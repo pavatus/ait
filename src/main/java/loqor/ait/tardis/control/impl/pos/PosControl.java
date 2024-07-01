@@ -29,7 +29,7 @@ public abstract class PosControl extends Control {
 			return false;
 		}
 
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 		DirectedGlobalPos.Cached destination = travel.destination();
 
 		BlockPos pos = this.type.add(destination.getPos(), (leftClick) ? -IncrementManager.increment(tardis)

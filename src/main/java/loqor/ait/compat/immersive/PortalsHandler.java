@@ -65,7 +65,7 @@ public class PortalsHandler {
 
 		TardisPortal interior = createInteriorPortal(tardis);
 
-		if (tardis.travel2().getState() == TravelHandlerBase.State.LANDED) {
+		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
 			list.add(createExteriorPortal(tardis));
 		}
 
@@ -75,8 +75,8 @@ public class PortalsHandler {
 
 	private static TardisPortal createExteriorPortal(Tardis tardis) {
 		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandlerBase.State.LANDED
-				? tardis.travel2().position() : tardis.travel2().getProgress();
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
+				? tardis.travel().position() : tardis.travel().getProgress();
 
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
@@ -110,8 +110,8 @@ public class PortalsHandler {
 	// todo allow for multiple interior doors
 	private static TardisPortal createInteriorPortal(Tardis tardis) {
 		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel2().getState() == TravelHandlerBase.State.LANDED
-				? tardis.travel2().position() : tardis.travel2().getProgress();
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
+				? tardis.travel().position() : tardis.travel().getProgress();
 
 		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
 		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);

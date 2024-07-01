@@ -149,7 +149,7 @@ public class TardisUtil {
                         if (variantChange) {
                             tardis.getExterior().setVariant(schema);
                             WorldOps.updateIfOnServer(server.getWorld(tardis
-                                            .travel2().position().getWorld().getRegistryKey()),
+                                            .travel().position().getWorld().getRegistryKey()),
                                     tardis.travel().position().getPos());
                         }
 					});
@@ -222,7 +222,7 @@ public class TardisUtil {
                             return;
 						}
 
-                        tardis.travel2().forceDestination(DirectedGlobalPos.Cached.create(
+                        tardis.travel().forceDestination(DirectedGlobalPos.Cached.create(
                                 (ServerWorld) serverPlayer.getWorld(), serverPlayer.getBlockPos(),
                                 (byte) RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())
                         ));
@@ -288,7 +288,7 @@ public class TardisUtil {
 	}
 
     public static ExteriorBlockEntity getExterior(Tardis tardis) {
-        DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
+        DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 
         if (!(globalPos.getWorld().getBlockEntity(globalPos.getPos()) instanceof ExteriorBlockEntity exterior))
             return null;
@@ -370,13 +370,13 @@ public class TardisUtil {
 
 	public static void teleportOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-		TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity, tardis.travel2().position().toPos());
+		TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity, tardis.travel().position().toPos());
 	}
 
 	public static void dropOutside(Tardis tardis, Entity entity) {
 		TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-        DirectedGlobalPos.Cached percentageOfDestination = tardis.travel2().getProgress();
+        DirectedGlobalPos.Cached percentageOfDestination = tardis.travel().getProgress();
         TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity, percentageOfDestination.toPos());
 	}
 

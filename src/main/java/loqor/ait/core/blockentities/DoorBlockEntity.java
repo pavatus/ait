@@ -52,7 +52,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 
 		Tardis tardis = door.tardis().get();
-		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel2().position();
+		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
 		if (world.isClient())
 			return;
@@ -101,7 +101,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 		}
 
-		if (tardis.travel2().getState() == TravelHandlerBase.State.LANDED)
+		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
 			DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 	}
 
@@ -136,7 +136,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())
 			return;
 
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		if (travel.getState() == TravelHandlerBase.State.FLIGHT) {
 			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)

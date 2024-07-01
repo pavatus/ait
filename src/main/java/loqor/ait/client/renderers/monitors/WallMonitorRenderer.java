@@ -66,13 +66,13 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         float xVal = 0f;
         matrices.translate(xVal, -35f, 35f);
 
-        TravelHandler travel = tardis.travel2();
+        TravelHandler travel = tardis.travel();
         DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED
                 ? travel.getProgress() : travel.position();
 
         BlockPos abppPos = abpp.getPos();
 
-        DirectedGlobalPos.Cached abpd = tardis.travel2().destination();
+        DirectedGlobalPos.Cached abpd = tardis.travel().destination();
         BlockPos abpdPos = abpd.getPos();
 
         String positionPosText = abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
@@ -98,7 +98,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth("⛽") / 2), 40, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth(fuelText) / 2), 48, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
-        String flightTimeText = travel.getState() == TravelHandlerBase.State.LANDED ? "0%" : tardis.travel2().getDurationAsPercentage() + "%";
+        String flightTimeText = travel.getState() == TravelHandlerBase.State.LANDED ? "0%" : tardis.travel().getDurationAsPercentage() + "%";
 
         this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth("⏳") / 2), 60, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth(flightTimeText) / 2), 68, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);

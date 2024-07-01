@@ -196,7 +196,7 @@ public class FallingTardisEntity extends Entity {
 			if (blockPos == null)
 				return;
 
-			tardis.travel2().forcePosition(cached -> cached.pos(blockPos)
+			tardis.travel().forcePosition(cached -> cached.pos(blockPos)
 					.world(this.getWorld().getRegistryKey()));
 
 			if (this.isOnGround()) {
@@ -205,7 +205,7 @@ public class FallingTardisEntity extends Entity {
 			}
 		}
 
-		this.setVelocity(this.getVelocity().multiply(tardis.travel2().isCrashing() ? 1.05f : 0.98f));
+		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.05f : 0.98f));
 
 		if (this.getY() <= (double) this.getWorld().getBottomY() + 2)
 			this.tickInVoid();
@@ -216,7 +216,7 @@ public class FallingTardisEntity extends Entity {
 			PropertiesHandler.set(this.getTardis(), PropertiesHandler.ANTIGRAVS_ENABLED, true);
 
 		Tardis tardis = this.getTardis();
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		Block block = this.block.getBlock();
 		BlockPos blockPos = this.getBlockPos();

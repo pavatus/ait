@@ -81,7 +81,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			return;
 
 		Tardis tardis = TardisManager.with(world, (o, manager) -> manager.demandTardis(o, tardisId));
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		TardisRealEntity tardisRealEntity = new TardisRealEntity(world, tardisId, (double) spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, player.getUuid(), pos);
 
@@ -142,15 +142,15 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					}
 					if (user.isSneaking()) {
 						// TODO(travel): replace with proper travel method
-						getTardis().travel2().immediatelyLandHere(DirectedGlobalPos.Cached.create(
+						getTardis().travel().immediatelyLandHere(DirectedGlobalPos.Cached.create(
                                 (ServerWorld) this.getWorld(), this.getBlockPos(), DirectionControl.getGeneralizedRotation(
 										RotationPropertyHelper.fromYaw(user.getBodyYaw())))
 						);
 
-						if (getTardis().travel2().getState() == TravelHandlerBase.State.LANDED)
+						if (getTardis().travel().getState() == TravelHandlerBase.State.LANDED)
 							PropertiesHandler.set(getTardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_REAL_FLIGHT, false);
 
-						getTardis().travel2().autopilot(false);
+						getTardis().travel().autopilot(false);
 						user.dismountVehicle();
 					}
 				} else {
@@ -158,7 +158,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 					user.getAbilities().allowFlying = true;
 				}
 			}
-		} else if (getTardis().travel2().getState() == TravelHandlerBase.State.LANDED) {
+		} else if (getTardis().travel().getState() == TravelHandlerBase.State.LANDED) {
 			if (user.getWorld().isClient() && MinecraftClient.getInstance().player == user) {
 				MinecraftClient client = MinecraftClient.getInstance();
 				client.options.setPerspective(Perspective.FIRST_PERSON);

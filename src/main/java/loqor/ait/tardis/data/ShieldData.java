@@ -82,13 +82,13 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 		if (!this.areShieldsActive())
 			return;
 
-		if (this.tardis().travel2().getState() == TravelHandlerBase.State.FLIGHT)
+		if (this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT)
 			return;
 
 		Tardis tardis = this.tardis();
 		tardis.removeFuel(2 * (tardis.tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
 
-		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel2().position();
+		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
 		World world = globalExteriorPos.getWorld();
 		BlockPos exteriorPos = globalExteriorPos.getPos();

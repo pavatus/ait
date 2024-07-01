@@ -827,7 +827,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// X Control Movement
 		ModelPart xControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_2").getChild("bone70");
 		ModelPart xControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_11").getChild("bone82");
-		BlockPos destination = tardis.travel2().destination().getPos();
+		BlockPos destination = tardis.travel().destination().getPos();
 
 		if (destination.getX() != xDestination) {
 			xControl.roll = xControl.roll + 1.575f;
@@ -859,17 +859,17 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Fast Return Movements
 		ModelPart fastReturn = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("fastreturn").getChild("bone25");
-		if (tardis.travel2().destination().equals(tardis.travel2().previousPosition())) {
+		if (tardis.travel().destination().equals(tardis.travel().previousPosition())) {
 			fastReturn.pivotY = fastReturn.pivotY + 0.25f;
         }
 
 		// Throttle Control Movements
 		ModelPart throttle = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_1").getChild("bone45");
-		throttle.roll = throttle.roll + (tardis.travel2().speed().get() / (float) tardis.travel2().maxSpeed().get());
+		throttle.roll = throttle.roll + (tardis.travel().speed() / (float) tardis.travel().maxSpeed().get());
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
-		handbrake.roll = tardis.travel2().handbrake() ? handbrake.roll + 1 : handbrake.roll;
+		handbrake.roll = tardis.travel().handbrake() ? handbrake.roll + 1 : handbrake.roll;
 
 		// Power Control Movements
 		ModelPart powerControl = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("m_lever_3").getChild("bone142");
@@ -936,7 +936,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Direction Control Movements
 		ModelPart direction = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_crank_1").getChild("bone59");
-		direction.yaw += (0.5f * tardis.travel2().destination().getRotation());
+		direction.yaw += (0.5f * tardis.travel().destination().getRotation());
 
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
@@ -950,7 +950,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Auto Pilot Control Movements
 		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");
-		autoPilot.yaw = !tardis.travel2().autopilot() ? autoPilot.yaw + 1 : autoPilot.yaw;
+		autoPilot.yaw = !tardis.travel().autopilot() ? autoPilot.yaw + 1 : autoPilot.yaw;
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

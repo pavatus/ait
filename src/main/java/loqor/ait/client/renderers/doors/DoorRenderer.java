@@ -78,10 +78,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 			texture = tardis.door().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
 		}
 
-		if (DependencyChecker.hasPortals() && tardis.travel2().getState() == TravelHandlerBase.State.LANDED
+		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TravelHandlerBase.State.LANDED
 				&& tardis.door().getDoorState() != DoorData.DoorStateEnum.CLOSED
 		) {
-			DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
+			DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 
 			BlockPos pos = globalPos.getPos();
 			World world = globalPos.getWorld();

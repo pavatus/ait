@@ -129,7 +129,7 @@ public class KeyItem extends LinkableItem {
 		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY))
 			return;
 
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
 		if (travel.handbrake())

@@ -65,7 +65,7 @@ public class RemoteItem extends LinkableItem {
                 player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
 
             // Check if the Tardis is already present at this location before moving it there
-            DirectedGlobalPos.Cached currentPosition = tardis.travel2().position();
+            DirectedGlobalPos.Cached currentPosition = tardis.travel().position();
 
 			if (currentPosition.getPos().equals(pos))
 				return;
@@ -78,7 +78,7 @@ public class RemoteItem extends LinkableItem {
 				if (world.getBlockState(pos).isReplaceable())
 					temp = pos;
 
-				tardis.travel2().speed().set(tardis.travel2().maxSpeed());
+				tardis.travel().speed(tardis.travel().maxSpeed().get());
 
 				TravelUtil.travelTo(tardis, DirectedGlobalPos.Cached.create(serverWorld, temp,
 						DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())))
@@ -104,8 +104,8 @@ public class RemoteItem extends LinkableItem {
 			if (tardis == null)
 				return;
 
-			if (tardis.travel2().getState() != LANDED)
-				tooltip.add(Text.literal("→ " + tardis.travel2().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
+			if (tardis.travel().getState() != LANDED)
+				tooltip.add(Text.literal("→ " + tardis.travel().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
 		}
 	}
 }

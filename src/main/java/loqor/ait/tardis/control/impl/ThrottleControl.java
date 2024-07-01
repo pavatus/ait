@@ -22,17 +22,17 @@ public class ThrottleControl extends Control {
 		if (tardis.isInDanger())
 			return false;
 
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		if (!leftClick) {
 			if (player.isSneaking()) {
-				travel.speed().set(travel.maxSpeed());
+				travel.speed(travel.maxSpeed().get());
 			} else {
 				travel.increaseSpeed();
 			}
 		} else {
 			if (player.isSneaking()) {
-				travel.speed().set(0);
+				travel.speed(0);
 			} else {
 				travel.decreaseSpeed();
 			}

@@ -38,7 +38,7 @@ public class CloakData extends TardisComponent implements TardisTickable {
 		if (!this.isEnabled())
 			return;
 
-		if (tardis.travel2().position().getPos() == null)
+		if (tardis.travel().position().getPos() == null)
 			return;
 
 		this.tardis().removeFuel(2 * (this.tardis().tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick

@@ -19,7 +19,7 @@ public class RandomiserControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);
@@ -27,7 +27,7 @@ public class RandomiserControl extends Control {
 		}
 
 		world.getServer().execute(() -> {
-			tardis.travel2().destination(TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis)));
+			tardis.travel().destination(TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis)));
 			tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * (tardis.tardisHammerAnnoyance + 1));
 
 			messagePlayer(player, travel);

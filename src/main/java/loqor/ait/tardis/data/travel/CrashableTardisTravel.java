@@ -6,7 +6,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -25,9 +24,9 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
     TravelHandlerBase.State getState();
     boolean isCrashing();
     void setCrashing(boolean value);
+    int speed();
 
     Tardis tardis();
-    IntValue speed();
     void forceRemat();
 
     DirectedGlobalPos.Cached position();
@@ -43,7 +42,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
             return;
 
         Tardis tardis = this.tardis();
-        int power = this.speed().get() + tardis.tardisHammerAnnoyance + 1;
+        int power = this.speed() + tardis.tardisHammerAnnoyance + 1;
 
         List<Explosion> explosions = new ArrayList<>();
 
@@ -91,7 +90,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
         PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
 
-        tardis.travel2().speed().set(0);
+        tardis.travel().speed(0);
         tardis.removeFuel(500 * power);
 
         tardis.tardisHammerAnnoyance = 0;

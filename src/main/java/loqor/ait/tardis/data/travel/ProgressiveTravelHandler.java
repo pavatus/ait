@@ -53,11 +53,11 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     private boolean isFlightTicking() {
-        return this.tardis().travel2().getState() == State.FLIGHT && this.getTargetTicks() != 0;
+        return this.tardis().travel().getState() == State.FLIGHT && this.getTargetTicks() != 0;
     }
 
     public boolean hasFinishedFlight() {
-        return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || tardis.travel2().isCrashing()) &&
+        return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0 || tardis.travel().isCrashing()) &&
                 !PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
     }
 
@@ -67,7 +67,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         this.resetFlight();
 
         if (this.autopilot.get() && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
-            this.tardis().travel2().rematerialize();
+            this.tardis().travel().rematerialize();
     }
 
     public void increaseFlightTime(int ticks) {
@@ -80,7 +80,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
     public int getDurationAsPercentage() {
         if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0)
-            return this.tardis().travel2().getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
+            return this.tardis().travel().getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
 
         int target = this.getTargetTicks();
         return (MathHelper.clamp(this.getFlightTicks(), 1, target) * 100) / target;
@@ -130,7 +130,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
     public void handbrake(boolean value) {
         if (this.getState() == TravelHandlerBase.State.DEMAT && value)
-            this.tardis.travel2().cancelDemat();
+            this.tardis.travel().cancelDemat();
 
         handbrake.set(value);
     }
@@ -175,10 +175,10 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         Tardis tardis = this.tardis();
 
         TardisCrashData crash = tardis.crash();
-        TravelHandler travel = tardis.travel2();
+        TravelHandler travel = tardis.travel();
 
         if (crash.getState() != TardisCrashData.State.NORMAL)
-            crash.addRepairTicks(2 * travel.speed().get());
+            crash.addRepairTicks(2 * travel.speed());
 
         if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandlerBase.State.LANDED)
             this.recalculate();
@@ -195,7 +195,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
                 return;
             }
 
-            this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.speed().get() / 2, 1)));
+            this.setFlightTicks(this.getFlightTicks() + (Math.max(this.speed() / 2, 1)));
         }
     }
 
@@ -208,7 +208,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
                 && !sequences.hasActiveSequence()
                 && !this.position().equals(this.destination())
                 && this.getTargetTicks() > 100
-                && random.nextBetween(0, 230 / (this.speed().get() == 0 ? 1 : this.speed().get())) == 7) {
+                && random.nextBetween(0, 230 / (this.speed() == 0 ? 1 : this.speed())) == 7) {
             sequences.triggerRandomSequence(true);
         }
     }

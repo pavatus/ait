@@ -180,7 +180,7 @@ public class AITModClient implements ClientModInitializer {
                             return;
 
                         // todo remember to use the right world in future !!
-                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.travel2().position().getPos());
+                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.travel().position().getPos());
 
                         if (!(block instanceof ExteriorBlockEntity exterior))
                             return;

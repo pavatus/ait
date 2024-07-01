@@ -16,7 +16,7 @@ public class FastReturnControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);

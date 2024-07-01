@@ -33,7 +33,7 @@ public class TravelDebugCommand {
 
     private static int demat(CommandContext<ServerCommandSource> context) {
         Tardis tardis = TardisArgumentType.getTardis(context, "tardis");
-        tardis.travel2().dematerialize();
+        tardis.travel().dematerialize();
 
         return Command.SINGLE_SUCCESS;
     }
@@ -43,13 +43,13 @@ public class TravelDebugCommand {
         ServerWorld world = DimensionArgumentType.getDimensionArgument(context, "dimension");
         BlockPos pos = BlockPosArgumentType.getBlockPos(context, "pos");
 
-        tardis.travel2().destination(cached -> cached.world(world).pos(pos));
+        tardis.travel().destination(cached -> cached.world(world).pos(pos));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int remat(CommandContext<ServerCommandSource> context) {
         Tardis tardis = TardisArgumentType.getTardis(context, "tardis");
-        tardis.travel2().rematerialize();
+        tardis.travel().rematerialize();
 
         return Command.SINGLE_SUCCESS;
     }

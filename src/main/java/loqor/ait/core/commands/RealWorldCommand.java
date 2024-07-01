@@ -35,10 +35,10 @@ public class RealWorldCommand {
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		// TODO: better error handling
-		if (tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
+		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 			return 0;
 
-		DirectedGlobalPos.Cached globalPos = tardis.travel2().position();
+		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 		BlockPos spawnBlockPos = globalPos.getPos();
 
 		TardisUtil.teleportOutside(tardis, source);

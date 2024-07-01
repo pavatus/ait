@@ -903,7 +903,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever9").getChild("bone50");
-		throttle.roll = throttle.roll - ((tardis.travel2().speed().get() / (float) tardis.travel2().maxSpeed().get()) * 1.5f);
+		throttle.roll = throttle.roll - ((tardis.travel().speed() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
 
 		ModelPart increment = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever10").getChild("bone54");
 		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
@@ -926,7 +926,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		refueling.roll = (tardis.isRefueling() ? 0.4363F : -0.5672F);
 
 		ModelPart handbrake = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("lever6").getChild("bone41");
-		handbrake.roll = handbrake.roll + (tardis.travel2().handbrake() ? -0f : 1.5f);
+		handbrake.roll = handbrake.roll + (tardis.travel().handbrake() ? -0f : 1.5f);
 
 		ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7").getChild("bone45");
 		power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
@@ -935,7 +935,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
 
 		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
-		direction.yaw = direction.yaw + (1.5708f * tardis.travel2().destination().getRotation());
+		direction.yaw = direction.yaw + (1.5708f * tardis.travel().destination().getRotation());
 
 		ModelPart doorControl = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("crank2").getChild("bone18");
 		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
@@ -947,7 +947,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		doorLock.roll = doorLock.roll - (tardis.door().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
-		autopilot.roll = autopilot.roll - (tardis.travel2().autopilot() ? 1.5708f : 0);
+		autopilot.roll = autopilot.roll - (tardis.travel().autopilot() ? 1.5708f : 0);
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

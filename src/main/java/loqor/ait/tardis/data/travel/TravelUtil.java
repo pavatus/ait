@@ -15,7 +15,7 @@ public class TravelUtil {
     private static final int BASE_FLIGHT_TICKS = 5 * 20;
 
     public static DirectedGlobalPos.Cached randomPos(Tardis tardis, int limit, int max) {
-        TravelHandler travel = tardis.travel2();
+        TravelHandler travel = tardis.travel();
         DirectedGlobalPos.Cached dest = travel.destination();
         ServerWorld world = dest.getWorld();
 
@@ -30,7 +30,7 @@ public class TravelUtil {
     }
 
     public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {
-        TravelHandler travel = tardis.travel2();
+        TravelHandler travel = tardis.travel();
 
         travel.autopilot(true);
         travel.destination(pos);

@@ -59,14 +59,14 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 		if (!tardis.alarm().isEnabled())
 			return;
 
-		if (tardis.travel2().getState() == TravelHandlerBase.State.FLIGHT)
+		if (tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)
 			return;
 
 		soundCounter++;
 
 		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
 			soundCounter = 0;
-			tardis.travel2().position().getWorld().playSound(null, tardis.travel2().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+			tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
 		}
 	}
 }

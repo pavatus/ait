@@ -41,7 +41,7 @@ public class RemoveCommand {
         ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
 
         // Remove the exterior if it exists
-        DirectedGlobalPos.Cached globalExteriorPos = tardis.travel2().position();
+        DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
         if (globalExteriorPos != null) {
             World world = globalExteriorPos.getWorld();

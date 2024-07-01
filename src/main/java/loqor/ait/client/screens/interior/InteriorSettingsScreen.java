@@ -270,7 +270,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 
-		int progress = tardis().travel2().getDurationAsPercentage();
+		int progress = tardis().travel().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -285,7 +285,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel2().getState() == TravelHandlerBase.State.FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == TravelHandlerBase.State.FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 
 		this.renderHums(context);

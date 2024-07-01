@@ -154,7 +154,7 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 	}
 
 	public enum Type implements StringIdentifiable {
-		FLIGHT(tardis -> tardis.travel2().getState() != TravelHandlerBase.State.LANDED ? 15 : 0),
+		FLIGHT(tardis -> tardis.travel().getState() != TravelHandlerBase.State.LANDED ? 15 : 0),
 		POWER(tardis -> tardis.engine().hasPower() ? 15 : 0),
 		CRASHED(tardis -> {
 			TardisCrashData.State state = tardis.crash().getState();

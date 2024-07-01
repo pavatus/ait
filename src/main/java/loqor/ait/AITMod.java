@@ -160,7 +160,7 @@ public class AITMod implements ModInitializer {
 					return;
 
 				// nuh uh no interior changing during flight
-				if (tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
+				if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 					return;
 
 				tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);

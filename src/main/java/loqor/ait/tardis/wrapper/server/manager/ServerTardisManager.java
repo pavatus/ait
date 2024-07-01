@@ -64,7 +64,7 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 					ServerTardis found = null;
 
 					for (ServerTardis tardis : this.lookup.values()) {
-						DirectedGlobalPos exteriorPos = tardis.travel2().position();
+						DirectedGlobalPos exteriorPos = tardis.travel().position();
 
 						if (!exteriorPos.getPos().equals(pos.getPos())
 								|| !exteriorPos.getDimension().equals(pos.getDimension()))
@@ -259,13 +259,13 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		for (ServerTardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
 			if (lock) {
-				ForcedChunkUtil.stopForceLoading(tardis.travel2().position());
-				TravelHandlerBase.State state = tardis.travel2().getState();
+				ForcedChunkUtil.stopForceLoading(tardis.travel().position());
+				TravelHandlerBase.State state = tardis.travel().getState();
 
 				if (state == TravelHandlerBase.State.DEMAT) {
-					tardis.travel2().finishDemat();
+					tardis.travel().finishDemat();
 				} else if (state == TravelHandlerBase.State.MAT) {
-					tardis.travel2().finishRemat();
+					tardis.travel().finishRemat();
 				}
 
 				tardis.door().closeDoors();

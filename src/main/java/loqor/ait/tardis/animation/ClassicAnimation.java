@@ -12,10 +12,10 @@ public class ClassicAnimation extends ExteriorAnimation {
 
 	@Override
 	public void tick(Tardis tardis) {
-		TravelHandlerBase.State state = tardis.travel2().getState();
+		TravelHandlerBase.State state = tardis.travel().getState();
 
 		if (this.timeLeft < 0)
-			this.setupAnimation(tardis.travel2().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(tardis.travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
 		if (state == TravelHandlerBase.State.DEMAT) {
 			timeLeft--;

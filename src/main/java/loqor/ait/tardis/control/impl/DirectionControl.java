@@ -18,7 +18,7 @@ public class DirectionControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 		DirectedGlobalPos.Cached dest = travel.destination();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {

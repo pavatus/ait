@@ -223,7 +223,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 			return;
 
 		SequenceHandler handler = this.tardis().get().sequence();
-		TravelHandlerBase.State travelState = this.tardis().get().travel2().getState();
+		TravelHandlerBase.State travelState = this.tardis().get().travel().getState();
 
 		if (travelState == TravelHandlerBase.State.FLIGHT || travelState == TravelHandlerBase.State.MAT) {
 			if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
@@ -247,9 +247,9 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		}
 
 		ServerTardis tardis = (ServerTardis) this.tardis().get();
-		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel2().position().getPos());
+		boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
 
-		if (tardis.travel2().isCrashing()) {
+		if (tardis.travel().isCrashing()) {
 			serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
 					pos.getZ() + 0.5f, 5, 0, 0, 0, 0.025f);
 

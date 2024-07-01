@@ -110,7 +110,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		tardis.engine().disablePower();
 
 		if (tardis.hasGrowthExterior()) {
-			TravelHandler travel = tardis.travel2();
+			TravelHandler travel = tardis.travel();
 
 			travel.handbrake(false);
 			travel.autopilot(true);
@@ -139,7 +139,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
 			return;
 
-		TravelHandler travel = this.tardis().travel2();
+		TravelHandler travel = this.tardis().travel();
 
 		// TODO(travel): move this to travelhandler
 		//if (travel.getState() == TravelHandler.State.FLIGHT)

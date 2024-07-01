@@ -104,7 +104,7 @@ public class EngineHandler extends KeyedTardisComponent {
     }
 
     private void updateExteriorState() {
-        TravelHandler travel = this.tardis.travel2();
+        TravelHandler travel = this.tardis.travel();
 
         if (travel.getState() != TravelHandlerBase.State.LANDED)
             return;

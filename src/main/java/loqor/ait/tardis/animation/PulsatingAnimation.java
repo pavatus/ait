@@ -18,7 +18,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 	@Override
 	public void tick(Tardis tardis) {
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 		TravelHandlerBase.State state = travel.getState();
 
 		if (this.timeLeft < 0)

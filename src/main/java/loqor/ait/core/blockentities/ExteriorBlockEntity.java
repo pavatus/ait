@@ -161,7 +161,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         Tardis tardis = ref.get();
 
-        TravelHandlerBase travel = tardis.travel2();
+        TravelHandlerBase travel = tardis.travel();
         TravelHandlerBase.State state = travel.getState();
 
         if (!world.isClient())

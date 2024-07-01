@@ -363,7 +363,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 
 		ClientTardis tardis = (ClientTardis) exterior.tardis().get();
 
-		root = tardis.getHandlers().getInteriorChanger().isGenerating() || tardis.travel2().getState() != TravelHandlerBase.State.LANDED
+		root = tardis.getHandlers().getInteriorChanger().isGenerating() || tardis.travel().getState() != TravelHandlerBase.State.LANDED
 				? coral.getChild("six") : coral.getChild("seven");
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

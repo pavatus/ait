@@ -68,13 +68,13 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		matrices.scale(0.005f, 0.005f, 0.005f);
 		matrices.translate(-50f, 0, -80);
 
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 		DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED
 				? travel.getProgress() : travel.position();
 
 		BlockPos abppPos = abpp.getPos();
 
-		DirectedGlobalPos.Cached abpd = tardis.travel2().destination();
+		DirectedGlobalPos.Cached abpd = tardis.travel().destination();
 		BlockPos abpdPos = abpd.getPos();
 
 		String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
@@ -99,7 +99,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), 0, 78, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), 8, 78, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		String flightTimeText = tardis.travel2().getState() == TravelHandlerBase.State.LANDED ? "0%" : tardis.travel2().getDurationAsPercentage() + "%";
+		String flightTimeText = tardis.travel().getState() == TravelHandlerBase.State.LANDED ? "0%" : tardis.travel().getDurationAsPercentage() + "%";
 		this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 92, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 		this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), 8, 92, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 

@@ -80,7 +80,7 @@ public class TardisItemBuilder extends Item {
             if (tardis == null)
                 return ActionResult.FAIL;
 
-            TravelHandlerBase.State state = tardis.travel2().getState();
+            TravelHandlerBase.State state = tardis.travel().getState();
 
             if (!(state == TravelHandlerBase.State.LANDED || state == TravelHandlerBase.State.FLIGHT))
                 return ActionResult.PASS;

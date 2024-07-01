@@ -189,7 +189,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             this.tardis.door().closeDoors();
             this.tardis.setRefueling(false);
 
-            if (this.speed().get() == 0)
+            if (this.speed() == 0)
                 this.increaseSpeed();
         }
 

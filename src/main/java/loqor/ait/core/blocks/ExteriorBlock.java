@@ -157,7 +157,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
-        TravelHandlerBase.State travelState = tardis.travel2().getState();
+        TravelHandlerBase.State travelState = tardis.travel().getState();
 
         if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
             return normal;
@@ -203,7 +203,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-        TravelHandlerBase.State travelState = tardis.travel2().getState();
+        TravelHandlerBase.State travelState = tardis.travel().getState();
 
         if (travelState == TravelHandlerBase.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
             return getNormalShape(state);

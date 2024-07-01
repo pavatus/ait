@@ -28,7 +28,7 @@ public class SiegeModeControl extends Control {
 			return false;
 		}
 
-		if (tardis.travel2().isCrashing() || tardis.travel2().getState() != TravelHandlerBase.State.LANDED)
+		if (tardis.travel().isCrashing() || tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 			return true;
 
 		tardis.siege().setActive(!tardis.siege().isActive());

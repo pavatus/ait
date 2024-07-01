@@ -88,12 +88,12 @@ public class ClientFlightHandler extends SoundHandler {
 
 	private boolean inFlight() {
 		Tardis tardis = this.tardis();
-		return (tardis != null && tardis.travel2().getState() == TravelHandlerBase.State.FLIGHT);
+		return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT);
 	}
 
 	public boolean hasThrottleAndHandbrakeDown() {
 		Tardis tardis = this.tardis();
-		return (tardis != null && tardis.travel2().speed().get() > 0 && tardis.travel2().handbrake());
+		return (tardis != null && tardis.travel().speed() > 0 && tardis.travel().handbrake());
 	}
 
 	public void tick(MinecraftClient client) {

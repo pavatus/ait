@@ -29,16 +29,16 @@ public class HandBrakeControl extends Control {
 			return false;
 
 		// todo make this fancier when moving stuff from flightdata to travelhandler
-		boolean handbrake = tardis.travel2().handbrake();
+		boolean handbrake = tardis.travel().handbrake();
 		handbrake = !handbrake;
 
-		tardis.travel2().handbrake(handbrake);
+		tardis.travel().handbrake(handbrake);
 
 		if (tardis.isRefueling())
 			tardis.setRefueling(false);
 
 		this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
-		TravelHandler travel = tardis.travel2();
+		TravelHandler travel = tardis.travel();
 
 		// TODO(travel): replace with proper travel methods
 		if (handbrake && travel.getState() == TravelHandlerBase.State.FLIGHT) {

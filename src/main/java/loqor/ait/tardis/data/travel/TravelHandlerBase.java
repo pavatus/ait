@@ -73,12 +73,12 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         this.previousPosition.ifPresent(cached -> cached.init(current), false);
     }
 
-    public IntValue speed() {
-        return speed;
+    public void speed(int value) {
+        this.speed.set(this.clampSpeed(value));
     }
 
-    protected void speed(int value) {
-        this.speed.set(this.clampSpeed(value));
+    public int speed() {
+        return this.speed.get();
     }
 
     protected int clampSpeed(int value) {
