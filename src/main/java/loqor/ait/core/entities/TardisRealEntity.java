@@ -174,18 +174,19 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				user.clearStatusEffects();
 				user.getAbilities().setFlySpeed(0.05F);
 
-				if (user instanceof ServerPlayerEntity serverUser)
-					updatePlayer(serverUser, false, false);
-
 				if(this.getPlayerBlockPos().isEmpty()) {
 					TardisUtil.teleportInside(this.getTardis(), user);
 				} else {
 					TardisUtil.teleportToInteriorPosition(this.getTardis(), user, this.getPlayerBlockPos().get());
 				}
+
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
 
-				// TODO(travel): replace with proper travel method
-				this.getTardis().travel().immediatelyLandHere(getTardis().travel().position());
+				if (user instanceof ServerPlayerEntity serverUser) {
+					updatePlayer(serverUser, false, false);
+					this.getTardis().travel().immediatelyLandHere(getTardis().travel().position());
+				}
+
 				this.discard();
 			}
 		}
