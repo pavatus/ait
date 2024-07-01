@@ -83,8 +83,10 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
             return this.getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
 
         int target = this.getTargetTicks();
-        System.out.println("v:"+((MathHelper.clamp(this.getFlightTicks(), 1, target) * 100) / target) + ";ft:"+this.getFlightTicks() + ";tt:"+target);
-        return (MathHelper.clamp(this.getFlightTicks(), 1, target) * 100) / target;
+        int flightTicksClamped = MathHelper.clamp(this.getFlightTicks(), 1, target);
+        int percentage = (flightTicksClamped * 100) / target;
+
+        return Math.max(0, percentage);
     }
 
     public DirectedGlobalPos.Cached getProgress() {
