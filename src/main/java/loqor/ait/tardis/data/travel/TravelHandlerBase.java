@@ -139,7 +139,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         );
 
         this.forceDestination(cached);
-        this.tardis().travel().recalculate();
+        //this.tardis().travel().recalculate();
     }
 
     public void forceDestination(DirectedGlobalPos.Cached cached) {
