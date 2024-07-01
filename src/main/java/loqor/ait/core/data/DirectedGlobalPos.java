@@ -196,7 +196,7 @@ public class DirectedGlobalPos {
 
         @Override
         public Cached offset(int x, int y, int z) {
-            return Cached.createSame(this.world, this.getDimension(), this.getPos().add(x, y, z), this.getRotation());
+            return pos(this.getPos().add(x, y, z));
         }
 
         @Override

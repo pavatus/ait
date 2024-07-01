@@ -89,7 +89,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
     public DirectedGlobalPos.Cached getProgress() {
         return TravelUtil.getPositionFromPercentage(
-                this.position(), this.destination(), this.getDurationAsPercentage()
+                this.destination(), this.position(), this.getDurationAsPercentage()
         );
     }
 
