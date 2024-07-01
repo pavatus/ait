@@ -61,6 +61,12 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
                 !PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
     }
 
+    @Override
+    public void forceDestination(DirectedGlobalPos.Cached cached) {
+        super.forceDestination(cached);
+        this.recalculate();
+    }
+
     // TODO inline
     private void onFlightFinished() {
         this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);

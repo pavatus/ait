@@ -144,8 +144,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     public void forceDestination(DirectedGlobalPos.Cached cached) {
         cached.init(TravelHandlerBase.server());
         this.destination.set(cached);
-
-        this.tardis.travel().recalculate();
     }
 
     public void destination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
