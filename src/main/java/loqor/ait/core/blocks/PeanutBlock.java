@@ -12,5 +12,7 @@ public class PeanutBlock extends Block {
 
     public void explode(World world, BlockPos pos) {
         world.createExplosion(null, world.getDamageSources().outOfWorld(), null, pos.toCenterPos(), 1000, true, World.ExplosionSourceType.MOB);
+        world.createExplosion(null, world.getDamageSources().outOfWorld(), null, pos.toCenterPos(), 1000, true, World.ExplosionSourceType.BLOCK);
+        world.createExplosion(null, world.getDamageSources().outOfWorld(), null, pos.toCenterPos(), 1000, true, World.ExplosionSourceType.TNT);
     }
 }
