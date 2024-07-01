@@ -183,15 +183,17 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandlerBase.State.LANDED)
             this.recalculate();
 
-        if (server.getTicks() % 2 == 0)
-            this.triggerSequencingDuringFlight(tardis);
-
         if (this.isInFlight() && !travel.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
             this.recalculate();
 
+        if (server.getTicks() % 2 == 0)
+            this.triggerSequencingDuringFlight(tardis);
+
         if (this.isFlightTicking()) {
-            if (this.hasFinishedFlight())
+            if (this.hasFinishedFlight()) {
                 this.onFlightFinished();
+                return;
+            }
 
             this.setFlightTicks(this.getFlightTicks() + (Math.max(travel.speed().get() / 2, 1)));
         }
