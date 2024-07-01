@@ -80,7 +80,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
 
     public int getDurationAsPercentage() {
         if (this.getTargetTicks() == 0 || this.getFlightTicks() == 0)
-            return this.tardis().travel().getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
+            return this.getState() == TravelHandlerBase.State.DEMAT ? 0 : 100;
 
         int target = this.getTargetTicks();
         System.out.println("v:"+((MathHelper.clamp(this.getFlightTicks(), 1, target) * 100) / target) + ";ft:"+this.getFlightTicks() + ";tt:"+target);

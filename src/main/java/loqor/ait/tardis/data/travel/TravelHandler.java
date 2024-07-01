@@ -149,8 +149,8 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         this.placeExterior(false);
         this.finishRemat();
 
-        this.destination.set(globalPos);
-        this.position.set(globalPos);
+        this.forceDestination(globalPos);
+        this.forcePosition(globalPos);
     }
 
     private void runAnimations(ExteriorBlockEntity exterior) {
@@ -276,7 +276,6 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
     public void rematerialize() {
         boolean bypass = tardis.hasGrowthExterior();
-        this.destination(this.getProgress());
 
         if ((TardisEvents.MAT.invoker().onMat(tardis) || TravelUtil.matCooldownn(tardis)) && !bypass) {
             this.failRemat();
@@ -300,6 +299,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
+        this.forceDestination(this.getProgress());
         this.forcePosition(this.destination());
 
         // Play materialize sound at the destination
