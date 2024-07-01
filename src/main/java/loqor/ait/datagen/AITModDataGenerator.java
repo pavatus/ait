@@ -328,8 +328,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .pattern("BBB")
                     .pattern("BEB")
                     .pattern("BBB")
-                    .input('B', Blocks.BEACON)
-                    .input('E', Blocks.DRAGON_EGG));
+                    .input('B', Blocks.BEACON).criterion(hasItem(Blocks.BEACON), conditionsFromItem(Blocks.BEACON))
+                    .input('E', Blocks.DRAGON_EGG).criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));
 
             generateSmithingRecipes(provider);
             return provider;
