@@ -12,18 +12,24 @@ public final class TardisEvents {
 
 	public static final Event<Demat> DEMAT = EventFactory.createArrayBacked(Demat.class, callbacks -> tardis -> {
 		for (Demat callback : callbacks) {
-			return callback.onDemat(tardis);
+			Interaction value = callback.onDemat(tardis);
+
+			if (value != Interaction.PASS)
+				return value;
 		}
 
-		return false;
+		return Interaction.SUCCESS;
 	});
 
 	public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> tardis -> {
 		for (Mat callback : callbacks) {
-			return callback.onMat(tardis);
+			Interaction value = callback.onMat(tardis);
+
+			if (value != Interaction.PASS)
+				return value;
 		}
 
-		return false;
+		return Interaction.SUCCESS;
 	});
 
 	public static final Event<Landed> LANDED = EventFactory.createArrayBacked(Landed.class, callbacks -> tardis -> {
@@ -94,10 +100,6 @@ public final class TardisEvents {
 		}
 	});
 
-	// Interfaces go down here
-	// todo add functionality for cancelling things ( start by removing the void i think lol ) ( look at PlayerBlockBreakEvents )
-	// todo add more events, i dont really know what should and shouldnt be an event rn
-
 	/**
 	 * Called when a TARDIS successfully ( passed all checks ) starts to take off, before anything else is ran
 	 */
@@ -107,9 +109,9 @@ public final class TardisEvents {
 		 * Called when a TARDIS successfully ( passed all checks ) starts to take off, before anything else is ran.
 		 *
 		 * @param tardis the tardis taking off
-		 * @return whether the demat should be cancelled ( true cancels it )
+		 * @return event's result
 		 */
-		boolean onDemat(Tardis tardis);
+		Interaction onDemat(Tardis tardis);
 	}
 
 	/**
@@ -121,9 +123,9 @@ public final class TardisEvents {
 		 * Called when a TARDIS successfully ( passed all checks ) starts to land, before anything else is ran.
 		 *
 		 * @param tardis the tardis landing
-		 * @return whether the mat should be cancelled ( true cancels it )
+		 * @return event's result
 		 */
-		boolean onMat(Tardis tardis);
+		Interaction onMat(Tardis tardis);
 	}
 
 	/**
@@ -159,8 +161,6 @@ public final class TardisEvents {
 	public interface LosePower {
 		/**
 		 * Called when a tardis' loses power
-		 *
-		 * @param tardis
 		 */
 		void onLosePower(Tardis tardis);
 	}
@@ -169,8 +169,6 @@ public final class TardisEvents {
 	public interface RegainPower {
 		/**
 		 * Called when a tardis regains power
-		 *
-		 * @param tardis
 		 */
 		void onRegainPower(Tardis tardis);
 	}
@@ -212,5 +210,11 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface Shields {
 		void onShields(Tardis tardis, boolean active, boolean visual);
+	}
+
+	public enum Interaction {
+		SUCCESS,
+		FAIL,
+		PASS
 	}
 }

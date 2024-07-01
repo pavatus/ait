@@ -29,19 +29,19 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	}
 
 	static {
-		TardisEvents.DEMAT.register((tardis -> {
+		TardisEvents.DEMAT.register(tardis -> {
 			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating())
-				return true; // cancelled
+				return TardisEvents.Interaction.FAIL;
 
-            return tardis.door().isOpen();
-        }));
+            return TardisEvents.Interaction.PASS;
+        });
 
 		TardisEvents.MAT.register(tardis -> {
 			if (!tardis.isGrowth())
-				return false;
+				return TardisEvents.Interaction.PASS;
 
 			tardis.getExterior().setType(CategoryRegistry.CAPSULE);
-            return true;
+            return TardisEvents.Interaction.SUCCESS; // force mat even if checks fail
         });
 	}
 
@@ -114,7 +114,6 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			TravelHandler travel = tardis.travel();
 
 			travel.autopilot(true);
-
 			travel.forceDemat();
 		}
 	}
@@ -141,9 +140,8 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		TravelHandler travel = this.tardis().travel();
 
-		// TODO(travel): move this to travelhandler
-		//if (travel.getState() == TravelHandler.State.FLIGHT)
-		//	travel.crash();
+		if (server.getTicks() % 10 == 0 && travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
+			travel.crash();
 
 		if (this.isGenerating()) {
 			if (!this.tardis().alarm().isEnabled())
@@ -170,6 +168,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			clearedOldInterior = true;
 			return;
 		}
+
 		if (isInteriorEmpty() && clearedOldInterior) {
 			this.tardis().getDesktop().changeInterior(getQueuedInterior());
 			onCompletion();

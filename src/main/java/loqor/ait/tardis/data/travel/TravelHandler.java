@@ -204,9 +204,8 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
                 this.increaseSpeed();
         }
 
-        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis)
-                || tardis.door().isOpen() || tardis.isRefueling()
-                || TravelUtil.dematCooldown(this.tardis)
+        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL
+                || tardis.door().isOpen() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis)
                 || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
         ) {
             this.failDemat();
@@ -278,9 +277,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
     }
 
     public void rematerialize() {
-        boolean bypass = tardis.hasGrowthExterior();
-
-        if ((TardisEvents.MAT.invoker().onMat(tardis) || TravelUtil.matCooldownn(tardis)) && !bypass) {
+        if (TardisEvents.MAT.invoker().onMat(tardis) == TardisEvents.Interaction.FAIL || TravelUtil.matCooldownn(tardis)) {
             this.failRemat();
             return;
         }
