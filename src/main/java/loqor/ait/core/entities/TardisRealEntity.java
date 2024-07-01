@@ -207,8 +207,8 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
-		float f = controllingPlayer.sidewaysSpeed * 1.25f;
-		float g = controllingPlayer.forwardSpeed * 1.25f;
+		float f = controllingPlayer.sidewaysSpeed * 1.45f;
+		float g = controllingPlayer.forwardSpeed * 1.45f;
 
 		double v = controllingPlayer.getVelocity().y;
 		if (v < 0 && !controllingPlayer.isSneaking())
