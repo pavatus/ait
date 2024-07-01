@@ -137,8 +137,8 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
                 this.tardis().properties(), PropertiesHandler.FIND_GROUND)
         );
 
-        this.tardis().travel2().recalculate();
         this.forceDestination(cached);
+        this.tardis().travel().recalculate();
     }
 
     public void forceDestination(DirectedGlobalPos.Cached cached) {

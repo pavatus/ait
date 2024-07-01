@@ -48,24 +48,19 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
     }
 
     @Override
-    protected void speed(int value) {
-        super.speed(value);
-        this.tryFly();
-    }
-
-    @Override
     public void handbrake(boolean value) {
         super.handbrake(value);
         this.tryFly();
     }
 
     private void tryFly() {
-        int speed = this.speed.get();
-
-        if (speed > 0 && this.getState() == State.LANDED && !this.handbrake() && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC))
+        if (this.getState() == State.LANDED && !this.handbrake()
+                && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
             this.dematerialize();
+            return;
+        }
 
-        if (speed != 0 || this.getState() != State.FLIGHT)
+        if (this.speed.get() != 0 || this.getState() != State.FLIGHT)
             return;
 
         if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
@@ -297,8 +292,6 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
-
-        this.position.set(this.destination());
 
         // Play materialize sound at the destination
         this.position().getWorld().playSound(null,
