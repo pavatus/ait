@@ -92,11 +92,10 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     public DirectedGlobalPos.Cached getProgress() {
         if (this.isServer() && this.position().getWorld().getServer().getTicks() % 5 == 0) {
 
-            System.out.println("to: " + this.destination() + "; from: " + this.position() + "; %=" + this.getDurationAsPercentage() + "; res: " + TravelUtil.getPositionFromPercentage(
-                    this.destination(), this.position(), this.getDurationAsPercentage()
-            ) + "; alt: " + TravelUtil.getPositionFromPercentage(
+            System.out.println("to: " + this.destination().getPos() + "; from: " + this.position().getPos() + "; %=" + this.getDurationAsPercentage() +
+                    "; alt: " + TravelUtil.getPositionFromPercentage(
                     this.position(), this.destination(), this.getDurationAsPercentage()
-            ));
+            ).getPos());
         }
         return TravelUtil.getPositionFromPercentage(
                 this.position(), this.destination(), this.getDurationAsPercentage()
