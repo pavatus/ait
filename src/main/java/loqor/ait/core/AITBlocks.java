@@ -64,7 +64,7 @@ public class AITBlocks implements BlockRegistryContainer {
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
 
-    public static final Block PEANUT = new Block(FabricBlockSettings.copy(Blocks.BEDROCK).emissiveLighting((state, world, pos) -> true).luminance(value -> -128));
+    public static final Block PEANUT = new Block(FabricBlockSettings.copy(Blocks.OBSIDIAN).emissiveLighting((state, world, pos) -> true));
     /*public static final Block CONSOLE_ROOM_PORT_BLOCK = new ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));
     public static final Block ENGINE_ROOM_PORT_BLOCK = new EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()

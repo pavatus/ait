@@ -45,10 +45,7 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
 		return this.preview;
 	}
 
-	/**
-	 * Decides whether this desktop should be auto-unlocked on creation.
-	 * aka - freebee, freeby
-	 */
+	@Override
 	public boolean freebie() {
 		return true;
 	}
