@@ -72,7 +72,10 @@ public abstract class ExteriorAnimation {
 			case DEMAT, LANDED -> 1f;
 			case MAT -> 0f;
 
-			default -> throw new IllegalStateException("Unreachable.");
+			default -> {
+				AITMod.LOGGER.error("Can't get alpha for a TARDIS in FLIGHT state! Using default!");
+				yield  1;
+			}
 		};
 
 		this.tellClientsToSetup(state);
