@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
@@ -31,7 +32,7 @@ public class DatapackSonic extends SonicSchema {
             ).apply(instance, DatapackSonic::new));
 
     public DatapackSonic(Identifier id, String name, Models models, Optional<Rendering> rendering, Loyalty loyalty) {
-        super(id, name, models, rendering.orElse(new Rendering()), loyalty);
+        super(id, Text.translatable(name), models, rendering.orElse(new Rendering()), loyalty);
     }
 
     public static SonicSchema fromInputStream(InputStream stream) {
