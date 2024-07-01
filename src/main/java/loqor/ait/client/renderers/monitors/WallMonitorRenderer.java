@@ -5,8 +5,8 @@ import loqor.ait.client.models.decoration.PlaqueModel;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -76,12 +76,12 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         BlockPos abpdPos = abpd.getPos();
 
         String positionPosText = abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
-        Text positionDimensionText = DimensionControl.dimensionText(abpp.getDimension());
+        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
 
         String fuelText = Math.round((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%";
 
         String destinationPosText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text destinationDimensionText = DimensionControl.dimensionText(abpd.getDimension());
+        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
 
         float v = -20f;
 

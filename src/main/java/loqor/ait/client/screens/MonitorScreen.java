@@ -11,11 +11,11 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -375,13 +375,13 @@ public class MonitorScreen extends ConsoleScreen {
         BlockPos abpdPos = abpd.getPos();
 
         String positionText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text dimensionText = DimensionControl.dimensionText(abpd.getDimension());
+        Text dimensionText = WorldUtil.worldText(abpd.getDimension());
 
         BlockPos dabpdPos = dabpd.getPos();
 
         String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
         String destinationText = dabpdPos.getX() + ", " + dabpdPos.getY() + ", " + dabpdPos.getZ();
-		Text dDimensionText = DimensionControl.dimensionText(dabpd.getDimension());
+		Text dDimensionText = WorldUtil.worldText(dabpd.getDimension());
         String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
 
         // position

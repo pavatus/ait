@@ -1,11 +1,11 @@
 package loqor.ait.tardis.control.impl;
 
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -54,30 +54,10 @@ public class DimensionControl extends Control {
 
 	private void messagePlayer(ServerPlayerEntity player, ServerWorld world) {
 		Text message = Text.translatable("message.ait.tardis.control.dimension.info").append(
-				dimensionText(world.getRegistryKey())
+				WorldUtil.worldText(world.getRegistryKey())
 		);
 
-		player.sendMessage(message, true); // fixme translatable is preferred
-	}
-
-	public static Text dimensionText(RegistryKey<World> key) {
-		return Text.translatable(key.getValue().toTranslationKey("dimension"));
-	}
-
-	// @TODO for some reason in the dev env, this method tends to not like doing anything sometimes. idk, it works or it doesnt, but in builds, it always works. funny what a lil spaghetti man can tell you at 3 am
-	@Deprecated(forRemoval = true)
-	public static String convertWorldValueToModified(String value) {
-
-		// Split the string into words
-		String[] words = value.split("_");
-
-		// Capitalize the first letter of each word
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-		}
-
-		// Join the words back together with spaces
-		return String.join(" ", words);
+		player.sendMessage(message, true);
 	}
 
 	public static List<ServerWorld> getDimensions(MinecraftServer server) {

@@ -3,6 +3,7 @@ package loqor.ait.core.item;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.Waypoint;
+import loqor.ait.core.util.WorldUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.DyeableItem;
@@ -10,7 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -19,8 +20,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
-import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class WaypointItem extends Item implements DyeableItem {
 	public static final String POS_KEY = "pos";
@@ -47,10 +46,11 @@ public class WaypointItem extends Item implements DyeableItem {
 			return;
 
 		NbtCompound nbt = main.getCompound(POS_KEY);
+		DirectedGlobalPos globalPos = DirectedGlobalPos.fromNbt(nbt);
 
-		BlockPos pos = NbtHelper.toBlockPos(nbt.getCompound("pos"));
-		String dimension = nbt.getString("dimension");
-		Direction dir = Direction.byId(nbt.getInt("direction"));
+		BlockPos pos = globalPos.getPos();
+		Direction dir = Direction.byId(globalPos.getRotation());
+		RegistryKey<World> dimension = globalPos.getDimension();
 
 		tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
 						" > " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ()))
@@ -61,7 +61,7 @@ public class WaypointItem extends Item implements DyeableItem {
 				.formatted(Formatting.BLUE));
 
 		tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(
-						" > " + convertWorldValueToModified(dimension)))
+						" > ").append(WorldUtil.worldText(dimension)))
 				.formatted(Formatting.BLUE));
 	}
 

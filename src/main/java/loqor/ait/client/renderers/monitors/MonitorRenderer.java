@@ -4,8 +4,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.monitors.CRTMonitorModel;
 import loqor.ait.core.blockentities.MonitorBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -78,7 +78,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		BlockPos abpdPos = abpd.getPos();
 
 		String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
-		Text positionDimensionText = DimensionControl.dimensionText(abpp.getDimension());
+		Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
 		String positionDirectionText = " " + DirectionControl.rotationToDirection(abpp.getRotation()).toUpperCase();
 
 		this.textRenderer.drawWithOutline(Text.of("❌").asOrderedText(), 0, 0, 0xF00F00, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
@@ -87,7 +87,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		this.textRenderer.drawWithOutline(Text.of(positionDirectionText).asOrderedText(), 0, 24, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
 		String destinationPosText = " " + abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-		Text destinationDimensionText = DimensionControl.dimensionText(abpd.getDimension());
+		Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
 		String destinationDirectionText = " " + DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
 
 		this.textRenderer.drawWithOutline(Text.of("✛").asOrderedText(), 0, 40, 0x00F0FF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
