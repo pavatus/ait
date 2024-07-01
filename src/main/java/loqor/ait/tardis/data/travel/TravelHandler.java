@@ -248,7 +248,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.runAnimations();
 
-        //this.startFlight();
+        this.startFlight();
     }
 
     public void finishDemat() {

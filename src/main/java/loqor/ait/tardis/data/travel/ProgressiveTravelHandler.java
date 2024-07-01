@@ -102,7 +102,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
             System.out.println("to: " + this.destination().getPos() + "; from: " + this.position().getPos() + "; %=" + this.getDurationAsPercentage() +
                     "; alt: " + TravelUtil.getPositionFromPercentage(
                     this.position(), this.destination(), 100 - this.getDurationAsPercentage()
-            ).getPos());
+            ).getPos() + "; ft: " + this.getFlightTicks() + "; tt: " + this.getTargetTicks());
         }
         return TravelUtil.getPositionFromPercentage(
                 this.position(), this.destination(), this.getDurationAsPercentage()

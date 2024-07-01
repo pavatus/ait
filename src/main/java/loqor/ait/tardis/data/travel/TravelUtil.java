@@ -1,5 +1,6 @@
 package loqor.ait.tardis.data.travel;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
@@ -59,6 +60,7 @@ public class TravelUtil {
         Random random = TardisUtil.random();
         multiplier *= random.nextInt(0, 2) == 0 ? 1 : -1;
 
+        AITMod.LOGGER.info("JUKED POS!");
         return pos.offset(random.nextInt(min, max) * multiplier, 0,
                 random.nextInt(min, max) * multiplier
         );
