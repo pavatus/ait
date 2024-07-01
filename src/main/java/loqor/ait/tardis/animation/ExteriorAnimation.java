@@ -74,7 +74,7 @@ public abstract class ExteriorAnimation {
 
 			default -> {
 				AITMod.LOGGER.error("Can't get alpha for a TARDIS in FLIGHT state! Using default!");
-				yield  1;
+				yield 0;
 			}
 		};
 
