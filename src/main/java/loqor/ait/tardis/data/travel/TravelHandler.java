@@ -337,6 +337,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
     @Override
     protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
+        if (true) return destination;
         ServerWorld world = destination.getWorld();
         BlockPos.Mutable temp = destination.getPos().mutableCopy();
 
