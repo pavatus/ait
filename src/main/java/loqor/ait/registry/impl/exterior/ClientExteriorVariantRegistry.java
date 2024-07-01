@@ -151,6 +151,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema BOOTH_SOUL;
 	public static ClientExteriorVariantSchema BOOTH_VINTAGE;
 	public static ClientExteriorVariantSchema BOOTH_BLUE;
+	public static ClientExteriorVariantSchema BOOTH_GILDED;
 	public static ClientExteriorVariantSchema HEAD_DEFAULT;
 	public static ClientExteriorVariantSchema HEAD_SOUL;
 	public static ClientExteriorVariantSchema HEAD_FIRE;
@@ -204,6 +205,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		BOOTH_SOUL = register(new ClientBoothSoulVariant());
 		BOOTH_VINTAGE = register(new ClientBoothVintageVariant());
 		BOOTH_BLUE = register(new ClientBoothBlueVariant());
+		BOOTH_GILDED = register(new ClientBoothGildedVariant());
 
 		// Easter Head
 		HEAD_DEFAULT = register(new ClientEasterHeadDefaultVariant());

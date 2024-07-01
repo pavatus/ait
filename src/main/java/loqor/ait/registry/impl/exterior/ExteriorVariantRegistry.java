@@ -147,6 +147,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema BOOTH_SOUL;
 	public static ExteriorVariantSchema BOOTH_VINTAGE;
 	public static ExteriorVariantSchema BOOTH_BLUE;
+	public static ExteriorVariantSchema BOOTH_GILDED;
 	public static ExteriorVariantSchema HEAD_DEFAULT;
 	public static ExteriorVariantSchema HEAD_SOUL;
 	public static ExteriorVariantSchema HEAD_FIRE;
@@ -200,6 +201,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		BOOTH_SOUL = register(new BoothSoulVariant());
 		BOOTH_VINTAGE = register(new BoothVintageVariant());
 		BOOTH_BLUE = register(new BoothBlueVariant());
+		BOOTH_GILDED = register(new BoothGildedVariant());
 
 		// Easter Head
 		HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
