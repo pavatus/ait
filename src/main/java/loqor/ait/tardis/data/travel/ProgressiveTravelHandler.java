@@ -99,7 +99,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
             ));
         }
         return TravelUtil.getPositionFromPercentage(
-                this.destination(), this.position(), this.getDurationAsPercentage()
+                this.position(), this.destination(), this.getDurationAsPercentage()
         );
     }
 
