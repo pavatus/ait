@@ -140,6 +140,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 						}
 						shouldTriggerLandSound = true;
 					}
+
 					if (user.isSneaking()) {
 						// TODO(travel): replace with proper travel method
 						getTardis().travel().immediatelyLandHere(DirectedGlobalPos.Cached.create(
@@ -176,7 +177,7 @@ public class TardisRealEntity extends LinkableLivingEntity {
 				this.dataTracker.set(PLAYER_UUID, Optional.empty());
 
 				// TODO(travel): replace with proper travel method
-				//this.getTardis().travel2().immediatelyLandAt(getTardis().travel2().position());
+				this.getTardis().travel().immediatelyLandHere(getTardis().travel().position());
 				this.discard();
 			}
 		}
