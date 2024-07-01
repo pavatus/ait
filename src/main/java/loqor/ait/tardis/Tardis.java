@@ -183,8 +183,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
-		return unlockable.getRequirement() == Loyalty.MIN
-				|| this.stats().isUnlocked(unlockable);
+		return unlockable.getRequirement() == Loyalty.MIN || unlockable.freebie() || this.stats().isUnlocked(unlockable);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

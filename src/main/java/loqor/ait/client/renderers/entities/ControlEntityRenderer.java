@@ -73,7 +73,7 @@ public class ControlEntityRenderer
 			if (isPlayerLookingWithSonic) {
 				textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
 
-				if (entity.getControl() instanceof RefuelerControl) {
+				if (entity.getControl() instanceof RefuelerControl || entity.getIdentity().equals("RefuelerControl")) {
 					Text fuelLevel = Text.literal((int) ((entity.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%");
 					textRenderer.drawWithOutline(fuelLevel.asOrderedText(), h / 2, (float) fuelLevel.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
 				}
@@ -83,7 +83,7 @@ public class ControlEntityRenderer
 		if (hitresult != null) {
 			boolean isPlayerHoldingScanningSonic = isScanningSonicInConsole(entity);
 			PlayerEntity player = MinecraftClient.getInstance().player;
-			if (isPlayerHoldingScanningSonic && entity.getTardis().getHandlers().getLoyalties().get(player).level() < Loyalty.Type.PILOT.level) {
+			if (isPlayerHoldingScanningSonic && entity.getTardis().loyalty().get(player).isOf(Loyalty.Type.PILOT)) {
 				if (entity.isPartOfSequence()) {
 					matrices.push();
 					matrices.scale(0.4f, 0.4f, 0.4f);

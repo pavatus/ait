@@ -1,6 +1,5 @@
 {
   "id": "ait:fob",
-  "name": "Fob",
   "models": {
     "inactive": "ait:item/sonic/fob/inactive",
     "interaction": "ait:item/sonic/fob/interaction",

@@ -33,7 +33,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 
 	@Override
 	protected void onInit(InitContext ctx) {
-		AITMod.LOGGER.info("RAHHH THM INIT");
 		this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
 		this.forEach(component -> component.postInit(ctx));
 	}

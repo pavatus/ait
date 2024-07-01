@@ -1,6 +1,5 @@
 {
   "id": "ait:renaissance",
-  "name": "Renaissance",
   "models": {
     "inactive": "ait:item/sonic/renaissance/inactive",
     "interaction": "ait:item/sonic/renaissance/interaction",

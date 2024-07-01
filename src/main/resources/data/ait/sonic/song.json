@@ -1,6 +1,5 @@
 {
   "id": "ait:song",
-  "name": "Song",
   "models": {
     "inactive": "ait:item/sonic/song/inactive",
     "interaction": "ait:item/sonic/song/interaction",

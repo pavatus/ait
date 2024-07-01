@@ -109,9 +109,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	public Control getControl() {
-		if (control == null)
-			return null; // exploding head emoji
-
 		return control;
 	}
 
@@ -281,9 +278,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
 
 	// clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
 	public Tardis getTardis(World world) {
-		if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
+		if (this.consoleBlockPos == null || this.control == null || !(world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
 			return null;
 
+        System.out.println("haha, control: " + console);
 		return console.tardis().get();
 	}
 
@@ -304,6 +302,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		this.control = type.getControl();
 
 		if (consoleType != null) {
+			this.setIdentity(this.control.getClass().getSimpleName());
 			this.setControlWidth(type.getScale().width);
 			this.setControlHeight(type.getScale().height);
 			this.setCustomName(Text.translatable(type.getControl().id));

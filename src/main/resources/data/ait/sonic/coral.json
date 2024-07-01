@@ -1,6 +1,5 @@
 {
   "id": "ait:coral",
-  "name": "Coral",
   "models": {
     "inactive": "ait:item/sonic/coral/inactive",
     "interaction": "ait:item/sonic/coral/interaction",

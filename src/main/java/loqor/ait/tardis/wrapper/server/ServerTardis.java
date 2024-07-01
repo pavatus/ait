@@ -87,10 +87,9 @@ public class ServerTardis extends Tardis {
 	protected void generateInteriorWithItem() {
 		TardisUtil.getEntitiesInInterior(this, 50)
 				.stream()
-				.filter(entity -> (entity instanceof ItemEntity) &&
-						(((ItemEntity) entity).getStack().getItem() == Items.NETHER_STAR ||
-								isChargedCrystal(((ItemEntity) entity).getStack())) &&
-						entity.isTouchingWater()).forEach(entity -> {
+				.filter(entity -> entity instanceof ItemEntity item && (item.getStack().getItem() == Items.NETHER_STAR
+						|| isChargedCrystal(item.getStack())) && entity.isTouchingWater()
+				).forEach(entity -> {
 					DirectedGlobalPos position = this.travel().position();
 
 					if (position == null)

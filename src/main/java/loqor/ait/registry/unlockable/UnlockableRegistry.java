@@ -30,7 +30,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     @Override
     @Deprecated
     public T getRandom(Random random) {
-        AITMod.LOGGER.warn("Using plain random in an unlockable registry! Class: " + this.getClass());
+        AITMod.LOGGER.warn("Using plain random in an unlockable registry! Class: {}", this.getClass());
         return super.getRandom(random);
     }
 
@@ -50,7 +50,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
 
     public void tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
         for (T schema : REGISTRY.values()) {
-            if (schema.getRequirement() == Loyalty.MIN)
+            if (schema.getRequirement() == Loyalty.MIN || schema.freebie())
                 continue;
 
             if (tardis.isUnlocked(schema))

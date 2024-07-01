@@ -1,6 +1,5 @@
 {
   "id": "ait:copper",
-  "name": "Copper",
   "models": {
     "inactive": "ait:item/sonic/copper/inactive",
     "interaction": "ait:item/sonic/copper/interaction",

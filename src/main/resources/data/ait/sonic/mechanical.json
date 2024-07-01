@@ -1,6 +1,5 @@
 {
   "id": "ait:mechanical",
-  "name": "Mechanical",
   "models": {
     "inactive": "ait:item/sonic/mechanical/inactive",
     "interaction": "ait:item/sonic/mechanical/interaction",

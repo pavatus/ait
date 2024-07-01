@@ -74,7 +74,6 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
         Loyalty current = this.get(player);
         current = consumer.apply(current);
 
-        this.unlock(player, current);
         this.set(player, current);
     }
 
