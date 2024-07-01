@@ -36,12 +36,13 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
             return tardis.door().isOpen();
         }));
 
-		TardisEvents.LANDED.register(tardis -> {
+		TardisEvents.MAT.register(tardis -> {
 			if (!tardis.isGrowth())
-				return;
+				return true;
 
 			tardis.getExterior().setType(CategoryRegistry.CAPSULE);
-		});
+            return true;
+        });
 	}
 
 	private void setGenerating(boolean var) {
