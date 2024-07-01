@@ -70,7 +70,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     // TODO inline
     private void onFlightFinished() {
         this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
-        //this.resetFlight();
+        this.resetFlight();
 
         if (this.autopilot.get() && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
             this.tardis().travel().rematerialize();
