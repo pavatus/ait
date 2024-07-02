@@ -1,6 +1,7 @@
 package loqor.ait.core.entities;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
@@ -56,9 +57,13 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 		super(entityType, world);
 	}
 
-	public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world, Tardis tardis) {
-		this(entityType, world);
+	private ConsoleControlEntity(World world, Tardis tardis) {
+		this(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
 		this.link(tardis);
+	}
+
+	public static ConsoleControlEntity create(World world, Tardis tardis) {
+		return new ConsoleControlEntity(world, tardis);
 	}
 
 	@Override

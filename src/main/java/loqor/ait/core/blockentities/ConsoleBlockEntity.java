@@ -3,7 +3,6 @@ package loqor.ait.core.blockentities;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
@@ -184,7 +183,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 		ControlTypes[] controls = consoleType.getControlTypes();
 
 		for (ControlTypes control : controls) {
-			ConsoleControlEntity controlEntity = new ConsoleControlEntity(AITEntityTypes.CONTROL_ENTITY_TYPE, this.world, this.tardis().get());
+			ConsoleControlEntity controlEntity = ConsoleControlEntity.create(this.world, this.tardis().get());
 
 			Vector3f position = current.toCenterPos().toVector3f().add(control.getOffset().x(), control.getOffset().y(), control.getOffset().z());
 			controlEntity.setPosition(position.x(), position.y(), position.z());
