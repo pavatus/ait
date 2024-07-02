@@ -50,7 +50,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
     @Override
     public void speed(int value) {
         super.speed(value);
-        this.tryFly(this.handbrake());
+        this.tryFly();
     }
 
     @Override
