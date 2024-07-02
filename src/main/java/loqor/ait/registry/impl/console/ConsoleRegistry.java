@@ -32,6 +32,6 @@ public class ConsoleRegistry {
 		TOYOTA = register(new ToyotaType());
 		ALNICO = register(new AlnicoType());
 		STEAM = register(new SteamType());
-		HUDOLIN = register(new HudolinType());
+		//HUDOLIN = register(new HudolinType());
 	}
 }
