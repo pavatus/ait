@@ -5,6 +5,7 @@ import io.wispforest.owo.config.annotation.Modmenu;
 import io.wispforest.owo.config.annotation.SectionHeader;
 import loqor.ait.AITMod;
 
+@SuppressWarnings("unused")
 @Modmenu(modId = AITMod.MOD_ID)
 @Config(name = "aitconfig", wrapperName = "AITConfig")
 public class AITConfigModel {
@@ -21,4 +22,5 @@ public class AITConfigModel {
 	public boolean SHOW_EXPERIMENTAL_WARNING = false;
 	public boolean ENVIRONMENT_PROJECTOR = true;
 	public boolean DISABLE_CONSOLE_ANIMATIONS = false;
+	public boolean DISABLE_LOYALTY_FOG = false;
 }
