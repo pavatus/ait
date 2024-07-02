@@ -65,7 +65,8 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     public boolean isInFlight() {
-        return this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT;
+        Tardis tardis = this.tardis();
+        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT);
     }
 
     public void tick(MinecraftClient client) {
