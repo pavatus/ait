@@ -5,7 +5,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;

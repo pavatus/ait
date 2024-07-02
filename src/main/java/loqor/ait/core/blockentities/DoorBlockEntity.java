@@ -13,7 +13,7 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

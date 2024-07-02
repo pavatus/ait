@@ -1,10 +1,12 @@
 package loqor.ait.core.entities;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.entities.base.LinkableDummyLivingEntity;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
@@ -12,6 +14,7 @@ import loqor.ait.tardis.control.ControlTypes;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -21,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -38,7 +40,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class ConsoleControlEntity extends BaseControlEntity {
+public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
 	private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);
 	private static final TrackedData<Float> WIDTH = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -51,13 +53,23 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	private BlockPos consoleBlockPos;
 	private Control control;
 
-	public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
+	public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
+	private ConsoleControlEntity(World world, Tardis tardis) {
+		this(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
+		this.link(tardis);
+	}
+
+	public static ConsoleControlEntity create(World world, Tardis tardis) {
+		return new ConsoleControlEntity(world, tardis);
+	}
+
 	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-		super.onSpawnPacket(packet);
+	public void remove(RemovalReason reason) {
+		AITMod.LOGGER.debug("Control entity discarded as {}", reason);
+		super.remove(reason);
 	}
 
 	@Override
@@ -72,7 +84,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	@Override
-	protected void initDataTracker() {
+	public void initDataTracker() {
 		super.initDataTracker();
 
 		this.dataTracker.startTracking(IDENTITY, "");
@@ -82,6 +94,146 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
 		this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
 		this.dataTracker.startTracking(WAS_SEQUENCED, false);
+	}
+
+	@Override
+	public void writeCustomDataToNbt(NbtCompound nbt) {
+		super.writeCustomDataToNbt(nbt);
+
+		if (consoleBlockPos != null)
+			nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
+
+		nbt.putString("identity", this.getIdentity());
+		nbt.putFloat("width", this.getControlWidth());
+		nbt.putFloat("height", this.getControlHeight());
+		nbt.putFloat("offsetX", this.getOffset().x());
+		nbt.putFloat("offsetY", this.getOffset().y());
+		nbt.putFloat("offsetZ", this.getOffset().z());
+		nbt.putBoolean("partOfSequence", this.isPartOfSequence());
+		nbt.putInt("sequenceColor", this.getSequenceColor());
+		nbt.putBoolean("wasSequenced", this.wasSequenced());
+	}
+
+	@Override
+	public void readCustomDataFromNbt(NbtCompound nbt) {
+		super.readCustomDataFromNbt(nbt);
+
+		NbtCompound console = nbt.getCompound("console");
+
+		if (console != null)
+			this.consoleBlockPos = NbtHelper.toBlockPos(console);
+
+		if (nbt.contains("identity"))
+			this.setIdentity(nbt.getString("identity"));
+
+		if (nbt.contains("width") && nbt.contains("height")) {
+			this.setControlWidth(nbt.getFloat("width"));
+			this.setControlWidth(nbt.getFloat("height"));
+			this.calculateDimensions();
+		}
+
+		if (nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ"))
+			this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
+
+		if (nbt.contains("partOfSequence"))
+			this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
+
+		if (nbt.contains("sequenceColor"))
+			this.setSequenceColor(nbt.getInt("sequenceColor"));
+
+		if (nbt.contains("wasSequenced"))
+			this.setWasSequenced(nbt.getBoolean("wasSequenced"));
+	}
+
+	@Override
+	public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
+		this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
+	}
+
+	@Override
+	public void onTrackedDataSet(TrackedData<?> data) {
+		super.onTrackedDataSet(data);
+
+		if (!this.getWorld().isClient())
+			return;
+
+		if (PART_OF_SEQUENCE.equals(data)) {
+			this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
+		} else if (SEQUENCE_COLOR.equals(data)) {
+			this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
+		} else if (WAS_SEQUENCED.equals(data)) {
+			this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
+		}
+	}
+
+	@Override
+	public ActionResult interact(PlayerEntity player, Hand hand) {
+		ItemStack handStack = player.getStackInHand(hand);
+
+		if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
+			controlEditorHandler(player);
+			return ActionResult.SUCCESS;
+		}
+
+		handStack.useOnEntity(player, this, hand);
+
+		if (handStack.getItem() instanceof ControlBlockItem)
+			return ActionResult.FAIL;
+
+		if (hand == Hand.MAIN_HAND)
+			this.run(player, player.getWorld(), false);
+
+		return ActionResult.SUCCESS;
+	}
+
+	@Override
+	public boolean damage(DamageSource source, float amount) {
+		if (source.getAttacker() instanceof PlayerEntity player) {
+			if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
+				controlEditorHandler(player);
+			} else this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
+		}
+
+		return super.damage(source, amount);
+	}
+
+	@Override
+	public boolean isAttackable() {
+		return true;
+	}
+
+	@Override
+	public Text getName() {
+		if (this.control != null) return Text.translatable(this.control.getId());
+		else return super.getName();
+	}
+
+	@Override
+	public EntityDimensions getDimensions(EntityPose pose) {
+		if (this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
+			return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
+
+		return super.getDimensions(pose);
+	}
+
+	@Nullable
+	@Override
+	protected SoundEvent getHurtSound(DamageSource source) {
+		return SoundEvents.INTENTIONALLY_EMPTY;
+	}
+
+	@Override
+	public void tick() {
+		if (this.getWorld().isClient())
+			return;
+
+		if (this.control == null && this.consoleBlockPos != null)
+			this.discard();
+	}
+
+	@Override
+	public boolean shouldRenderName() {
+		return true;
 	}
 
 	public String getIdentity() {
@@ -143,103 +295,13 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	public boolean isPartOfSequence() {
 		return this.dataTracker.get(PART_OF_SEQUENCE);
 	}
+
 	public void createDelay(long millis) {
-		Control.createDelay(this.getControl(), this.getTardis(), millis);
+		Control.createDelay(this.getControl(), this.tardis().get(), millis);
 	}
 
 	public boolean isOnDelay() {
-		return Control.isOnDelay(this.getControl(), this.getTardis());
-	}
-
-	@Override
-	public void writeCustomDataToNbt(NbtCompound nbt) {
-		super.writeCustomDataToNbt(nbt);
-
-		if (consoleBlockPos != null)
-			nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
-
-		nbt.putString("identity", this.getIdentity());
-		nbt.putFloat("width", this.getControlWidth());
-		nbt.putFloat("height", this.getControlHeight());
-		nbt.putFloat("offsetX", this.getOffset().x());
-		nbt.putFloat("offsetY", this.getOffset().y());
-		nbt.putFloat("offsetZ", this.getOffset().z());
-		nbt.putBoolean("partOfSequence", this.isPartOfSequence());
-		nbt.putInt("sequenceColor", this.getSequenceColor());
-		nbt.putBoolean("wasSequenced", this.wasSequenced());
-	}
-
-	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt) {
-		super.readCustomDataFromNbt(nbt);
-
-		NbtCompound console = nbt.getCompound("console");
-
-		if (console != null)
-			this.consoleBlockPos = NbtHelper.toBlockPos(console);
-
-		if (nbt.contains("identity"))
-			this.setIdentity(nbt.getString("identity"));
-
-		if (nbt.contains("width") && nbt.contains("height")) {
-			this.setControlWidth(nbt.getFloat("width"));
-			this.setControlWidth(nbt.getFloat("height"));
-			this.calculateDimensions();
-		}
-
-		if (nbt.contains("offsetX") && nbt.contains("offsetY") && nbt.contains("offsetZ"))
-			this.setOffset(new Vector3f(nbt.getFloat("offsetX"), nbt.getFloat("offsetY"), nbt.getFloat("offsetZ")));
-
-		if (nbt.contains("partOfSequence"))
-			this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
-
-		if (nbt.contains("sequenceColor"))
-			this.setSequenceColor(nbt.getInt("sequenceColor"));
-
-		if (nbt.contains("wasSequenced"))
-			this.setWasSequenced(nbt.getBoolean("wasSequenced"));
-	}
-
-	@Override
-	public boolean cannotDespawn() {
-		return true;
-	}
-
-	@Override
-	public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-		ItemStack handStack = player.getStackInHand(hand);
-
-		if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
-			controlEditorHandler(player);
-			return ActionResult.SUCCESS;
-		}
-
-		handStack.useOnEntity(player, this, hand);
-
-		if (handStack.getItem() instanceof ControlBlockItem)
-			return ActionResult.FAIL;
-
-		if (hand == Hand.MAIN_HAND)
-			this.run(player, player.getWorld(), false);
-
-		return ActionResult.SUCCESS;
-	}
-
-	@Override
-	public boolean damage(DamageSource source, float amount) {
-		if (source.getAttacker() instanceof PlayerEntity player) {
-			if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
-				controlEditorHandler(player);
-			} else this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
-		}
-
-		return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
-	}
-
-	@Override
-	public void remove(RemovalReason reason) {
-		AITMod.LOGGER.debug("Control entity discarded as {}", reason);
-		super.remove(reason);
+		return Control.isOnDelay(this.getControl(), this.tardis().get());
 	}
 
 	public boolean run(PlayerEntity player, World world, boolean leftClick) {
@@ -252,7 +314,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM)
 			this.remove(RemovalReason.DISCARDED);
 
-		Tardis tardis = this.getTardis(world);
+		Tardis tardis = this.tardis().get();
 
 		if (tardis == null) {
 			AITMod.LOGGER.warn("Discarding invalid control entity at {}; console pos: {}", this.getPos(), this.consoleBlockPos);
@@ -276,24 +338,10 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick); // i dont gotta check these cus i know its server
 	}
 
-	// clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
-	public Tardis getTardis(World world) {
-		if (this.consoleBlockPos == null || this.control == null || !(world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
-			return null;
-
-		return console.tardis().get();
-	}
-
 	public void setScaleAndCalculate(float width, float height) {
 		this.setControlWidth(width);
 		this.setControlHeight(height);
 		this.calculateDimensions();
-	}
-
-	@Override
-	public Text getName() {
-		if (this.control != null) return Text.translatable(this.control.getId());
-		else return super.getName();
 	}
 
 	public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
@@ -306,60 +354,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			this.setControlHeight(type.getScale().height);
 			this.setCustomName(Text.translatable(type.getControl().id));
 		}
-	}
-
-	@Override
-	public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
-		this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-	}
-
-	@Override
-	public void onTrackedDataSet(TrackedData<?> data) {
-		super.onTrackedDataSet(data);
-
-		if (!this.getWorld().isClient())
-			return;
-
-		if (PART_OF_SEQUENCE.equals(data)) {
-			this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-		} else if (SEQUENCE_COLOR.equals(data)) {
-			this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-		} else if (WAS_SEQUENCED.equals(data)) {
-			this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
-		}
-	}
-
-	@Override
-	public EntityDimensions getDimensions(EntityPose pose) {
-		if (this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
-			return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
-
-		return super.getDimensions(pose);
-	}
-
-	@Nullable
-	@Override
-	protected SoundEvent getHurtSound(DamageSource source) {
-		return SoundEvents.INTENTIONALLY_EMPTY;
-	}
-
-	@Override
-	public void tick() {
-		if (this.getWorld().isClient())
-			return;
-
-		if (this.control == null && this.consoleBlockPos != null)
-			this.discard();
-	}
-
-	@Override
-	public boolean doesRenderOnFire() {
-		return false;
-	}
-
-	@Override
-	public boolean shouldRenderName() {
-		return true;
 	}
 
 	public void controlEditorHandler(PlayerEntity player) {

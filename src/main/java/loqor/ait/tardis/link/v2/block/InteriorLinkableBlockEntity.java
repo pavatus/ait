@@ -1,7 +1,5 @@
-package loqor.ait.tardis.link.v2.interior;
+package loqor.ait.tardis.link.v2.block;
 
-import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.link.v2.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
@@ -19,17 +17,16 @@ public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockE
     public void setWorld(World world) {
         super.setWorld(world);
 
-        if (this.ref == null) {
-            this.ref = new TardisRef(
-                    TardisUtil.findTardisByInterior(pos, !world.isClient()),
-                    uuid -> TardisManager.with(this.world, (o, manager) ->
-                            manager.demandTardis(o, uuid))
-            );
+        if (this.ref != null)
+            return;
 
-            this.onLinked();
+        this.ref = TardisRef.createAs(this,
+                TardisUtil.findTardisByInterior(pos, !world.isClient())
+        );
 
-            this.sync();
-            this.markDirty();
-        }
+        this.onLinked();
+
+        this.sync();
+        this.markDirty();
     }
 }

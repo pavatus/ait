@@ -1,7 +1,7 @@
 package loqor.ait.core.blockentities;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
