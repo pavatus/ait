@@ -73,10 +73,11 @@ public class ControlEntityRenderer
 			if (isPlayerLookingWithSonic) {
 				textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
 
-				if (entity.getControl() instanceof RefuelerControl || entity.getIdentity().equals("RefuelerControl")) {
+				// TODO so this is like not very well received so er im removing it :))))
+				/*if (entity.getControl() instanceof RefuelerControl || entity.getIdentity().equals("RefuelerControl")) {
 					Text fuelLevel = Text.literal((int) ((entity.getTardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%");
 					textRenderer.drawWithOutline(fuelLevel.asOrderedText(), h / 2, (float) fuelLevel.getString().length(), 0xF0F0F0, 0x000000, matrix4f, vertexConsumers, 0xFF);
-				}
+				}*/
 			}
 		}
 		matrices.pop();

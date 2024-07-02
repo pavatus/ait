@@ -4,6 +4,7 @@ import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
 import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
+import loqor.ait.client.sounds.rwf.ClientRWFSoundsHandler;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,6 +20,7 @@ public class ClientSoundManager {
 	private static ClientFlightHandler flight;
 	private static ClientCreakHandler creak;
 	private static ClientVortexSoundsHandler vortexSounds;
+	private static ClientRWFSoundsHandler rwfsounds;
 
 	public static ClientHumHandler getHum() {
 		if (hum == null) {
@@ -42,6 +44,13 @@ public class ClientSoundManager {
 		}
 
 		return flight;
+	}
+
+	public static ClientRWFSoundsHandler getRWFSounds() {
+		if (rwfsounds == null) {
+			rwfsounds = ClientRWFSoundsHandler.create();
+		}
+		return rwfsounds;
 	}
 
 	public static ClientCreakHandler getCreaks() {
