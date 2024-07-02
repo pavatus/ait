@@ -8,8 +8,11 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
@@ -73,6 +76,26 @@ public abstract class DummyLivingEntity extends LivingEntity {
     public boolean isAttackable() {
         return false;
     }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.INTENTIONALLY_EMPTY;
+    }
+
+    @Override
+    public FallSounds getFallSounds() {
+        return new FallSounds(SoundEvents.INTENTIONALLY_EMPTY, SoundEvents.INTENTIONALLY_EMPTY);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.INTENTIONALLY_EMPTY;
+    }
+
+    @Override
+    protected void playBlockFallSound() { }
 
     public static DefaultAttributeContainer.Builder createDummyAttributes() {
         return MobEntity.createMobAttributes()

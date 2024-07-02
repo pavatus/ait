@@ -48,12 +48,10 @@ public class TardisRealEntity extends LinkableLivingEntity {
 	public static final TrackedData<Optional<UUID>> PLAYER_UUID;
 	public static final TrackedData<Optional<BlockPos>> PLAYER_INTERIOR_POSITION;
 
-	protected Vec3d lastVelocity;
 	private boolean shouldTriggerLandSound = false;
 
 	public TardisRealEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
-		this.lastVelocity = Vec3d.ZERO;
 	}
 
 	static {
@@ -103,9 +101,6 @@ public class TardisRealEntity extends LinkableLivingEntity {
 
 	@Override
 	public void tick() {
-		if (this.getWorld().isClient())
-			this.lastVelocity = this.getVelocity();
-
 		boolean gravs = PropertiesHandler.getBool(this.getTardis().properties(), PropertiesHandler.ANTIGRAVS_ENABLED);
 		this.setRotation(0, 0);
 
@@ -206,10 +201,6 @@ public class TardisRealEntity extends LinkableLivingEntity {
 			player.getAbilities().flying = flying;
 
 		player.sendAbilitiesUpdate();
-	}
-
-	public Vec3d lerpVelocity(float tickDelta) {
-		return this.lastVelocity.lerp(this.getVelocity(), tickDelta);
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -38,7 +37,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 
 public class DoorBlockEntity extends InteriorLinkableBlockEntity {
@@ -68,12 +66,12 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorPos);
 
 		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !tardis.areShieldsActive()) {
-			if(world.getRandom().nextBoolean()) {
-				List<ServerPlayerEntity> list = TardisUtil.getPlayersInsideInterior(tardis);
-				for (ServerPlayerEntity player : list) {
-					tardis.loyalty().set(player, Loyalty.fromLevel((int) (tardis.loyalty().get(player).level() - 0.15f)));
+			if (world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
+				for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+					tardis.loyalty().subLevel(player, 1);
 				}
 			}
+
 			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED,
 					exteriorBlockState.get(Properties.WATERLOGGED) && tardis.door().isOpen()
 			), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
