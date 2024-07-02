@@ -95,7 +95,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
     @Override
     public void postInit(InitContext context) {
         if (this.isServer() && context.created())
-            this.placeAndAnimate();
+            this.placeExterior(true);
     }
 
     public void deleteExterior() {
@@ -109,15 +109,18 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         ForcedChunkUtil.stopForceLoading(world, pos);
     }
 
-    public ExteriorBlockEntity placeAndAnimate() {
-        return placeExterior(true);
-    }
-
+    /**
+     * Places an exterior, animates it if `animate` is true and schedules a block update.
+     */
     public ExteriorBlockEntity placeExterior(boolean animate) {
-        return placeExterior(this.position(), animate);
+        return placeExterior(animate, true);
     }
 
-    private ExteriorBlockEntity placeExterior(DirectedGlobalPos.Cached globalPos, boolean animate) {
+    public ExteriorBlockEntity placeExterior(boolean animate, boolean schedule) {
+        return placeExterior(this.position(), animate, schedule);
+    }
+
+    private ExteriorBlockEntity placeExterior(DirectedGlobalPos.Cached globalPos, boolean animate, boolean schedule) {
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
@@ -129,9 +132,6 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         world.setBlockState(pos, blockState);
 
-        if (!PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED))
-            world.scheduleBlockTick(pos, AITBlocks.EXTERIOR_BLOCK, 2);
-
         ExteriorBlockEntity exterior = new ExteriorBlockEntity(pos, blockState, this.tardis);
         world.addBlockEntity(exterior);
 
@@ -140,6 +140,9 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
         biome.update();
+
+        if (schedule && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED))
+            world.scheduleBlockTick(pos, AITBlocks.EXTERIOR_BLOCK, 2);
 
         ForcedChunkUtil.keepChunkLoaded(world, pos);
         return exterior;
@@ -152,8 +155,8 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         this.forceDestination(globalPos);
         this.forcePosition(globalPos);
 
-        this.finishRemat();
         this.placeExterior(false);
+        this.finishRemat();
     }
 
     private void runAnimations(ExteriorBlockEntity exterior) {
@@ -308,7 +311,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         );
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
-        this.placeAndAnimate();
+        this.placeExterior(true, false); // we schedule block update in #finishRemat
     }
 
     public void finishRemat() {
@@ -316,9 +319,9 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             this.speed.set(0);
 
         this.state.set(State.LANDED);
-        this.position().getWorld().scheduleBlockTick(this.position().getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
         this.resetFlight();
 
+        this.position().getWorld().scheduleBlockTick(this.position().getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
         DoorData.lockTardis(PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis, null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
