@@ -316,6 +316,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             this.speed.set(0);
 
         this.state.set(State.LANDED);
+        this.position().getWorld().scheduleBlockTick(this.position().getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
         this.resetFlight();
 
         DoorData.lockTardis(PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis, null, false);

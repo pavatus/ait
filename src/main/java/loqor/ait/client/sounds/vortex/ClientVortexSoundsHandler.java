@@ -21,7 +21,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     public LoopingSound getVortexSound() {
-        if (VORTEX_SOUND == null && tardis() != null && tardis().getDesktop().doorPos().getPos() != null)
+        if (VORTEX_SOUND == null)
             VORTEX_SOUND = new PositionedLoopingSound(AITSounds.VORTEX_SOUND,
                     SoundCategory.AMBIENT,
                     tardis().getDesktop().doorPos().getPos(), 0.2f);
@@ -38,7 +38,10 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     private void generate() {
-        if (VORTEX_SOUND == null && tardis() != null && tardis().getDesktop().doorPos().getPos() != null)
+
+        if (tardis() == null) return;
+
+        if (VORTEX_SOUND == null && tardis().getDesktop().doorPos().getPos() != null)
             VORTEX_SOUND = new PositionedLoopingSound(AITSounds.VORTEX_SOUND,
                     SoundCategory.AMBIENT,
                     tardis().getDesktop().doorPos().getPos(), 0.2f);
@@ -60,8 +63,11 @@ public class ClientVortexSoundsHandler extends SoundHandler {
 
     public Tardis tardis() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-        return found;
+
+        if (player == null)
+            return null;
+
+        return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
     }
 
     public boolean isInFlight() {
@@ -70,12 +76,13 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     public void tick(MinecraftClient client) {
-        if (this.sounds == null) this.generate();
+        if (this.sounds == null)
+            this.generate();
 
         if (isPlayerInATardis() && isInFlight()) {
             this.startIfNotPlaying(getVortexSound());
         } else {
-            this.stopSounds();
+            this.stopSound(VORTEX_SOUND);
         }
     }
 }

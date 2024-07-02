@@ -421,7 +421,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
-		DoorData.lockTardis(tardis.door().previouslyLocked(), tardis, null, false);
+		DoorData.lockTardis(tardis.door().previouslyLocked() || tardis.getHandlers().getInteriorChanger().isGenerating(), tardis, null, false);
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
