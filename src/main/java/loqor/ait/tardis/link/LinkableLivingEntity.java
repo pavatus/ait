@@ -38,7 +38,7 @@ public abstract class LinkableLivingEntity extends LivingEntity {
         this.dataTracker.set(TARDIS_ID, Optional.of(UUID.fromString(nbt.getString("TardisID"))));
     }
 
-    public Tardis getTardis() {
+    public Tardis tardis() {
         UUID id = this.getTardisID();
 
         if (id == null)

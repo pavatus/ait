@@ -6,7 +6,7 @@ package loqor.ait.client.models.exteriors;// Made with Blockbench 4.10.1
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -123,20 +123,15 @@ public class BookshelfExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
 		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = realEntity.getTardis().door();
+		DoorData door = realEntity.tardis().get().door();
 
 		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
 		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
-
-		// hide the doors if we have portals to stop the dupe
-		//if (DependencyChecker.hasPortals())
-		//    this.TARDIS.getChild("Doors").visible = realEntity.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
-
 
 		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 

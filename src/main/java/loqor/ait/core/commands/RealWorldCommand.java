@@ -5,7 +5,6 @@ import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -44,7 +43,7 @@ public class RealWorldCommand {
 		TardisUtil.teleportOutside(tardis, source);
 		source.setInvisible(true);
 
-		TardisRealEntity.spawnFromTardisId(globalPos.getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
+		RealTardisEntity.spawnFromTardisId(globalPos.getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
 
 		Text textResponse = Text.translatableWithFallback("command.ait.realworld.response",
 				"Spawned a real world TARDIS at: ", spawnBlockPos

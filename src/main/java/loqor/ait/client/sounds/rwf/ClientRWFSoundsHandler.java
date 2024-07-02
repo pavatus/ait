@@ -2,22 +2,16 @@ package loqor.ait.client.sounds.rwf;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
-import loqor.ait.client.sounds.flight.InteriorFlightSound;
-import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 import java.util.ArrayList;
-import java.util.Properties;
 
 public class ClientRWFSoundsHandler extends SoundHandler {
 	public static LoopingSound RWFSOUND;
@@ -64,7 +58,7 @@ public class ClientRWFSoundsHandler extends SoundHandler {
 		if (player == null)
 			return null;
 
-		return player.getVehicle() instanceof TardisRealEntity realEntity && realEntity.getTardis() != null ? realEntity.getTardis() : null;
+		return player.getVehicle() instanceof RealTardisEntity realEntity && realEntity.tardis() != null ? realEntity.tardis() : null;
 	}
 
 	private void playFlightSound() {

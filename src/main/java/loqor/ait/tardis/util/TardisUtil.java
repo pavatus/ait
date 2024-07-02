@@ -14,7 +14,6 @@ import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
@@ -171,7 +170,7 @@ public class TardisUtil {
 
 						player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
-						if (player.getVehicle() instanceof TardisRealEntity real) {
+						if (player.getVehicle() instanceof RealTardisEntity real) {
 							DoorData.DoorStateEnum state = tardis.door().getDoorState();
 							if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
 								DoorData.useDoor(tardis, player.getServerWorld(), null, player);

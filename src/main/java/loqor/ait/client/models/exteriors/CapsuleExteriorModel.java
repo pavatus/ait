@@ -3,7 +3,7 @@ package loqor.ait.client.models.exteriors;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -87,13 +87,13 @@ public class CapsuleExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		if (realEntity.getTardis() == null) return;
+	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		if (realEntity.tardis() == null) return;
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
 
-		if (realEntity.getTardis() == null) return;
-		DoorData handler = realEntity.getTardis().door();
+		if (realEntity.tardis() == null) return;
+		DoorData handler = realEntity.tardis().get().door();
 
 		this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;

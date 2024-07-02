@@ -1,6 +1,5 @@
 package loqor.ait.tardis.control.impl;
 
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -40,7 +39,7 @@ public class AutoPilotControl extends Control {
 			TardisUtil.teleportOutside(tardis, player);
 
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
-			TardisRealEntity.spawnFromTardisId(tardis.travel().position().getWorld(), tardis.getUuid(), tardis.travel().position().getPos(), player, player.getBlockPos());
+			RealTardisEntity.spawnFromTardisId(tardis.travel().position().getWorld(), tardis.getUuid(), tardis.travel().position().getPos(), player, player.getBlockPos());
 			return true;
 		}
 

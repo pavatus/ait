@@ -12,7 +12,6 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.core.entities.TardisRealEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
@@ -268,7 +267,7 @@ public class AITMod implements ModInitializer {
 
 	public void entityAttributeRegister() {
 		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createDummyAttributes());
-		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealEntity.createLivingAttributes());
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, RealTardisEntity.createLivingAttributes());
 	}
 
 	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
