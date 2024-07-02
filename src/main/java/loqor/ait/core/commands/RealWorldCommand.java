@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -12,6 +13,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -43,7 +45,8 @@ public class RealWorldCommand {
 		TardisUtil.teleportOutside(tardis, source);
 		source.setInvisible(true);
 
-		RealTardisEntity.spawnFromTardisId(globalPos.getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
+		RealTardisEntity.create(globalPos.getWorld(), spawnBlockPos, source, tardis,
+				(byte) RotationPropertyHelper.fromYaw(source.getBodyYaw()));
 
 		Text textResponse = Text.translatableWithFallback("command.ait.realworld.response",
 				"Spawned a real world TARDIS at: ", spawnBlockPos

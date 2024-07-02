@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.entities.base.LinkableDummyLivingEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
@@ -20,6 +21,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
@@ -29,6 +31,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class RealTardisEntity extends LinkableDummyLivingEntity {
@@ -53,8 +56,23 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         this.setVelocity(Vec3d.ZERO);
     }
 
-    public static void create(World world, BlockPos spawnPos, ServerPlayerEntity player, Tardis tardis) {
-        if (world.isClient())
+    private static void teleportPlayer(PlayerEntity player, ServerWorld world, BlockPos pos, byte rotation) {
+        Vec3d center = pos.toCenterPos();
+
+        if (player.getWorld().getRegistryKey() == world.getRegistryKey()) {
+            player.refreshPositionAndAngles(center.x, center.y, center.z,
+                    RotationPropertyHelper.toDegrees(rotation), player.getPitch());
+            return;
+        }
+
+        player.teleport(world, center.x, center.y, center.z, Set.of(),
+                RotationPropertyHelper.toDegrees(rotation), player.getPitch()
+        );
+    }
+
+    // TODO: move this to RWF handler
+    public static void create(World world, BlockPos spawnPos, ServerPlayerEntity player, Tardis tardis, byte rotation) {
+        if (!(world instanceof ServerWorld serverWorld))
             return;
 
         TravelHandler travel = tardis.travel();
@@ -62,6 +80,8 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         RealTardisEntity tardisRealEntity = new RealTardisEntity(
                 world, spawnPos.toCenterPos(), player.getUuid(), player.getBlockPos(), tardis
         );
+
+        RealTardisEntity.teleportPlayer(player, serverWorld, spawnPos, rotation);
 
         tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(
                 DirectionControl.getGeneralizedRotation(travel.position().getRotation())
@@ -74,6 +94,11 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
 
         RealTardisEntity.updatePlayer(player, true, true);
         travel.finishDemat();
+    }
+
+    public static void create(ServerPlayerEntity player, Tardis tardis) {
+        DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+        create(globalPos.getWorld(), globalPos.getPos(), player, tardis, globalPos.getRotation());
     }
 
     @Override

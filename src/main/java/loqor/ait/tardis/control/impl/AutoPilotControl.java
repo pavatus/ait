@@ -1,9 +1,9 @@
 package loqor.ait.tardis.control.impl;
 
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,10 +36,8 @@ public class AutoPilotControl extends Control {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 
-			TardisUtil.teleportOutside(tardis, player);
-
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1, 1, false, false, false));
-			RealTardisEntity.spawnFromTardisId(tardis.travel().position().getWorld(), tardis.getUuid(), tardis.travel().position().getPos(), player, player.getBlockPos());
+			RealTardisEntity.create(player, tardis);
 			return true;
 		}
 

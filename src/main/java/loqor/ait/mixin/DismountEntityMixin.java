@@ -1,5 +1,6 @@
 package loqor.ait.mixin;
 
+import loqor.ait.core.entities.RealTardisEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,8 +19,7 @@ public abstract class DismountEntityMixin extends Entity {
 
     @Inject(method = "shouldDismount", at = @At("HEAD"), cancellable = true)
     private void ait$shouldDismount(CallbackInfoReturnable<Boolean> cir) {
-        if(this.getVehicle() instanceof RealTardisEntity) {
+        if(this.getVehicle() instanceof RealTardisEntity)
             cir.setReturnValue(false);
-        }
     }
 }

@@ -4,6 +4,7 @@ import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.SoundHandler;
@@ -58,7 +59,8 @@ public class ClientRWFSoundsHandler extends SoundHandler {
 		if (player == null)
 			return null;
 
-		return player.getVehicle() instanceof RealTardisEntity realEntity && realEntity.tardis() != null ? realEntity.tardis() : null;
+		return player.getVehicle() instanceof RealTardisEntity realEntity
+				&& realEntity.tardis() != null ? realEntity.tardis().get() : null;
 	}
 
 	private void playFlightSound() {
