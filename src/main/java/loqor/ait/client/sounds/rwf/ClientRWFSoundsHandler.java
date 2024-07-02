@@ -6,7 +6,6 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.SoundHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -69,9 +68,10 @@ public class ClientRWFSoundsHandler extends SoundHandler {
 	}
 
 	private boolean shouldPlaySounds(MinecraftClient client) {
-		if(client.player == null || tardis() == null) return false;
+		if (client.player == null || tardis() == null)
+			return false;
 
-		return PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT) && !client.player.getVehicle().isOnGround();
+		return this.tardis().flight().isActive() && !client.player.getVehicle().isOnGround();
 	}
 
 	public void tick(MinecraftClient client) {

@@ -909,17 +909,17 @@ public class SteamConsoleModel extends ConsoleModel {
 		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
 
 		ModelPart alarms = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever4").getChild("bone22");
-		alarms.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
+		alarms.roll = (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
 
 		ModelPart security = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever2").getChild("bone20");
-		security.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
+		security.roll = (PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
 
 		ModelPart antigrav = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever3").getChild("bone19");
-		antigrav.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 0.4363F : -0.5672F);
+		antigrav.roll = (tardis.travel().antigravs().get() ? 0.4363F : -0.5672F);
 
 		ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5").getChild("bone21");
-		shields.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
-				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
+		shields.roll = (PropertiesHandler.getBool(tardis.properties(),
+				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.properties(),
 				ShieldData.IS_VISUALLY_SHIELDED) ? 0.0F : 0.4363F : -0.5672F);
 
 		ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever").getChild("bone23");

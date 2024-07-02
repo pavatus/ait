@@ -69,7 +69,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         int speed = this.speed();
 
         if (speed > 0 && this.getState() == State.LANDED && !this.handbrake()
-                && !tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+                && !this.tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
             this.dematerialize();
             return;
         }
@@ -77,10 +77,10 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (speed != 0 || this.getState() != State.FLIGHT)
             return;
 
-        if (tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
+        if (this.tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
             this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
 
-        if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
+        if (!this.tardis.flight().isActive())
             this.rematerialize();
     }
 
@@ -147,7 +147,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
         biome.update();
 
-        if (schedule && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED))
+        if (schedule && !this.antigravs.get())
             world.scheduleBlockTick(pos, AITBlocks.EXTERIOR_BLOCK, 2);
 
         ForcedChunkUtil.keepChunkLoaded(world, pos);

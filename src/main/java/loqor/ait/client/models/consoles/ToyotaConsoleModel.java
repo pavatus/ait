@@ -857,10 +857,10 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		//Anti Gravity Control
 		ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1").getChild("pivot2");
-		antigravs.yaw = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antigravs.yaw - 1.58f : antigravs.yaw;
+		antigravs.yaw = tardis.travel().antigravs().get() ? antigravs.yaw - 1.58f : antigravs.yaw;
 
 		ModelPart shield = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps2");
-		shield.yaw = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? shield.yaw - 1.58f : shield.yaw;
+		shield.yaw = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.yaw - 1.58f : shield.yaw;
 
 		//Door Locking Mechanism Control
 		ModelPart doorlock = this.toyota.getChild("panel1").getChild("controls").getChild("smalllockernob").getChild("pivot3");

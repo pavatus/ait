@@ -340,12 +340,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 		Tardis tardis = this.findTardis(world, pos);
 
-		if (tardis == null)
-			return;
-
-		boolean antigravs = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED);
-
-		if (antigravs)
+		if (tardis == null || tardis.travel().antigravs().get())
 			return;
 
 		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)

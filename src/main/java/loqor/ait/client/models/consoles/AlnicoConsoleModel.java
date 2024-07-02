@@ -857,7 +857,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);
 
 		ModelPart antigravs = alnico.getChild("section1").getChild("controls").getChild("tinyswitch").getChild("bone3");
-		antigravs.yaw = antigravs.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 1.5708f : 0);
+		antigravs.yaw = antigravs.yaw + (tardis.travel().antigravs().get() ? 1.5708f : 0);
 
 		ModelPart doorControl = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch6").getChild("bone24");
 		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);

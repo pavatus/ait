@@ -31,9 +31,6 @@ public class PropertiesHandler {
 	public static final String ANTIGRAVS_ENABLED = "antigravs_enabled";
 	public static final String HADS_ENABLED = "hads_enabled";
 	public static final String IS_IN_ACTIVE_DANGER = "is_in_active_danger";
-	public static final String IS_IN_REAL_FLIGHT = "is_in_real_flight";
-	public static final String DEMAT_TICKS = "demat_ticks";
-	public static final String MAT_TICKS = "mat_ticks";
 	public static final String IS_CLOAKED = "cloaked";
 	public static final String CONSOLE_DISABLED = "console_disabled";
 	public static final String LEAVE_BEHIND = "leave_behind";
@@ -213,15 +210,11 @@ public class PropertiesHandler {
 		map.put(HUM_ENABLED, true);
 		map.put(ALARM_ENABLED, false);
 		map.put(IS_FALLING, false);
-		map.put(ANTIGRAVS_ENABLED, false);
 		map.put(IS_IN_ACTIVE_DANGER, false);
 		map.put(HADS_ENABLED, false);
 		map.put(FuelData.FUEL_COUNT, 1000d);
 		map.put(FuelData.REFUELING, false);
 		map.put(SIEGE_HELD, false);
-		map.put(IS_IN_REAL_FLIGHT, false);
-		map.put(DEMAT_TICKS, 0);
-		map.put(MAT_TICKS, 0);
 		map.put(IS_CLOAKED, false);
 		map.put(CONSOLE_DISABLED, false);
 		map.put(LEAVE_BEHIND, false);

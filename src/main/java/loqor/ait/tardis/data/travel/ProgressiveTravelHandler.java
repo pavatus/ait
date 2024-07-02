@@ -6,7 +6,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
@@ -57,8 +56,9 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public boolean hasFinishedFlight() {
-        return (this.getFlightTicks() >= this.getTargetTicks() ||  this.getTargetTicks() == 0 || tardis.travel().isCrashing()) &&
-                !PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
+        return (this.getFlightTicks() >= this.getTargetTicks()
+                || this.getTargetTicks() == 0 || tardis.travel().isCrashing()
+        ) && !this.tardis.flight().isActive();
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
         this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
         this.resetFlight();
 
-        if (this.autopilot.get() && !PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.IS_IN_REAL_FLIGHT))
+        if (this.autopilot.get() && !this.tardis.flight().isActive())
             this.tardis().travel().rematerialize();
     }
 

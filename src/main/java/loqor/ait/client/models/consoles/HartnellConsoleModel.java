@@ -940,7 +940,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
-		antiGrav.pivotX = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX : antiGrav.pivotX + 1;
+		antiGrav.pivotX = !tardis.travel().antigravs().get() ? antiGrav.pivotX : antiGrav.pivotX + 1;
 
 		ModelPart shield = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_6").getChild("bone57");
 		shield.pivotX = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED) ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;

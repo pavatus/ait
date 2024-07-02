@@ -93,6 +93,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.handler(TardisComponent.Id.TRAVEL);
 	}
 
+	public RealFlightHandler flight() {
+		return this.handler(TardisComponent.Id.FLIGHT);
+	}
+
 	public LoyaltyHandler loyalty() {
 		return this.handler(TardisComponent.Id.LOYALTY);
 	}

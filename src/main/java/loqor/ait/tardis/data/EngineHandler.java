@@ -35,17 +35,6 @@ public class EngineHandler extends KeyedTardisComponent {
 
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.engine().disablePower());
-
-        TardisEvents.LOSE_POWER.register(tardis -> {
-            if (TardisUtil.getTardisDimension() != null) {
-                tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
-            }
-
-            // disabling protocols
-            PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
-        });
     }
 
     @Override
@@ -82,6 +71,17 @@ public class EngineHandler extends KeyedTardisComponent {
         this.updateExteriorState();
 
         TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
+        this.disableProtocols();
+    }
+
+    private void disableProtocols() {
+        if (TardisUtil.getTardisDimension() != null)
+            tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+
+        // disabling protocols
+        tardis.travel().antigravs().set(false);
+        PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
+        PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
     }
 
     public void enablePower() {

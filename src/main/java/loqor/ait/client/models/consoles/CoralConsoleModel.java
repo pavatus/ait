@@ -1369,7 +1369,7 @@ public class CoralConsoleModel extends ConsoleModel {
 		fuelLowWarningLight.visible = (tardis.getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10));
 
 		// Anti-gravs Lever
-		controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ?
+		controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !tardis.travel().antigravs().get() ?
 				controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll : controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll - 1.5f;
 
 		// Door Control

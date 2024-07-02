@@ -6,7 +6,6 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.entities.base.LinkableDummyLivingEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
@@ -18,10 +17,10 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
@@ -31,7 +30,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 public class RealTardisEntity extends LinkableDummyLivingEntity {
@@ -56,49 +54,23 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         this.setVelocity(Vec3d.ZERO);
     }
 
-    private static void teleportPlayer(PlayerEntity player, ServerWorld world, BlockPos pos, byte rotation) {
-        Vec3d center = pos.toCenterPos();
-
-        if (player.getWorld().getRegistryKey() == world.getRegistryKey()) {
-            player.refreshPositionAndAngles(center.x, center.y, center.z,
-                    RotationPropertyHelper.toDegrees(rotation), player.getPitch());
-            return;
-        }
-
-        player.teleport(world, center.x, center.y, center.z, Set.of(),
-                RotationPropertyHelper.toDegrees(rotation), player.getPitch()
-        );
-    }
-
-    // TODO: move this to RWF handler
-    public static void create(World world, BlockPos spawnPos, ServerPlayerEntity player, Tardis tardis, byte rotation) {
-        if (!(world instanceof ServerWorld serverWorld))
-            return;
-
+    public static void create(World world, BlockPos spawnPos, ServerPlayerEntity player, Tardis tardis) {
         TravelHandler travel = tardis.travel();
 
         RealTardisEntity tardisRealEntity = new RealTardisEntity(
                 world, spawnPos.toCenterPos(), player.getUuid(), player.getBlockPos(), tardis
         );
 
-        RealTardisEntity.teleportPlayer(player, serverWorld, spawnPos, rotation);
-
         tardisRealEntity.setRotation(RotationPropertyHelper.toDegrees(
                 DirectionControl.getGeneralizedRotation(travel.position().getRotation())
         ), 0);
 
-        PropertiesHandler.set(tardis, PropertiesHandler.IS_IN_REAL_FLIGHT, true);
-
         world.spawnEntity(tardisRealEntity);
-        player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
-
-        RealTardisEntity.updatePlayer(player, true, true);
-        travel.finishDemat();
     }
 
     public static void create(ServerPlayerEntity player, Tardis tardis) {
         DirectedGlobalPos.Cached globalPos = tardis.travel().position();
-        create(globalPos.getWorld(), globalPos.getPos(), player, tardis, globalPos.getRotation());
+        create(globalPos.getWorld(), globalPos.getPos(), player, tardis);
     }
 
     @Override
@@ -114,8 +86,8 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         player.startRiding(this);
         Tardis tardis = tardisRef.get();
 
-        if (!this.shouldLand())
-            this.enterFlight(tardis, player);
+        if (this.tardis().get().flight().isActive())
+            this.flightTick(tardis, player);
 
         if (this.getWorld().isClient()) {
             this.lastVelocity = this.getVelocity();
@@ -130,21 +102,20 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         }
     }
 
-    private void enterFlight(Tardis tardis, PlayerEntity player) {
+    private void flightTick(Tardis tardis, PlayerEntity player) {
         if (this.isClientRiding(player)) {
             MinecraftClient client = MinecraftClient.getInstance();
             client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
             client.options.hudHidden = true;
         }
 
-        if (!this.isOnGround())
-            return;
+        boolean onGround = this.isOnGround();
 
-        if (player.isSneaking() && this.antigravs())
+        if (player.isSneaking() && (onGround || tardis.travel().antigravs().get()))
             this.finishLand(tardis, player);
 
         // we do the check still, because isClientRiding may fail even if we're on client
-        if (this.getWorld().isClient())
+        if (!onGround || this.getWorld().isClient())
             return;
 
         this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
@@ -162,9 +133,6 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         if (!(player instanceof ServerPlayerEntity serverPlayer))
             return;
 
-        serverPlayer.clearStatusEffects();
-        serverPlayer.dismountVehicle();
-
         RealTardisEntity.resetPlayer(serverPlayer);
 
         if (this.getExitPos().isEmpty()) {
@@ -173,10 +141,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
             TardisUtil.teleportToInteriorPosition(tardis, serverPlayer, this.getExitPos().get());
         }
 
-        tardis.travel().immediatelyLandHere(tardis.travel().position());
-        tardis.travel().autopilot(false);
-
-        this.shouldLand(true);
+        tardis.flight().land(player);
         this.discard();
     }
 
@@ -303,29 +268,13 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         return client != null && client.getUuid().equals(uuid);
     }
 
-    private boolean antigravs() {
-        return PropertiesHandler.getBool(this.tardis().get().properties(), PropertiesHandler.ANTIGRAVS_ENABLED);
-    }
+    private static void resetPlayer(ServerPlayerEntity player) {
+        PlayerAbilities abilities = player.getAbilities();
 
-    private boolean shouldLand() {
-        return !PropertiesHandler.getBool(this.tardis().get().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT);
-    }
-
-    private void shouldLand(boolean value) {
-        PropertiesHandler.set(this.tardis().get(), PropertiesHandler.IS_IN_REAL_FLIGHT, !value);
-    }
-
-    private static void updatePlayer(ServerPlayerEntity player, Boolean allowFlight, Boolean flying) {
-        if (allowFlight != null)
-            player.getAbilities().allowFlying = allowFlight;
-
-        if (flying != null)
-            player.getAbilities().flying = flying;
+        abilities.invulnerable = player.isCreative();
+        abilities.allowFlying = player.isCreative();
+        abilities.flying = false;
 
         player.sendAbilitiesUpdate();
-    }
-
-    private static void resetPlayer(ServerPlayerEntity player) {
-        updatePlayer(player, player.isCreative(), false);
     }
 }

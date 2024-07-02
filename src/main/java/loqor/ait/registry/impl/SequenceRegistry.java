@@ -9,7 +9,6 @@ import loqor.ait.tardis.control.impl.pos.YControl;
 import loqor.ait.tardis.control.impl.pos.ZControl;
 import loqor.ait.tardis.control.impl.waypoint.SetWaypointControl;
 import loqor.ait.tardis.control.sequences.Sequence;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.entity.EntityType;
@@ -132,7 +131,7 @@ public class SequenceRegistry {
 					finishedTardis.travel().decreaseFlightTime(120);
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(45, 125));
-					PropertiesHandler.set(missedTardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
+					missedTardis.travel().antigravs().set(false);
 				}), 80L, Text.literal("Gravity miscalculation!").formatted(Formatting.ITALIC, Formatting.YELLOW),
 				new AntiGravsControl()));
 

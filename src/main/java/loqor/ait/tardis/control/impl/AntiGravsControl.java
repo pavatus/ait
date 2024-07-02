@@ -5,7 +5,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -25,7 +24,7 @@ public class AntiGravsControl extends Control {
 			return false;
 		}
 
-		PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED));
+		tardis.travel().antigravs().flatMap(value -> !value);
 
 		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 		World targetWorld = globalPos.getWorld();

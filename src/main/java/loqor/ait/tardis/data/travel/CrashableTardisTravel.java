@@ -88,7 +88,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
 
         tardis.door().setLocked(true);
         PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
-        PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
+        tardis.travel().antigravs().set(false);
 
         tardis.travel().speed(0);
         tardis.removeFuel(500 * power);

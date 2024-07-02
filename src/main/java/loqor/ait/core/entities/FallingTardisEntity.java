@@ -111,7 +111,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 				null, console, SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
 		);
 
-		if (this.antigravs()) {
+		if (tardis.travel().antigravs().get()) {
 			this.stopFalling(true);
 			return;
 		}
@@ -129,11 +129,11 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 	}
 
 	public void stopFalling(boolean antigravs) {
-		if (antigravs)
-			this.antigravs(true);
-
 		Tardis tardis = this.tardis().get();
 		TravelHandler travel = tardis.travel();
+
+		if (antigravs)
+			travel.antigravs().set(true);
 
 		Block block = this.state.getBlock();
 		BlockPos blockPos = this.getBlockPos();
@@ -173,14 +173,6 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
 		travel.placeExterior(false);
 		this.discard();
-	}
-
-	private boolean antigravs() {
-		return PropertiesHandler.getBool(this.tardis().get().properties(), PropertiesHandler.ANTIGRAVS_ENABLED);
-	}
-
-	private void antigravs(boolean value) {
-		PropertiesHandler.set(this.tardis().get(), PropertiesHandler.ANTIGRAVS_ENABLED, value);
 	}
 
 	@Override

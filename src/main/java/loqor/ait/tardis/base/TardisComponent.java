@@ -104,6 +104,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
 		LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
 		ENGINE(EngineHandler.class, EngineHandler::new),
+		FLIGHT(RealFlightHandler.class, RealFlightHandler::new),
 
 		// FIXME in future: currently handled by properties
 		BIOME(BiomeHandler.class, BiomeHandler::new, null),

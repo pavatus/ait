@@ -32,6 +32,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", Property.warnCompat("crashing", false));
+    private static final BoolProperty ANTIGRAVS = new BoolProperty("ANTIGRAVS", Property.warnCompat("antigravs", false));
 
     private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat("speed", 0));
     private static final IntProperty MAX_SPEED = new IntProperty("max_speed", Property.warnCompat("max_speed", 7));
@@ -42,6 +43,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
     protected final Value<DirectedGlobalPos.Cached> previousPosition = PREVIOUS_POSITION.create(this);
 
     protected final BoolValue crashing = CRASHING.create(this);
+    protected final BoolValue antigravs = ANTIGRAVS.create(this);
 
     protected final IntValue speed = SPEED.create(this);
     protected final IntValue maxSpeed = MAX_SPEED.create(this);
@@ -62,6 +64,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         maxSpeed.of(this, MAX_SPEED);
 
         crashing.of(this, CRASHING);
+        antigravs.of(this, ANTIGRAVS);
 
         if (this.isClient())
             return;
@@ -99,6 +102,10 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
     public boolean isCrashing() {
         return crashing.get();
+    }
+
+    public BoolValue antigravs() {
+        return antigravs;
     }
 
     public void setCrashing(boolean crashing) {
