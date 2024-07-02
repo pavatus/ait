@@ -5,8 +5,7 @@ import loqor.ait.client.models.machines.ShieldsModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.core.entities.TardisRealEntity;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
@@ -22,46 +21,46 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.Objects;
+public class RealTardisRenderer extends EntityRenderer<RealTardisEntity> {
 
-public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 	private ExteriorModel model;
 
-	public TardisRealRenderer(EntityRendererFactory.Context ctx) {
+	public RealTardisRenderer(EntityRendererFactory.Context ctx) {
 		super(ctx);
 	}
 
 	@Override
-	public Identifier getTexture(TardisRealEntity entity) {
-		if (entity.getTardis() == null)
+	public Identifier getTexture(RealTardisEntity entity) {
+		if (entity.tardis().isEmpty())
 			return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
-		return Objects.requireNonNull(ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant())).texture();
+		return entity.tardis().get().getExterior().getVariant().getClient().texture();
 	}
 
 	@Override
-	public void render(TardisRealEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-		Tardis tardis = entity.getTardis();
+	public void render(RealTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+		Tardis tardis = entity.tardis().get();
 
 		if (tardis == null)
 			return;
 
-		TardisExterior tardisExterior = tardis.getExterior();
-		ClientExteriorVariantSchema exteriorVariantSchema = ClientExteriorVariantRegistry.withParent(tardisExterior.getVariant());
+		TardisExterior exterior = tardis.getExterior();
+		ClientExteriorVariantSchema exteriorVariant = exterior.getVariant().getClient();
 
-		if (exteriorVariantSchema == null)
+		if (exteriorVariant == null)
 			return;
 
-		Class<? extends ExteriorModel> modelClass = exteriorVariantSchema.model().getClass();
+		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
 
 		if (model != null && !model.getClass().isInstance(modelClass))
 			model = null;
 
-		if (getModel(entity) == null || entity.getPlayer().isEmpty())
+		if (this.getModel(tardis) == null || entity.getPlayer().isEmpty())
 			return;
 
 		Vec3d vec3d = entity.getRotationVec(tickDelta);
 		Vec3d vec3d2 = entity.lerpVelocity(tickDelta);
+
 		double d = vec3d2.horizontalLengthSquared();
 		double e = vec3d.horizontalLengthSquared();
 
@@ -89,18 +88,15 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 
 		matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
-		if (getModel(entity) == null)
-			return;
+		this.model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
-		getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
-
-		if (exteriorVariantSchema.emission() != null && tardis.engine().hasPower()) {
+		if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {
 			boolean alarms = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
-			getModel(entity).renderRealWorld(entity, getModel(entity).getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+			this.model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(getEmission(entity), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 		}
 
 		BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-		Identifier biomeTexture = exteriorVariantSchema.getBiomeTexture(biome.getBiomeKey());
+		Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
 
 		if (biomeTexture != null && !this.getTexture(entity).equals(biomeTexture)) {
 			model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
@@ -120,20 +116,14 @@ public class TardisRealRenderer extends EntityRenderer<TardisRealEntity> {
 		}
 	}
 
-	private ExteriorModel getModel(TardisRealEntity entity) {
-		if (entity.getTardis() == null)
-			return model;
-
+	private ExteriorModel getModel(Tardis tardis) {
 		if (model == null)
-			model = Objects.requireNonNull(ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant())).model();
+			model = tardis.getExterior().getVariant().getClient().model();
 
 		return model;
 	}
 
-	public Identifier getEmission(TardisRealEntity entity) {
-		if (entity.getTardis() == null)
-			return getTexture(entity);
-
-		return Objects.requireNonNull(ClientExteriorVariantRegistry.withParent(entity.getTardis().getExterior().getVariant())).emission();
+	public Identifier getEmission(Tardis tardis) {
+		return tardis.getExterior().getVariant().getClient().emission();
 	}
 }

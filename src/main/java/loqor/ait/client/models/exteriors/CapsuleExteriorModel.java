@@ -104,7 +104,9 @@ public class CapsuleExteriorModel extends ExteriorModel {
 
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		if (falling.getTardis() == null) return;
+		if (falling.tardis() == null)
+			return;
+
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
 

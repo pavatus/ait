@@ -36,6 +36,8 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     public static final TrackedData<Optional<UUID>> PLAYER_UUID = DataTracker.registerData(RealTardisEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     public static final TrackedData<Optional<BlockPos>> PLAYER_INTERIOR_POSITION = DataTracker.registerData(RealTardisEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_POS);
 
+    private Vec3d lastVelocity = Vec3d.ZERO;
+
     public RealTardisEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
     }
@@ -87,15 +89,20 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         player.startRiding(this);
         Tardis tardis = tardisRef.get();
 
+        if (!this.shouldLand())
+            this.enterFlight(tardis, player);
+
+        if (this.getWorld().isClient()) {
+            this.lastVelocity = this.getVelocity();
+            return;
+        }
+
         if (!this.getWorld().isClient() && tardis.door().isOpen()) {
             this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
                     -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
-                            entity -> TardisUtil.teleportInside(tardis, entity)
+                    entity -> TardisUtil.teleportInside(tardis, entity)
             );
         }
-
-        if (!this.shouldLand())
-            this.enterFlight(tardis, player);
     }
 
     private void enterFlight(Tardis tardis, PlayerEntity player) {
@@ -108,7 +115,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         if (!this.isOnGround())
             return;
 
-        if (player.isSneaking())
+        if (player.isSneaking() && this.antigravs())
             this.finishLand(tardis, player);
 
         // we do the check still, because isClientRiding may fail even if we're on client
@@ -184,7 +191,12 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
 
     @Override
     public float getBodyYaw() {
-        return 180.0f - ((float) this.age + 0.5f) / (float) Math.PI * 9;
+        return 180.0f - this.getRotation(0.5f) / (float) Math.PI * 180f;
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return this.getPlayer().get().getAbilities().flying;
     }
 
     @Override
@@ -215,6 +227,14 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         nbt.putUuid("PlayerUuid", this.getPlayer().get().getUuid());
     }
 
+    public float getRotation(float tickDelta) {
+        return ((float) this.age + tickDelta) / 20.0f;
+    }
+
+    public Vec3d lerpVelocity(float tickDelta) {
+        return this.lastVelocity.lerp(this.getVelocity(), tickDelta);
+    }
+
     public Optional<PlayerEntity> getPlayer() {
         if (this.getWorld() == null)
             return Optional.empty();
@@ -242,14 +262,6 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         return Optional.of(this.dataTracker.get(PLAYER_INTERIOR_POSITION).get());
     }
 
-    @Override
-    public boolean hasNoGravity() {
-        if (this.getPlayer().isEmpty() || this.tardis().get() == null)
-            return false;
-
-        return this.getPlayer().get().getAbilities().flying;
-    }
-
     private boolean isClientRiding(PlayerEntity player) {
         if (!player.getWorld().isClient())
             return false;
@@ -268,10 +280,6 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
 
     private boolean antigravs() {
         return PropertiesHandler.getBool(this.tardis().get().properties(), PropertiesHandler.ANTIGRAVS_ENABLED);
-    }
-
-    private void antigravs(boolean value) {
-        PropertiesHandler.set(this.tardis().get(), PropertiesHandler.ANTIGRAVS_ENABLED, value);
     }
 
     private boolean shouldLand() {

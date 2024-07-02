@@ -52,11 +52,9 @@ public class PlinthExteriorModel extends ExteriorModel {
 	@Override
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
-
 		matrices.translate(0, -1.5f, 0);
 
-		plinth.getChild("door").yaw = falling.getTardis().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
-
+		plinth.getChild("door").yaw = falling.tardis().get().door().isOpen() ? -1.75f : 0f;
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
