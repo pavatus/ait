@@ -1,7 +1,8 @@
-package loqor.ait.tardis.link.v2;
+package loqor.ait.tardis.link.v2.block;
 
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.link.v2.Linkable;
+import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -24,6 +25,7 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
         super(type, pos, state);
     }
 
+    @Override
     public TardisRef tardis() {
         return ref;
     }
@@ -45,9 +47,7 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
         if (id == null)
             return;
 
-        this.ref = new TardisRef(NbtHelper.toUuid(id), uuid -> TardisManager.with(
-                this.world, (o, manager) -> manager.demandTardis(o, uuid))
-        );
+        this.ref = TardisRef.createAs(this, NbtHelper.toUuid(id));
 
         if (this.world == null)
             return;
@@ -57,9 +57,7 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
 
     @Override
     public void link(Tardis tardis) {
-        this.ref = new TardisRef(tardis, uuid -> TardisManager.with(
-                this.world, (o, manager) -> manager.demandTardis(o, uuid))
-        );
+        this.ref = TardisRef.createAs(this, tardis);
 
         this.onLinked();
 
@@ -69,9 +67,7 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
 
     @Override
     public void link(UUID id) {
-        this.ref = new TardisRef(id, uuid -> TardisManager.with(
-                this.world, (o, manager) -> manager.demandTardis(o, uuid))
-        );
+        this.ref = TardisRef.createAs(this, id);
 
         this.onLinked();
 

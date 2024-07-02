@@ -267,7 +267,7 @@ public class AITMod implements ModInitializer {
 	}
 
 	public void entityAttributeRegister() {
-		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createDummyAttributes());
 		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealEntity.createLivingAttributes());
 	}
 

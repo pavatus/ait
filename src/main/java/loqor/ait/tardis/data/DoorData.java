@@ -6,7 +6,7 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.schema.door.DoorSchema;
-import loqor.ait.core.entities.BaseControlEntity;
+import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
@@ -57,7 +57,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		// Get all entities in the Tardis interior
 		TardisUtil.getLivingEntitiesInInterior(tardis())
 				.stream()
-				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
+				.filter(entity -> !(entity instanceof ConsoleControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
 				.forEach(entity -> {
 					// Calculate the motion vector away from the door
