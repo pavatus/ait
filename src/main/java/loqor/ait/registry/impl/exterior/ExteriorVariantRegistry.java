@@ -19,6 +19,7 @@ import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadFireVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadSoulVariant;
 import loqor.ait.tardis.exterior.variant.geometric.GeometricDefaultVariant;
 import loqor.ait.tardis.exterior.variant.geometric.GeometricFireVariant;
+import loqor.ait.tardis.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.tardis.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
@@ -163,6 +164,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema GEOMETRIC_DEFAULT;
 	public static ExteriorVariantSchema GEOMETRIC_FIRE;
 	public static ExteriorVariantSchema GEOMETRIC_SOUL;
+	public static ExteriorVariantSchema GEOMETRIC_GILDED;
 
 	@Override
 	protected void defaults() {
@@ -231,5 +233,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		GEOMETRIC_DEFAULT = register(new GeometricDefaultVariant());
 		GEOMETRIC_FIRE = register(new GeometricFireVariant());
 		GEOMETRIC_SOUL = register(new GeometricSoulVariant());
+		GEOMETRIC_GILDED = register(new GeometricGildedVariant());
 	}
 }
