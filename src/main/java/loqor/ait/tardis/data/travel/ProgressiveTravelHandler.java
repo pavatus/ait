@@ -135,9 +135,6 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase impleme
     }
 
     public void handbrake(boolean value) {
-        if (this.getState() == TravelHandlerBase.State.DEMAT && value)
-            this.tardis.travel().cancelDemat();
-
         handbrake.set(value);
     }
 
