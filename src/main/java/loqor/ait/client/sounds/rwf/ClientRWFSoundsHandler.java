@@ -73,7 +73,7 @@ public class ClientRWFSoundsHandler extends SoundHandler {
 	}
 
 	private boolean shouldPlaySounds(MinecraftClient client) {
-		if(client.player == null) return false;
+		if(client.player == null || tardis() == null) return false;
 
 		return PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.IS_IN_REAL_FLIGHT) && !client.player.getVehicle().isOnGround();
 	}

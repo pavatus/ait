@@ -83,5 +83,8 @@ public class ClientSoundManager {
 
 		if (getVortexSounds() != null)
 			getVortexSounds().tick(client);
+
+		if (getRWFSounds() != null)
+			getRWFSounds().tick(client);
 	}
 }
