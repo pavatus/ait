@@ -186,7 +186,7 @@ public class SiegeTardisItem extends Item {
 
 	public static void placeTardis(Tardis tardis, DirectedGlobalPos.Cached pos) {
 		tardis.travel().forcePosition(pos);
-		tardis.travel().placeAndAnimate();
+		tardis.travel().placeExterior(false);
 		tardis.setSiegeBeingHeld(null);
 	}
 

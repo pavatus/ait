@@ -91,9 +91,6 @@ public class TardisBuilder {
         ServerTardis tardis = new ServerTardis(this.uuid, this.desktop, this.exterior);
         Tardis.init(tardis, TardisComponent.InitContext.createdAt(this.pos));
 
-        tardis.travel().initPos(pos);
-        tardis.travel().placeAndAnimate();
-
         for (Consumer<ServerTardis> consumer : this.postInit) {
             consumer.accept(tardis);
         }
