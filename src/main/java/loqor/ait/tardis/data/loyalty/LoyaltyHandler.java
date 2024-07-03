@@ -45,9 +45,10 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
         return this.data.getOrDefault(player.getUuid(), new Loyalty(Loyalty.Type.NEUTRAL));
     }
 
-    public Loyalty set(PlayerEntity player, Loyalty loyalty) {
+    public Loyalty set(ServerPlayerEntity player, Loyalty loyalty) {
         this.data.put(player.getUuid(), loyalty);
-        this.unlock((ServerPlayerEntity) player, loyalty); // safe cast because this should only be called on server anyway
+        this.unlock(player, loyalty);
+
         this.sync();
         return loyalty;
     }
@@ -80,13 +81,14 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
         ServerTardis tardis = (ServerTardis) this.tardis();
 
-        player.getServerWorld().playSound(null, player.getBlockPos(),
-                SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.2F, 1.0F);
+        boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        playSound = playSound || DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        playSound = playSound || ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        playSound = playSound || SonicRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
 
-        ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        SonicRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        if (playSound)
+            player.getServerWorld().playSound(null, player.getBlockPos(),
+                    SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.2F, 1.0F);
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {

@@ -48,7 +48,8 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
         return this.getRandom(tardis, RANDOM);
     }
 
-    public void tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
+    public boolean tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
+        boolean success = false;
         for (T schema : REGISTRY.values()) {
             if (schema.getRequirement() == Loyalty.MIN || schema.freebie())
                 continue;
@@ -61,11 +62,14 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
 
             AITMod.LOGGER.debug("Unlocked {} {} for tardis [{}]", schema.unlockType(), schema.id(), tardis.getUuid());
 
+            success = true;
             tardis.stats().unlock(schema);
 
             if (consumer != null)
                 consumer.accept(schema);
         }
+
+        return success;
     }
 
     public void unlockAll(Tardis tardis) {

@@ -66,14 +66,16 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorPos);
 
 		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !tardis.areShieldsActive()) {
-			if (world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
+			boolean waterlogged = exteriorBlockState.get(Properties.WATERLOGGED);
+
+			if (waterlogged && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
 				for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 					tardis.loyalty().subLevel(player, 1);
 				}
 			}
 
 			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED,
-					exteriorBlockState.get(Properties.WATERLOGGED) && tardis.door().isOpen()
+					waterlogged && tardis.door().isOpen()
 			), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 
 			world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
