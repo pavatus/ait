@@ -3,6 +3,7 @@ package loqor.ait.core.entities.base;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.link.v2.entity.AbstractLinkableEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
@@ -19,6 +20,17 @@ public class LinkableDummyEntity extends DummyEntity implements AbstractLinkable
     public LinkableDummyEntity(EntityType<?> type, World world) {
         super(type, world);
     }
+
+    @Override
+    public World getWorld() {
+        return super.getWorld();
+    }
+
+    @Override
+    public DataTracker getDataTracker() {
+        return super.getDataTracker();
+    }
+
 
     @Override
     public TrackedData<Optional<UUID>> getTracked() {

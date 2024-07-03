@@ -18,8 +18,9 @@ import java.util.UUID;
 public interface AbstractLinkableEntity extends Linkable {
 
     World getWorld();
-    TrackedData<Optional<UUID>> getTracked();
     DataTracker getDataTracker();
+
+    TrackedData<Optional<UUID>> getTracked();
 
     TardisRef asRef();
     void setRef(TardisRef ref);
