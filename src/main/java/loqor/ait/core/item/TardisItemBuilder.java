@@ -22,6 +22,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -57,7 +58,7 @@ public class TardisItemBuilder extends Item {
 		World world = context.getWorld();
 		PlayerEntity player = context.getPlayer();
 
-		if (player == null)
+		if (!(player instanceof ServerPlayerEntity serverPlayer))
 			return ActionResult.PASS;
 
         if (!(world instanceof ServerWorld serverWorld))
@@ -94,13 +95,15 @@ public class TardisItemBuilder extends Item {
 		ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
 
         ServerTardisManager.getInstance().create(new TardisBuilder()
-                .at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop)).owner(player)
+                .at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop)).owner(serverPlayer)
                 .exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
                 .<FuelData>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
                 .<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
                     engine.hasEngineCore().set(true);
                     engine.enablePower();
-                }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty -> loyalty.set(player, new Loyalty(Loyalty.Type.OWNER)))
+                }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty
+						-> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER))
+				)
         );
 
 		context.getStack().decrement(1);

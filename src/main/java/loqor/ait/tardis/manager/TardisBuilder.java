@@ -12,7 +12,7 @@ import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class TardisBuilder {
         return this;
     }
 
-    public TardisBuilder owner(PlayerEntity player) {
+    public TardisBuilder owner(ServerPlayerEntity player) {
         return this.<StatsData>with(TardisComponent.Id.STATS, stats -> {
             stats.setPlayerCreatorName(player.getName().getString());
             stats.markPlayerCreatorName();
