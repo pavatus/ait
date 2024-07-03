@@ -186,7 +186,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
 
     @Override
     public boolean hasNoGravity() {
-        return this.getPlayer().get().getAbilities().flying;
+        return this.getPlayer().map(player -> player.getAbilities().flying).orElse(false);
     }
 
     @Override
