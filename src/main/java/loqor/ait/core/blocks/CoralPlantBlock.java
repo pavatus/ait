@@ -98,10 +98,13 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 	}
 
 	private void createTardis(ServerWorld world, BlockPos pos, UUID creatorId) {
+		if (!(world.getPlayerByUuid(creatorId) instanceof ServerPlayerEntity player))
+			return;
+
 		ServerTardis created = ServerTardisManager.getInstance().create(new TardisBuilder()
 				.at(DirectedGlobalPos.Cached.create(world, pos, (byte) 0))
 				.exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
-				.desktop(DesktopRegistry.DEFAULT_CAVE).owner(world.getPlayerByUuid(creatorId))
+				.desktop(DesktopRegistry.DEFAULT_CAVE).owner(player)
 		);
 
 		created.fuel().setCurrentFuel(0);
