@@ -138,6 +138,9 @@ public class KeyItem extends LinkableItem {
 		if (!keyType.hasProtocol(Protocols.HAIL))
 			return;
 
+		if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
+			return;
+
 		if (player.getHealth() > 4 || player.getWorld() == TardisUtil.getTardisDimension())
 			return;
 
@@ -148,7 +151,9 @@ public class KeyItem extends LinkableItem {
 				(ServerWorld) world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw())
 		);
 
-		TravelUtil.travelTo(tardis, globalPos);
+		travel.dematerialize();
+		travel.forceDestination(globalPos);
+		travel.rematerialize();
 
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));
