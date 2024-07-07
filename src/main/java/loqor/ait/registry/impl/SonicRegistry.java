@@ -47,6 +47,7 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
         register(BuiltinSonic.create("fob"));
         register(BuiltinSonic.create("coral"));
         register(BuiltinSonic.create("renaissance"));
+        register(BuiltinSonic.create("crystalline"));
         register(BuiltinSonic.create("song"));
     }
 

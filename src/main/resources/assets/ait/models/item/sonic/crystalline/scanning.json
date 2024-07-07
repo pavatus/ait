@@ -1,0 +1,6 @@
+{
+	"parent": "ait:item/sonic/crystalline",
+	"textures": {
+		"2": "ait:item/sonic_tools/crystalline_scanning"
+	}
+}
