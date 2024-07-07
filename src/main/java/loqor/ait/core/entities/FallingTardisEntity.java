@@ -91,6 +91,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 	}
 
 	public void tick() {
+		super.tick();
 		this.timeFalling++;
 
 		this.move(MovementType.SELF, this.getVelocity());
@@ -245,5 +246,10 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 		double f = packet.getZ();
 
 		this.setPosition(d, e, f);
+	}
+
+	@Override
+	public boolean hasNoGravity() {
+		return false;
 	}
 }
