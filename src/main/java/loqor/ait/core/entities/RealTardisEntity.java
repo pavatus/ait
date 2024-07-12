@@ -1,3 +1,4 @@
+
 package loqor.ait.core.entities;
 
 import loqor.ait.core.AITEntityTypes;
@@ -28,6 +29,8 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -68,10 +71,6 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         world.spawnEntity(tardisRealEntity);
     }
 
-    public static void thisShouldRun() {
-        System.out.println("what");
-    }
-
 
     public static void create(ServerPlayerEntity player, Tardis tardis) {
         DirectedGlobalPos.Cached globalPos = tardis.travel().position();
@@ -82,29 +81,28 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     public void tick() {
         super.tick();
 
+        PlayerEntity player = this.getControllingPassenger();
+        TardisRef tardisRef = this.tardis();
+
+        if (player == null || tardisRef.isEmpty())
+            return;
+
+        player.startRiding(this);
+        Tardis tardis = tardisRef.get();
+
+        if (this.tardis().get().flight().isActive())
+            this.flightTick(tardis, player);
+
         if (this.getWorld().isClient()) {
             this.lastVelocity = this.getVelocity();
-        } else {
+            return;
+        }
 
-            PlayerEntity player = this.getControllingPassenger();
-            TardisRef tardisRef = this.tardis();
-
-            if (player == null || tardisRef.isEmpty())
-                return;
-
-            player.startRiding(this);
-            Tardis tardis = tardisRef.get();
-
-            // TODO theo you really need to learn when something is on server and when somethings on client.
-            // if (this.tardis().get().flight().isActive())
-            //     this.flightTick(tardis, player);
-
-            if (tardis.door().isOpen()) {
-                this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
-                        -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
-                        entity -> TardisUtil.teleportInside(tardis, entity)
-                );
-            }
+        if (!this.getWorld().isClient() && tardis.door().isOpen()) {
+            this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
+                    -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
+                    entity -> TardisUtil.teleportInside(tardis, entity)
+            );
         }
     }
 
@@ -128,6 +126,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     }
 
     private void finishLand(Tardis tardis, PlayerEntity player) {
+        // TODO move this to RealFlightHandler
         if (this.isClientRiding(player)) {
             MinecraftClient client = MinecraftClient.getInstance();
             client.options.setPerspective(Perspective.FIRST_PERSON);
@@ -232,7 +231,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     }
 
     public Optional<PlayerEntity> getPlayer() {
-        if (this.getWorld() == null || this.getWorld().isClient())
+        if (this.getWorld() == null)
             return Optional.empty();
 
         Optional<UUID> targetPlayerId = this.dataTracker.get(PLAYER_UUID);
@@ -242,7 +241,13 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
 
         UUID uuid = targetPlayerId.get();
 
-        return Optional.ofNullable(this.getWorld().getPlayerByUuid(uuid));
+        if (!this.getWorld().isClient())
+            return Optional.ofNullable(this.getWorld().getPlayerByUuid(uuid));
+
+        if (this.isClientRiding(uuid))
+            return Optional.ofNullable(MinecraftClient.getInstance().player);
+
+        return Optional.empty();
     }
 
     public Optional<BlockPos> getExitPos() {
@@ -253,21 +258,23 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     }
 
     private boolean isClientRiding(PlayerEntity player) {
-        if (!player.getWorld().isClient())
-            return false;
-
-        PlayerEntity client = MinecraftClient.getInstance().player;
-        return client != null && (client == player || client.getUuid().equals(player.getUuid()));
+        return isClientRiding(player.getUuid());
     }
 
     private boolean isClientRiding(UUID uuid) {
         if (!this.getWorld().isClient())
             return false;
 
-        PlayerEntity client = MinecraftClient.getInstance().player;
-        return client != null && client.getUuid().equals(uuid);
+        PlayerEntity client = getClientPlayer();
+        return client != null && (client == player || client.getUuid().equals(uuid));
     }
 
+    @Environment(EnvType.CLIENT)
+    private static PlayerEntity getClientPlayer() {
+        return MinecraftClient.getInstance().player;
+    }
+
+    // TODO move to RealFlightHandler 
     private static void resetPlayer(ServerPlayerEntity player) {
         PlayerAbilities abilities = player.getAbilities();
 
