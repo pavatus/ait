@@ -34,7 +34,7 @@ public class AutoPilotControl extends Control {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 
-			RealTardisEntity.create(player, tardis);
+			tardis.flight().enterFlight(player);
 			return true;
 		}
 

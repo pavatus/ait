@@ -68,6 +68,11 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
         world.spawnEntity(tardisRealEntity);
     }
 
+    public static void thisShouldRun() {
+        System.out.println("what");
+    }
+
+
     public static void create(ServerPlayerEntity player, Tardis tardis) {
         DirectedGlobalPos.Cached globalPos = tardis.travel().position();
         create(globalPos.getWorld(), globalPos.getPos(), player, tardis);
@@ -77,28 +82,29 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     public void tick() {
         super.tick();
 
-        PlayerEntity player = this.getControllingPassenger();
-        TardisRef tardisRef = this.tardis();
-
-        if (player == null || tardisRef.isEmpty())
-            return;
-
-        player.startRiding(this);
-        Tardis tardis = tardisRef.get();
-
-        if (this.tardis().get().flight().isActive())
-            this.flightTick(tardis, player);
-
         if (this.getWorld().isClient()) {
             this.lastVelocity = this.getVelocity();
-            return;
-        }
+        } else {
 
-        if (!this.getWorld().isClient() && tardis.door().isOpen()) {
-            this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
-                    -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
-                    entity -> TardisUtil.teleportInside(tardis, entity)
-            );
+            PlayerEntity player = this.getControllingPassenger();
+            TardisRef tardisRef = this.tardis();
+
+            if (player == null || tardisRef.isEmpty())
+                return;
+
+            player.startRiding(this);
+            Tardis tardis = tardisRef.get();
+
+            // TODO theo you really need to learn when something is on server and when somethings on client.
+            // if (this.tardis().get().flight().isActive())
+            //     this.flightTick(tardis, player);
+
+            if (tardis.door().isOpen()) {
+                this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
+                        -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
+                        entity -> TardisUtil.teleportInside(tardis, entity)
+                );
+            }
         }
     }
 
@@ -226,7 +232,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     }
 
     public Optional<PlayerEntity> getPlayer() {
-        if (this.getWorld() == null)
+        if (this.getWorld() == null || this.getWorld().isClient())
             return Optional.empty();
 
         Optional<UUID> targetPlayerId = this.dataTracker.get(PLAYER_UUID);
@@ -236,13 +242,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
 
         UUID uuid = targetPlayerId.get();
 
-        if (!this.getWorld().isClient())
-            return Optional.ofNullable(this.getWorld().getPlayerByUuid(uuid));
-
-        if (this.isClientRiding(uuid))
-            return Optional.ofNullable(MinecraftClient.getInstance().player);
-
-        return Optional.empty();
+        return Optional.ofNullable(this.getWorld().getPlayerByUuid(uuid));
     }
 
     public Optional<BlockPos> getExitPos() {

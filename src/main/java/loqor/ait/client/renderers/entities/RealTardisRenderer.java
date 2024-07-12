@@ -55,7 +55,7 @@ public class RealTardisRenderer extends EntityRenderer<RealTardisEntity> {
 		if (model != null && !model.getClass().isInstance(modelClass))
 			model = null;
 
-		if (this.getModel(tardis) == null || entity.getPlayer().isEmpty())
+		if (this.getModel(tardis) == null || entity.getControllingPassenger() == null)
 			return;
 
 		Vec3d vec3d = entity.getRotationVec(tickDelta);
