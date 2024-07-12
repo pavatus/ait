@@ -1,4 +1,3 @@
-
 package loqor.ait.core.entities;
 
 import loqor.ait.core.AITEntityTypes;
@@ -258,7 +257,11 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
     }
 
     private boolean isClientRiding(PlayerEntity player) {
-        return isClientRiding(player.getUuid());
+        if (!this.getWorld().isClient())
+            return false;
+
+        PlayerEntity client = getClientPlayer();
+        return client == player || isClientRiding(player.getUuid());
     }
 
     private boolean isClientRiding(UUID uuid) {
