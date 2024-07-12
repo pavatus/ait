@@ -269,7 +269,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
             return false;
 
         PlayerEntity client = getClientPlayer();
-        return client != null && (client == player || client.getUuid().equals(uuid));
+        return client != null && client.getUuid().equals(uuid);
     }
 
     @Environment(EnvType.CLIENT)
