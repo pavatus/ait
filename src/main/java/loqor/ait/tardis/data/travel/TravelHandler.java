@@ -302,6 +302,9 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             this.tardis.sequence().setActiveSequence(null, true);
         }
 
+        this.destination(this.checkDestination(this.destination(), AITMod.AIT_CONFIG.SEARCH_HEIGHT(), PropertiesHandler.getBool(
+                this.tardis().properties(), PropertiesHandler.FIND_GROUND)));
+
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
 
@@ -347,7 +350,6 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
     @Override
     protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
-        if (true) return destination;
         ServerWorld world = destination.getWorld();
         BlockPos.Mutable temp = destination.getPos().mutableCopy();
 
@@ -365,7 +367,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
                 top = world.getBlockState(temp.up());
                 ground = world.getBlockState(temp.down());
 
-                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for grond
+                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for ground
                     return destination.pos(temp);
 
                 temp = temp.down().mutableCopy();
