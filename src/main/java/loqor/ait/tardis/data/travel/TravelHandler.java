@@ -302,16 +302,13 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             this.tardis.sequence().setActiveSequence(null, true);
         }
 
-        this.destination(this.checkDestination(this.destination(), AITMod.AIT_CONFIG.SEARCH_HEIGHT(), PropertiesHandler.getBool(
-                this.tardis().properties(), PropertiesHandler.FIND_GROUND)));
-
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
 
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
-        this.forceDestination(this.getProgress());
+        this.destination(this.getProgress());
         this.forcePosition(this.destination());
 
         // Play materialize sound at the destination
