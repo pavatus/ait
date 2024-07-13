@@ -209,10 +209,10 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			}
 
 			if (pos != null) // fixme will play sound twice on interior door
-				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
-					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			return false;
 		}
@@ -252,10 +252,10 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			}
 
 			if (pos != null) // fixme will play sound twice on interior door
-				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
-					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			return false;
 		}
@@ -263,8 +263,8 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		if (tardis.getLockedTardis() || tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
-				TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
+				TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 			}
 
 			return false;
@@ -275,10 +275,10 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		DoorSchema doorSchema = tardis.getExterior().getVariant().door();
 		SoundEvent sound = doorSchema.isDouble() && door.isBothOpen() ? doorSchema.closeSound() : doorSchema.openSound();
 
-		tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), sound, SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
 		TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
-				sound, SoundCategory.BLOCKS, 0.6F, 1F);
+				sound, SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
 		if (!doorSchema.isDouble()) {
 			door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
