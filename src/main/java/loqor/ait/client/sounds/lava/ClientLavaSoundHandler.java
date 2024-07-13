@@ -1,4 +1,4 @@
-package loqor.ait.client.sounds.rain;
+package loqor.ait.client.sounds.lava;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
@@ -8,32 +8,36 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class ClientRainSoundHandler extends SoundHandler {
-    public static LoopingSound RAIN_SOUND;
+public class ClientLavaSoundHandler extends SoundHandler {
+    public static LoopingSound LAVA_SOUND;
 
-    protected ClientRainSoundHandler() {
+    protected ClientLavaSoundHandler() {
     }
 
     public LoopingSound getRainSound() {
-        if (RAIN_SOUND == null)
-            RAIN_SOUND = new PositionedLoopingSound(SoundEvents.WEATHER_RAIN,
-                    SoundCategory.WEATHER,
-                    tardis().getDesktop().doorPos().getPos(), 0.1f);
+        if (LAVA_SOUND == null)
+            LAVA_SOUND = new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT,
+                    SoundCategory.BLOCKS,
+                    tardis().getDesktop().doorPos().getPos(), 0.2f);
 
-        return RAIN_SOUND;
+        return LAVA_SOUND;
     }
 
-    public static ClientRainSoundHandler create() {
+    public static ClientLavaSoundHandler create() {
         if (MinecraftClient.getInstance().player == null) return null;
 
-        ClientRainSoundHandler handler = new ClientRainSoundHandler();
+        ClientLavaSoundHandler handler = new ClientLavaSoundHandler();
         handler.generate();
         return handler;
     }
@@ -42,14 +46,14 @@ public class ClientRainSoundHandler extends SoundHandler {
 
         if (tardis() == null) return;
 
-        if (RAIN_SOUND == null && tardis().getDesktop().doorPos().getPos() != null)
-            RAIN_SOUND = new PositionedLoopingSound(SoundEvents.WEATHER_RAIN,
+        if (LAVA_SOUND == null && tardis().getDesktop().doorPos().getPos() != null)
+            LAVA_SOUND = new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT,
                     SoundCategory.WEATHER,
-                    tardis().getDesktop().doorPos().getPos(), 0.1f);
+                    tardis().getDesktop().doorPos().getPos(), 0.2f);
 
         this.sounds = new ArrayList<>();
         this.sounds.add(
-                RAIN_SOUND
+                LAVA_SOUND
         );
     }
 
@@ -80,10 +84,30 @@ public class ClientRainSoundHandler extends SoundHandler {
         if (this.sounds == null)
             this.generate();
 
-        if (isPlayerInATardis() && tardis().travel().position() != null && tardis().travel().position().getWorld().isRaining() && isInFlight()) {
+        if (isPlayerInATardis() && isInLava() && isInFlight()) {
             this.startIfNotPlaying(getRainSound());
         } else {
-            this.stopSound(RAIN_SOUND);
+            this.stopSound(LAVA_SOUND);
         }
+    }
+
+    public boolean isInLava() {
+        Tardis tardis = this.tardis();
+
+        if (tardis.travel().position() != null) return false;
+
+        World world = tardis.travel().position().getWorld();
+        BlockPos tardisPos = tardis.travel().position().getPos();
+
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+                BlockPos blockPos = tardisPos.add(xOffset, 0, yOffset);
+                if (world.getBlockState(blockPos).getBlock() == Blocks.LAVA) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

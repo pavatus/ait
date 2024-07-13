@@ -4,6 +4,7 @@ import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
 import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
+import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
 import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
 import loqor.ait.client.sounds.rwf.ClientRWFSoundsHandler;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
@@ -23,6 +24,7 @@ public class ClientSoundManager {
 	private static ClientVortexSoundsHandler vortexSounds;
 	private static ClientRWFSoundsHandler rwfsounds;
 	private static ClientRainSoundHandler rainSound;
+	private static ClientLavaSoundHandler lavaSound;
 
 	public static ClientHumHandler getHum() {
 		if (hum == null) {
@@ -76,6 +78,13 @@ public class ClientSoundManager {
 		return rainSound;
 	}
 
+	public static ClientLavaSoundHandler getLavaSound() {
+		if (lavaSound == null) {
+			lavaSound = ClientLavaSoundHandler.create();
+		}
+		return lavaSound;
+	}
+
 
 	public static void tick(MinecraftClient client) {
 		if (getAlarm() != null)
@@ -98,5 +107,8 @@ public class ClientSoundManager {
 
 		if (getRainSound() != null)
 			getRainSound().tick(client);
+
+		if (getLavaSound() != null)
+			getLavaSound().tick(client);
 	}
 }
