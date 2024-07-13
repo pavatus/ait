@@ -75,16 +75,16 @@ public class ClientLavaSoundHandler extends SoundHandler {
         return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
     }
 
-    public boolean isInFlight() {
+    public boolean isLanded() {
         Tardis tardis = this.tardis();
-        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT);
+        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.LANDED);
     }
 
     public void tick(MinecraftClient client) {
         if (this.sounds == null)
             this.generate();
 
-        if (isPlayerInATardis() && isInLava() && isInFlight()) {
+        if (isLanded() && isPlayerInATardis() && isInLava()) {
             this.startIfNotPlaying(getRainSound());
         } else {
             this.stopSound(LAVA_SOUND);

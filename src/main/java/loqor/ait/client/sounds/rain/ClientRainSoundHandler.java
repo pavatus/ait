@@ -71,16 +71,16 @@ public class ClientRainSoundHandler extends SoundHandler {
         return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
     }
 
-    public boolean isInFlight() {
+    public boolean isLanded() {
         Tardis tardis = this.tardis();
-        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT);
+        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.LANDED);
     }
 
     public void tick(MinecraftClient client) {
         if (this.sounds == null)
             this.generate();
 
-        if (isPlayerInATardis() && tardis().travel().position() != null && tardis().travel().position().getWorld().isRaining() && isInFlight()) {
+        if (isLanded() &&isPlayerInATardis() && tardis().travel().position() != null && tardis().travel().position().getWorld().isRaining()) {
             this.startIfNotPlaying(getRainSound());
         } else {
             this.stopSound(RAIN_SOUND);
