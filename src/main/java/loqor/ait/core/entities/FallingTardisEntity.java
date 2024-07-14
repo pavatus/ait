@@ -17,6 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.ShulkerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -189,7 +190,12 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 			float f = (float) Math.min(MathHelper.floor((float) i * HURT_AMOUNT), HURT_MAX);
 
 			this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate)
-					.forEach((entity) -> entity.damage(damageSource2, f));
+					.forEach(entity -> {
+						if (entity instanceof ShulkerEntity shulker) {
+							shulker.kill();
+						}
+						entity.damage(damageSource2, f);
+					});
 		}
 
         return false;
