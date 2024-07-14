@@ -42,7 +42,8 @@ public class FabricatorBlockEntity extends LinkableBlockEntity implements NamedS
 	public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player) {
 		//if (world.isClient() || this.findTardis().isEmpty()) return;
 
-		MinecraftClient.getInstance().setScreen(new BlueprintFabricatorScreen(Text.literal("Blueprint Fabricator")));
+		if (world.isClient())
+			MinecraftClient.getInstance().setScreen(new BlueprintFabricatorScreen(Text.literal("Blueprint Fabricator")));
 
 		player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
 		/*NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
