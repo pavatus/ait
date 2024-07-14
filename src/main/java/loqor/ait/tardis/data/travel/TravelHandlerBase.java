@@ -15,6 +15,7 @@ import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -175,7 +176,39 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         return true;
     }
 
-    protected abstract DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck);
+    // TODO rewrite because theo is just gonna get really pissy about it if we dont <3
+    protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
+        ServerWorld world = destination.getWorld();
+        BlockPos.Mutable temp = destination.getPos().mutableCopy();
+
+        destination = destination.pos(temp.getX(), MathHelper.clamp(
+                temp.getY(), world.getBottomY(), world.getTopY() - 1
+        ), temp.getZ());
+
+        BlockState current;
+        BlockState top;
+        BlockState ground;
+
+        if (fullCheck) {
+            for (int i = 0; i < limit; i++) {
+                current = world.getBlockState(temp);
+                top = world.getBlockState(temp.up());
+                ground = world.getBlockState(temp.down());
+
+                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for ground
+                    return destination.pos(temp);
+
+                temp = temp.down().mutableCopy();
+            }
+        }
+
+        temp = temp.mutableCopy();
+
+        current = world.getBlockState(temp);
+        top = world.getBlockState(temp.up());
+
+        return isReplaceable(current, top) ? destination.pos(temp) : destination;
+    }
 
     public enum State {
         LANDED,

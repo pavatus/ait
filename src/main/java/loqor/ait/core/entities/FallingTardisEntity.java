@@ -61,7 +61,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 		this.state = state;
 
 		this.link(tardis);
-		this.setPosition(pos);
+		this.setPosition(pos.subtract(0f, 0.5f, 0f));
 		this.setVelocity(Vec3d.ZERO);
 	}
 
