@@ -5,6 +5,9 @@ import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.ServerLavaHandler;
+import loqor.ait.tardis.data.ServerRainHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
@@ -80,7 +83,7 @@ public class ClientRainSoundHandler extends SoundHandler {
         if (this.sounds == null)
             this.generate();
 
-        if (isLanded() &&isPlayerInATardis() && tardis().travel().position() != null && tardis().travel().position().getWorld().isRaining()) {
+        if (isLanded() && isPlayerInATardis() && tardis().getHandlers().<ServerRainHandler>get(TardisComponent.Id.RAINING).isEnabled()) {
             this.startIfNotPlaying(getRainSound());
         } else {
             this.stopSound(RAIN_SOUND);

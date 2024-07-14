@@ -116,6 +116,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		OVERGROWN(OvergrownData.class, OvergrownData::new, null),
 		HUM(ServerHumHandler.class, ServerHumHandler::new, null),
 		ALARMS(ServerAlarmHandler.class, ServerAlarmHandler::new, null),
+		RAINING(ServerRainHandler.class, ServerRainHandler::new, null),
+		LAVA_OUTSIDE(ServerLavaHandler.class, ServerLavaHandler::new, null),
 		INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new, null),
 		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
 		FUEL(FuelData.class, FuelData::new, null),

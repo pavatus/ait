@@ -302,6 +302,10 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             this.tardis.sequence().setActiveSequence(null, true);
         }
 
+        // TODO reverted theos "fix of a silly" because it wasnt a fix of a silly, his weird HandlerBase stuff is weird and unnecessary.
+        this.destination(this.checkDestination(this.destination(), AITMod.AIT_CONFIG.SEARCH_HEIGHT(), PropertiesHandler.getBool(
+                this.tardis().properties(), PropertiesHandler.FIND_GROUND)));
+
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
 

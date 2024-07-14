@@ -5,6 +5,8 @@ import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.ServerLavaHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
@@ -84,30 +86,10 @@ public class ClientLavaSoundHandler extends SoundHandler {
         if (this.sounds == null)
             this.generate();
 
-        if (isLanded() && isPlayerInATardis() && isInLava()) {
+        if (isLanded() && isPlayerInATardis() && tardis().getHandlers().<ServerLavaHandler>get(TardisComponent.Id.LAVA_OUTSIDE).isEnabled()) {
             this.startIfNotPlaying(getRainSound());
         } else {
             this.stopSound(LAVA_SOUND);
         }
-    }
-
-    public boolean isInLava() {
-        Tardis tardis = this.tardis();
-
-        if (tardis.travel().position() != null) return false;
-
-        World world = tardis.travel().position().getWorld();
-        BlockPos tardisPos = tardis.travel().position().getPos();
-
-        for (int xOffset = -1; xOffset <= 1; xOffset++) {
-            for (int yOffset = -1; yOffset <= 1; yOffset++) {
-                BlockPos blockPos = tardisPos.add(xOffset, 0, yOffset);
-                if (world.getBlockState(blockPos).getBlock() == Blocks.LAVA) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }
