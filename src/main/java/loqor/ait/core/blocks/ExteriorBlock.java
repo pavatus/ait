@@ -394,7 +394,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 	private Tardis findTardis(ServerWorld world, BlockPos pos) {
 		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-			if (exterior.tardis().isEmpty())
+			if (exterior.tardis() == null || exterior.tardis().isEmpty())
 				return null;
 
 			return exterior.tardis().get();

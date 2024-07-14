@@ -66,9 +66,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (tardis.siege().isActive()) {
 			profiler.push("siege");
 
+			matrices.push();
+			matrices.translate(0.5f, 0.5f, 0.5f);
 			siege.renderWithAnimations(entity, siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, overlay, 1, 1, 1, 1);
 
-			//matrices.pop();
+			matrices.pop();
 			profiler.pop();
 			return;
 		}
