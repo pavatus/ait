@@ -1,8 +1,11 @@
 package loqor.ait.client.renderers.machines;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.models.machines.EngineCoreModel;
 import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import loqor.ait.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.ConduitBlockEntity;
@@ -26,12 +29,17 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<EngineCoreBlockEntity> {
-    public static final SpriteIdentifier BASE_TEXTURE;
+
+    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/machines/engine_core.png");
+    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/machines/engine_core_emission.png");
+
+    /*public static final SpriteIdentifier BASE_TEXTURE;
     public static final SpriteIdentifier CAGE_TEXTURE;
     public static final SpriteIdentifier WIND_TEXTURE;
     public static final SpriteIdentifier WIND_VERTICAL_TEXTURE;
@@ -41,16 +49,54 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
     private final ModelPart conduitWind;
     private final ModelPart conduitShell;
     private final ModelPart conduit;
-    private final BlockEntityRenderDispatcher dispatcher;
+    private final BlockEntityRenderDispatcher dispatcher;*/
+    EngineCoreModel model;
+    private int tickForSpin;
     public EngineCoreBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.dispatcher = ctx.getRenderDispatcher();
-        this.conduitEye = EngineCoreBlockEntityRenderer.getEyeTexturedModelData().createModel();
+        // this.dispatcher = ctx.getRenderDispatcher();
+        this.model = new EngineCoreModel(EngineCoreModel.getTexturedModelData().createModel());
+        /*this.conduitEye = EngineCoreBlockEntityRenderer.getEyeTexturedModelData().createModel();
         this.conduitWind = EngineCoreBlockEntityRenderer.getWindTexturedModelData().createModel();
         this.conduitShell = EngineCoreBlockEntityRenderer.getShellTexturedModelData().createModel();
-        this.conduit = EngineCoreBlockEntityRenderer.getPlainTexturedModelData().createModel();
+        this.conduit = EngineCoreBlockEntityRenderer.getPlainTexturedModelData().createModel();*/
     }
 
-    public static TexturedModelData getEyeTexturedModelData() {
+    @Override
+    public void render(EngineCoreBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        tickForSpin++;
+
+        if (entity.findTardis().isEmpty()) {
+            return;
+        }
+
+        Tardis tardis = entity.findTardis().get();
+
+        boolean bl = tardis.engine().hasPower();
+
+        matrices.push();
+        // matrices.scale(10, 10, 10);
+        matrices.translate(0.5f, 1f, 0.5f);
+        // matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+
+        if (bl && entity.isActive()) {
+            //matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 350L) * 360.0f));
+            //matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(((float) tickForSpin / 700L) * 360.0f));
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 2000L) * 360.0f));
+        }
+
+        model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, overlay, 1, 1, 1, 1);
+
+        if (entity.isActive()) {
+            ClientLightUtil.renderEmissive(
+                    ClientLightUtil.Renderable.create(model::render), EMISSION, entity, this.model.getPart(), matrices, vertexConsumers,
+                    light, overlay, 1, 1, 1, 1
+            );
+        }
+
+        matrices.pop();
+    }
+
+    /*public static TexturedModelData getEyeTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
         modelPartData.addChild("eye", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -4.0F, 0.0F, 8.0F, 8.0F, 0.0F, new Dilation(0.01F)), ModelTransform.NONE);
@@ -76,9 +122,9 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
         ModelPartData modelPartData = modelData.getRoot();
         modelPartData.addChild("shell", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), ModelTransform.NONE);
         return TexturedModelData.of(modelData, 32, 16);
-    }
+    }*/
 
-    public void render(EngineCoreBlockEntity coreBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    /*public void render(EngineCoreBlockEntity coreBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         float g = (float)coreBlockEntity.ticks + f;
         float h;
         matrixStack.push();
@@ -133,14 +179,14 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             matrixStack.pop();
         }
         matrixStack.pop();
-    }
+    }*/
 
-    static {
+    /*static {
         BASE_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/base"));
         CAGE_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/cage"));
         WIND_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/wind"));
         WIND_VERTICAL_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/wind_vertical"));
         OPEN_EYE_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/environment/eye_of_harmony.png");
         CLOSED_EYE_TEXTURE = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("entity/conduit/closed_eye"));
-    }
+    }*/
 }
