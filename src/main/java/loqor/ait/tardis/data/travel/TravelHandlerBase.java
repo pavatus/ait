@@ -175,9 +175,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         return true;
     }
 
-    protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
-        return destination;
-    }
+    protected abstract DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck);
 
     public enum State {
         LANDED,
