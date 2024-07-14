@@ -276,7 +276,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 		if (blockEntity instanceof ExteriorBlockEntity exterior) {
 			if (world.isClient()) {
-				if (exterior.tardis().isEmpty()) {
+				if (exterior.tardis() == null || exterior.tardis().isEmpty()) {
 					ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
 					return ActionResult.FAIL;
 				}
