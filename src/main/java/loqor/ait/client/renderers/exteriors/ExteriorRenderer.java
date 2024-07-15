@@ -15,6 +15,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
@@ -55,7 +56,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		Tardis tardis = optionalTardis.get();
 		profiler.swap("render");
 		//System.out.println(entity.getAlpha());
-		if (entity.getAlpha() > 0)
+		if (entity.getAlpha() > 0 || !tardis.getHandlers().<CloakData>get(TardisComponent.Id.CLOAK).isEnabled())
 			this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		profiler.pop();
 
