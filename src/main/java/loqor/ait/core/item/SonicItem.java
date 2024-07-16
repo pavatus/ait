@@ -2,6 +2,8 @@ package loqor.ait.core.item;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolderItem;
+import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
+import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -19,6 +21,7 @@ import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.*;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -83,6 +86,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	@Override
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		setPreviousMode(stack);
+		// stop sound stuff for sonic
 		setMode(stack, Mode.INACTIVE);
 
 		super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -172,8 +176,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return stack;
 	}
 
+	@Deprecated
 	public static void playSonicSounds(PlayerEntity player) {
-		player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
+		// Deprecated in favour of ClientSonicSoundHandler
 	}
 
 	public static void cycleMode(ItemStack stack) {
@@ -186,6 +191,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		SonicItem.setMode(stack, nbt.getInt(PREV_MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(PREV_MODE_KEY) + 1 : 0);
 		setPreviousMode(stack);
+		setMode(stack, 0);
 	}
 
 	public static boolean isSonic(ItemStack stack) {

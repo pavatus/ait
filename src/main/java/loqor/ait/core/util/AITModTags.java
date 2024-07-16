@@ -22,7 +22,6 @@ public class AITModTags {
 		public static final TagKey<Item> SONIC_ITEM = createTag("sonic_item");
 		public static final TagKey<Item> CLUSTER_MAX_HARVESTABLES = createTag("cluster_max_harvestables");
 
-		@Deprecated(forRemoval = true)
 		public static final TagKey<Item> NO_BOP = createTag("no_bop");
 		public static final TagKey<Item> LINK = createTag("link"); // TODO use the tag instead of the item instanceof
 

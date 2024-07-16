@@ -43,4 +43,12 @@ public class PlayerFollowingLoopingSound extends LoopingSound {
 		this.y = player.getY();
 		this.z = player.getZ();
 	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
 }
