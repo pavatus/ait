@@ -95,7 +95,7 @@ public class ClientSonicSoundHandlerV2 extends SoundHandler {
         if (this.sounds == null)
             this.generate();
 
-        if (this.shouldPlay() && playerUsingSonic()) {
+        if (this.getPlayer() != null && this.shouldPlay() && playerUsingSonic()) {
             this.startIfNotPlaying(getSonicSound());
             getSonicSound().setPosition(this.getPlayer().getBlockPos());
             getSonicSound().setPitch(-(this.getPlayer().getPitch() / 90f) + 1f);

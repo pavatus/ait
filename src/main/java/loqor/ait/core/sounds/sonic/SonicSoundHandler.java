@@ -9,14 +9,19 @@ import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SonicSoundHandler {
@@ -51,8 +56,16 @@ public class SonicSoundHandler {
         buf.writeBoolean(this.shouldPlay());
         buf.writeUuid(this.getPlayerUUID());
 
-        for (ServerPlayerEntity entity : server.getPlayerManager().getPlayerList()) {
-            ServerPlayNetworking.send(entity, SEND, buf);
+        ServerPlayerEntity entity = server.getPlayerManager().getPlayer(this.getPlayerUUID());
+
+        if (entity == null) return;
+
+        ServerWorld world = entity.getServerWorld();
+
+        List<ServerPlayerEntity> list = world.getPlayers();
+
+        for (ServerPlayerEntity player : list) {
+            ServerPlayNetworking.send(player, SEND, buf);
         }
     }
 }

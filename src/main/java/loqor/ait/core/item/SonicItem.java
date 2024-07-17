@@ -156,6 +156,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (user.isSneaking()) {
 			world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
 			cycleMode(stack);
+			Mode previousMode = findPreviousMode(stack);
+			user.sendMessage(Text.literal(previousMode.asString()).formatted(previousMode.format).formatted(Formatting.BOLD), true);
 			return;
 		}
 
@@ -474,6 +476,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				}
 
 				if (world == TardisUtil.getTardisDimension()) {
+					if (player.getPitch() == -90 && !tardis.travel().handbrake()) {
+						player.sendMessage(Text.translatable("message.ait.remoteitem.success1"), true);
+						tardis.travel().dematerialize();
+						return;
+					}
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
 					return;
