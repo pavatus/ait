@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -10,6 +11,7 @@ import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -23,9 +25,11 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,6 +84,9 @@ public class KeyItem extends LinkableItem {
 
 		for (ItemStack stack : keys) {
 			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
+
+			if (stack.getItem() == AITItems.SKELETON_KEY)
+				return true;
 
 			if (found == null)
 				continue;
@@ -168,7 +175,7 @@ public class KeyItem extends LinkableItem {
 		world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
 	}
 
-	@Override
+	/*@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
 		BlockPos pos = context.getBlockPos();
@@ -196,5 +203,12 @@ public class KeyItem extends LinkableItem {
 
 		player.sendMessage(Text.translatable("message.ait.tardis.trust_issue", true));
 		return ActionResult.FAIL;
+	}*/
+
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		if (stack.getItem() == AITItems.SKELETON_KEY)
+			tooltip.add(Text.literal("CREATIVE ONLY SKELETON KEY").formatted(Formatting.DARK_PURPLE));
+		super.appendTooltip(stack, world, tooltip, context);
 	}
 }

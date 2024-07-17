@@ -536,6 +536,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
         provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+        provider.addTranslation(AITItems.SKELETON_KEY, "Skeleton Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
