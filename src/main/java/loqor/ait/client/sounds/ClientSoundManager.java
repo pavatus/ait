@@ -8,7 +8,6 @@ import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
 import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
 import loqor.ait.client.sounds.rwf.ClientRWFSoundsHandler;
 import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
-import loqor.ait.client.sounds.sonic.ClientSonicSoundHandlerV2;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +26,7 @@ public class ClientSoundManager {
 	private static ClientRWFSoundsHandler rwfsounds;
 	private static ClientRainSoundHandler rainSound;
 	private static ClientLavaSoundHandler lavaSound;
-	private static ClientSonicSoundHandlerV2 sonicSound;
+	private static ClientSonicSoundHandler sonicSound;
 
 	public static ClientHumHandler getHum() {
 		if (hum == null) {
@@ -88,9 +87,9 @@ public class ClientSoundManager {
 		return lavaSound;
 	}
 
-	public static ClientSonicSoundHandlerV2 getSonicSound() {
+	public static ClientSonicSoundHandler getSonicSound() {
 		if (sonicSound == null) {
-			sonicSound = ClientSonicSoundHandlerV2.create();
+			sonicSound = ClientSonicSoundHandler.create();
 		}
 		return sonicSound;
 	}

@@ -1,39 +1,43 @@
 package loqor.ait.client.sounds.sonic;
 
-import loqor.ait.client.sounds.LoopingSound;
-import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.ServerLavaHandler;
-import loqor.ait.tardis.data.ServerRainHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
 import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 
 public class ClientSonicSoundHandler extends SoundHandler {
-    public static PlayerFollowingLoopingSound SONIC_SOUND;
+    public static PositionedLoopingSound SONIC_SOUND;
+    private boolean shouldPlay;
+    private PlayerEntity player;
+
     protected ClientSonicSoundHandler() {
+        ClientPlayNetworking.registerGlobalReceiver(ServerSonicSoundHandler.SEND,
+                (client, handler, buf, responseSender) -> {
+                    if (client.world == null) return;
+                    boolean shouldPlay = buf.readBoolean();
+                    PlayerEntity entity = client.world.getPlayerByUuid(buf.readUuid());
+
+                    this.shouldPlay(shouldPlay);
+                    this.setPlayer(entity);
+                });
     }
 
-    public PlayerFollowingLoopingSound getSonicSound() {
+    public PositionedLoopingSound getSonicSound() {
 
         if (SONIC_SOUND == null)
-            SONIC_SOUND = new PlayerFollowingLoopingSound(AITSounds.SONIC_USE,
+            SONIC_SOUND = new PositionedLoopingSound(AITSounds.SONIC_USE,
                     SoundCategory.PLAYERS,
-                    1f, 1f);
+                    new BlockPos(0, 0, 0), 1f, 1f);
 
         return SONIC_SOUND;
     }
@@ -49,9 +53,9 @@ public class ClientSonicSoundHandler extends SoundHandler {
     private void generate() {
 
         if (SONIC_SOUND == null)
-            SONIC_SOUND = new PlayerFollowingLoopingSound(AITSounds.SONIC_USE,
+            SONIC_SOUND = new PositionedLoopingSound(AITSounds.SONIC_USE,
                 SoundCategory.PLAYERS,
-                1f, 1f);
+                    new BlockPos(0, 0, 0), 1f, 1f);
 
         this.sounds = new ArrayList<>();
         this.sounds.add(
@@ -59,34 +63,42 @@ public class ClientSonicSoundHandler extends SoundHandler {
         );
     }
 
-    public ItemStack isPlayerHoldingSonic(PlayerEntity player) {
-        if (player.getMainHandStack() != null && player.getMainHandStack().getItem() instanceof SonicItem) {
-            return player.getMainHandStack();
-        }
-        return null;
+    public boolean shouldPlay() {
+        return this.shouldPlay;
     }
 
-    public boolean sonicIsInUse(ItemStack item) {
-        if (item == null) return false;
-        NbtCompound nbt = item.getOrCreateNbt();
+    public boolean playerUsingSonic() {
+        ItemStack handStack = this.getPlayer().getMainHandStack();
+        if (handStack == null || !(handStack.getItem() instanceof SonicItem)) return false;
+        NbtCompound nbt = this.getPlayer().getMainHandStack().getOrCreateNbt();
 
-        if (nbt.contains(SonicItem.MODE_KEY))
+        if (nbt.contains(SonicItem.MODE_KEY)) {
             return nbt.getInt(SonicItem.MODE_KEY) != 0;
+        }
 
         return false;
+    }
+
+    public void shouldPlay(boolean shouldPlay) {
+        this.shouldPlay = shouldPlay;
+    }
+
+    public void setPlayer(PlayerEntity entity) {
+        this.player = entity;
+    }
+
+    public PlayerEntity getPlayer() {
+        return this.player;
     }
 
     public void tick(MinecraftClient client) {
         if (this.sounds == null)
             this.generate();
 
-        if (client.player == null) return;
-
-        ItemStack item = isPlayerHoldingSonic(client.player);
-
-        if (sonicIsInUse(item)) {
+        if (this.getPlayer() != null && this.shouldPlay() && playerUsingSonic()) {
             this.startIfNotPlaying(getSonicSound());
-            getSonicSound().setPitch(-(client.player.getPitch() / 90f) + 1f);
+            getSonicSound().setPosition(this.getPlayer().getBlockPos());
+            getSonicSound().setPitch(-(this.getPlayer().getPitch() / 90f) + 1f);
         } else {
             this.stopSound(SONIC_SOUND);
         }

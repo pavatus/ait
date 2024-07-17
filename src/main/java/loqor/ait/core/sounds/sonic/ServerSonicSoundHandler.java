@@ -1,35 +1,30 @@
 package loqor.ait.core.sounds.sonic;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.sounds.PositionedLoopingSound;
-import loqor.ait.registry.impl.HumsRegistry;
-import loqor.ait.tardis.base.TardisComponent;
 
-import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.UUID;
 
-public class SonicSoundHandler {
+/**
+ * @author Loqor
+ * the reasoning behind this class is basically just a simple handler that is external to the entire tardis system
+ * its specifically and only for updating client information from the server
+ */
+
+public class ServerSonicSoundHandler {
     public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_sonic_use");
     private boolean shouldPlay;
     private UUID playerUUID;
 
-    public SonicSoundHandler() {}
+    public ServerSonicSoundHandler() {}
 
     public boolean shouldPlay() {
         return this.shouldPlay;

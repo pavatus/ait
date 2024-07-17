@@ -8,7 +8,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.core.sounds.sonic.SonicSoundHandler;
+import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
@@ -51,7 +51,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final String INACTIVE = "inactive";
 	public static final String SONIC_TYPE = "sonic_type";
 	public static final int SONIC_SFX_LENGTH = 30;
-	private final SonicSoundHandler sonicSoundHandler = new SonicSoundHandler();
+	private final ServerSonicSoundHandler sonicSoundHandler = new ServerSonicSoundHandler();
 	private boolean shouldntContinue = false;
 
 	public SonicItem(Settings settings) {
