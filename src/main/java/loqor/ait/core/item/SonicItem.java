@@ -2,14 +2,13 @@ package loqor.ait.core.item;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolderItem;
-import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
-import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.managers.RiftChunkManager;
+import loqor.ait.core.sounds.sonic.SonicSoundHandler;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
@@ -21,8 +20,8 @@ import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -52,6 +51,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final String INACTIVE = "inactive";
 	public static final String SONIC_TYPE = "sonic_type";
 	public static final int SONIC_SFX_LENGTH = 30;
+	private final SonicSoundHandler sonicSoundHandler = new SonicSoundHandler();
+	private boolean shouldntContinue = false;
 
 	public SonicItem(Settings settings) {
 		super(settings.maxCount(1), true);
@@ -87,6 +88,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		setPreviousMode(stack);
 		// stop sound stuff for sonic
+		if(!world.isClient())
+			sonicSoundHandler.setPlaying(false, world.getServer());
+		shouldntContinue = false;
 		setMode(stack, Mode.INACTIVE);
 
 		super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -95,6 +99,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	@Override
 	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
 		setPreviousMode(stack);
+		if(!world.isClient())
+			sonicSoundHandler.setPlaying(false, world.getServer());
+		shouldntContinue = false;
 		setMode(stack, Mode.INACTIVE);
 
 		return stack;
@@ -108,7 +115,26 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (remainingUseTicks % SONIC_SFX_LENGTH != 0)
 			return;
 
-		playSonicSounds(player);
+		if (sonicIsInUse(stack))
+			playSonicSoundsHere(player);
+	}
+
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		super.inventoryTick(stack, world, entity, slot, selected);
+		if (!selected) {
+			setMode(stack, Mode.INACTIVE);
+		}
+	}
+
+	public boolean sonicIsInUse(ItemStack item) {
+		if (item == null) return false;
+		NbtCompound nbt = item.getOrCreateNbt();
+
+		if (nbt.contains(SonicItem.MODE_KEY))
+			return nbt.getInt(SonicItem.MODE_KEY) != 0;
+
+		return false;
 	}
 
 	@Override
@@ -178,7 +204,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 	@Deprecated
 	public static void playSonicSounds(PlayerEntity player) {
-		// Deprecated in favour of ClientSonicSoundHandler
+		// womp womp
+	}
+
+	public void playSonicSoundsHere(PlayerEntity player) {
+		if(this.shouldntContinue) return;
+		if(player.getWorld().isClient()) return;
+		sonicSoundHandler.setPlayerIdAndServer(player.getUuid(), player.getServer());
+		sonicSoundHandler.setPlaying(true, player.getServer());
+		this.shouldntContinue = true;
 	}
 
 	public static void cycleMode(ItemStack stack) {
