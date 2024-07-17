@@ -1,0 +1,6 @@
+{
+	"parent": "ait:item/tardis_key",
+	"textures": {
+		"texture": "ait:item/keys/skeleton_key"
+	}
+}
