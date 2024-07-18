@@ -10,8 +10,6 @@ name: Automated donator builds
 on:
   push:
     branches: [ "main", "travel-rewrite" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
