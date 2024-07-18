@@ -91,7 +91,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		if (this.activeSequence == null)
 			return;
 
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(tardis()));
+		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(tardis()));
 	}
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
@@ -105,7 +105,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 			return;
 
 		this.activeSequence = sequence;
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(this.tardis));
+		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(this.tardis));
 
 		this.tardis().getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BEACON_POWER_SELECT);
 	}
