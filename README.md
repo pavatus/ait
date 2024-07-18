@@ -31,6 +31,17 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - Your TARDIS will be Bigger on the Inside (BOTI)
 - When you open the doors from the exterior you will be able to see the interior and vice versa
 
+### If you have [Gravity Changer (qouteall fork)](https://modrinth.com/mod/gravity-api-fork/versions)
+- Your TARDIS will be able to control the interior gravity from the [TARDIS Monitor](https://loqor.dev/ait/Monitor/)
+  
+## AIT Compatibility Addons
+
+### If you have [Adventures in Space](https://github.com/DrTheodor/adventures-in-space) and [Ad Astra](https://modrinth.com/mod/ad-astra)
+- Special compatibility with the TARDIS when playing with Ad Astra
+  
+### If you have [AIT: Computed](https://github.com/Duzos/aitcompute/tree/0.1.0.24-1.20.1-dev) and [Computer Craft](https://modrinth.com/mod/cc-tweaked)
+- Your TARDIS will be able to communicate with a turtle through the vortex
+
 ## Credits
 
 ### Developers:
@@ -61,6 +72,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - DocArcane (Credit for the Steampunk console design)
 - Creativious (Help with code)
 - Jeryn (Suff) (Help with code)
+- Maggie (Help with texturing)
 
 
 ## Links
