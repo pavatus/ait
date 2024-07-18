@@ -658,4 +658,17 @@ public class TardisUtil {
 
         return new Corners(first, second);
 	}
+
+	public static List<ServerWorld> getDimensions(MinecraftServer server) {
+		List<ServerWorld> dims = new ArrayList<>();
+		Iterable<ServerWorld> allDims = server.getWorlds();
+
+		// fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
+		allDims.forEach(dim -> {
+			if (dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
+				dims.add(dim);
+		});
+
+		return dims;
+	}
 }

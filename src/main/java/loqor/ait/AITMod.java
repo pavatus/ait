@@ -84,6 +84,7 @@ public class AITMod implements ModInitializer {
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
+		MoodEventPoolRegistry.init();
 
 		// For all the addon devs
 		FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class, AITModInitializer::onInitializeAIT);
@@ -126,6 +127,7 @@ public class AITMod implements ModInitializer {
 			FuelCommand.register(dispatcher);
 			SetRepairTicksCommand.register(dispatcher);
 			RiftChunkCommand.register(dispatcher);
+			TriggerMoodRollCommand.register(dispatcher);
 			SetNameCommand.register(dispatcher);
 			GetNameCommand.register(dispatcher);
 			GetCreatorCommand.register(dispatcher);

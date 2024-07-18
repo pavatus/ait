@@ -7,6 +7,7 @@ import loqor.ait.tardis.*;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
+import loqor.ait.tardis.data.mood.MoodHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -120,6 +121,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		LAVA_OUTSIDE(ServerLavaHandler.class, ServerLavaHandler::new, null),
 		INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new, null),
 		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
+		MOOD(MoodHandler.class, MoodHandler::new, null),
 		FUEL(FuelData.class, FuelData::new, null),
 		HADS(HADSData.class, HADSData::new, null),
 		SIEGE(SiegeData.class, SiegeData::new, null),

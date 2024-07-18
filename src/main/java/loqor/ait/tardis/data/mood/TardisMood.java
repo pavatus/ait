@@ -54,14 +54,14 @@ public record TardisMood(Moods moods, MoodType type, int weight) {
         UPSET(0, MoodType.NEGATIVE),
 
         // 8 neutral moods
-        TOLERANT(0, MoodType.NEUTRAL.setSwayWeight(-2)),
-        BORED(0, MoodType.NEUTRAL.setSwayWeight(-1)),
-        IMPASSIVE(0, MoodType.NEUTRAL.setSwayWeight(-1)),
-        CALM(0, MoodType.NEUTRAL.setSwayWeight(2)),
-        MANIC(0, MoodType.NEUTRAL.setSwayWeight(-2)),
-        CURIOUS(0, MoodType.NEUTRAL.setSwayWeight(3)),
-        LONELY(0, MoodType.NEUTRAL.setSwayWeight(-1)),
-        ANXIOUS(0, MoodType.NEUTRAL.setSwayWeight(-3)),
+        TOLERANT(0, MoodType.NEUTRAL.setSwayWeight(-20)),
+        BORED(0, MoodType.NEUTRAL.setSwayWeight(-20)),
+        IMPASSIVE(0, MoodType.NEUTRAL.setSwayWeight(-20)),
+        CALM(0, MoodType.NEUTRAL.setSwayWeight(20)),
+        MANIC(0, MoodType.NEUTRAL.setSwayWeight(-20)),
+        CURIOUS(0, MoodType.NEUTRAL.setSwayWeight(20)),
+        LONELY(0, MoodType.NEUTRAL.setSwayWeight(-20)),
+        ANXIOUS(0, MoodType.NEUTRAL.setSwayWeight(-20)),
 
         // 5 positive moods
         HAPPY(0, MoodType.POSITIVE),
@@ -108,6 +108,10 @@ public record TardisMood(Moods moods, MoodType type, int weight) {
 
         MoodType(int swayWeight) {
             this.swayWeight = swayWeight;
+        }
+
+        public int getSwayedWeight() {
+            return this.swayWeight;
         }
 
         // if the sway weight is positive, it results in a more-than-likely positive mood

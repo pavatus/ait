@@ -53,6 +53,10 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         this.tryFly();
     }
 
+    public boolean inFlight() {
+        return this.getState() == State.FLIGHT;
+    }
+
     @Override
     public void handbrake(boolean value) {
         super.handbrake(value);

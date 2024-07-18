@@ -32,7 +32,7 @@ public class DimensionControl extends Control {
 		TravelHandler travel = tardis.travel();
 		DirectedGlobalPos.Cached dest = travel.destination();
 
-		List<ServerWorld> dims = getDimensions(world.getServer());
+		List<ServerWorld> dims = TardisUtil.getDimensions(world.getServer());
 		int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
 
 		int next;
@@ -58,18 +58,5 @@ public class DimensionControl extends Control {
 		);
 
 		player.sendMessage(message, true);
-	}
-
-	public static List<ServerWorld> getDimensions(MinecraftServer server) {
-		List<ServerWorld> dims = new ArrayList<>();
-		Iterable<ServerWorld> allDims = server.getWorlds();
-
-		// fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
-		allDims.forEach(dim -> {
-			if (dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
-				dims.add(dim);
-		});
-
-		return dims;
 	}
 }

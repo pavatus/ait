@@ -36,8 +36,7 @@ public class Sequence {
 		return recent.equals(this.getControls());
 	}
 
-	public void execute(Tardis tardis) {
-	}
+	public void execute(Tardis tardis) {}
 
 	public void executeMissed(Tardis tardis, @Nullable ServerPlayerEntity player) {
 		if(player != null) {
