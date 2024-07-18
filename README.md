@@ -34,7 +34,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ### If you have [Gravity Changer (qouteall fork)](https://modrinth.com/mod/gravity-api-fork/versions)
 - Your TARDIS will be able to control the interior gravity from the [TARDIS Monitor](https://loqor.dev/ait/Monitor/)
   
-## AIT Compactibility Addons
+## AIT Compatibility Addons
 
 ### If you have [Adventures in Space](https://github.com/DrTheodor/adventures-in-space) and [Ad Astra](https://modrinth.com/mod/ad-astra)
 - Special compatibility with the TARDIS when playing with Ad Astra
