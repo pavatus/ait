@@ -14,10 +14,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
 
@@ -27,6 +24,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     private TardisMood.Moods winningMood;
     @Exclude
     private final Random RANDOM = AITMod.RANDOM;
+    public static List<TardisMood.Moods> PRIORITY_MOODS; // <3>
 
     /**
      * Do NOT under any circumstances run logic in this constructor.
@@ -36,6 +34,14 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
      */
     public MoodHandler() {
         super(Id.MOOD);
+    }
+
+    public void setPriorityMoods(List<TardisMood.Moods> moods) {
+        PRIORITY_MOODS = moods;
+    }
+
+    public List<TardisMood.Moods> getPriorityMoods() {
+        return PRIORITY_MOODS;
     }
 
     @Override
@@ -97,9 +103,16 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     public void raceMoods() {
         Map<TardisMood.Moods, Integer> moodWeights = new HashMap<>();
 
-        for (TardisMood.Moods mood : TardisMood.Moods.values()) {
-            int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
-            moodWeights.put(mood, Math.min(weight, 256));
+        if (this.getPriorityMoods().isEmpty()) {
+            for (TardisMood.Moods mood : TardisMood.Moods.values()) {
+                int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
+                moodWeights.put(mood, Math.min(weight, 256));
+            }
+        } else {
+            for (TardisMood.Moods mood : this.getPriorityMoods()) {
+                int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
+                moodWeights.put(mood, Math.min(weight, 256));
+            }
         }
 
         this.winningMood = moodWeights.entrySet().stream()
@@ -173,5 +186,13 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     public void setMoodDictatedEvent(@Nullable MoodDictatedEvent moodDictatedEvent) {
         this.moodDictatedEvent = moodDictatedEvent;
         this.winningMood = null;
+    }
+
+    public void randomizePriorityMoods() {
+        List<TardisMood.Moods> moods = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            moods.add(TardisMood.Moods.values()[RANDOM.nextInt(TardisMood.Moods.values().length)]);
+        }
+        this.setPriorityMoods(moods);
     }
 }
