@@ -81,8 +81,6 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
     public void rollForMoodDictatedEvent() {
 
-        this.winningMood = null;
-
         int rand = RANDOM.nextInt(0, MoodEventPoolRegistry.REGISTRY.size());
         MoodDictatedEvent moodEvent = MoodEventPoolRegistry.REGISTRY.get(rand);
 
@@ -93,6 +91,10 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         TardisUtil.getPlayersInsideInterior(this.tardis()).forEach(player -> player.sendMessage(
                 Text.literal(moodDictatedEvent.id().getPath()).formatted(Formatting.BOLD), true));
 
+        raceMoods();
+    }
+
+    public void raceMoods() {
         Map<TardisMood.Moods, Integer> moodWeights = new HashMap<>();
 
         for (TardisMood.Moods mood : TardisMood.Moods.values()) {
