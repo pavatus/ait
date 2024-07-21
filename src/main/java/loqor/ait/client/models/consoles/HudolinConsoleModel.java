@@ -1,11 +1,9 @@
 package loqor.ait.client.models.consoles;
 
-
 import loqor.ait.client.animation.console.hudolin.HudolinAnimations;
-import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -619,11 +617,11 @@ public class HudolinConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch (state) {
-			case FLIGHT, MAT, DEMAT, CRASH -> HudolinAnimations.HUDOLIN_FLIGHT;
-			default -> Animation.Builder.create(0).build();
-		};
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
+		if (state == TravelHandlerBase.State.LANDED)
+			return Animation.Builder.create(0).build();
+
+		return HudolinAnimations.HUDOLIN_FLIGHT;
 	}
 
 	@Override

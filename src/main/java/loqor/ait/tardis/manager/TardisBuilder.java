@@ -1,7 +1,7 @@
 package loqor.ait.tardis.manager;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -12,7 +12,7 @@ import loqor.ait.tardis.data.StatsData;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 public class TardisBuilder {
 
     private final UUID uuid;
-    private AbsoluteBlockPos.Directed pos;
+    private DirectedGlobalPos.Cached pos;
     private TardisDesktopSchema desktop;
     private ExteriorVariantSchema exterior;
 
@@ -36,7 +36,7 @@ public class TardisBuilder {
         this(UUID.randomUUID());
     }
 
-    public TardisBuilder at(AbsoluteBlockPos.Directed pos) {
+    public TardisBuilder at(DirectedGlobalPos.Cached pos) {
         this.pos = pos;
         return this;
     }
@@ -60,7 +60,7 @@ public class TardisBuilder {
         return this;
     }
 
-    public TardisBuilder owner(PlayerEntity player) {
+    public TardisBuilder owner(ServerPlayerEntity player) {
         return this.<StatsData>with(TardisComponent.Id.STATS, stats -> {
             stats.setPlayerCreatorName(player.getName().getString());
             stats.markPlayerCreatorName();
@@ -88,14 +88,14 @@ public class TardisBuilder {
         long start = System.currentTimeMillis();
         this.validate();
 
-        ServerTardis tardis = new ServerTardis(this.uuid, this.pos, this.desktop, this.exterior);
-        Tardis.init(tardis, false);
+        ServerTardis tardis = new ServerTardis(this.uuid, this.desktop, this.exterior);
+        Tardis.init(tardis, TardisComponent.InitContext.createdAt(this.pos));
 
         for (Consumer<ServerTardis> consumer : this.postInit) {
             consumer.accept(tardis);
         }
 
-        AITMod.LOGGER.info("Built {} in {}mst", tardis, System.currentTimeMillis() - start);
+        AITMod.LOGGER.info("Built {} in {}ms", tardis, System.currentTimeMillis() - start);
         return tardis;
     }
 }

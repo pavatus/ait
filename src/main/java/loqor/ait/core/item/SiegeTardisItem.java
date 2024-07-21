@@ -1,7 +1,7 @@
 package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableItem;
 import net.minecraft.client.item.TooltipContext;
@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
 
 // todo fix so many issues with having more than one of this item
 public class SiegeTardisItem extends Item {
@@ -76,7 +76,7 @@ public class SiegeTardisItem extends Item {
 			}
 		}
 
-		tardis.travel().setPosition(fromEntity(entity));
+		tardis.travel().forcePosition(fromEntity(entity));
 
 		if (!tardis.isSiegeBeingHeld()) {
 			tardis.setSiegeBeingHeld(entity.getUuid());
@@ -133,12 +133,12 @@ public class SiegeTardisItem extends Item {
 		tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
 	}
 
-	public static AbsoluteBlockPos.Directed fromItemContext(ItemUsageContext context) {
-		return new AbsoluteBlockPos.Directed(context.getBlockPos().offset(context.getSide()), context.getWorld(), 0);
+	public static DirectedGlobalPos.Cached fromItemContext(ItemUsageContext context) {
+		return DirectedGlobalPos.Cached.create((ServerWorld) context.getWorld(), context.getBlockPos().offset(context.getSide()), (byte) 0);
 	}
 
-	public static AbsoluteBlockPos.Directed fromEntity(Entity entity) {
-		return new AbsoluteBlockPos.Directed(BlockPos.ofFloored(entity.getPos()), entity.getWorld(), 0);
+	public static DirectedGlobalPos.Cached fromEntity(Entity entity) {
+		return DirectedGlobalPos.Cached.create((ServerWorld) entity.getWorld(), BlockPos.ofFloored(entity.getPos()), (byte) 0);
 	}
 
 	public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis) {
@@ -175,7 +175,7 @@ public class SiegeTardisItem extends Item {
 	}
 
 	public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
-		if (tardis.flight().handbrake().get())
+		if (tardis.travel().handbrake())
 			return;
 
 		tardis.travel().deleteExterior();
@@ -184,9 +184,9 @@ public class SiegeTardisItem extends Item {
 		player.getInventory().markDirty();
 	}
 
-	public static void placeTardis(Tardis tardis, AbsoluteBlockPos.Directed pos) {
-		tardis.travel().setPosition(pos);
-		tardis.travel().placeExterior();
+	public static void placeTardis(Tardis tardis, DirectedGlobalPos.Cached pos) {
+		tardis.travel().forcePosition(pos);
+		tardis.travel().placeExterior(false);
 		tardis.setSiegeBeingHeld(null);
 	}
 

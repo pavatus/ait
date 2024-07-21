@@ -1,14 +1,12 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.MinecraftServer;
@@ -47,8 +45,6 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 
 	@Override
 	public void tick(MinecraftServer server) {
-		if(tardis.getExteriorPos().getWorld().isClient()) return;
-
 		// @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
 		if (!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
 			for (Entity entity : TardisUtil.getEntitiesInInterior(tardis(), 200)) {
@@ -60,14 +56,17 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 			return;
 		}
 
-		if (!tardis.getHandlers().getAlarms().isEnabled()) return;
-		if (tardis.travel().getState() == TardisTravel.State.FLIGHT) return;
+		if (!tardis.alarm().isEnabled())
+			return;
+
+		if (tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)
+			return;
 
 		soundCounter++;
 
 		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
 			soundCounter = 0;
-			tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+			tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
 		}
 	}
 }

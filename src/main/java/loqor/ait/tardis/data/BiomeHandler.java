@@ -1,16 +1,14 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,13 +27,17 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     public void update() {
-        if (tardis.getExteriorPos() == null)
+        this.update(this.tardis.travel().position());
+    }
+
+    public void update(DirectedGlobalPos.Cached globalPos) {
+        if (globalPos == null)
             return;
 
-        AbsoluteBlockPos pos = tardis.getExteriorPos();
-        World world = pos.getWorld();
+        RegistryEntry<Biome> entry = globalPos.getWorld().getBiome(globalPos.getPos());
+        BiomeType biome = getTagForBiome(entry);
 
-        this.type.set(getTagForBiome(world.getBiome(pos)));
+        this.type.set(biome);
     }
 
     public BiomeType getBiomeKey() {
@@ -64,6 +66,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         return getBiomeTypeFromKey(biome.getKey().get().getValue().getPath());
     }
 
+    // TODO: make tags for these
     private static BiomeType getBiomeTypeFromKey(String biomeKey) {
         return switch(biomeKey) {
             default -> BiomeType.DEFAULT;

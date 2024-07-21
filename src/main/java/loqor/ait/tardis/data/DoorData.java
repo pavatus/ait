@@ -6,12 +6,13 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.schema.door.DoorSchema;
-import loqor.ait.core.entities.BaseControlEntity;
+import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
@@ -27,8 +28,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
-
-import static loqor.ait.tardis.TardisTravel.State.*;
 
 public class DoorData extends TardisComponent implements TardisTickable {
 	private boolean locked, left, right;
@@ -58,7 +57,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		// Get all entities in the Tardis interior
 		TardisUtil.getLivingEntitiesInInterior(tardis())
 				.stream()
-				.filter(entity -> !(entity instanceof BaseControlEntity)) // Exclude control entities
+				.filter(entity -> !(entity instanceof ConsoleControlEntity)) // Exclude control entities
 				.filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
 				.forEach(entity -> {
 					// Calculate the motion vector away from the door
@@ -82,7 +81,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		if (directed == null)
 			return false;
 
-		return (tardis.travel().getState() != LANDED && tardis().travel().getState() != MAT)
+		return (tardis.travel().getState() != TravelHandlerBase.State.LANDED && tardis().travel().getState() != TravelHandlerBase.State.MAT)
 				&& !tardis.areShieldsActive() && this.isOpen() && TardisUtil.getTardisDimension().getBlockEntity(
 				directed.getPos()
 		) instanceof DoorBlockEntity;
@@ -210,10 +209,10 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			}
 
 			if (pos != null) // fixme will play sound twice on interior door
-				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
-					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			return false;
 		}
@@ -247,39 +246,39 @@ public class DoorData extends TardisComponent implements TardisTickable {
 						SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
 				lockTardis(false, tardis, player, true); // forcefully unlock the tardis
-				tardis.getDoor().openDoors();
+				tardis.door().openDoors();
 
 				return true;
 			}
 
 			if (pos != null) // fixme will play sound twice on interior door
-				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
-					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+					AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
 			return false;
 		}
 
-		if (tardis.getLockedTardis() || tardis.getHandlers().getSonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+		if (tardis.getLockedTardis() || tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
-				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
-				TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, 0.5f);
+				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
+				TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 			}
 
 			return false;
 		}
 
-		DoorData door = tardis.getDoor();
+		DoorData door = tardis.door();
 
 		DoorSchema doorSchema = tardis.getExterior().getVariant().door();
 		SoundEvent sound = doorSchema.isDouble() && door.isBothOpen() ? doorSchema.closeSound() : doorSchema.openSound();
 
-		tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), sound, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), sound, SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
 		TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
-				sound, SoundCategory.BLOCKS, 0.6F, 1F);
+				sound, SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
 		if (!doorSchema.isDouble()) {
 			door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
@@ -309,28 +308,29 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		if (tardis.getLockedTardis() == locked)
 			return true;
 
-		if (!forced && (tardis.travel().getState() == DEMAT || tardis.travel().getState() == MAT))
+		if (!forced && (tardis.travel().getState() == TravelHandlerBase.State.DEMAT || tardis.travel().getState() == TravelHandlerBase.State.MAT))
 			return false;
 
-		tardis.setLockedTardis(locked);
-		DoorData door = tardis.getDoor();
+		tardis.door().setLocked(locked);
+		DoorData door = tardis.door();
 
 		if (door == null)
 			return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme
 
 		door.setDoorState(DoorStateEnum.CLOSED);
 
-		if (!forced) {
+		if (!forced)
 			PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, locked);
-		}
 
-		if (tardis.siege().isActive()) return true;
+		if (tardis.siege().isActive())
+			return true;
 
 		String lockedState = tardis.getLockedTardis() ? "\uD83D\uDD12" : "\uD83D\uDD13";
+
 		if (player != null)
 			player.sendMessage(Text.literal(lockedState), true);
 
-		tardis.getExteriorPos().getWorld().playSound(null, tardis.getExteriorPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+		tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
 		TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
 				SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F
@@ -340,7 +340,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 	}
 
 	public boolean previouslyLocked(){
-		return PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+		return PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
 	}
 
 	public enum DoorStateEnum {

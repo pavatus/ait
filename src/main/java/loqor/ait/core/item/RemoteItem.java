@@ -1,10 +1,10 @@
 package loqor.ait.core.item;
 
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-import static loqor.ait.tardis.TardisTravel.State.LANDED;
+import static loqor.ait.tardis.data.travel.TravelHandlerBase.State.LANDED;
 
 public class RemoteItem extends LinkableItem {
 
@@ -41,7 +42,10 @@ public class RemoteItem extends LinkableItem {
 		PlayerEntity player = context.getPlayer();
 		ItemStack itemStack = context.getStack();
 
-		if (world.isClient() || player == null)
+		if (player == null)
+			return ActionResult.PASS;
+
+		if (!(world instanceof ServerWorld serverWorld))
 			return ActionResult.PASS;
 
 		NbtCompound nbt = itemStack.getOrCreateNbt();
@@ -61,24 +65,28 @@ public class RemoteItem extends LinkableItem {
                 player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
 
             // Check if the Tardis is already present at this location before moving it there
-            AbsoluteBlockPos.Directed currentPosition = tardis.travel().getPosition();
+            DirectedGlobalPos.Cached currentPosition = tardis.travel().position();
 
-            if (!currentPosition.equals(pos)) {
-                if (world != TardisUtil.getTardisDimension()) {
-                    world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+			if (currentPosition.getPos().equals(pos))
+				return;
 
-                    BlockPos temp = pos.up();
+			if (world != TardisUtil.getTardisDimension()) {
+				world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-                    if (world.getBlockState(pos).isReplaceable())
-						temp = pos;
+				BlockPos temp = pos.up();
 
-                    tardis.flight().speed().set(tardis.flight().maxSpeed());
-                    FlightUtil.travelTo(tardis, new AbsoluteBlockPos.Directed(temp, world, DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
-                } else {
-                    world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                    player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
-                }
-            }
+				if (world.getBlockState(pos).isReplaceable())
+					temp = pos;
+
+				tardis.travel().speed(tardis.travel().maxSpeed().get());
+
+				TravelUtil.travelTo(tardis, DirectedGlobalPos.Cached.create(serverWorld, temp,
+						DirectionControl.getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw())))
+				);
+			} else {
+				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+				player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
+			}
         });
 
 		return ActionResult.PASS;
@@ -97,7 +105,7 @@ public class RemoteItem extends LinkableItem {
 				return;
 
 			if (tardis.travel().getState() != LANDED)
-				tooltip.add(Text.literal("→ " + tardis.getHandlers().getFlight().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
+				tooltip.add(Text.literal("→ " + tardis.travel().getDurationAsPercentage() + "%").formatted(Formatting.GOLD));
 		}
 	}
 }

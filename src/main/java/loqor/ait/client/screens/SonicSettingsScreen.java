@@ -1,6 +1,7 @@
 package loqor.ait.client.screens;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.data.schema.SonicSchema;
@@ -40,8 +41,6 @@ public class SonicSettingsScreen extends ConsoleScreen {
     public SonicSettingsScreen(ClientTardis tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
-
-        sendSonicChangePacket();
     }
 
     @Override
@@ -112,6 +111,8 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
         SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
+        if (!tardis().isUnlocked(schema)) return;
+
         SonicItem.setSchema(tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC), schema);
         ClientTardisUtil.changeSonicWithScreen(this.tardis().getUuid(), schema);
     }
@@ -161,6 +162,16 @@ public class SonicSettingsScreen extends ConsoleScreen {
             SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
             SonicItem.setSchema(sonicCopy, schema);
+
+            stack.push();
+            stack.translate(50f, 50f, 1000f);
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    (tardis().isUnlocked(schema)) ? "" : "\uD83D\uDD12",
+                    x, y,
+                    Color.WHITE.getRGB());
+            stack.pop();
+
             stack.push();
 
             SonicSchema.Rendering rendering = schema.rendering();
@@ -170,9 +181,15 @@ public class SonicSettingsScreen extends ConsoleScreen {
             stack.translate(x + positionOffset.x(), y + positionOffset.y(), positionOffset.z());
             stack.scale(scale + scaleOffset.x(), scale + scaleOffset.y(), scale + scaleOffset.z());
 
+            boolean isSonicUnlocked = tardis().isUnlocked(schema);
+
+            float base = isSonicUnlocked ? 1f : 0.1f;
+
+            RenderSystem.setShaderColor(base, base, base, 1f);
             DiffuseLighting.disableGuiDepthLighting();
             context.drawItem(sonicCopy,0, 0);
             DiffuseLighting.enableGuiDepthLighting();
+            RenderSystem.setShaderColor(1, 1, 1,1);
 
             stack.pop();
 

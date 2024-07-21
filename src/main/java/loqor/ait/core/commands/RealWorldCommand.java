@@ -4,9 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.core.entities.TardisRealEntity;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,15 +33,13 @@ public class RealWorldCommand {
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		// TODO: better error handling
-		if (tardis.travel().getState() != TardisTravel.State.LANDED)
+		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 			return 0;
 
-		BlockPos spawnBlockPos = tardis.getExteriorPos();
+		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+		BlockPos spawnBlockPos = globalPos.getPos();
 
-		TardisUtil.teleportOutside(tardis, source);
-		source.setInvisible(true);
-
-		TardisRealEntity.spawnFromTardisId(tardis.getExteriorPos().getWorld(), tardis.getUuid(), spawnBlockPos, source, tardis.getDesktop().doorPos().getPos());
+		tardis.flight().enterFlight(source);
 
 		Text textResponse = Text.translatableWithFallback("command.ait.realworld.response",
 				"Spawned a real world TARDIS at: ", spawnBlockPos

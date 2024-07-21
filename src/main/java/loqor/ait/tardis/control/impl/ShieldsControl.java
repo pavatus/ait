@@ -41,8 +41,8 @@ public class ShieldsControl extends Control {
 
 		this.soundEvent = player.isSneaking() ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
 
-		if (tardis.getExteriorPos() != null)
-			WorldOps.updateIfOnServer(world, tardis.getExteriorPos());
+		if (tardis.travel().position().getPos() != null)
+			WorldOps.updateIfOnServer(world, tardis.travel().position().getPos());
 
 		return true;
 	}

@@ -173,19 +173,31 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.CORAL_PLANT, 1)
-                    .pattern("SRS")
-                    .pattern("BCB")
-                    .pattern("ERE")
-                    .input('C', Items.DEAD_BRAIN_CORAL)
-                    .input('R', Items.END_CRYSTAL)
-                    .input('E', Items.ENDER_EYE)
-                    .input('S', Items.BLAZE_ROD)
-                    .input('B', Items.REDSTONE_BLOCK)
+                    .pattern("ZHZ")
+                    .pattern("CDC")
+                    .pattern("RGR")
+                    .input('Z', AITBlocks.ZEITON_BLOCK)
+                    .input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
+                    .input('C', AITBlocks.ZEITON_CLUSTER)
+                    .input('D', Items.DEAD_BRAIN_CORAL)
+                    .input('R', AITItems.ZEITON_SHARD)
+                    .input('G', AITBlocks.CONSOLE_GENERATOR)
+                    .criterion(hasItem(AITBlocks.ZEITON_BLOCK), conditionsFromItem(AITBlocks.ZEITON_BLOCK))
+                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
+                    .criterion(hasItem(AITBlocks.ZEITON_CLUSTER), conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
                     .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
-                    .criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL))
-                    .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
-                    .criterion(hasItem(Items.BLAZE_ROD), conditionsFromItem(Items.BLAZE_ROD))
-                    .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
+                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .criterion(hasItem(AITBlocks.CONSOLE_GENERATOR), conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ENGINE_CORE_BLOCK, 1)
+                    .pattern("GHG")
+                    .pattern("HCH")
+                    .pattern("GHG")
+                    .input('G', Items.GLASS)
+                    .input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
+                    .input('C', Items.CONDUIT)
+                    .criterion(hasItem(Items.GLASS), conditionsFromItem(Items.GLASS))
+                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
+                    .criterion(hasItem(Items.CONDUIT), conditionsFromItem(Items.CONDUIT)));
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1)
                     .pattern("GSG")
                     .pattern("SBS")
@@ -324,6 +336,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('S', Blocks.SEA_LANTERN).criterion(hasItem(Blocks.SEA_LANTERN), conditionsFromItem(Blocks.SEA_LANTERN))
             );
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.PEANUT)
+                    .pattern("BBB")
+                    .pattern("BEB")
+                    .pattern("BBB")
+                    .input('B', Blocks.BEACON).criterion(hasItem(Blocks.BEACON), conditionsFromItem(Blocks.BEACON))
+                    .input('E', Blocks.DRAGON_EGG).criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));
+
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -445,6 +464,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("sonic/switch", AITSounds.SONIC_SWITCH);
 
             // Other
+            provider.addSound("tardis/vortex_sound", AITSounds.VORTEX_SOUND);
             provider.addSound("tardis/cloister", AITSounds.CLOISTER);
             provider.addSound("tardis/groan", AITSounds.GROAN);
 
@@ -516,6 +536,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
         provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
         provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+        provider.addTranslation(AITItems.SKELETON_KEY, "Skeleton Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
         provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
@@ -555,6 +576,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
+        provider.addTranslation(AITBlocks.PEANUT, "P E A N U T");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
@@ -603,6 +625,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.warning1", "The TARDIS is out of fuel and cannot dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning2", "The TARDIS is refueling and is unable to dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
+        provider.addTranslation("message.ait.remoteitem.success1", "Dematerialized TARDIS");
         provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
         provider.addTranslation("message.ait.version", "ᴠᴇʀꜱɪᴏɴ: %s");
 

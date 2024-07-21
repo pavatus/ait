@@ -8,7 +8,6 @@ import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import net.minecraft.client.MinecraftClient;
 
@@ -27,11 +26,6 @@ public class ClientTardis extends Tardis {
 	public void setDesktop(TardisDesktop desktop) {
 		desktop.setTardis(this);
 		this.desktop = desktop;
-	}
-
-	public void setTravel(TardisTravel travel) {
-		travel.setTardis(this);
-		this.travel = travel;
 	}
 
 	public void setExterior(TardisExterior exterior) {

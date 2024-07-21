@@ -134,6 +134,11 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
+// @THEO (ME) DONT FORGET TO REMOVE THIS LATER
+tasks.withType(JavaCompile) {
+    options.compilerArgs += "-Xlint:-removal"
+}
+
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     if (JavaVersion.current() < javaVersion) {

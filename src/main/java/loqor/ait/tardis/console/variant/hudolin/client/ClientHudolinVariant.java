@@ -3,10 +3,8 @@ package loqor.ait.tardis.console.variant.hudolin.client;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.HudolinConsoleModel;
-import loqor.ait.client.models.consoles.SteamConsoleModel;
 import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.tardis.console.variant.hudolin.HudolinVariant;
-import loqor.ait.tardis.console.variant.steam.SteamVariant;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 

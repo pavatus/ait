@@ -17,7 +17,8 @@ public abstract class ExteriorCategorySchema extends BasicSchema {
 	private final Identifier id;
 
 	protected ExteriorCategorySchema(Identifier id, String name) {
-		this.id = id;
+        super("exterior");
+        this.id = id;
 	}
 
 	@Override

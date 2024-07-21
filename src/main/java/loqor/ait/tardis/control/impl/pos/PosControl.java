@@ -1,15 +1,16 @@
 package loqor.ait.tardis.control.impl.pos;
 
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class PosControl extends Control {
+
 	private final PosType type;
 
 	public PosControl(PosType type, String id) {
@@ -28,19 +29,22 @@ public abstract class PosControl extends Control {
 			return false;
 		}
 
-		TardisTravel travel = tardis.travel();
-		AbsoluteBlockPos.Directed destination = travel.getDestination();
+		TravelHandler travel = tardis.travel();
+		DirectedGlobalPos.Cached destination = travel.destination();
 
-		BlockPos pos = this.type.add(destination, (leftClick) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis), destination.getWorld());
-		travel.setDestination(new AbsoluteBlockPos.Directed(pos, destination.getWorld(), destination.getRotation()), false);
+		BlockPos pos = this.type.add(destination.getPos(), (leftClick) ? -IncrementManager.increment(tardis)
+				: IncrementManager.increment(tardis), destination.getWorld());
 
+		travel.forceDestination(destination.pos(pos));
 		messagePlayerDestination(player, travel);
 		return true;
 	}
 
-	private void messagePlayerDestination(ServerPlayerEntity player, TardisTravel travel) {
-		AbsoluteBlockPos.Directed dest = travel.getDestination();
-		Text text = Text.translatable("tardis.message.control.randomiser.poscontrol").append(Text.literal(" " + dest.getX() + " | " + dest.getY() + " | " + dest.getZ()));
+	private void messagePlayerDestination(ServerPlayerEntity player, TravelHandler travel) {
+		DirectedGlobalPos.Cached globalPos = travel.destination();
+		BlockPos pos = globalPos.getPos();
+
+		Text text = Text.translatable("tardis.message.control.randomiser.poscontrol").append(Text.literal(" " + pos.getX() + " | " + pos.getY() + " | " + pos.getZ()));
 		player.sendMessage(text, true);
 	}
 

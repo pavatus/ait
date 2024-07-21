@@ -2,7 +2,6 @@ package loqor.ait.core.data.schema.exterior;
 
 import com.google.gson.*;
 import loqor.ait.AITMod;
-import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.BasicSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
@@ -11,9 +10,9 @@ import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -46,15 +45,16 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	@Environment(EnvType.CLIENT)
 	private ClientExteriorVariantSchema cachedSchema;
 
-	protected ExteriorVariantSchema(String name, Identifier category, Identifier id, Loyalty loyalty) {
-		this.category = category;
+	protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
+        super("exterior");
+        this.category = category;
 
 		this.id = id;
 		this.loyalty = loyalty;
 	}
 
-	protected ExteriorVariantSchema(String name, Identifier category, Identifier id) {
-		this(name, category, id, Loyalty.MIN);
+	protected ExteriorVariantSchema(Identifier category, Identifier id) {
+		this(category, id, Loyalty.MIN);
 	}
 
 	@Override
@@ -72,13 +72,12 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 		return UnlockType.EXTERIOR;
 	}
 
-	public MatSound getSound(TardisTravel.State state) {
-		return switch (state) {
-			case LANDED, CRASH -> AITSounds.LANDED_ANIM;
-			case FLIGHT -> AITSounds.FLIGHT_ANIM;
-			case DEMAT -> AITSounds.DEMAT_ANIM;
-			case MAT -> AITSounds.MAT_ANIM;
-		};
+	/**
+	 * @see TravelHandlerBase.State#effect()
+	 */
+	@Deprecated
+	public MatSound getSound(TravelHandlerBase.State state) {
+		return state.effect();
 	}
 
 	public Identifier categoryId() {

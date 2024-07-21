@@ -8,7 +8,7 @@ import loqor.ait.client.renderers.decoration.PlaqueRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
-import loqor.ait.client.renderers.entities.TardisRealRenderer;
+import loqor.ait.client.renderers.entities.RealTardisRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
@@ -29,8 +29,9 @@ import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -179,7 +180,7 @@ public class AITModClient implements ClientModInitializer {
                             return;
 
                         // todo remember to use the right world in future !!
-                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.getExteriorPos());
+                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.travel().position().getPos());
 
                         if (!(block instanceof ExteriorBlockEntity exterior))
                             return;
@@ -187,13 +188,13 @@ public class AITModClient implements ClientModInitializer {
                         if (exterior.getAnimation() == null)
                             return;
 
-                        exterior.getAnimation().setupAnimation(TardisTravel.State.values()[p]);
+                        exterior.getAnimation().setupAnimation(TravelHandlerBase.State.values()[p]);
                     });
                 }
         );
 
         // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
-        ClientPlayNetworking.registerGlobalReceiver(TardisTravel.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) ->
+        ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) ->
                 client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
 
         // FIXME well this seems pointless
@@ -315,7 +316,7 @@ public class AITModClient implements ClientModInitializer {
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
-        EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealRenderer::new);
+        EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, RealTardisRenderer::new);
     }
 
     public static void setupBlockRendering() {

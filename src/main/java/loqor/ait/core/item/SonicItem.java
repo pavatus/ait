@@ -5,27 +5,30 @@ import loqor.ait.api.tardis.ArtronHolderItem;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.managers.RiftChunkManager;
+import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -47,7 +50,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public static final String PREV_MODE_KEY = "PreviousMode";
 	public static final String INACTIVE = "inactive";
 	public static final String SONIC_TYPE = "sonic_type";
-	public static final int SONIC_SFX_LENGTH = FlightUtil.convertSecondsToTicks(1.5);
+	public static final int SONIC_SFX_LENGTH = 30;
+	private final ServerSonicSoundHandler sonicSoundHandler = new ServerSonicSoundHandler();
+	private boolean shouldntContinue = false;
 
 	public SonicItem(Settings settings) {
 		super(settings.maxCount(1), true);
@@ -82,6 +87,10 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	@Override
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		setPreviousMode(stack);
+		// stop sound stuff for sonic
+		if(!world.isClient())
+			sonicSoundHandler.setPlaying(false, world.getServer());
+		shouldntContinue = false;
 		setMode(stack, Mode.INACTIVE);
 
 		super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -90,6 +99,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	@Override
 	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
 		setPreviousMode(stack);
+		if(!world.isClient())
+			sonicSoundHandler.setPlaying(false, world.getServer());
+		shouldntContinue = false;
 		setMode(stack, Mode.INACTIVE);
 
 		return stack;
@@ -103,7 +115,26 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (remainingUseTicks % SONIC_SFX_LENGTH != 0)
 			return;
 
-		playSonicSounds(player);
+		if (sonicIsInUse(stack))
+			playSonicSoundsHere(player);
+	}
+
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		super.inventoryTick(stack, world, entity, slot, selected);
+		if (!selected) {
+			setMode(stack, Mode.INACTIVE);
+		}
+	}
+
+	public boolean sonicIsInUse(ItemStack item) {
+		if (item == null) return false;
+		NbtCompound nbt = item.getOrCreateNbt();
+
+		if (nbt.contains(SonicItem.MODE_KEY))
+			return nbt.getInt(SonicItem.MODE_KEY) != 0;
+
+		return false;
 	}
 
 	@Override
@@ -114,7 +145,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	private void useSonic(World world, PlayerEntity user, BlockPos pos, Hand hand, ItemStack stack) {
 		Mode mode = findMode(stack);
 
-		if (world.isClient())
+		if (!(world instanceof ServerWorld serverWorld))
 			return;
 
 		Tardis tardis = getTardis(world, stack);
@@ -125,6 +156,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		if (user.isSneaking()) {
 			world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
 			cycleMode(stack);
+			Mode previousMode = findPreviousMode(stack);
+			user.sendMessage(Text.literal(previousMode.asString()).formatted(previousMode.format).formatted(Formatting.BOLD), true);
 			return;
 		}
 
@@ -147,7 +180,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		user.setCurrentHand(hand);
 		this.removeFuel(stack);
 
-		mode.run(tardis, world, pos, user, stack);
+		mode.run(tardis, serverWorld, pos, user, stack);
 	}
 
 	@Override
@@ -171,8 +204,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		return stack;
 	}
 
+	@Deprecated
 	public static void playSonicSounds(PlayerEntity player) {
-		player.getWorld().playSoundFromEntity(null, player, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1f, 1f);
+		// womp womp
+	}
+
+	public void playSonicSoundsHere(PlayerEntity player) {
+		if(this.shouldntContinue) return;
+		if(player.getWorld().isClient()) return;
+		sonicSoundHandler.setPlayerIdAndServer(player.getUuid(), player.getServer());
+		sonicSoundHandler.setPlaying(true, player.getServer());
+		this.shouldntContinue = true;
 	}
 
 	public static void cycleMode(ItemStack stack) {
@@ -185,6 +227,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 		SonicItem.setMode(stack, nbt.getInt(PREV_MODE_KEY) + 1 <= Mode.values().length - 1 ? nbt.getInt(PREV_MODE_KEY) + 1 : 0);
 		setPreviousMode(stack);
+		setMode(stack, 0);
 	}
 
 	public static boolean isSonic(ItemStack stack) {
@@ -310,7 +353,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		Tardis tardis = LinkableItem.getTardis(world, stack);
 
 		if (tardis != null)
-			position = tardis.travel() == null || tardis.getExteriorPos() == null ? "In Flight..." : tardis.getExteriorPos().toShortString();
+			position = tardis.travel() == null || tardis.travel().position().getPos() == null ? "In Flight..." : tardis.travel().position().getPos().toShortString();
 
 		tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
@@ -343,12 +386,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 	public enum Mode implements StringIdentifiable {
 		INACTIVE(Formatting.GRAY) {
 			@Override
-			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-			}
+			public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) { }
 		},
 		INTERACTION(Formatting.GREEN) {
 			@Override
-			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+			public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
 				BlockState blockState = world.getBlockState(pos);
 
 				if (!world.getBlockState(pos).isIn(AITModTags.Blocks.SONIC_INTERACTABLE)) return;
@@ -370,7 +412,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		},
 		OVERLOAD(Formatting.RED) {
 			@Override
-			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+			public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 Block block = world.getBlockState(pos).getBlock();
 
 				if (!world.getBlockState(pos).isIn(AITModTags.Blocks.SONIC_INTERACTABLE))
@@ -392,7 +434,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		},
 		SCANNING(Formatting.AQUA) {
 			@Override
-			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+			public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
 				if ((world.getRegistryKey() == World.OVERWORLD)) {
 					Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
 					Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA).formatted(Formatting.BOLD);
@@ -413,7 +455,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 		},
 		TARDIS(Formatting.BLUE) {
 			@Override
-			public void run(Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+			public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
 				if (tardis == null)
 					return;
 
@@ -434,6 +476,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 				}
 
 				if (world == TardisUtil.getTardisDimension()) {
+					if (player.getPitch() == -90 && !tardis.travel().handbrake()) {
+						player.sendMessage(Text.translatable("message.ait.remoteitem.success1"), true);
+						tardis.travel().dematerialize();
+						return;
+					}
 					world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 					player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);
 					return;
@@ -441,17 +488,18 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
 				world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
-				TardisTravel travel = tardis.travel();
-				AbsoluteBlockPos.Directed target = new AbsoluteBlockPos.Directed(pos, world, RotationPropertyHelper.fromYaw(player.getBodyYaw()));
+				TravelHandler travel = tardis.travel();
+
+				DirectedGlobalPos.Cached target = DirectedGlobalPos.Cached.create(world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
 				boolean isPilot = tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT);
 				boolean isNearTardis = ExteriorAnimation.isNearTardis(player, tardis, 256);
 
 				if (!isNearTardis || isPilot) {
-					travel.setDestination(target, true);
-					if (isPilot) {
-						FlightUtil.travelTo(tardis, target);
-					}
+					travel.destination(target);
+
+					if (isPilot)
+						TravelUtil.travelTo(tardis, target);
 				}
 
 				player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
@@ -464,7 +512,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 			this.format = format;
 		}
 
-		public abstract void run(@Nullable Tardis tardis, World world, BlockPos pos, PlayerEntity player, ItemStack stack);
+		public abstract void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack);
 
 		@Override
 		public String asString() {

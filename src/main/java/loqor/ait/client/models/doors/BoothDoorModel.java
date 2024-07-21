@@ -65,7 +65,7 @@ public class BoothDoorModel extends DoorModel {
 	@Override
 	public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
 		matrices.push();
-		this.k2.getChild("Door").yaw = door.tardis().get().getDoor().isOpen() ? 1.575F : 0.0F;
+		this.k2.getChild("Door").yaw = door.tardis().get().door().isOpen() ? 1.575F : 0.0F;
 
 		matrices.scale(1f, 1f, 1f);
 		matrices.translate(0, -1.5f, 0);

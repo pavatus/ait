@@ -3,7 +3,7 @@ package loqor.ait.client.models.exteriors;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorData;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -90,7 +90,7 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.tardis().get().getDoor();
+		DoorData door = exterior.tardis().get().door();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
@@ -99,23 +99,16 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-
+	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		matrices.push();
 		matrices.scale(0.64F, 0.64F, 0.64F);
 		matrices.translate(0, -1.5f, 0);
 
-		/*this.classic.getChild("Doors").getChild("left_door").yaw = exterior.getLeftDoor();
-		this.classic.getChild("Doors").getChild("right_door").yaw = -exterior.getRightDoor();*/
-
-		DoorData door = realEntity.getTardis().getDoor();
+		DoorData door = realEntity.tardis().get().door();
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;
 
-		//if (DependencyChecker.hasPortals())
-		//	this.getPart().getChild("Doors").visible = realEntity.getTardis().getDoor().getDoorState() == DoorData.DoorStateEnum.CLOSED;
 		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-
 		matrices.pop();
 	}
 

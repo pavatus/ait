@@ -1,9 +1,10 @@
 package loqor.ait.tardis.control.impl;
 
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.core.AITSounds;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -27,7 +28,7 @@ public class SiegeModeControl extends Control {
 			return false;
 		}
 
-		if (tardis.travel().isCrashing() || tardis.travel().inFlight())
+		if (tardis.travel().isCrashing() || tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 			return true;
 
 		tardis.siege().setActive(!tardis.siege().isActive());

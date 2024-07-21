@@ -1,15 +1,15 @@
 package loqor.ait.tardis.exterior.variant.renegade;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.exterior.category.RenegadeCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.tardis.door.RenegadeDoorVariant;
+import loqor.ait.tardis.exterior.category.RenegadeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ public abstract class RenegadeVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/renegade/renegade_";
 
 	protected RenegadeVariant(String name) {
-		super(name, RenegadeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name), new Loyalty(Loyalty.Type.PILOT));
+		super(RenegadeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name), new Loyalty(Loyalty.Type.PILOT));
 	}
 
 	@Override

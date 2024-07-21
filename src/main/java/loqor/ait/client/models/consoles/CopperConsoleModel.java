@@ -1,7 +1,7 @@
 package loqor.ait.client.models.consoles;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -1222,7 +1222,7 @@ public class CopperConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return Animation.Builder.create(0).build();
 	}
 }

@@ -2,7 +2,7 @@ package loqor.ait.core;
 
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.bind.KeyBind;
-import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -31,8 +31,8 @@ public class AITKeyBinds {
             if (player == null)
                 return;
 
-            if (player.getVehicle() instanceof TardisRealEntity entity) {
-                ClientTardisUtil.snapToOpenDoors(entity.getTardisID());
+            if (player.getVehicle() instanceof RealTardisEntity entity) {
+                ClientTardisUtil.snapToOpenDoors(entity.tardis().getId());
                 return;
             }
 

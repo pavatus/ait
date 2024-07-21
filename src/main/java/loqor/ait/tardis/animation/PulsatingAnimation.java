@@ -1,13 +1,15 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class PulsatingAnimation extends ExteriorAnimation {
+	private static final int PULSE_LENGTH = 20;
+
 	private int pulses = 0;
-	private final int PULSE_LENGTH = 20;
 	private float frequency, intensity;
 
 	public PulsatingAnimation(ExteriorBlockEntity exterior) {
@@ -15,32 +17,22 @@ public class PulsatingAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public void tick() {
-		if (exterior.tardis().isEmpty())
-			return;
-
-		TardisTravel.State state = exterior.tardis().get().travel().getState();
+	public void tick(Tardis tardis) {
+		TravelHandler travel = tardis.travel();
+		TravelHandlerBase.State state = travel.getState();
 
 		if (this.timeLeft < 0)
-			this.setupAnimation(state); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(travel.getState()); // fixme is a jank fix for the timeLeft going negative on client
 
-		if (state == TardisTravel.State.DEMAT) {
-			this.setAlpha(1f - getPulseAlpha());
-			timeLeft--;
+		if (state == TravelHandlerBase.State.DEMAT)
+			this.setAlpha(1f - this.getPulseAlpha());
 
-			runAlphaChecks(state);
-		} else if (state == TardisTravel.State.MAT) {
-			timeLeft--;
-
-			if (timeLeft < startTime)
-				this.setAlpha(getPulseAlpha());
-			else
-				this.setAlpha(0f);
-
-			runAlphaChecks(state);
-		} else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
-			this.setAlpha(1f);
+		if (state == TravelHandlerBase.State.MAT) {
+			if (timeLeft < startTime) this.setAlpha(this.getPulseAlpha());
+			else this.alpha = 0f;
 		}
+
+		this.timeLeft--;
 	}
 
 	public float getPulseAlpha() {
@@ -51,30 +43,14 @@ public class PulsatingAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public void setupAnimation(TardisTravel.State state) {
-		if (exterior.tardis().isEmpty() || exterior.tardis().get().getExterior().getCategory() == null) {
-			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
-			alpha = 0f; // just make me vanish.
-			return;
-		}
+	public boolean setupAnimation(TravelHandlerBase.State state) {
+		if (!super.setupAnimation(state))
+			return false;
 
-		MatSound sound = exterior.tardis().get().getExterior().getVariant().getSound(state);
-		this.tellClientsToSetup(state);
+		MatSound sound = state.effect();
 
-		timeLeft = sound.timeLeft();
-		maxTime = sound.maxTime();
-		frequency = sound.frequency();
-		intensity = sound.intensity();
-		startTime = sound.startTime();
-
-		if (state == TardisTravel.State.DEMAT) {
-			alpha = 1f;
-		} else if (state == TardisTravel.State.MAT) {
-			alpha = 0f;
-		} else if (state == TardisTravel.State.LANDED) {
-			alpha = 1f;
-		}
-
-		pulses = 0;
+		this.frequency = sound.frequency();
+		this.intensity = sound.intensity();
+		return true;
 	}
 }

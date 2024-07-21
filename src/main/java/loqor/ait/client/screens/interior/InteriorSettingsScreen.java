@@ -16,6 +16,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
@@ -39,7 +40,6 @@ import net.minecraft.util.math.RotationAxis;
 import java.util.List;
 import java.util.function.Function;
 
-import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
 import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
 
 @Environment(EnvType.CLIENT)
@@ -270,7 +270,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 
-		int progress = tardis().flight().getDurationAsPercentage();
+		int progress = tardis().travel().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -285,7 +285,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
+			context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114, tardis().travel().getState() == TravelHandlerBase.State.FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
 		}
 
 		this.renderHums(context);

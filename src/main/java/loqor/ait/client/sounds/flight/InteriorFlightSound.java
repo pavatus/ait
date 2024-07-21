@@ -3,7 +3,6 @@ package loqor.ait.client.sounds.flight;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.tardis.util.FlightUtil;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 
@@ -11,7 +10,7 @@ import java.util.Random;
 
 public class InteriorFlightSound extends PlayerFollowingLoopingSound {
 	private static final Random rnd = new Random();
-	private static final int PITCH_CHANGE_TICK = FlightUtil.convertSecondsToTicks(4);
+	private static final int PITCH_CHANGE_TICK = 80;
 	private int ticks = 0;
 
 	public InteriorFlightSound(SoundEvent soundEvent, SoundCategory soundCategory, float volume) {
@@ -34,7 +33,7 @@ public class InteriorFlightSound extends PlayerFollowingLoopingSound {
 	private static float getRandomPitch() {
 		if (ClientTardisUtil.getCurrentTardis() == null) return 1f;
 
-		int speed = ClientTardisUtil.getCurrentTardis().flight().speed().get();
+		int speed = ClientTardisUtil.getCurrentTardis().travel().speed();
 
 		if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
 			// todo i hate switch

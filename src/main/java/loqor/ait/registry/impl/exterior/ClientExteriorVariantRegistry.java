@@ -20,6 +20,7 @@ import loqor.ait.tardis.exterior.variant.easter_head.client.ClientEasterHeadFire
 import loqor.ait.tardis.exterior.variant.easter_head.client.ClientEasterHeadSoulVariant;
 import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricDefaultVariant;
 import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricFireVariant;
+import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.tardis.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.tardis.exterior.variant.growth.client.ClientGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
@@ -151,6 +152,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema BOOTH_SOUL;
 	public static ClientExteriorVariantSchema BOOTH_VINTAGE;
 	public static ClientExteriorVariantSchema BOOTH_BLUE;
+	public static ClientExteriorVariantSchema BOOTH_GILDED;
 	public static ClientExteriorVariantSchema HEAD_DEFAULT;
 	public static ClientExteriorVariantSchema HEAD_SOUL;
 	public static ClientExteriorVariantSchema HEAD_FIRE;
@@ -166,6 +168,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 	public static ClientExteriorVariantSchema GEOMETRIC_DEFAULT;
 	public static ClientExteriorVariantSchema GEOMETRIC_FIRE;
 	public static ClientExteriorVariantSchema GEOMETRIC_SOUL;
+	public static ClientExteriorVariantSchema GEOMETRIC_GILDED;
 
 	@Override
 	public void onClientInit() {
@@ -204,6 +207,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		BOOTH_SOUL = register(new ClientBoothSoulVariant());
 		BOOTH_VINTAGE = register(new ClientBoothVintageVariant());
 		BOOTH_BLUE = register(new ClientBoothBlueVariant());
+		BOOTH_GILDED = register(new ClientBoothGildedVariant());
 
 		// Easter Head
 		HEAD_DEFAULT = register(new ClientEasterHeadDefaultVariant());
@@ -233,5 +237,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 		GEOMETRIC_DEFAULT = register(new ClientGeometricDefaultVariant());
 		GEOMETRIC_FIRE = register(new ClientGeometricFireVariant());
 		GEOMETRIC_SOUL = register(new ClientGeometricSoulVariant());
+		GEOMETRIC_GILDED = register(new ClientGeometricGildedVariant());
 	}
 }

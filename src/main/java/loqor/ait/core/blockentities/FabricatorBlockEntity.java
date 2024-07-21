@@ -1,6 +1,7 @@
 package loqor.ait.core.blockentities;
 
 import io.wispforest.owo.util.ImplementedInventory;
+import loqor.ait.client.screens.BlueprintFabricatorScreen;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.tardis.Tardis;
@@ -8,6 +9,7 @@ import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -38,14 +40,17 @@ public class FabricatorBlockEntity extends LinkableBlockEntity implements NamedS
 	}
 
 	public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player) {
-		if (world.isClient() || this.findTardis().isEmpty()) return;
+		//if (world.isClient() || this.findTardis().isEmpty()) return;
+
+		/*if (world.isClient())
+			MinecraftClient.getInstance().setScreen(new BlueprintFabricatorScreen(Text.literal("Blueprint Fabricator")));*/
 
 		player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
-		NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+		/*NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 		System.out.println(screenHandlerFactory);
 		if (screenHandlerFactory != null) {
 			player.openHandledScreen(screenHandlerFactory);
-		}
+		}*/
 	}
 
 

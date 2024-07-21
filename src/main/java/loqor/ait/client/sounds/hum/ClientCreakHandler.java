@@ -7,6 +7,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.registry.impl.CreakRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.CreakSound;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
@@ -114,7 +115,8 @@ public class ClientCreakHandler extends SoundHandler {
 			return;
 		}
 
-		if ((current.engine().hasPower() && (!current.inFlight() || current.flight().autoLand().get()))) { // todo should they play even with power? just make them more rare??
+		// todo should they play even with power? just make them more rare??
+		if (current.engine().hasPower() && (current.travel().getState() == TravelHandlerBase.State.LANDED || current.travel().autopilot())) {
 			this.stopSounds();
 			return;
 		}

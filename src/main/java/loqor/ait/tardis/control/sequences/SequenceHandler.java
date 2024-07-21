@@ -2,11 +2,11 @@ package loqor.ait.tardis.control.sequences;
 
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.SequenceRegistry;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -91,7 +91,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		if (this.activeSequence == null)
 			return;
 
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(tardis()));
+		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(tardis()));
 	}
 
 	public void triggerRandomSequence(boolean setTicksTo0) {
@@ -105,8 +105,9 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 			return;
 
 		this.activeSequence = sequence;
-        FlightUtil.playSoundAtEveryConsole(this.tardis().getDesktop(), SoundEvents.BLOCK_BEACON_POWER_SELECT);
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInInterior(tardis()));
+		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(this.tardis));
+
+		this.tardis().getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BEACON_POWER_SELECT);
 	}
 
 	@Nullable
@@ -152,7 +153,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 	public static void missedControlEffects(BlockPos console) {
 		ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
 
-		FlightUtil.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
 		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
 		world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
@@ -174,7 +175,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 	public static void completedControlEffects(BlockPos console) {
 		ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
 
-		FlightUtil.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f, 1f);
+		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f, 1f);
 		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
 		world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);

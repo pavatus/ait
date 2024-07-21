@@ -7,22 +7,21 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
 import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -31,7 +30,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -43,9 +41,6 @@ import net.minecraft.util.math.RotationAxis;
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
-
-import static loqor.ait.tardis.TardisTravel.State.FLIGHT;
-import static loqor.ait.tardis.control.impl.DimensionControl.convertWorldValueToModified;
 
 public class MonitorScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
@@ -77,14 +72,14 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public ExteriorCategorySchema getCategory() {
-		return category == null ? tardis().getExterior().getCategory() : category;
+		return category == null ? this.tardis().getExterior().getCategory() : category;
 	}
 
 	public void setCategory(ExteriorCategorySchema category) {
 		this.category = category;
 
 		if (currentVariant == null)
-			return;
+            return;
 
 		if (this.currentVariant.parent().category() != category)
 			currentVariant = null;
@@ -95,10 +90,10 @@ public class MonitorScreen extends ConsoleScreen {
 			changeCategory(true);
 
 		if (currentVariant == null)
-			if (!tardis().getExterior().getCategory().equals(getCategory())) {
+			if (!this.tardis().getExterior().getCategory().equals(getCategory())) {
 				setCurrentVariant(this.getCategory().getDefaultVariant());
 			} else {
-				setCurrentVariant(tardis().getExterior().getVariant());
+				setCurrentVariant(this.tardis().getExterior().getVariant());
 			}
 
 		return currentVariant;
@@ -145,13 +140,13 @@ public class MonitorScreen extends ConsoleScreen {
 		});
 	}
 
-	public static void sendExteriorPacket(ClientTardis tardis, ExteriorCategorySchema category, ClientExteriorVariantSchema variant) {
-		if (category != tardis.getExterior().getCategory() || variant.parent() != tardis.getExterior().getVariant()) {
-			ClientTardisUtil.changeExteriorWithScreen(tardis,
-					category.id().toString(), variant.id().toString(),
-					variant.parent() != tardis.getExterior().getVariant());
-		}
-	}
+    public static void sendExteriorPacket(ClientTardis tardis, ExteriorCategorySchema category, ClientExteriorVariantSchema variant) {
+        if (category != tardis.getExterior().getCategory() || variant.parent() != tardis.getExterior().getVariant()) {
+            ClientTardisUtil.changeExteriorWithScreen(tardis,
+                    category.id().toString(), variant.id().toString(),
+                    variant.parent() != tardis.getExterior().getVariant());
+        }
+    }
 
 	public void toInteriorSettingsScreen() {
 		if (tardis() == null || tardis().isGrowth())
@@ -161,10 +156,10 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	public void changeCategory(boolean direction) {
-		PlayerEntity player = MinecraftClient.getInstance().player;
+        PlayerEntity player = MinecraftClient.getInstance().player;
 
-		if (player == null)
-			return;
+        if (player == null)
+            return;
 
 		if (direction) setCategory(nextCategory());
 		else setCategory(previousCategory());
@@ -220,19 +215,21 @@ public class MonitorScreen extends ConsoleScreen {
 		return (rangeProgress / 5) * UV_INCREMENT;
 	}
 
-	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-		// just this whole thing is for the flight
-		if (tardis() == null) return;
+	protected void drawBackground(DrawContext context) {
+        // just this whole thing is for the flight
+        if (this.tardis() == null)
+            return;
 
-		int i = (this.width - this.backgroundWidth) / 2;
+        int i = (this.width - this.backgroundWidth) / 2;
 		int j = ((this.height) - this.backgroundHeight) / 2;
 		context.drawTexture(TEXTURE, i - 8, j + 4, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		// apply button
-		if (!this.buttons.get(0).isHovered()) context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
+		if (!this.buttons.get(0).isHovered())
+            context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
 
 		// around the battery
-		context.drawTexture(TEXTURE, i + 1, j + 129, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
+		context.drawTexture(TEXTURE, i + 1, j + 129, 0, this.tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
 		// triangle buttons
 		if (!this.buttons.get(1).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 96, 0, 197, 15, 30);
@@ -241,11 +238,11 @@ public class MonitorScreen extends ConsoleScreen {
 		if (!this.buttons.get(4).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 31, 15, 197, 15, 30);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round(tardis().getFuel() / FuelData.TARDIS_MAX_FUEL * 12); ++p) {
+		for (int p = 0; p < Math.round((this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
 		}
 
-		int progress = tardis().getHandlers().getFlight().getDurationAsPercentage();
+        int progress = this.tardis().travel().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
 			int rangeStart = index * 20;
@@ -260,102 +257,104 @@ public class MonitorScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-			context.drawTexture(TEXTURE, i + 101 + (index * 18), j + 78, tardis().travel().getState() == FLIGHT ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17);
-		}
+            context.drawTexture(TEXTURE, i + 101 + index * 18, j + 78,
+                    this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
+                            ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17
+            );
+        }
 	}
 
-	protected void drawTardisExterior(DrawContext context, int x, int y, float scale) {
-		this.tickForSpin++;
-		Tardis tardis = this.tardis();
+    protected void drawTardisExterior(DrawContext context, int x, int y, float scale) {
+        this.tickForSpin++;
+        Tardis tardis = this.tardis();
 
-		if (tardis == null)
-			return;
+        if (tardis == null)
+            return;
 
-		VertexConsumerProvider vertexConsumer = context.getVertexConsumers();
-		MatrixStack stack = context.getMatrices();
+        MatrixStack stack = context.getMatrices();
 
-		int centerWidth = width / 2;
-		int centerHeight = height / 2;
+        int centerWidth = width / 2;
+        int centerHeight = height / 2;
 
-		ExteriorCategorySchema category = this.getCategory();
-		ClientExteriorVariantSchema variant = this.getCurrentVariant();
+        ExteriorCategorySchema category = this.getCategory();
+        ClientExteriorVariantSchema variant = this.getCurrentVariant();
 
-		if (category == null || variant == null)
-			return;
+        if (category == null || variant == null)
+            return;
 
-		boolean isPoliceBox = category.equals(CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE))
-				|| category.equals(CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE));
+        boolean isPoliceBox = category.equals(CategoryRegistry.getInstance().get(PoliceBoxCategory.REFERENCE))
+                || category.equals(CategoryRegistry.getInstance().get(ClassicCategory.REFERENCE));
 
-		boolean isExtUnlocked = tardis.isUnlocked(variant.parent());
-		boolean hasPower = tardis.engine().hasPower();
-		boolean alarms = tardis.alarm().isEnabled();
+        boolean isExtUnlocked = tardis.isUnlocked(variant.parent());
+        boolean hasPower = tardis.engine().hasPower();
+        boolean alarms = tardis.alarm().isEnabled();
 
-		stack.push();
-		stack.translate(0, 0, 50f);
+        stack.push();
+        stack.translate(0, 0, 50f);
 
-		context.drawCenteredTextWithShadow(
-				this.textRenderer, category.text(), (centerWidth - 54),
-				(centerHeight + 41), 5636095
-		);
+        context.drawCenteredTextWithShadow(
+                this.textRenderer, category.text(), (centerWidth - 54),
+                (centerHeight + 41), 5636095
+        );
 
-		List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(category);
+        List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(category);
 
-		context.drawCenteredTextWithShadow(
-				this.textRenderer, (list.indexOf(variant.parent()) + 1)
-						+ "/" + list.size(),
-				(centerWidth - 29), (centerHeight + 26), 0x00ffb3
-		);
+        context.drawCenteredTextWithShadow(
+                this.textRenderer, (list.indexOf(variant.parent()) + 1)
+                        + "/" + list.size(),
+                (centerWidth - 29), (centerHeight + 26), 0x00ffb3
+        );
 
-		stack.pop();
-		ExteriorModel model = variant.model();
+        stack.pop();
+        ExteriorModel model = variant.model();
 
-		stack.push();
-		stack.translate(0, 0, -50f);
-		stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
-		context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
-		stack.pop();
+        stack.push();
+        stack.translate(0, 0, -50f);
+        stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
+        context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
+        stack.pop();
 
-		stack.push();
-		stack.translate(x, isPoliceBox ? y + 11 : y, 0f);
+        stack.push();
+        stack.translate(x, isPoliceBox ? y + 11 : y, 0f);
 
-		if (isPoliceBox) {
-			stack.scale(-12, 12, 12);
-		} else {
-			stack.scale(-scale, scale, scale);
-		}
+        if (isPoliceBox) {
+            stack.scale(-12, 12, 12);
+        } else {
+            stack.scale(-scale, scale, scale);
+        }
 
-		stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
+        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 1200L) * 360.0f));
 
-		Identifier texture = variant.texture();
-		Identifier emissive = variant.emission();
+        Identifier texture = variant.texture();
+        Identifier emissive = variant.emission();
 
-		float base = isExtUnlocked ? 1f : 0.1f;
-		float tinted = alarms && isExtUnlocked ? 0.3f : base;
+        float base = isExtUnlocked ? 1f : 0.1f;
+        float tinted = alarms && isExtUnlocked ? 0.3f : base;
 
-		model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
-				LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f
-		);
+        model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
+                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f
+        );
 
-		if (hasPower && emissive != null) {
-			ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(model::render), emissive, null,
-					model.getPart(), stack, context.getVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE,
-					OverlayTexture.DEFAULT_UV, base, tinted, tinted, 1f
-			);
-		}
+        if (hasPower && emissive != null) {
+            ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(model::render), emissive, null,
+                    model.getPart(), stack, context.getVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE,
+                    OverlayTexture.DEFAULT_UV, base, tinted, tinted, 1f
+            );
+        }
 
-		stack.pop();
+        stack.pop();
 
-		stack.push();
-		stack.translate(0, 0, 50f);
+        stack.push();
+        stack.translate(0, 0, 50f);
 
-		context.drawCenteredTextWithShadow(
-				this.textRenderer, isExtUnlocked
-						? "" : "\uD83D\uDD12",
-				x, y, Color.WHITE.getRGB()
-		);
+        context.drawCenteredTextWithShadow(
+                this.textRenderer, isExtUnlocked
+                        ? "" : "\uD83D\uDD12",
+                x, y, Color.WHITE.getRGB()
+        );
 
-		stack.pop();
-	}
+        stack.pop();
+    }
 
 	@Override
 	public void renderBackground(DrawContext context) {
@@ -363,42 +362,38 @@ public class MonitorScreen extends ConsoleScreen {
 	}
 
 	protected void drawInformationText(DrawContext context) {
-		if (this.tardis() == null)
-			return;
+        if (this.tardis() == null)
+            return;
 
-		TardisTravel travel = this.tardis().travel();
-		AbsoluteBlockPos.Directed abpd = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), this.tardis().getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
-		AbsoluteBlockPos.Directed dabpd = travel.getDestination();
+        TravelHandler travel = this.tardis().travel();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT ? travel.getProgress() : travel.position();
+        DirectedGlobalPos.Cached dabpd = travel.destination();
 
-		if (abpd.getDimension() == null)
-			return;
+        if (abpd.getDimension() == null)
+            return;
 
-		String positionText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-		String dimensionText = convertWorldValueToModified(abpd.getDimension().getValue().toString());
+        BlockPos abpdPos = abpd.getPos();
 
-		String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
-		String destinationText = dabpd.getX() + ", " + dabpd.getY() + ", " + dabpd.getZ();
-		String dDimensionText = convertWorldValueToModified(dabpd.getDimension().getValue());
-		String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
+        String positionText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
+        Text dimensionText = WorldUtil.worldText(abpd.getDimension());
 
-		// position
-		//context.drawText(this.textRenderer, Text.literal("Position"), (width / 2 - 64), (height / 2 - 46), 5636095, true);
+        BlockPos dabpdPos = dabpd.getPos();
+
+        String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
+        String destinationText = dabpdPos.getX() + ", " + dabpdPos.getY() + ", " + dabpdPos.getZ();
+		Text dDimensionText = WorldUtil.worldText(dabpd.getDimension());
+        String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
+
+        // position
 		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 + 7), (height / 2 - 36), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, Text.literal(dimensionText), (width / 2 + 7), (height / 2 - 26), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, dimensionText, (width / 2 + 7), (height / 2 - 26), 0xFFFFFF, true);
 		context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 + 14), (height / 2 - 16), 0xFFFFFF, true);
 
 		// destination
 		context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 + 7), (height / 2 + 31), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, Text.literal(dDimensionText), (width / 2 + 7), (height / 2 + 41), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, dDimensionText, (width / 2 + 7), (height / 2 + 41), 0xFFFFFF, true);
 		context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 + 14), (height / 2 + 51), 0xFFFFFF, true);
-
-		// fuel
-		//context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.fuel"), (width / 2 - 102), (height / 2 + 28), 0xFFFFFF, true);
-		//context.drawText(this.textRenderer, Text.literal(fuelText + "%"), (width / 2 - 108), (height / 2 + 38), 0xFFFFFF, true);
-		// percentage of travel time to destination
-		//context.drawText(this.textRenderer, Text.translatable("screen.ait.monitor.traveltime"), (width / 2 + 34), (height / 2 + 28), 0xFFFFFF, true);
-		//context.drawText(this.textRenderer, Text.literal(flightTimeText + "%"), (width / 2 + 46), (height / 2 + 38), 0xFFFFFF, true);
-	}
+    }
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -411,25 +406,9 @@ public class MonitorScreen extends ConsoleScreen {
 		context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
 		stack.pop();
 		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f);
-		this.drawBackground(context, delta, mouseX, mouseY);
+		this.drawBackground(context);
 		// todo manually adjusting all these values are annoying me
 		this.drawInformationText(context);
 		super.render(context, mouseX, mouseY, delta);
-	}
-
-	@Deprecated(forRemoval = true)
-	public String convertCategoryNameToProper(String string) {
-		return switch (string) {
-			case "easter_head" -> "Moyai";
-			case "police_box" -> "Police";
-			case "classic" -> "Classic";
-			case "doom" -> "Doom";
-			case "plinth" -> "Plinth";
-			case "tardim" -> "TARDIM";
-			case "booth" -> "K2 Booth";
-			case "capsule" -> "Capsule";
-			case "renegade" -> "Renegade";
-			default -> DimensionControl.convertWorldValueToModified(string);
-		};
 	}
 }

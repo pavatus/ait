@@ -19,6 +19,7 @@ import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadFireVariant;
 import loqor.ait.tardis.exterior.variant.easter_head.EasterHeadSoulVariant;
 import loqor.ait.tardis.exterior.variant.geometric.GeometricDefaultVariant;
 import loqor.ait.tardis.exterior.variant.geometric.GeometricFireVariant;
+import loqor.ait.tardis.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.tardis.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.exterior.variant.plinth.PlinthDefaultVariant;
@@ -63,7 +64,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 			}
 
 			buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(
-					schema.name(), schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE,
+					schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE,
 					DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, false, schema.getRequirement())
 			);
 		}
@@ -147,6 +148,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema BOOTH_SOUL;
 	public static ExteriorVariantSchema BOOTH_VINTAGE;
 	public static ExteriorVariantSchema BOOTH_BLUE;
+	public static ExteriorVariantSchema BOOTH_GILDED;
 	public static ExteriorVariantSchema HEAD_DEFAULT;
 	public static ExteriorVariantSchema HEAD_SOUL;
 	public static ExteriorVariantSchema HEAD_FIRE;
@@ -162,6 +164,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 	public static ExteriorVariantSchema GEOMETRIC_DEFAULT;
 	public static ExteriorVariantSchema GEOMETRIC_FIRE;
 	public static ExteriorVariantSchema GEOMETRIC_SOUL;
+	public static ExteriorVariantSchema GEOMETRIC_GILDED;
 
 	@Override
 	protected void defaults() {
@@ -200,6 +203,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		BOOTH_SOUL = register(new BoothSoulVariant());
 		BOOTH_VINTAGE = register(new BoothVintageVariant());
 		BOOTH_BLUE = register(new BoothBlueVariant());
+		BOOTH_GILDED = register(new BoothGildedVariant());
 
 		// Easter Head
 		HEAD_DEFAULT = register(new EasterHeadDefaultVariant());
@@ -229,5 +233,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 		GEOMETRIC_DEFAULT = register(new GeometricDefaultVariant());
 		GEOMETRIC_FIRE = register(new GeometricFireVariant());
 		GEOMETRIC_SOUL = register(new GeometricSoulVariant());
+		GEOMETRIC_GILDED = register(new GeometricGildedVariant());
 	}
 }

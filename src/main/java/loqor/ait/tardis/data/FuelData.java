@@ -3,15 +3,15 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolder;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -93,14 +93,14 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 	public void tick(MinecraftServer server) {
 
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		AbsoluteBlockPos pos = tardis.getExteriorPos();
+		DirectedGlobalPos.Cached pos = tardis.travel().position();
 		World world = pos.getWorld();
-		TardisTravel.State state = tardis.travel().getState();
+		TravelHandlerBase.State state = tardis.travel().getState();
 
-		if (state == TardisTravel.State.LANDED) {
+		if (state == TravelHandlerBase.State.LANDED) {
 			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
-				if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) > 0) {
-					RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
+				if (RiftChunkManager.isRiftChunk(pos.getPos()) && RiftChunkManager.getArtronLevels(world, pos.getPos()) > 0) {
+					RiftChunkManager.setArtronLevels(world, pos.getPos(), RiftChunkManager.getArtronLevels(world, pos.getPos()) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
 					addFuel(9);
 				} else {
 					addFuel(7);
@@ -114,17 +114,18 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 			}
 		}
 
-		if (state == TardisTravel.State.FLIGHT) {
+		if (state == TravelHandlerBase.State.FLIGHT) {
 			if (!isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel((4 ^ (tardis.flight().speed().get())) * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel((4 ^ (tardis.travel().speed())) * (tardis.tardisHammerAnnoyance + 1));
 			}
 
-			if (!tardis.engine().hasPower())
-				tardis().travel().crash(); // hehe force land if you don't have enough fuel
+			// TODO: make a crash method to avoid isGrowth checks outside of interiorchanginghandler
+			if (!tardis.engine().hasPower() && !tardis.isGrowth())
+				  this.tardis.travel().crash(); // hehe force land if you don't have enough fuel
 		}
 
-		if ((state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) && !isDrainOnDelay(tardis)) {
+		if ((state == TravelHandlerBase.State.DEMAT || state == TravelHandlerBase.State.MAT) && !isDrainOnDelay(tardis)) {
 			createDrainDelay(tardis);
 			removeFuel(5 * (tardis.tardisHammerAnnoyance + 1));
 		}

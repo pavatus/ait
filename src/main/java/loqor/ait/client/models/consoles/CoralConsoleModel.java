@@ -4,7 +4,6 @@ import loqor.ait.client.animation.console.coral.CoralAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
@@ -12,6 +11,7 @@ import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.WaypointHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -1332,7 +1332,7 @@ public class CoralConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return switch (state) {
 			default -> CoralAnimations.CORAL_CONSOLE_INFLIGHT_ANIMATION;
 			case MAT -> CoralAnimations.CORAL_CONSOLE_REMAT_ANIMATION;
@@ -1369,15 +1369,15 @@ public class CoralConsoleModel extends ConsoleModel {
 		fuelLowWarningLight.visible = (tardis.getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10));
 
 		// Anti-gravs Lever
-		controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ?
+		controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !tardis.travel().antigravs().get() ?
 				controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll : controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll - 1.5f;
 
 		// Door Control
 		ModelPart doorControl = controls.getChild("p_ctrl_1").getChild("bone29").getChild("crank").getChild("bone32");
 
-		if (tardis.getDoor().isLeftOpen()) {
+		if (tardis.door().isLeftOpen()) {
 			doorControl.pitch = doorControl.pitch - 0.8f;
-		} else if (tardis.getDoor().isRightOpen()) {
+		} else if (tardis.door().isRightOpen()) {
 			doorControl.pitch = doorControl.pitch - 1.5f;
 		}
 
@@ -1389,7 +1389,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Throttle
 		ModelPart throttle = controls.getChild("p_ctrl_5").getChild("bone49").getChild("lever3").getChild("bone52");
-		throttle.roll = throttle.roll + (tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get());
+		throttle.roll = throttle.roll + (tardis.travel().speed() / (float) tardis.travel().maxSpeed().get());
 
 		// Increment
 		ModelPart increment = controls.getChild("p_ctrl_2").getChild("bone33").getChild("bone31").getChild("crank2");
@@ -1406,7 +1406,9 @@ public class CoralConsoleModel extends ConsoleModel {
 		controls.getChild("ctrl_1").getChild("bone13").getChild("insert").getChild("bone96").visible = tardis.<WaypointHandler>handler(TardisComponent.Id.WAYPOINTS).hasCartridge();
 
 		// Handbrake
-		controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !tardis.flight().handbrake().get() ? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw : controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
+		controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw = !tardis.travel().handbrake()
+				? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw
+				: controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2").getChild("bone102").yaw + 0.75f;
 
 		// Siege Mode
 		ModelPart siege = controls.getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
@@ -1418,7 +1420,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Autopilot
 		ModelPart autopilot = controls.getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
-		autopilot.pivotY = tardis.flight().autoLand().get() ? autopilot.pivotY + 1 : autopilot.pivotY;
+		autopilot.pivotY = tardis.travel().autopilot() ? autopilot.pivotY + 1 : autopilot.pivotY;
 
 		ModelPart security = controls.getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
 		security.pivotY = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;

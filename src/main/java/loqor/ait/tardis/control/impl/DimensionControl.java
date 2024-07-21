@@ -1,10 +1,10 @@
 package loqor.ait.tardis.control.impl;
 
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.control.impl.pos.PosType;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DimensionControl extends Control {
+
 	public DimensionControl() {
 		super("dimension");
 	}
@@ -28,13 +29,13 @@ public class DimensionControl extends Control {
 			return false;
 		}
 
-		TardisTravel travel = tardis.travel();
-		AbsoluteBlockPos.Directed dest = travel.getDestination();
-		List<ServerWorld> dims = getDimensions(world.getServer());
+		TravelHandler travel = tardis.travel();
+		DirectedGlobalPos.Cached dest = travel.destination();
 
+		List<ServerWorld> dims = TardisUtil.getDimensions(world.getServer());
 		int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
-		int next;
 
+		int next;
 		if (!player.isSneaking()) {
 			next = ((current + 1) > dims.size() - 1) ? 0 : current + 1;
 		} else {
@@ -43,60 +44,19 @@ public class DimensionControl extends Control {
 
 		// FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
 
-		travel.setDestination(new AbsoluteBlockPos.Directed(PosType.Y.add(dest, 0), dims.get(next), dest.getRotation()), false); // postype.y.add means it clamps the y coord fixme doesnt work for nether as u can go above the bedrock but dont hardcode it like you did loqor :(
-		messagePlayer(player, (ServerWorld) travel.getDestination().getWorld());
+		ServerWorld destWorld = dims.get(next);
+
+		travel.destination(cached -> cached.world(destWorld));
+		messagePlayer(player, destWorld);
+
 		return true;
 	}
 
 	private void messagePlayer(ServerPlayerEntity player, ServerWorld world) {
 		Text message = Text.translatable("message.ait.tardis.control.dimension.info").append(
-				Text.literal(" " + convertWorldToReadable(world))
+				WorldUtil.worldText(world.getRegistryKey())
 		);
 
-		player.sendMessage(message, true); // fixme translatable is preferred
-	}
-
-	public static String convertWorldToReadable(World world) {
-		String path = world.getDimensionKey().getValue().getPath();
-
-		// Split the string into words
-		String[] words = path.split("_");
-
-		// Capitalize the first letter of each word
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-		}
-
-		// Join the words back together with spaces
-		return String.join(" ", words);
-	}
-
-	// @TODO for some reason in the dev env, this method tends to not like doing anything sometimes. idk, it works or it doesnt, but in builds, it always works. funny what a lil spaghetti man can tell you at 3 am
-	@Deprecated(forRemoval = true)
-	public static String convertWorldValueToModified(String value) {
-
-		// Split the string into words
-		String[] words = value.split("_");
-
-		// Capitalize the first letter of each word
-		for (int i = 0; i < words.length; i++) {
-			words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-		}
-
-		// Join the words back together with spaces
-		return String.join(" ", words);
-	}
-
-	public static List<ServerWorld> getDimensions(MinecraftServer server) {
-		List<ServerWorld> dims = new ArrayList<>();
-		Iterable<ServerWorld> allDims = server.getWorlds();
-
-		// fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
-		allDims.forEach(dim -> {
-			if (dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
-				dims.add(dim);
-		});
-
-		return dims;
+		player.sendMessage(message, true);
 	}
 }

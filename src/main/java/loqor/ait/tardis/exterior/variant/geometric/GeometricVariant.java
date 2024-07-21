@@ -18,7 +18,7 @@ public abstract class GeometricVariant extends ExteriorVariantSchema {
 	protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/geometric/geometric_";
 
 	protected GeometricVariant(String name, String modId) { // idk why i added the modid bit i dont use it later lol
-		super(name, GeometricCategory.REFERENCE, new Identifier(modId, "exterior/geometric/" + name));
+		super(GeometricCategory.REFERENCE, new Identifier(modId, "exterior/geometric/" + name));
 	}
 
 	protected GeometricVariant(String name) {

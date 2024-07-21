@@ -20,8 +20,7 @@ import java.util.function.Consumer;
 
 public class TardisHandlersManager extends TardisComponent implements TardisTickable {
 
-	@Exclude
-	private final EnumMap<IdLike, TardisComponent> handlers = new EnumMap<>(TardisComponentRegistry::values, TardisComponent[]::new);
+	@Exclude private final EnumMap<IdLike, TardisComponent> handlers = new EnumMap<>(TardisComponentRegistry::values, TardisComponent[]::new);
 
 	public TardisHandlersManager() {
         super(Id.HANDLERS);
@@ -35,6 +34,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 	@Override
 	protected void onInit(InitContext ctx) {
 		this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
+		this.forEach(component -> component.postInit(ctx));
 	}
 
 	private void forEach(Consumer<TardisComponent> consumer) {
@@ -60,7 +60,11 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 			if (!(component instanceof TardisTickable tickable))
 				return;
 
-			tickable.tick(server);
+			try {
+				tickable.tick(server);
+			} catch (Exception e) {
+				AITMod.LOGGER.error("Ticking failed for " + component.getId().name(), e);
+			}
 		});
 	}
 
@@ -111,7 +115,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 
 	@Deprecated
 	public DoorData getDoor() {
-		return this.tardis().getDoor();
+		return this.tardis().door();
 	}
 
 	@Deprecated
@@ -142,11 +146,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 	@Deprecated
 	public SequenceHandler getSequenceHandler() {
 		return this.tardis().sequence();
-	}
-
-	@Deprecated
-	public FlightData getFlight() {
-		return this.tardis().flight();
 	}
 
 	@Deprecated

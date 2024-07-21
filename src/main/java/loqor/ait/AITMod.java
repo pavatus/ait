@@ -9,11 +9,10 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
@@ -31,8 +30,8 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
@@ -85,6 +84,7 @@ public class AITMod implements ModInitializer {
 		HumsRegistry.init();
 		CreakRegistry.init();
 		SequenceRegistry.init();
+		MoodEventPoolRegistry.init();
 
 		// For all the addon devs
 		FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class, AITModInitializer::onInitializeAIT);
@@ -127,6 +127,7 @@ public class AITMod implements ModInitializer {
 			FuelCommand.register(dispatcher);
 			SetRepairTicksCommand.register(dispatcher);
 			RiftChunkCommand.register(dispatcher);
+			TriggerMoodRollCommand.register(dispatcher);
 			SetNameCommand.register(dispatcher);
 			GetNameCommand.register(dispatcher);
 			GetCreatorCommand.register(dispatcher);
@@ -139,52 +140,18 @@ public class AITMod implements ModInitializer {
 			LoyaltyCommand.register(dispatcher);
 			UnlockCommand.register(dispatcher);
 			DataCommand.register(dispatcher);
+			TravelDebugCommand.register(dispatcher);
 			VersionCommand.register(dispatcher);
 		}));
 
-		TardisEvents.LANDED.register((tardis -> {
-			// stuff for resetting the ExteriorAnimation
-			if (tardis.travel().getPosition().getWorld().getBlockEntity(tardis.getExteriorPos()) instanceof ExteriorBlockEntity entity) {
-				entity.getAnimation().setupAnimation(tardis.travel().getState());
-			}
-		}));
-
-		TardisEvents.DEMAT.register((tardis -> {
-			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
-					|| tardis.flight().handbrake().get() || PropertiesHandler.getBool(
-							tardis.properties(), PropertiesHandler.IS_FALLING
-			) || tardis.isRefueling())
-				return true; // cancelled
-
-			if (tardis.getDoor().isOpen())
-				return true;
-
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
-				TardisCriterions.TAKEOFF.trigger(player);
-			}
-
-			return false;
-		}));
-
-		TardisEvents.MAT.register((tardis -> {
-            // Check if the Tardis is on cooldown
-			boolean isCooldown = FlightUtil.isMaterialiseOnCooldown(tardis);
-
-			// Check if the destination is already occupied
-			boolean isDestinationOccupied = !tardis.travel().getDestination().equals(tardis.getExteriorPos())
-					&& !tardis.travel().checkDestination();
-
-			return isCooldown || isDestinationOccupied;
-		}));
-
 		TardisEvents.CRASH.register(tardis -> {
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 				TardisCriterions.CRASH.trigger(player);
 			}
 		});
 
-		TardisEvents.REGAIN_POWER.register(tardis -> FlightUtil.playSoundAtEveryConsole(
-				tardis.getDesktop(), AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f)
+		TardisEvents.REGAIN_POWER.register(tardis -> tardis.getDesktop().playSoundAtEveryConsole(
+				AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f)
 		);
 
 		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
@@ -195,7 +162,7 @@ public class AITMod implements ModInitializer {
 					return;
 
 				// nuh uh no interior changing during flight
-				if(tardis.travel().inFlight())
+				if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 					return;
 
 				tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
@@ -290,12 +257,20 @@ public class AITMod implements ModInitializer {
 			AIT_CONFIG.save();
 		});
 
+		TardisEvents.DEMAT.register(tardis -> {
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+				TardisCriterions.TAKEOFF.trigger(player);
+			}
+
+			return TardisEvents.Interaction.PASS;
+		});
+
 		AIT_ITEM_GROUP.initialize();
 	}
 
 	public void entityAttributeRegister() {
-		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createControlAttributes());
-		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, TardisRealEntity.createLivingAttributes());
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ConsoleControlEntity.createDummyAttributes());
+		FabricDefaultAttributeRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, RealTardisEntity.createDummyAttributes());
 	}
 
 	public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");

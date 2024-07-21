@@ -1,6 +1,7 @@
 package loqor.ait.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import loqor.ait.AITMod;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.tardis.Tardis;
 import net.minecraft.client.MinecraftClient;
@@ -30,6 +31,7 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogShape(FogShape.SPHERE);
 			RenderSystem.setShaderFogColor(0, 0, 0, tardis.siege().isActive() ? 0.85f : 1f);
 		}
+
 		if (ClientTardisUtil.isPlayerInATardis() && tardis.crash().isToxic() &&
 				tardis.engine().hasPower()) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
@@ -41,16 +43,21 @@ public class FoggyUtils {
 			RenderSystem.setShaderFogColor(0.2f, 0.2f, 0.2f,
 					stack.isIn(AITModTags.Items.FULL_RESPIRATORS) ? 0.015f: 0.35f);
 		}
-		if (ClientTardisUtil.isPlayerInATardis() &&
+
+		if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_FOG() &&
+				ClientTardisUtil.isPlayerInATardis() &&
 				!tardis.crash().isToxic() &&
 				!tardis.alarm().isEnabled() &&
-				tardis.engine().hasPower()) {
+				tardis.engine().hasPower()
+		) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
 			RenderSystem.setShaderFogShape(FogShape.CYLINDER);
+
 			int loyaltyLevel = tardis.loyalty().get(MinecraftClient.getInstance().player).level();
 			RenderSystem.setShaderFogColor(1 - loyaltyLevel / 100f, 0, loyaltyLevel / 100f, 0.025f);
 		}
+
 		/*if(MinecraftClient.getInstance().world != null &&MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
 			RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));

@@ -1,5 +1,6 @@
 package loqor.ait.tardis.control.impl;
 
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
@@ -76,6 +77,10 @@ public class SecurityControl extends Control {
 
 		for (ItemStack stack : keys) {
 			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
+
+			if (stack.getItem() == AITItems.SKELETON_KEY) {
+				return true;
+			}
 
 			if (found == tardis)
 				return companion;

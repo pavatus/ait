@@ -5,7 +5,7 @@ import loqor.ait.registry.impl.ControlRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.link.v2.TardisRef;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;

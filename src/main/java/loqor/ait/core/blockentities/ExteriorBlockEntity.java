@@ -7,16 +7,18 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.link.v2.AbstractLinkableBlockEntity;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.TardisRef;
+import loqor.ait.tardis.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -24,9 +26,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -36,11 +35,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-
-import static loqor.ait.tardis.TardisTravel.State.*;
 
 public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
 	public int animationTimer = 0;
@@ -65,7 +61,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (tardis.isGrowth())
 			return;
 
-		SonicHandler handler = this.tardis().get().sonic();
+		SonicHandler handler = tardis.sonic();
 		boolean hasSonic = handler.hasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
 		boolean shouldEject = player.isSneaking();
 
@@ -102,7 +98,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (player.getMainHandStack().getItem() instanceof SonicItem &&
 				!tardis.siege().isActive() &&
 				!tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
-				&& tardis.getDoor().isClosed()
+				&& tardis.door().isClosed()
 				&& tardis.crash().getRepairTicks() > 0) {
 			ItemStack sonic = player.getMainHandStack();
 			NbtCompound tag = sonic.getOrCreateNbt();
@@ -133,41 +129,23 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if ((tardis.travel().getState() == LANDED
-				|| tardis.travel().getState() == CRASH)) {
+		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
 			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
-		}
-	}
-
-	@Nullable
-	@Override
-	public Packet<ClientPlayPacketListener> toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
-	}
-
-	@Override
-	public void writeNbt(NbtCompound nbt) {
-		super.writeNbt(nbt);
-	}
-
-	@Override
-	public void readNbt(NbtCompound nbt) {
-		super.readNbt(nbt);
 	}
 
 	public void onEntityCollision(Entity entity) {
-		TardisRef optional = this.tardis();
+		TardisRef ref = this.tardis();
 
-		if (optional.isEmpty())
+		if (ref.isEmpty())
 			return;
 
-		Tardis tardis = optional.get();
-		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
+		Tardis tardis = ref.get();
+		boolean previouslyLocked = tardis.door().previouslyLocked();
 
-		if (!previouslyLocked && tardis.travel().getState() == MAT && this.getAlpha() >= 0.9f)
+		if (!previouslyLocked && tardis.travel().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
 
-		if (!tardis.getDoor().isOpen())
+		if (!tardis.door().isOpen())
 			return;
 
 		if (!tardis.getLockedTardis() && (!DependencyChecker.hasPortals() || !tardis.getExterior().getVariant().hasPortals()))
@@ -176,41 +154,33 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 	@Override
 	public void tick(World world, BlockPos pos, BlockState blockState, ExteriorBlockEntity blockEntity) {
-		TardisRef optional = this.tardis();
+        TardisRef ref = this.tardis();
 
-		if (optional == null || optional.isEmpty())
-			return;
+        if (ref == null || ref.isEmpty())
+            return;
 
-		Tardis tardis = optional.get();
+        Tardis tardis = ref.get();
 
-		TardisTravel travel = tardis.travel();
-		TardisTravel.State state = travel.getState();
+        TravelHandlerBase travel = tardis.travel();
+        TravelHandlerBase.State state = travel.getState();
 
-		/*if (state == LANDED && tardis.getExteriorPos() != null && !world.isClient()) {
-			((ExteriorBlock) blockState.getBlock()).tryFall(blockState, (ServerWorld) world, pos);
-		}*/
+        if (!world.isClient())
+            return;
 
-		if (state != LANDED)
-			this.getAnimation().tick();
+        if (state.animated())
+            this.getAnimation().tick(tardis);
 
-		if (world.isClient()) {
-			this.checkAnimations();
-			this.exteriorLightBlockState(tardis);
-			return;
-		}
-
-		// ensures we don't exist during flight
-		if (state == FLIGHT)
-			world.removeBlock(this.getPos(), false);
+        this.exteriorLightBlockState(state);
+        this.checkAnimations();
 	}
 
 	public void verifyAnimation() {
-		TardisRef optional = this.tardis();
+		TardisRef ref = this.tardis();
 
-		if (this.animation != null || optional == null || optional.isEmpty())
+		if (this.animation != null || ref == null || ref.isEmpty())
 			return;
 
-		Tardis tardis = optional.get();
+		Tardis tardis = ref.get();
 
 		this.animation = tardis.getExterior().getVariant().animation(this);
 		this.animation.setupAnimation(tardis.travel().getState());
@@ -220,15 +190,14 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		}
 	}
 
+    @Environment(EnvType.CLIENT)
 	public void checkAnimations() {
-		// DO NOT RUN THIS ON SERVER!!
 		if (this.tardis().isEmpty())
 			return;
 
 		animationTimer++;
 		Tardis tardis = this.tardis().get();
-
-		DoorData door = tardis.getDoor();
+		DoorData door = tardis.door();
 
 		DoorData.DoorStateEnum doorState = door.getDoorState();
 		DoorData.DoorStateEnum animState = door.getAnimationExteriorState();
@@ -251,16 +220,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		return this.getAnimation().getAlpha();
 	}
 
-	private void exteriorLightBlockState(Tardis tardis) {
-		TardisTravel.State state = tardis.travel().getState();
+    private void exteriorLightBlockState(TravelHandlerBase.State state) {
+        if (!state.animated())
+            return;
 
-		if (state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT) {
-			int light = (int) Math.max(1, Math.min(this.getAlpha() * 9.0f, 9));
-			this.getWorld().setBlockState(pos, this.getCachedState().with(ExteriorBlock.LEVEL_9, light));
-		}
-	}
-
-	public void onBroken() {
-		this.tardis().ifPresent(tardis -> tardis.travel().setState(TardisTravel.State.FLIGHT));
-	}
+        this.getWorld().setBlockState(pos, this.getWorld().getBlockState(pos).with(
+                ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)
+        ));
+    }
 }

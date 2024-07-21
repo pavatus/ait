@@ -5,12 +5,14 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -50,20 +52,30 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 
 		Tardis tardis = door.tardis().get();
+		DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
-		if (!world.isClient() && tardis.getExteriorPos() == null)
+		if (world.isClient())
 			return;
 
-		World exteriorWorld = tardis.getExteriorPos().getWorld();
+		BlockPos exteriorPos = globalExteriorPos.getPos();
+		World exteriorWorld = globalExteriorPos.getWorld();
 
-		if (exteriorWorld == null)
+		if (exteriorWorld == null || exteriorPos == null)
 			return;
 
-		BlockState exteriorBlockState = exteriorWorld.getBlockState(tardis.getExteriorPos());
+		BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorPos);
 
 		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !tardis.areShieldsActive()) {
+			boolean waterlogged = exteriorBlockState.get(Properties.WATERLOGGED);
+
+			if (waterlogged && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
+				for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+					tardis.loyalty().subLevel(player, 1);
+				}
+			}
+
 			world.setBlockState(pos, blockState.with(Properties.WATERLOGGED,
-					exteriorBlockState.get(Properties.WATERLOGGED) && tardis.getDoor().isOpen()
+					waterlogged && tardis.door().isOpen()
 			), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 
 			world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
@@ -97,7 +109,8 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 		}
 
-		DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
+			DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 	}
 
 	public Direction getFacing() {
@@ -119,7 +132,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
 		Tardis tardis = this.tardis().get();
 
-		if (tardis.getDoor().isClosed())
+		if (tardis.door().isClosed())
 			return;
 
 		if (tardis.getLockedTardis())
@@ -131,13 +144,14 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())
 			return;
 
-		TardisTravel travel = tardis.travel();
-		if (travel.getState() == TardisTravel.State.FLIGHT) {
+		TravelHandler travel = tardis.travel();
+
+		if (travel.getState() == TravelHandlerBase.State.FLIGHT) {
 			TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead of the not correct position :)
 			return;
 		}
 
-		if (travel.getState() != TardisTravel.State.LANDED)
+		if (travel.getState() != TravelHandlerBase.State.LANDED)
 			return;
 
 		TardisUtil.teleportOutside(tardis, entity);

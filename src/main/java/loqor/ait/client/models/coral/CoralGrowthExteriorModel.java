@@ -2,8 +2,8 @@ package loqor.ait.client.models.coral;
 
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -363,10 +363,8 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 
 		ClientTardis tardis = (ClientTardis) exterior.tardis().get();
 
-		TardisTravel travel = tardis.travel();
-		TardisTravel.State state = travel.getState();
-
-		root = (tardis.getHandlers().getInteriorChanger().isGenerating() || (state == TardisTravel.State.DEMAT || state == TardisTravel.State.MAT)) ? coral.getChild("six") : coral.getChild("seven");
+		root = tardis.getHandlers().getInteriorChanger().isGenerating() || tardis.travel().getState() != TravelHandlerBase.State.LANDED
+				? coral.getChild("six") : coral.getChild("seven");
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 	}

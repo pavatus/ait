@@ -1,6 +1,9 @@
 package loqor.ait.core.blocks;
 
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import net.minecraft.block.*;
@@ -8,10 +11,13 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -52,10 +58,22 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.tardis().get().siege().isActive())
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.tardis() != null && door.tardis().get().siege().isActive())
 			return VoxelShapes.empty();
 
 		return rotateShape(Direction.NORTH, state.get(FACING), NORTH_SHAPE);
+	}
+
+	@Override
+	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+		if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+			// dont place yo
+			world.breakBlock(pos, true);
+			world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.DOOR_BLOCK)));
+			return;
+		}
+
+		super.onPlaced(world, pos, state, placer, itemStack);
 	}
 
 	public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {

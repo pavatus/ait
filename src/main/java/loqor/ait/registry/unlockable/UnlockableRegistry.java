@@ -30,7 +30,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     @Override
     @Deprecated
     public T getRandom(Random random) {
-        AITMod.LOGGER.warn("Using plain random in an unlockable registry! Class: " + this.getClass());
+        AITMod.LOGGER.warn("Using plain random in an unlockable registry! Class: {}", this.getClass());
         return super.getRandom(random);
     }
 
@@ -48,9 +48,10 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
         return this.getRandom(tardis, RANDOM);
     }
 
-    public void tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
+    public boolean tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
+        boolean success = false;
         for (T schema : REGISTRY.values()) {
-            if (schema.getRequirement() == Loyalty.MIN)
+            if (schema.getRequirement() == Loyalty.MIN || schema.freebie())
                 continue;
 
             if (tardis.isUnlocked(schema))
@@ -59,14 +60,16 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
             if (loyalty.smallerThan(schema.getRequirement()))
                 continue;
 
-            AITMod.LOGGER.debug("Unlocked " + schema.unlockType() + " "
-                    + schema.id() + " for tardis [" + tardis.getUuid() + "]");
+            AITMod.LOGGER.debug("Unlocked {} {} for tardis [{}]", schema.unlockType(), schema.id(), tardis.getUuid());
 
+            success = true;
             tardis.stats().unlock(schema);
 
             if (consumer != null)
                 consumer.accept(schema);
         }
+
+        return success;
     }
 
     public void unlockAll(Tardis tardis) {

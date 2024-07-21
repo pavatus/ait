@@ -1,14 +1,17 @@
 package loqor.ait.core.item;
 
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -17,12 +20,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,6 +85,9 @@ public class KeyItem extends LinkableItem {
 		for (ItemStack stack : keys) {
 			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
 
+			if (stack.getItem() == AITItems.SKELETON_KEY)
+				return true;
+
 			if (found == null)
 				continue;
 
@@ -111,10 +121,12 @@ public class KeyItem extends LinkableItem {
 			return;
 
 		Tardis tardis = KeyItem.getTardis(entity.getWorld(), entity.getStack());
-		if (tardis == null) return;
-		tardis.loyalty().subLevel(player, 5);
 
-		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.CLOISTER);
+		if (tardis == null)
+			return;
+
+		tardis.loyalty().subLevel(player, 5);
+		tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CLOISTER);
 	}
 
 	private static void hailMary(Tardis tardis, ItemStack stack, PlayerEntity player) {
@@ -124,24 +136,31 @@ public class KeyItem extends LinkableItem {
 		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY))
 			return;
 
+		TravelHandler travel = tardis.travel();
 		KeyItem keyType = (KeyItem) stack.getItem().asItem();
 
-		if (tardis.flight().handbrake().get())
+		if (travel.handbrake())
 			return;
 
 		if (!keyType.hasProtocol(Protocols.HAIL))
 			return;
 
+		if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
+			return;
+
 		if (player.getHealth() > 4 || player.getWorld() == TardisUtil.getTardisDimension())
 			return;
 
-		tardis.travel().setDestination(TardisUtil.createFromPlayer(player), true);
+		World world = player.getWorld();
+		BlockPos pos = player.getBlockPos();
 
-		if (tardis.travel().getState() == TardisTravel.State.LANDED) {
-			tardis.travel().dematerialise(true);
-		} else if (tardis.travel().getState() == TardisTravel.State.FLIGHT) {
-			tardis.travel().materialise();
-		}
+		DirectedGlobalPos.Cached globalPos = DirectedGlobalPos.Cached.create(
+				(ServerWorld) world, pos, (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw())
+		);
+
+		travel.dematerialize();
+		travel.forceDestination(globalPos);
+		travel.rematerialize();
 
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
 		player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));
@@ -151,11 +170,12 @@ public class KeyItem extends LinkableItem {
 		PropertiesHandler.set(tardis.properties(), PropertiesHandler.HAIL_MARY, false);
 		PropertiesHandler.set(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED, false);
 
-		player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f); // like a sound to show its been called
-		player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
+		// like a sound to show its been called
+		world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
+		world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
 	}
 
-	@Override
+	/*@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
 		BlockPos pos = context.getBlockPos();
@@ -183,5 +203,12 @@ public class KeyItem extends LinkableItem {
 
 		player.sendMessage(Text.translatable("message.ait.tardis.trust_issue", true));
 		return ActionResult.FAIL;
+	}*/
+
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		if (stack.getItem() == AITItems.SKELETON_KEY)
+			tooltip.add(Text.literal("CREATIVE ONLY SKELETON KEY").formatted(Formatting.DARK_PURPLE));
+		super.appendTooltip(stack, world, tooltip, context);
 	}
 }

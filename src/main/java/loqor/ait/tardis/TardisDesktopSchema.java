@@ -17,11 +17,14 @@ import java.util.Optional;
 public abstract class TardisDesktopSchema extends BasicSchema implements Unlockable {
 
 	private final Identifier id;
+
 	private final DesktopPreviewTexture preview;
 	private final Loyalty loyalty;
 
 	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture, Loyalty loyalty) {
-		this.id = id;
+        super("desktop");
+        this.id = id;
+
 		this.preview = texture;
 		this.loyalty = loyalty;
 	}
@@ -45,10 +48,7 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
 		return this.preview;
 	}
 
-	/**
-	 * Decides whether this desktop should be auto-unlocked on creation.
-	 * aka - freebee, freeby
-	 */
+	@Override
 	public boolean freebie() {
 		return true;
 	}

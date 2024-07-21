@@ -4,21 +4,23 @@ import com.google.gson.GsonBuilder;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
+import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.mood.MoodHandler;
+import loqor.ait.tardis.data.mood.TardisMood;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisChunkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -29,9 +31,12 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -60,11 +65,14 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 		ServerPlayNetworking.registerGlobalReceiver(
 				ASK_POS, (server, player, handler, buf, responseSender) -> {
-					BlockPos pos = AbsoluteBlockPos.fromNbt(buf.readNbt());
-
+					GlobalPos pos = buf.readGlobalPos();
 					ServerTardis found = null;
+
 					for (ServerTardis tardis : this.lookup.values()) {
-						if (!tardis.travel().getPosition().equals(pos))
+						DirectedGlobalPos exteriorPos = tardis.travel().position();
+
+						if (!exteriorPos.getPos().equals(pos.getPos())
+								|| !exteriorPos.getDimension().equals(pos.getDimension()))
 							continue;
 
 						found = tardis;
@@ -83,12 +91,6 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
 
 		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
-
-		ServerTickEvents.START_SERVER_TICK.register(server -> {
-			for (ServerTardis tardis : this.lookup.values()) {
-				tardis.startTick(server);
-			}
-		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			ServerPlayerEntity player = handler.getPlayer();
@@ -116,6 +118,8 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 	public ServerTardis create(TardisBuilder builder) {
 		ServerTardis tardis = builder.build();
 		this.lookup.put(tardis);
+
+		tardis.getHandlers().<MoodHandler>get(TardisComponent.Id.MOOD).randomizePriorityMoods();
 
 		return tardis;
 	}
@@ -262,16 +266,16 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 		for (ServerTardis tardis : this.lookup.values()) {
 			// stop forcing all chunks
 			if (lock) {
-				TardisChunkUtil.stopForceExteriorChunk(tardis);
-				TardisTravel.State state = tardis.travel().getState();
+				ForcedChunkUtil.stopForceLoading(tardis.travel().position());
+				TravelHandlerBase.State state = tardis.travel().getState();
 
-				if (state == TardisTravel.State.DEMAT) {
-					tardis.travel().toFlight();
-				} else if (state == TardisTravel.State.MAT) {
-					tardis.travel().forceLand();
+				if (state == TravelHandlerBase.State.DEMAT) {
+					tardis.travel().finishDemat();
+				} else if (state == TravelHandlerBase.State.MAT) {
+					tardis.travel().finishRemat();
 				}
 
-				tardis.getDoor().closeDoors();
+				tardis.door().closeDoors();
 
 				if (DependencyChecker.hasPortals())
 					PortalsHandler.removePortals(tardis);

@@ -3,11 +3,11 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.steam.SteamAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -903,30 +903,30 @@ public class SteamConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever9").getChild("bone50");
-		throttle.roll = throttle.roll - ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
+		throttle.roll = throttle.roll - ((tardis.travel().speed() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
 
 		ModelPart increment = steam.getChild("controls").getChild("panel_6").getChild("rot6").getChild("lever10").getChild("bone54");
 		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
 
 		ModelPart alarms = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever4").getChild("bone22");
-		alarms.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
+		alarms.roll = (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
 
 		ModelPart security = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever2").getChild("bone20");
-		security.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
+		security.roll = (PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
 
 		ModelPart antigrav = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever3").getChild("bone19");
-		antigrav.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 0.4363F : -0.5672F);
+		antigrav.roll = (tardis.travel().antigravs().get() ? 0.4363F : -0.5672F);
 
 		ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5").getChild("bone21");
-		shields.roll = (PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
-				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.getHandlers().getProperties(),
+		shields.roll = (PropertiesHandler.getBool(tardis.properties(),
+				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.properties(),
 				ShieldData.IS_VISUALLY_SHIELDED) ? 0.0F : 0.4363F : -0.5672F);
 
 		ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever").getChild("bone23");
 		refueling.roll = (tardis.isRefueling() ? 0.4363F : -0.5672F);
 
 		ModelPart handbrake = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("lever6").getChild("bone41");
-		handbrake.roll = handbrake.roll + (tardis.flight().handbrake().get() ? -0f : 1.5f);
+		handbrake.roll = handbrake.roll + (tardis.travel().handbrake() ? -0f : 1.5f);
 
 		ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7").getChild("bone45");
 		power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
@@ -935,31 +935,30 @@ public class SteamConsoleModel extends ConsoleModel {
 		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
 
 		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
-		direction.yaw = direction.yaw + (1.5708f * tardis.travel().getDestination().getRotation());
+		direction.yaw = direction.yaw + (1.5708f * tardis.travel().destination().getRotation());
 
 		ModelPart doorControl = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("crank2").getChild("bone18");
-		doorControl.yaw = doorControl.yaw + (tardis.getDoor().isOpen() ? tardis.getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
+		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart cloak = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone46");
 		cloak.roll = cloak.roll - (tardis.getHandlers().getCloak().isEnabled() ? 1.5708f : 0);
 
 		ModelPart doorLock = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone47");
-		doorLock.roll = doorLock.roll - (tardis.getDoor().locked() ? 1.5708f : 0);
+		doorLock.roll = doorLock.roll - (tardis.door().locked() ? 1.5708f : 0);
 
 		ModelPart autopilot = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone48");
-		autopilot.roll = autopilot.roll - (tardis.flight().autoLand().get() ? 1.5708f : 0);
+		autopilot.roll = autopilot.roll - (tardis.travel().autopilot() ? 1.5708f : 0);
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch (state) {
-			case LANDED -> SteamAnimations.CONSOLE_STEAM_IDLE;
-			case FLIGHT, MAT, DEMAT, CRASH -> SteamAnimations.CONSOLE_STEAM_FLIGHT;
-			default -> Animation.Builder.create(0).build();
-		};
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
+		if (state == TravelHandlerBase.State.LANDED)
+			return SteamAnimations.CONSOLE_STEAM_IDLE;
+
+		return SteamAnimations.CONSOLE_STEAM_FLIGHT;
 	}
 
 	@Override

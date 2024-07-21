@@ -1,6 +1,5 @@
 {
   "id": "ait:prime",
-  "name": "Prime",
   "models": {
     "inactive": "ait:item/sonic/prime/inactive",
     "interaction": "ait:item/sonic/prime/interaction",

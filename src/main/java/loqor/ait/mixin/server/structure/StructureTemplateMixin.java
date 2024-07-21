@@ -3,7 +3,7 @@ package loqor.ait.mixin.server.structure;
 import loqor.ait.AITMod;
 import loqor.ait.api.Structure;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.v2.interior.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.FluidState;

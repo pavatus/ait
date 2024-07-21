@@ -3,12 +3,12 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.alnico.AlnicoAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -824,16 +824,16 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		ModelPart throttle = alnico.getChild("section1").getChild("controls").getChild("fliplever1").getChild("bone5");
-		throttle.pitch = throttle.pitch + ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
+		throttle.pitch = throttle.pitch + ((tardis.travel().speed() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
 
 		ModelPart handbrake = alnico.getChild("section1").getChild("controls").getChild("biglever").getChild("bone");
-		handbrake.pitch = !tardis.flight().handbrake().get() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
+		handbrake.pitch = !tardis.travel().handbrake() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
 
 		ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
 		power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
 		ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch1");
-		autoPilot.pitch = tardis.flight().autoLand().get() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
+		autoPilot.pitch = tardis.travel().autopilot() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
 
 		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
 		security.pitch = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
@@ -857,13 +857,13 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);
 
 		ModelPart antigravs = alnico.getChild("section1").getChild("controls").getChild("tinyswitch").getChild("bone3");
-		antigravs.yaw = antigravs.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? 1.5708f : 0);
+		antigravs.yaw = antigravs.yaw + (tardis.travel().antigravs().get() ? 1.5708f : 0);
 
 		ModelPart doorControl = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch6").getChild("bone24");
-		doorControl.yaw = doorControl.yaw + (tardis.getDoor().isOpen() ? tardis.getDoor().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
+		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart doorLock = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch7").getChild("bone25");
-		doorLock.yaw = doorLock.yaw + (tardis.getDoor().locked() ? 1.5708f : 0);
+		doorLock.yaw = doorLock.yaw + (tardis.door().locked() ? 1.5708f : 0);
 
 		ModelPart toast1 = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toast1");
 		ModelPart toastlever = alnico.getChild("section2").getChild("controls2").getChild("waypointcatridge").getChild("toastlever");
@@ -873,7 +873,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		toast2.visible = tardis.waypoint().hasCartridge();
 
 		ModelPart direction = alnico.getChild("section5").getChild("controls5").getChild("tinyswitch9").getChild("bone26");
-		direction.yaw += (1.5708f * tardis.travel().getDestination().getRotation());
+		direction.yaw += (1.5708f * tardis.travel().destination().getRotation());
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
@@ -886,7 +886,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return switch (state) {
 			case FLIGHT, MAT, DEMAT -> AlnicoAnimations.CONSOLE_ALNICO_FLIGHT;
 			case LANDED -> AlnicoAnimations.CONSOLE_ALNICO_IDLE;

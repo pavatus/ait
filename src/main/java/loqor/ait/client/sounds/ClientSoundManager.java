@@ -4,6 +4,11 @@ import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
 import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
+import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
+import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
+import loqor.ait.client.sounds.rwf.ClientRWFSoundsHandler;
+import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
+import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -17,6 +22,11 @@ public class ClientSoundManager {
 	private static ClientAlarmHandler alarm;
 	private static ClientFlightHandler flight;
 	private static ClientCreakHandler creak;
+	private static ClientVortexSoundsHandler vortexSounds;
+	private static ClientRWFSoundsHandler rwfsounds;
+	private static ClientRainSoundHandler rainSound;
+	private static ClientLavaSoundHandler lavaSound;
+	private static ClientSonicSoundHandler sonicSound;
 
 	public static ClientHumHandler getHum() {
 		if (hum == null) {
@@ -42,11 +52,46 @@ public class ClientSoundManager {
 		return flight;
 	}
 
+	public static ClientRWFSoundsHandler getRWFSounds() {
+		if (rwfsounds == null) {
+			rwfsounds = ClientRWFSoundsHandler.create();
+		}
+		return rwfsounds;
+	}
+
 	public static ClientCreakHandler getCreaks() {
 		if (creak == null) {
 			creak = ClientCreakHandler.create();
 		}
 		return creak;
+	}
+
+	public static ClientVortexSoundsHandler getVortexSounds() {
+		if (vortexSounds == null) {
+			vortexSounds = ClientVortexSoundsHandler.create();
+		}
+		return vortexSounds;
+	}
+
+	public static ClientRainSoundHandler getRainSound() {
+		if (rainSound == null) {
+			rainSound = ClientRainSoundHandler.create();
+		}
+		return rainSound;
+	}
+
+	public static ClientLavaSoundHandler getLavaSound() {
+		if (lavaSound == null) {
+			lavaSound = ClientLavaSoundHandler.create();
+		}
+		return lavaSound;
+	}
+
+	public static ClientSonicSoundHandler getSonicSound() {
+		if (sonicSound == null) {
+			sonicSound = ClientSonicSoundHandler.create();
+		}
+		return sonicSound;
 	}
 
 
@@ -62,5 +107,20 @@ public class ClientSoundManager {
 
 		if (getCreaks() != null)
 			getCreaks().tick(client);
+
+		if (getVortexSounds() != null)
+			getVortexSounds().tick(client);
+
+		if (getRWFSounds() != null)
+			getRWFSounds().tick(client);
+
+		if (getRainSound() != null)
+			getRainSound().tick(client);
+
+		if (getLavaSound() != null)
+			getLavaSound().tick(client);
+
+		if (getSonicSound() != null)
+			getSonicSound().tick(client);
 	}
 }

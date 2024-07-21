@@ -2,7 +2,7 @@ package loqor.ait.client.models.exteriors;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.TardisRealEntity;
+import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.loyalty.Loyalty;
@@ -33,10 +33,11 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 	}
 
 	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-		if (exterior.tardis().isEmpty())
+		Tardis tardis = exterior.tardis().get();
+
+		if (tardis == null)
 			return;
 
-		Tardis tardis = exterior.tardis().get();
 		float newAlpha = alpha;
 
 		if (tardis.getHandlers().getCloak().isEnabled()) {
@@ -66,9 +67,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 
-	public void renderRealWorld(TardisRealEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		if (realEntity.getTardis() == null) return;
-
+	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 
@@ -76,7 +75,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
 	}
-
 
 	public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
 }

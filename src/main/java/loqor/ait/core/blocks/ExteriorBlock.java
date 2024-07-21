@@ -6,17 +6,15 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -24,7 +22,6 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.util.ParticleUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -46,6 +43,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -63,7 +61,7 @@ import java.util.function.ToIntFunction;
 @SuppressWarnings("deprecation")
 public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBreak, Waterloggable {
 
-	public static final int MAX_ROTATION_INDEX = RotationPropertyHelper.getMax();
+	public static final byte MAX_ROTATION_INDEX = (byte) RotationPropertyHelper.getMax();
 	private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
 	public static final IntProperty ROTATION = Properties.ROTATION;
 	public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
@@ -159,9 +157,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis.siege().isActive())
 			return SIEGE_SHAPE;
 
-		TardisTravel.State travelState = tardis.travel().getState();
-		if (travelState == TardisTravel.State.LANDED || exterior.getAlpha() > 0.75)
-			return normal;
+        TravelHandlerBase.State travelState = tardis.travel().getState();
+
+        if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
+            return normal;
 
 		if (DependencyChecker.hasPortals())
 			return PORTALS_SHAPE;
@@ -201,12 +200,13 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 		// todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
 		if (DependencyChecker.hasPortals())
-			if (tardis.getDoor().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
+			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-		TardisTravel.State travelState = tardis.travel().getState();
-		if (travelState == TardisTravel.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
-			return getNormalShape(state);
+        TravelHandlerBase.State travelState = tardis.travel().getState();
+
+        if (travelState == TravelHandlerBase.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+            return getNormalShape(state);
 
 		if (DependencyChecker.hasPortals()) {
 			return PORTALS_SHAPE;
@@ -256,17 +256,16 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
 			return getNormalShape(state);
 
-		TardisTravel.State travelState = exterior.tardis().get().travel().getState();
-		if (travelState == TardisTravel.State.LANDED || exterior.getAlpha() > 0.75)
-			return getNormalShape(state);
+        TravelHandlerBase.State travelState = exterior.tardis().get().travel().getState();
 
-		if (exterior.tardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM)) {
-			return LEDGE_DOOM;
-		}
+        if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
+            return getNormalShape(state);
 
-		if (DependencyChecker.hasPortals()) {
-			return PORTALS_SHAPE;
-		}
+        if (exterior.tardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
+            return LEDGE_DOOM;
+
+        if (DependencyChecker.hasPortals())
+            return PORTALS_SHAPE;
 
 		return VoxelShapes.empty();
 	}
@@ -277,10 +276,11 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 		if (blockEntity instanceof ExteriorBlockEntity exterior) {
 			if (world.isClient()) {
-				if (exterior.tardis().isEmpty()) {
-					ClientTardisManager.getInstance().askTardis(new AbsoluteBlockPos(pos, world));
+				if (exterior.tardis() == null || exterior.tardis().isEmpty()) {
+					ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
 					return ActionResult.FAIL;
 				}
+
 				return ActionResult.SUCCESS;
 			}
 
@@ -299,9 +299,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			return;
 
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (blockEntity instanceof ExteriorBlockEntity exterior) {
+		if (blockEntity instanceof ExteriorBlockEntity exterior)
 			exterior.onEntityCollision(entity);
-		}
 	}
 
 	@Nullable
@@ -325,20 +324,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 	}
 
 	@Override
-	public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-		super.onBroken(world, pos, state);
-
-		if (!world.isClient()) {
-			BlockEntity entity = world.getBlockEntity(pos);
-
-			if (!(entity instanceof ExteriorBlockEntity))
-				return;
-
-			((ExteriorBlockEntity) entity).onBroken();
-		}
-	}
-
-	@Override
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		// this is called when the block is first placed, but we have a demat anim so nothing occurs.
 		this.tryFall(state, world, pos);
@@ -353,19 +338,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (!canFallThrough(world, pos.down()))
 			return;
 
-		Tardis tardis = this.getTardisFromExterior(world, pos);
+		Tardis tardis = this.findTardis(world, pos);
 
-		if (tardis == null)
+		if (tardis == null || tardis.travel().antigravs().get())
 			return;
 
-		boolean antigravs = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED);
-
-		System.out.print(antigravs);
-
-		if (antigravs)
-			return;
-
-		if (tardis.travel().getState() != TardisTravel.State.LANDED)
+		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
 			return;
 
 		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
@@ -373,24 +351,25 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         FallingTardisEntity.spawnFromBlock(world, pos, state);
 
-        if (state.get(WATERLOGGED)) {
+        if (state.get(WATERLOGGED))
 			state.with(WATERLOGGED, false);
-		}
 	}
 
-	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-		super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
-		if(world.isClient()) return;
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
 
-		Tardis tardis = this.getTardisFromExterior(((ServerWorld) world), pos);
+        if(world.isClient())
+            return;
 
-		if (tardis == null) {
-			return;
-		}
+        Tardis tardis = this.findTardis(((ServerWorld) world), pos);
 
-		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
-	}
+        if (tardis == null) {
+            return;
+        }
+
+        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+    }
 
 	private static boolean canFallThrough(World world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
@@ -405,21 +384,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		return state.isAir() || state.isIn(BlockTags.FIRE) || state.isLiquid() || state.isReplaceable();
 	}
 
-	@Override
-	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-		super.onPlaced(world, pos, state, placer, itemStack);
-
-		if(world.isClient()) return;
-
-		Tardis tardis = this.getTardisFromExterior(((ServerWorld) world), pos);
-
-		if (tardis == null) {
-			return;
-		}
-
-		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
-	}
-
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		if (state.get(WATERLOGGED))
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -428,9 +392,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
-	private Tardis getTardisFromExterior(ServerWorld world, BlockPos pos) {
+	private Tardis findTardis(ServerWorld world, BlockPos pos) {
 		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-			if (exterior.tardis().isEmpty())
+			if (exterior.tardis() == null || exterior.tardis().isEmpty())
 				return null;
 
 			return exterior.tardis().get();
@@ -443,18 +407,16 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (tardis == null)
 			return;
 
-		tardis.travel().setPosition(new AbsoluteBlockPos.Directed(pos, world, tardis.travel().getPosition().getRotation()));
+        tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
-		world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-		((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+        world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
 
-		FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        world.scheduleBlockTick(pos, this, 2);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
 		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
-
-		world.scheduleBlockTick(pos, this, 2);
-
-		DoorData.lockTardis(tardis.getDoor().previouslyLocked(), tardis, null, false);
+		DoorData.lockTardis(tardis.door().previouslyLocked() || tardis.getHandlers().getInteriorChanger().isGenerating(), tardis, null, false);
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

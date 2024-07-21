@@ -2,7 +2,7 @@ package loqor.ait.core.data.schema;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import loqor.ait.core.data.base.Nameable;
+import loqor.ait.core.data.BasicSchema;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.util.Identifier;
@@ -10,29 +10,24 @@ import net.minecraft.util.Identifier;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public abstract class SonicSchema implements Unlockable, Nameable {
+public abstract class SonicSchema extends BasicSchema implements Unlockable {
 
     private final Identifier id;
-    private final String name;
     private final Models models;
     private final Rendering rendering;
     private final Loyalty loyalty;
 
-    protected SonicSchema(Identifier id, String name, Models models, Rendering rendering, Loyalty loyalty) {
+    protected SonicSchema(Identifier id, Models models, Rendering rendering, Loyalty loyalty) {
+        super("sonic");
+
         this.id = id;
-        this.name = name;
         this.models = models;
         this.rendering = rendering;
         this.loyalty = loyalty;
     }
 
-    protected SonicSchema(Identifier id, String name, Models models, Rendering rendering) {
-        this(id, name, models, rendering, Loyalty.MIN);
-    }
-
-    @Override
-    public String name() {
-        return name;
+    protected SonicSchema(Identifier id, Models models, Rendering rendering) {
+        this(id, models, rendering, Loyalty.MIN);
     }
 
     @Override

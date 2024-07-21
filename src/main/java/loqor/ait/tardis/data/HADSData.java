@@ -1,12 +1,11 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
-
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.ServerTardisTravel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -38,17 +37,15 @@ public class HADSData extends TardisComponent implements TardisTickable {
 	@Override
 	public void tick(MinecraftServer server) {
 		if (isHADSActive())
-			tickingForDanger(tardis.getExteriorPos().getWorld());
+			tickingForDanger(tardis.travel().position().getWorld());
 	}
-
 
 	// @TODO Fix hads idk why its broken. duzo did something to the demat idk what happened lol
 	public void tickingForDanger(World world) {
-		if (tardis.getExteriorPos() == null) return;
 		List<Entity> listOfEntities = world.getOtherEntities(null,
-				new Box(tardis.getExteriorPos()).expand(3f),
+				new Box(tardis.travel().position().getPos()).expand(3f),
 				EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
-		/*if(isHADSActive()) {*/
+
 		for (Entity entity : listOfEntities) {
 			if (entity instanceof CreeperEntity creeperEntity) {
 				if (creeperEntity.getFuseSpeed() > 0) {
@@ -68,23 +65,23 @@ public class HADSData extends TardisComponent implements TardisTickable {
 	public void dematerialiseWhenInDanger() {
 		ServerTardis tardis = (ServerTardis) tardis();
 
-		ServerTardisTravel travel = (ServerTardisTravel) tardis.travel();
-		TardisTravel.State state = travel.getState();
+		TravelHandler travel = tardis.travel();
+		TravelHandlerBase.State state = travel.getState();
 
-		ServerAlarmHandler alarm = tardis.getHandlers().getAlarms();
+		ServerAlarmHandler alarm = tardis.alarm();
 
-		if (isInDanger()) {
-			if (state == TardisTravel.State.LANDED) {
-				travel.dematerialise(false);
-			}
-			tardis.getHandlers().getAlarms().enable();
+		if (this.isInDanger()) {
+			if (state == TravelHandlerBase.State.LANDED)
+				travel.dematerialize();
 
-		} else if (alarm.isEnabled()) {
-			if (state == TardisTravel.State.FLIGHT) {
-				travel.materialise();
-			} else if (state == TardisTravel.State.MAT)
-				alarm.disable();
+			tardis.alarm().enable();
+			return;
 		}
-	}
 
+		if (state == TravelHandlerBase.State.FLIGHT)
+			travel.rematerialize();
+
+		if (state == TravelHandlerBase.State.MAT)
+			alarm.disable();
+	}
 }

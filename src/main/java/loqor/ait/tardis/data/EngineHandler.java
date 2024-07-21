@@ -4,17 +4,17 @@ import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
@@ -35,17 +35,6 @@ public class EngineHandler extends KeyedTardisComponent {
 
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.engine().disablePower());
-
-        TardisEvents.LOSE_POWER.register(tardis -> {
-            if (TardisUtil.getTardisDimension() != null) {
-                FlightUtil.playSoundAtEveryConsole(tardis.getDesktop(), AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
-            }
-
-            // disabling protocols
-            PropertiesHandler.set(tardis, PropertiesHandler.ANTIGRAVS_ENABLED, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
-            PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
-        });
     }
 
     @Override
@@ -82,6 +71,17 @@ public class EngineHandler extends KeyedTardisComponent {
         this.updateExteriorState();
 
         TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
+        this.disableProtocols();
+    }
+
+    private void disableProtocols() {
+        if (TardisUtil.getTardisDimension() != null)
+            tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+
+        // disabling protocols
+        tardis.travel().antigravs().set(false);
+        PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
+        PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
     }
 
     public void enablePower() {
@@ -104,18 +104,18 @@ public class EngineHandler extends KeyedTardisComponent {
     }
 
     private void updateExteriorState() {
-        TardisTravel travel = this.tardis.travel();
+        TravelHandler travel = this.tardis.travel();
 
-        if (travel.inFlight())
+        if (travel.getState() != TravelHandlerBase.State.LANDED)
             return;
 
-        AbsoluteBlockPos pos = travel.getPosition();
+        DirectedGlobalPos.Cached pos = travel.position();
         World world = pos.getWorld();
 
         if (world == null)
             return;
 
-        world.setBlockState(pos, pos.getBlockEntity().getCachedState()
+        world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos())
                 .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
         );
     }

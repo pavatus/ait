@@ -2,8 +2,9 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -27,21 +28,23 @@ public class HandBrakeControl extends Control {
 		if (tardis.isInDanger())
 			return false;
 
-		tardis.flight().handbrake().flatMap(handbrake -> !handbrake);
+		// todo make this fancier when moving stuff from flightdata to travelhandler
+		boolean handbrake = tardis.travel().handbrake();
+		handbrake = !handbrake;
+
+		tardis.travel().handbrake(handbrake);
 
 		if (tardis.isRefueling())
 			tardis.setRefueling(false);
 
-		boolean handbrake = tardis.flight().handbrake().get();
-
 		this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
-		TardisTravel travel = tardis.travel();
+		TravelHandler travel = tardis.travel();
 
-		if (handbrake && travel.getState() == TardisTravel.State.FLIGHT) {
-			if (tardis.flight().autoLand().get()) {
-				travel.setPositionToProgress();
-				travel.forceLand();
-				travel.playThudSound();
+		// TODO(travel): replace with proper travel methods
+		if (handbrake && travel.getState() == TravelHandlerBase.State.FLIGHT) {
+			if (travel.autopilot()) {
+				travel.stopHere();
+				travel.rematerialize();
 			} else {
 				travel.crash();
 			}

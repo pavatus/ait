@@ -1,8 +1,7 @@
 package loqor.ait.tardis.control.impl.pos;
 
-import loqor.ait.tardis.Tardis;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;

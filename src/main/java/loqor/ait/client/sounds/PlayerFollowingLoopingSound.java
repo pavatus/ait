@@ -12,11 +12,9 @@ public class PlayerFollowingLoopingSound extends LoopingSound {
 		super(soundEvent, soundCategory);
 
 		ClientPlayerEntity client = MinecraftClient.getInstance().player;
-		this.x = client.getX();
-		this.y = client.getY();
-		this.z = client.getZ();
-		this.volume = volume;
-		this.pitch = pitch;
+		this.setPosition(client.getBlockPos());
+		this.setVolume(volume);
+		this.setPitch(pitch);
 		this.repeat = true;
 	}
 
@@ -31,16 +29,12 @@ public class PlayerFollowingLoopingSound extends LoopingSound {
 	@Override
 	public void tick() {
 		super.tick();
-
 		this.setCoordsToPlayerCoords();
 	}
 
 	private void setCoordsToPlayerCoords() {
 		ClientPlayerEntity player = MinecraftClient.getInstance().player;
 		if (player == null) return;
-
-		this.x = player.getX();
-		this.y = player.getY();
-		this.z = player.getZ();
+		this.setPosition(player.getBlockPos());
 	}
 }

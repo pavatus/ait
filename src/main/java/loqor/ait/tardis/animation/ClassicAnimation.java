@@ -1,9 +1,8 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.MatSound;
-import loqor.ait.tardis.TardisTravel;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class ClassicAnimation extends ExteriorAnimation {
 
@@ -12,21 +11,16 @@ public class ClassicAnimation extends ExteriorAnimation {
 	}
 
 	@Override
-	public void tick() {
-		if (exterior.tardis().isEmpty())
-			return;
-
-		TardisTravel.State state = exterior.tardis().get().travel().getState();
+	public void tick(Tardis tardis) {
+		TravelHandlerBase.State state = tardis.travel().getState();
 
 		if (this.timeLeft < 0)
-			this.setupAnimation(exterior.tardis().get().travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
+			this.setupAnimation(tardis.travel().getState()); // fixme is a jank fix for the timeLeft going negative on client
 
-		if (state == TardisTravel.State.DEMAT) {
+		if (state == TravelHandlerBase.State.DEMAT) {
 			timeLeft--;
 			this.setAlpha(getFadingAlpha());
-
-			runAlphaChecks(state);
-		} else if (state == TardisTravel.State.MAT) {
+		} else if (state == TravelHandlerBase.State.MAT) {
 			timeLeft++;
 
 			if (timeLeft > 680) {
@@ -34,38 +28,12 @@ public class ClassicAnimation extends ExteriorAnimation {
 			} else {
 				this.setAlpha(0f);
 			}
-
-			runAlphaChecks(state);
-		} else if (state == TardisTravel.State.LANDED/* && alpha != 1f*/) {
+		} else if (state == TravelHandlerBase.State.LANDED) {
 			this.setAlpha(1f);
 		}
 	}
 
 	public float getFadingAlpha() {
 		return (float) (timeLeft) / (maxTime);
-	}
-
-	@Override
-	public void setupAnimation(TardisTravel.State state) {
-		if (exterior.tardis().isEmpty() || exterior.tardis().get().getExterior().getCategory() == null) {
-			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
-			alpha = 0f; // just make me vanish.
-			return;
-		}
-
-		MatSound sound = exterior.tardis().get().getExterior().getVariant().getSound(state);
-		this.tellClientsToSetup(state);
-
-		timeLeft = sound.timeLeft();
-		maxTime = sound.maxTime();
-		startTime = sound.startTime();
-
-		if (state == TardisTravel.State.DEMAT) {
-			alpha = 1f;
-		} else if (state == TardisTravel.State.MAT) {
-			alpha = 0f;
-		} else if (state == TardisTravel.State.LANDED) {
-			alpha = 1f;
-		}
 	}
 }

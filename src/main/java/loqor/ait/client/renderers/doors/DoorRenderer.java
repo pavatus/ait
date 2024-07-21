@@ -7,17 +7,18 @@ import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.DoorBlock;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.door.ClientDoorSchema;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
@@ -74,14 +75,16 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		Identifier texture = exteriorVariant.texture();
 
 		if (exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
-			texture = tardis.getDoor().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
+			texture = tardis.door().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
 		}
 
-		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TardisTravel.State.LANDED
-				&& tardis.getDoor().getDoorState() != DoorData.DoorStateEnum.CLOSED
+		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TravelHandlerBase.State.LANDED
+				&& tardis.door().getDoorState() != DoorData.DoorStateEnum.CLOSED
 		) {
-			BlockPos pos = tardis.travel().getPosition();
-			World world = tardis.travel().getPosition().getWorld();
+			DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+
+			BlockPos pos = globalPos.getPos();
+			World world = globalPos.getWorld();
 
 			if (world != null) {
 				int lightConst = 524296;
@@ -118,7 +121,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
 			Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
 
-			if (biomeTexture != null && !texture.equals(biomeTexture) && tardis.travel().getPosition().getWorld() != null && !(tardis.travel().getPosition().getWorld().getBlockState(tardis.travel().getPosition().down()).getBlock() instanceof AirBlock))
+			if (biomeTexture != null && !texture.equals(biomeTexture) && tardis.travel().position().getWorld() != null && !(tardis.travel().position().getWorld().getBlockState(tardis.travel().position().getPos().down()).getBlock() instanceof AirBlock))
                 model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, 1);
         }
 

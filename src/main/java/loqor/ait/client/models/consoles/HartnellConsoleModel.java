@@ -9,23 +9,23 @@ import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 // Made with Blockbench 4.9.2
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class HartnellConsoleModel extends ConsoleModel {
+
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/hartnell_console.png");
 	public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/consoles/hartnell_console_emission.png");
-	public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have none
 
 	private final ModelPart bone;
 
@@ -790,11 +790,11 @@ public class HartnellConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
-		return switch (state) {
-			default -> HartnellAnimations.HARTNELL_INFLIGHT_ANIMATION;
-			case LANDED -> HartnellAnimations.HARTNELL_IDLE_ANIMATION;
-		};
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
+		if (state == TravelHandlerBase.State.LANDED)
+			return HartnellAnimations.HARTNELL_IDLE_ANIMATION;
+
+		return HartnellAnimations.HARTNELL_INFLIGHT_ANIMATION;
 	}
 
 	@Override
@@ -827,49 +827,49 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// X Control Movement
 		ModelPart xControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_2").getChild("bone70");
 		ModelPart xControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_11").getChild("bone82");
-		AbsoluteBlockPos.Directed destination = tardis.travel().getDestination();
-		if (tardis.travel().getDestination().getX() != xDestination) {
+		BlockPos destination = tardis.travel().destination().getPos();
+
+		/*if (destination.getX() != xDestination) {
 			xControl.roll = xControl.roll + 1.575f;
 			xControlLight.pivotY = xControlLight.pivotY + 1;
 
 			xDestination = destination.getX();
-		}
+		}*/
 
 		// Y Control Movement
 		ModelPart yControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_3").getChild("bone76");
 		ModelPart yControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_12").getChild("bone83");
-		if (tardis.travel().getDestination().getY() != yDestination) {
+		/*if (destination.getY() != yDestination) {
 			yControl.roll = yControl.roll + 1.575f;
 			yControlLight.pivotY = yControlLight.pivotY + 1;
 
 			yDestination = destination.getY();
-		}
+		}*/
 
 		// Z Control Movement
 		ModelPart zControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_lever_4").getChild("bone77");
 		ModelPart zControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("ind_lamp_13").getChild("bone84");
 
-		if (tardis.travel().getDestination().getZ() != zDestination) {
+		/*if (destination.getZ() != zDestination) {
 			zControl.roll = zControl.roll + 1.575f;
 			zControlLight.pivotY = zControlLight.pivotY + 1;
 
 			zDestination = destination.getZ();
-		}
+		}*/
 
 		// Fast Return Movements
 		ModelPart fastReturn = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("fastreturn").getChild("bone25");
-		AbsoluteBlockPos.Directed lastLocation = tardis.travel().getLastPosition();
-		if (tardis.travel().getDestination() == lastLocation) {
+		if (tardis.travel().destination().equals(tardis.travel().previousPosition())) {
 			fastReturn.pivotY = fastReturn.pivotY + 0.25f;
         }
 
 		// Throttle Control Movements
 		ModelPart throttle = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_1").getChild("bone45");
-		throttle.roll = throttle.roll + (tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get());
+		throttle.roll = throttle.roll + (tardis.travel().speed() / (float) tardis.travel().maxSpeed().get());
 
 		// Handbrake Control Movements
 		ModelPart handbrake = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("m_lever_2").getChild("bone46");
-		handbrake.roll = tardis.flight().handbrake().get() ? handbrake.roll + 1 : handbrake.roll;
+		handbrake.roll = tardis.travel().handbrake() ? handbrake.roll + 1 : handbrake.roll;
 
 		// Power Control Movements
 		ModelPart powerControl = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("m_lever_3").getChild("bone142");
@@ -881,10 +881,10 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// Door Control Movements
 		ModelPart doorControl = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone123");
 		ModelPart doorControlLight = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ind_lamp_20").getChild("bone117");
-		if (tardis.getDoor().isLeftOpen()) {
+		if (tardis.door().isLeftOpen()) {
 			doorControl.yaw = doorControl.yaw + 1.575f;
 			doorControlLight.pivotY = doorControlLight.pivotY + 1;
-		} else if (tardis.getDoor().isRightOpen()) {
+		} else if (tardis.door().isRightOpen()) {
 			doorControl.yaw = doorControl.yaw + 3.15f;
 			doorControlLight.pivotY = doorControlLight.pivotY + 1;
 		}
@@ -892,8 +892,8 @@ public class HartnellConsoleModel extends ConsoleModel {
 		// Door Lock Control Movement
 		ModelPart doorLock = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ctrl_panel_3").getChild("bone125");
 		ModelPart doorLockLight = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113").getChild("bone114").getChild("ind_lamp_21").getChild("bone118");
-		doorLock.yaw = tardis.getDoor().locked() ? doorLock.yaw + 1.575f : doorLock.yaw;
-		doorLockLight.pivotY = tardis.getDoor().locked() ? doorLockLight.pivotY : doorLockLight.pivotY + 1;
+		doorLock.yaw = tardis.door().locked() ? doorLock.yaw + 1.575f : doorLock.yaw;
+		doorLockLight.pivotY = tardis.door().locked() ? doorLockLight.pivotY : doorLockLight.pivotY + 1;
 
 		// Refueler Control Movements
 		ModelPart refueler = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ctrl_panel_2").getChild("bone106");
@@ -936,11 +936,11 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Direction Control Movements
 		ModelPart direction = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_crank_1").getChild("bone59");
-		direction.yaw += (0.5f * tardis.travel().getDestination().getRotation());
+		direction.yaw += (0.5f * tardis.travel().destination().getRotation());
 
 		// Anti Grav Control Movements
 		ModelPart antiGrav = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("sl_switch_1").getChild("bone33");
-		antiGrav.pivotX = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antiGrav.pivotX : antiGrav.pivotX + 1;
+		antiGrav.pivotX = !tardis.travel().antigravs().get() ? antiGrav.pivotX : antiGrav.pivotX + 1;
 
 		ModelPart shield = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_6").getChild("bone57");
 		shield.pivotX = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED) ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;
@@ -950,7 +950,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Auto Pilot Control Movements
 		ModelPart autoPilot = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36").getChild("bone37").getChild("st_switch").getChild("bone26");
-		autoPilot.yaw = !tardis.flight().autoLand().get() ? autoPilot.yaw + 1 : autoPilot.yaw;
+		autoPilot.yaw = !tardis.travel().autopilot() ? autoPilot.yaw + 1 : autoPilot.yaw;
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
 	}

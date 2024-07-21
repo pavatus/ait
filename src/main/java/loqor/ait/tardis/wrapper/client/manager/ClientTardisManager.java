@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
-import loqor.ait.core.data.AbsoluteBlockPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.TardisComponentRegistry;
@@ -24,6 +23,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -112,9 +112,9 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 	/**
 	 * Asks the server for a tardis at an exterior position
 	 */
-	public void askTardis(AbsoluteBlockPos pos) {
+	public void askTardis(GlobalPos pos) {
 		PacketByteBuf data = PacketByteBufs.create();
-		data.writeNbt(pos.toNbt());
+		data.writeGlobalPos(pos);
 
 		ClientPlayNetworking.send(ASK_POS, data);
 	}

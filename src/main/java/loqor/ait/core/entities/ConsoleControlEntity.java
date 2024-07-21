@@ -1,10 +1,12 @@
 package loqor.ait.core.entities;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.entities.base.LinkableDummyLivingEntity;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
@@ -12,6 +14,7 @@ import loqor.ait.tardis.control.ControlTypes;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -21,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -38,7 +40,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class ConsoleControlEntity extends BaseControlEntity {
+public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
 	private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);
 	private static final TrackedData<Float> WIDTH = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -51,13 +53,23 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	private BlockPos consoleBlockPos;
 	private Control control;
 
-	public ConsoleControlEntity(EntityType<? extends BaseControlEntity> entityType, World world) {
+	public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
+	private ConsoleControlEntity(World world, Tardis tardis) {
+		this(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
+		this.link(tardis);
+	}
+
+	public static ConsoleControlEntity create(World world, Tardis tardis) {
+		return new ConsoleControlEntity(world, tardis);
+	}
+
 	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-		super.onSpawnPacket(packet);
+	public void remove(RemovalReason reason) {
+		AITMod.LOGGER.debug("Control entity discarded as {}", reason);
+		super.remove(reason);
 	}
 
 	@Override
@@ -72,7 +84,7 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	@Override
-	protected void initDataTracker() {
+	public void initDataTracker() {
 		super.initDataTracker();
 
 		this.dataTracker.startTracking(IDENTITY, "");
@@ -82,76 +94,6 @@ public class ConsoleControlEntity extends BaseControlEntity {
 		this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
 		this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
 		this.dataTracker.startTracking(WAS_SEQUENCED, false);
-	}
-
-	public String getIdentity() {
-		return this.dataTracker.get(IDENTITY);
-	}
-
-	public void setIdentity(String string) {
-		this.dataTracker.set(IDENTITY, string);
-	}
-
-	public float getControlWidth() {
-		return this.dataTracker.get(WIDTH);
-	}
-
-	public float getControlHeight() {
-		return this.dataTracker.get(HEIGHT);
-	}
-
-	public void setControlWidth(float width) {
-		this.dataTracker.set(WIDTH, width);
-	}
-
-	public void setControlHeight(float height) {
-		this.dataTracker.set(HEIGHT, height);
-	}
-
-	public Control getControl() {
-		if (control == null)
-			return null; // exploding head emoji
-
-		return control;
-	}
-
-	public Vector3f getOffset() {
-		return this.dataTracker.get(OFFSET);
-	}
-
-	public void setOffset(Vector3f offset) {
-		this.dataTracker.set(OFFSET, offset);
-	}
-
-	public int getSequenceColor() {
-		return this.dataTracker.get(SEQUENCE_COLOR);
-	}
-
-	public void setSequenceColor(int color) {
-		this.dataTracker.set(SEQUENCE_COLOR, color);
-	}
-
-	public boolean wasSequenced() {
-		return this.dataTracker.get(WAS_SEQUENCED);
-	}
-
-	public void setWasSequenced(boolean sequenced) {
-		this.dataTracker.set(WAS_SEQUENCED, sequenced);
-	}
-
-	public void setPartOfSequence(boolean partOfSequence) {
-		this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence);
-	}
-
-	public boolean isPartOfSequence() {
-		return this.dataTracker.get(PART_OF_SEQUENCE);
-	}
-	public void createDelay(long millis) {
-		Control.createDelay(this.getControl(), this.getTardis(), millis);
-	}
-
-	public boolean isOnDelay() {
-		return Control.isOnDelay(this.getControl(), this.getTardis());
 	}
 
 	@Override
@@ -204,12 +146,28 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	@Override
-	public boolean cannotDespawn() {
-		return true;
+	public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
+		this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
 	}
 
 	@Override
-	public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+	public void onTrackedDataSet(TrackedData<?> data) {
+		super.onTrackedDataSet(data);
+
+		if (!this.getWorld().isClient())
+			return;
+
+		if (PART_OF_SEQUENCE.equals(data)) {
+			this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
+		} else if (SEQUENCE_COLOR.equals(data)) {
+			this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
+		} else if (WAS_SEQUENCED.equals(data)) {
+			this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
+		}
+	}
+
+	@Override
+	public ActionResult interact(PlayerEntity player, Hand hand) {
 		ItemStack handStack = player.getStackInHand(hand);
 
 		if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
@@ -236,99 +194,18 @@ public class ConsoleControlEntity extends BaseControlEntity {
 			} else this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
 		}
 
-		return super.damage(source, source.getAttacker() instanceof PlayerEntity ? 0 : amount);
+		return super.damage(source, amount);
 	}
 
 	@Override
-	public void remove(RemovalReason reason) {
-		AITMod.LOGGER.debug("Control entity discarded as {}", reason);
-		super.remove(reason);
-	}
-
-	public boolean run(PlayerEntity player, World world, boolean leftClick) {
-		if (world.getRandom().nextBetween(1, 10_000) == 72)
-			this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
-
-		if (world.isClient())
-			return false;
-
-		if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM)
-			this.remove(RemovalReason.DISCARDED);
-
-		Tardis tardis = this.getTardis(world);
-
-		if (tardis == null) {
-			AITMod.LOGGER.warn("Discarding invalid control entity at {}; console pos: {}", this.getPos(), this.consoleBlockPos);
-
-			this.discard();
-			return false;
-		}
-
-		control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
-
-		if (!this.control.canRun(tardis, (ServerPlayerEntity) player))
-			return false;
-
-		if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
-			this.createDelay(this.control.getDelayLength());
-		}
-
-		if (this.consoleBlockPos != null)
-			this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
-
-		return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick); // i dont gotta check these cus i know its server
-	}
-
-	// clearly loqor has trust issues with running this so i do too so im overwriting it to do what he did fixme pls
-	public Tardis getTardis(World world) {
-		if (!(this.consoleBlockPos != null && this.control != null && world.getBlockEntity(this.consoleBlockPos) instanceof ConsoleBlockEntity console))
-			return null;
-
-		return console.tardis().get();
-	}
-
-	public void setScaleAndCalculate(float width, float height) {
-		this.setControlWidth(width);
-		this.setControlHeight(height);
-		this.calculateDimensions();
+	public boolean isAttackable() {
+		return true;
 	}
 
 	@Override
 	public Text getName() {
 		if (this.control != null) return Text.translatable(this.control.getId());
 		else return super.getName();
-	}
-
-	public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
-		this.consoleBlockPos = consoleBlockPosition;
-		this.control = type.getControl();
-
-		if (consoleType != null) {
-			this.setControlWidth(type.getScale().width);
-			this.setControlHeight(type.getScale().height);
-			this.setCustomName(Text.translatable(type.getControl().id));
-		}
-	}
-
-	@Override
-	public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
-		this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-	}
-
-	@Override
-	public void onTrackedDataSet(TrackedData<?> data) {
-		super.onTrackedDataSet(data);
-
-		if (!this.getWorld().isClient())
-			return;
-
-		if (PART_OF_SEQUENCE.equals(data)) {
-			this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-		} else if (SEQUENCE_COLOR.equals(data)) {
-			this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-		} else if (WAS_SEQUENCED.equals(data)) {
-			this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
-		}
 	}
 
 	@Override
@@ -355,13 +232,128 @@ public class ConsoleControlEntity extends BaseControlEntity {
 	}
 
 	@Override
-	public boolean doesRenderOnFire() {
-		return false;
-	}
-
-	@Override
 	public boolean shouldRenderName() {
 		return true;
+	}
+
+	public String getIdentity() {
+		return this.dataTracker.get(IDENTITY);
+	}
+
+	public void setIdentity(String string) {
+		this.dataTracker.set(IDENTITY, string);
+	}
+
+	public float getControlWidth() {
+		return this.dataTracker.get(WIDTH);
+	}
+
+	public float getControlHeight() {
+		return this.dataTracker.get(HEIGHT);
+	}
+
+	public void setControlWidth(float width) {
+		this.dataTracker.set(WIDTH, width);
+	}
+
+	public void setControlHeight(float height) {
+		this.dataTracker.set(HEIGHT, height);
+	}
+
+	public Control getControl() {
+		return control;
+	}
+
+	public Vector3f getOffset() {
+		return this.dataTracker.get(OFFSET);
+	}
+
+	public void setOffset(Vector3f offset) {
+		this.dataTracker.set(OFFSET, offset);
+	}
+
+	public int getSequenceColor() {
+		return this.dataTracker.get(SEQUENCE_COLOR);
+	}
+
+	public void setSequenceColor(int color) {
+		this.dataTracker.set(SEQUENCE_COLOR, color);
+	}
+
+	public boolean wasSequenced() {
+		return this.dataTracker.get(WAS_SEQUENCED);
+	}
+
+	public void setWasSequenced(boolean sequenced) {
+		this.dataTracker.set(WAS_SEQUENCED, sequenced);
+	}
+
+	public void setPartOfSequence(boolean partOfSequence) {
+		this.dataTracker.set(PART_OF_SEQUENCE, partOfSequence);
+	}
+
+	public boolean isPartOfSequence() {
+		return this.dataTracker.get(PART_OF_SEQUENCE);
+	}
+
+	public void createDelay(long millis) {
+		Control.createDelay(this.getControl(), this.tardis().get(), millis);
+	}
+
+	public boolean isOnDelay() {
+		return Control.isOnDelay(this.getControl(), this.tardis().get());
+	}
+
+	public boolean run(PlayerEntity player, World world, boolean leftClick) {
+		if (world.getRandom().nextBetween(1, 10_000) == 72)
+			this.getWorld().playSound(null, this.getBlockPos(), AITSounds.EVEN_MORE_SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
+
+		if (world.isClient())
+			return false;
+
+		if (player.getMainHandStack().getItem() == AITItems.TARDIS_ITEM)
+			this.remove(RemovalReason.DISCARDED);
+
+		Tardis tardis = this.tardis().get();
+
+		if (tardis == null) {
+			AITMod.LOGGER.warn("Discarding invalid control entity at {}; console pos: {}", this.getPos(), this.consoleBlockPos);
+
+			this.discard();
+			return false;
+		}
+
+		control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
+
+		if (!this.control.canRun(tardis, (ServerPlayerEntity) player))
+			return false;
+
+		if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
+			this.createDelay(this.control.getDelayLength());
+		}
+
+		if (this.consoleBlockPos != null)
+			this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
+
+		return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick); // i dont gotta check these cus i know its server
+	}
+
+	public void setScaleAndCalculate(float width, float height) {
+		this.setControlWidth(width);
+		this.setControlHeight(height);
+		this.calculateDimensions();
+	}
+
+	public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
+		this.consoleBlockPos = consoleBlockPosition;
+		this.control = type.getControl();
+
+		if (consoleType != null) {
+			this.setIdentity(this.control.getClass().getSimpleName());
+			this.setControlWidth(type.getScale().width);
+			this.setControlHeight(type.getScale().height);
+			this.setCustomName(Text.translatable(type.getControl().id));
+		}
 	}
 
 	public void controlEditorHandler(PlayerEntity player) {

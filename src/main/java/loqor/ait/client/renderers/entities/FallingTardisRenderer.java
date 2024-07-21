@@ -31,7 +31,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
 	@Override
 	public void render(FallingTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-		Tardis tardis = entity.getTardis();
+		Tardis tardis = entity.tardis().get();
 
 		if (tardis == null)
 			return;
@@ -92,9 +92,9 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
 	@Override
 	public Identifier getTexture(FallingTardisEntity entity) {
-		if (entity.getTardis() == null)
+		if (entity.tardis().get() == null)
 			return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
-		return entity.getTardis().getExterior().getVariant().getClient().texture();
+		return entity.tardis().get().getExterior().getVariant().getClient().texture();
 	}
 }

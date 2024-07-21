@@ -1,18 +1,22 @@
 package loqor.ait.tardis.base;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.*;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
+import loqor.ait.tardis.data.mood.MoodHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -37,6 +41,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 	public TardisComponent(IdLike id) {
 		this.id = id;
 	}
+
+	public void postInit(InitContext ctx) { }
 
 	/**
 	 * Syncs this object and all its properties to the client.
@@ -82,10 +88,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		this.tardis = null;
 	}
 
-	public static void init(TardisComponent component, Tardis tardis, boolean deserialized) {
-		TardisComponent.init(component, tardis, new InitContext(deserialized));
-	}
-
 	public static void init(TardisComponent component, Tardis tardis, InitContext context) {
 		component.setTardis(tardis);
 		Initializable.init(component, context);
@@ -94,15 +96,16 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 	public enum Id implements IdLike {
 		// Base parts.
 		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
-		TRAVEL(TardisTravel.class, null, ClientTardis::setTravel),
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
 
+		TRAVEL(TravelHandler.class, TravelHandler::new),
 		DOOR(DoorData.class, DoorData::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
 		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
 		LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
 		ENGINE(EngineHandler.class, EngineHandler::new),
+		FLIGHT(RealFlightHandler.class, RealFlightHandler::new),
 
 		// FIXME in future: currently handled by properties
 		BIOME(BiomeHandler.class, BiomeHandler::new, null),
@@ -114,11 +117,13 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		OVERGROWN(OvergrownData.class, OvergrownData::new, null),
 		HUM(ServerHumHandler.class, ServerHumHandler::new, null),
 		ALARMS(ServerAlarmHandler.class, ServerAlarmHandler::new, null),
+		RAINING(ServerRainHandler.class, ServerRainHandler::new, null),
+		LAVA_OUTSIDE(ServerLavaHandler.class, ServerLavaHandler::new, null),
 		INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new, null),
 		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
+		MOOD(MoodHandler.class, MoodHandler::new, null),
 		FUEL(FuelData.class, FuelData::new, null),
 		HADS(HADSData.class, HADSData::new, null),
-		FLIGHT(FlightData.class, FlightData::new, null),
 		SIEGE(SiegeData.class, SiegeData::new, null),
 		CLOAK(CloakData.class, CloakData::new, null),
 
@@ -157,7 +162,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 			return switch (this) {
 				case DESKTOP -> tardis.getDesktop();
 				case EXTERIOR -> tardis.getExterior();
-				case TRAVEL -> tardis.travel();
 				case HANDLERS -> tardis.getHandlers();
 				default -> tardis.handler(this);
 			};
@@ -268,8 +272,17 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		}
 	}
 
-	public record InitContext(boolean deserialized) implements Initializable.Context {
+	public record InitContext(@Nullable DirectedGlobalPos.Cached pos, boolean deserialized) implements Initializable.Context {
 
+		public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
+			return new InitContext(pos, false);
+		}
+
+		public static InitContext deserialize() {
+			return new InitContext(null, true);
+		}
+
+		@Override
 		public boolean created() {
 			return !deserialized;
 		}

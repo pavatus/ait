@@ -40,14 +40,15 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
 
     @Override
     protected void defaults() {
-        DEFAULT = register(BuiltinSonic.create("prime", "Prime"));
+        DEFAULT = register(BuiltinSonic.create("prime"));
 
-        register(BuiltinSonic.create("copper", null));
-        register(BuiltinSonic.create("mechanical", null));
-        register(BuiltinSonic.create("fob", null));
-        register(BuiltinSonic.create("coral", null));
-        register(BuiltinSonic.create("renaissance", null));
-        register(BuiltinSonic.create("song", null));
+        register(BuiltinSonic.create("copper"));
+        register(BuiltinSonic.create("mechanical"));
+        register(BuiltinSonic.create("fob"));
+        register(BuiltinSonic.create("coral"));
+        register(BuiltinSonic.create("renaissance"));
+        register(BuiltinSonic.create("crystalline"));
+        register(BuiltinSonic.create("song"));
     }
 
     public static SonicRegistry getInstance() {

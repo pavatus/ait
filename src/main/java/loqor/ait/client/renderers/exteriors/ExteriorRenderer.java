@@ -8,13 +8,14 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
@@ -55,7 +56,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		Tardis tardis = optionalTardis.get();
 		profiler.swap("render");
 		//System.out.println(entity.getAlpha());
-		if (entity.getAlpha() > 0)
+		if (entity.getAlpha() > 0 || !tardis.getHandlers().<CloakData>get(TardisComponent.Id.CLOAK).isEnabled())
 			this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		profiler.pop();
 
@@ -66,14 +67,16 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		if (tardis.siege().isActive()) {
 			profiler.push("siege");
 
+			matrices.push();
+			matrices.translate(0.5f, 0.5f, 0.5f);
 			siege.renderWithAnimations(entity, siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, overlay, 1, 1, 1, 1);
 
-			//matrices.pop();
+			matrices.pop();
 			profiler.pop();
 			return;
 		}
 
-		AbsoluteBlockPos.Directed exteriorPos = tardis.getExteriorPos();
+		DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
 		if (exteriorPos == null) {
 			profiler.pop();

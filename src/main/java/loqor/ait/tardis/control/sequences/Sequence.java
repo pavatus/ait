@@ -4,7 +4,6 @@ import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -37,8 +36,7 @@ public class Sequence {
 		return recent.equals(this.getControls());
 	}
 
-	public void execute(Tardis tardis) {
-	}
+	public void execute(Tardis tardis) {}
 
 	public void executeMissed(Tardis tardis, @Nullable ServerPlayerEntity player) {
 		if(player != null) {

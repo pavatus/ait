@@ -1,10 +1,10 @@
 package loqor.ait.tardis.control.impl;
 
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -18,22 +18,22 @@ public class DirectionControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-		TardisTravel travel = tardis.travel();
-		AbsoluteBlockPos.Directed dest = travel.getDestination();
+		TravelHandler travel = tardis.travel();
+		DirectedGlobalPos.Cached dest = travel.destination();
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);
 			return false;
 		}
 
-		int rotation = dest.getRotation();
-		rotation = leftClick ? getPreviousGeneralizedRotation(rotation)
-				: getNextGeneralizedRotation(rotation);
+		byte rotation = dest.getRotation();
+		rotation = (byte) (leftClick ? getPreviousGeneralizedRotation(rotation)
+                        : getNextGeneralizedRotation(rotation));
 
 		rotation = wrap(rotation, ExteriorBlock.MAX_ROTATION_INDEX);
 
-		travel.setDestination(new AbsoluteBlockPos.Directed(dest, rotation), false);
-		messagePlayer(player, getNextGeneralizedRotation(dest.getRotation()));
+		travel.forceDestination(dest.rotation(rotation));
+		messagePlayer(player, rotation);
 		return true;
 	}
 
@@ -67,13 +67,14 @@ public class DirectionControl extends Control {
 		return (rotation - 2) % 16;
 	}
 
-	public static int getGeneralizedRotation(int rotation) {
-		if (rotation % 2 != 0 && rotation < 15) {
-			return rotation + 1;
-		} else if (rotation == 15) {
+	public static byte getGeneralizedRotation(int rotation) {
+		if (rotation % 2 != 0 && rotation < 15)
+			return (byte) (rotation + 1);
+
+		if (rotation == 15)
 			return 0;
-		}
-		return rotation;
+
+		return (byte) rotation;
 	}
 
 	public static String rotationForArrow(int currentRot) {
@@ -89,7 +90,7 @@ public class DirectionControl extends Control {
 		};
 	}
 
-	public static int wrap(int value, int max) {
-		return (value % max + max) % max;
+	public static byte wrap(byte value, byte max) {
+		return (byte) ((value % max + max) % max);
 	}
 }

@@ -10,12 +10,12 @@ import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +27,7 @@ import java.util.Set;
 
 import static loqor.ait.core.util.LegacyUtil.Consoles;
 
-public class TardisDesktop extends TardisComponent implements TardisTickable {
+public class TardisDesktop extends TardisComponent {
 
 	public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
 
@@ -95,7 +95,7 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 		DesktopGenerator generator = new DesktopGenerator(this.schema);
 		generator.place(this.tardis, (ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 
-		AITMod.LOGGER.warn("Time taken to generate interior: " + (System.currentTimeMillis() - currentTime));
+        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
 	}
 
 	public void clearOldInterior(TardisDesktopSchema schema) {
@@ -117,6 +117,25 @@ public class TardisDesktop extends TardisComponent implements TardisTickable {
 
 		dim.setBlockState(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
 		dim.addBlockEntity(generator);
+	}
+
+	public static void playSoundAtConsole(BlockPos console, SoundEvent sound, SoundCategory category, float volume, float pitch) {
+		ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+		dim.playSound(null, console, sound, category, volume, pitch);
+	}
+
+	public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+		this.getConsolePos().forEach(consolePos -> playSoundAtConsole(
+				consolePos, sound, category, volume, pitch)
+		);
+	}
+
+	public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category) {
+		this.playSoundAtEveryConsole(sound, category, 1f, 1f);
+	}
+
+	public void playSoundAtEveryConsole(SoundEvent sound) {
+		this.playSoundAtEveryConsole(sound, SoundCategory.BLOCKS);
 	}
 
 	public Set<BlockPos> getConsolePos() {

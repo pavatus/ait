@@ -3,7 +3,6 @@ package loqor.ait.tardis.console.variant.hudolin;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.console.type.HudolinType;
-import loqor.ait.tardis.console.type.SteamType;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.util.Identifier;
 

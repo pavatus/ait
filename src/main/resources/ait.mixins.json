@@ -32,6 +32,7 @@
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",
+    "client.rendering.HeldItemRendererMixin",
     "client.rendering.PlayerEntityRendererMixin",
     "client.rendering.SkyboxMixin"
   ],

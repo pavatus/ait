@@ -1,6 +1,7 @@
 package loqor.ait.registry.impl;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.blueprint.BlueprintType;
 import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
@@ -38,6 +39,7 @@ public class BlueprintRegistry {
     public static BlueprintType ARTRON_MERCURIAL_LINK;
     public static BlueprintType DATA_MERCURIAL_LINK;
     public static BlueprintType VORTEX_MERCURIAL_LINK;
+    public static BlueprintType ENGINE_CORE_BLUEPRINT;
 
     public static void init() {
         DEMATERIALIZATION_CIRCUIT = register(new BlueprintType(AITItems.DEMATERIALIZATION_CIRCUIT));
@@ -49,6 +51,8 @@ public class BlueprintRegistry {
         ARTRON_MERCURIAL_LINK = register(new BlueprintType(AITItems.ARTRON_MERCURIAL_LINK));
         DATA_MERCURIAL_LINK = register(new BlueprintType(AITItems.DATA_MERCURIAL_LINK));
         VORTEX_MERCURIAL_LINK = register(new BlueprintType(AITItems.VORTEX_MERCURIAL_LINK));
+
+        ENGINE_CORE_BLUEPRINT = register(new BlueprintType(AITBlocks.ENGINE_CORE_BLOCK.asItem()));
     }
 
     public static BlueprintType getRandomEntry() {

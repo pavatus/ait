@@ -1,21 +1,21 @@
 package loqor.ait.tardis.exterior.variant.doom;
 
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.exterior.category.DoomCategory;
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.door.DoomDoorVariant;
-import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.tardis.exterior.category.DoomCategory;
 import net.minecraft.util.Identifier;
 
 public class DoomVariant extends ExteriorVariantSchema {
 	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/doom");
 
 	public DoomVariant() {
-		super("doom", DoomCategory.REFERENCE, REFERENCE);
+		super(DoomCategory.REFERENCE, REFERENCE);
 	}
 
 	@Override

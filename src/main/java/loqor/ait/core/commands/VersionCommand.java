@@ -6,8 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.font.FontLoader;
-import net.minecraft.client.font.FontManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;

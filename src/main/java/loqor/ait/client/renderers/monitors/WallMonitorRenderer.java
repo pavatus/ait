@@ -4,13 +4,13 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
-import loqor.ait.tardis.control.impl.DimensionControl;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.util.FlightUtil;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -21,6 +21,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 
@@ -65,35 +66,39 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         float xVal = 0f;
         matrices.translate(xVal, -35f, 35f);
 
-        TardisTravel travel = tardis.travel();
-        AbsoluteBlockPos.Directed abpp = travel.inFlight() ? FlightUtil.getPositionFromPercentage(travel.getPosition(), travel.getDestination(), tardis.getHandlers().getFlight().getDurationAsPercentage()) : travel.getPosition();
-        AbsoluteBlockPos.Directed abpd = tardis.travel().getDestination();
+        TravelHandler travel = tardis.travel();
+        DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED
+                ? travel.getProgress() : travel.position();
 
-        String positionPosText = abpp.getX() + ", " + abpp.getY() + ", " + abpp.getZ();
-        String positionDimensionText = DimensionControl.convertWorldValueToModified(abpp.getDimension().getValue());
+        BlockPos abppPos = abpp.getPos();
+
+        DirectedGlobalPos.Cached abpd = tardis.travel().destination();
+        BlockPos abpdPos = abpd.getPos();
+
+        String positionPosText = abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
+        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
 
         String fuelText = Math.round((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) + "%";
 
-        String destinationPosText = abpd.getX() + ", " + abpd.getY() + ", " + abpd.getZ();
-        String destinationDimensionText = DimensionControl.convertWorldValueToModified(abpd.getDimension().getValue());
+        String destinationPosText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
+        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
 
         float v = -20f;
 
         String arrow = DirectionControl.rotationForArrow(abpp.getRotation());
-
         String arrow2 = DirectionControl.rotationForArrow(abpd.getRotation());
 
         this.textRenderer.drawWithOutline(Text.of(positionPosText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionPosText) / 2), 35, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of(positionDimensionText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 46, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(positionDimensionText.asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 46, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(arrow).asOrderedText(), (18 - xVal) - ((float) this.textRenderer.getWidth(arrow) / 2), 42, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of("-===========-").asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth("-===========-") / 2), 55, 0x00F0FF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(destinationPosText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(destinationPosText) / 2), 67, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of(destinationDimensionText).asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 78, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(destinationDimensionText.asOrderedText(), (v - xVal) - ((float) this.textRenderer.getWidth(positionDimensionText) / 2), 78, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(arrow2).asOrderedText(), (18 - xVal) - ((float) this.textRenderer.getWidth(arrow2) / 2), 75, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
 
         this.textRenderer.drawWithOutline(Text.of("⛽").asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth("⛽") / 2), 40, 0xFAF000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(fuelText).asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth(fuelText) / 2), 48, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
-        String flightTimeText = tardis.travel().getState() == TardisTravel.State.LANDED ? "0%" : tardis.getHandlers().getFlight().getDurationAsPercentage() + "%";
+        String flightTimeText = travel.getState() == TravelHandlerBase.State.LANDED ? "0%" : tardis.travel().getDurationAsPercentage() + "%";
 
         this.textRenderer.drawWithOutline(Text.of("⏳").asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth("⏳") / 2), 60, 0x00FF0F, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(flightTimeText).asOrderedText(), (53 - xVal) - ((float) this.textRenderer.getWidth(flightTimeText) / 2), 68, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);

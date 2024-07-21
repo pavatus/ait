@@ -58,7 +58,6 @@ public class TardisComponentRegistry implements Registry {
         return switch (name) {
             case "EXTERIOR" -> TardisComponent.Id.EXTERIOR;
             case "DESKTOP" -> TardisComponent.Id.DESKTOP;
-            case "TRAVEL" -> TardisComponent.Id.TRAVEL;
             case "HANDLERS" -> TardisComponent.Id.HANDLERS;
             default -> REGISTRY.get(name);
         };

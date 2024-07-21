@@ -1,13 +1,13 @@
 package loqor.ait.tardis.control.impl;
 
 import com.mojang.datafixers.util.Pair;
-import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.core.data.AbsoluteBlockPos;
+import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.link.LinkableItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NameTagItem;
 import net.minecraft.registry.Registry;
@@ -27,6 +27,7 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 public class TelepathicControl extends Control {
+
 	public TelepathicControl() {
 		super("telepathic_circuit");
 	}
@@ -71,13 +72,15 @@ public class TelepathicControl extends Control {
 		Text text = Text.literal("The TARDIS is choosing.."); // todo translatable
 		player.sendMessage(text, true);
 
-		BlockPos found = locateStructureOfInterest((ServerWorld) tardis.travel().getDestination().getWorld(), tardis.travel().getPosition());
+		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+
+		BlockPos found = locateStructureOfInterest(globalPos.getWorld(), globalPos.getPos());
 		text = Text.literal("The TARDIS chose where to go.."); // todo translatable
 
 		if (found == null) {
 			text = Text.literal("The TARDIS is happy where it is"); // todo translatable
 		} else {
-			tardis.travel().setDestination(new AbsoluteBlockPos.Directed(found.add(0, 75, 0), tardis.travel().getDestination().getWorld(), tardis.travel().getDestination().getRotation()), true);
+			tardis.travel().destination(cached -> cached.pos(found.withY(75)));
 			tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
 		}
 
@@ -96,13 +99,13 @@ public class TelepathicControl extends Control {
 			if (found != null) return found;
 
 			found = getBastion(world, source, radius);
-			if (found != null) return found;
+            return found;
 		} else if (world.getRegistryKey() == World.END) {
 			found = getEndCity(world, source, radius);
-			if (found != null) return found;
+            return found;
 		} else if (world.getRegistryKey() == World.OVERWORLD) {
 			found = getVillage(world, source, radius);
-			if (found != null) return found;
+            return found;
 		}
 
 		return null;
@@ -126,7 +129,10 @@ public class TelepathicControl extends Control {
 
 	public static BlockPos getStructure(ServerWorld world, BlockPos pos, int radius, RegistryKey<Structure> key) {
 		Registry<Structure> registry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
-		if (registry.getEntry(key).isEmpty()) return null;
+
+		if (registry.getEntry(key).isEmpty())
+			return null;
+
 		Pair<BlockPos, RegistryEntry<Structure>> pair = world.getChunkManager().getChunkGenerator().locateStructure(world, RegistryEntryList.of(registry.getEntry(key).get()), pos, radius, false);
 		return pair != null ? pair.getFirst() : null;
 	}
@@ -136,12 +142,7 @@ public class TelepathicControl extends Control {
 		return false;
 	}
 
-	@Override
-	public boolean shouldHaveDelay() {
-		return true;
-	}
-
-	@Override
+    @Override
 	public long getDelayLength() {
 		return 5 * 1000L;
 	}

@@ -2,9 +2,9 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.util.FlightUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -56,7 +56,7 @@ public class SonicPortControl extends Control {
 		handler.markHasSonic(SonicHandler.HAS_CONSOLE_SONIC);
 		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-		FlightUtil.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
+		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
 		return true;
 	}
 

@@ -20,7 +20,6 @@ public class DatapackSonic extends SonicSchema {
     public static final Codec<SonicSchema> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(SonicSchema::id),
-                    Codec.STRING.fieldOf("name").forGetter(SonicSchema::name),
                     Models.CODEC.fieldOf("models").forGetter(SonicSchema::models),
 
                     Rendering.CODEC.optionalFieldOf("rendering")
@@ -30,8 +29,8 @@ public class DatapackSonic extends SonicSchema {
                             .forGetter(SonicSchema::getRequirement)
             ).apply(instance, DatapackSonic::new));
 
-    public DatapackSonic(Identifier id, String name, Models models, Optional<Rendering> rendering, Loyalty loyalty) {
-        super(id, name, models, rendering.orElse(new Rendering()), loyalty);
+    public DatapackSonic(Identifier id, Models models, Optional<Rendering> rendering, Loyalty loyalty) {
+        super(id, models, rendering.orElse(new Rendering()), loyalty);
     }
 
     public static SonicSchema fromInputStream(InputStream stream) {

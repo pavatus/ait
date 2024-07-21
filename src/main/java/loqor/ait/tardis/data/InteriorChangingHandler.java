@@ -1,14 +1,16 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -16,17 +18,31 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.Random;
-
 public class InteriorChangingHandler extends TardisComponent implements TardisTickable {
     public static final String IS_REGENERATING = "is_regenerating";
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
-	private static Random random;
-	private int ticks;
+    private int ticks;
 
 	public InteriorChangingHandler() {
 		super(Id.INTERIOR);
+	}
+
+	static {
+		TardisEvents.DEMAT.register(tardis -> {
+			if (tardis.isGrowth() || tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating())
+				return TardisEvents.Interaction.FAIL;
+
+            return TardisEvents.Interaction.PASS;
+        });
+
+		TardisEvents.MAT.register(tardis -> {
+			if (!tardis.isGrowth())
+				return TardisEvents.Interaction.PASS;
+
+			tardis.getExterior().setType(CategoryRegistry.CAPSULE);
+            return TardisEvents.Interaction.SUCCESS; // force mat even if checks fail
+        });
 	}
 
 	private void setGenerating(boolean var) {
@@ -88,18 +104,17 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		tardis.alarm().disable();
 
-		boolean previouslyLocked = tardis.getDoor().previouslyLocked();
+		boolean previouslyLocked = tardis.door().previouslyLocked();
 		DoorData.lockTardis(previouslyLocked, tardis, null, false);
 
 		tardis.engine().hasEngineCore().set(false);
+		tardis.engine().disablePower();
 
 		if (tardis.hasGrowthExterior()) {
-			TardisTravel travel = tardis.travel();
+			TravelHandler travel = tardis.travel();
 
-			tardis.flight().handbrake().set(false);
-			tardis.flight().autoLand().set(true);
-
-			travel.dematerialise(true, true);
+			travel.autopilot(true);
+			travel.forceDemat();
 		}
 	}
 
@@ -113,27 +128,19 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		return TardisUtil.getPlayersInsideInterior(this.tardis()).isEmpty();
 	}
 
-	public static Random random() {
-		if (random == null)
-			random = new Random();
-
-		return random;
-	}
-
 	private boolean clearedOldInterior = false;
 
 	@Override
 	public void tick(MinecraftServer server) {
-
 		if (!isGenerating())
 			return;
 
 		if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
 			return;
 
-		TardisTravel travel = this.tardis().travel();
+		TravelHandler travel = this.tardis().travel();
 
-		if (travel.getState() == TardisTravel.State.FLIGHT)
+		if (server.getTicks() % 10 == 0 && travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
 			travel.crash();
 
 		if (this.isGenerating()) {
@@ -152,7 +159,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			return;
 		}
 
-		if (isInteriorEmpty() && !this.tardis().getDoor().locked()) {
+		if (isInteriorEmpty() && !this.tardis().door().locked()) {
 			DoorData.lockTardis(true, this.tardis(), null, true);
 		}
 		if (isInteriorEmpty() && !clearedOldInterior) {
@@ -161,6 +168,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			clearedOldInterior = true;
 			return;
 		}
+
 		if (isInteriorEmpty() && clearedOldInterior) {
 			this.tardis().getDesktop().changeInterior(getQueuedInterior());
 			onCompletion();

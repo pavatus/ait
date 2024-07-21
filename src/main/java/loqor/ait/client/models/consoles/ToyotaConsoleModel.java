@@ -4,12 +4,12 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.toyota.ToyotaAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisTravel;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.FuelData;
 import loqor.ait.tardis.data.ShieldData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -840,15 +840,15 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart throttle = this.toyota.getChild("panel4").getChild("controls4").getChild("throttle");
 		ModelPart throttleLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("flightlights2");
 
-		throttle.pitch = throttle.pitch + ((tardis.flight().speed().get() / (float) tardis.flight().maxSpeed().get()) * 1.5f);
-		throttleLights.pivotY = !(tardis.flight().speed().get() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
+		throttle.pitch = throttle.pitch + ((tardis.travel().speed() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
+		throttleLights.pivotY = !(tardis.travel().speed() > 0) ? throttleLights.pivotY + 1 : throttleLights.pivotY;
 
 		//Handbrake Control and Lights
 		ModelPart handbrake = this.toyota.getChild("panel4").getChild("controls4").getChild("handbrake").getChild("pivot");
-		handbrake.yaw = !tardis.flight().handbrake().get() ? handbrake.yaw - 1.57f : handbrake.yaw;
+		handbrake.yaw = !tardis.travel().handbrake() ? handbrake.yaw - 1.57f : handbrake.yaw;
 		ModelPart handbrakeLights = this.toyota.getChild("panel4").getChild("flightlights").getChild("handbrakelights").getChild("handbrakelights2");
 
-		handbrakeLights.pivotY = !tardis.flight().handbrake().get() ? handbrakeLights.pivotY + 1 : handbrakeLights.pivotY;
+		handbrakeLights.pivotY = !tardis.travel().handbrake() ? handbrakeLights.pivotY + 1 : handbrakeLights.pivotY;
 
 		// @TODO MONSTER THE ONE ON THE LEFT IS THE POWER NOT THE RIGHT SMH
 		//Power Switch and Lights
@@ -857,20 +857,20 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		//Anti Gravity Control
 		ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1").getChild("pivot2");
-		antigravs.yaw = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.ANTIGRAVS_ENABLED) ? antigravs.yaw - 1.58f : antigravs.yaw;
+		antigravs.yaw = tardis.travel().antigravs().get() ? antigravs.yaw - 1.58f : antigravs.yaw;
 
 		ModelPart shield = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps2");
-		shield.yaw = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), ShieldData.IS_SHIELDED) ? shield.yaw - 1.58f : shield.yaw;
+		shield.yaw = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.yaw - 1.58f : shield.yaw;
 
 		//Door Locking Mechanism Control
 		ModelPart doorlock = this.toyota.getChild("panel1").getChild("controls").getChild("smalllockernob").getChild("pivot3");
-		doorlock.yaw = tardis.getDoor().locked() ? doorlock.yaw + 0.5f : doorlock.yaw;
+		doorlock.yaw = tardis.door().locked() ? doorlock.yaw + 0.5f : doorlock.yaw;
 
 		//Door Control
 		ModelPart doorControl = this.toyota.getChild("panel1").getChild("controls").getChild("power");
-		doorControl.pitch = tardis.getDoor().isLeftOpen() ? doorControl.pitch - 1f : tardis.getDoor().isRightOpen() ? doorControl.pitch - 1.55f : doorControl.pitch;
+		doorControl.pitch = tardis.door().isLeftOpen() ? doorControl.pitch - 1f : tardis.door().isRightOpen() ? doorControl.pitch - 1.55f : doorControl.pitch;
 		ModelPart doorControlLights = this.toyota.getChild("panel1").getChild("controls").getChild("powerlights").getChild("powerlights2");
-		doorControlLights.pivotY = !(tardis.getDoor().isOpen()) ? doorControlLights.pivotY : doorControlLights.pivotY + 1;
+		doorControlLights.pivotY = !(tardis.door().isOpen()) ? doorControlLights.pivotY : doorControlLights.pivotY + 1;
 
 		//Alarm Control and Lights
 		ModelPart alarms = this.toyota.getChild("panel4").getChild("controls4").getChild("coloredlever2");
@@ -885,8 +885,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");
 		ModelPart autopilotLight = this.toyota.getChild("panel4").getChild("yellow4");
 
-		autopilot.pitch = tardis.flight().autoLand().get() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
-		autopilotLight.pivotY = tardis.flight().autoLand().get() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
+		autopilot.pitch = tardis.travel().autopilot() ? autopilot.pitch + 1f : autopilot.pitch - 1f;
+		autopilotLight.pivotY = tardis.travel().autopilot() ? autopilotLight.pivotY : autopilotLight.pivotY + 1;
 
 		// Siege Mode Control
 		ModelPart siegeMode = this.toyota.getChild("panel2").getChild("controls3").getChild("siegemode").getChild("siegemodehandle");
@@ -905,11 +905,11 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Ground Search Control
 		ModelPart groundSearch = this.toyota.getChild("panel1").getChild("controls").getChild("smallswitch");
-		groundSearch.pitch = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch + 1f : groundSearch.pitch - 0.75f;
+		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch + 1f : groundSearch.pitch - 0.75f;
 
 		// Direction Control
 		ModelPart direction = this.toyota.getChild("panel6").getChild("controls2").getChild("smallnob2");
-		direction.pitch = direction.pitch + tardis.travel().getDestination().getRotation();
+		direction.pitch = direction.pitch + tardis.travel().destination().getRotation();
 
 		// Increment Control
 		ModelPart increment = this.toyota.getChild("panel2").getChild("controls3").getChild("gears").getChild("largegear2");
@@ -934,7 +934,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 	}
 
 	@Override
-	public Animation getAnimationForState(TardisTravel.State state) {
+	public Animation getAnimationForState(TravelHandlerBase.State state) {
 		return switch (state) {
 			case MAT, DEMAT, FLIGHT -> ToyotaAnimations.CONSOLE_TOYOTA_FLIGHT;
 			case LANDED -> ToyotaAnimations.CONSOLE_TOYOTA_IDLE;
