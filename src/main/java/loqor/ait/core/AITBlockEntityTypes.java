@@ -1,14 +1,12 @@
 package loqor.ait.core;
 
-import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import io.wispforest.owo.registration.reflect.BlockEntityRegistryContainer;
 import loqor.ait.core.blockentities.*;
 import loqor.ait.core.blockentities.control.ButtonControlBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 
-public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityType<?>> {
+public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
 
     public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();
     public static BlockEntityType<DoorBlockEntity> DOOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(DoorBlockEntity::new, AITBlocks.DOOR_BLOCK).build();
@@ -30,15 +28,4 @@ public class AITBlockEntityTypes implements AutoRegistryContainer<BlockEntityTyp
 
     public static final BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
             AITRadioBlockEntity::new, AITBlocks.RADIO).build();
-
-    @Override
-    public Registry<BlockEntityType<?>> getRegistry() {
-        return Registries.BLOCK_ENTITY_TYPE;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Class<BlockEntityType<?>> getTargetFieldType() {
-        return (Class <BlockEntityType<?>>) (Object) BlockEntityType.class;
-    }
 }

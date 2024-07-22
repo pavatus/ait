@@ -1,14 +1,14 @@
 package loqor.ait.core;
 
-import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.util.SoundRegistryContainer;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-public class AITSounds implements AutoRegistryContainer<SoundEvent> {
+public class AITSounds implements SoundRegistryContainer {
 	public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/secret_music"));
 	public static final SoundEvent EVEN_MORE_SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/even_more_secret_music"));
 	public static final SoundEvent DRIFTING_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/drifting_by_radio"));

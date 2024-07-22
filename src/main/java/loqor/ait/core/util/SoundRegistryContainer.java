@@ -1,4 +1,4 @@
-package loqor.ait.core.sounds;
+package loqor.ait.core.util;
 
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.registry.Registries;
