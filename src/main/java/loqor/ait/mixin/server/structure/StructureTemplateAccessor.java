@@ -9,8 +9,6 @@ import java.util.List;
 
 @Mixin(StructureTemplate.class)
 public interface StructureTemplateAccessor {
-    @Accessor("blockInfoLists")
-    List<StructureTemplate.PalettedBlockInfoList> getBlockInfoLists();
 
     @Accessor("entities")
     List<StructureTemplate.StructureEntityInfo> getEntities();

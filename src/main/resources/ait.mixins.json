@@ -19,7 +19,6 @@
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
     "server.structure.StructureTemplateAccessor",
-    "server.structure.StructureTemplateInvoker",
     "server.structure.StructureTemplateMixin"
   ],
   "client": [

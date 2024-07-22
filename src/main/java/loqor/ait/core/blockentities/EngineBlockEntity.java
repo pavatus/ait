@@ -1,7 +1,6 @@
 package loqor.ait.core.blockentities;
 
 import io.wispforest.owo.util.ImplementedInventory;
-import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.tardis.Tardis;
