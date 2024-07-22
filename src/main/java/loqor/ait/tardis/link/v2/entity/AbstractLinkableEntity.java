@@ -42,7 +42,6 @@ public interface AbstractLinkableEntity extends Linkable {
         TardisRef result = this.asRef();
 
         if (result == null) {
-            System.out.println("Updated from getter");
             this.link(this.getDataTracker().get(this.getTracked()).orElse(null));
             return this.tardis();
         }
@@ -58,7 +57,6 @@ public interface AbstractLinkableEntity extends Linkable {
         if (!this.getTracked().equals(data))
             return;
 
-        System.out.println("Updated from update event");
         this.link(this.getDataTracker().get(this.getTracked()).orElse(null));
     }
 
