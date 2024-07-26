@@ -19,7 +19,7 @@ import net.minecraft.util.Identifier;
 import java.io.InputStream;
 import java.util.function.Function;
 
-public abstract class SimpleDatapackRegistry<T extends Identifiable> extends DatapackRegistry<T> {
+public abstract class SimpleDatapackRegistry<T extends Identifiable> extends DatapackRegistry<T> implements SimpleSynchronousResourceReloadListener {
 
     private final Function<InputStream, T> deserializer;
     private final Codec<T> codec;
@@ -58,17 +58,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
     public void onServerInit() { }
 
     public void onCommonInit() {
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return SimpleDatapackRegistry.this.name;
-            }
-
-            @Override
-            public void reload(ResourceManager manager) {
-                SimpleDatapackRegistry.this.reload(manager);
-            }
-        });
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(this);
 
         if (!this.sync)
             return;
@@ -122,7 +112,13 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         return this.deserializer.apply(stream);
     }
 
-    protected void reload(ResourceManager manager) {
+    @Override
+    public Identifier getFabricId() {
+        return SimpleDatapackRegistry.this.name;
+    }
+
+    @Override
+    public void reload(ResourceManager manager) {
         this.clearCache();
         this.defaults();
 
