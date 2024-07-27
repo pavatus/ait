@@ -244,7 +244,7 @@ public class RealTardisEntity extends LinkableDummyLivingEntity {
             return Optional.ofNullable(this.getWorld().getPlayerByUuid(uuid));
 
         if (this.isClientRiding(uuid))
-            return Optional.ofNullable(MinecraftClient.getInstance().player);
+            return Optional.ofNullable(getClientPlayer());
 
         return Optional.empty();
     }
