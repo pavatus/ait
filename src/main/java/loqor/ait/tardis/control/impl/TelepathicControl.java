@@ -1,6 +1,5 @@
 package loqor.ait.tardis.control.impl;
 
-import com.mojang.datafixers.util.Pair;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
@@ -8,14 +7,15 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.util.AsyncLocatorUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NameTagItem;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.StructureTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -74,67 +74,35 @@ public class TelepathicControl extends Control {
 
 		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 
-		BlockPos found = locateStructureOfInterest(globalPos.getWorld(), globalPos.getPos());
-		text = Text.literal("The TARDIS chose where to go.."); // todo translatable
+		locateStructureOfInterest(player, tardis, globalPos.getWorld(), globalPos.getPos());
 
-		if (found == null) {
-			text = Text.literal("The TARDIS is happy where it is"); // todo translatable
-		} else {
-			tardis.travel().destination(cached -> cached.pos(found.withY(75)));
-			tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
-		}
-
-		player.sendMessage(text, true);
 		return true;
 	}
 
-	public static BlockPos locateStructureOfInterest(ServerWorld world, BlockPos source) {
+	public static void locateStructureOfInterest(ServerPlayerEntity player, Tardis tardis, ServerWorld world, BlockPos source) {
 		// TODO - create a tag "TardisStructureLikesTag" to save on performance + to make this code simpler
 
-		BlockPos found;
 		int radius = 256;
 
 		if (world.getRegistryKey() == World.NETHER) {
-			found = getFortress(world, source, radius);
-			if (found != null) return found;
-
-			found = getBastion(world, source, radius);
-            return found;
+			getStructureViaChunkGen(player, tardis, world, source, radius, StructureKeys.FORTRESS);
+			// getStructureViaChunkGen(player, tardis, world, source, radius, StructureKeys.BASTION_REMNANT); TODO idfk what to do with this one
 		} else if (world.getRegistryKey() == World.END) {
-			found = getEndCity(world, source, radius);
-            return found;
+			getStructureViaChunkGen(player, tardis, world, source, radius, StructureKeys.END_CITY);
 		} else if (world.getRegistryKey() == World.OVERWORLD) {
-			found = getVillage(world, source, radius);
-            return found;
+			getStructureViaWorld(player, tardis, world, source, radius, StructureTags.VILLAGE);
 		}
-
-		return null;
 	}
 
-	public static BlockPos getVillage(ServerWorld world, BlockPos pos, int radius) {
-		return world.locateStructure(StructureTags.VILLAGE, pos, radius, false);
-	}
-
-	public static BlockPos getFortress(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.FORTRESS);
-	}
-
-	public static BlockPos getBastion(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.BASTION_REMNANT);
-	}
-
-	public static BlockPos getEndCity(ServerWorld world, BlockPos pos, int radius) {
-		return getStructure(world, pos, radius, StructureKeys.END_CITY);
-	}
-
-	public static BlockPos getStructure(ServerWorld world, BlockPos pos, int radius, RegistryKey<Structure> key) {
+	public static void getStructureViaChunkGen(ServerPlayerEntity player, Tardis tardis, ServerWorld world, BlockPos pos, int radius, RegistryKey<Structure> key) {
 		Registry<Structure> registry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
 
-		if (registry.getEntry(key).isEmpty())
-			return null;
+		if (registry.getEntry(key).isPresent())
+			locateWithChunkGenAsync(player, tardis, RegistryEntryList.of(registry.getEntry(key).get()), world, pos, radius);
+	}
 
-		Pair<BlockPos, RegistryEntry<Structure>> pair = world.getChunkManager().getChunkGenerator().locateStructure(world, RegistryEntryList.of(registry.getEntry(key).get()), pos, radius, false);
-		return pair != null ? pair.getFirst() : null;
+	public static void getStructureViaWorld(ServerPlayerEntity player, Tardis tardis, ServerWorld world, BlockPos pos, int radius, TagKey<Structure> key) {
+		locateWithWorldAsync(player, tardis, key, world, pos, radius);
 	}
 
 	@Override
@@ -145,5 +113,33 @@ public class TelepathicControl extends Control {
     @Override
 	public long getDelayLength() {
 		return 5 * 1000L;
+	}
+
+	public static void locateWithChunkGenAsync(ServerPlayerEntity player, Tardis tardis, RegistryEntryList<Structure> structureList, ServerWorld world, BlockPos center, int radius) {
+		AsyncLocatorUtil.locate(world, structureList, center, radius, true /* this is whether it should ignore previously found structures. Should this be false? idfk */)
+				.thenOnServerThread(pos -> {
+					BlockPos newPos = pos != null ? pos.getFirst() : null;
+			if (newPos != null) {
+				tardis.travel().destination(cached -> cached.pos(newPos.withY(75)));
+				tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
+				player.sendMessage(Text.translatable("tardis.message.control.telepathic.success"), true);
+			} else {
+				player.sendMessage(Text.translatable("tardis.message.control.telepathic.failed"), true);
+			}
+		});
+	}
+
+	public static void locateWithWorldAsync(ServerPlayerEntity player, Tardis tardis, TagKey<Structure> structureTagKey, ServerWorld world, BlockPos center, int radius) {
+		System.out.println("is this working...?");
+		AsyncLocatorUtil.locate(world, structureTagKey, center, radius, true /* this is whether it should ignore previously found structures. Should this be false? idfk */)
+				.thenOnServerThread(pos -> {
+			if (pos != null) {
+				tardis.travel().destination(cached -> cached.pos(pos.withY(75)));
+				tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
+				player.sendMessage(Text.translatable("tardis.message.control.telepathic.success"), true);
+			} else {
+				player.sendMessage(Text.translatable("tardis.message.control.telepathic.failed"), true);
+			}
+		});
 	}
 }

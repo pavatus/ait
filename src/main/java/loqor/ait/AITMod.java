@@ -32,6 +32,7 @@ import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.tardis.util.AsyncLocatorUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.ModInitializer;
@@ -80,6 +81,8 @@ public class AITMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> AsyncLocatorUtil.setupExecutorService());
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> AsyncLocatorUtil.shutdownExecutorService());
 		ConsoleRegistry.init();
 		HumsRegistry.init();
 		CreakRegistry.init();
