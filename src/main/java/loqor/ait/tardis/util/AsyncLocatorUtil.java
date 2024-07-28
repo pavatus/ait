@@ -56,21 +56,11 @@ public class AsyncLocatorUtil {
      * Queues a task to locate a feature using {@link ServerWorld#locateStructure(TagKey, BlockPos, int, boolean)}
      * and returns a {@link LocateTask} with the futures for it.
      */
-    public static LocateTask<BlockPos> locate(
-            ServerWorld level,
-            TagKey<Structure> structureTag,
-            BlockPos pos,
-            int searchRadius,
-            boolean skipKnownStructures
-    ) {
-        AITMod.LOGGER.trace(
-                "Creating locate task for {} in {} around {} within {} chunks",
-                structureTag, level, pos, searchRadius
-        );
+    public static LocateTask<BlockPos> locate(ServerWorld level, TagKey<Structure> structureTag, BlockPos pos, int searchRadius, boolean skipKnownStructures) {
+        AITMod.LOGGER.trace("Creating locate task for {} in {} around {} within {} chunks", structureTag, level, pos, searchRadius);
         CompletableFuture<BlockPos> completableFuture = new CompletableFuture<>();
-        Future<?> future = LOCATING_EXECUTOR_SERVICE.submit(
-                () -> doLocateLevel(completableFuture, level, structureTag, pos, searchRadius, skipKnownStructures)
-        );
+        Future<?> future = LOCATING_EXECUTOR_SERVICE.submit(() ->
+                doLocateLevel(completableFuture, level, structureTag, pos, searchRadius, skipKnownStructures));
         return new LocateTask<>(level.getServer(), completableFuture, future);
     }
 
@@ -79,65 +69,38 @@ public class AsyncLocatorUtil {
      * {@link net.minecraft.world.gen.chunk.ChunkGenerator#locateStructure(ServerWorld, RegistryEntryList, BlockPos, int, boolean)} and returns a
      * {@link LocateTask} with the futures for it.
      */
-    public static LocateTask<Pair<BlockPos, RegistryEntry<Structure>>> locate(
-            ServerWorld level,
-            RegistryEntryList<Structure> structureSet,
-            BlockPos pos,
-            int searchRadius,
-            boolean skipKnownStructures
-    ) {
-        AITMod.LOGGER.trace(
-                "Creating locate task for {} in {} around {} within {} chunks",
-                structureSet, level, pos, searchRadius
-        );
+    public static LocateTask<Pair<BlockPos, RegistryEntry<Structure>>> locate(ServerWorld level, RegistryEntryList<Structure> structureSet, BlockPos pos, int searchRadius, boolean skipKnownStructures) {
+        AITMod.LOGGER.trace("Creating locate task for {} in {} around {} within {} chunks", structureSet, level, pos, searchRadius);
         CompletableFuture<Pair<BlockPos, RegistryEntry<Structure>>> completableFuture = new CompletableFuture<>();
-        Future<?> future = LOCATING_EXECUTOR_SERVICE.submit(
-                () -> doLocateChunkGenerator(completableFuture, level, structureSet, pos, searchRadius, skipKnownStructures)
-        );
+        Future<?> future = LOCATING_EXECUTOR_SERVICE.submit(() ->
+                doLocateChunkGenerator(completableFuture, level, structureSet, pos, searchRadius, skipKnownStructures));
         return new LocateTask<>(level.getServer(), completableFuture, future);
     }
 
-    private static void doLocateLevel(
-            CompletableFuture<BlockPos> completableFuture,
-            ServerWorld level,
-            TagKey<Structure> structureTag,
-            BlockPos pos,
-            int searchRadius,
-            boolean skipExistingChunks
-    ) {
-        AITMod.LOGGER.trace(
-                "Trying to locate {} in {} around {} within {} chunks",
-                structureTag, level, pos, searchRadius
-        );
+    private static void doLocateLevel(CompletableFuture<BlockPos> completableFuture, ServerWorld level, TagKey<Structure> structureTag, BlockPos pos, int searchRadius, boolean skipExistingChunks) {
+        AITMod.LOGGER.trace("Trying to locate {} in {} around {} within {} chunks", structureTag, level, pos, searchRadius);
         long start = System.nanoTime();
         BlockPos foundPos = level.locateStructure(structureTag, pos, searchRadius, skipExistingChunks);
         String time = NumberFormat.getNumberInstance().format(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
-        if (foundPos == null)
+        if (foundPos == null) {
             AITMod.LOGGER.trace("No {} found (took {}ms)", structureTag, time);
-        else
+        } else {
             AITMod.LOGGER.trace("Found {} at {} (took {}ms)", structureTag, foundPos, time);
+        }
         completableFuture.complete(foundPos);
     }
 
-    private static void doLocateChunkGenerator(
-            CompletableFuture<Pair<BlockPos, RegistryEntry<Structure>>> completableFuture,
-            ServerWorld level,
-            RegistryEntryList<Structure> structureSet,
-            BlockPos pos,
-            int searchRadius,
-            boolean skipExistingChunks
-    ) {
+    private static void doLocateChunkGenerator(CompletableFuture<Pair<BlockPos, RegistryEntry<Structure>>> completableFuture, ServerWorld level, RegistryEntryList<Structure> structureSet, BlockPos pos, int searchRadius, boolean skipExistingChunks) {
         AITMod.LOGGER.info("Trying to locate {} in {} around {} within {} chunks", structureSet, level, pos, searchRadius);
         long start = System.nanoTime();
         Pair<BlockPos, RegistryEntry<Structure>> foundPair = level.getChunkManager().getChunkGenerator()
                 .locateStructure(level, structureSet, pos, searchRadius, skipExistingChunks);
         String time = NumberFormat.getNumberInstance().format(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
-        if (foundPair == null)
+        if (foundPair == null) {
             AITMod.LOGGER.trace("No {} found (took {}ms)", structureSet, time);
-        else
-            AITMod.LOGGER.trace("Found {} at {} (took {}ms)",
-                    foundPair.getSecond().value().getClass().getSimpleName(), foundPair.getFirst(), time
-            );
+        } else {
+            AITMod.LOGGER.trace("Found {} at {} (took {}ms)", foundPair.getSecond().value().getClass().getSimpleName(), foundPair.getFirst(), time);
+        }
         completableFuture.complete(foundPair);
     }
 
