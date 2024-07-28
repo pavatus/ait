@@ -1,9 +1,13 @@
 package loqor.ait.tardis.manager;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.util.JsonObjectTransform;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
@@ -14,6 +18,7 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+// Sadly not a file manager for Linux - that would be kinda sick though - TARDIS meaning bigger on the inside.
 public class TardisFileManager<T extends Tardis> {
 
     private boolean locked = false;
@@ -50,6 +55,18 @@ public class TardisFileManager<T extends Tardis> {
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
             String json = Files.readString(file);
+
+            // TODO letting the autistic do it because im not taking my fucking ritalin at 1 in the morning to do a dumbass menial task of replacing a bunch of json info
+            // this is a dumb way of doing it. do it fucking better.
+            // i thought programming was supposed to be simplifying processes not making me do more <3333 - Loqor
+
+            /*JsonElement element = JsonParser.parseString(json);
+            JsonObject object = element.getAsJsonObject();
+
+            int version = object.get("VERSION_SCHEMA").getAsInt();
+
+            if (version == 0)
+                new JsonObjectTransform(object).transform();*/
 
             T tardis = function.apply(manager.getFileGson(), json);
             consumer.accept(tardis);

@@ -1,5 +1,6 @@
 package loqor.ait.tardis;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -26,6 +27,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	protected TardisDesktop desktop;
 	protected TardisExterior exterior;
 	protected TardisHandlersManager handlers;
+	protected int VERSION_SCHEMA = 1;
 
 	public int tardisHammerAnnoyance = 0; // todo move :(
 
@@ -45,6 +47,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		TardisComponent.init(desktop, this, ctx);
 		TardisComponent.init(exterior, this, ctx);
 		TardisComponent.init(handlers, this, ctx);
+		// Idk if this should be here but oh well cry about it
+		AITMod.LOGGER.info("Tardis Schema Version: {}", this.VERSION_SCHEMA);
 	}
 
 	@Override

@@ -17,6 +17,10 @@ public class RandomiserControl extends Control {
 		super("randomiser");
 	}
 
+	/**
+	* TODO rewrite the randomizer to follow the async stuff like this class
+	* {@link loqor.ait.tardis.util.AsyncLocatorUtil}
+	*/
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
 		TravelHandler travel = tardis.travel();

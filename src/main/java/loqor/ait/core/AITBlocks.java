@@ -26,6 +26,8 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
+    public static final Block WAYPOINT_BANK_BLOCK = new WaypointBankBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+
     @NoBlockItem
     public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool().instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
