@@ -107,7 +107,7 @@ public class TardisItemBuilder extends Item {
         );
 
 		context.getStack().decrement(1);
-        player.getItemCooldownManager().set(this, 60 * 20);
+        // player.getItemCooldownManager().set(this, 60 * 20);
 		return ActionResult.SUCCESS;
 	}
 }

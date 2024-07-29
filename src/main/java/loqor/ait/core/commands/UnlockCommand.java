@@ -51,7 +51,7 @@ public class UnlockCommand {
 
         if (wildcard.isPresent()) {
             T t = wildcard.get();
-            tardis.stats().unlock(t);
+            source.getServer().execute(() -> tardis.stats().unlock(t));
 
             source.sendMessage(Text.translatableWithFallback("command.ait.unlock.some",
                     "Granted [%s] %s %s", tardis.getUuid(), t.name(), type)
@@ -60,7 +60,7 @@ public class UnlockCommand {
             return Command.SINGLE_SUCCESS;
         }
 
-        registry.unlockAll(tardis);
+        source.getServer().execute(() -> registry.unlockAll(tardis));
         source.sendMessage(Text.translatableWithFallback("command.ait.unlock.all",
                 "Granted [%s] every %s", tardis.getUuid(), type)
         );

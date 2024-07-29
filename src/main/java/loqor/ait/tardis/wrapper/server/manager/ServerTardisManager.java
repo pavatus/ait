@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftServer> {
 
@@ -47,14 +48,15 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
 
     private final Map<ChunkPos, Set<Tardis>> tardisChunks = new HashMap<>();
+    private final Set<Tardis> buffer = new HashSet<>();
 
     public static void init() {
         instance = new ServerTardisManager();
     }
 
     private ServerTardisManager() {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> this.fileManager.setLocked(false));
-        ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> this.fileManager.setLocked(false));
+        ServerLifecycleEvents.SERVER_STOPPING.register(this::saveAndReset);
 
         ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
         WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
@@ -72,13 +74,38 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         });
 
         TardisEvents.UNLOAD_TARDIS.register((player, chunk) -> {
-            AITMod.LOGGER.info("Un-loading tardises at chunk {}", chunk);
+            AITMod.LOGGER.info("Un-loading buffer at chunk {}", chunk);
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerTardis tardis : this.lookup.values()) {
                 tardis.tick(server);
             }
+        });
+
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            for (Tardis tardis : this.buffer) {
+                long start = System.currentTimeMillis();
+
+                DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+                ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
+
+                ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
+                ChunkHolder holder = ((ServerChunkManagerAccessor) chunkManager).ait$chunkHolder(chunkPos.toLong());
+                ThreadedAnvilChunkStorage storage = (ThreadedAnvilChunkStorage) ((ChunkHolderAccessor) holder).getPlayersWatchingChunkProvider();
+
+                List<ServerPlayerEntity> players = new ArrayList<>();
+
+                players.addAll(storage.getPlayersWatchingChunk(chunkPos));
+                players.addAll(TardisUtil.getPlayersInsideInterior(tardis));
+
+                for (ServerPlayerEntity player : players) {
+                    sendTardis(player, tardis);
+                }
+
+                AITMod.LOGGER.info("Updating tardis took {}ms", System.currentTimeMillis() - start);
+            }
+            this.buffer.clear();
         });
     }
 
@@ -92,6 +119,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     public void sendTardis(ServerPlayerEntity player, Tardis tardis) {
         if (tardis == null || this.networkGson == null)
             return;
+
+        if (this.fileManager.isLocked()) return;
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(tardis.getUuid());
@@ -117,6 +146,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
         players.addAll(storage.getPlayersWatchingChunk(chunkPos));
         players.addAll(TardisUtil.getPlayersInsideInterior(tardis));
+
+        if (this.fileManager.isLocked()) return;
+        this.buffer.add(tardis);
 
         for (ServerPlayerEntity player : players) {
             sendTardis(player, tardis);
@@ -194,6 +226,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     public void unmark(Tardis tardis, ChunkPos chunk) {
         AITMod.LOGGER.info("Unmarked tardis {} at {}", tardis, chunk);
         Set<Tardis> set = this.tardisChunks.get(chunk);
+        if (set == null) return;
         set.remove(tardis);
     }
 
