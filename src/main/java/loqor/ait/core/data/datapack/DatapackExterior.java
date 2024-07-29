@@ -21,6 +21,7 @@ import net.minecraft.util.shape.VoxelShape;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackExterior extends ExteriorVariantSchema {
@@ -41,10 +42,10 @@ public class DatapackExterior extends ExteriorVariantSchema {
 					Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
 					Identifier.CODEC.fieldOf("biomeTexturePath").forGetter(DatapackExterior::getBiomeTexturePath),
 					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack),
-					Loyalty.CODEC.optionalFieldOf("loyalty", null).forGetter(DatapackExterior::getRequirement)
+					Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement)
 			).apply(instance, DatapackExterior::new));
 
-	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Loyalty loyalty) {
+	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Optional<Loyalty> loyalty) {
 		super(category, id, loyalty);
 		this.parent = parent;
 		this.texture = texture;

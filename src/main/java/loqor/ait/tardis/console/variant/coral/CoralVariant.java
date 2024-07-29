@@ -6,6 +6,8 @@ import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
+
 public class CoralVariant extends ConsoleVariantSchema {
 	public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/coral");
 

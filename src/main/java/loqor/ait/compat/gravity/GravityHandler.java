@@ -84,17 +84,16 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     public static void init() {
         AITMod.LOGGER.info("AIT - Setting up interior gravity");
 
-        ServerPlayNetworking.registerGlobalReceiver(SYNC, (server, player, handler, buf, responseSender) -> {
-            ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-                if (tardis == null)
-                    return;
+        ServerPlayNetworking.registerGlobalReceiver(SYNC, ServerTardisManager.receiveTardis(
+                (tardis, server, player, handler, buf, responseSender) -> {
+                    if (tardis == null)
+                        return;
 
-                GravityHandler gravity = tardis.handler(ID);
-                Direction direction = buf.readEnumConstant(Direction.class);
+                    GravityHandler gravity = tardis.handler(ID);
+                    Direction direction = buf.readEnumConstant(Direction.class);
 
-                gravity.direction.set(direction);
-            });
-        });
+                    gravity.direction.set(direction);
+                }));
 
         TardisComponentRegistry.getInstance().register(ID);
 

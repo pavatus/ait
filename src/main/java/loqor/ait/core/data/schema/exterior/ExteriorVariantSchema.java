@@ -24,6 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model, texture, emission, {@link ExteriorAnimation} and {@link DoorSchema}
@@ -45,16 +46,20 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	@Environment(EnvType.CLIENT)
 	private ClientExteriorVariantSchema cachedSchema;
 
-	protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
+	protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty) {
         super("exterior");
         this.category = category;
 
 		this.id = id;
-		this.loyalty = loyalty;
+		this.loyalty = loyalty.orElse(null);
+	}
+
+	protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
+		this(category, id, Optional.of(loyalty));
 	}
 
 	protected ExteriorVariantSchema(Identifier category, Identifier id) {
-		this(category, id, null);
+		this(category, id, Optional.empty());
 	}
 
 	@Override
@@ -63,13 +68,8 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	}
 
 	@Override
-	public Loyalty getRequirement() {
-		return loyalty;
-	}
-
-	@Override
-	public boolean freebie() {
-		return this.loyalty == null;
+	public Optional<Loyalty> requirement() {
+		return Optional.ofNullable(loyalty);
 	}
 
 	@Override

@@ -119,14 +119,11 @@ public class TardisUtil {
 			TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
 		});
 
-		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, (server, player, handler, buf, responseSender) -> {
-			UUID uuid = buf.readUuid();
-			Identifier id = buf.readIdentifier();
-
-			ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
-				SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id); // here we trust in the server with all of our might
-			});
-		});
+		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, ServerTardisManager.receiveTardis(
+				(tardis, server, player, handler, buf, responseSender) -> {
+					Identifier id = buf.readIdentifier();
+					SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id);
+		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
 				(server, player, handler, buf, responseSender) -> {

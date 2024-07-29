@@ -34,6 +34,11 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         super(Id.MOOD);
     }
 
+    @Override
+    public void onCreate() {
+        this.randomizePriorityMoods();
+    }
+
     @Nullable
     public MoodDictatedEvent getEvent() {
         return moodEvent;

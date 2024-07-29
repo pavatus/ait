@@ -56,7 +56,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 			return;
 		}
 
-		ServerTardisManager.getInstance().sendToSubscribers(this);
+		ServerTardisManager.getInstance().sendTardis(this);
 	}
 
 	public Tardis tardis() {

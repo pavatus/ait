@@ -9,6 +9,7 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.util.Identifier;
 
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -54,7 +55,9 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
             if (tardis.isUnlocked(schema))
                 continue;
 
-            if (loyalty.smallerThan(schema.getRequirement()))
+            Optional<Loyalty> optional = schema.requirement();
+
+            if (optional.isEmpty() || loyalty.smallerThan(optional.get()))
                 continue;
 
             AITMod.LOGGER.debug("Unlocked {} {} for tardis [{}]", schema.unlockType(), schema.id(), tardis.getUuid());

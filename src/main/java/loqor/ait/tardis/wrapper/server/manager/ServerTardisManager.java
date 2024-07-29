@@ -1,307 +1,248 @@
 package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
+import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.mixin.networking.ChunkHolderAccessor;
+import loqor.ait.mixin.networking.ServerChunkManagerAccessor;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.mood.MoodHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.manager.BufferedTardisManager;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
-import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.GlobalPos;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.server.world.ChunkHolder;
+import net.minecraft.server.world.ServerChunkManager;
+import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.util.math.ChunkPos;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
-public class ServerTardisManager extends BufferedTardisManager<ServerTardis, ServerPlayerEntity, MinecraftServer> {
+public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftServer> {
 
-	private static ServerTardisManager instance;
-	private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
+    private static ServerTardisManager instance;
+    private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
 
-	public static void init() {
-		instance = new ServerTardisManager();
-	}
+    private final Map<ChunkPos, Set<Tardis>> tardisChunks = new HashMap<>();
 
-	private ServerTardisManager() {
-		ServerPlayNetworking.registerGlobalReceiver(
-				ASK, (server, player, handler, buf, responseSender) -> {
-					UUID uuid = buf.readUuid();
+    public static void init() {
+        instance = new ServerTardisManager();
+    }
 
-					if (player == null || uuid == null)
-						return;
+    private ServerTardisManager() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> this.fileManager.setLocked(false));
+        ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
 
-					this.getTardis(server, uuid, tardis ->
-							this.sendAndSubscribe(player, tardis)
-					);
-				}
-		);
+        ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
+        WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
 
-		ServerPlayNetworking.registerGlobalReceiver(
-				ASK_POS, (server, player, handler, buf, responseSender) -> {
-					GlobalPos pos = buf.readGlobalPos();
-					ServerTardis found = null;
+        TardisEvents.SYNC_TARDIS.register((player, chunk) -> {
+            Set<Tardis> set = this.tardisChunks.get(chunk);
 
-					for (ServerTardis tardis : this.lookup.values()) {
-						DirectedGlobalPos exteriorPos = tardis.travel().position();
+            if (set == null)
+                return;
 
-						if (!exteriorPos.getPos().equals(pos.getPos())
-								|| !exteriorPos.getDimension().equals(pos.getDimension()))
-							continue;
+            for (Tardis tardis : set) {
+                AITMod.LOGGER.info("Sending tardis {} at chunk {}", tardis.getUuid(), chunk);
+                this.sendTardis(player, tardis);
+            }
+        });
 
-						found = tardis;
-					}
+        TardisEvents.UNLOAD_TARDIS.register((player, chunk) -> {
+            AITMod.LOGGER.info("Un-loading tardises at chunk {}", chunk);
+        });
 
-					if (found == null)
-						return;
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            for (ServerTardis tardis : this.lookup.values()) {
+                tardis.tick(server);
+            }
+        });
+    }
 
-					this.sendAndSubscribe(player, found);
-				}
-		);
+    @Override
+    protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
+        return super.createGsonBuilder(strategy)
+                .registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
+                .registerTypeAdapter(Tardis.class, ServerTardis.creator());
+    }
 
-		ServerCrashEvent.EVENT.register(((server, report) -> this.reset())); // just panic and reset
+    public void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+        if (tardis == null || this.networkGson == null)
+            return;
 
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> this.fileManager.setLocked(false));
-		ServerLifecycleEvents.SERVER_STOPPED.register(this::saveAndReset);
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeUuid(tardis.getUuid());
+        data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
 
-		WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
+        ServerPlayNetworking.send(player, SEND, data);
+    }
 
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			ServerPlayerEntity player = handler.getPlayer();
+    public void sendTardis(Tardis tardis) {
+        if (tardis == null || this.networkGson == null)
+            return;
 
-			if (player.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-				// if the player is in a tardis already, sync the one at their location
-				Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), true);
+        long start = System.currentTimeMillis();
 
-				if (found == null)
-					return;
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
 
-				this.sendTardis(player, found);
-			}
-		});
+        ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
+        ChunkHolder holder = ((ServerChunkManagerAccessor) chunkManager).ait$chunkHolder(chunkPos.toLong());
+        ThreadedAnvilChunkStorage storage = (ThreadedAnvilChunkStorage) ((ChunkHolderAccessor) holder).getPlayersWatchingChunkProvider();
 
-		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			for (ServerTardis tardis : this.lookup.values()) {
-				tardis.tick(server);
-			}
+        List<ServerPlayerEntity> players = new ArrayList<>();
 
-			this.tickBuffer(id -> server.getPlayerManager().getPlayer(id));
-		});
-	}
+        players.addAll(storage.getPlayersWatchingChunk(chunkPos));
+        players.addAll(TardisUtil.getPlayersInsideInterior(tardis));
 
-	public ServerTardis create(TardisBuilder builder) {
-		ServerTardis tardis = builder.build();
-		this.lookup.put(tardis);
+        for (ServerPlayerEntity player : players) {
+            sendTardis(player, tardis);
+        }
 
-		tardis.getHandlers().<MoodHandler>get(TardisComponent.Id.MOOD).randomizePriorityMoods();
+        AITMod.LOGGER.info("Updating tardis took {}ms", System.currentTimeMillis() - start);
+    }
 
-		return tardis;
-	}
+    public void sendTardis(TardisComponent component) {
+        sendTardis(component.tardis()); // TODO
+    }
 
-	@Override
-	protected void sendTardis(@NotNull ServerPlayerEntity player, UUID uuid, String json) {
-		PacketByteBuf data = PacketByteBufs.create();
-		data.writeUuid(uuid);
-		data.writeString(json);
+    public void sendPropertyV2ToSubscribers(Tardis tardis, Value<?> value) {
+        sendTardis(tardis); // TODO
+    }
 
-		ServerPlayNetworking.send(player, SEND, data);
-	}
+    public void sendPropertyToSubscribers(Tardis tardis, PropertiesHolder holder, String key, String type, String value) {
+        sendTardis(tardis); // TODO
+    }
 
-	@Override
-	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String key, String type, String value) {
-		PacketByteBuf data = PacketByteBufs.create();
+    public void sendToSubscribers(ServerTardis tardis) {
+        sendTardis(tardis);
+    }
 
-		data.writeUuid(tardis.getUuid());
-		data.writeEnumConstant(id);
+    public ServerTardis create(TardisBuilder builder) {
+        ServerTardis tardis = builder.build();
+        this.lookup.put(tardis);
 
-		data.writeString(key);
-		data.writeString(type);
-		data.writeString(value);
+        return tardis;
+    }
 
-		ServerPlayNetworking.send(player, UPDATE, data);
-	}
+    public void remove(MinecraftServer server, Tardis tardis) {
+        this.fileManager.delete(server, tardis.getUuid());
+        this.lookup.remove(tardis.getUuid());
 
-	@Override
-	protected void updateTardisProperty(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.IdLike id, Value<?> property) {
-		PacketByteBuf data = PacketByteBufs.create();
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
 
-		data.writeUuid(tardis.getUuid());
-		data.writeByte(Property.Mode.forValue(property));
+        this.unmark(tardis, chunkPos);
+    }
 
-		data.writeVarInt(id.index());
-		data.writeString(property.getProperty().getName());
-		property.write(data);
+    @Override
+    public @Nullable ServerTardis demandTardis(MinecraftServer server, UUID uuid) {
+        if (uuid == null)
+            return null; // ugh
 
-		ServerPlayNetworking.send(player, UPDATE_PROPERTY, data);
-	}
+        ServerTardis result = this.lookup.get(uuid);
 
-	@Override
-	protected void updateTardis(@NotNull ServerPlayerEntity player, ServerTardis tardis, TardisComponent.Id id, String json) {
-		PacketByteBuf data = PacketByteBufs.create();
-		data.writeUuid(tardis.getUuid());
-		data.writeEnumConstant(id);
+        if (result == null)
+            result = this.loadTardis(server, uuid);
 
-		data.writeString(json);
-		ServerPlayNetworking.send(player, UPDATE, data);
-	}
+        return result;
+    }
 
-	@Override
-	protected ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
-        return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
-	}
+    @Override
+    public void loadTardis(MinecraftServer server, UUID uuid, @Nullable Consumer<ServerTardis> consumer) {
+        if (consumer != null)
+            consumer.accept(this.loadTardis(server, uuid));
+    }
 
-	@Override
-	protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
-		return super.createGsonBuilder(strategy)
-				.registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
-				.registerTypeAdapter(Tardis.class, ServerTardis.creator());
-	}
+    private ServerTardis loadTardis(MinecraftServer server, UUID uuid) {
 
-	@Override
-	public void getTardis(MinecraftServer server, UUID uuid, Consumer<ServerTardis> consumer) {
-		if (uuid == null)
-			return; // ugh
+        return this.fileManager.loadTardis(
+                server, this, uuid, this::readTardis, this.lookup::put
+        );
+    }
 
-		ServerTardis result = this.lookup.get(uuid);
+    public void mark(Tardis tardis, ChunkPos chunk) {
+        AITMod.LOGGER.info("Marked tardis {} at {}", tardis, chunk);
+        this.tardisChunks.computeIfAbsent(chunk,
+                chunkPos -> new HashSet<>()
+        ).add(tardis);
+    }
 
-		if (result == null) {
-			this.loadTardis(server, uuid, consumer);
-			return;
-		}
+    public void unmark(Tardis tardis, ChunkPos chunk) {
+        AITMod.LOGGER.info("Unmarked tardis {} at {}", tardis, chunk);
+        Set<Tardis> set = this.tardisChunks.get(chunk);
+        set.remove(tardis);
+    }
 
-		consumer.accept(result);
-	}
+    private void save(MinecraftServer server, boolean lock) {
+        if (lock)
+            this.fileManager.setLocked(true);
 
-	public void sendToSubscribers(Tardis tardis) {
-		if (this.fileManager.isLocked())
-			return;
+        // force all dematting to go flight and all matting to go land
+        for (ServerTardis tardis : this.lookup.values()) {
+            // stop forcing all chunks
+            if (lock) {
+                ForcedChunkUtil.stopForceLoading(tardis.travel().position());
+                TravelHandlerBase.State state = tardis.travel().getState();
 
-		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
-			this.sendTardis(player, tardis);
-		}
-	}
+                if (state == TravelHandlerBase.State.DEMAT) {
+                    tardis.travel().finishDemat();
+                } else if (state == TravelHandlerBase.State.MAT) {
+                    tardis.travel().finishRemat();
+                }
 
-	public void sendToSubscribers(TardisComponent component) {
-		if (this.fileManager.isLocked())
-			return;
+                tardis.door().closeDoors();
 
-		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(component.tardis())) {
-			this.updateTardis(player, (ServerTardis) component.tardis(), component);
-		}
-	}
+                if (DependencyChecker.hasPortals())
+                    PortalsHandler.removePortals(tardis);
+            }
 
-	/**
-	 * For sending changes to do with the PropertiesHandler
-	 *
-	 * @param tardis The TARDIS to sync to
-	 * @param key    The key where the value is stored in the PropertiesHolder
-	 * @param type   The class of the variable serialised, so it can be read later
-	 *               eg a double would be "double", boolean would be "boolean", etc
-	 * @param value  The new value to be synced to client
-	 */
-	public void sendPropertyToSubscribers(ServerTardis tardis, TardisComponent component, String key, String type, String value) {
-		if (this.fileManager.isLocked())
-			return;
+            this.fileManager.saveTardis(server, this, tardis);
+        }
+    }
 
-		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
-			this.updateTardisProperty(player, tardis, component, key, type, value);
-		}
-	}
+    private void saveAndReset(MinecraftServer server) {
+        this.save(server, true);
+        this.reset();
+    }
 
-	public void sendPropertyV2ToSubscribers(ServerTardis tardis, Value<?> property) {
-		if (this.fileManager.isLocked())
-			return;
+    public static ServerTardisManager getInstance() {
+        return instance;
+    }
 
-		for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(tardis)) {
-			this.updateTardisPropertyV2(player, tardis, property);
-		}
-	}
+    public static ServerPlayNetworking.PlayChannelHandler receiveTardis(Receiver receiver) {
+        return (server, player, handler, buf, responseSender) -> {
+            ServerTardisManager.getInstance().getTardis(server, buf.readUuid(),
+                    tardis -> receiver.receive(tardis, server, player, handler, buf, responseSender));
+        };
+    }
 
-	public void remove(MinecraftServer server, UUID uuid) {
-		this.fileManager.delete(server, uuid);
-		super.remove(uuid);
-	}
-
-	/**
-	 * @deprecated Use {@link #remove(MinecraftServer, UUID)} instead.
-	 * @implNote Doesn't actually delete the file, due to the lack of the server instance.
-	 */
-	@Override
-	@Deprecated
-	public void remove(UUID uuid) {
-		super.remove(uuid);
-	}
-
-	private void save(MinecraftServer server, boolean lock) {
-		if (lock)
-			this.fileManager.setLocked(true);
-
-		// force all dematting to go flight and all matting to go land
-		for (ServerTardis tardis : this.lookup.values()) {
-			// stop forcing all chunks
-			if (lock) {
-				ForcedChunkUtil.stopForceLoading(tardis.travel().position());
-				TravelHandlerBase.State state = tardis.travel().getState();
-
-				if (state == TravelHandlerBase.State.DEMAT) {
-					tardis.travel().finishDemat();
-				} else if (state == TravelHandlerBase.State.MAT) {
-					tardis.travel().finishRemat();
-				}
-
-				tardis.door().closeDoors();
-
-				if (DependencyChecker.hasPortals())
-					PortalsHandler.removePortals(tardis);
-			}
-
-			this.fileManager.saveTardis(server, this, tardis);
-		}
-	}
-
-	private void saveAndReset(MinecraftServer server) {
-		this.save(server, true);
-		this.reset();
-	}
-
-	public static ServerTardisManager getInstance() {
-		return instance;
-	}
-
-	public static ServerPlayNetworking.PlayChannelHandler receiveTardis(Receiver receiver) {
-		return (server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(),
-					tardis -> receiver.receive(tardis, server, player, handler, buf, responseSender));
-		};
-	}
-
-	@FunctionalInterface
-	public interface Receiver {
-		void receive(ServerTardis tardis, MinecraftServer server, ServerPlayerEntity player,
-					 ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender);
-	}
+    @FunctionalInterface
+    public interface Receiver {
+        void receive(ServerTardis tardis, MinecraftServer server, ServerPlayerEntity player,
+                     ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender);
+    }
 }

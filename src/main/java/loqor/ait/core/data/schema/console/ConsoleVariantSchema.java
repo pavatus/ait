@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * This class is for variants of a {@link ConsoleTypeSchema} and can be changed in game to the players desires
@@ -37,16 +38,20 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
 	@Environment(EnvType.CLIENT)
 	private ClientConsoleVariantSchema cachedSchema;
 
-	protected ConsoleVariantSchema(Identifier parent, Identifier id, Loyalty loyalty) {
+	protected ConsoleVariantSchema(Identifier parent, Identifier id, Optional<Loyalty> loyalty) {
 		super("console");
 
 		this.parent = parent;
 		this.id = id;
-		this.loyalty = loyalty;
+		this.loyalty = loyalty.orElse(null);
+	}
+
+	protected ConsoleVariantSchema(Identifier parent, Identifier id, Loyalty loyalty) {
+		this(parent, id, Optional.of(loyalty));
 	}
 
 	protected ConsoleVariantSchema(Identifier parent, Identifier id) {
-		this(parent, id, null);
+		this(parent, id, Optional.empty());
 	}
 
 	@Override
@@ -55,13 +60,8 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
 	}
 
 	@Override
-	public Loyalty getRequirement() {
-		return loyalty;
-	}
-
-	@Override
-	public boolean freebie() {
-		return this.loyalty == null;
+	public Optional<Loyalty> requirement() {
+		return Optional.ofNullable(loyalty);
 	}
 
 	@Override

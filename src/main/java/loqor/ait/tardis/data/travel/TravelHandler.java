@@ -147,7 +147,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (animate)
             this.runAnimations(exterior);
 
-        BiomeHandler biome = this.tardis.getHandlers().get(Id.BIOME);
+        BiomeHandler biome = this.tardis.handler(Id.BIOME);
         biome.update();
 
         if (schedule && !this.antigravs.get())

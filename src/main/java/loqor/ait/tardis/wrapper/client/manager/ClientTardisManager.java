@@ -120,6 +120,7 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 	}
 
 	private void sync(UUID uuid, String json) {
+		long start = System.currentTimeMillis();
 		ClientTardis tardis = this.readTardis(this.networkGson, json);
 		AITMod.LOGGER.info("Received {}", tardis);
 
@@ -129,6 +130,8 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 				consumer.accept(tardis);
 			}
+
+			AITMod.LOGGER.info("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
 		}
 	}
 

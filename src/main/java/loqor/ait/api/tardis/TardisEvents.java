@@ -5,6 +5,9 @@ import loqor.ait.tardis.Tardis;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.chunk.WorldChunk;
 
 public final class TardisEvents {
 
@@ -97,6 +100,18 @@ public final class TardisEvents {
 	public static final Event<Shields> TOGGLE_SHIELDS = EventFactory.createArrayBacked(Shields.class, callbacks -> (tardis, active, visual) -> {
 		for (Shields callback : callbacks) {
 			callback.onShields(tardis, active, visual);
+		}
+	});
+
+	public static final Event<SyncTardis> SYNC_TARDIS = EventFactory.createArrayBacked(SyncTardis.class, callbacks -> (tardis, chunk) -> {
+		for (SyncTardis callback : callbacks) {
+			callback.sync(tardis, chunk);
+		}
+	});
+
+	public static final Event<UnloadTardis> UNLOAD_TARDIS = EventFactory.createArrayBacked(UnloadTardis.class, callbacks -> (tardis, chunk) -> {
+		for (UnloadTardis callback : callbacks) {
+			callback.unload(tardis, chunk);
 		}
 	});
 
@@ -210,6 +225,16 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface Shields {
 		void onShields(Tardis tardis, boolean active, boolean visual);
+	}
+
+	@FunctionalInterface
+	public interface SyncTardis {
+		void sync(ServerPlayerEntity player, ChunkPos chunk);
+	}
+
+	@FunctionalInterface
+	public interface UnloadTardis {
+		void unload(ServerPlayerEntity player, ChunkPos chunk);
 	}
 
 	public enum Interaction {

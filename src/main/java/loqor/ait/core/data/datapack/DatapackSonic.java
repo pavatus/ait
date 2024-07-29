@@ -26,11 +26,11 @@ public class DatapackSonic extends SonicSchema {
                     Rendering.CODEC.optionalFieldOf("rendering")
                             .forGetter(schema -> Optional.of(schema.rendering())),
 
-                    Loyalty.CODEC.optionalFieldOf("loyalty", null)
-                            .forGetter(SonicSchema::getRequirement)
+                    Loyalty.CODEC.optionalFieldOf("loyalty")
+                            .forGetter(SonicSchema::requirement)
             ).apply(instance, DatapackSonic::new));
 
-    public DatapackSonic(Identifier id, Models models, Optional<Rendering> rendering, Loyalty loyalty) {
+    public DatapackSonic(Identifier id, Models models, Optional<Rendering> rendering, Optional<Loyalty> loyalty) {
         super(id, models, rendering.orElse(new Rendering()), loyalty);
     }
 
@@ -42,11 +42,10 @@ public class DatapackSonic extends SonicSchema {
         AtomicReference<SonicSchema> created = new AtomicReference<>();
 
         CODEC.decode(JsonOps.INSTANCE, json)
-                .get()
-                .ifLeft(sonic -> created.set(sonic.getFirst()))
+                .get().ifLeft(sonic -> created.set(sonic.getFirst()))
                 .ifRight(err -> {
                     created.set(null);
-                    AITMod.LOGGER.error("Error decoding datapack sonic: " + err);
+                    AITMod.LOGGER.error("Error decoding datapack sonic: {}", err);
                 });
 
         return created.get();

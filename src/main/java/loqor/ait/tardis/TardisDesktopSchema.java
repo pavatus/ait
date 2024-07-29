@@ -21,16 +21,20 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
 	private final DesktopPreviewTexture preview;
 	private final Loyalty loyalty;
 
-	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture, Loyalty loyalty) {
+	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture, Optional<Loyalty> loyalty) {
         super("desktop");
         this.id = id;
 
 		this.preview = texture;
-		this.loyalty = loyalty;
+		this.loyalty = loyalty.orElse(null);
+	}
+
+	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture, Loyalty loyalty) {
+		this(id, texture, Optional.of(loyalty));
 	}
 
 	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture) {
-		this(id, texture, null);
+		this(id, texture, Optional.empty());
 	}
 
 	@Override
@@ -39,13 +43,8 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
 	}
 
 	@Override
-	public Loyalty getRequirement() {
-		return loyalty;
-	}
-
-	@Override
-	public boolean freebie() {
-		return this.loyalty == null;
+	public Optional<Loyalty> requirement() {
+		return Optional.ofNullable(loyalty);
 	}
 
 	@Override

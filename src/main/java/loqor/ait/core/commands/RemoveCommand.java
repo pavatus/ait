@@ -65,7 +65,7 @@ public class RemoveCommand {
         DesktopGenerator.clearArea(tardisWorld, tardis.getDesktop().getCorners());
 
         // Delete the file. File system operations are costly!
-        ServerTardisManager.getInstance().remove(context.getSource().getServer(), tardis.getUuid());
+        ServerTardisManager.getInstance().remove(context.getSource().getServer(), tardis);
 
         source.sendFeedback(() -> Text.translatableWithFallback("tardis.remove.done",
                 "TARDIS [%s] removed", tardis.getUuid()), true

@@ -17,6 +17,7 @@ import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -34,6 +35,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -228,4 +230,21 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)
         ));
     }
+
+	@Override
+	public void markRemoved() {
+		super.markRemoved();
+
+		if (this.tardis() == null || this.tardis().isEmpty())
+			return;
+
+		ServerTardisManager.getInstance().unmark(
+				this.tardis().get(), new ChunkPos(this.pos)
+		);
+	}
+
+	@Override
+	public void onLinked() {
+		ServerTardisManager.getInstance().mark(this.tardis().get(), new ChunkPos(this.pos));
+	}
 }
