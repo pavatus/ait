@@ -31,14 +31,11 @@ public class StatsData extends KeyedTardisComponent {
 
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
 	private static List<String> NAME_CACHE;
-
 	private static final String NAME_KEY = "name";
 	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
 	private static final String DATE_KEY = "date";
-
     private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
 	private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks", new HashSet<>());
-
 	private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
 	private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
 

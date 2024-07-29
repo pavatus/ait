@@ -5,8 +5,13 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakData;
+import loqor.ait.tardis.data.EngineHandler;
+import loqor.ait.tardis.data.ServerAlarmHandler;
+import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.mood.MoodDictatedEvent;
 import loqor.ait.tardis.data.mood.TardisMood;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.entity.ItemEntity;
@@ -39,10 +44,18 @@ public class MoodEventPoolRegistry {
     public static MoodDictatedEvent RANDOM_THROTTLING_UP;
     public static MoodDictatedEvent KICK_PLAYER_OUT;
     public static MoodDictatedEvent CLOAKING_WHEN_AFRAID;
+    public static MoodDictatedEvent FAST_RETURN_AND_TAKEOFF;
+    public static MoodDictatedEvent RANDOM_ALARM_ACTIVATION;
+    public static MoodDictatedEvent RANDOM_POWER_OFF;
 
     // Neutral mood events
     public static MoodDictatedEvent ACTIVATE_AUTOPILOT;
     public static MoodDictatedEvent LOCK_DOORS;
+    public static MoodDictatedEvent SHIELD_ACTIVATION;
+
+    // Positive mood events
+    public static MoodDictatedEvent ADD_LOYALTY;
+    public static MoodDictatedEvent RANDOM_XP_GRANT;
 
     /**
      * @author Loqor
@@ -77,6 +90,27 @@ public class MoodEventPoolRegistry {
             tardis.travel().destination(cached -> cached.world(randomWorld));
         }, 80, TardisMood.MoodType.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
+        FAST_RETURN_AND_TAKEOFF = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_return_and_takeoff"), (tardis) -> {
+            TravelHandler travel = tardis.travel();
+            if (tardis.door().isOpen()) tardis.door().closeDoors();
+            travel.handbrake(false);
+            boolean same = travel.destination().equals(travel.previousPosition());
+            if (travel.previousPosition() != null) {
+                travel.destination(same ? travel.position() : travel.previousPosition());
+            }
+            travel.dematerialize();
+        }, 128, TardisMood.MoodType.NEGATIVE));
+
+        RANDOM_POWER_OFF = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_power_off"), (tardis) -> {
+            if (!tardis.travel().inFlight()) {
+                tardis.getHandlers().<EngineHandler>get(TardisComponent.Id.ENGINE).disablePower();
+            }
+        }, 256, TardisMood.MoodType.NEGATIVE));
+
+        RANDOM_ALARM_ACTIVATION = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_alarm_activation"), (tardis) -> {
+            tardis.getHandlers().<ServerAlarmHandler>get(TardisComponent.Id.ALARMS).enable();
+        }, 32, TardisMood.MoodType.NEGATIVE));
+
         RANDOM_THROTTLING_UP = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_throttling_up"), (tardis) -> {
             if (tardis.travel().inFlight())
                 tardis.travel().increaseSpeed();
@@ -95,6 +129,13 @@ public class MoodEventPoolRegistry {
                         SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
         }, 32, TardisMood.MoodType.NEUTRAL));
 
+        SHIELD_ACTIVATION = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "shield_activation"), (tardis) -> {
+            tardis.getHandlers().<ShieldData>get(TardisComponent.Id.SHIELDS).enable();
+            if (tardis.getHandlers().<ShieldData>get(TardisComponent.Id.SHIELDS).areVisualShieldsActive()) {
+                tardis.getHandlers().<ShieldData>get(TardisComponent.Id.SHIELDS).disableVisuals();
+            }
+        }, 96, TardisMood.MoodType.NEUTRAL));
+
         CLOAKING_WHEN_AFRAID = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "cloaking_when_afraid"), (tardis) -> {
             tardis.getHandlers().<CloakData>get(TardisComponent.Id.CLOAK).enable();
         }, 96, TardisMood.MoodType.NEUTRAL, TardisMood.Moods.FEARFUL));
@@ -102,6 +143,15 @@ public class MoodEventPoolRegistry {
         ACTIVATE_AUTOPILOT = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "activate_autopilot"), (tardis) -> {
             tardis.travel().autopilot(true);
         }, 128, TardisMood.MoodType.NEUTRAL));
+
+        ADD_LOYALTY = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "add_loyalty"), (tardis) -> {
+            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> tardis.getHandlers().<LoyaltyHandler>get(TardisComponent.Id.LOYALTY).get(player).add(7));
+        }, 64, TardisMood.MoodType.POSITIVE));
+
+        RANDOM_XP_GRANT = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_xp_grant"), (tardis) -> {
+            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> player.addExperience(600));
+        }, 32, TardisMood.MoodType.POSITIVE));
+
 
         // TODO: should make this happen when a low loyalty player approaches the TARDIS
 
