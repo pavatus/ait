@@ -133,28 +133,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         if (tardis == null || this.networkGson == null)
             return;
 
-        long start = System.currentTimeMillis();
-
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
-        ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
-
-        ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
-        ChunkHolder holder = ((ServerChunkManagerAccessor) chunkManager).ait$chunkHolder(chunkPos.toLong());
-        ThreadedAnvilChunkStorage storage = (ThreadedAnvilChunkStorage) ((ChunkHolderAccessor) holder).getPlayersWatchingChunkProvider();
-
-        List<ServerPlayerEntity> players = new ArrayList<>();
-
-        players.addAll(storage.getPlayersWatchingChunk(chunkPos));
-        players.addAll(TardisUtil.getPlayersInsideInterior(tardis));
-
         if (this.fileManager.isLocked()) return;
         this.buffer.add(tardis);
-
-        for (ServerPlayerEntity player : players) {
-            sendTardis(player, tardis);
-        }
-
-        AITMod.LOGGER.info("Updating tardis took {}ms", System.currentTimeMillis() - start);
     }
 
     public void sendTardis(TardisComponent component) {
