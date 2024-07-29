@@ -29,6 +29,10 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
 		this.loyalty = loyalty;
 	}
 
+	protected TardisDesktopSchema(Identifier id, DesktopPreviewTexture texture) {
+		this(id, texture, null);
+	}
+
 	@Override
 	public Identifier id() {
 		return id;
@@ -40,17 +44,17 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
 	}
 
 	@Override
+	public boolean freebie() {
+		return this.loyalty == null;
+	}
+
+	@Override
 	public UnlockType unlockType() {
 		return UnlockType.DESKTOP;
 	}
 
 	public DesktopPreviewTexture previewTexture() {
 		return this.preview;
-	}
-
-	@Override
-	public boolean freebie() {
-		return true;
 	}
 
 	public Optional<StructureTemplate> findTemplate() {
