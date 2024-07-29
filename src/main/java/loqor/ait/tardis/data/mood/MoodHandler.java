@@ -18,13 +18,12 @@ import java.util.*;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
 
-    @Exclude
-    private MoodDictatedEvent moodDictatedEvent;
-    @Exclude
-    private TardisMood.Moods winningMood;
-    @Exclude
-    private final Random RANDOM = AITMod.RANDOM;
-    public static List<TardisMood.Moods> PRIORITY_MOODS; // <3>
+    // FIXME Loqor, you sure you want this to be a static? It will affect ALL TARDIS'.
+    public static TardisMood.Moods[] PRIORITY_MOODS;
+
+    @Exclude private MoodDictatedEvent moodEvent;
+    @Exclude private TardisMood.Moods winningMood;
+    @Exclude private final Random RANDOM = AITMod.RANDOM;
 
     /**
      * Do NOT under any circumstances run logic in this constructor.
@@ -36,52 +35,38 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         super(Id.MOOD);
     }
 
-    public void setPriorityMoods(List<TardisMood.Moods> moods) {
-        PRIORITY_MOODS = moods;
-    }
-
-    public List<TardisMood.Moods> getPriorityMoods() {
-        return PRIORITY_MOODS;
-    }
-
-    @Override
-    protected void onInit(InitContext ctx) {
-        this.setMoodDictatedEvent(null);
-    }
-
     @Nullable
-    public MoodDictatedEvent getMoodDictatedEvent() {
-        return moodDictatedEvent;
+    public MoodDictatedEvent getEvent() {
+        return moodEvent;
     }
 
     @Override
     public void tick(MinecraftServer world) {
+        if (this.moodEvent == null)
+            return;
 
-        if (this.getMoodDictatedEvent() == null) return;
+        if (this.winningMood == null)
+            return;
 
-        if (this.winningMood != null) {
-            TardisMood.MoodType moodType = this.getMoodDictatedEvent().getMoodTypeCompatibility();
-            if (this.winningMood.getMoodType().equals(TardisMood.MoodType.NEUTRAL) ||
-                    (this.winningMood.getMoodType() == moodType && (this.getMoodDictatedEvent().getMoodsList().contains(this.winningMood) ||
-                    this.getMoodDictatedEvent().getMoodsList().isEmpty()))) {
-                if (this.winningMood.getWeight() >= this.getMoodDictatedEvent().getCost()) {
-                    switch (this.winningMood.getMoodType()) {
-                        case NEGATIVE:
-                            handleNegativeMood(moodType);
-                            break;
-                        case POSITIVE:
-                            handlePositiveMood(moodType);
-                            break;
-                        case NEUTRAL:
-                            handleNeutralMood(this.getMoodDictatedEvent(), moodType, this.winningMood);
-                            break;
-                        default:
-                            System.out.println(this + ": How did we get here?");
-                    }
+        TardisMood.Alignment alignment = this.moodEvent.getMoodTypeCompatibility();
+
+        if (this.winningMood.alignment().equals(TardisMood.Alignment.NEUTRAL) ||
+                (this.winningMood.alignment() == alignment && (this.moodEvent.getMoodsList().contains(this.winningMood) ||
+                this.moodEvent.getMoodsList().isEmpty()))) {
+            if (this.winningMood.weight() >= this.moodEvent.getCost()) {
+                if (this.getEvent() == null) {
+                    this.winningMood = null;
+                    return;
                 }
-            } else {
-                this.winningMood = null;
+
+                switch (this.winningMood.alignment()) {
+                    case NEGATIVE -> handleNegativeMood(alignment);
+                    case POSITIVE -> handlePositiveMood(this.winningMood, alignment);
+                    case NEUTRAL -> handleNeutralMood(this.moodEvent, alignment, this.winningMood);
+                }
             }
+        } else {
+            this.winningMood = null;
         }
     }
 
@@ -93,9 +78,9 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         if (moodEvent == null)
             return;
 
-        this.moodDictatedEvent = moodEvent;
+        this.moodEvent = moodEvent;
         TardisUtil.getPlayersInsideInterior(this.tardis()).forEach(player -> player.sendMessage(
-                Text.literal(moodDictatedEvent.id().getPath()).formatted(Formatting.BOLD), true));
+                Text.literal(this.moodEvent.id().getPath()).formatted(Formatting.BOLD), true));
 
         raceMoods();
     }
@@ -103,96 +88,82 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     public void raceMoods() {
         Map<TardisMood.Moods, Integer> moodWeights = new HashMap<>();
 
-        if (this.getPriorityMoods().isEmpty()) {
-            for (TardisMood.Moods mood : TardisMood.Moods.values()) {
-                int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
-                moodWeights.put(mood, Math.min(weight, 256));
-            }
-        } else {
-            for (TardisMood.Moods mood : this.getPriorityMoods()) {
-                int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
-                moodWeights.put(mood, Math.min(weight, 256));
-            }
+        TardisMood.Moods[] moods = PRIORITY_MOODS.length == 0 ?
+                TardisMood.Moods.VALUES : PRIORITY_MOODS;
+
+        for (TardisMood.Moods mood : moods) {
+            int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
+            moodWeights.put(mood, Math.min(weight, 256));
         }
 
         this.winningMood = moodWeights.entrySet().stream()
                 .max(Comparator.comparingInt(Map.Entry::getValue))
                 .map(Map.Entry::getKey).orElse(null);
-        this.winningMood.setWeight(moodWeights.get(this.winningMood));
 
         this.tardis().getDesktop().getConsolePos().forEach(console ->
                 TardisUtil.getTardisDimension().playSound(null, BlockPos.ofFloored(console.toCenterPos()),
                         SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.MASTER, 1f, 1f));
     }
 
-    private void handleNegativeMood(TardisMood.MoodType moodType) {
-        if (this.getMoodDictatedEvent() == null) {
-            this.winningMood = null;
-            return;
-        }
-        if (moodType == TardisMood.MoodType.NEGATIVE) {
-            this.getMoodDictatedEvent().execute(this.tardis());
-            this.setMoodDictatedEvent(null);
-        } else if (moodType == TardisMood.MoodType.POSITIVE) {
+    private void handleNegativeMood(TardisMood.Alignment alignment) {
+        if (alignment == TardisMood.Alignment.NEGATIVE) {
+            this.moodEvent.execute(this.tardis());
+            this.updateEvent(null);
+        } else if (alignment == TardisMood.Alignment.POSITIVE) {
             this.rollForMoodDictatedEvent();
-        } else if (moodType == TardisMood.MoodType.NEUTRAL) {
+        } else if (alignment == TardisMood.Alignment.NEUTRAL) {
             if (RANDOM.nextInt(0, 10) < 5) {
-                this.getMoodDictatedEvent().execute(this.tardis());
-                this.setMoodDictatedEvent(null);
+                this.moodEvent.execute(this.tardis());
+                this.updateEvent(null);
             } else {
                 this.rollForMoodDictatedEvent();
             }
         }
     }
 
-    private void handlePositiveMood(TardisMood.MoodType moodType) {
-        if (this.getMoodDictatedEvent() == null) {
-            this.winningMood = null;
-            return;
-        }
-        if (moodType == TardisMood.MoodType.POSITIVE) {
-            this.getMoodDictatedEvent().execute(this.tardis());
-            this.setMoodDictatedEvent(null);
-        } else if (moodType == TardisMood.MoodType.NEGATIVE) {
+    private void handlePositiveMood(TardisMood.Moods mood, TardisMood.Alignment alignment) {
+        if (alignment == TardisMood.Alignment.POSITIVE) {
+            this.moodEvent.execute(this.tardis());
+            this.updateEvent(null);
+        } else if (alignment == TardisMood.Alignment.NEGATIVE) {
             this.rollForMoodDictatedEvent();
-        } else if (moodType == TardisMood.MoodType.NEUTRAL) {
-            if (moodType.getSwayedWeight() == 0 || (moodType.getSwayedWeight() < 0 && RANDOM.nextInt(0, 10) < 5)) {
-                this.getMoodDictatedEvent().execute(this.tardis());
-                this.setMoodDictatedEvent(null);
+        } else if (alignment == TardisMood.Alignment.NEUTRAL) {
+            if (mood.swayWeight() == 0 || (mood.swayWeight() < 0 && RANDOM.nextInt(0, 10) < 5)) {
+                this.moodEvent.execute(this.tardis());
+                this.updateEvent(null);
             } else {
                 this.rollForMoodDictatedEvent();
             }
         }
     }
 
-    private void handleNeutralMood(MoodDictatedEvent mDE, TardisMood.MoodType moodType, TardisMood.Moods winningMood) {
-        if (this.getMoodDictatedEvent() == null) {
-            this.winningMood = null;
-            return;
-        }
-        if (moodType == TardisMood.MoodType.NEUTRAL) {
-            if (winningMood.getWeight() + winningMood.getMoodType().getSwayedWeight() >= mDE.getCost()) {
-                this.getMoodDictatedEvent().execute(this.tardis());
-                this.setMoodDictatedEvent(null);
+    private void handleNeutralMood(MoodDictatedEvent mDE, TardisMood.Alignment alignment, TardisMood.Moods winningMood) {
+        if (alignment == TardisMood.Alignment.NEUTRAL) {
+            if (winningMood.weight() + winningMood.swayWeight() >= mDE.getCost()) {
+                this.moodEvent.execute(this.tardis());
+                this.updateEvent(null);
             } else {
                 this.rollForMoodDictatedEvent();
             }
         } else {
-            this.getMoodDictatedEvent().execute(this.tardis());
-            this.setMoodDictatedEvent(null);
+            this.moodEvent.execute(this.tardis());
+            this.updateEvent(null);
         }
     }
 
-    public void setMoodDictatedEvent(@Nullable MoodDictatedEvent moodDictatedEvent) {
-        this.moodDictatedEvent = moodDictatedEvent;
+    public void updateEvent(@Nullable MoodDictatedEvent moodDictatedEvent) {
+        this.moodEvent = moodDictatedEvent;
         this.winningMood = null;
     }
 
     public void randomizePriorityMoods() {
-        List<TardisMood.Moods> moods = new ArrayList<>();
+        TardisMood.Moods[] moods = new TardisMood.Moods[3];
+
         for (int i = 0; i < 3; i++) {
-            moods.add(TardisMood.Moods.values()[RANDOM.nextInt(TardisMood.Moods.values().length)]);
+            moods[i] = TardisMood.Moods.VALUES[RANDOM.nextInt(
+                    TardisMood.Moods.VALUES.length)];
         }
-        this.setPriorityMoods(moods);
+
+        PRIORITY_MOODS = moods;
     }
 }
