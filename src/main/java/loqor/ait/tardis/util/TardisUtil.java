@@ -78,7 +78,8 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
-	private static final Random RANDOM = new Random();
+	@Deprecated
+	private static final Random RANDOM = AITMod.RANDOM;
 
 	private static ServerWorld OVERWORLD;
 	private static ServerWorld TARDIS_DIMENSION;
@@ -305,6 +306,7 @@ public class TardisUtil {
 		);
 	}
 
+	@Deprecated
 	public static Random random() {
 		return RANDOM;
 	}

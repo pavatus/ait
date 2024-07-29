@@ -67,10 +67,12 @@ public class AITMod implements ModInitializer {
 
 	public static final String MOD_ID = "ait";
 	public static final Logger LOGGER = LoggerFactory.getLogger("ait");
+	public static final Random RANDOM = new Random();
+
 	public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
 	public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, "item_group"), () ->
 			Icon.of(AITItems.TARDIS_ITEM)).disableDynamicTitle().build();
-	public static final Random RANDOM = new Random();
+
 	public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "zeiton_geode"));
 
 	public static final ScreenHandlerType<EngineScreenHandler> ENGINE_SCREEN_HANDLER;

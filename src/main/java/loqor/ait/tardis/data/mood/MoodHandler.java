@@ -23,7 +23,6 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
     @Exclude private MoodDictatedEvent moodEvent;
     @Exclude private TardisMood.Moods winningMood;
-    @Exclude private final Random RANDOM = AITMod.RANDOM;
 
     /**
      * Do NOT under any circumstances run logic in this constructor.
@@ -71,8 +70,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     }
 
     public void rollForMoodDictatedEvent() {
-
-        int rand = RANDOM.nextInt(0, MoodEventPoolRegistry.REGISTRY.size());
+        int rand = AITMod.RANDOM.nextInt(0, MoodEventPoolRegistry.REGISTRY.size());
         MoodDictatedEvent moodEvent = MoodEventPoolRegistry.REGISTRY.get(rand);
 
         if (moodEvent == null)
@@ -92,7 +90,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
                 TardisMood.Moods.VALUES : PRIORITY_MOODS;
 
         for (TardisMood.Moods mood : moods) {
-            int weight = 8 + (RANDOM.nextInt(0, 11) * 8);
+            int weight = 8 + (AITMod.RANDOM.nextInt(0, 11) * 8);
             moodWeights.put(mood, Math.min(weight, 256));
         }
 
@@ -112,7 +110,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         } else if (alignment == TardisMood.Alignment.POSITIVE) {
             this.rollForMoodDictatedEvent();
         } else if (alignment == TardisMood.Alignment.NEUTRAL) {
-            if (RANDOM.nextInt(0, 10) < 5) {
+            if (AITMod.RANDOM.nextInt(0, 10) < 5) {
                 this.moodEvent.execute(this.tardis());
                 this.updateEvent(null);
             } else {
@@ -128,7 +126,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         } else if (alignment == TardisMood.Alignment.NEGATIVE) {
             this.rollForMoodDictatedEvent();
         } else if (alignment == TardisMood.Alignment.NEUTRAL) {
-            if (mood.swayWeight() == 0 || (mood.swayWeight() < 0 && RANDOM.nextInt(0, 10) < 5)) {
+            if (mood.swayWeight() == 0 || (mood.swayWeight() < 0 && AITMod.RANDOM.nextInt(0, 10) < 5)) {
                 this.moodEvent.execute(this.tardis());
                 this.updateEvent(null);
             } else {
@@ -160,7 +158,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         TardisMood.Moods[] moods = new TardisMood.Moods[3];
 
         for (int i = 0; i < 3; i++) {
-            moods[i] = TardisMood.Moods.VALUES[RANDOM.nextInt(
+            moods[i] = TardisMood.Moods.VALUES[AITMod.RANDOM.nextInt(
                     TardisMood.Moods.VALUES.length)];
         }
 
