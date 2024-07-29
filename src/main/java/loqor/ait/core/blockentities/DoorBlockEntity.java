@@ -2,6 +2,7 @@ package loqor.ait.core.blockentities;
 
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.DirectedBlockPos;
@@ -63,12 +64,10 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (exteriorWorld == null || exteriorPos == null)
 			return;
 
-		BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorPos);
+		if (blockState.getBlock() instanceof DoorBlock && !tardis.areShieldsActive()) {
+			boolean waterlogged = blockState.get(Properties.WATERLOGGED);
 
-		if (exteriorBlockState.getBlock() instanceof ExteriorBlock && !tardis.areShieldsActive()) {
-			boolean waterlogged = exteriorBlockState.get(Properties.WATERLOGGED);
-
-			if ((waterlogged && tardis.door().isOpen()) && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
+			if (waterlogged && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
 				for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 					tardis.loyalty().subLevel(player, 1);
 				}
