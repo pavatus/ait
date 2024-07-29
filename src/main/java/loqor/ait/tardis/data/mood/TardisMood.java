@@ -45,15 +45,19 @@ public record TardisMood(Moods moods, Alignment type, int weight) {
      */
 
     public enum Moods {
-        // 6 negative moods
+        // 10 negative moods
         ANGRY(0, Alignment.NEGATIVE),
         HATEFUL(0, Alignment.NEGATIVE),
         FEARFUL(0, Alignment.NEGATIVE),
         DEPRESSED(0, Alignment.NEGATIVE),
         HURT(0, Alignment.NEGATIVE),
         UPSET(0, Alignment.NEGATIVE),
+        FRUSTRATED(0, Alignment.NEGATIVE),
+        JEALOUS(0, Alignment.NEGATIVE),
+        DISAPPOINTED(0, Alignment.NEGATIVE),
+        ANXIOUS(0, Alignment.NEGATIVE),
 
-        // 8 neutral moods
+        // 10 neutral moods
         TOLERANT(0, Alignment.NEUTRAL, -20),
         BORED(0, Alignment.NEUTRAL, -20),
         IMPASSIVE(0, Alignment.NEUTRAL, -20),
@@ -61,14 +65,21 @@ public record TardisMood(Moods moods, Alignment type, int weight) {
         MANIC(0, Alignment.NEUTRAL, -20),
         CURIOUS(0, Alignment.NEUTRAL, 20),
         LONELY(0, Alignment.NEUTRAL, -20),
-        ANXIOUS(0, Alignment.NEUTRAL, -20),
+        INDIFFERENT(0, Alignment.NEUTRAL, 0),
+        MEDIOCRE(0, Alignment.NEUTRAL, 0),
+        TIRED(0, Alignment.NEUTRAL, 10),
 
-        // 5 positive moods
+        // 10 positive moods
         HAPPY(0, Alignment.POSITIVE),
         EXCITED(0, Alignment.POSITIVE),
         COOPERATIVE(0, Alignment.POSITIVE),
         HOPEFUL(0, Alignment.POSITIVE),
-        GRATEFUL(0, Alignment.POSITIVE);
+        GRATEFUL(0, Alignment.POSITIVE),
+        ENTHUSIASTIC(0, Alignment.POSITIVE),
+        RELIEVED(0, Alignment.POSITIVE),
+        CONTENT(0, Alignment.POSITIVE),
+        OPTIMISTIC(0, Alignment.POSITIVE),
+        JOYFUL(0, Alignment.POSITIVE);
 
         public static final Moods[] VALUES = Moods.values();
 
