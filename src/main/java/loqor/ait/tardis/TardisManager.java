@@ -1,9 +1,6 @@
 package loqor.ait.tardis;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
@@ -179,7 +176,15 @@ public abstract class TardisManager<T extends Tardis, C> {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T readTardis(Gson gson, String json) {
+	protected T readTardis(Gson gson, String raw) {
+		T tardis = (T) gson.fromJson(raw, Tardis.class);
+		Tardis.init(tardis, TardisComponent.InitContext.deserialize());
+
+		return tardis;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected T readTardis(Gson gson, JsonObject json) {
 		T tardis = (T) gson.fromJson(json, Tardis.class);
 		Tardis.init(tardis, TardisComponent.InitContext.deserialize());
 

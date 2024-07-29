@@ -6,6 +6,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -21,16 +22,25 @@ import java.util.Random;
 
 public sealed interface CrashableTardisTravel permits TravelHandler {
 
+    Tardis tardis();
     TravelHandlerBase.State getState();
+
+    void resetHammerUses();
+    int getHammerUses();
+
     boolean isCrashing();
     void setCrashing(boolean value);
-    int speed();
 
-    Tardis tardis();
+    int speed();
+    void speed(int speed);
+
+    BoolValue antigravs();
+
     void forceRemat();
 
     DirectedGlobalPos.Cached position();
     DirectedGlobalPos.Cached getProgress();
+
     void destination(DirectedGlobalPos.Cached cached);
 
     /**
@@ -42,8 +52,8 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
             return;
 
         Tardis tardis = this.tardis();
-        int power = this.speed() + tardis.tardisHammerAnnoyance + 1;
 
+        int power = this.speed() + this.getHammerUses() + 1;
         List<Explosion> explosions = new ArrayList<>();
 
         tardis.getDesktop().getConsolePos().forEach(console -> {
@@ -88,12 +98,12 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
 
         tardis.door().setLocked(true);
         PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
-        tardis.travel().antigravs().set(false);
+        this.antigravs().set(false);
 
-        tardis.travel().speed(0);
+        this.speed(0);
         tardis.removeFuel(500 * power);
 
-        tardis.tardisHammerAnnoyance = 0;
+        this.resetHammerUses();
 
         this.setCrashing(true);
         this.destination(TravelUtil.jukePos(this.getProgress(), 10, 100, power));

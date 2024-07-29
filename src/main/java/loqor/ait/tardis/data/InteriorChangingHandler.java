@@ -5,7 +5,6 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
@@ -22,9 +21,8 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
     public static final String IS_REGENERATING = "is_regenerating";
 	public static final String QUEUED_INTERIOR = "queued_interior";
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
-    private int ticks;
 
-	public InteriorChangingHandler() {
+    public InteriorChangingHandler() {
 		super(Id.INTERIOR);
 	}
 
@@ -53,14 +51,6 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		return PropertiesHandler.getBool(this.tardis().properties(), IS_REGENERATING);
 	}
 
-	private void setTicks(int var) {
-		this.ticks = var;
-	}
-
-	public int getTicks() {
-		return this.ticks;
-	}
-
 	private void setQueuedInterior(TardisDesktopSchema schema) {
 		PropertiesHandler.set(this.tardis(), QUEUED_INTERIOR, schema.id());
 	}
@@ -70,8 +60,6 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	}
 
 	public void queueInteriorChange(TardisDesktopSchema schema) {
-		Tardis tardis = this.tardis();
-
 		if (!this.canQueue())
 			return;
 
@@ -85,20 +73,18 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		AITMod.LOGGER.info("Queueing interior change for {} to {}", this.tardis, schema);
 
 		setQueuedInterior(schema);
-		setTicks(0);
 		setGenerating(true);
+
 		DeltaTimeManager.createDelay("interior_change-" + tardis.getUuid().toString(), 100L);
 		tardis.alarm().enable();
 
 		tardis.getDesktop().getConsolePos().clear();
 
 		if (!tardis.hasGrowthDesktop())
-			tardis.removeFuel(5000 * (tardis.tardisHammerAnnoyance + 1));
+			tardis.removeFuel(5000 * tardis.travel().instability());
 	}
 
 	private void onCompletion() {
-		Tardis tardis = this.tardis();
-
         this.setGenerating(false);
 		clearedOldInterior = false;
 

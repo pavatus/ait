@@ -46,7 +46,7 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
 	}
 
 	protected ConsoleVariantSchema(Identifier parent, Identifier id) {
-		this(parent, id, Loyalty.MIN);
+		this(parent, id, null);
 	}
 
 	@Override
@@ -57,6 +57,11 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
 	@Override
 	public Loyalty getRequirement() {
 		return loyalty;
+	}
+
+	@Override
+	public boolean freebie() {
+		return this.loyalty == null;
 	}
 
 	@Override

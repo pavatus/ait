@@ -22,10 +22,11 @@ public class DatapackSonic extends SonicSchema {
                     Identifier.CODEC.fieldOf("id").forGetter(SonicSchema::id),
                     Models.CODEC.fieldOf("models").forGetter(SonicSchema::models),
 
+                    // TODO move this to an item model display type thing
                     Rendering.CODEC.optionalFieldOf("rendering")
                             .forGetter(schema -> Optional.of(schema.rendering())),
 
-                    Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN)
+                    Loyalty.CODEC.optionalFieldOf("loyalty", null)
                             .forGetter(SonicSchema::getRequirement)
             ).apply(instance, DatapackSonic::new));
 

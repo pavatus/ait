@@ -82,7 +82,11 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 		});
 	}
 
+	/**
+	 * @deprecated Use {@link Tardis#handler(IdLike)}
+	 */
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public <T extends TardisComponent> T get(IdLike id) {
 		return (T) this.handlers.get(id);
 	}

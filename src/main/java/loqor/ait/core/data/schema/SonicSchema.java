@@ -27,7 +27,7 @@ public abstract class SonicSchema extends BasicSchema implements Unlockable {
     }
 
     protected SonicSchema(Identifier id, Models models, Rendering rendering) {
-        this(id, models, rendering, Loyalty.MIN);
+        this(id, models, rendering, null);
     }
 
     @Override
@@ -38,6 +38,11 @@ public abstract class SonicSchema extends BasicSchema implements Unlockable {
     @Override
     public Loyalty getRequirement() {
         return loyalty;
+    }
+
+    @Override
+    public boolean freebie() {
+        return this.loyalty == null;
     }
 
     @Override

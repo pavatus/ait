@@ -51,9 +51,6 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     public boolean tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
         boolean success = false;
         for (T schema : REGISTRY.values()) {
-            if (schema.getRequirement() == Loyalty.MIN || schema.freebie())
-                continue;
-
             if (tardis.isUnlocked(schema))
                 continue;
 

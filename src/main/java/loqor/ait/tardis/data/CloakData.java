@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import net.minecraft.server.MinecraftServer;
 
 public class CloakData extends TardisComponent implements TardisTickable {
@@ -31,16 +32,17 @@ public class CloakData extends TardisComponent implements TardisTickable {
 
 	@Override
 	public void tick(MinecraftServer server) {
-
-		if (this.isEnabled() && !tardis().engine().hasPower())
-			this.disable();
-
 		if (!this.isEnabled())
 			return;
 
-		if (tardis.travel().position().getPos() == null)
+		if (!this.tardis.engine().hasPower())
+			this.disable();
+
+		TravelHandler travel = this.tardis.travel();
+
+		if (travel.position().getPos() == null)
 			return;
 
-		this.tardis().removeFuel(2 * (this.tardis().tardisHammerAnnoyance + 1)); // idle drain of 2 fuel per tick
+		this.tardis.removeFuel(2 * travel.instability()); // idle drain of 2 fuel per tick
 	}
 }

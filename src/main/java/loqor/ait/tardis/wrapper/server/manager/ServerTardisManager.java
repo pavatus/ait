@@ -13,7 +13,6 @@ import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.mood.MoodHandler;
-import loqor.ait.tardis.data.mood.TardisMood;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -26,17 +25,16 @@ import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -292,5 +290,18 @@ public class ServerTardisManager extends BufferedTardisManager<ServerTardis, Ser
 
 	public static ServerTardisManager getInstance() {
 		return instance;
+	}
+
+	public static ServerPlayNetworking.PlayChannelHandler receiveTardis(Receiver receiver) {
+		return (server, player, handler, buf, responseSender) -> {
+			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(),
+					tardis -> receiver.receive(tardis, server, player, handler, buf, responseSender));
+		};
+	}
+
+	@FunctionalInterface
+	public interface Receiver {
+		void receive(ServerTardis tardis, MinecraftServer server, ServerPlayerEntity player,
+					 ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender);
 	}
 }

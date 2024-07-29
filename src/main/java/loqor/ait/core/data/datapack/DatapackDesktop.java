@@ -19,7 +19,7 @@ public class DatapackDesktop extends TardisDesktopSchema {
 	public static final Codec<TardisDesktopSchema> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
 					Identifier.CODEC.fieldOf("id").forGetter(TardisDesktopSchema::id),
-					Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN)
+					Loyalty.CODEC.optionalFieldOf("loyalty", null)
 							.forGetter(TardisDesktopSchema::getRequirement)
 			).apply(instance, (DatapackDesktop::new)));
 
@@ -35,13 +35,11 @@ public class DatapackDesktop extends TardisDesktopSchema {
 		AtomicReference<TardisDesktopSchema> created = new AtomicReference<>();
 
 		CODEC.decode(JsonOps.INSTANCE, json)
-				.get()
-				.ifLeft(desktop -> {
+				.get().ifLeft(desktop -> {
 					created.set(desktop.getFirst());
-				})
-				.ifRight(err -> {
+				}).ifRight(err -> {
 					created.set(null);
-					AITMod.LOGGER.error("Error decoding datapack desktop: " + err);
+                    AITMod.LOGGER.error("Error decoding datapack desktop: {}", err);
 				});
 
 		return created.get();

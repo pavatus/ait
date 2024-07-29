@@ -1,6 +1,5 @@
 package loqor.ait.tardis;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -9,7 +8,6 @@ import loqor.ait.tardis.base.Initializable;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -20,6 +18,9 @@ import java.util.UUID;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> implements Disposable {
 
+	@Exclude(strategy = Exclude.Strategy.NETWORK)
+	protected int version = 1;
+
 	@Exclude private boolean disposed = false;
 	@Exclude private boolean aged = false;
 
@@ -27,17 +28,12 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	protected TardisDesktop desktop;
 	protected TardisExterior exterior;
 	protected TardisHandlersManager handlers;
-	protected int VERSION_SCHEMA = 1;
-
-	public int tardisHammerAnnoyance = 0; // todo move :(
 
 	protected Tardis(UUID uuid, TardisDesktop desktop, TardisExterior exterior) {
 		this.uuid = uuid;
 		this.desktop = desktop;
 		this.exterior = exterior;
 		this.handlers = new TardisHandlersManager();
-
-		tardisHammerAnnoyance = 0;
 	}
 
 	protected Tardis() { }
@@ -47,8 +43,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		TardisComponent.init(desktop, this, ctx);
 		TardisComponent.init(exterior, this, ctx);
 		TardisComponent.init(handlers, this, ctx);
-		// Idk if this should be here but oh well cry about it
-		AITMod.LOGGER.info("Tardis Schema Version: {}", this.VERSION_SCHEMA);
 	}
 
 	@Override
@@ -130,18 +124,11 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.handlers.get(type);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		return this == o;
-	}
-
-	@Override
+    @Override
 	public int hashCode() {
 		return uuid.hashCode();
 	}
 
-	// todo clean up all this
-	// fuel - because getHandlers() blah blah is annoying me
 	public double addFuel(double fuel) {
 		return this.<FuelData>handler(TardisComponent.Id.FUEL).addFuel(fuel);
 	}
@@ -191,7 +178,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public boolean isUnlocked(Unlockable unlockable) {
-		return unlockable.getRequirement() == Loyalty.MIN || unlockable.freebie() || this.stats().isUnlocked(unlockable);
+		return unlockable.freebie() || this.stats().isUnlocked(unlockable);
 	}
 
 	// for now this just checks that the exterior is the coral growth, which is bad. but its fine for first beta

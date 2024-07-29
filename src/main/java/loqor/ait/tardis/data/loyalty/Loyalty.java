@@ -13,9 +13,6 @@ public record Loyalty(int level, Type type) {
                     Codec.INT.optionalFieldOf("level").forGetter(loyalty -> Optional.of(loyalty.level))
             ).apply(instance, (Loyalty::deserialize)));
 
-    @Deprecated
-    public static final Loyalty MIN = new Loyalty(Type.REJECT);
-
     public Loyalty(Type type) {
         this(type.level, type);
     }

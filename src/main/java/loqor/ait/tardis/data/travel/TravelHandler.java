@@ -26,7 +26,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 public non-sealed class TravelHandler extends ProgressiveTravelHandler implements CrashableTardisTravel {
 

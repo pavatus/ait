@@ -3,8 +3,13 @@ package loqor.ait.tardis.data.travel;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
+import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
@@ -24,7 +29,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings("removal")
-public abstract class TravelHandlerBase extends KeyedTardisComponent {
+public abstract class TravelHandlerBase extends KeyedTardisComponent implements TardisTickable {
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
 
@@ -48,6 +53,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
 
     protected final IntValue speed = SPEED.create(this);
     protected final IntValue maxSpeed = MAX_SPEED.create(this);
+
+    @Exclude(strategy = Exclude.Strategy.NETWORK)
+    protected int hammerUses = 0;
 
     public TravelHandlerBase(Id id) {
         super(id);
@@ -77,6 +85,20 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         this.previousPosition.ifPresent(cached -> cached.init(current), false);
     }
 
+    @Override
+    public void tick(MinecraftServer server) {
+        TardisCrashData crash = tardis.crash();
+
+        if (crash.getState() != TardisCrashData.State.NORMAL)
+            crash.addRepairTicks(2 * this.speed());
+
+        if (this.hammerUses > 0 && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
+            this.hammerUses--;
+
+            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay", (long) TimeUtil.secondsToMilliseconds(10));
+        }
+    }
+
     public void speed(int value) {
         this.speed.set(this.clampSpeed(value));
     }
@@ -101,16 +123,32 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent {
         return this.position.get();
     }
 
-    public boolean isCrashing() {
-        return crashing.get();
-    }
-
     public BoolValue antigravs() {
         return antigravs;
     }
 
+    public boolean isCrashing() {
+        return crashing.get();
+    }
+
     public void setCrashing(boolean crashing) {
         this.crashing.set(crashing);
+    }
+
+    public int getHammerUses() {
+        return hammerUses;
+    }
+
+    public int instability() {
+        return this.getHammerUses() + 1;
+    }
+
+    public void useHammer() {
+        this.hammerUses++;
+    }
+
+    public void resetHammerUses() {
+        this.hammerUses = 0;
     }
 
     public void forcePosition(DirectedGlobalPos.Cached cached) {

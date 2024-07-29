@@ -54,7 +54,7 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	}
 
 	protected ExteriorVariantSchema(Identifier category, Identifier id) {
-		this(category, id, Loyalty.MIN);
+		this(category, id, null);
 	}
 
 	@Override
@@ -65,6 +65,11 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	@Override
 	public Loyalty getRequirement() {
 		return loyalty;
+	}
+
+	@Override
+	public boolean freebie() {
+		return this.loyalty == null;
 	}
 
 	@Override

@@ -28,6 +28,8 @@ import net.minecraft.world.gen.structure.StructureKeys;
 
 public class TelepathicControl extends Control {
 
+	private static final int RADIUS = 256;
+
 	public TelepathicControl() {
 		super("telepathic_circuit");
 	}
@@ -82,15 +84,12 @@ public class TelepathicControl extends Control {
 	public static void locateStructureOfInterest(ServerPlayerEntity player, Tardis tardis, ServerWorld world, BlockPos source) {
 		// TODO - create a tag "TardisStructureLikesTag" to save on performance + to make this code simpler
 
-		int radius = 256;
-
 		if (world.getRegistryKey() == World.NETHER) {
-			getStructureViaChunkGen(player, tardis, world, source, radius, StructureKeys.FORTRESS);
-			// getStructureViaChunkGen(player, tardis, world, source, radius, StructureKeys.BASTION_REMNANT); TODO idfk what to do with this one
+			getStructureViaChunkGen(player, tardis, world, source, RADIUS, StructureKeys.FORTRESS);
 		} else if (world.getRegistryKey() == World.END) {
-			getStructureViaChunkGen(player, tardis, world, source, radius, StructureKeys.END_CITY);
+			getStructureViaChunkGen(player, tardis, world, source, RADIUS, StructureKeys.END_CITY);
 		} else if (world.getRegistryKey() == World.OVERWORLD) {
-			getStructureViaWorld(player, tardis, world, source, radius, StructureTags.VILLAGE);
+			getStructureViaWorld(player, tardis, world, source, RADIUS, StructureTags.VILLAGE);
 		}
 	}
 
@@ -116,12 +115,12 @@ public class TelepathicControl extends Control {
 	}
 
 	public static void locateWithChunkGenAsync(ServerPlayerEntity player, Tardis tardis, RegistryEntryList<Structure> structureList, ServerWorld world, BlockPos center, int radius) {
-		AsyncLocatorUtil.locate(world, structureList, center, radius, true /* this is whether it should ignore previously found structures. Should this be false? idfk */)
+		AsyncLocatorUtil.locate(world, structureList, center, radius, false)
 				.thenOnServerThread(pos -> {
 					BlockPos newPos = pos != null ? pos.getFirst() : null;
 			if (newPos != null) {
 				tardis.travel().destination(cached -> cached.pos(newPos.withY(75)));
-				tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
+				tardis.removeFuel(500 * tardis.travel().getHammerUses());
 				player.sendMessage(Text.translatable("tardis.message.control.telepathic.success"), true);
 			} else {
 				player.sendMessage(Text.translatable("tardis.message.control.telepathic.failed"), true);
@@ -130,12 +129,11 @@ public class TelepathicControl extends Control {
 	}
 
 	public static void locateWithWorldAsync(ServerPlayerEntity player, Tardis tardis, TagKey<Structure> structureTagKey, ServerWorld world, BlockPos center, int radius) {
-		System.out.println("is this working...?");
-		AsyncLocatorUtil.locate(world, structureTagKey, center, radius, true /* this is whether it should ignore previously found structures. Should this be false? idfk */)
+		AsyncLocatorUtil.locate(world, structureTagKey, center, radius, false)
 				.thenOnServerThread(pos -> {
 			if (pos != null) {
 				tardis.travel().destination(cached -> cached.pos(pos.withY(75)));
-				tardis.removeFuel(500 * (tardis.tardisHammerAnnoyance + 1));
+				tardis.removeFuel(500 * tardis.travel().instability());
 				player.sendMessage(Text.translatable("tardis.message.control.telepathic.success"), true);
 			} else {
 				player.sendMessage(Text.translatable("tardis.message.control.telepathic.failed"), true);

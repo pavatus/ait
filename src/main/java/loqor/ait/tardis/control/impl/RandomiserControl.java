@@ -32,7 +32,7 @@ public class RandomiserControl extends Control {
 
 		world.getServer().execute(() -> {
 			tardis.travel().destination(TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis)));
-			tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * (tardis.tardisHammerAnnoyance + 1));
+			tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
 
 			messagePlayer(player, travel);
 		});

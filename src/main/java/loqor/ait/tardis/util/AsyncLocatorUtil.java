@@ -21,9 +21,8 @@ import java.util.function.Consumer;
  * @implNote This is pretty much copy-pasted from <a href="https://github.com/thebrightspark/AsyncLocator/blob/1.20.x/Common/src/main/java/brightspark/asynclocator/AsyncLocator.java">...</a>
  */
 public class AsyncLocatorUtil {
-    private static ExecutorService LOCATING_EXECUTOR_SERVICE = null;
 
-    private AsyncLocatorUtil() {}
+    private static ExecutorService LOCATING_EXECUTOR_SERVICE = null;
 
     public static void setupExecutorService() {
         shutdownExecutorService();

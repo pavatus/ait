@@ -41,7 +41,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
 					Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
 					Identifier.CODEC.fieldOf("biomeTexturePath").forGetter(DatapackExterior::getBiomeTexturePath),
 					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack),
-					Loyalty.CODEC.optionalFieldOf("loyalty", Loyalty.MIN).forGetter(DatapackExterior::getRequirement)
+					Loyalty.CODEC.optionalFieldOf("loyalty", null).forGetter(DatapackExterior::getRequirement)
 			).apply(instance, DatapackExterior::new));
 
 	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Loyalty loyalty) {

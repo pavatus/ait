@@ -81,8 +81,8 @@ public class AITMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> AsyncLocatorUtil.setupExecutorService());
-		ServerLifecycleEvents.SERVER_STOPPING.register(server -> AsyncLocatorUtil.shutdownExecutorService());
+		AsyncLocatorUtil.setupExecutorService();
+
 		ConsoleRegistry.init();
 		HumsRegistry.init();
 		CreakRegistry.init();
@@ -157,70 +157,65 @@ public class AITMod implements ModInitializer {
 				AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f)
 		);
 
-		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ((server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
+		ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP, ServerTardisManager.receiveTardis(
+				((tardis, server, player, handler, buf, responseSender) -> {
+            TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
 
-				if (tardis == null || desktop == null)
-					return;
+            if (tardis == null || desktop == null)
+                return;
 
-				// nuh uh no interior changing during flight
-				if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
-					return;
+            // nuh uh no interior changing during flight
+            if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+                return;
 
-				tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
-			});
-		}));
+            tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
+        })));
 
-		ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ((server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
+		ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE, ServerTardisManager.receiveTardis(
+				(tardis, server, player, handler, buf, responseSender) -> {
+            HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
 
-				if (tardis == null || hum == null)
-					return;
+            if (tardis == null || hum == null)
+                return;
 
-				tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
-			});
-		}));
+            tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
+        }));
 
-		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, (server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				BlockPos console = buf.readBlockPos();
+		ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE, ServerTardisManager.receiveTardis(
+				(tardis, server, player, handler, buf, responseSender) -> {
+					BlockPos console = buf.readBlockPos();
 
-				server.execute(() -> {
-					if (tardis == null)
-						return;
+					server.execute(() -> {
+						if (tardis == null)
+							return;
 
-					tardis.getDesktop().cacheConsole(console);
-				});
-			});
-		});
+						tardis.getDesktop().cacheConsole(console);
+					});
+				}));
 
-		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, (server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				boolean behind = buf.readBoolean();
+		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, ServerTardisManager.receiveTardis(
+				(tardis, server, player, handler, buf, responseSender) -> {
+					boolean behind = buf.readBoolean();
 
-				server.execute(() -> {
-					if (tardis == null)
-						return;
+					server.execute(() -> {
+						if (tardis == null)
+							return;
 
-					PropertiesHandler.set(tardis, PropertiesHandler.LEAVE_BEHIND, behind);
-				});
-			});
-		});
+						PropertiesHandler.set(tardis, PropertiesHandler.LEAVE_BEHIND, behind);
+					});
+				}));
 
-		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, (server, player, handler, buf, responseSender) -> {
-			ServerTardisManager.getInstance().getTardis(server, buf.readUuid(), tardis -> {
-				boolean hostile = buf.readBoolean();
+		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, ServerTardisManager.receiveTardis(
+				(tardis, server, player, handler, buf, responseSender) -> {
+					boolean hostile = buf.readBoolean();
 
-				server.execute(() -> {
-					if (tardis == null)
-						return;
+					server.execute(() -> {
+						if (tardis == null)
+							return;
 
-					PropertiesHandler.set(tardis, PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
-				});
-			});
-		});
+						PropertiesHandler.set(tardis, PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+					});
+				}));
 
 		ServerPlayNetworking.registerGlobalReceiver(MachineItem.MACHINE_DISASSEMBLE, (server, player, handler, buf, responseSender) -> {
 			ItemStack machine = buf.readItemStack();
@@ -258,8 +253,10 @@ public class AITMod implements ModInitializer {
 
 		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
 			AIT_CONFIG.save();
+			AsyncLocatorUtil.shutdownExecutorService();
 		});
 
+		// TODO move to either TardisCriterions or one of TravelHandlers'
 		TardisEvents.DEMAT.register(tardis -> {
 			for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 				TardisCriterions.TAKEOFF.trigger(player);

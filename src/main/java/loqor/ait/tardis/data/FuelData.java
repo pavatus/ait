@@ -11,6 +11,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
@@ -91,11 +92,13 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 
 	@Override
 	public void tick(MinecraftServer server) {
-
 		ServerTardis tardis = (ServerTardis) this.tardis();
-		DirectedGlobalPos.Cached pos = tardis.travel().position();
+		TravelHandler travel = tardis.travel();
+
+		DirectedGlobalPos.Cached pos = travel.position();
 		World world = pos.getWorld();
-		TravelHandlerBase.State state = tardis.travel().getState();
+
+		TravelHandlerBase.State state = travel.getState();
 
 		if (state == TravelHandlerBase.State.LANDED) {
 			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
@@ -110,24 +113,24 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 
 			if (!isRefueling() && !isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel(0.25 * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel(0.25 * travel.instability());
 			}
 		}
 
 		if (state == TravelHandlerBase.State.FLIGHT) {
 			if (!isDrainOnDelay(tardis)) {
 				createDrainDelay(tardis);
-				removeFuel((4 ^ (tardis.travel().speed())) * (tardis.tardisHammerAnnoyance + 1));
+				removeFuel((4 ^ travel.speed()) * travel.instability());
 			}
 
 			// TODO: make a crash method to avoid isGrowth checks outside of interiorchanginghandler
 			if (!tardis.engine().hasPower() && !tardis.isGrowth())
-				  this.tardis.travel().crash(); // hehe force land if you don't have enough fuel
+				  travel.crash(); // hehe force land if you don't have enough fuel
 		}
 
 		if ((state == TravelHandlerBase.State.DEMAT || state == TravelHandlerBase.State.MAT) && !isDrainOnDelay(tardis)) {
 			createDrainDelay(tardis);
-			removeFuel(5 * (tardis.tardisHammerAnnoyance + 1));
+			removeFuel(5 * travel.instability());
 		}
 	}
 }

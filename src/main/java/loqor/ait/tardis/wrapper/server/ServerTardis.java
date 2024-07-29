@@ -58,11 +58,6 @@ public class ServerTardis extends Tardis {
 			DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay", (long) TimeUtil.minutesToMilliseconds(new Random().nextInt(7, 9)));
 		}
 
-		if (this.tardisHammerAnnoyance > 0 && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
-			this.tardisHammerAnnoyance--;
-			DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay", (long) TimeUtil.secondsToMilliseconds(10));
-		}
-
 		// @TODO if tnt explodes in the interior (near the console), then it should crash
 		if (this.isGrowth() && server.getTicks() % 10 == 0)
 			this.generateInteriorWithItem();

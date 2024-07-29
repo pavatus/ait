@@ -108,7 +108,9 @@ public class SiegeData extends KeyedTardisComponent implements TardisTickable {
 			TardisDesktop.playSoundAtConsole(console, sound, SoundCategory.BLOCKS, 3f, 1f);
 		}
 
-		this.tardis.removeFuel((0.01 * FuelData.TARDIS_MAX_FUEL) * (this.tardis.tardisHammerAnnoyance + 1));
+		this.tardis.removeFuel((0.01 * FuelData.TARDIS_MAX_FUEL)
+				* (this.tardis.travel().getHammerUses() + 1));
+
 		this.active.set(siege);
 	}
 

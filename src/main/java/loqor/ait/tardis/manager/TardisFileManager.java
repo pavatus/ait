@@ -1,13 +1,11 @@
 package loqor.ait.tardis.manager;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.util.JsonObjectTransform;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
@@ -18,7 +16,6 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-// Sadly not a file manager for Linux - that would be kinda sick though - TARDIS meaning bigger on the inside.
 public class TardisFileManager<T extends Tardis> {
 
     private boolean locked = false;
@@ -27,7 +24,7 @@ public class TardisFileManager<T extends Tardis> {
         try {
             Files.deleteIfExists(TardisFileManager.getSavePath(server, uuid, "json"));
         } catch (IOException e) {
-            AITMod.LOGGER.error("Failed to delete TARDIS " + uuid, e);
+            AITMod.LOGGER.error("Failed to delete TARDIS {}", uuid, e);
         }
     }
 
@@ -54,11 +51,18 @@ public class TardisFileManager<T extends Tardis> {
 
         try {
             Path file = TardisFileManager.getSavePath(server, uuid, "json");
-            String json = Files.readString(file);
+            String raw = Files.readString(file);
+
+            JsonObject object = JsonParser.parseString(raw).getAsJsonObject();
 
             // TODO letting the autistic do it because im not taking my fucking ritalin at 1 in the morning to do a dumbass menial task of replacing a bunch of json info
             // this is a dumb way of doing it. do it fucking better.
             // i thought programming was supposed to be simplifying processes not making me do more <3333 - Loqor
+
+            // i am not autistic
+            // also this is life, should've made it better from the start
+            // not your fault tho, i blame duzo
+            //                          - Theo
 
             /*JsonElement element = JsonParser.parseString(json);
             JsonObject object = element.getAsJsonObject();
@@ -68,7 +72,7 @@ public class TardisFileManager<T extends Tardis> {
             if (version == 0)
                 new JsonObjectTransform(object).transform();*/
 
-            T tardis = function.apply(manager.getFileGson(), json);
+            T tardis = function.apply(manager.getFileGson(), object);
             consumer.accept(tardis);
 
             AITMod.LOGGER.info("Deserialized {} in {}ms", tardis, System.currentTimeMillis() - start);
@@ -86,7 +90,7 @@ public class TardisFileManager<T extends Tardis> {
             Path savePath = TardisFileManager.getSavePath(server, tardis.getUuid(), "json");
             Files.writeString(savePath, manager.getFileGson().toJson(tardis, ServerTardis.class));
         } catch (IOException e) {
-            AITMod.LOGGER.warn("Couldn't save TARDIS " + tardis.getUuid(), e);
+            AITMod.LOGGER.warn("Couldn't save TARDIS {}", tardis.getUuid(), e);
         }
     }
 
@@ -100,6 +104,6 @@ public class TardisFileManager<T extends Tardis> {
 
     @FunctionalInterface
     public interface TardisLoader<T> {
-        T apply(Gson gson, String name);
+        T apply(Gson gson, JsonObject object);
     }
 }

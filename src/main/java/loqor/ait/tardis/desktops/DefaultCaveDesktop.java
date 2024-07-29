@@ -10,7 +10,7 @@ public class DefaultCaveDesktop extends TardisDesktopSchema {
 
 	public DefaultCaveDesktop() {
 		super(new Identifier(AITMod.MOD_ID, "default_cave"), new DesktopPreviewTexture(
-				DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "cave"))), Loyalty.MIN);
+				DesktopPreviewTexture.pathFromDesktopId(new Identifier(AITMod.MOD_ID, "cave"))), null);
 	}
 
 	@Override // fixme doesnt work
