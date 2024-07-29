@@ -103,6 +103,8 @@ public class MoodEventPoolRegistry {
             tardis.travel().autopilot(true);
         }, 128, TardisMood.MoodType.NEUTRAL));
 
+        // TODO: should make this happen when a low loyalty player approaches the TARDIS
+
         LOCK_DOORS = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "lock_doors"), (tardis) -> {
             tardis.door().setLocked(true);
             if (tardis.getDesktop().doorPos() != null)

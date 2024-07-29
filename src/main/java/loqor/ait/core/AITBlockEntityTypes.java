@@ -26,6 +26,7 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
     public static BlockEntityType<FabricatorBlockEntity> FABRICATOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(FabricatorBlockEntity::new, AITBlocks.FABRICATOR).build();
     public static BlockEntityType<EnvironmentProjectorBlockEntity> ENVIRONMENT_PROJECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(EnvironmentProjectorBlockEntity::new, AITBlocks.ENVIRONMENT_PROJECTOR).build();
     public static BlockEntityType<WaypointBankBlockEntity> WAYPOINT_BANK_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(WaypointBankBlockEntity::new, AITBlocks.WAYPOINT_BANK_BLOCK).build();
+    public static BlockEntityType<LandingPadBlockEntity> LANDING_PAD_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(LandingPadBlockEntity::new, AITBlocks.LANDING_PAD_BLOCK).build();
 
     public static final BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder.create(
             AITRadioBlockEntity::new, AITBlocks.RADIO).build();
