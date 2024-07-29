@@ -123,6 +123,7 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 		long start = System.currentTimeMillis();
 		ClientTardis tardis = this.readTardis(this.networkGson, json);
 		AITMod.LOGGER.info("Received {}", tardis);
+		// AITMod.LOGGER.info("Received JSON file {}", json);
 
 		synchronized (this) {
 			this.updateAge(tardis);
