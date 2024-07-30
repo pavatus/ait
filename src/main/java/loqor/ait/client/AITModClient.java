@@ -311,6 +311,7 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE, FabricatorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE, WaypointBankBlockEntityRenderer::new);
     }
 
     public static void entityRenderRegister() {
@@ -331,5 +332,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
+        map.putBlock(AITBlocks.WAYPOINT_BANK_BLOCK, RenderLayer.getCutout());
     }
 }

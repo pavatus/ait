@@ -16,7 +16,7 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
 public class WaypointBankBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
-    public static final VoxelShape SHAPE = VoxelShapes.cuboid(0.0F, 0.0F, 0.0F, 16.0F, 32.0F, 16.0F);
+    public static final VoxelShape SHAPE = VoxelShapes.cuboid(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 1.0F);
     public WaypointBankBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
@@ -53,7 +53,7 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.INVISIBLE;
+        return BlockRenderType.MODEL;
     }
 
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
