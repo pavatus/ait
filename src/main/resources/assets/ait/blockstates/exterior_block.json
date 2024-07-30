@@ -1,6 +1,6 @@
 {
   "variants": {
-    "all": {
+    "": {
       "model": "ait:block/exterior_block"
     }
   }

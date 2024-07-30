@@ -15,14 +15,6 @@
     "facing=north": {
       "model": "ait:block/fabricator",
       "y": 0
-    },
-    "facing=up": {
-      "model": "ait:block/fabricator",
-      "y": 0
-    },
-    "facing=down": {
-      "model": "ait:block/fabricator",
-      "y": 0
     }
   }
 }

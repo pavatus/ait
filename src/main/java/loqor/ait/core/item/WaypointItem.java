@@ -4,6 +4,8 @@ import loqor.ait.core.AITItems;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.tardis.control.impl.waypoint.LoadWaypointControl;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.DyeableItem;
@@ -49,7 +51,7 @@ public class WaypointItem extends Item implements DyeableItem {
 		DirectedGlobalPos globalPos = DirectedGlobalPos.fromNbt(nbt);
 
 		BlockPos pos = globalPos.getPos();
-		Direction dir = Direction.byId(globalPos.getRotation());
+		String dir = DirectionControl.rotationToDirection(globalPos.getRotation());
 		RegistryKey<World> dimension = globalPos.getDimension();
 
 		tooltip.add(Text.translatable("waypoint.position.tooltip").append(Text.literal(
@@ -57,7 +59,7 @@ public class WaypointItem extends Item implements DyeableItem {
 				.formatted(Formatting.BLUE));
 
 		tooltip.add(Text.translatable("waypoint.direction.tooltip").append(Text.literal(
-						" > " + dir.asString().toUpperCase()))
+						" > " + dir.toUpperCase()))
 				.formatted(Formatting.BLUE));
 
 		tooltip.add(Text.translatable("waypoint.dimension.tooltip").append(Text.literal(

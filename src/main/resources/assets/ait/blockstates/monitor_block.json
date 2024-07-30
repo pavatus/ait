@@ -1,20 +1,52 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "ait:block/monitor_block",
-      "y": 180
+    "rotation=0": {
+      "model": "ait:block/monitor_block"
     },
-    "facing=north": {
-      "model": "ait:block/monitor_block",
-      "y": 90
+    "rotation=1": {
+      "model": "ait:block/monitor_block"
     },
-    "facing=south": {
-      "model": "ait:block/monitor_block",
-      "y": 270
+    "rotation=2": {
+      "model": "ait:block/monitor_block"
     },
-    "facing=west": {
-      "model": "ait:block/monitor_block",
-      "y": 0
+    "rotation=3": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=4": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=5": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=6": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=7": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=8": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=9": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=10": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=11": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=12": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=13": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=14": {
+      "model": "ait:block/monitor_block"
+    },
+    "rotation=15": {
+      "model": "ait:block/monitor_block"
     }
   }
 }
