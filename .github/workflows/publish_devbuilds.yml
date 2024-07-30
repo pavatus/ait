@@ -9,7 +9,7 @@ name: Automated donator builds
 
 on:
   push:
-    branches: [ "main", "travel-rewrite" ]
+    branches: [ "main", "DrTheodor/manager-rewrite" ]
 
 jobs:
   build:
