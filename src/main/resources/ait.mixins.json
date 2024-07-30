@@ -12,7 +12,6 @@
     "lookup.SectionedEntityCacheAccessor",
     "lookup.SimpleEntityLookupAccessor",
     "lookup.WorldInvoker",
-    "networking.ChunkHolderAccessor",
     "networking.ServerChunkManagerAccessor",
     "networking.ThreadedAnvilChunkStorageMixin",
     "server.ItemEntityMixin",

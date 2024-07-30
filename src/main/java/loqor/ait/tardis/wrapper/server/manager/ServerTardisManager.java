@@ -11,7 +11,6 @@ import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.mixin.networking.ChunkHolderAccessor;
 import loqor.ait.mixin.networking.ServerChunkManagerAccessor;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
@@ -32,7 +31,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.math.ChunkPos;
@@ -40,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftServer> {
 
@@ -74,7 +71,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         });
 
         TardisEvents.UNLOAD_TARDIS.register((player, chunk) -> {
-            AITMod.LOGGER.info("Un-loading buffer at chunk {}", chunk);
+            AITMod.LOGGER.info("Un-loading tardises at chunk {}", chunk);
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -91,8 +88,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                 ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
 
                 ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
-                ChunkHolder holder = ((ServerChunkManagerAccessor) chunkManager).ait$chunkHolder(chunkPos.toLong());
-                ThreadedAnvilChunkStorage storage = (ThreadedAnvilChunkStorage) ((ChunkHolderAccessor) holder).getPlayersWatchingChunkProvider();
+
+                ThreadedAnvilChunkStorage storage = ((ServerChunkManagerAccessor) chunkManager)
+                        .getThreadedAnvilChunkStorage();
 
                 List<ServerPlayerEntity> players = new ArrayList<>();
 
@@ -117,11 +115,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void sendTardis(ServerPlayerEntity player, Tardis tardis) {
-        if (tardis == null || this.networkGson == null)
-            return;
-
-        if (this.fileManager.isLocked()) return;
-
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(tardis.getUuid());
         data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
@@ -133,7 +126,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         if (tardis == null || this.networkGson == null)
             return;
 
-        if (this.fileManager.isLocked()) return;
+        if (this.fileManager.isLocked())
+            return;
+
         this.buffer.add(tardis);
     }
 
@@ -206,7 +201,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     public void unmark(Tardis tardis, ChunkPos chunk) {
         AITMod.LOGGER.info("Unmarked tardis {} at {}", tardis, chunk);
         Set<Tardis> set = this.tardisChunks.get(chunk);
-        if (set == null) return;
+        if (set == null)
+            return;
+
         set.remove(tardis);
     }
 

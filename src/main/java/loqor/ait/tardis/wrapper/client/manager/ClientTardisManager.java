@@ -80,9 +80,8 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 		if (consumer != null)
 			this.subscribers.put(uuid, consumer);
 
-		MinecraftClient.getInstance().executeTask(() -> {
-			ClientPlayNetworking.send(ASK, data);
-		});
+		MinecraftClient.getInstance().executeTask(() ->
+				ClientPlayNetworking.send(ASK, data));
 	}
 
 	public void loadTardis(UUID uuid, @Nullable Consumer<ClientTardis> consumer) {
@@ -121,18 +120,21 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 
 	private void sync(UUID uuid, String json) {
 		long start = System.currentTimeMillis();
-		ClientTardis tardis = this.readTardis(this.networkGson, json);
-		AITMod.LOGGER.info("Received {}", tardis);
-		// AITMod.LOGGER.info("Received JSON file {}", json);
+		try {
+			ClientTardis tardis = this.readTardis(this.networkGson, json);
+			AITMod.LOGGER.info("Received {}", tardis);
 
-		synchronized (this) {
-			this.updateAge(tardis);
+			synchronized (this) {
+				this.updateAge(tardis);
 
-			for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
-				consumer.accept(tardis);
+				for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
+					consumer.accept(tardis);
+				}
+
+				AITMod.LOGGER.info("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
 			}
-
-			AITMod.LOGGER.info("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
+		} catch(Throwable t) { // FIXME debug
+			AITMod.LOGGER.info("Received JSON file {}", json);
 		}
 	}
 
@@ -188,14 +190,14 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 		String key = buf.readString();
 
 		if (!(typeId.get(tardis) instanceof KeyedTardisComponent keyed)) {
-			AITMod.LOGGER.error("Tried to update an un-keyed component: " + typeId, new IllegalAccessException());
+            AITMod.LOGGER.error("Tried to update an un-keyed component: {}", typeId, new IllegalAccessException());
 			return;
 		}
 
 		try {
 			keyed.update(key, buf, mode);
 		} catch (Exception e) {
-			AITMod.LOGGER.error("Failed to update property for component " + typeId, e);
+            AITMod.LOGGER.error("Failed to update property for component {}", typeId, e);
 		}
 	}
 

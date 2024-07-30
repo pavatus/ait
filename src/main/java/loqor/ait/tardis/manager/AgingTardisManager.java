@@ -29,7 +29,7 @@ public abstract class AgingTardisManager<T extends Tardis, C> extends TardisMana
         if (realOld == null)
             return;
 
-        AITMod.LOGGER.info("Disposing {}", realOld);
+        AITMod.LOGGER.info("(Not) Disposing {}", realOld);
         realOld.dispose();
     }
 
