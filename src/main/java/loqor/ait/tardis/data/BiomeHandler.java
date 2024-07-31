@@ -12,6 +12,11 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
+
+/**
+ * @author Loqor
+ * TODO reminder to work on this more, making it so you have to brush off different biomes if you don't just demat/remat + having to land on the respective blocks / has to snow for it to take effect.
+ */
 public class BiomeHandler extends KeyedTardisComponent {
 
     private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
