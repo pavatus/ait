@@ -16,10 +16,10 @@ public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockE
 
     @Override
     public void setWorld(World world) {
+        super.setWorld(world);
+
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
             return;
-
-        super.setWorld(world);
 
         if (this.ref != null)
             return;

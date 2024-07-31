@@ -30,16 +30,6 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
     }
 
     @Override
-    public void setWorld(World world) {
-        super.setWorld(world);
-
-        if (this.ref == null || this.ref.isEmpty())
-            return;
-
-        this.mark();
-    }
-
-    @Override
     public TardisRef tardis() {
         return ref;
     }
