@@ -124,7 +124,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
 			ClientTardis tardis = this.readTardis(this.networkGson, json);
 			tardis.travel();
-			AITMod.LOGGER.info("Received {}", tardis);
+			// AITMod.LOGGER.debug("Received {}", tardis);
 
 			synchronized (this) {
 				ClientTardis old = this.lookup.put(tardis);
@@ -136,7 +136,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 					consumer.accept(tardis);
 				}
 
-				AITMod.LOGGER.info("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
+				// AITMod.LOGGER.debug("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
 			}
 		} catch(Throwable t) {
 			AITMod.LOGGER.error("Received malformed JSON file {}", json);

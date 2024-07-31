@@ -6,6 +6,7 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,7 +23,7 @@ import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
+public class ConsoleGeneratorBlock extends Block implements BlockEntityProvider {
 
 	public ConsoleGeneratorBlock(Settings settings) {
 		super(settings);

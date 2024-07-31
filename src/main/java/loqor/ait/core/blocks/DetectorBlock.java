@@ -141,7 +141,7 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 	}
 
 	private static void tick(World world, BlockPos pos, BlockState state, DetectorBlockEntity detector) {
-		if (world.isClient() || detector.tardis().isEmpty())
+		if (world.isClient() || detector.tardis() == null || detector.tardis().isEmpty())
 			return;
 
 		updateState(state, world, pos, detector.tardis().get());

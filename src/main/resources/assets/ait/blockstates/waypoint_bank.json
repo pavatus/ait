@@ -17,16 +17,16 @@
       "y": 180
     },
     "facing=east,half=upper": {
-      "model": "minecraft:block/barrier"
+      "model": "ait:block/waypoint_bank_upper"
     },
     "facing=north,half=upper": {
-      "model": "minecraft:block/barrier"
+      "model": "ait:block/waypoint_bank_upper"
     },
     "facing=south,half=upper": {
-      "model": "minecraft:block/barrier"
+      "model": "ait:block/waypoint_bank_upper"
     },
     "facing=west,half=upper": {
-      "model": "minecraft:block/barrier"
+      "model": "ait:block/waypoint_bank_upper"
     }
   }
 }
