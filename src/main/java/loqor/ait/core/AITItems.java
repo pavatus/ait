@@ -43,25 +43,24 @@ public class AITItems implements ItemRegistryContainer {
 	public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 
 	// Machine parts
-	public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item DATA_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item DATA_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.DATA, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.VORTEX, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
 
-	public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.DATA, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.VORTEX, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.DATA, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.VORTEX, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
 
-	public static final Item CONDENSER = new MachinePartItem(MachinePartItem.Type.CONDENSER, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item MANIPULATOR = new MachinePartItem(MachinePartItem.Type.MANIPULATOR, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item BULB = new MachinePartItem(MachinePartItem.Type.BULB, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-	public static final Item INDUCTOR = new MachinePartItem(MachinePartItem.Type.INDUCTOR, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-
+	public static final Item CONDENSER = new MachinePartItem(MachinePartItem.Type.CONDENSER, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item MANIPULATOR = new MachinePartItem(MachinePartItem.Type.MANIPULATOR, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item BULB = new MachinePartItem(MachinePartItem.Type.BULB, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
+	public static final Item INDUCTOR = new MachinePartItem(MachinePartItem.Type.INDUCTOR, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
 
 	// Components
-	public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+	public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);
 
 	// Blueprint
-	public static final Item BLUEPRINT = new BlueprintItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).rarity(Rarity.EPIC));
+	public static final Item BLUEPRINT = new BlueprintItem(new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/.rarity(Rarity.EPIC));
 
 
 	// Waypoint-related
