@@ -23,7 +23,7 @@ import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class ConsoleGeneratorBlock extends Block implements BlockEntityProvider {
+public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
 	public ConsoleGeneratorBlock(Settings settings) {
 		super(settings);
