@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -46,8 +47,17 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         super.tick(server);
         State state = this.getState();
 
-        if (state.animated())
+        if (state.animated()) {
             this.tickAnimationProgress(state);
+        }
+
+        // Idk if this should even be a thing
+
+        /*if (this.getFlightTicks() % 140 == 0 && AITMod.RANDOM.nextBoolean()) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+                tardis.loyalty().addLevel(player, 1);
+            }
+        }*/
     }
 
     @Override

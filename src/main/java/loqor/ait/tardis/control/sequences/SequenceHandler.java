@@ -124,7 +124,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 
 		if (this.getActiveSequence().isFinished(this.recent)) {
 			recent.clear();
-			this.getActiveSequence().execute(this.tardis());
+			this.getActiveSequence().execute(this.tardis(), this.getActivePlayer());
 
 			this.doCompletedControlEffects(console);
 			this.setActiveSequence(null, true);

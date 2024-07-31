@@ -16,6 +16,7 @@ import net.minecraft.item.ToolMaterials;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -62,6 +63,9 @@ public class HammerItem extends SwordItem {
 		if (!(tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)) {
 			world.playSound(null, consoleBlockEntity.getPos(),
 					SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 1f, 1.0f);
+			world.playSoundFromEntity(null, player, SoundEvents.ENTITY_DOLPHIN_HURT, SoundCategory.PLAYERS, 0.2f, 0.5f);
+
+			tardis.loyalty().subLevel((ServerPlayerEntity) player, 2); // safe cast since its on server already
 			return ActionResult.SUCCESS;
 		}
 
@@ -125,12 +129,6 @@ public class HammerItem extends SwordItem {
 		}
 
 		return false;
-	}
-
-	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		world.playSoundFromEntity(null, user, SoundEvents.ENTITY_DOLPHIN_HURT, SoundCategory.PLAYERS, 1f, 1f);
-		return super.use(world, user, hand);
 	}
 
 	@Override

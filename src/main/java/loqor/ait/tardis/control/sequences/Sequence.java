@@ -36,12 +36,15 @@ public class Sequence {
 		return recent.equals(this.getControls());
 	}
 
-	public void execute(Tardis tardis) {}
+	public void execute(Tardis tardis, @Nullable ServerPlayerEntity player) {
+		if(player != null) {
+			tardis.loyalty().get(player).add(1);
+		}
+	}
 
 	public void executeMissed(Tardis tardis, @Nullable ServerPlayerEntity player) {
 		if(player != null) {
-			LoyaltyHandler loyaltyHandler = tardis.getHandlers().getLoyalties();
-			loyaltyHandler.get(player).subtract(2);
+			tardis.loyalty().get(player).subtract(2);
 		}
 	}
 
@@ -104,7 +107,7 @@ public class Sequence {
 		}
 
 		@Override
-		public void execute(Tardis tardis) {
+		public void execute(Tardis tardis, @Nullable ServerPlayerEntity player) {
 			this.execute.run(tardis);
 		}
 
