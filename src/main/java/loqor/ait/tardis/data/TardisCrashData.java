@@ -8,6 +8,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
+import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -86,6 +87,7 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 		);
 		if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
 		if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
+		int loyaltySubAmount = AITMod.RANDOM.nextInt(10, 25);
 		for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
 			ItemStack stack = serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD);
 
@@ -96,6 +98,8 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 			serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
 			serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 100, 3, true, false, false));
 			serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 5, true, false, false));
+
+			tardis.<LoyaltyHandler>handler(Id.LOYALTY).get(serverPlayerEntity).subtract(loyaltySubAmount);
 		}
 		DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(), (long) TimeUtil.secondsToMilliseconds(2));
 	}

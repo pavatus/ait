@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
     "bottom": "ait:block/landing_pad_bottom",
     "side": "ait:block/landing_pad_side",

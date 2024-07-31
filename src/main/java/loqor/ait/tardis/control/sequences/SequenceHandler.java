@@ -124,7 +124,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 
 		if (this.getActiveSequence().isFinished(this.recent)) {
 			recent.clear();
-			this.getActiveSequence().execute(this.tardis());
+			this.getActiveSequence().execute(this.tardis(), this.getActivePlayer());
 
 			this.doCompletedControlEffects(console);
 			this.setActiveSequence(null, true);
@@ -157,6 +157,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
 		world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
+		world.spawnParticles(ParticleTypes.ANGRY_VILLAGER, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F, 0.5F);
 		world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
 		world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
 	}
@@ -180,6 +181,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 
 		world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
 		world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
+		world.spawnParticles(ParticleTypes.HEART, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F, 0.5F);
 	}
 
 	public boolean isConsoleDisabled() {
