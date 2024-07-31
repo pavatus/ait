@@ -13,7 +13,6 @@ import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.manager.AgingTardisManager;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -30,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ClientTardisManager extends AgingTardisManager<ClientTardis, MinecraftClient> {
+public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
 
 	private static ClientTardisManager instance;
 
@@ -120,13 +119,17 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 	}
 
 	private void sync(UUID uuid, String json) {
-		long start = System.currentTimeMillis();
 		try {
+			long start = System.currentTimeMillis();
+
 			ClientTardis tardis = this.readTardis(this.networkGson, json);
 			AITMod.LOGGER.info("Received {}", tardis);
 
 			synchronized (this) {
-				this.updateAge(tardis);
+				ClientTardis old = this.lookup.put(tardis);
+
+				if (old != null)
+					old.age();
 
 				for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 					consumer.accept(tardis);

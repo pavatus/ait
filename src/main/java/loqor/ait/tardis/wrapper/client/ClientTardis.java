@@ -9,14 +9,16 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.util.Disposable;
 import net.minecraft.client.MinecraftClient;
 
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-public class ClientTardis extends Tardis {
+public class ClientTardis extends Tardis implements Disposable {
 
 	@Exclude private final UUID check;
+	@Exclude private boolean aged = false;
 
 	private ClientTardis(UUID check) {
         super();
@@ -61,6 +63,27 @@ public class ClientTardis extends Tardis {
 		}
 
 		return super.handler(type);
+	}
+
+	public void age() {
+		this.aged = true;
+	}
+
+	@Override
+	public boolean isAged() {
+		return aged;
+	}
+
+	@Override
+	public void dispose() {
+		this.desktop.dispose();
+		this.desktop = null;
+
+		this.exterior.dispose();
+		this.exterior = null;
+
+		this.handlers.dispose();
+		this.handlers = null;
 	}
 
 	@Override
