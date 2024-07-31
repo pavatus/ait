@@ -70,15 +70,17 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 				&& !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
 			ItemStack key = player.getMainHandStack();
 			NbtCompound tag = key.getOrCreateNbt();
-			if (!tag.contains("tardis")) {
+
+			if (!tag.contains("tardis"))
 				return;
-			}
+
 			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
 				DoorData.toggleLock(tardis, (ServerPlayerEntity) player);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
 			}
+
 			return;
 		}
 
@@ -129,8 +131,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 		}
 
-		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
-			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+		DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 	}
 
 	public void onEntityCollision(Entity entity) {

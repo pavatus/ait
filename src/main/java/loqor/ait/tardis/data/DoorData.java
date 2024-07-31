@@ -185,6 +185,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		return tempExteriorState;
 	}
 
+	// TODO predict the result of this on common side so the client doesnt have to wait for the server to answer
 	public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
 		if (tardis.getHandlers().getOvergrown().isOvergrown()) {
 			// Bro cant escape
