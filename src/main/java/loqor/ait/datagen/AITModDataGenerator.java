@@ -546,7 +546,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public AITLanguageProvider addEnglishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
-        provider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+        provider.addTranslation("itemgroup.ait.item_group", "Adventures In Time");
 
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
@@ -575,6 +575,55 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
 
+        // Exteriors
+        provider.addTranslation("exterior.ait.capsule", "Capsule");
+        provider.addTranslation("exterior.ait.police_box", "Police Box");
+        provider.addTranslation("exterior.ait.booth", "Booth");
+        provider.addTranslation("exterior.ait.renegade", "Renegade");
+        provider.addTranslation("exterior.ait.doom", "DOOM");
+        provider.addTranslation("exterior.ait.geometric", "Geometric");
+        provider.addTranslation("exterior.ait.tardim", "TARDIM");
+        provider.addTranslation("exterior.ait.easter_head", "Moyai");
+        provider.addTranslation("exterior.ait.plinth", "Plinth");
+        provider.addTranslation("exterior.ait.bookshelf", "Bookshelf");
+        provider.addTranslation("exterior.ait.classic", "Classic");
+
+        // Desktops
+        provider.addTranslation("desktop.ait.coral", "Coral");
+        provider.addTranslation("desktop.ait.war", "War");
+        provider.addTranslation("desktop.ait.office", "Office");
+        provider.addTranslation("desktop.ait.meridian", "Meridian");
+        provider.addTranslation("desktop.ait.botanist", "Botanist");
+        provider.addTranslation("desktop.ait.default_cave", "Default Cave");
+        provider.addTranslation("desktop.ait.timeless", "Timeless");
+        provider.addTranslation("desktop.ait.cave", "Cave");
+        provider.addTranslation("desktop.ait.deco", "Deco");
+        provider.addTranslation("desktop.ait.alnico", "Alnico");
+        provider.addTranslation("desktop.ait.newbury", "Newbury");
+        provider.addTranslation("desktop.ait.type_40", "Type 40");
+        provider.addTranslation("desktop.ait.copper", "Copper");
+        provider.addTranslation("desktop.ait.pristine", "Pristine");
+        provider.addTranslation("desktop.ait.victorian", "Victorian");
+        provider.addTranslation("desktop.ait.vintage", "Vintage");
+        provider.addTranslation("desktop.ait.dev", "Dev");
+        provider.addTranslation("desktop.ait.tokamak", "Tokamak");
+        provider.addTranslation("desktop.ait.toyota", "Toyota");
+        provider.addTranslation("desktop.ait.crystalline", "Crystalline");
+        provider.addTranslation("desktop.ait.hourglass", "Hourglass");
+        provider.addTranslation("desktop.ait.regal", "Regal");
+
+        // Sonic Screwdrivers
+        provider.addTranslation("sonic.ait.prime", "Prime");
+        provider.addTranslation("sonic.ait.crystalline", "Crystalline");
+        provider.addTranslation("sonic.ait.renaissance", "Renaissance");
+        provider.addTranslation("sonic.ait.coral", "Coral");
+        provider.addTranslation("sonic.ait.fob", "Fob");
+        provider.addTranslation("sonic.ait.copper", "Copper");
+        provider.addTranslation("sonic.ait.mechanical", "Mechanical");
+        provider.addTranslation("sonic.ait.song", "Song");
+
+        provider.addTranslation(AITBlocks.WAYPOINT_BANK_BLOCK, "Waypoint Bank");
+        provider.addTranslation(AITBlocks.LANDING_PAD_BLOCK, "Landing Pad");
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
@@ -663,6 +712,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
         provider.addTranslation("screen.ait.interior.settings.eight", "Eighth");
+        provider.addTranslation("screen.ait.interior.settings.beacon", "Beacon");
+        provider.addTranslation("screen.ait.interior.settings.copper", "Copper");
+        provider.addTranslation("screen.ait.interior.settings.prime", "Prime");
+        provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
+        provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
