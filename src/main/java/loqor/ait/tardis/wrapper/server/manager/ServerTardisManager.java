@@ -71,13 +71,9 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                 return;
 
             for (Tardis tardis : set) {
-                AITMod.LOGGER.info("Sending tardis {} at chunk {}", tardis.getUuid(), chunk);
+                AITMod.LOGGER.debug("Sending tardis {} at chunk {}", tardis.getUuid(), chunk);
                 this.sendTardis(player, tardis);
             }
-        });
-
-        TardisEvents.UNLOAD_TARDIS.register((player, chunk) -> {
-            AITMod.LOGGER.info("Un-loading tardises at chunk {}", chunk);
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
@@ -107,7 +103,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                     sendTardis(player, tardis);
                 }
 
-                AITMod.LOGGER.info("Updating tardis took {}ms", System.currentTimeMillis() - start);
+                AITMod.LOGGER.debug("Updating tardis took {}ms", System.currentTimeMillis() - start);
             }
             this.needsUpdate.clear();
         });
@@ -220,7 +216,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
     public void mark(ServerWorld world, Tardis tardis, ChunkPos chunk) {
         ((WorldWithTardis) world).ait$lookup().put(chunk, tardis);
-        AITMod.LOGGER.info("Marked tardis {} at {} in {}", tardis, chunk, world);
     }
 
     public void unmark(ServerWorld world, Tardis tardis, ChunkPos chunk) {
@@ -230,7 +225,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
             return;
 
         withTardis.ait$lookup().remove(chunk, tardis);
-        AITMod.LOGGER.info("Unmarked tardis {} at {} in {}", tardis, chunk, world);
     }
 
     private void save(MinecraftServer server, boolean clean) {

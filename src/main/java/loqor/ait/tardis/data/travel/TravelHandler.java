@@ -22,13 +22,11 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -50,24 +48,12 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (state.animated()) {
             this.tickAnimationProgress(state);
         }
-
-        // Idk if this should even be a thing
-
-        /*if (this.getFlightTicks() % 140 == 0 && AITMod.RANDOM.nextBoolean()) {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
-                tardis.loyalty().addLevel(player, 1);
-            }
-        }*/
     }
 
     @Override
     public void speed(int value) {
         super.speed(value);
         this.tryFly();
-    }
-
-    public boolean inFlight() {
-        return this.getState() == State.FLIGHT;
     }
 
     @Override
@@ -376,5 +362,9 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
     public boolean isLanded() {
         return this.getState() == State.LANDED;
+    }
+
+    public boolean inFlight() {
+        return this.getState() == State.FLIGHT;
     }
 }
