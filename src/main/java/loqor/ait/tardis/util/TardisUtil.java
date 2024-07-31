@@ -445,9 +445,8 @@ public class TardisUtil {
 	}
 
 	public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
-		 Tardis result = TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
+        return TardisManager.getInstance(isServer).find(tardis -> TardisUtil.inBox(
 				tardis.getDesktop().getCorners(), pos));
-		 return result == null || result.isDisposed() ? null : result;
 	}
 
 	public static void giveEffectToInteriorPlayers(Tardis tardis, StatusEffectInstance effect) {
