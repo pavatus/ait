@@ -16,7 +16,7 @@ import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
@@ -66,7 +66,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 			ClientSoundManager.tick(client);
 		});
 
-		ClientPlayConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
+		ClientLoginConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
 	}
 
 	@Override
@@ -217,6 +217,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	@Override
 	public void reset() {
 		this.subscribers.clear();
+
+		this.forEach(ClientTardis::dispose);
 		super.reset();
 	}
 
