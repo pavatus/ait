@@ -82,9 +82,9 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
         ServerTardis tardis = (ServerTardis) this.tardis();
 
         boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        playSound = playSound || DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        playSound = playSound || ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        playSound = playSound || SonicRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
+        playSound = DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema)) || playSound;
+        playSound = ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema)) || playSound;
+        playSound = SonicRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema)) || playSound;
 
         if (playSound)
             player.getServerWorld().playSound(null, player.getBlockPos(),
