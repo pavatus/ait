@@ -82,7 +82,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 	}
 
 	@Override
-	protected Entity.MoveEffect getMoveEffect() {
+	protected MoveEffect getMoveEffect() {
 		return MoveEffect.NONE;
 	}
 
@@ -91,14 +91,15 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 		this.stopFalling(true);
 	}
 
- @Override
+ 	@Override
 	public void tick() {
 		this.timeFalling++;
 
-   if (!this.hasNoGravity())
-        this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+   		if (!this.hasNoGravity())
+        	this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
 		this.move(MovementType.SELF, this.getVelocity());
+
 		Tardis tardis = this.tardis().get();
 
 		if (tardis == null)
@@ -236,19 +237,21 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 	}
 
 	@Override
- public boolean entityDataRequiresOperator() {
-	  return true;
+	public boolean entityDataRequiresOperator() {
+		return true;
 	}
 
- @Override
- public boolean hasNoGravity() {
-	  return false;
- }
+	@Override
+	public boolean hasNoGravity() {
+		return false;
+	}
 
+	@Override
 	public Packet<ClientPlayPacketListener> createSpawnPacket() {
 		return new EntitySpawnS2CPacket(this, Block.getRawIdFromState(this.getBlockState()));
 	}
 
+	@Override
 	public void onSpawnPacket(EntitySpawnS2CPacket packet) {
 		super.onSpawnPacket(packet);
 
