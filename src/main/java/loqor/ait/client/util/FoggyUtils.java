@@ -22,7 +22,7 @@ public class FoggyUtils {
 
 		Tardis tardis = ClientTardisUtil.getCurrentTardis();
 		
-		if (tardis == null || tardis.isAged())
+		if (tardis == null)
 			return;
 		
 		if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth() && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {

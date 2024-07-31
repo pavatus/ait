@@ -11,18 +11,14 @@ import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.util.Disposable;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class Tardis extends Initializable<TardisComponent.InitContext> implements Disposable {
+public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
 
 	@Exclude(strategy = Exclude.Strategy.NETWORK)
 	protected int version = 1;
-
-	@Exclude private boolean disposed = false;
-	@Exclude private boolean aged = false;
 
 	private UUID uuid;
 	protected TardisDesktop desktop;
@@ -43,20 +39,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		TardisComponent.init(desktop, this, ctx);
 		TardisComponent.init(exterior, this, ctx);
 		TardisComponent.init(handlers, this, ctx);
-	}
-
-	@Override
-	public void dispose() {
-		this.disposed = true;
-
-		this.desktop.dispose();
-		this.desktop = null;
-
-		this.exterior.dispose();
-		this.exterior = null;
-
-		this.handlers.dispose();
-		this.handlers = null;
 	}
 
 	public static void init(Tardis tardis, TardisComponent.InitContext ctx) {
@@ -213,18 +195,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
 	public void setSiegeBeingHeld(UUID b) {
 		this.<SiegeData>handler(TardisComponent.Id.SIEGE).setSiegeBeingHeld(b);
-	}
-
-	public boolean isDisposed() {
-		return disposed;
-	}
-
-	public void age() {
-		this.aged = true;
-	}
-
-	public boolean isAged() {
-		return aged;
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unused"})
 public class TardisRef implements Disposable {
 
     private final LoadFunc load;
@@ -64,11 +64,15 @@ public class TardisRef implements Disposable {
     }
 
     public Tardis get() {
-        if (this.cached != null && !this.cached.isAged())
+        if (this.cached != null && !this.shouldInvalidate())
             return this.cached;
 
         this.cached = this.load.apply(this.id);
         return this.cached;
+    }
+
+    private boolean shouldInvalidate() {
+        return this.cached instanceof Disposable disposable && disposable.isAged();
     }
 
     public UUID getId() {
