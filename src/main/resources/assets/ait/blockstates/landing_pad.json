@@ -1,20 +1,7 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "ait:block/landing_pad",
-      "y": 0
-    },
-    "facing=north": {
-      "model": "ait:block/landing_pad",
-      "y": 270
-    },
-    "facing=south": {
-      "model": "ait:block/landing_pad",
-      "y": 90
-    },
-    "facing=west": {
-      "model": "ait:block/landing_pad",
-      "y": 180
+    "": {
+      "model": "ait:block/landing_pad"
     }
   }
 }
