@@ -28,6 +28,7 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
 	@Override
 	public void render(EngineBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+
 		if(entity.hasWorld() && entity.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD && entity.findTardis().isEmpty())
 			return;
 

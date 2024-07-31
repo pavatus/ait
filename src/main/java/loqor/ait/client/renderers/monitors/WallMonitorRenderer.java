@@ -37,6 +37,8 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
     @Override
     public void render(WallMonitorBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        if (entity.tardis() == null)
+            return;
 
         BlockState blockState = entity.getCachedState();
 
