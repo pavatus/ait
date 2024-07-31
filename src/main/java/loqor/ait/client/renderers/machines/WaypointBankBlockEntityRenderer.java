@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers.machines;
 
-import io.wispforest.owo.ui.core.Color;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.WaypointBankBlockEntity;
 import loqor.ait.core.blocks.WaypointBankBlock;
@@ -8,10 +7,6 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -19,20 +14,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> implements BlockEntityRenderer<T> {
     private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;

@@ -123,6 +123,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 			long start = System.currentTimeMillis();
 
 			ClientTardis tardis = this.readTardis(this.networkGson, json);
+			tardis.travel();
 			AITMod.LOGGER.info("Received {}", tardis);
 
 			synchronized (this) {
@@ -216,11 +217,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	@Override
 	public void reset() {
 		this.subscribers.clear();
-
-		for (ClientTardis tardis : this.lookup.values()) {
-			tardis.dispose();
-		}
-
 		super.reset();
 	}
 

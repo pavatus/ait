@@ -28,7 +28,7 @@ public interface AbstractLinkableEntity extends Linkable {
     @Override
     default void link(UUID id) {
         this.setRef(TardisRef.createAs(this.getWorld(), id));
-        this.getDataTracker().set(this.getTracked(), Optional.of(id));
+        this.getDataTracker().set(this.getTracked(), Optional.ofNullable(id));
     }
 
     @Override
