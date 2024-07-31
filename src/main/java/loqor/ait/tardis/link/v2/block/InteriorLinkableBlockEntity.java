@@ -1,5 +1,6 @@
 package loqor.ait.tardis.link.v2.block;
 
+import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
@@ -15,7 +16,7 @@ public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockE
 
     @Override
     public void setWorld(World world) {
-        if (world.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
             return;
 
         super.setWorld(world);
