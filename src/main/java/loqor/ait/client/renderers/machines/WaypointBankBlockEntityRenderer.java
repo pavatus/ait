@@ -7,6 +7,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -26,7 +27,11 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        if (entity.tardis() == null || entity.tardis().isEmpty()) return;
+        if (entity.getCachedState().get(WaypointBankBlock.HALF) == DoubleBlockHalf.UPPER)
+            return;
+
+        if (entity.tardis() == null || entity.tardis().isEmpty())
+            return;
 
         Tardis tardis = entity.tardis().get();
 

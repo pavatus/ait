@@ -1,20 +1,32 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,half=lower": {
       "model": "ait:block/waypoint_bank",
       "y": 0
     },
-    "facing=north": {
+    "facing=north,half=lower": {
       "model": "ait:block/waypoint_bank",
       "y": 270
     },
-    "facing=south": {
+    "facing=south,half=lower": {
       "model": "ait:block/waypoint_bank",
       "y": 90
     },
-    "facing=west": {
+    "facing=west,half=lower": {
       "model": "ait:block/waypoint_bank",
       "y": 180
+    },
+    "facing=east,half=upper": {
+      "model": "minecraft:block/barrier"
+    },
+    "facing=north,half=upper": {
+      "model": "minecraft:block/barrier"
+    },
+    "facing=south,half=upper": {
+      "model": "minecraft:block/barrier"
+    },
+    "facing=west,half=upper": {
+      "model": "minecraft:block/barrier"
     }
   }
 }
