@@ -1,5 +1,5 @@
 plugins {
-    id "fabric-loom" version "1.3-SNAPSHOT"
+    id "fabric-loom" version "1.5-SNAPSHOT"
     id "maven-publish"
 }
 
@@ -132,11 +132,6 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         it.options.release = targetJavaVersion
     }
-}
-
-// @THEO (ME) DONT FORGET TO REMOVE THIS LATER
-tasks.withType(JavaCompile) {
-    options.compilerArgs += "-Xlint:-removal"
 }
 
 java {

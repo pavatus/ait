@@ -3,6 +3,7 @@ package loqor.ait.tardis.link.v2.block;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.v2.Linkable;
 import loqor.ait.tardis.link.v2.TardisRef;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,7 +14,10 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerChunkManager;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -23,6 +27,16 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
 
     public AbstractLinkableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
+
+        if (this.ref == null || this.ref.isEmpty())
+            return;
+
+        this.mark();
     }
 
     @Override
@@ -56,19 +70,40 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
     }
 
     @Override
+    public void markRemoved() {
+        super.markRemoved();
+
+        if (this.ref == null || this.ref.isEmpty())
+            return;
+
+        if (!(this.world instanceof ServerWorld serverWorld))
+            return;
+
+        ServerTardisManager.getInstance().unmark(
+                serverWorld, this.ref.get(), new ChunkPos(this.pos)
+        );
+    }
+
+    @Override
     public void link(Tardis tardis) {
         this.ref = TardisRef.createAs(this, tardis);
-
-        this.onLinked();
-
-        this.sync();
-        this.markDirty();
+        this.handleLink();
     }
 
     @Override
     public void link(UUID id) {
         this.ref = TardisRef.createAs(this, id);
+        this.handleLink();
+    }
 
+    private void mark() {
+        if (this.world instanceof ServerWorld serverWorld)
+            ServerTardisManager.getInstance().mark(serverWorld,
+                    this.tardis().get(), new ChunkPos(this.pos));
+    }
+
+    private void handleLink() {
+        this.mark();
         this.onLinked();
 
         this.sync();

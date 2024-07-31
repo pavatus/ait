@@ -229,7 +229,7 @@ public final class TardisEvents {
 
 	@FunctionalInterface
 	public interface SyncTardis {
-		void sync(ServerPlayerEntity player, ChunkPos chunk);
+		void sync(ServerPlayerEntity player, WorldChunk chunk);
 	}
 
 	@FunctionalInterface

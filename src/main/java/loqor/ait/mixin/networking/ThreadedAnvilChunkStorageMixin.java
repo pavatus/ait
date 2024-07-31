@@ -21,7 +21,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
     protected void sendWatchPackets(
             ThreadedAnvilChunkStorage instance, ServerPlayerEntity player, MutableObject<ChunkDataS2CPacket> cachedDataPacket, WorldChunk chunk
     ) {
-        TardisEvents.SYNC_TARDIS.invoker().sync(player, chunk.getPos());
+        TardisEvents.SYNC_TARDIS.invoker().sync(player, chunk);
         this.sendChunkDataPackets(player, cachedDataPacket, chunk);
     }
 

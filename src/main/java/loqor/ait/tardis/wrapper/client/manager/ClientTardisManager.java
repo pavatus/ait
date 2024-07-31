@@ -9,10 +9,10 @@ import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.manager.AgingTardisManager;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ClientTardisManager extends AgingTardisManager<ClientTardis, MinecraftClient> {
+public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
 
 	private static ClientTardisManager instance;
 
@@ -125,7 +125,7 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 			AITMod.LOGGER.info("Received {}", tardis);
 
 			synchronized (this) {
-				this.updateAge(tardis);
+				this.lookup.put(tardis);
 
 				for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 					consumer.accept(tardis);
@@ -133,8 +133,9 @@ public class ClientTardisManager extends AgingTardisManager<ClientTardis, Minecr
 
 				AITMod.LOGGER.info("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
 			}
-		} catch(Throwable t) { // FIXME debug
-			AITMod.LOGGER.info("Received JSON file {}", json);
+		} catch(Throwable t) {
+			AITMod.LOGGER.error("Received malformed JSON file {}", json);
+			AITMod.LOGGER.error("Failed to deserialize TARDIS data: ", t);
 		}
 	}
 

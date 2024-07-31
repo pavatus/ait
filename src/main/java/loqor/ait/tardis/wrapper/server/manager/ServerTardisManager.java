@@ -2,6 +2,7 @@ package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import loqor.ait.AITMod;
+import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
@@ -32,6 +33,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerChunkManager;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.math.ChunkPos;
 import org.jetbrains.annotations.Nullable;
@@ -44,8 +46,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     private static ServerTardisManager instance;
     private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
 
-    private final Map<ChunkPos, Set<Tardis>> tardisChunks = new HashMap<>();
-    private final Set<Tardis> buffer = new HashSet<>();
+    private final Set<Tardis> needsUpdate = new HashSet<>();
 
     public static void init() {
         instance = new ServerTardisManager();
@@ -59,7 +60,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         WorldSaveEvent.EVENT.register(world -> this.save(world.getServer(), false));
 
         TardisEvents.SYNC_TARDIS.register((player, chunk) -> {
-            Set<Tardis> set = this.tardisChunks.get(chunk);
+            WorldWithTardis tardisWorld = (WorldWithTardis) chunk.getWorld();
+            Set<Tardis> set = tardisWorld.ait$lookup().get(chunk.getPos());
 
             if (set == null)
                 return;
@@ -81,7 +83,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         });
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
-            for (Tardis tardis : this.buffer) {
+            for (Tardis tardis : this.needsUpdate) {
                 long start = System.currentTimeMillis();
 
                 DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
@@ -103,7 +105,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
                 AITMod.LOGGER.info("Updating tardis took {}ms", System.currentTimeMillis() - start);
             }
-            this.buffer.clear();
+            this.needsUpdate.clear();
         });
     }
 
@@ -129,7 +131,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         if (this.fileManager.isLocked())
             return;
 
-        this.buffer.add(tardis);
+        this.needsUpdate.add(tardis);
     }
 
     public void sendTardis(TardisComponent component) {
@@ -162,7 +164,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
         ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
 
-        this.unmark(tardis, chunkPos);
+        this.unmark(exteriorPos.getWorld(), tardis, chunkPos);
     }
 
     @Override
@@ -191,30 +193,27 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         );
     }
 
-    public void mark(Tardis tardis, ChunkPos chunk) {
-        AITMod.LOGGER.info("Marked tardis {} at {}", tardis, chunk);
-        this.tardisChunks.computeIfAbsent(chunk,
-                chunkPos -> new HashSet<>()
-        ).add(tardis);
+    public void mark(ServerWorld world, Tardis tardis, ChunkPos chunk) {
+        ((WorldWithTardis) world).ait$lookup().put(chunk, tardis);
+        AITMod.LOGGER.info("Marked tardis {} at {} in {}", tardis, chunk, world);
     }
 
-    public void unmark(Tardis tardis, ChunkPos chunk) {
-        AITMod.LOGGER.info("Unmarked tardis {} at {}", tardis, chunk);
-        Set<Tardis> set = this.tardisChunks.get(chunk);
-        if (set == null)
+    public void unmark(ServerWorld world, Tardis tardis, ChunkPos chunk) {
+        WorldWithTardis withTardis = (WorldWithTardis) world;
+
+        if (!withTardis.ait$hasTardis())
             return;
 
-        set.remove(tardis);
+        withTardis.ait$lookup().remove(chunk, tardis);
+        AITMod.LOGGER.info("Unmarked tardis {} at {} in {}", tardis, chunk, world);
     }
 
-    private void save(MinecraftServer server, boolean lock) {
-        if (lock)
+    private void save(MinecraftServer server, boolean clean) {
+        if (clean)
             this.fileManager.setLocked(true);
 
-        // force all dematting to go flight and all matting to go land
         for (ServerTardis tardis : this.lookup.values()) {
-            // stop forcing all chunks
-            if (lock) {
+            if (clean) {
                 ForcedChunkUtil.stopForceLoading(tardis.travel().position());
                 TravelHandlerBase.State state = tardis.travel().getState();
 
@@ -231,6 +230,18 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
             }
 
             this.fileManager.saveTardis(server, this, tardis);
+        }
+
+        if (!clean)
+            return;
+
+        for (ServerWorld world : server.getWorlds()) {
+            WorldWithTardis withTardis = (WorldWithTardis) world;
+
+            if (withTardis.ait$hasTardis())
+                continue;
+
+            withTardis.ait$lookup().clear();
         }
     }
 

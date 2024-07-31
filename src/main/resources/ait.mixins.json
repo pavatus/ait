@@ -13,6 +13,7 @@
     "lookup.SimpleEntityLookupAccessor",
     "lookup.WorldInvoker",
     "networking.ServerChunkManagerAccessor",
+    "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
