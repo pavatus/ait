@@ -26,7 +26,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        if (entity.tardis().isEmpty()) return;
+        if (entity.tardis() == null || entity.tardis().isEmpty()) return;
 
         Tardis tardis = entity.tardis().get();
 

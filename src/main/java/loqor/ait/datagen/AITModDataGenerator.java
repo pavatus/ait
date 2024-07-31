@@ -546,7 +546,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public AITLanguageProvider addEnglishTranslations(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
-        provider.addTranslation("itemgroup.ait.item_group", "Adventures In Time");
+        provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
 
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
