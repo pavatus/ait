@@ -108,7 +108,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 			return;
 		}
 
-		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
+		if (tardis.travel().isLanded() || tardis.travel().inFlight())
 			DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 	}
 

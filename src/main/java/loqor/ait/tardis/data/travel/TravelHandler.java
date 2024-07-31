@@ -373,4 +373,8 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (this.previousPosition.get() == null)
             this.previousPosition.set(cached);
     }
+
+    public boolean isLanded() {
+        return this.getState() == State.LANDED;
+    }
 }
