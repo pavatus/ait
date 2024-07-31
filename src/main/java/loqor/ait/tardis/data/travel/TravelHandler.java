@@ -17,6 +17,7 @@ import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.TardisCrashData;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,6 +27,9 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 public non-sealed class TravelHandler extends ProgressiveTravelHandler implements CrashableTardisTravel {
 
@@ -81,7 +85,19 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             return;
 
         if (this.tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
-            this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
+            this.destination(cached -> {
+
+                DirectedGlobalPos.Cached jukedPosition = TravelUtil.jukePos(cached, 1, 10);
+
+                // temp fix for not crashing in the End because im lazy
+
+                List<ServerWorld> worlds = TardisUtil.getDimensions(server());
+
+                int worldIndex = AITMod.RANDOM.nextInt(0, worlds.size());
+
+                return jukedPosition.world(worlds.get(worldIndex == 2 ? 0 : worldIndex));
+
+            });
 
         if (!this.tardis.flight().isActive())
             this.rematerialize();
