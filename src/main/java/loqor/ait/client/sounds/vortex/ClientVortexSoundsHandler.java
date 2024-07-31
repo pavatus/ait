@@ -24,7 +24,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
         if (VORTEX_SOUND == null)
             VORTEX_SOUND = new PositionedLoopingSound(AITSounds.VORTEX_SOUND,
                     SoundCategory.AMBIENT,
-                    tardis().getDesktop().doorPos().getPos(), 0.2f);
+                    tardis().getDesktop().doorPos().getPos(), 0.1f);
 
         return VORTEX_SOUND;
     }
@@ -44,7 +44,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
         if (VORTEX_SOUND == null && tardis().getDesktop().doorPos().getPos() != null)
             VORTEX_SOUND = new PositionedLoopingSound(AITSounds.VORTEX_SOUND,
                     SoundCategory.AMBIENT,
-                    tardis().getDesktop().doorPos().getPos(), 0.2f);
+                    tardis().getDesktop().doorPos().getPos(), 0.1f);
 
         this.sounds = new ArrayList<>();
         this.sounds.add(
