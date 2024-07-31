@@ -69,7 +69,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		matrices.translate(-50f, 0, -80);
 
 		TravelHandler travel = tardis.travel();
-		DirectedGlobalPos.Cached abpp = travel.getState() != TravelHandlerBase.State.LANDED
+		DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
 				? travel.getProgress() : travel.position();
 
 		BlockPos abppPos = abpp.getPos();
