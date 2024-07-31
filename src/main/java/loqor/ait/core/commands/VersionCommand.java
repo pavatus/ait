@@ -19,12 +19,13 @@ public class VersionCommand {
 
     private static final ModContainer AIT = FabricLoader.getInstance().getModContainer(AITMod.MOD_ID).get();
 
-    private static final String LOGO = """
+    private static final Text LOGO = Text.literal("""
            ::::::\\\\     ::::::::::::|| ::::::::::::::::||
           == ==\\\\      ==||      ==||
          =======\\\\     ==||      ==||
         ##//   ##\\\\    ##||      ##||
-       ##//     ##\\\\ ######||    ##||""";
+       ##//     ##\\\\ ######||    ##||"""
+    ).copy().setStyle(Style.EMPTY.withFont(new Identifier("uniform")));
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
@@ -37,8 +38,10 @@ public class VersionCommand {
     private static int run(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
 
-        source.sendMessage(Text.literal(LOGO).copy().setStyle(Style.EMPTY.withFont(new Identifier("uniform"))).formatted(Formatting.GOLD));
-        source.sendMessage(Text.translatable("message.ait.version", AIT.getMetadata().getVersion().getFriendlyString()));
+        source.sendMessage(LOGO.copy().formatted(Formatting.GOLD));
+        source.sendMessage(Text.translatable("message.ait.version")
+                .formatted(Formatting.GOLD).append(Text.literal(": ")
+                        .append(AIT.getMetadata().getVersion().getFriendlyString())));
 
         if (!source.isExecutedByPlayer())
             return Command.SINGLE_SUCCESS;

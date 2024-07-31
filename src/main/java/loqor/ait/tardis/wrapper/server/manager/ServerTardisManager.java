@@ -6,6 +6,7 @@ import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
+import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
@@ -22,6 +23,7 @@ import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -35,7 +37,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -158,13 +162,34 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void remove(MinecraftServer server, Tardis tardis) {
+        ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
+
+        // Remove the exterior if it exists
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+
+        if (exteriorPos != null) {
+            World world = exteriorPos.getWorld();
+            BlockPos pos = exteriorPos.getPos();
+
+            world.removeBlock(pos, false);
+            world.removeBlockEntity(pos);
+        }
+
+        // Remove the interior door
+        DirectedBlockPos interiorDorPos = tardis.getDesktop().doorPos();
+
+        if (interiorDorPos != null) {
+            BlockPos interiorDoor = interiorDorPos.getPos();
+
+            tardisWorld.removeBlock(interiorDoor, false);
+            tardisWorld.removeBlockEntity(interiorDoor);
+        }
+
+        // Remove the interior
+        DesktopGenerator.clearArea(tardisWorld, tardis.getDesktop().getCorners());
+
         this.fileManager.delete(server, tardis.getUuid());
         this.lookup.remove(tardis.getUuid());
-
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
-        ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
-
-        this.unmark(exteriorPos.getWorld(), tardis, chunkPos);
     }
 
     @Override

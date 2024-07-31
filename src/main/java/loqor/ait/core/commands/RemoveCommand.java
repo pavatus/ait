@@ -38,32 +38,6 @@ public class RemoveCommand {
                 "Removing TARDIS with id [%s]...", tardis.getUuid()), true
         );
 
-        ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
-
-        // Remove the exterior if it exists
-        DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
-
-        if (globalExteriorPos != null) {
-            World world = globalExteriorPos.getWorld();
-            BlockPos exteriorPos = globalExteriorPos.getPos();
-
-            world.removeBlock(exteriorPos, false);
-            world.removeBlockEntity(exteriorPos);
-        }
-
-        // Remove the interior door
-        DirectedBlockPos interiorDorPos = tardis.getDesktop().doorPos();
-
-        if (interiorDorPos != null) {
-            BlockPos interiorDoor = interiorDorPos.getPos();
-
-            tardisWorld.removeBlock(interiorDoor, false);
-            tardisWorld.removeBlockEntity(interiorDoor);
-        }
-
-        // Remove the interior
-        DesktopGenerator.clearArea(tardisWorld, tardis.getDesktop().getCorners());
-
         // Delete the file. File system operations are costly!
         ServerTardisManager.getInstance().remove(context.getSource().getServer(), tardis);
 

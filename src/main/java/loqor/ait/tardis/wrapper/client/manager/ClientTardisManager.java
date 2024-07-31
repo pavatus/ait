@@ -13,6 +13,7 @@ import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.manager.AgingTardisManager;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
+public class ClientTardisManager extends AgingTardisManager<ClientTardis, MinecraftClient> {
 
 	private static ClientTardisManager instance;
 
@@ -125,7 +126,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 			AITMod.LOGGER.info("Received {}", tardis);
 
 			synchronized (this) {
-				this.lookup.put(tardis);
+				this.updateAge(tardis);
 
 				for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 					consumer.accept(tardis);

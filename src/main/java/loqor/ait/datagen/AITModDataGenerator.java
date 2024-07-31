@@ -644,7 +644,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("message.ait.remoteitem.success1", "Dematerialized TARDIS");
         provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
-        provider.addTranslation("message.ait.version", "ᴠᴇʀꜱɪᴏɴ: %s");
+        provider.addTranslation("message.ait.version", "ᴠᴇʀꜱɪᴏɴ");
 
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
