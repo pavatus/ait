@@ -74,9 +74,10 @@ public class AITBlocks implements BlockRegistryContainer {
     /*public static final Block CONSOLE_ROOM_PORT_BLOCK = new ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
             .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));
     public static final Block ENGINE_ROOM_PORT_BLOCK = new EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));
-    public static final Block CABLE_BLOCK = new CableBlock(NeptuneBlockSettings.create().nonOpaque()
-            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.GUITAR).strength(1.5F, 6.0F));*/
+            .addItemSettings(new NeptuneItemSettings().group(() -> AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F, 6.0F));*/
+    @NoBlockItem
+    public static final Block CABLE_BLOCK = new CableBlock(FabricBlockSettings.create().nonOpaque()
+            .instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
 
     public static List<Block> getBlocks() {
         List<Block> list = new ArrayList<>();
