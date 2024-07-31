@@ -81,19 +81,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
             return;
 
         if (this.tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
-            this.destination(cached -> {
-
-                DirectedGlobalPos.Cached jukedPosition = TravelUtil.jukePos(cached, 1, 10);
-
-                // temp fix for not crashing in the End because im lazy
-
-                List<ServerWorld> worlds = TardisUtil.getDimensions(server());
-
-                int worldIndex = AITMod.RANDOM.nextInt(0, worlds.size());
-
-                return jukedPosition.world(worlds.get(worldIndex == 2 ? 0 : worldIndex));
-
-            });
+            this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
 
         if (!this.tardis.flight().isActive())
             this.rematerialize();
