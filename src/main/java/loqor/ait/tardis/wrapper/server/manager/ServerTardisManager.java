@@ -1,6 +1,7 @@
 package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
+import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
@@ -180,18 +181,27 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     public void remove(MinecraftServer server, Tardis tardis) {
         ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
 
-        this.sendTardisRemoval(server, tardis);
-
         // Remove the exterior if it exists
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
         if (exteriorPos != null) {
+            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
+                TardisUtil.teleportOutside(tardis, player);
+            });
+
             World world = exteriorPos.getWorld();
             BlockPos pos = exteriorPos.getPos();
 
             world.removeBlock(pos, false);
             world.removeBlockEntity(pos);
+        } else {
+            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
+                DirectedGlobalPos.Cached cached = tardis.travel().destination();
+                WorldOps.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos());
+            });
         }
+
+        this.sendTardisRemoval(server, tardis);
 
         // Remove the interior door
         DirectedBlockPos interiorDorPos = tardis.getDesktop().doorPos();
