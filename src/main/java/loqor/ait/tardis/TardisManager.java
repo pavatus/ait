@@ -49,6 +49,7 @@ public abstract class TardisManager<T extends Tardis, C> {
 	public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
 
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
+	public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "remove_tardis");
 	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
 
 	public static final Identifier UPDATE_PROPERTY = new Identifier(AITMod.MOD_ID, "update_property");

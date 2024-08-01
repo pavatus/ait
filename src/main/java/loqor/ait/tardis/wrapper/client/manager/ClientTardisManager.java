@@ -47,6 +47,10 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 				(client, handler, buf, responseSender) -> this.sync(buf)
 		);
 
+		ClientPlayNetworking.registerGlobalReceiver(REMOVE,
+				(client, handler, buf, responseSender) -> this.remove(buf)
+		);
+
 		ClientPlayNetworking.registerGlobalReceiver(UPDATE,
 				(client, handler, buf, responseSender) -> this.update(client, buf)
 		);
@@ -67,6 +71,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		});
 
 		ClientLoginConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
+	}
+
+	private void remove(PacketByteBuf buf) {
+		UUID tardisid = buf.readUuid();
+		this.lookup.remove(tardisid);
 	}
 
 	@Override

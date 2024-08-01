@@ -132,6 +132,18 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         ServerPlayNetworking.send(player, SEND, data);
     }
 
+    private void sendTardisRemoval(MinecraftServer server, Tardis tardis) {
+
+        if (tardis == null)
+            return;
+
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeUuid(tardis.getUuid());
+
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList())
+            ServerPlayNetworking.send(player, REMOVE, data);
+    }
+
     public void sendTardis(Tardis tardis) {
         if (tardis == null || this.networkGson == null)
             return;
@@ -167,6 +179,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
     public void remove(MinecraftServer server, Tardis tardis) {
         ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
+
+        this.sendTardisRemoval(server, tardis);
 
         // Remove the exterior if it exists
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
