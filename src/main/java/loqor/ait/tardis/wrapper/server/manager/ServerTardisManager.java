@@ -121,8 +121,10 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+
         if (tardis == null)
             return;
+
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(tardis.getUuid());
         data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
@@ -239,12 +241,11 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
         for (ServerTardis tardis : this.lookup.values()) {
             if (clean) {
-                DirectedGlobalPos.Cached pos = tardis.travel().position();
 
-                if (pos == null)
+                if (tardis == null)
                     continue;
 
-                ForcedChunkUtil.stopForceLoading(pos);
+                ForcedChunkUtil.stopForceLoading(tardis.travel().position());
                 TravelHandlerBase.State state = tardis.travel().getState();
 
                 if (state == TravelHandlerBase.State.DEMAT) {
