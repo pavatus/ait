@@ -34,9 +34,12 @@ public abstract class ExteriorAnimation {
 		if (this.exterior.tardis().isEmpty())
 			return 1f;
 
-		if (this.exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED
-				&& this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled())
-			return 0.105f;
+		if (this.exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED) {
+			if (this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
+				return 0.105f;
+			}
+			return 1.0f;
+		}
 
 		return this.alpha;
 	}

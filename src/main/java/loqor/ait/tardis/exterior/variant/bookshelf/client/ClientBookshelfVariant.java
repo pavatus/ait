@@ -45,7 +45,7 @@ public abstract class ClientBookshelfVariant extends ClientExteriorVariantSchema
 	@Override
 	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
 		return switch(biomeType) {
-			case DEFAULT -> BiomeHandler.BiomeType.DEFAULT.getTextureFromKey(CATEGORY_IDENTIFIER);
+			case DEFAULT -> BiomeHandler.BiomeType.DEFAULT.getTextureFromKey(null);
 			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTextureFromKey(CATEGORY_IDENTIFIER);
 			case SCULK -> BiomeHandler.BiomeType.SCULK.getTextureFromKey(CATEGORY_IDENTIFIER);
 			case SANDY -> BiomeHandler.BiomeType.SANDY.getTextureFromKey(CATEGORY_IDENTIFIER);

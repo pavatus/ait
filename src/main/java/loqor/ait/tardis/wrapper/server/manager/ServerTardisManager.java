@@ -87,6 +87,10 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                 long start = System.currentTimeMillis();
 
                 DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+
+                if (exteriorPos == null)
+                    continue;
+
                 ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
 
                 ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
@@ -117,6 +121,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void sendTardis(ServerPlayerEntity player, Tardis tardis) {
+        if (tardis == null)
+            return;
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(tardis.getUuid());
         data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
@@ -191,7 +197,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     @Override
     public @Nullable ServerTardis demandTardis(MinecraftServer server, UUID uuid) {
         if (uuid == null)
-            return null; // ugh
+            return null; // ugh - ong bro
 
         ServerTardis result = this.lookup.get(uuid);
 
@@ -233,7 +239,12 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
         for (ServerTardis tardis : this.lookup.values()) {
             if (clean) {
-                ForcedChunkUtil.stopForceLoading(tardis.travel().position());
+                DirectedGlobalPos.Cached pos = tardis.travel().position();
+
+                if (pos == null)
+                    continue;
+
+                ForcedChunkUtil.stopForceLoading(pos);
                 TravelHandlerBase.State state = tardis.travel().getState();
 
                 if (state == TravelHandlerBase.State.DEMAT) {
