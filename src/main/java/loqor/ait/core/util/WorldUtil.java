@@ -134,7 +134,7 @@ public class WorldUtil {
         ).sampleHeightmap(
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 x & 15, z & 15
-        );
+        ) + 1;
     }
 
     @Environment(EnvType.CLIENT)
