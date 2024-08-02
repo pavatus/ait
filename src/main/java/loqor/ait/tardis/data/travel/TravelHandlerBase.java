@@ -204,6 +204,14 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return previousPosition.get();
     }
 
+    public BoolValue horizontalSearch() {
+        return hGroundSearch;
+    }
+
+    public Value<GroundSearch> verticalSearch() {
+        return vGroundSearch;
+    }
+
     protected static MinecraftServer server() {
         return TardisUtil.getOverworld().getServer();
     }
@@ -252,9 +260,31 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     public enum GroundSearch {
-        NONE,
-        FLOOR,
-        CEILING,
-        MEDIAN
+        NONE {
+            @Override
+            public GroundSearch next() {
+                return FLOOR;
+            }
+        },
+        FLOOR {
+            @Override
+            public GroundSearch next() {
+                return CEILING;
+            }
+        },
+        CEILING {
+            @Override
+            public GroundSearch next() {
+                return MEDIAN;
+            }
+        },
+        MEDIAN {
+            @Override
+            public GroundSearch next() {
+                return FLOOR;
+            }
+        };
+
+        public abstract GroundSearch next();
     }
 }

@@ -804,8 +804,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocole 813: INACTF");
         aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "Frein à main: ON");
         aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "Frein à main: OFF");
-        aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Recherche Surface: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Recherche Surface: OFF");
         aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
         aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége: Activé");
         aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége: Désactivé");
@@ -825,6 +823,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Amélioration");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Type de Clé: ");
         aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Matériau: ");
+        aitLanguageProvider.addTranslation("message.ait.control.ylandtype", "Recherche Surface Mode: %s");
+        aitLanguageProvider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Surface Search: ON");
+        aitLanguageProvider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Surface Search: OFF");
+
         aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "La clé ne s’identifie avec aucun TARDIS");
         //
         aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");

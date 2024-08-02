@@ -854,7 +854,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		shield.pitch = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.pitch + 1f : shield.pitch;
 
 		ModelPart landtype = alnico.getChild("section1").getChild("controls").getChild("tinyswitch2").getChild("bone2");
-		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0);
+		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0); // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		ModelPart antigravs = alnico.getChild("section1").getChild("controls").getChild("tinyswitch").getChild("bone3");
 		antigravs.yaw = antigravs.yaw + (tardis.travel().antigravs().get() ? 1.5708f : 0);

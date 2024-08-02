@@ -905,7 +905,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Ground Search Control
 		ModelPart groundSearch = this.toyota.getChild("panel1").getChild("controls").getChild("smallswitch");
-		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch + 1f : groundSearch.pitch - 0.75f;
+		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch + 1f : groundSearch.pitch - 0.75f; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		// Direction Control
 		ModelPart direction = this.toyota.getChild("panel6").getChild("controls2").getChild("smallnob2");

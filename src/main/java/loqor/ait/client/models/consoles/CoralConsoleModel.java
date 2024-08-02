@@ -1427,7 +1427,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Ground Searching
 		ModelPart groundSearch = controls.getChild("p_ctrl_6").getChild("bone62").getChild("bow").getChild("bone68");
-		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch - 0.5f : groundSearch.pitch;
+		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch - 0.5f : groundSearch.pitch; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

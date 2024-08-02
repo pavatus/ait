@@ -23,7 +23,7 @@ public class PropertiesHandler {
 	public static final String ALARM_ENABLED = "alarm_enabled";
 	public static final String RAIN_FALLING = "rain_falling";
 	public static final String LAVA_OUTSIDE = "lava_outside";
-	public static final String FIND_GROUND = "find_ground"; // whether the destination checks will try to find the ground or not
+	@Deprecated(forRemoval = true) public static final String FIND_GROUND = "find_ground"; // whether the destination checks will try to find the ground or not
 	public static final String PREVIOUSLY_LOCKED = "last_locked";
 	public static final String SIEGE_HELD = "siege_held";
 	public static final String SIEGE_TIME = "siege_ticks";
@@ -203,7 +203,6 @@ public class PropertiesHandler {
 		map.put(ALARM_ENABLED, false);
 		map.put(RAIN_FALLING, false);
 		map.put(LAVA_OUTSIDE, false);
-		// map.put(WATER_OUTSIDE, false); - we dont really need this one
 		map.put(IS_FALLING, false);
 		map.put(IS_IN_ACTIVE_DANGER, false);
 		map.put(HADS_ENABLED, false);

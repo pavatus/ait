@@ -932,7 +932,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
 
 		ModelPart landType = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("valve").getChild("bone9");
-		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0);
+		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0); // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
 		direction.yaw = direction.yaw + (1.5708f * tardis.travel().destination().getRotation());

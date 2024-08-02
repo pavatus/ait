@@ -908,7 +908,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		// Ground Search Control Movements
 		ModelPart groundSearch = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("s_knob");
-		groundSearch.pivotZ = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ;
+		groundSearch.pivotZ = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		// Hail Mary Control Movements
 		ModelPart hailMary = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_lever").getChild("bone61");
