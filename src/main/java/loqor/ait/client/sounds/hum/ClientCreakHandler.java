@@ -110,6 +110,9 @@ public class ClientCreakHandler extends SoundHandler {
 
 		ClientTardis current = (ClientTardis) ClientTardisUtil.getCurrentTardis();
 
+		if (current == null)
+			return;
+
 		if (!isPlayerInATardis()) {
 			this.stopSounds();
 			return;
