@@ -6,6 +6,7 @@ import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -26,6 +27,22 @@ public class ClientTardisUtil {
 	private static boolean alarmDeltaDirection; // true for increasing false for decreasing
 	private static int powerDeltaTick;
 	public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
+
+	private static Tardis currentTardis;
+
+	static {
+		ClientTickEvents.START_CLIENT_TICK.register(client -> {
+			if (client.world == null || client.player == null)
+				return;
+
+			Tardis newTardis = null;
+
+			if (client.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+				newTardis = TardisUtil.findTardisByInterior(client.player.getBlockPos(), false);
+
+			currentTardis = newTardis;
+		});
+	}
 
 	public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
 		PacketByteBuf buf = PacketByteBufs.create();
@@ -67,15 +84,7 @@ public class ClientTardisUtil {
 	 */
 	// FIXME: wow what a waste of resources.
 	public static Tardis getCurrentTardis() {
-		if (!isPlayerInATardis())
-			return null;
-
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-
-		if (player == null)
-			return null;
-
-        return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
+		return currentTardis;
 	}
 
 	public static double distanceFromConsole() {

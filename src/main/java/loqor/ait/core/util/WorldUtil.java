@@ -12,43 +12,62 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 public class WorldUtil {
 
     public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
-        if (vSearch == TravelHandlerBase.GroundSearch.NONE && !hSearch)
-            return cached;
-
+        ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
         int y = switch (vSearch) {
-            case CEILING -> cached.getWorld().getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ());
-            case FLOOR -> findSafeBottomY(cached.getWorld(), pos);
-            case MEDIAN -> 0; // TODO
-            case NONE -> pos.getY();
+            case CEILING -> findSafeTopY(world, pos);
+            case FLOOR -> findSafeBottomY(world, pos);
+            case MEDIAN -> pos.getY(); // TODO
         };
 
         return cached.offset(0, y, 0);
     }
 
-    private static int findSafeBottomY(ServerWorld world, BlockPos pos) {
-        BlockPos.Mutable mutPos = pos.mutableCopy().setY(world.getBottomY());
-
-        BlockState current = world.getBlockState(mutPos.down());
-        BlockState above = world.getBlockState(mutPos);
+    private static int findSafeMedianY(ServerWorld world, BlockPos pos) {
+        BlockPos upCursor = pos;
+        BlockPos downCursor = pos;
 
         while (true) {
-            System.out.println("At y: " + mutPos.getY());
+
+        }
+    }
+
+    private static int findSafeBottomY(ServerWorld world, BlockPos pos) {
+        BlockPos cursor = pos.withY(world.getBottomY() + 1);
+
+        BlockState current = world.getBlockState(cursor.down());
+        BlockState above = world.getBlockState(cursor);
+
+        while (true) {
+            System.out.println("At y: " + cursor.getY());
 
             if (!current.blocksMovement() && !above.blocksMovement())
-                return mutPos.getY();
+                return cursor.getY();
 
             current = above;
-            above = world.getBlockState(mutPos.move(Direction.UP));
+            above = world.getBlockState(cursor.up());
         }
+    }
+
+    private static int findSafeTopY(ServerWorld world, BlockPos pos) {
+        int x = pos.getX();
+        int z = pos.getZ();
+
+        return world.getChunk(
+                ChunkSectionPos.getSectionCoord(x),
+                ChunkSectionPos.getSectionCoord(z)
+        ).sampleHeightmap(
+                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                x & 15, z & 15
+        );
     }
 
     @Environment(EnvType.CLIENT)

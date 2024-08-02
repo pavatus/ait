@@ -263,7 +263,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     public enum GroundSearch {
-        NONE,
         FLOOR,
         CEILING,
         MEDIAN;
