@@ -43,7 +43,6 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	private final Identifier category;
 	private final Identifier id;
 	private final Loyalty loyalty;
-	private final BiomeOverrides overrides;
 
 	@Environment(EnvType.CLIENT)
 	private ClientExteriorVariantSchema cachedSchema;
@@ -54,7 +53,6 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 
 		this.id = id;
 		this.loyalty = loyalty.orElse(null);
-		this.overrides = this.overrides();
 	}
 
 	protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
@@ -86,10 +84,6 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 	@Deprecated
 	public MatSound getSound(TravelHandlerBase.State state) {
 		return state.effect();
-	}
-
-	public BiomeOverrides overrides() {
-		return overrides;
 	}
 
 	public Identifier categoryId() {

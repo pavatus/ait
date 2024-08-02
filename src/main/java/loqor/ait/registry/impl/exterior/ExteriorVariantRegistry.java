@@ -2,6 +2,7 @@ package loqor.ait.registry.impl.exterior;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.datapack.DatapackExterior;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
@@ -65,7 +66,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
 			buf.encodeAsJson(DatapackExterior.CODEC, new DatapackExterior(
 					schema.id(), schema.categoryId(), schema.id(), DatapackExterior.DEFAULT_TEXTURE,
-					DatapackExterior.DEFAULT_TEXTURE, schema.requirement(), schema.overrides(),
+					DatapackExterior.DEFAULT_TEXTURE, schema.requirement(), BiomeOverrides.EMPTY,
 					false
 			));
 		}
