@@ -672,6 +672,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
         provider.addTranslation("tardis.message.control.siege.enabled", "Siege Mode: Enabled");
         provider.addTranslation("tardis.message.control.siege.disabled", "Siege Mode: Disabled");
+        provider.addTranslation("tardis.message.control.telepathic.success", "Destination Found");
+        provider.addTranslation("tardis.message.control.telepathic.failed", "Destination Not Found");
+        provider.addTranslation("tardis.message.control.telepathic.choosing", "The TARDIS is choosing...");
 
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");

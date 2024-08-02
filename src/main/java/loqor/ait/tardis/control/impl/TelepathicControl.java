@@ -57,21 +57,16 @@ public class TelepathicControl extends Control {
 
 		if (player.getMainHandStack().getItem() instanceof NameTagItem) {
 			ItemStack hand = player.getMainHandStack();
-
 			if (!hand.hasCustomName())
 				return false;
-
 			tardis.stats().setName(hand.getName().getString());
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
-
 			if (!player.isCreative())
 				hand.decrement(1);
-
-			this.addToControlSequence(tardis, player, console);
 			return true;
 		}
 
-		Text text = Text.literal("The TARDIS is choosing.."); // todo translatable
+		Text text = Text.translatable("tardis.message.control.telepathic.choosing"); // todo translatable
 		player.sendMessage(text, true);
 
 		DirectedGlobalPos.Cached globalPos = tardis.travel().position();
