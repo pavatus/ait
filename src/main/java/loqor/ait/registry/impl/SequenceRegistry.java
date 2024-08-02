@@ -36,11 +36,9 @@ import java.util.List;
 public class SequenceRegistry {
 	public static final SimpleRegistry<Sequence> REGISTRY = FabricRegistryBuilder.createSimple(RegistryKey.<Sequence>ofRegistry(new Identifier(AITMod.MOD_ID, "sequence"))).buildAndRegister();
 	private static final Random random = Random.create();
-
 	public static Sequence register(Sequence schema) {
 		return Registry.register(REGISTRY, schema.id(), schema);
 	}
-
 	public static Sequence AVOID_DEBRIS;
 	public static Sequence DIMENSIONAL_BREACH;
 	public static Sequence ENERGY_DRAIN;
