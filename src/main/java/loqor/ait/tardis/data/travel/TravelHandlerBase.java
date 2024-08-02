@@ -216,39 +216,38 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return true;
     }
 
+    // TODO rewrite because theo is just gonna get really pissy about it if we dont <3
     protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
         ServerWorld world = destination.getWorld();
         BlockPos.Mutable temp = destination.getPos().mutableCopy();
 
-        if (!antigravs.get()) {
-            for (int x = -5; x <= 5; x++) {
-                for (int z = -5; z <= 5; z++) {
-                    for (int y = -limit; y <= limit; y++) {
-                        temp.set(temp.getX() + x,
-                                temp.getY() + y,
-                                temp.getZ() + z);
+        destination = destination.pos(temp.getX(), MathHelper.clamp(
+                temp.getY(), world.getBottomY(), world.getTopY() - 1
+        ), temp.getZ());
 
-                        BlockState current = world.getBlockState(temp);
-                        BlockState top = world.getBlockState(temp.up());
+        BlockState current;
+        BlockState top;
+        BlockState ground;
 
-                        if (isReplaceable(current, top)) {
+        if (fullCheck) {
+            for (int i = 0; i < limit; i++) {
+                current = world.getBlockState(temp);
+                top = world.getBlockState(temp.up());
+                ground = world.getBlockState(temp.down());
 
-                            if (isLargePoolOfWater(world, temp)) {
-                                continue;
-                            }
+                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for ground
+                    return destination.pos(temp);
 
-                            if (isLargePoolOfLava(world, temp)) {
-                                continue;
-                            }
-
-                            return destination.pos(temp);
-                        }
-                    }
-                }
+                temp = temp.down().mutableCopy();
             }
         }
 
-        return destination;
+        temp = temp.mutableCopy();
+
+        current = world.getBlockState(temp);
+        top = world.getBlockState(temp.up());
+
+        return isReplaceable(current, top) ? destination.pos(temp) : destination;
     }
 
     private boolean isLargePoolOfWater(ServerWorld world, BlockPos pos) {
@@ -257,32 +256,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
                 BlockState blockState = world.getBlockState(pos.add(x, 0, z));
                 if (blockState.getBlock() == Blocks.WATER && blockState.get(FluidBlock.LEVEL) == 0) {
                     return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isLargePoolOfLava(ServerWorld world, BlockPos pos) {
-        for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
-                BlockState blockState = world.getBlockState(pos.add(x, 0, z));
-                if (blockState.getBlock() == Blocks.LAVA && blockState.get(FluidBlock.LEVEL) == 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean hasAirInArea(ServerWorld world, BlockPos pos) {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                for (int z = -1; z <= 1; z++) {
-                    BlockState blockState = world.getBlockState(pos.add(x, y, z));
-                    if (blockState.isAir()) {
-                        return true;
-                    }
                 }
             }
         }
