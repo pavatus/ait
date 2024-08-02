@@ -93,7 +93,6 @@ public class DatapackExterior extends ExteriorVariantSchema {
 		return this.getParent().door();
 	}
 
-	@Override
 	public BiomeOverrides overrides() {
 		return overrides;
 	}
