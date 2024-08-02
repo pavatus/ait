@@ -45,14 +45,14 @@ public abstract class ClientPoliceBoxVariant extends ClientExteriorVariantSchema
 	@Override
 	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
 		return switch(biomeType) {
-			case DEFAULT -> BiomeHandler.BiomeType.DEFAULT.getTextureFromKey(null);
-			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTextureFromKey(CATEGORY_IDENTIFIER);
-			case SCULK -> BiomeHandler.BiomeType.SCULK.getTextureFromKey(CATEGORY_IDENTIFIER);
-			case SANDY -> BiomeHandler.BiomeType.SANDY.getTextureFromKey(CATEGORY_IDENTIFIER);
-			case RED_SANDY -> BiomeHandler.BiomeType.RED_SANDY.getTextureFromKey(CATEGORY_IDENTIFIER);
-			case MUDDY -> BiomeHandler.BiomeType.MUDDY.getTextureFromKey(CATEGORY_IDENTIFIER);
-			case CHORUS -> BiomeHandler.BiomeType.CHORUS.getTextureFromKey(CATEGORY_IDENTIFIER);
-			case CHERRY -> BiomeHandler.BiomeType.CHERRY.getTextureFromKey(CATEGORY_IDENTIFIER);
+			case DEFAULT -> BiomeHandler.BiomeType.DEFAULT.getTexture(null);
+			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTexture(CATEGORY_IDENTIFIER);
+			case SCULK -> BiomeHandler.BiomeType.SCULK.getTexture(CATEGORY_IDENTIFIER);
+			case SANDY -> BiomeHandler.BiomeType.SANDY.getTexture(CATEGORY_IDENTIFIER);
+			case RED_SANDY -> BiomeHandler.BiomeType.RED_SANDY.getTexture(CATEGORY_IDENTIFIER);
+			case MUDDY -> BiomeHandler.BiomeType.MUDDY.getTexture(CATEGORY_IDENTIFIER);
+			case CHORUS -> BiomeHandler.BiomeType.CHORUS.getTexture(CATEGORY_IDENTIFIER);
+			case CHERRY -> BiomeHandler.BiomeType.CHERRY.getTexture(CATEGORY_IDENTIFIER);
 		};
 	}
 }

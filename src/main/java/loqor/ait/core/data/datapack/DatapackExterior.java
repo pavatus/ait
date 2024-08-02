@@ -4,7 +4,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.Keyable;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.codecs.SimpleMapCodec;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.schema.door.DoorSchema;
@@ -12,8 +15,10 @@ import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.util.EnumMap;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -21,6 +26,8 @@ import net.minecraft.util.shape.VoxelShape;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,13 +69,9 @@ public class DatapackExterior extends ExteriorVariantSchema {
 		AtomicReference<DatapackExterior> created = new AtomicReference<>();
 
 		CODEC.decode(JsonOps.INSTANCE, json)
-				.get()
-				.ifLeft(var -> {
-					created.set(var.getFirst());
-				})
-				.ifRight(err -> {
+				.get().ifLeft(var -> created.set(var.getFirst())).ifRight(err -> {
 					created.set(null);
-					AITMod.LOGGER.error("Error decoding datapack exterior variant: " + err);
+                    AITMod.LOGGER.error("Error decoding datapack exterior variant: {}", err);
 				});
 
 		return created.get();
@@ -94,8 +97,6 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
 	/**
 	 * @see TravelHandlerBase.State#effect()
-	 * @param state
-	 * @return
 	 */
 	@Override
 	public MatSound getSound(TravelHandlerBase.State state) {
@@ -141,5 +142,12 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
 	public Identifier getBiomeTexturePath() {
 		return this.biomeTexturePath;
+	}
+
+	public static class BiomeOverrides {
+
+		public static final SimpleMapCodec<BiomeHandler.BiomeType, String> CODEC = Codec.simpleMap(
+				BiomeHandler.BiomeType.CODEC.orElse(BiomeHandler.BiomeType.DEFAULT), Codec.STRING.orElse(null), BiomeHandler.BiomeType.DEFAULT
+		);
 	}
 }

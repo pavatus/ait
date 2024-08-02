@@ -6,8 +6,6 @@ import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
-import static loqor.ait.tardis.data.BiomeHandler.BiomeType.SNOWY;
-
 public class ClientPoliceBoxCoralVariant extends ClientPoliceBoxVariant {
 	public ClientPoliceBoxCoralVariant() {
 		super("coral");
@@ -27,13 +25,13 @@ public class ClientPoliceBoxCoralVariant extends ClientPoliceBoxVariant {
 	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
 		return switch(biomeType) {
 			default -> super.getBiomeTexture(biomeType);
-			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTextureFromKey(texture());
-			case SCULK -> BiomeHandler.BiomeType.SCULK.getTextureFromKey(texture());
-			case SANDY -> BiomeHandler.BiomeType.SANDY.getTextureFromKey(texture());
-			case RED_SANDY -> BiomeHandler.BiomeType.RED_SANDY.getTextureFromKey(texture());
-			case MUDDY -> BiomeHandler.BiomeType.MUDDY.getTextureFromKey(texture());
-			case CHORUS -> BiomeHandler.BiomeType.CHORUS.getTextureFromKey(texture());
-			case CHERRY -> BiomeHandler.BiomeType.CHERRY.getTextureFromKey(texture());
+			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTexture(texture());
+			case SCULK -> BiomeHandler.BiomeType.SCULK.getTexture(texture());
+			case SANDY -> BiomeHandler.BiomeType.SANDY.getTexture(texture());
+			case RED_SANDY -> BiomeHandler.BiomeType.RED_SANDY.getTexture(texture());
+			case MUDDY -> BiomeHandler.BiomeType.MUDDY.getTexture(texture());
+			case CHORUS -> BiomeHandler.BiomeType.CHORUS.getTexture(texture());
+			case CHERRY -> BiomeHandler.BiomeType.CHERRY.getTexture(texture());
 		};
 	}
 }

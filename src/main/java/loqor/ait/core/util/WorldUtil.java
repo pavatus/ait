@@ -26,6 +26,9 @@ public class WorldUtil {
         if (hSearch && vSearch == TravelHandlerBase.GroundSearch.NONE)
             vSearch = TravelHandlerBase.GroundSearch.MEDIAN;
 
+        int x = pos.getX();
+        int z = pos.getZ();
+
         int y = switch (vSearch) {
             case CEILING -> findSafeTopY(world, pos);
             case FLOOR -> findSafeBottomY(world, pos);
@@ -33,7 +36,7 @@ public class WorldUtil {
             case NONE -> pos.getY();
         };
 
-        return cached.offset(0, y, 0);
+        return cached.pos(x, y, z);
     }
 
     private static int findSafeMedianY(ServerWorld world, BlockPos pos) {
