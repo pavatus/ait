@@ -18,9 +18,7 @@ import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
 import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -87,6 +85,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         if (this.isClient())
             return;
 
+        @SuppressWarnings("resource")
         MinecraftServer current = TravelHandlerBase.server();
 
         this.position.ifPresent(cached -> cached.init(current), false);
@@ -209,16 +208,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return TardisUtil.getOverworld().getServer();
     }
 
-    protected static boolean isReplaceable(BlockState... states) {
-        for (BlockState state1 : states) {
-            if (!state1.isReplaceable()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public enum State {
         LANDED,
         DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat),
@@ -263,8 +252,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     public enum GroundSearch {
+        NONE,
         FLOOR,
         CEILING,
-        MEDIAN;
+        MEDIAN
     }
 }

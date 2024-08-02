@@ -16,16 +16,21 @@ import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
+@SuppressWarnings("deprecation")
 public class WorldUtil {
 
     public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
+        if (hSearch && vSearch == TravelHandlerBase.GroundSearch.NONE)
+            vSearch = TravelHandlerBase.GroundSearch.MEDIAN;
+
         int y = switch (vSearch) {
             case CEILING -> findSafeTopY(world, pos);
             case FLOOR -> findSafeBottomY(world, pos);
-            case MEDIAN -> pos.getY(); // TODO
+            case MEDIAN -> findSafeMedianY(world, pos);
+            case NONE -> pos.getY();
         };
 
         return cached.offset(0, y, 0);
@@ -33,10 +38,31 @@ public class WorldUtil {
 
     private static int findSafeMedianY(ServerWorld world, BlockPos pos) {
         BlockPos upCursor = pos;
+        BlockState curUp = world.getBlockState(upCursor);
+        BlockState aboveUp = world.getBlockState(upCursor.up());
+
         BlockPos downCursor = pos;
+        BlockState curDown = world.getBlockState(downCursor);
+        BlockState aboveDown = world.getBlockState(downCursor.down());
 
         while (true) {
+            System.out.println("At top y: " + upCursor.getY());
+            System.out.println("At bottom y: " + downCursor.getY());
 
+            if (!curUp.blocksMovement() && !aboveUp.blocksMovement())
+                return upCursor.getY();
+
+            if (!curDown.blocksMovement() && !aboveDown.blocksMovement())
+                return downCursor.getY();
+
+            upCursor = upCursor.up();
+            downCursor = downCursor.down();
+
+            curUp = aboveUp;
+            aboveUp = world.getBlockState(upCursor);
+
+            curDown = aboveDown;
+            aboveDown = world.getBlockState(downCursor);
         }
     }
 
@@ -52,8 +78,10 @@ public class WorldUtil {
             if (!current.blocksMovement() && !above.blocksMovement())
                 return cursor.getY();
 
+            cursor = cursor.up();
+
             current = above;
-            above = world.getBlockState(cursor.up());
+            above = world.getBlockState(cursor);
         }
     }
 
@@ -81,10 +109,6 @@ public class WorldUtil {
 
     public static Text worldText(RegistryKey<World> key) {
         return Text.translatableWithFallback(key.getValue().toTranslationKey("dimension"), fakeTranslate(key));
-    }
-
-    public static Text worldText(Identifier value) {
-        return Text.translatableWithFallback(value.toTranslationKey("dimension"), fakeTranslate(value));
     }
 
     private static String fakeTranslate(RegistryKey<World> id) {
