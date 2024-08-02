@@ -187,8 +187,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
                 border.clamp(pos.getX(), pos.getY(), pos.getZ())
         );
 
-        cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
-        this.forceDestination(cached);
+        this.forceDestination(WorldUtil.locateSafe(
+                cached, this.vGroundSearch.get(), this.hGroundSearch.get()
+        ));
     }
 
     public void forceDestination(DirectedGlobalPos.Cached cached) {
@@ -264,6 +265,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     public enum GroundSearch {
         NONE,
         FLOOR,
-        CEILING
+        CEILING,
+        MEDIAN;
     }
 }

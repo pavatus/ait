@@ -4,17 +4,51 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 public class WorldUtil {
 
-    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch ySearch, boolean hSearch) {
-        return cached;
+    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
+        if (vSearch == TravelHandlerBase.GroundSearch.NONE && !hSearch)
+            return cached;
+
+        BlockPos pos = cached.getPos();
+
+        int y = switch (vSearch) {
+            case CEILING -> cached.getWorld().getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ());
+            case FLOOR -> findSafeBottomY(cached.getWorld(), pos);
+            case MEDIAN -> 0; // TODO
+            case NONE -> pos.getY();
+        };
+
+        return cached.offset(0, y, 0);
+    }
+
+    private static int findSafeBottomY(ServerWorld world, BlockPos pos) {
+        BlockPos.Mutable mutPos = pos.mutableCopy().setY(world.getBottomY());
+
+        BlockState current = world.getBlockState(mutPos.down());
+        BlockState above = world.getBlockState(mutPos);
+
+        while (true) {
+            System.out.println("At y: " + mutPos.getY());
+
+            if (!current.blocksMovement() && !above.blocksMovement())
+                return mutPos.getY();
+
+            current = above;
+            above = world.getBlockState(mutPos.move(Direction.UP));
+        }
     }
 
     @Environment(EnvType.CLIENT)
