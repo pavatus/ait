@@ -3,10 +3,10 @@ package loqor.ait.registry.impl.exterior;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.data.datapack.DatapackExterior;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.exterior.variant.bookshelf.client.ClientBookshelfDefaultVariant;
 import loqor.ait.tardis.exterior.variant.booth.client.*;
 import loqor.ait.tardis.exterior.variant.box.client.*;
@@ -92,10 +92,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 			return convertNonDatapack(variant);
 		
 		return new ClientExteriorVariantSchema(variant.id()) {
-			@Override
-			public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
-				return variant.getBiomeTexturePath();
-			}
 
 			@Override
 			public Identifier texture() {
@@ -115,6 +111,11 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 			@Override
 			public Vector3f sonicItemTranslations() {
 				return new Vector3f(0.5f, 1.2f, 1.2f);
+			}
+
+			@Override
+			public BiomeOverrides overrides() {
+				return variant.overrides();
 			}
 		};
 	}

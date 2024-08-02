@@ -28,17 +28,17 @@ public class ClientTardisUtil {
 	private static int powerDeltaTick;
 	public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
 
-	private static Tardis currentTardis;
+	private static ClientTardis currentTardis;
 
 	static {
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			if (client.world == null || client.player == null)
 				return;
 
-			Tardis newTardis = null;
+			ClientTardis newTardis = null;
 
 			if (client.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
-				newTardis = TardisUtil.findTardisByInterior(client.player.getBlockPos(), false);
+				newTardis = (ClientTardis) TardisUtil.findTardisByInterior(client.player.getBlockPos(), false);
 
 			currentTardis = newTardis;
 		});
@@ -82,8 +82,7 @@ public class ClientTardisUtil {
 	/**
 	 * Gets the tardis the player is currently inside
 	 */
-	// FIXME: wow what a waste of resources.
-	public static Tardis getCurrentTardis() {
+	public static ClientTardis getCurrentTardis() {
 		return currentTardis;
 	}
 

@@ -4,16 +4,16 @@ import loqor.ait.client.renderers.coral.CoralRenderer;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.coral.CoralGrowthExteriorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
 public class ClientGrowthVariant extends ClientExteriorVariantSchema {
+
 	public ClientGrowthVariant() {
 		super(new Identifier(AITMod.MOD_ID, "exterior/coral_growth"));
 	}
-
 
 	@Override
 	public ExteriorModel model() {
@@ -36,7 +36,7 @@ public class ClientGrowthVariant extends ClientExteriorVariantSchema {
 	}
 
 	@Override
-	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
+	public BiomeOverrides overrides() {
 		return null;
 	}
 }

@@ -13,18 +13,25 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 @SuppressWarnings("deprecation")
 public class WorldUtil {
 
+    private static final int SAFE_RADIUS = 3;
+
     public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
-        if (hSearch && vSearch == TravelHandlerBase.GroundSearch.NONE)
-            vSearch = TravelHandlerBase.GroundSearch.MEDIAN;
+        if (hSearch) {
+            BlockPos temp = findSafeXZ(world, pos, SAFE_RADIUS);
+
+            if (temp != null)
+                return cached.pos(temp);
+        }
 
         int x = pos.getX();
         int z = pos.getZ();
@@ -37,6 +44,35 @@ public class WorldUtil {
         };
 
         return cached.pos(x, y, z);
+    }
+
+    private static BlockPos findSafeXZ(ServerWorld world, BlockPos original, int radius) {
+        BlockPos.Mutable pos = original.mutableCopy();
+
+        int minX = pos.getX() - radius;
+        int maxX = pos.getX() + radius;
+
+        int minZ = pos.getZ() - radius;
+        int maxZ = pos.getZ() + radius;
+
+        for (int x = minX; x < maxX; x++) {
+            for (int z = minZ; z < maxZ; z++) {
+                pos.setX(x).setZ(z);
+
+                BlockState floor = world.getBlockState(pos.move(Direction.DOWN));
+
+                if (!floor.blocksMovement())
+                    continue;
+
+                BlockState curUp = world.getBlockState(pos);
+                BlockState aboveUp = world.getBlockState(pos.move(Direction.UP));
+
+                if (!curUp.blocksMovement() && !aboveUp.blocksMovement())
+                    return pos.toImmutable();
+            }
+        }
+
+        return null;
     }
 
     private static int findSafeMedianY(ServerWorld world, BlockPos pos) {

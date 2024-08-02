@@ -4,21 +4,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import com.mojang.serialization.Keyable;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.mojang.serialization.codecs.SimpleMapCodec;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.EnumMap;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -26,19 +22,18 @@ import net.minecraft.util.shape.VoxelShape;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatapackExterior extends ExteriorVariantSchema {
+
 	public static final Identifier DEFAULT_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/desktop/missing_preview.png");
 
 	protected final Identifier parent;
 	protected final Identifier texture;
 	protected final Identifier emission;
-	protected final Identifier biomeTexturePath;
-	protected boolean initiallyDatapack;
+	protected final BiomeOverrides overrides;
+	protected final boolean initiallyDatapack;
 
 	public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
@@ -47,18 +42,21 @@ public class DatapackExterior extends ExteriorVariantSchema {
 					Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
 					Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
 					Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
-					Identifier.CODEC.fieldOf("biomeTexturePath").forGetter(DatapackExterior::getBiomeTexturePath),
-					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack),
-					Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement)
+					Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
+					BiomeOverrides.CODEC.optionalFieldOf("overrides", BiomeOverrides.EMPTY).forGetter(DatapackExterior::overrides),
+					Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack)
 			).apply(instance, DatapackExterior::new));
 
-	public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture, Identifier emission, Identifier biomeTexturePath, boolean isDatapack, Optional<Loyalty> loyalty) {
+	public DatapackExterior(Identifier id, Identifier category, Identifier parent,
+							Identifier texture, Identifier emission, Optional<Loyalty> loyalty,
+							BiomeOverrides overrides, boolean isDatapack
+	) {
 		super(category, id, loyalty);
 		this.parent = parent;
 		this.texture = texture;
 		this.emission = emission;
-		this.biomeTexturePath = biomeTexturePath;
 		this.initiallyDatapack = isDatapack;
+		this.overrides = overrides;
 	}
 
 	public static DatapackExterior fromInputStream(InputStream stream) {
@@ -93,6 +91,11 @@ public class DatapackExterior extends ExteriorVariantSchema {
 	@Override
 	public DoorSchema door() {
 		return this.getParent().door();
+	}
+
+	@Override
+	public BiomeOverrides overrides() {
+		return overrides;
 	}
 
 	/**
@@ -140,14 +143,4 @@ public class DatapackExterior extends ExteriorVariantSchema {
 		return this.emission;
 	}
 
-	public Identifier getBiomeTexturePath() {
-		return this.biomeTexturePath;
-	}
-
-	public static class BiomeOverrides {
-
-		public static final SimpleMapCodec<BiomeHandler.BiomeType, String> CODEC = Codec.simpleMap(
-				BiomeHandler.BiomeType.CODEC.orElse(BiomeHandler.BiomeType.DEFAULT), Codec.STRING.orElse(null), BiomeHandler.BiomeType.DEFAULT
-		);
-	}
 }

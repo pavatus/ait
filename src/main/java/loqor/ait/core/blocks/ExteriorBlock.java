@@ -310,11 +310,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 	}
 
 	@Override
-	public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
-		return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
-	}
-
-	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
 		return (world1, blockPos, blockState, ticker) -> {
 			if (ticker instanceof ExteriorBlockEntity exterior) {

@@ -119,7 +119,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         profiler.swap("biome");
         if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-			Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
+			Identifier biomeTexture = biome.getBiomeKey().get(exteriorVariant.overrides());
 
 			if (biomeTexture != null && !texture.equals(biomeTexture) && tardis.travel().position().getWorld() != null && !(tardis.travel().position().getWorld().getBlockState(tardis.travel().position().getPos().down()).getBlock() instanceof AirBlock))
                 model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, 1);

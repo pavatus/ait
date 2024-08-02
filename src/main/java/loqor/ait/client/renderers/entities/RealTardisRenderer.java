@@ -96,7 +96,7 @@ public class RealTardisRenderer extends EntityRenderer<RealTardisEntity> {
 		}
 
 		BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-		Identifier biomeTexture = exteriorVariant.getBiomeTexture(biome.getBiomeKey());
+		Identifier biomeTexture = biome.getBiomeKey().get(exteriorVariant.overrides());
 
 		if (biomeTexture != null && !this.getTexture(entity).equals(biomeTexture)) {
 			model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);

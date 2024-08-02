@@ -1,10 +1,16 @@
 package loqor.ait.tardis.exterior.variant.box.client;
 
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.tardis.data.BiomeHandler;
-import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
 public class ClientPoliceBoxTokamakVariant extends ClientPoliceBoxVariant {
+
+	private static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
+			.with(type -> type.getTexture(CATEGORY_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
+					BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY
+			).build();
+
 	public ClientPoliceBoxTokamakVariant() {
 		super("tokamak");
 	}
@@ -15,12 +21,7 @@ public class ClientPoliceBoxTokamakVariant extends ClientPoliceBoxVariant {
 	}
 
 	@Override
-	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
-		return switch(biomeType) {
-			default -> super.getBiomeTexture(biomeType);
-			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTexture(texture());
-			case CHORUS -> BiomeHandler.BiomeType.CHORUS.getTexture(texture());
-			case CHERRY -> BiomeHandler.BiomeType.CHERRY.getTexture(texture());
-		};
+	public BiomeOverrides overrides() {
+		return OVERRIDES;
 	}
 }

@@ -3,8 +3,8 @@ package loqor.ait.tardis.exterior.variant.tardim.client;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.TardimExteriorModel;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.tardis.data.BiomeHandler;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
@@ -15,12 +15,15 @@ public abstract class ClientTardimVariant extends ClientExteriorVariantSchema {
 	protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/tardim.png");
 	protected static final String TEXTURE_PATH = CATEGORY_PATH + "/tardim_";
 
+	protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(
+			type -> type.getTexture(CATEGORY_IDENTIFIER)
+	);
+
 	protected ClientTardimVariant(String name) {
 		super(new Identifier(AITMod.MOD_ID, "exterior/tardim/" + name));
 
 		this.name = name;
 	}
-
 
 	@Override
 	public ExteriorModel model() {
@@ -43,16 +46,7 @@ public abstract class ClientTardimVariant extends ClientExteriorVariantSchema {
 	}
 
 	@Override
-	public Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType) {
-		return switch(biomeType) {
-			case DEFAULT -> null;
-			case SNOWY -> BiomeHandler.BiomeType.SNOWY.getTexture(CATEGORY_IDENTIFIER);
-			case SCULK -> BiomeHandler.BiomeType.SCULK.getTexture(CATEGORY_IDENTIFIER);
-			case SANDY -> BiomeHandler.BiomeType.SANDY.getTexture(CATEGORY_IDENTIFIER);
-			case RED_SANDY -> BiomeHandler.BiomeType.RED_SANDY.getTexture(CATEGORY_IDENTIFIER);
-			case MUDDY -> BiomeHandler.BiomeType.MUDDY.getTexture(CATEGORY_IDENTIFIER);
-			case CHORUS -> BiomeHandler.BiomeType.CHORUS.getTexture(CATEGORY_IDENTIFIER);
-			case CHERRY -> BiomeHandler.BiomeType.CHERRY.getTexture(CATEGORY_IDENTIFIER);
-		};
+	public BiomeOverrides overrides() {
+		return OVERRIDES;
 	}
 }

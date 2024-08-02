@@ -3,10 +3,10 @@ package loqor.ait.core.data.schema.exterior;
 import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.tardis.data.BiomeHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -43,8 +43,6 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 		return ExteriorVariantRegistry.getInstance().get(this.parent);
 	}
 
-	public abstract Identifier getBiomeTexture(BiomeHandler.BiomeType biomeType);
-
 	public Identifier id() {
 		return id;
 	}
@@ -56,6 +54,8 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 	public abstract ExteriorModel model();
 
 	public abstract Vector3f sonicItemTranslations();
+
+	public abstract BiomeOverrides overrides();
 
 	public float[] sonicItemRotations() {
 		return new float[]{0f, 45f};

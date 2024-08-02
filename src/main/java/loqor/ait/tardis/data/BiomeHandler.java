@@ -1,15 +1,11 @@
 package loqor.ait.tardis.data;
 
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.Keyable;
-import com.mojang.serialization.codecs.PrimitiveCodec;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.util.EnumMap;
 import loqor.ait.tardis.util.Ordered;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.registry.RegistryKey;
@@ -20,8 +16,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.function.Function;
 
 /**
  * @author Loqor
@@ -89,26 +84,28 @@ public class BiomeHandler extends KeyedTardisComponent {
         return BiomeType.DEFAULT;
     }
 
-    public enum BiomeType implements StringIdentifiable, Keyable, Ordered {
+    public enum BiomeType implements StringIdentifiable, Ordered {
         DEFAULT,
-        SNOWY("_snowy"),
-        SCULK("_sculk"),
-        SANDY("_sand"),
-        RED_SANDY("_red_sand"),
-        MUDDY("_mud"),
-        CHORUS("_chorus"),
-        CHERRY("_cherry");
+        SNOWY("_snowy", BiomeOverrides::snowy),
+        SCULK("_sculk", BiomeOverrides::sculk),
+        SANDY("_sand", BiomeOverrides::sandy),
+        RED_SANDY("_red_sand", BiomeOverrides::redSandy),
+        MUDDY("_mud", BiomeOverrides::muddy),
+        CHORUS("_chorus", BiomeOverrides::chorus),
+        CHERRY("_cherry", BiomeOverrides::cherry);
 
         public static final BiomeType[] VALUES = BiomeType.values();
 
+        private final Function<BiomeOverrides, Identifier> func;
         private final String suffix;
 
-        BiomeType(String suffix) {
+        BiomeType(String suffix, Function<BiomeOverrides, Identifier> func) {
             this.suffix = suffix;
+            this.func = func;
         }
 
         BiomeType() {
-            this(null);
+            this(null, o -> null);
         }
 
         @Override
@@ -126,33 +123,16 @@ public class BiomeHandler extends KeyedTardisComponent {
                     0, path.length() - 4) + this.suffix + ".png");
         };
 
-        @Override
-        public <T> Stream<T> keys(DynamicOps<T> ops) {
-            return Arrays.stream(VALUES).map(biomeType
-                    -> ops.createString(biomeType.toString()));
+        public Identifier get(BiomeOverrides overrides) {
+            if (overrides == null)
+                return null;
+
+            return this.func.apply(overrides);
         }
 
         @Override
         public int index() {
             return ordinal();
         }
-
-        public static PrimitiveCodec<BiomeType> CODEC = new PrimitiveCodec<>() {
-
-            @Override
-            public <T> DataResult<BiomeType> read(final DynamicOps<T> ops, final T input) {
-                return ops.getStringValue(input).map(BiomeType::valueOf);
-            }
-
-            @Override
-            public <T> T write(final DynamicOps<T> ops, final BiomeType value) {
-                return ops.createString(value.toString());
-            }
-
-            @Override
-            public String toString() {
-                return "BiomeType";
-            }
-        };
     }
 }

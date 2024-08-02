@@ -154,11 +154,6 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 	}
 
 	@Override
-	public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
-		return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
-	}
-
-	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		builder.add(FACING, WATERLOGGED);
 	}

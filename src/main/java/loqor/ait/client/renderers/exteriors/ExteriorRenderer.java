@@ -19,7 +19,6 @@ import loqor.ait.tardis.data.CloakData;
 import loqor.ait.tardis.data.OvergrownData;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -83,7 +82,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			return;
 		}
 
-		ClientExteriorVariantSchema exteriorVariant = ClientExteriorVariantRegistry.withParent(tardis.getExterior().getVariant());
+		ClientExteriorVariantSchema exteriorVariant = tardis.getExterior().getVariant().getClient();
 		TardisExterior tardisExterior = tardis.getExterior();
 
 		if (tardisExterior == null || exteriorVariant == null) {
@@ -183,11 +182,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
-			Identifier biomeTexture = exteriorVariant.getBiomeTexture(handler.getBiomeKey());
+			Identifier biomeTexture = handler.getBiomeKey().get(exteriorVariant.overrides());
 
-			if (biomeTexture != null && !texture.equals(biomeTexture) && !(entity.getWorld().getBlockState(entity.getPos().down()).getBlock() instanceof AirBlock)) {
+			if (biomeTexture != null && !texture.equals(biomeTexture)) {
 				// yes i know it says emission, but go fuck yourself <3
-				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, true)), light, overlay, 1, 1, 1, alpha);
+				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(
+						AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, true)
+				), light, overlay, 1, 1, 1, alpha);
 			}
 		}
 

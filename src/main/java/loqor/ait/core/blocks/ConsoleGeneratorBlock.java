@@ -6,7 +6,6 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,8 +17,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,11 +44,6 @@ public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements
 			return;
 		}
 		super.onPlaced(world, pos, state, placer, itemStack);
-	}
-
-	@Override
-	public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
-		return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
 	}
 
 	@Override
