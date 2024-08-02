@@ -72,7 +72,7 @@ public class WaypointHandler extends TardisComponent {
 		if (!this.hasWaypoint())
 			return;
 
-		this.tardis().travel().destination(this.get().getPos());
+		this.tardis().travel().forceDestination(this.get().getPos());
 	}
 
 	public void spawnItem(BlockPos console) {

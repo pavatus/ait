@@ -91,12 +91,16 @@ public class MoodEventPoolRegistry {
 
         FAST_RETURN_AND_TAKEOFF = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_return_and_takeoff"), tardis -> {
             TravelHandler travel = tardis.travel();
-            if (tardis.door().isOpen()) tardis.door().closeDoors();
+
+            if (tardis.door().isOpen())
+                tardis.door().closeDoors();
+
             travel.handbrake(false);
             boolean same = travel.destination().equals(travel.previousPosition());
-            if (travel.previousPosition() != null) {
-                travel.destination(same ? travel.position() : travel.previousPosition());
-            }
+
+            if (travel.previousPosition() != null)
+                travel.forceDestination(same ? travel.position() : travel.previousPosition());
+
             travel.dematerialize();
         }, 128, TardisMood.Alignment.NEGATIVE));
 

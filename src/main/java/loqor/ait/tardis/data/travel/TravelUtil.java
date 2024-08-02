@@ -3,6 +3,7 @@ package loqor.ait.tardis.data.travel;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.util.AsyncLocatorUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -10,28 +11,34 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class TravelUtil {
 
     private static final int BASE_FLIGHT_TICKS = 5 * 20;
 
-    public static void randomPos(Tardis tardis, int limit, int max) {
+    public static void randomPos(Tardis tardis, int limit, int max, Consumer<DirectedGlobalPos.Cached> consumer) {
         TravelHandler travel = tardis.travel();
-        final DirectedGlobalPos.Cached[] dest = {travel.destination()};
-        ServerWorld world = dest[0].getWorld();
 
-        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<DirectedGlobalPos.Cached> future = CompletableFuture.supplyAsync(() -> {
+            DirectedGlobalPos.Cached dest = travel.destination();
+            ServerWorld world = dest.getWorld();
+
             for (int i = 0; i <= limit; i++) {
-                dest[0] = dest[0].pos(
-                        world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max), dest[0].getPos().getY(),
+                dest = dest.pos(
+                        world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max), dest.getPos().getY(),
                         world.random.nextBoolean() ? world.random.nextInt(max) : -world.random.nextInt(max)
                 );
-                travel.destination(dest[0]);
             }
-            return null;
+
+            return dest;
         });
 
-        future.join();
+        future.thenAccept(cached -> cached.getWorld().getServer().submit(
+                () -> consumer.accept(cached)
+        ));
+
+        AsyncLocatorUtil.LOCATING_EXECUTOR_SERVICE.submit(() -> future);
     }
 
     public static void travelTo(Tardis tardis, DirectedGlobalPos.Cached pos) {

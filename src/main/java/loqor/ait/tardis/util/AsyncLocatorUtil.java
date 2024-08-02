@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  */
 public class AsyncLocatorUtil {
 
-    private static ExecutorService LOCATING_EXECUTOR_SERVICE = null;
+    public static ExecutorService LOCATING_EXECUTOR_SERVICE = null;
 
     public static void setupExecutorService() {
         shutdownExecutorService();
