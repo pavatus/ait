@@ -11,8 +11,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.concurrent.CompletableFuture;
-
 public class RandomiserControl extends Control {
 
 	public RandomiserControl() {
@@ -32,9 +30,8 @@ public class RandomiserControl extends Control {
 			return false;
 		}
 
-		world.getServer().execute(() -> {
-
-			TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis));
+		TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis), cached -> {
+			tardis.travel().forceDestination(cached);
 			tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
 
 			messagePlayer(player, travel);

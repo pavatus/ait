@@ -1,5 +1,7 @@
 package loqor.ait.core.util;
 
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -10,6 +12,10 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
 
 public class WorldUtil {
+
+    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch ySearch, boolean hSearch) {
+        return cached;
+    }
 
     @Environment(EnvType.CLIENT)
     public static String getName(MinecraftClient client) {

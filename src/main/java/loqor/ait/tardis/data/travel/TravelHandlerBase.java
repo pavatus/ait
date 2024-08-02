@@ -7,10 +7,10 @@ import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
@@ -19,8 +19,6 @@ import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -35,15 +33,18 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
 
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
+    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) Property.warnCompat("position", null));
+    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) Property.warnCompat("destination", null));
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", Property.warnCompat("crashing", false));
     private static final BoolProperty ANTIGRAVS = new BoolProperty("ANTIGRAVS", Property.warnCompat("antigravs", false));
 
     private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat("speed", 0));
-    private static final IntProperty MAX_SPEED = new IntProperty("max_speed", Property.warnCompat("max_speed", 7));
+    private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
+
+    private static final Property<GroundSearch> VGROUND_SEARCH = Property.forEnum("yground_search", GroundSearch.class, GroundSearch.CEILING);
+    private static final BoolProperty HGROUND_SEARCH = new BoolProperty("hground_search", true);
 
     protected final Value<State> state = STATE.create(this);
     protected final Value<DirectedGlobalPos.Cached> position = POSITION.create(this);
@@ -55,6 +56,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
     protected final IntValue speed = SPEED.create(this);
     protected final IntValue maxSpeed = MAX_SPEED.create(this);
+
+    protected final Value<GroundSearch> vGroundSearch = VGROUND_SEARCH.create(this);
+    protected final BoolValue hGroundSearch = HGROUND_SEARCH.create(this);
 
     @Exclude(strategy = Exclude.Strategy.NETWORK)
     protected int hammerUses = 0;
@@ -76,6 +80,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         crashing.of(this, CRASHING);
         antigravs.of(this, ANTIGRAVS);
+
+        vGroundSearch.of(this, VGROUND_SEARCH);
+        hGroundSearch.of(this, HGROUND_SEARCH);
 
         if (this.isClient())
             return;
@@ -180,12 +187,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
                 border.clamp(pos.getX(), pos.getY(), pos.getZ())
         );
 
-        // TODO: how about, instead of doing the checks at demat, do them at remat?
-        //  it makes much more sense, because the target could be obstructed by the time the tardis is there
-        cached = this.checkDestination(cached, AITMod.AIT_CONFIG.SEARCH_HEIGHT(), PropertiesHandler.getBool(
-                this.tardis().properties(), PropertiesHandler.FIND_GROUND)
-        );
-
+        cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
         this.forceDestination(cached);
     }
 
@@ -214,52 +216,6 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         }
 
         return true;
-    }
-
-    // TODO rewrite because theo is just gonna get really pissy about it if we dont <3
-    protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
-        ServerWorld world = destination.getWorld();
-        BlockPos.Mutable temp = destination.getPos().mutableCopy();
-
-        destination = destination.pos(temp.getX(), MathHelper.clamp(
-                temp.getY(), world.getBottomY(), world.getTopY() - 1
-        ), temp.getZ());
-
-        BlockState current;
-        BlockState top;
-        BlockState ground;
-
-        if (fullCheck) {
-            for (int i = 0; i < limit; i++) {
-                current = world.getBlockState(temp);
-                top = world.getBlockState(temp.up());
-                ground = world.getBlockState(temp.down());
-
-                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for ground
-                    return destination.pos(temp);
-
-                temp = temp.down().mutableCopy();
-            }
-        }
-
-        temp = temp.mutableCopy();
-
-        current = world.getBlockState(temp);
-        top = world.getBlockState(temp.up());
-
-        return isReplaceable(current, top) ? destination.pos(temp) : destination;
-    }
-
-    private boolean isLargePoolOfWater(ServerWorld world, BlockPos pos) {
-        for (int x = -1; x <= 1; x++) {
-            for (int z = -1; z <= 1; z++) {
-                BlockState blockState = world.getBlockState(pos.add(x, 0, z));
-                if (blockState.getBlock() == Blocks.WATER && blockState.get(FluidBlock.LEVEL) == 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public enum State {
@@ -303,5 +259,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         public void finish(TravelHandler handler) {
             this.finish.accept(handler);
         }
+    }
+
+    public enum GroundSearch {
+        NONE,
+        FLOOR,
+        CEILING
     }
 }

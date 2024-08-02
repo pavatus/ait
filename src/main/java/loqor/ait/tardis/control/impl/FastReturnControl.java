@@ -26,7 +26,7 @@ public class FastReturnControl extends Control {
 		boolean same = travel.destination().equals(travel.previousPosition());
 
 		if (travel.previousPosition() != null) {
-			travel.destination(same ? travel.position() : travel.previousPosition());
+			travel.forceDestination(same ? travel.position() : travel.previousPosition());
 
 			this.messagePlayer(player, same);
 			return true;
