@@ -19,6 +19,8 @@ import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
 import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -214,38 +216,77 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return true;
     }
 
-    // TODO rewrite because theo is just gonna get really pissy about it if we dont <3
     protected DirectedGlobalPos.Cached checkDestination(DirectedGlobalPos.Cached destination, int limit, boolean fullCheck) {
         ServerWorld world = destination.getWorld();
         BlockPos.Mutable temp = destination.getPos().mutableCopy();
 
-        destination = destination.pos(temp.getX(), MathHelper.clamp(
-                temp.getY(), world.getBottomY(), world.getTopY() - 1
-        ), temp.getZ());
+        if (!antigravs.get()) {
+            for (int x = -5; x <= 5; x++) {
+                for (int z = -5; z <= 5; z++) {
+                    for (int y = -limit; y <= limit; y++) {
+                        temp.set(temp.getX() + x,
+                                temp.getY() + y,
+                                temp.getZ() + z);
 
-        BlockState current;
-        BlockState top;
-        BlockState ground;
+                        BlockState current = world.getBlockState(temp);
+                        BlockState top = world.getBlockState(temp.up());
 
-        if (fullCheck) {
-            for (int i = 0; i < limit; i++) {
-                current = world.getBlockState(temp);
-                top = world.getBlockState(temp.up());
-                ground = world.getBlockState(temp.down());
+                        if (isReplaceable(current, top)) {
 
-                if (isReplaceable(current, top) && !isReplaceable(ground)) // check two blocks cus tardis is two blocks tall yk and check for ground
-                    return destination.pos(temp);
+                            if (isLargePoolOfWater(world, temp)) {
+                                continue;
+                            }
 
-                temp = temp.down().mutableCopy();
+                            if (isLargePoolOfLava(world, temp)) {
+                                continue;
+                            }
+
+                            return destination.pos(temp);
+                        }
+                    }
+                }
             }
         }
 
-        temp = temp.mutableCopy();
+        return destination;
+    }
 
-        current = world.getBlockState(temp);
-        top = world.getBlockState(temp.up());
+    private boolean isLargePoolOfWater(ServerWorld world, BlockPos pos) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockState blockState = world.getBlockState(pos.add(x, 0, z));
+                if (blockState.getBlock() == Blocks.WATER && blockState.get(FluidBlock.LEVEL) == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        return isReplaceable(current, top) ? destination.pos(temp) : destination;
+    private boolean isLargePoolOfLava(ServerWorld world, BlockPos pos) {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockState blockState = world.getBlockState(pos.add(x, 0, z));
+                if (blockState.getBlock() == Blocks.LAVA && blockState.get(FluidBlock.LEVEL) == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasAirInArea(ServerWorld world, BlockPos pos) {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
+                    BlockState blockState = world.getBlockState(pos.add(x, y, z));
+                    if (blockState.isAir()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public enum State {
