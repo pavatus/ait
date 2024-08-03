@@ -3,7 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "ait:block/waypoint_bank",
-		"particle": "ait:block/waypoint_bank"
+		"particle": "ait:block/block_particles/waypoint_bank"
 	},
 	"elements": [
 		{
