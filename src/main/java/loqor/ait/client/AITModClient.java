@@ -117,7 +117,9 @@ public class AITModClient implements ClientModInitializer {
                 return;
 
             if (ClientTardisUtil.isPlayerInATardis()) {
-                TardisStar.renderStar(context, tardis);
+                TardisStar star = new TardisStar();
+                star.renderStar(context, tardis);
+                star.renderShine(context, tardis);
             }
 
         });

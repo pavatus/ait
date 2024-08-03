@@ -13,10 +13,13 @@ import loqor.ait.tardis.data.properties.v2.Property;
 import loqor.ait.tardis.data.properties.v2.Value;
 import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
+import loqor.ait.tardis.data.properties.v2.integer.IntValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -25,9 +28,13 @@ public class EngineHandler extends KeyedTardisComponent {
 
     private static final BoolProperty POWER = new BoolProperty("power", Property.warnCompat("power", false));
     private static final BoolProperty HAS_ENGINE_CORE = new BoolProperty("has_engine_core", false);
+    private static final IntProperty ENGINE_CORE_X = new IntProperty("engine_core_x", 0);
+    private static final IntProperty ENGINE_CORE_Z = new IntProperty("engine_core_z", 0);
 
     private final BoolValue power = POWER.create(this);
     private final BoolValue hasEngineCore = HAS_ENGINE_CORE.create(this);
+    private final IntValue engineCorePositionX = ENGINE_CORE_X.create(this);
+    private final IntValue engineCorePositionZ = ENGINE_CORE_Z.create(this);
 
     public EngineHandler() {
         super(Id.ENGINE);
@@ -41,10 +48,20 @@ public class EngineHandler extends KeyedTardisComponent {
     public void onLoaded() {
         power.of(this, POWER);
         hasEngineCore.of(this, HAS_ENGINE_CORE);
+        engineCorePositionX.of(this, ENGINE_CORE_X);
+        engineCorePositionZ.of(this, ENGINE_CORE_Z);
     }
 
     public Value<Boolean> hasEngineCore() {
         return hasEngineCore;
+    }
+
+    public Value<Integer> engineCorePositionX() {
+        return engineCorePositionX;
+    }
+
+    public Value<Integer> engineCorePositionZ() {
+        return engineCorePositionZ;
     }
 
     public boolean hasPower() {
@@ -118,5 +135,11 @@ public class EngineHandler extends KeyedTardisComponent {
         world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos())
                 .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
         );
+    }
+
+    public Vec3d engineCorePosition() {
+        return new Vec3d(this.engineCorePositionX.get(),
+                0,
+                this.engineCorePositionZ.get());
     }
 }

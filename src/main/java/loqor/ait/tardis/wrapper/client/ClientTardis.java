@@ -19,6 +19,7 @@ public class ClientTardis extends Tardis implements Disposable {
 
 	@Exclude private final UUID check;
 	@Exclude private boolean aged = false;
+	@Exclude public int ticks = 0;
 
 	private ClientTardis(UUID check) {
         super();
@@ -52,6 +53,7 @@ public class ClientTardis extends Tardis implements Disposable {
 		if (this.equals(ClientTardisUtil.getCurrentTardis())) {
 			ClientTardisUtil.tickPowerDelta();
 			ClientTardisUtil.tickAlarmDelta();
+			ticks++;
 		}
 	}
 
