@@ -43,12 +43,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class MonitorScreen extends ConsoleScreen {
-	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/monitor_gui.png");
+	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/new_monitor_gui.png");
 	private final List<ButtonWidget> buttons = Lists.newArrayList();
 	private ExteriorCategorySchema category;
 	private ClientExteriorVariantSchema currentVariant;
-	int backgroundHeight = 150;
-	int backgroundWidth = 208;
+	int backgroundHeight = 166;
+	int backgroundWidth = 256;
 	private int tickForSpin = 0;
 
 	public MonitorScreen(ClientTardis tardis, BlockPos console) {
@@ -111,29 +111,29 @@ public class MonitorScreen extends ConsoleScreen {
 		this.buttons.clear();
 		// exterior change text button
 		Text applyText = Text.literal("Apply");
-		this.addButton(new PressableTextWidget((width / 2 - 67), (height / 2 + 41),
-				this.textRenderer.getWidth(applyText), 10, Text.literal(""), button -> {
+		this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
+				this.textRenderer.getWidth(applyText), 20, Text.literal("Apply").formatted(Formatting.BOLD), button -> {
 			sendExteriorPacket(this.tardis(), this.getCategory(), this.getCurrentVariant());
 		}, this.textRenderer));
-		this.addButton(new PressableTextWidget((width / 2 - 99), (height / 2 + 37),
-				this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> {
+		this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 8),
+				this.textRenderer.getWidth("<#>"), 15, Text.literal("").formatted(Formatting.BOLD), button -> {
 			changeCategory(false);
 		}, this.textRenderer));
-		this.addButton(new PressableTextWidget((width / 2 - 12), (height / 2 + 37),
-				this.textRenderer.getWidth(">"), 10, Text.literal(""), button -> {
+		this.addButton(new PressableTextWidget((width / 2 + 105), (height / 2 + 8),
+				this.textRenderer.getWidth("<#>"), 15, Text.literal("").formatted(Formatting.BOLD), button -> {
 			changeCategory(true);
 		}, this.textRenderer));
-		this.addButton(new PressableTextWidget((width / 2 - 99), (height / 2 - 37),
-				this.textRenderer.getWidth("<"), 10, Text.literal("").formatted(Formatting.LIGHT_PURPLE), button -> {
+		this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 64),
+				this.textRenderer.getWidth("<#>"), 15, Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.LIGHT_PURPLE), button -> {
 			whichDirectionVariant(false);
 		}, this.textRenderer));
-		this.addButton(new PressableTextWidget((width / 2 - 12), (height / 2 - 37),
-				this.textRenderer.getWidth(">"), 10, Text.literal("").formatted(Formatting.LIGHT_PURPLE), button -> {
+		this.addButton(new PressableTextWidget((width / 2 + 105), (height / 2 + 64),
+				this.textRenderer.getWidth("<#>"), 15, Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.LIGHT_PURPLE), button -> {
 			whichDirectionVariant(true);
 		}, this.textRenderer));
-		Text desktopSettingsText = Text.literal("Settings");
-		this.addButton(new PressableTextWidget((width / 2 - 105), (height / 2 - 66),
-				this.textRenderer.getWidth(desktopSettingsText), 10, Text.literal("Settings").formatted(Formatting.WHITE), button -> toInteriorSettingsScreen(), this.textRenderer));
+		Text desktopSettingsText = Text.literal("⚙");
+		this.addButton(new PressableTextWidget((width / 2 + 2), (height / 2 + 7),
+				this.textRenderer.getWidth(desktopSettingsText), 10, Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.WHITE), button -> toInteriorSettingsScreen(), this.textRenderer));
 		this.buttons.forEach(buttons -> {
 			// buttons.visible = false;
 			buttons.active = true;
@@ -207,11 +207,11 @@ public class MonitorScreen extends ConsoleScreen {
 		return list.get(idx - 1);
 	}
 
-	final int UV_BASE = 159;
-	final int UV_INCREMENT = 17;
+	final int UV_BASE = 160;
+	final int UV_INCREMENT = 19;
 
 	int calculateUvOffsetForRange(int progress) {
-		int rangeProgress = progress % 20;
+		int rangeProgress = progress % 19;
 		return (rangeProgress / 5) * UV_INCREMENT;
 	}
 
@@ -222,44 +222,65 @@ public class MonitorScreen extends ConsoleScreen {
 
         int i = (this.width - this.backgroundWidth) / 2;
 		int j = ((this.height) - this.backgroundHeight) / 2;
-		context.drawTexture(TEXTURE, i - 8, j + 4, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		// apply button
 		if (!this.buttons.get(0).isHovered())
-            context.drawTexture(TEXTURE, i + 22, j + 114, 0, 227, 57, 12);
+            context.drawTexture(TEXTURE, this.buttons.get(0).getX() - 11, this.buttons.get(0).getY() - 5, 40, 166, 53, 20);
+		else
+			context.drawTexture(TEXTURE, this.buttons.get(0).getX() - 11, this.buttons.get(0).getY() - 5, 40, 186, 53, 20);
 
 		// around the battery
-		context.drawTexture(TEXTURE, i + 1, j + 129, 0, this.tardis().getFuel() > 250 ? 150 : 165, 99, 15);
+		// context.drawTexture(TEXTURE, i + 1, j + 129, 0, this.tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
-		// triangle buttons
-		if (!this.buttons.get(1).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 96, 0, 197, 15, 30);
-		if (!this.buttons.get(2).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 96, 30, 197, 15, 30);
-		if (!this.buttons.get(3).isHovered()) context.drawTexture(TEXTURE, i + 3, j + 31, 45, 197, 15, 30);
-		if (!this.buttons.get(4).isHovered()) context.drawTexture(TEXTURE, i + 83, j + 31, 15, 197, 15, 30);
+		// arrow buttons
+		if (!this.buttons.get(1).isHovered())
+			context.drawTexture(TEXTURE, this.buttons.get(1).getX() - 7, this.buttons.get(1).getY() - 5, 0, 166, 20, 20);
+		else
+			context.drawTexture(TEXTURE, this.buttons.get(1).getX() - 7, this.buttons.get(1).getY() - 5, 0, 186, 20, 20);
+		if (!this.buttons.get(2).isHovered())
+			context.drawTexture(TEXTURE, this.buttons.get(2).getX() - 7, this.buttons.get(2).getY() - 5, 20, 166, 20, 20);
+		else
+			context.drawTexture(TEXTURE, this.buttons.get(2).getX() - 7, this.buttons.get(2).getY() - 5, 20, 186, 20, 20);
+		if (!this.buttons.get(3).isHovered())
+			context.drawTexture(TEXTURE, this.buttons.get(3).getX() - 7, this.buttons.get(3).getY() - 2, 93, 166, 20, 12);
+		else
+			context.drawTexture(TEXTURE, this.buttons.get(3).getX() - 7, this.buttons.get(3).getY() - 2, 93, 178, 20, 12);
+		if (!this.buttons.get(4).isHovered())
+			context.drawTexture(TEXTURE, this.buttons.get(4).getX() - 7, this.buttons.get(4).getY() - 2, 113, 166, 20, 12);
+		else
+			context.drawTexture(TEXTURE, this.buttons.get(4).getX() - 7, this.buttons.get(4).getY() - 2, 113, 178, 20, 12);
+		if (!this.buttons.get(5).isHovered())
+			context.drawTexture(TEXTURE, this.buttons.get(5).getX() - 7, this.buttons.get(5).getY() - 5, 186, 166, 20, 20);
+		else
+			context.drawTexture(TEXTURE, this.buttons.get(5).getX() - 7, this.buttons.get(5).getY() - 5, 186, 186, 20, 20);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
+		/*for (int p = 0; p < Math.round((this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
-		}
+		}*/
+
+		context.drawTexture(TEXTURE, i + 30, j + 144, 0, this.tardis().getFuel() > (FuelData.TARDIS_MAX_FUEL / 4) ? 225 : 234,
+				(int) (85 * this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL), 9);
 
         int progress = this.tardis().travel().getDurationAsPercentage();
 
 		for (int index = 0; index < 5; index++) {
-			int rangeStart = index * 20;
-			int rangeEnd = (index + 1) * 20;
+			int rangeStart = index * 19;
+			int rangeEnd = (index + 1) * 19;
 
 			int uvOffset;
 			if (progress >= rangeStart && progress <= rangeEnd) {
 				uvOffset = calculateUvOffsetForRange(progress);
 			} else if (progress >= rangeEnd) {
-				uvOffset = 68;
+				uvOffset = 76;
 			} else {
 				uvOffset = UV_BASE;
 			}
 
-            context.drawTexture(TEXTURE, i + 101 + index * 18, j + 78,
+            context.drawTexture(TEXTURE, i + 25 + (index * 19), j + 113,
                     this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
-                            ? progress >= 100 ? 68 : uvOffset : UV_BASE, 180, 17, 17
+                            ? progress >= 100 ? 76 : uvOffset : UV_BASE, 206, 19, 19
             );
         }
 	}
@@ -290,11 +311,11 @@ public class MonitorScreen extends ConsoleScreen {
         boolean alarms = tardis.alarm().isEnabled();
 
         stack.push();
-        stack.translate(0, 0, 50f);
+        stack.translate(0, 0, 500f);
 
         context.drawCenteredTextWithShadow(
-                this.textRenderer, category.text(), (centerWidth - 54),
-                (centerHeight + 41), 5636095
+                this.textRenderer, category.text(), (centerWidth + 70),
+                (centerHeight - 68), 5636095
         );
 
         List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(category);
@@ -302,20 +323,35 @@ public class MonitorScreen extends ConsoleScreen {
         context.drawCenteredTextWithShadow(
                 this.textRenderer, (list.indexOf(variant.parent()) + 1)
                         + "/" + list.size(),
-                (centerWidth - 29), (centerHeight + 26), 0x00ffb3
+                (centerWidth + 109), (centerHeight + 53), 0x00ffb3
         );
+
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, variant.parent().text(), (centerWidth +70),
+				(centerHeight + 64), 5636095
+		);
+
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, Text.literal("AIT"), (centerWidth +70),
+				(centerHeight + 34), 5636095
+		);
+
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, Text.literal("Native Variants"), (centerWidth +70),
+				(centerHeight + 44), 5636095
+		);
 
         stack.pop();
         ExteriorModel model = variant.model();
 
-        stack.push();
+        /*stack.push();
         stack.translate(0, 0, -50f);
         stack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f), x, y, 0);
         context.drawTexture(TEXTURE, x - 41, y - 41, 173, 173, 83, 83);
-        stack.pop();
+        stack.pop();*/
 
         stack.push();
-        stack.translate(x, isPoliceBox ? y + 11 : y, 0f);
+        stack.translate(x, isPoliceBox ? y + 11 : y, 100f);
 
         if (isPoliceBox) {
             stack.scale(-12, 12, 12);
@@ -385,14 +421,14 @@ public class MonitorScreen extends ConsoleScreen {
         String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
 
         // position
-		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 + 7), (height / 2 - 36), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, dimensionText, (width / 2 + 7), (height / 2 - 26), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 + 14), (height / 2 - 16), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 119), (height / 2 - 72), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, dimensionText, (width / 2 - 119), (height / 2 - 62), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 112), (height / 2 - 52), 0xFFFFFF, true);
 
 		// destination
-		context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 + 7), (height / 2 + 31), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, dDimensionText, (width / 2 + 7), (height / 2 + 41), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 + 14), (height / 2 + 51), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 119), (height / 2 - 7), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, dDimensionText, (width / 2 - 119), (height / 2 + 3), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 112), (height / 2 + 13), 0xFFFFFF, true);
     }
 
 	@Override
@@ -401,11 +437,7 @@ public class MonitorScreen extends ConsoleScreen {
 		int j = ((this.width - this.backgroundWidth) / 2);
 		// background behind the tardis and gallifreyan text
 		MatrixStack stack = context.getMatrices();
-		stack.push();
-		stack.translate(0, 0, -100f);
-		context.drawTexture(TEXTURE, j + 4, i + 32, 80, 180, 93, 76);
-		stack.pop();
-		this.drawTardisExterior(context, (width / 2 - 54), (height / 2 - 4), 19f);
+		this.drawTardisExterior(context, (width / 2 + 70), (height / 2 - 30), 19f);
 		this.drawBackground(context);
 		// todo manually adjusting all these values are annoying me
 		this.drawInformationText(context);

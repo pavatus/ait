@@ -657,8 +657,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
         provider.addTranslation("tardis.message.control.handbrake.on", "Handbrake: ON");
         provider.addTranslation("tardis.message.control.handbrake.off", "Handbrake: OFF");
-        provider.addTranslation("tardis.message.control.landtype.on", "Ground Searching: ON");
-        provider.addTranslation("tardis.message.control.landtype.off", "Ground Searching: OFF");
         provider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
         provider.addTranslation("tardis.message.control.refueler.enabled", "Refueling: Enabled");
         provider.addTranslation("tardis.message.control.refueler.disabled", "Refueling: Disabled");
@@ -675,6 +673,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.control.telepathic.success", "Destination Found");
         provider.addTranslation("tardis.message.control.telepathic.failed", "Destination Not Found");
         provider.addTranslation("tardis.message.control.telepathic.choosing", "The TARDIS is choosing...");
+        provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
+        provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ON");
+        provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: ON");
 
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");

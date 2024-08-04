@@ -30,6 +30,9 @@ public class AITRenderLayers extends RenderLayer {
 		return RenderLayer.of("entity_cutout_no_cull_z_offset", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, true, multiPhaseParameters);
 	});
 
+	private static final RenderLayer TARDIS_STAR_SHINE = RenderLayer.of("gui_overlay", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256,
+			MultiPhaseParameters.builder().program(GUI_OVERLAY_PROGRAM).transparency(TRANSLUCENT_TRANSPARENCY).cull(DISABLE_CULLING).build(false));
+
 	/**
 	 * @see loqor.ait.client.util.ClientLightUtil#renderEmissive(ClientLightUtil.Renderable, Identifier, Object, ModelPart, MatrixStack, VertexConsumerProvider, int, int, float, float, float, float) 
 	 */
@@ -44,6 +47,10 @@ public class AITRenderLayers extends RenderLayer {
 
 	public static RenderLayer tardisEmissiveCullZOffset(Identifier texture, boolean affectsOutline) {
 		return EMISSIVE_CULL_Z_OFFSET.apply(texture, affectsOutline);
+	}
+
+	public static RenderLayer tardisStarShine() {
+		return TARDIS_STAR_SHINE;
 	}
 
 	private AITRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {

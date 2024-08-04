@@ -125,6 +125,8 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                 tardis.get().engine().hasEngineCore().set(bl);
+                tardis.get().engine().engineCorePositionX().set(pos.getX());
+                tardis.get().engine().engineCorePositionZ().set(pos.getZ());
             }
 
             blockEntity.active = bl;
@@ -271,6 +273,8 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
 
         EngineHandler engine = tardis.get().engine();
         engine.hasEngineCore().set(false);
+        engine.engineCorePositionX().set(0);
+        engine.engineCorePositionX().set(0);
 
         if (engine.hasPower())
             engine.disablePower();
