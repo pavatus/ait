@@ -53,7 +53,7 @@ public class AbstractTardisPart extends Item {
 
     public static AbstractLinkItem get(ItemStack stack, AbstractLinkItem.Type type) {
         NbtCompound nbt = stack.getOrCreateNbt();
-        Item result = StackUtil.read(nbt, type.toString());
+        Item result = StackUtil.readItem(nbt, type.toString());
 
         if (result != null)
             return (AbstractLinkItem) result;

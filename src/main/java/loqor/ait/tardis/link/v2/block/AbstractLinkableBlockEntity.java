@@ -28,6 +28,10 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
         super(type, pos, state);
     }
 
+    public boolean isLinked() {
+        return this.ref != null && this.ref.isPresent();
+    }
+
     @Override
     public TardisRef tardis() {
         return ref;

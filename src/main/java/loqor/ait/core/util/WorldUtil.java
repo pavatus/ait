@@ -170,4 +170,20 @@ public class WorldUtil {
         // Join the words back together with spaces
         return String.join(" ", words);
     }
+
+    public static Text rot2Text(int rotation) {
+        String key = switch (rotation) {
+            case 0 -> "direction.north";
+            case 1, 2, 3 -> "direction.north_east";
+            case 4 -> "direction.east";
+            case 5, 6, 7 -> "direction.south_east";
+            case 8 -> "direction.south";
+            case 9, 10, 11 -> "direction.south_west";
+            case 12 -> "direction.west";
+            case 13, 14, 15 -> "direction.north_west";
+            default -> null;
+        };
+
+        return Text.translatable(key);
+    }
 }

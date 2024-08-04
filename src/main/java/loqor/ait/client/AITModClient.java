@@ -285,11 +285,9 @@ public class AITModClient implements ClientModInitializer {
 
     public static void waypointPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if(itemStack.getItem() == AITItems.WAYPOINT_CARTRIDGE)
-                if(itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
-                    return 1.0f;
-                else return 0.5f;
-            else return 0.5f;
+            if(itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
+                return 1.0f;
+            else return 0f;
         });
 
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {

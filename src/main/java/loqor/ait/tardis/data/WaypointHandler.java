@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Optional;
 
 public class WaypointHandler extends TardisComponent {
+
 	public static final String HAS_CARTRIDGE = "has_cartridge";
 	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
@@ -40,11 +41,10 @@ public class WaypointHandler extends TardisComponent {
 	public Optional<Waypoint> set(Waypoint var, BlockPos console, boolean spawnItem) {
 		Optional<Waypoint> prev = Optional.ofNullable(this.current);
 
-		this.current = var;
-
-		if (spawnItem && prev.isPresent())
+		if (spawnItem && this.current != null)
 			this.spawnItem(console, prev.get());
 
+		this.current = var;
 		return prev;
 	}
 

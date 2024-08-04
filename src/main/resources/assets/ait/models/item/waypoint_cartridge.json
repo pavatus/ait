@@ -1,8 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "ait:item/waypoint/waypoint_cartridge_active",
-		"particle": "ait:item/waypoint/waypoint_cartridge_loaded"
+		"0": "ait:item/waypoint/waypoint_cartridge_loaded"
 	},
 	"elements": [
 		{
@@ -92,7 +91,6 @@
 	},
 	"overrides": [
 		{"predicate": {"type": 0}, "model": "ait:item/waypoint/waypoint_cartridge_inactive"},
-		{"predicate": {"type": 0.5}, "model": "ait:item/waypoint/waypoint_cartridge_active"},
-		{"predicate": {"type": 1}, "model": "ait:item/waypoint/waypoint_cartridge_loaded"}
+		{"predicate": {"type": 1}, "model": "ait:item/waypoint/waypoint_cartridge_active"}
 	]
 }

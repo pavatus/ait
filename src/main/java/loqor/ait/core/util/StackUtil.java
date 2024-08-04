@@ -189,7 +189,7 @@ public class StackUtil {
         nbt.putString(key, identifier == null ? AIR_STR_ID : identifier.toString());
     }
 
-    public static Item read(NbtCompound nbt, String key) {
+    public static Item readItem(NbtCompound nbt, String key) {
         String raw = nbt.getString(key);
 
         if (raw.isEmpty())
@@ -198,8 +198,8 @@ public class StackUtil {
         return Registries.ITEM.get(new Identifier(raw));
     }
 
-    public static Item readNonNull(NbtCompound nbt, String key) {
-        Item result = read(nbt, key);
+    public static Item readItemNonNull(NbtCompound nbt, String key) {
+        Item result = readItem(nbt, key);
         return result != null ? result : Items.AIR;
     }
 
