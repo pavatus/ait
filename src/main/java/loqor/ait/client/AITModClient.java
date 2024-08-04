@@ -109,7 +109,7 @@ public class AITModClient implements ClientModInitializer {
         });
         */
 
-        WorldRenderEvents.START.register(context -> {
+        WorldRenderEvents.END.register(context -> {
 
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
