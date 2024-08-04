@@ -13,7 +13,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
@@ -59,16 +58,16 @@ public class WorldUtil {
             for (int z = minZ; z < maxZ; z++) {
                 pos.setX(x).setZ(z);
 
-                BlockState floor = world.getBlockState(pos.move(Direction.DOWN));
+                BlockState floor = world.getBlockState(pos.down());
 
                 if (!floor.blocksMovement())
                     continue;
 
                 BlockState curUp = world.getBlockState(pos);
-                BlockState aboveUp = world.getBlockState(pos.move(Direction.UP));
+                BlockState aboveUp = world.getBlockState(pos.up());
 
                 if (!curUp.blocksMovement() && !aboveUp.blocksMovement())
-                    return pos.toImmutable();
+                    return pos;
             }
         }
 
@@ -138,6 +137,7 @@ public class WorldUtil {
     }
 
     @Environment(EnvType.CLIENT)
+    @SuppressWarnings("DataFlowIssue")
     public static String getName(MinecraftClient client) {
         if (client.isInSingleplayer()) {
             return client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString();
