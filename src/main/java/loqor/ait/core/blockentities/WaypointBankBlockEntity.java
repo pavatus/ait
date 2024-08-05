@@ -2,6 +2,7 @@ package loqor.ait.core.blockentities;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.WaypointBankBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.Waypoint;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -62,7 +64,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         this.waypoints[slot] = null;
         this.sync(state);
 
-        player.dropItem(waypoint.toStack(), true);
+        player.giveItemStack(waypoint.toStack());
         return ActionResult.SUCCESS;
     }
 
@@ -80,7 +82,25 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         return ActionResult.SUCCESS;
     }
 
+    private ActionResult activate(int slot) {
+        if (!this.isLinked())
+            return ActionResult.FAIL;
+
+        WaypointData data = this.waypoints[slot];
+
+        if (data == null)
+            return ActionResult.FAIL;
+
+        this.tardis().get().travel().forceDestination(data.pos);
+
+        this.world.playSound(null, this.getPos(), AITSounds.WAYPOINT_ACTIVATE, SoundCategory.BLOCKS);
+        return ActionResult.SUCCESS;
+    }
+
     private ActionResult select(BlockState state, int slot) {
+        if (this.selected == slot && this.isLinked())
+            return this.activate(slot);
+
         this.selected = slot;
         this.sync(state);
 
@@ -143,7 +163,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         return selected;
     }
 
-    public record WaypointData(int color, String name, DirectedGlobalPos pos) {
+    public record WaypointData(int color, String name, DirectedGlobalPos.Cached pos) {
 
         private WaypointData(int color, Waypoint waypoint) {
             this(color, waypoint.name(), waypoint.getPos());
@@ -185,7 +205,10 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
 
             int color = nbt.getInt("color");
             String name = nbt.getString("name");
-            DirectedGlobalPos pos = DirectedGlobalPos.fromNbt(nbt.getCompound("pos"));
+
+            DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.fromNbt(
+                    nbt.getCompound("pos")
+            );
 
             return new WaypointData(color, name, pos);
         }

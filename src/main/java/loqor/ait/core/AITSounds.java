@@ -27,6 +27,7 @@ public class AITSounds implements SoundRegistryContainer {
 	public static final SoundEvent LAND_THUD = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/land_thud"));
 	public static final SoundEvent SHUTDOWN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/console_shutdown"));
 	public static final SoundEvent POWERUP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/console_powerup"));
+	public static final SoundEvent WAYPOINT_ACTIVATE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/waypoint_activate"));
 
 	public static final SoundEvent SIEGE_ENABLE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/siege_enable"));
 	public static final SoundEvent SIEGE_DISABLE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/siege_disable"));
