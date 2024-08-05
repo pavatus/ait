@@ -1,15 +1,22 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.MinecraftServer;
 
-public class ServerRainHandler extends TardisComponent implements TardisTickable {
+public class ServerRainHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final BoolProperty RAIN_FALLING = new BoolProperty("raining", false);
+	private final BoolValue rainFalling = RAIN_FALLING.create(this);
 
 	public ServerRainHandler() {
 		super(Id.RAINING);
+	}
+	@Override
+	public void onLoaded() {
+		rainFalling.of(this, RAIN_FALLING);
 	}
 
 	public void enable() {
@@ -21,16 +28,11 @@ public class ServerRainHandler extends TardisComponent implements TardisTickable
 	}
 
 	private void set(boolean var) {
-		PropertiesHandler.set(this.tardis(), PropertiesHandler.RAIN_FALLING, var);
+		rainFalling.set(var);
 	}
 
 	public boolean isEnabled() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.RAIN_FALLING);
-	}
-
-	public void toggle() {
-		if (isEnabled()) disable();
-		else enable();
+		return rainFalling.get();
 	}
 
 	@Override

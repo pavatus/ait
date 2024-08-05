@@ -9,7 +9,7 @@ import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -62,7 +62,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		SonicHandler handler = tardis.sonic();
-		boolean hasSonic = handler.hasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
+		boolean hasSonic = handler.hasExteriorSonic();
 		boolean shouldEject = player.isSneaking();
 
 		if (player.getMainHandStack().getItem() instanceof KeyItem
@@ -75,7 +75,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 				return;
 
 			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
-				DoorData.toggleLock(tardis, (ServerPlayerEntity) player);
+				DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
@@ -86,9 +86,9 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 		if (hasSonic) {
 			if (shouldEject) {
-				player.giveItemStack(handler.get(SonicHandler.HAS_EXTERIOR_SONIC));
-				handler.clear(false, SonicHandler.HAS_EXTERIOR_SONIC, null);
-				handler.clearSonicMark(SonicHandler.HAS_EXTERIOR_SONIC);
+				player.giveItemStack(handler.getExteriorSonic());
+				handler.clearExterior(false, pos);
+				handler.clearExteriorSonicMark();
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				return;
 			}
@@ -113,8 +113,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 				if (!(stack.getItem() instanceof SonicItem))
 					return;
 
-				handler.set(stack, true, SonicHandler.HAS_EXTERIOR_SONIC, this.pos);
-				handler.markHasSonic(SonicHandler.HAS_EXTERIOR_SONIC);
+				handler.setExteriorSonic(stack, true, pos);
+				handler.markHasExteriorSonic();
 
 				player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
@@ -132,7 +132,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		}
 
 		if (tardis.travel().isLanded())
-			DoorData.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+			DoorHandler.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
 	}
 
 	public void onEntityCollision(Entity entity) {
@@ -142,7 +142,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		Tardis tardis = ref.get();
-		boolean previouslyLocked = tardis.door().previouslyLocked();
+		boolean previouslyLocked = tardis.door().previouslyLocked().get();
 
 		if (!previouslyLocked && tardis.travel().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
@@ -199,10 +199,10 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 		animationTimer++;
 		Tardis tardis = this.tardis().get();
-		DoorData door = tardis.door();
+		DoorHandler door = tardis.door();
 
-		DoorData.DoorStateEnum doorState = door.getDoorState();
-		DoorData.DoorStateEnum animState = door.getAnimationExteriorState();
+		DoorHandler.DoorStateEnum doorState = door.getDoorState();
+		DoorHandler.DoorStateEnum animState = door.getAnimationExteriorState();
 
 		if (animState == null)
 			return;

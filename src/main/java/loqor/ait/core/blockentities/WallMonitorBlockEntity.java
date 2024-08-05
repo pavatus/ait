@@ -4,7 +4,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +30,7 @@ public class WallMonitorBlockEntity extends InteriorLinkableBlockEntity {
         if (!tardis.engine().hasPower())
             return;
 
-        boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
+        boolean security = tardis.stats().security().get();
 
         if (security && !SecurityControl.hasMatchingKey(serverPlayer, tardis))
             return;

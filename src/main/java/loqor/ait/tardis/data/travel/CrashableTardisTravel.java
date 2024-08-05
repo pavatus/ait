@@ -4,9 +4,8 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
+import loqor.ait.tardis.data.TardisCrashHandler;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -97,7 +96,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         }
 
         tardis.door().setLocked(true);
-        PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, true);
+        tardis.alarm().getAlarms().set(true);
         this.antigravs().set(false);
 
         this.speed(0);
@@ -113,10 +112,10 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         int repairTicks = 1000 * power;
         tardis.crash().setRepairTicks(repairTicks);
 
-        if (repairTicks > TardisCrashData.UNSTABLE_TICK_START_THRESHOLD) {
-            tardis.crash().setState(TardisCrashData.State.TOXIC);
+        if (repairTicks > TardisCrashHandler.UNSTABLE_TICK_START_THRESHOLD) {
+            tardis.crash().setState(TardisCrashHandler.State.TOXIC);
         } else {
-            tardis.crash().setState(TardisCrashData.State.UNSTABLE);
+            tardis.crash().setState(TardisCrashHandler.State.UNSTABLE);
         }
 
         TardisEvents.CRASH.invoker().onCrash(tardis);

@@ -26,7 +26,7 @@ public class GetNameCommand {
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
 		source.sendMessage(Text.translatableWithFallback("tardis.name",
-				"TARDIS name: %s", tardis.getHandlers().getStats().getName())
+				"TARDIS name: %s", tardis.stats().getName())
 		);
 
 		return Command.SINGLE_SUCCESS;

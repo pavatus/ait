@@ -5,6 +5,7 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.AITModInitializer;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
@@ -29,7 +30,6 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
@@ -139,7 +139,6 @@ public class AITMod implements ModInitializer {
 			SetMaxSpeedCommand.register(dispatcher);
 			SetSiegeCommand.register(dispatcher);
 			LinkCommand.register(dispatcher);
-			PropertyCommand.register(dispatcher);
 			RemoveCommand.register(dispatcher);
 			PermissionCommand.register(dispatcher);
 			LoyaltyCommand.register(dispatcher);
@@ -195,7 +194,7 @@ public class AITMod implements ModInitializer {
 					});
 				}));
 
-		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.LEAVEBEHIND, ServerTardisManager.receiveTardis(
+		ServerPlayNetworking.registerGlobalReceiver(TardisSecurityScreen.LEAVEBEHIND, ServerTardisManager.receiveTardis(
 				(tardis, server, player, handler, buf, responseSender) -> {
 					boolean behind = buf.readBoolean();
 
@@ -203,11 +202,11 @@ public class AITMod implements ModInitializer {
 						if (tardis == null)
 							return;
 
-						PropertiesHandler.set(tardis, PropertiesHandler.LEAVE_BEHIND, behind);
+						tardis.travel().leaveBehind().set(behind);
 					});
 				}));
 
-		ServerPlayNetworking.registerGlobalReceiver(PropertiesHandler.HOSTILEALARMS, ServerTardisManager.receiveTardis(
+		ServerPlayNetworking.registerGlobalReceiver(TardisSecurityScreen.HOSTILEALARMS, ServerTardisManager.receiveTardis(
 				(tardis, server, player, handler, buf, responseSender) -> {
 					boolean hostile = buf.readBoolean();
 
@@ -215,7 +214,7 @@ public class AITMod implements ModInitializer {
 						if (tardis == null)
 							return;
 
-						PropertiesHandler.set(tardis, PropertiesHandler.HOSTILE_PRESENCE_TOGGLE, hostile);
+						tardis.alarm().hostilePresence().set(hostile);
 					});
 				}));
 

@@ -27,7 +27,7 @@ public class SetNameCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 		String name = StringArgumentType.getString(context, "value");
 
-		tardis.getHandlers().getStats().setName(name);
+		tardis.stats().setName(name);
 		return Command.SINGLE_SUCCESS;
 	}
 }

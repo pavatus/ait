@@ -10,13 +10,13 @@ import loqor.ait.core.util.TimeUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
-import loqor.ait.tardis.data.properties.v2.integer.IntValue;
+import loqor.ait.tardis.data.TardisCrashHandler;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
+import loqor.ait.tardis.data.properties.integer.IntProperty;
+import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +30,8 @@ import java.util.function.Function;
 public abstract class TravelHandlerBase extends KeyedTardisComponent implements TardisTickable {
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
-
+    private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
+    private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
     private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) Property.warnCompat("position", null));
     private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) Property.warnCompat("destination", null));
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
@@ -72,6 +73,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         position.of(this, POSITION);
         destination.of(this, DESTINATION);
         previousPosition.of(this, PREVIOUS_POSITION);
+        leaveBehind.of(this, LEAVE_BEHIND);
 
         speed.of(this, SPEED);
         maxSpeed.of(this, MAX_SPEED);
@@ -95,9 +97,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
     @Override
     public void tick(MinecraftServer server) {
-        TardisCrashData crash = tardis.crash();
+        TardisCrashHandler crash = tardis.crash();
 
-        if (crash.getState() != TardisCrashData.State.NORMAL)
+        if (crash.getState() != TardisCrashHandler.State.NORMAL)
             crash.addRepairTicks(2 * this.speed());
 
         if (this.hammerUses > 0 && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
@@ -105,6 +107,10 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
             DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay", (long) TimeUtil.secondsToMilliseconds(10));
         }
+    }
+
+    public BoolValue leaveBehind() {
+        return leaveBehind;
     }
 
     public void speed(int value) {

@@ -1,7 +1,7 @@
 package loqor.ait.client.models.exteriors;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -42,7 +42,7 @@ public class CoobExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 }

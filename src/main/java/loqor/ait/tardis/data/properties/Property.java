@@ -1,4 +1,4 @@
-package loqor.ait.tardis.data.properties.v2;
+package loqor.ait.tardis.data.properties;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -11,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -72,6 +73,12 @@ public class Property<T> {
         public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
         public static final Type<Direction> DIRECTION = new Type<>(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(Direction.class));
 
+        public static final Type<String> STR = new Type<>(PacketByteBuf::writeString, PacketByteBuf::readString);
+
+        public static final Type<UUID> UUID = new Type<>(PacketByteBuf::writeUuid, PacketByteBuf::readUuid);
+
+        public static final Type<Double> DOUBLE = new Type<>(PacketByteBuf::writeDouble, PacketByteBuf::readDouble);
+
         public static final Type<HashSet<String>> STR_SET = new Type<>((buf, strings) -> {
             buf.writeVarInt(strings.size());
 
@@ -87,7 +94,6 @@ public class Property<T> {
 
             return result;
         });
-
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;
 

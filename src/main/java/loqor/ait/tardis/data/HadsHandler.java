@@ -1,8 +1,9 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -16,22 +17,32 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class HADSData extends TardisComponent implements TardisTickable {
+public class HadsHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final BoolProperty HADS_ENABLED = new BoolProperty("hads_enabled", true);
+	private final BoolValue hadsEnabled = HADS_ENABLED.create(this);
+	private static final BoolProperty IS_IN_ACTIVE_DANGER = new BoolProperty("is_in_active_danger", false);
+	private final BoolValue isInDanger = IS_IN_ACTIVE_DANGER.create(this);
 
-	public HADSData() {
+	public HadsHandler() {
 		super(Id.HADS);
 	}
 
 	public boolean isHADSActive() {
-		return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.HADS_ENABLED);
+		return hadsEnabled.get();
 	}
 
 	public void setIsInDanger(boolean bool) {
-		PropertiesHandler.set(tardis(), PropertiesHandler.IS_IN_ACTIVE_DANGER, bool);
+		isInDanger.set(bool);
 	}
 
 	public boolean isInDanger() {
-		return PropertiesHandler.getBool(tardis().getHandlers().getProperties(), PropertiesHandler.IS_IN_ACTIVE_DANGER);
+		return isInDanger.get();
+	}
+
+	@Override
+	public void onLoaded() {
+		hadsEnabled.of(this, HADS_ENABLED);
+		isInDanger.of(this, IS_IN_ACTIVE_DANGER);
 	}
 
 	@Override
@@ -84,4 +95,8 @@ public class HADSData extends TardisComponent implements TardisTickable {
 		if (state == TravelHandlerBase.State.MAT)
 			alarm.disable();
 	}
+
+    public BoolValue hads() {
+		return hadsEnabled;
+    }
 }

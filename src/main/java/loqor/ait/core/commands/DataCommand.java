@@ -12,7 +12,7 @@ import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.command.CommandSource;

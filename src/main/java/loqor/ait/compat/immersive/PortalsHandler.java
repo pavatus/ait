@@ -7,7 +7,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +37,7 @@ public class PortalsHandler {
 	public static void removePortals(Tardis tardis) {
 		if (tardis == null) return;
 
-		if (tardis.door().getDoorState() != DoorData.DoorStateEnum.CLOSED)
+		if (tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
 			return; // todo move to a seperate method so we can remove without checks
 
 		List<TardisPortal> list = portals.get(tardis.getUuid());

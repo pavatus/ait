@@ -8,7 +8,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
-import static loqor.ait.tardis.data.DoorData.toggleLock;
+import static loqor.ait.tardis.data.DoorHandler.toggleLock;
 
 public class DoorLockControl extends Control {
 	public DoorLockControl() {

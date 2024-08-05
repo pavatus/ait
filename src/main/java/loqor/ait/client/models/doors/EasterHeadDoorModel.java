@@ -2,7 +2,7 @@ package loqor.ait.client.models.doors;
 
 import loqor.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -50,7 +50,7 @@ public class EasterHeadDoorModel extends DoorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> EasterHeadAnimations.EASTER_HEAD_INTERIOR_DOOR_CLOSE_ANIMATION;
 			case FIRST -> EasterHeadAnimations.EASTER_HEAD_INTERIOR_DOOR_OPEN_ANIMATION;

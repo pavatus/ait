@@ -17,7 +17,7 @@ import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.exterior.category.ClassicCategory;
@@ -260,8 +260,8 @@ public class MonitorScreen extends ConsoleScreen {
 			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
 		}*/
 
-		context.drawTexture(TEXTURE, i + 30, j + 144, 0, this.tardis().getFuel() > (FuelData.TARDIS_MAX_FUEL / 4) ? 225 : 234,
-				(int) (85 * this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL), 9);
+		context.drawTexture(TEXTURE, i + 30, j + 144, 0, this.tardis().getFuel() > (FuelHandler.TARDIS_MAX_FUEL / 4) ? 225 : 234,
+				(int) (85 * this.tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL), 9);
 
         int progress = this.tardis().travel().getDurationAsPercentage();
 
@@ -308,7 +308,7 @@ public class MonitorScreen extends ConsoleScreen {
 
         boolean isExtUnlocked = tardis.isUnlocked(variant.parent());
         boolean hasPower = tardis.engine().hasPower();
-        boolean alarms = tardis.alarm().isEnabled();
+        boolean alarms = tardis.alarm().getAlarms().get();
 
         stack.push();
         stack.translate(0, 0, 500f);

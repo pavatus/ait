@@ -1,7 +1,7 @@
-package loqor.ait.tardis.data.properties.v2.integer.ranged;
+package loqor.ait.tardis.data.properties.integer.ranged;
 
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.v2.Property;
+import loqor.ait.tardis.data.properties.Property;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.MathHelper;
 

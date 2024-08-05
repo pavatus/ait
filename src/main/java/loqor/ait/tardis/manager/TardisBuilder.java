@@ -8,7 +8,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.StatsData;
+import loqor.ait.tardis.data.StatsHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -61,7 +61,7 @@ public class TardisBuilder {
     }
 
     public TardisBuilder owner(ServerPlayerEntity player) {
-        return this.<StatsData>with(TardisComponent.Id.STATS, stats -> {
+        return this.<StatsHandler>with(TardisComponent.Id.STATS, stats -> {
             stats.setPlayerCreatorName(player.getName().getString());
             stats.markPlayerCreatorName();
         }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty ->

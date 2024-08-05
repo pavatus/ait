@@ -162,7 +162,8 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         public void toNbt(NbtCompound nbt) {
             nbt.putInt("color", this.color);
             nbt.putString("name", this.name);
-            nbt.put("pos", this.pos.toNbt());
+            if (this.pos != null)
+                nbt.put("pos",this.pos.toNbt());
         }
 
         public static WaypointData fromNbt(NbtCompound nbt) {

@@ -12,8 +12,8 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.RealFlightHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
@@ -48,7 +48,6 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
@@ -410,8 +409,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         world.scheduleBlockTick(pos, this, 2);
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
-		PropertiesHandler.set(tardis, PropertiesHandler.IS_FALLING, false);
-		DoorData.lockTardis(tardis.door().previouslyLocked() || tardis.getHandlers().getInteriorChanger().isGenerating(), tardis, null, false);
+		tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().set(false);
+		DoorHandler.lockTardis(tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isGenerating(), tardis, null, false);
 	}
 
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

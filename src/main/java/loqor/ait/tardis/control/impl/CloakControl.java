@@ -2,7 +2,7 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.CloakData;
+import loqor.ait.tardis.data.CloakHandler;
 import loqor.ait.tardis.control.Control;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -20,7 +20,7 @@ public class CloakControl extends Control {
 
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-		CloakData cloak = tardis.handler(TardisComponent.Id.CLOAK);
+		CloakHandler cloak = tardis.handler(TardisComponent.Id.CLOAK);
 
 		if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
 			this.addToControlSequence(tardis, player, console);
@@ -29,9 +29,9 @@ public class CloakControl extends Control {
 			return false;
 		}
 
-		cloak.toggle();
+		cloak.cloaked().set(!cloak.cloaked().get());
 
-		if (cloak.isEnabled()) {
+		if (cloak.cloaked().get()) {
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		} else {
 			world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP, SoundCategory.BLOCKS, 1.0F, 1.0F);

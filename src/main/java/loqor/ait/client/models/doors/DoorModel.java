@@ -1,7 +1,7 @@
 package loqor.ait.client.models.doors;
 
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -36,5 +36,5 @@ public abstract class DoorModel extends SinglePartEntityModel {
 	@Override
 	public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) { }
 
-	public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
+	public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
 }

@@ -2,7 +2,7 @@ package loqor.ait.client.models.coral;
 
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.model.*;
@@ -363,7 +363,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 
 		ClientTardis tardis = (ClientTardis) exterior.tardis().get();
 
-		root = tardis.getHandlers().getInteriorChanger().isGenerating() || tardis.travel().getState() != TravelHandlerBase.State.LANDED
+		root = tardis.interiorChangingHandler().isGenerating() || tardis.travel().getState() != TravelHandlerBase.State.LANDED
 				? coral.getChild("six") : coral.getChild("seven");
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -380,7 +380,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 

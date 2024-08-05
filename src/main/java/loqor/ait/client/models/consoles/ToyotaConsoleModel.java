@@ -4,11 +4,11 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.toyota.ToyotaAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.FuelHandler;
+import loqor.ait.tardis.data.ShieldHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -860,7 +860,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		antigravs.yaw = tardis.travel().antigravs().get() ? antigravs.yaw - 1.58f : antigravs.yaw;
 
 		ModelPart shield = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps2");
-		shield.yaw = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.yaw - 1.58f : shield.yaw;
+		shield.yaw = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get() ? shield.yaw - 1.58f : shield.yaw;
 
 		//Door Locking Mechanism Control
 		ModelPart doorlock = this.toyota.getChild("panel1").getChild("controls").getChild("smalllockernob").getChild("pivot3");
@@ -875,11 +875,11 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		//Alarm Control and Lights
 		ModelPart alarms = this.toyota.getChild("panel4").getChild("controls4").getChild("coloredlever2");
 		ModelPart alarmsLight = this.toyota.getChild("panel4").getChild("yellow3");
-		alarmsLight.pivotY = (tardis.getHandlers().getAlarms().isEnabled()) ? alarmsLight.pivotY : alarmsLight.pivotY + 1;
-		alarms.pitch = tardis.getHandlers().getAlarms().isEnabled() ? alarms.pitch + 1f : alarms.pitch;
+		alarmsLight.pivotY = (tardis.getHandlers().getAlarms().getAlarms().get()) ? alarmsLight.pivotY : alarmsLight.pivotY + 1;
+		alarms.pitch = tardis.getHandlers().getAlarms().getAlarms().get() ? alarms.pitch + 1f : alarms.pitch;
 
 		ModelPart security = this.toyota.getChild("panel4").getChild("controls4").getChild("coloredlever5");
-		security.pitch = PropertiesHandler.getBool(tardis.getHandlers().getProperties(), SecurityControl.SECURITY_KEY) ? security.pitch + 1f : security.pitch;
+		security.pitch = tardis.stats().security().get() ? security.pitch + 1f : security.pitch;
 
 		//Auto Pilot Control
 		ModelPart autopilot = this.toyota.getChild("panel4").getChild("controls4").getChild("tinyswitch2");
@@ -897,7 +897,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 		ModelPart fuelGauge = this.toyota.getChild("panel1").getChild("controls").getChild("geigercounter").getChild("needle");
 		fuelGauge.pivotX = fuelGauge.pivotX + 0.25f;
 		fuelGauge.pivotZ = fuelGauge.pivotZ + 0.25f;
-		fuelGauge.yaw = (float) (((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
+		fuelGauge.yaw = (float) (((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
 
 		// Refuel Light Warning
 		ModelPart fuelWarning = this.toyota.getChild("panel4").getChild("yellow5");
@@ -905,7 +905,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
 
 		// Ground Search Control
 		ModelPart groundSearch = this.toyota.getChild("panel1").getChild("controls").getChild("smallswitch");
-		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch + 1f : groundSearch.pitch - 0.75f; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
+		groundSearch.pitch = tardis.travel().horizontalSearch().get() ? groundSearch.pitch + 1f : groundSearch.pitch - 0.75f; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		// Direction Control
 		ModelPart direction = this.toyota.getChild("panel6").getChild("controls2").getChild("smallnob2");

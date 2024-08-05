@@ -8,7 +8,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
-import static loqor.ait.tardis.data.DoorData.useDoor;
+import static loqor.ait.tardis.data.DoorHandler.useDoor;
 
 public class DoorControl extends Control {
 

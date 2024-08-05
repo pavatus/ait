@@ -3,7 +3,7 @@ package loqor.ait.client.models.exteriors;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.RealTardisEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -43,7 +43,7 @@ public class PlinthExteriorModel extends ExteriorModel {
 
 		matrices.push();
 		matrices.translate(0, -1.5f, 0);
-		plinth.getChild("door").yaw = exterior.tardis().get().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
+		plinth.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? -1.75f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();
@@ -72,7 +72,7 @@ public class PlinthExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 

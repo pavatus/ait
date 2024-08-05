@@ -15,9 +15,8 @@ import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.OvergrownData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.OvergrownHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.AirBlock;
@@ -79,7 +78,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		}
 
 		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TravelHandlerBase.State.LANDED
-				&& tardis.door().getDoorState() != DoorData.DoorStateEnum.CLOSED
+				&& tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED
 		) {
 			DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 
@@ -103,13 +102,13 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
 		model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
 
-		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
+		if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+			model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
 		}
 
         profiler.push("emission");
 
-		boolean alarms = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED);
+		boolean alarms = tardis.alarm().getAlarms().get();
 
         ClientLightUtil.renderEmissivable(
                 tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,

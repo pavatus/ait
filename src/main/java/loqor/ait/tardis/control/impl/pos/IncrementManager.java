@@ -1,11 +1,15 @@
 package loqor.ait.tardis.control.impl.pos;
 
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.integer.IntProperty;
+import loqor.ait.tardis.data.properties.integer.IntValue;
 
-public class IncrementManager { // todo can likely be moved into the properties / use properties instead
-	// private final ConsoleBlockEntity console;
-	public static final String INCREMENT = "increment";
+public class IncrementManager extends KeyedTardisComponent {
+	private static final IntProperty INCREMENT_PROPERTY = new IntProperty("increment", 1);
+	private final IntValue increment = INCREMENT_PROPERTY.create(this);
+	@Exclude
 	private static final int[] validIncrements = new int[]{
 			1,
 			10,
@@ -14,19 +18,28 @@ public class IncrementManager { // todo can likely be moved into the properties 
 			10000
 	};
 
-	public static int increment(Tardis tardis) {
-		if (!tardis.getHandlers().getProperties().getData().containsKey(INCREMENT))
-			setIncrement(tardis, 1);
+	public IncrementManager() {
+		super(Id.INCREMENT);
+	}
 
-		return PropertiesHandler.getInt(tardis.getHandlers().getProperties(), INCREMENT);
+	@Override
+	public void onLoaded() {
+		increment.of(this, INCREMENT_PROPERTY);
+	}
+
+	public IntValue increment() {
+		return increment;
+	}
+
+	public static int increment(Tardis tardis) {
+		return tardis.<IncrementManager>handler(Id.INCREMENT).increment().get();
 	}
 
 	private static void setIncrement(Tardis tardis, int increment) {
-		PropertiesHandler.set(tardis, INCREMENT, increment);
+		tardis.<IncrementManager>handler(Id.INCREMENT).increment().set(increment);
 	}
 
 	private static int getIncrementPosition(Tardis tardis) {
-		// since indexof doesnt seem to work..
 		for (int i = 0; i < validIncrements.length; i++) {
 			if (increment(tardis) != validIncrements[i]) continue;
 
@@ -35,14 +48,15 @@ public class IncrementManager { // todo can likely be moved into the properties 
 		return 0;
 	}
 
-	public static int nextIncrement(Tardis tardis) {
+	public static void nextIncrement(Tardis tardis) {
 		setIncrement(tardis, validIncrements[(getIncrementPosition(tardis) + 1 >= validIncrements.length) ? 0 : getIncrementPosition(tardis) + 1]);
 
-		return increment(tardis);
+		increment(tardis);
 	}
 
-	public static int prevIncrement(Tardis tardis) {
+	public static void prevIncrement(Tardis tardis) {
 		setIncrement(tardis, validIncrements[(getIncrementPosition(tardis) - 1 < 0) ? validIncrements.length - 1 : getIncrementPosition(tardis) - 1]);
-		return getIncrementPosition(tardis);
+
+		getIncrementPosition(tardis);
 	}
 }

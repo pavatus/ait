@@ -18,8 +18,7 @@ import loqor.ait.mixin.networking.ServerChunkManagerAccessor;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHolder;
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.manager.TardisFileManager;
@@ -160,10 +159,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void sendPropertyV2ToSubscribers(Tardis tardis, Value<?> value) {
-        sendTardis(tardis); // TODO
-    }
-
-    public void sendPropertyToSubscribers(Tardis tardis, PropertiesHolder holder, String key, String type, String value) {
         sendTardis(tardis); // TODO
     }
 

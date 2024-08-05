@@ -4,12 +4,12 @@ import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.*;
+import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.mood.MoodHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.util.Ordered;
@@ -98,23 +98,19 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
 		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
 		HANDLERS(TardisHandlersManager.class, null),
-
 		TRAVEL(TravelHandler.class, TravelHandler::new),
-		DOOR(DoorData.class, DoorData::new),
+		DOOR(DoorHandler.class, DoorHandler::new),
 		SONIC(SonicHandler.class, SonicHandler::new),
 		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
 		LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
 		ENGINE(EngineHandler.class, EngineHandler::new),
 		FLIGHT(RealFlightHandler.class, RealFlightHandler::new),
-
-		// FIXME in future: currently handled by properties
 		BIOME(BiomeHandler.class, BiomeHandler::new, null),
-		SHIELDS(ShieldData.class, ShieldData::new, null),
-
-		STATS(StatsData.class, StatsData::new, null),
-		CRASH_DATA(TardisCrashData.class, TardisCrashData::new, null),
+		SHIELDS(ShieldHandler.class, ShieldHandler::new, null),
+		STATS(StatsHandler.class, StatsHandler::new, null),
+		CRASH_DATA(TardisCrashHandler.class, TardisCrashHandler::new, null),
 		WAYPOINTS(WaypointHandler.class, WaypointHandler::new, null),
-		OVERGROWN(OvergrownData.class, OvergrownData::new, null),
+		OVERGROWN(OvergrownHandler.class, OvergrownHandler::new, null),
 		HUM(ServerHumHandler.class, ServerHumHandler::new, null),
 		ALARMS(ServerAlarmHandler.class, ServerAlarmHandler::new, null),
 		RAINING(ServerRainHandler.class, ServerRainHandler::new, null),
@@ -122,12 +118,11 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 		INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new, null),
 		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
 		MOOD(MoodHandler.class, MoodHandler::new, null),
-		FUEL(FuelData.class, FuelData::new, null),
-		HADS(HADSData.class, HADSData::new, null),
-		SIEGE(SiegeData.class, SiegeData::new, null),
-		CLOAK(CloakData.class, CloakData::new, null),
-
-		PROPERTIES(PropertiesHolder.class, PropertiesHolder::new, null);
+		FUEL(FuelHandler.class, FuelHandler::new, null),
+		HADS(HadsHandler.class, HadsHandler::new, null),
+		SIEGE(SiegeHandler.class, SiegeHandler::new, null),
+		CLOAK(CloakHandler.class, CloakHandler::new, null),
+		INCREMENT(IncrementManager.class, IncrementManager::new, null);
 
 		private final BiConsumer<ClientTardis, TardisComponent> setter;
 		private final Supplier<TardisComponent> creator;

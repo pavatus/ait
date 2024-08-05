@@ -2,7 +2,7 @@ package loqor.ait.client.models.coral;
 
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -94,7 +94,7 @@ public class CoralGrowthDoorModel extends DoorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 

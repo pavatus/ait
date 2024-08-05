@@ -13,7 +13,7 @@ import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -102,9 +102,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole").formatted(this.console != null ? Formatting.WHITE : Formatting.GRAY), button -> sendCachePacket());
 		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
-		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC) ? Formatting.WHITE : Formatting.GRAY),
+		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasConsoleSonic() ? Formatting.WHITE : Formatting.GRAY),
 				(button -> {
-					if(tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
+					if(tardis().sonic().hasConsoleSonic()) {
 						toSonicScreen();
 					}
 				}));
@@ -266,7 +266,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		context.drawTexture(TEXTURE, left + 27, top + 133, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
 
 		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		for (int p = 0; p < Math.round((tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
+		for (int p = 0; p < Math.round((tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 12); ++p) {
 			context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
 		}
 

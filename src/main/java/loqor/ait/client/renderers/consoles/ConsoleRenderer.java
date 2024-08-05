@@ -74,12 +74,12 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 		matrices.pop();
 		profiler.swap("sonic"); // } emission / sonic {
 
-		if (!tardis.sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
+		if (!tardis.sonic().hasConsoleSonic()) {
 			profiler.pop(); // } sonic
 			return;
 		}
 
-		ItemStack stack = tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+		ItemStack stack = tardis.sonic().getConsoleSonic();
 
 		if (stack == null) {
 			profiler.pop(); // } sonic

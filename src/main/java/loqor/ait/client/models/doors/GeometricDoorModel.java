@@ -2,7 +2,7 @@ package loqor.ait.client.models.doors;
 
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -33,7 +33,7 @@ public class GeometricDoorModel extends DoorModel {
 
 	@Override
 	public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		DoorData door = doorEntity.tardis().get().door();
+		DoorHandler door = doorEntity.tardis().get().door();
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? 1f : 0f;
 
@@ -46,7 +46,7 @@ public class GeometricDoorModel extends DoorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
 			case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;

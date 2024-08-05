@@ -4,7 +4,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -98,13 +97,13 @@ public class Control {
 	}
 
 	public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-		if ((this.shouldFailOnNoPower() && !tardis.engine().hasPower()) || tardis.sequence().isConsoleDisabled())
+		if ((this.shouldFailOnNoPower() && !tardis.engine().hasPower()))
 			return false;
 
 		if (isOnDelay(this, tardis))
 			return false;
 
-		boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
+		boolean security = tardis.stats().security().get();
 
 		if (!this.ignoresSecurity() && security)
 			return SecurityControl.hasMatchingKey(user, tardis);

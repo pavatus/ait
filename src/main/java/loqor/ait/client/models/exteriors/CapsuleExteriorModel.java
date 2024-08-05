@@ -4,7 +4,7 @@ import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.RealTardisEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -77,7 +77,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
 		if (exterior.tardis().get() == null)
 			return;
 
-		DoorData handler = exterior.tardis().get().door();
+		DoorHandler handler = exterior.tardis().get().door();
 
 		this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
@@ -93,7 +93,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
 		matrices.translate(0, -1.5f, 0);
 
 		if (realEntity.tardis() == null) return;
-		DoorData handler = realEntity.tardis().get().door();
+		DoorHandler handler = realEntity.tardis().get().door();
 
 		this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
 		this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 5F : 0.0F;
@@ -116,7 +116,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
 			case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;

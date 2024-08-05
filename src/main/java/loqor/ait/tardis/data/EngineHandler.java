@@ -8,13 +8,12 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.Value;
-import loqor.ait.tardis.data.properties.v2.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.v2.bool.BoolValue;
-import loqor.ait.tardis.data.properties.v2.integer.IntProperty;
-import loqor.ait.tardis.data.properties.v2.integer.IntValue;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
+import loqor.ait.tardis.data.properties.integer.IntProperty;
+import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
@@ -97,15 +96,15 @@ public class EngineHandler extends KeyedTardisComponent {
 
         // disabling protocols
         tardis.travel().antigravs().set(false);
-        PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, false);
-        PropertiesHandler.set(tardis, PropertiesHandler.HADS_ENABLED, false);
+        tardis.stats().hailMary().set(false);
+        tardis.<HadsHandler>handler(Id.HADS).hads().set(false);
     }
 
     public void enablePower() {
         if (this.power.get())
             return;
 
-        if (this.tardis.getFuel() <= (0.01 * FuelData.TARDIS_MAX_FUEL))
+        if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
             return; // cant enable power if not enough fuel
 
         if (this.tardis.siege().isActive())

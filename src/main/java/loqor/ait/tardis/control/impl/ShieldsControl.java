@@ -5,7 +5,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.ShieldHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -27,15 +27,15 @@ public class ShieldsControl extends Control {
 			return false;
 		}
 
-		ShieldData shields = tardis.handler(TardisComponent.Id.SHIELDS);
+		ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
 
 		if (player.isSneaking()) {
-			if (shields.areShieldsActive())
+			if (shields.shielded().get())
 				shields.toggleVisuals();
 		} else {
 			shields.toggle();
 
-			if (shields.areVisualShieldsActive())
+			if (shields.visuallyShielded().get())
 				shields.disableVisuals();
 		}
 

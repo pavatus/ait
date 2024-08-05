@@ -4,8 +4,8 @@ import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.util.Ordered;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.minecraft.registry.RegistryKey;
@@ -23,7 +23,6 @@ import java.util.function.Function;
  * TODO reminder to work on this more, making it so you have to brush off different biomes if you don't just demat/remat + having to land on the respective blocks / has to snow for it to take effect.
  */
 public class BiomeHandler extends KeyedTardisComponent {
-
     private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
     private final Value<BiomeType> type = TYPE.create(this);
 

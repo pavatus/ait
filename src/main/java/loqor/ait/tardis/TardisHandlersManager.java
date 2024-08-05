@@ -7,11 +7,6 @@ import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.*;
-import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.data.properties.PropertiesHolder;
 import loqor.ait.tardis.util.EnumMap;
 import net.minecraft.server.MinecraftServer;
 
@@ -106,92 +101,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
 	public <T extends TardisComponent> void set(IdLike id, T t) {
 		this.handlers.put(id, t);
 	}
-
-	@Deprecated
-	public SonicHandler getSonic() {
-		return this.tardis().sonic();
-	}
-
-	@Deprecated
-	public StatsData getStats() {
-		return this.tardis().stats();
-	}
-
-	@Deprecated
-	public DoorData getDoor() {
-		return this.tardis().door();
-	}
-
-	@Deprecated
-	public PropertiesHolder getProperties() {
-		return this.tardis().properties();
-	}
-
-	@Deprecated
-	public CloakData getCloak() {
-		return this.get(Id.CLOAK);
-	}
-
-	@Deprecated
-	public ShieldData getShields() {
-		return this.get(Id.SHIELDS);
-	}
-
-	@Deprecated
-	public ServerAlarmHandler getAlarms() {
-		return this.tardis().alarm();
-	}
-
-	@Deprecated
-	public WaypointHandler getWaypoints() {
-		return this.tardis().waypoint();
-	}
-
-	@Deprecated
-	public SequenceHandler getSequenceHandler() {
-		return this.tardis().sequence();
-	}
-
-	@Deprecated
-	public FuelData getFuel() {
-		return this.tardis().fuel();
-	}
-
-	@Deprecated
-	public TardisCrashData getCrashData() {
-		return this.tardis().crash();
-	}
-
-	@Deprecated
-	public SiegeData getSiege() {
-		return this.get(Id.SIEGE);
-	}
-
-	@Deprecated
-	public LoyaltyHandler getLoyalties() {
-		return this.tardis().loyalty();
-	}
-
-	@Deprecated
-	public OvergrownData getOvergrown() {
-		return this.get(Id.OVERGROWN);
-	}
-
-	@Deprecated
-	public PermissionHandler getPermissions() {
-		return this.get(Id.PERMISSIONS);
-	}
-
-	@Deprecated
-	public InteriorChangingHandler getInteriorChanger() {
-		return this.get(Id.INTERIOR);
-	}
-
-	@Deprecated
-	public EngineHandler getEngine() {
-		return this.get(Id.ENGINE);
-	}
-
 	public static Object serializer() {
 		return new Serializer();
 	}

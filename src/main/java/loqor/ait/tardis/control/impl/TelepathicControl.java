@@ -5,7 +5,6 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
 import net.minecraft.item.ItemStack;
@@ -41,7 +40,7 @@ public class TelepathicControl extends Control {
 			return false;
 		}
 
-		boolean security = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY);
+		boolean security = tardis.stats().security().get();
 
 		if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security)
 			return false;

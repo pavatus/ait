@@ -5,7 +5,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.CloakData;
+import loqor.ait.tardis.data.CloakHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -35,7 +35,7 @@ public abstract class ExteriorAnimation {
 			return 1f;
 
 		if (this.exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED) {
-			if (this.exterior.tardis().get().<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled()) {
+			if (this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
 				return 0.105f;
 			}
 			return 1.0f;

@@ -7,7 +7,7 @@ import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.RealTardisEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -52,7 +52,7 @@ public class GeometricExteriorModel extends ExteriorModel {
 		matrices.scale(1F, 1F, 1F);
 		matrices.translate(0, -1.5f, 0);
 
-		DoorData door = exterior.tardis().get().door();
+		DoorHandler door = exterior.tardis().get().door();
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -83,7 +83,7 @@ public class GeometricExteriorModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
 			case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;

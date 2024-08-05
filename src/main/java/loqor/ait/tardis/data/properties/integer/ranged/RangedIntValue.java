@@ -1,6 +1,6 @@
-package loqor.ait.tardis.data.properties.v2.integer.ranged;
+package loqor.ait.tardis.data.properties.integer.ranged;
 
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Value;
 
 public class RangedIntValue extends Value<Integer> {
 

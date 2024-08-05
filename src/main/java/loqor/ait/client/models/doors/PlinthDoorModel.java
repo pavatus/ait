@@ -1,7 +1,7 @@
 package loqor.ait.client.models.doors;
 
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -41,7 +41,7 @@ public class PlinthDoorModel extends DoorModel {
 		matrices.translate(0, -1.5f, 0);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
-		plinth.getChild("door").yaw = door.tardis().get().getHandlers().getDoor().isOpen() ? -1.75f : 0f;
+		plinth.getChild("door").yaw = door.tardis().get().door().isOpen() ? -1.75f : 0f;
 		super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
 		matrices.pop();
@@ -53,7 +53,7 @@ public class PlinthDoorModel extends DoorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return Animation.Builder.create(0).build();
 	}
 }

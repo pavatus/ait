@@ -13,9 +13,9 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.InteriorChangingHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.RealFlightHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.entity.ItemEntity;
@@ -75,8 +75,8 @@ public class ServerTardis extends Tardis {
 
 		this.getHandlers().tick(server);
 
-		if (PropertiesHandler.getBool(this.properties(), PropertiesHandler.IS_FALLING))
-			DoorData.lockTardis(true, this, null, true);
+		if (this.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().get())
+			DoorHandler.lockTardis(true, this, null, true);
 	}
 
 	protected void generateInteriorWithItem() {

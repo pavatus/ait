@@ -3,10 +3,10 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.steam.SteamAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.ShieldHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -909,18 +909,18 @@ public class SteamConsoleModel extends ConsoleModel {
 		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
 
 		ModelPart alarms = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever4").getChild("bone22");
-		alarms.roll = (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED) ? 0.4363F : -0.5672F);
+		alarms.roll = tardis.alarm().getAlarms().get() ? 0.4363F : -0.5672F;
 
 		ModelPart security = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever2").getChild("bone20");
-		security.roll = (PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? 0.4363F : -0.5672F);
+		security.roll = (tardis.stats().security().get() ? 0.4363F : -0.5672F);
 
 		ModelPart antigrav = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever3").getChild("bone19");
 		antigrav.roll = (tardis.travel().antigravs().get() ? 0.4363F : -0.5672F);
 
 		ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5").getChild("bone21");
-		shields.roll = (PropertiesHandler.getBool(tardis.properties(),
-				ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.properties(),
-				ShieldData.IS_VISUALLY_SHIELDED) ? 0.0F : 0.4363F : -0.5672F);
+		shields.roll = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get() ?
+				tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get()
+						? 0.0F : 0.4363F : -0.5672F;
 
 		ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever").getChild("bone23");
 		refueling.roll = (tardis.isRefueling() ? 0.4363F : -0.5672F);
@@ -932,7 +932,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
 
 		ModelPart landType = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("valve").getChild("bone9");
-		landType.pivotY = landType.pivotY + (PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.FIND_GROUND) ? 0.5f : 0); // FIXME use TravelHandler#horizontalSearch/#verticalSearch
+		landType.pivotY = landType.pivotY + (tardis.travel().horizontalSearch().get() ? 0.5f : 0); // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		ModelPart direction = steam.getChild("controls").getChild("panel_4").getChild("rot4").getChild("crank").getChild("bone42");
 		direction.yaw = direction.yaw + (1.5708f * tardis.travel().destination().getRotation());
@@ -941,7 +941,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		doorControl.yaw = doorControl.yaw + (tardis.door().isOpen() ? tardis.door().isRightOpen() ? 1.5708f * 2f : 1.5708f : 0);
 
 		ModelPart cloak = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone46");
-		cloak.roll = cloak.roll - (tardis.getHandlers().getCloak().isEnabled() ? 1.5708f : 0);
+		cloak.roll = cloak.roll - (tardis.cloak().cloaked().get() ? 1.5708f : 0);
 
 		ModelPart doorLock = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever8").getChild("bone47");
 		doorLock.roll = doorLock.roll - (tardis.door().locked() ? 1.5708f : 0);

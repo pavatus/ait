@@ -7,7 +7,6 @@ import loqor.ait.registry.impl.HumsRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
@@ -27,11 +26,8 @@ import java.util.Random;
 
 import static loqor.ait.AITMod.AIT_CONFIG;
 
-// All this is CLIENT ONLY!!
-// Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
 public class ClientHumHandler extends SoundHandler {
 	private LoopingSound current;
-	private static final Random random = new Random();
 
 	protected ClientHumHandler() {
 
@@ -118,10 +114,6 @@ public class ClientHumHandler extends SoundHandler {
 		return found;
 	}
 
-	public boolean isEnabled() {
-		return PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.HUM_ENABLED);
-	}
-
 	public void tick(MinecraftClient client) {
 		if (this.sounds == null) this.generateHums();
 
@@ -132,7 +124,7 @@ public class ClientHumHandler extends SoundHandler {
 			return;
 		}
 
-		if (isPlayerInATardis() && isEnabled() && tardis().engine().hasPower()) {
+		if (isPlayerInATardis() && tardis().engine().hasPower()) {
 			this.startIfNotPlaying(this.getHum());
 		} else {
 			this.stopSounds();

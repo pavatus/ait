@@ -1,4 +1,4 @@
-package loqor.ait.tardis.data.properties.v2;
+package loqor.ait.tardis.data.properties;
 
 import loqor.ait.tardis.util.Disposable;
 

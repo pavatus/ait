@@ -9,9 +9,10 @@ import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.AxeItem;
@@ -29,16 +30,29 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
-public class DoorData extends TardisComponent implements TardisTickable {
-	private boolean locked, left, right;
-	private DoorStateEnum doorState;
+public class DoorHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final BoolProperty LOCKED_DOORS = new BoolProperty("locked", false);
+	private static final BoolProperty LEFT_DOOR = new BoolProperty("left_door", false);
+	private static final BoolProperty RIGHT_DOOR = new BoolProperty("right_door", false);
+	private static final BoolProperty PREVIOUSLY_LOCKED = new BoolProperty("previously_locked", false);
+	private final BoolValue locked = LOCKED_DOORS.create(this);
+	private final BoolValue left = LEFT_DOOR.create(this);
+	private final BoolValue right = RIGHT_DOOR.create(this);
+	private final BoolValue previouslyLocked = PREVIOUSLY_LOCKED.create(this);
+	private DoorStateEnum doorState = DoorStateEnum.CLOSED;
 	public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for checking when the door has been changed so the animation can start. Set on server, used on client
 	public DoorStateEnum tempInteriorState;
 
-	public DoorData() {
+	public DoorHandler() {
 		super(Id.DOOR);
+	}
 
-		this.doorState = DoorStateEnum.CLOSED;
+	@Override
+	public void onLoaded() {
+		locked.of(this, LOCKED_DOORS);
+		left.of(this, LEFT_DOOR);
+		right.of(this, RIGHT_DOOR);
+		previouslyLocked.of(this, PREVIOUSLY_LOCKED);
 	}
 
 	@Override
@@ -88,30 +102,30 @@ public class DoorData extends TardisComponent implements TardisTickable {
 	}
 
 	public void setLeftRot(boolean var) {
-		this.left = var;
+		this.left.set(var);
 
-		if (this.left)
+		if (this.left.get())
 			this.setDoorState(DoorStateEnum.FIRST);
 
 		this.sync();
 	}
 
 	public void setRightRot(boolean var) {
-		this.right = var;
-		if (this.right) this.setDoorState(DoorStateEnum.SECOND);
+		this.right.set(var);
+		if (this.right.get()) this.setDoorState(DoorStateEnum.SECOND);
 		this.sync();
 	}
 
 	public boolean isRightOpen() {
-		return this.doorState == DoorStateEnum.SECOND || this.right;
+		return this.doorState == DoorStateEnum.SECOND || this.right.get();
 	}
 
 	public boolean isLeftOpen() {
-		return this.doorState == DoorStateEnum.FIRST || this.left;
+		return this.doorState == DoorStateEnum.FIRST || this.left.get();
 	}
 
 	public void setLocked(boolean locked) {
-		this.locked = locked;
+		this.locked.set(locked);
 
 		if (locked)
 			setDoorState(DoorStateEnum.CLOSED);
@@ -120,7 +134,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 	}
 
 	public boolean locked() {
-		return this.locked;
+		return this.locked.get();
 	}
 
 	public boolean isDoubleDoor() {
@@ -187,7 +201,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 
 	// TODO predict the result of this on common side so the client doesnt have to wait for the server to answer
 	public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
-		if (tardis.getHandlers().getOvergrown().isOvergrown()) {
+		if (tardis.overgrown().isOvergrown()) {
 			// Bro cant escape
 			if (player == null)
 				return false;
@@ -196,7 +210,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
 			if (stack.getItem() instanceof AxeItem) {
 				player.swingHand(Hand.MAIN_HAND);
-				tardis.getHandlers().getOvergrown().removeVegetation();
+				tardis.overgrown().removeVegetation();
 				stack.setDamage(stack.getDamage() - 1);
 
 				if (pos != null)
@@ -261,7 +275,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			return false;
 		}
 
-		if (tardis.getLockedTardis() || tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+		if (tardis.getLockedTardis() || tardis.sonic().hasExteriorSonic()) {
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
@@ -271,7 +285,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			return false;
 		}
 
-		DoorData door = tardis.door();
+		DoorHandler door = tardis.door();
 
 		DoorSchema doorSchema = tardis.getExterior().getVariant().door();
 		SoundEvent sound = doorSchema.isDouble() && door.isBothOpen() ? doorSchema.closeSound() : doorSchema.openSound();
@@ -313,7 +327,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 			return false;
 
 		tardis.door().setLocked(locked);
-		DoorData door = tardis.door();
+		DoorHandler door = tardis.door();
 
 		if (door == null)
 			return false; // could have a case where the door is null but the thing above works fine meaning this false is wrong fixme
@@ -321,7 +335,7 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		door.setDoorState(DoorStateEnum.CLOSED);
 
 		if (!forced)
-			PropertiesHandler.set(tardis, PropertiesHandler.PREVIOUSLY_LOCKED, locked);
+			door.previouslyLocked.set(locked);
 
 		if (tardis.siege().isActive())
 			return true;
@@ -340,8 +354,8 @@ public class DoorData extends TardisComponent implements TardisTickable {
 		return true;
 	}
 
-	public boolean previouslyLocked(){
-		return PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED);
+	public BoolValue previouslyLocked(){
+		return this.previouslyLocked;
 	}
 
 	public enum DoorStateEnum {

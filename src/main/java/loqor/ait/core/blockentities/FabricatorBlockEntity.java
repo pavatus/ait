@@ -1,15 +1,11 @@
 package loqor.ait.core.blockentities;
 
 import io.wispforest.owo.util.ImplementedInventory;
-import loqor.ait.client.screens.BlueprintFabricatorScreen;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -18,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;

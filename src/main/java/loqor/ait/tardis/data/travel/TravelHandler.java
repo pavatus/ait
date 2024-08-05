@@ -9,15 +9,11 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.data.TardisCrashData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -27,8 +23,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.List;
 
 public non-sealed class TravelHandler extends ProgressiveTravelHandler implements CrashableTardisTravel {
 
@@ -72,7 +66,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         int speed = this.speed();
 
         if (speed > 0 && this.getState() == State.LANDED && !this.handbrake()
-                && !this.tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+                && !this.tardis.sonic().hasExteriorSonic()) {
             this.dematerialize();
             return;
         }
@@ -80,7 +74,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         if (speed != 0 || this.getState() != State.FLIGHT)
             return;
 
-        if (this.tardis.crash().getState() == TardisCrashData.State.UNSTABLE)
+        if (this.tardis.crash().getState() == TardisCrashHandler.State.UNSTABLE)
             this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
 
         if (!this.tardis.flight().isActive())
@@ -218,7 +212,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL
                 || tardis.door().isOpen() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis)
-                || PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING)
+                || tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().get()
         ) {
             this.failDemat();
             return;
@@ -272,7 +266,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         this.deleteExterior();
 
-        if (PropertiesHandler.getBool(this.tardis().properties(), SecurityControl.SECURITY_KEY))
+        if (tardis.stats().security().get())
             SecurityControl.runSecurityProtocols(this.tardis());
     }
 
@@ -331,7 +325,7 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
         this.resetFlight();
 
         this.position().getWorld().scheduleBlockTick(this.position().getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
-        DoorData.lockTardis(PropertiesHandler.getBool(this.tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED), this.tardis, null, false);
+        DoorHandler.lockTardis(tardis.<DoorHandler>handler(Id.DOOR).previouslyLocked().get(), this.tardis, null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
 

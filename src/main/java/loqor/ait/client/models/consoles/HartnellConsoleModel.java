@@ -5,12 +5,10 @@ import loqor.ait.client.animation.console.hartnell.HartnellAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.CloakData;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.CloakHandler;
+import loqor.ait.tardis.data.FuelHandler;
+import loqor.ait.tardis.data.ShieldHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -817,10 +815,10 @@ public class HartnellConsoleModel extends ConsoleModel {
 		matrices.translate(0.5f, -1.5f, -0.5f);
 
 		this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("m_meter_2").getChild("bone110").yaw =
-				(float) (((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
+				(float) (((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
 		ModelPart fuelLowWarningLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("sym_lamp2").getChild("bone96");
 		// Low Fuel Light
-		if (!(tardis.getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10))) {
+		if (!(tardis.getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10))) {
 			fuelLowWarningLight.pivotY = fuelLowWarningLight.pivotY + 1;
 		}
 
@@ -903,24 +901,24 @@ public class HartnellConsoleModel extends ConsoleModel {
 
 		ModelPart cloak = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ctrl_panel_2").getChild("bone108");
 		ModelPart cloakLight = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("ind_lamp_15").getChild("bone101");
-		cloak.yaw = tardis.<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled() ? cloak.yaw + 1.575f : cloak.yaw;
-		cloakLight.pivotY = tardis.<CloakData>handler(TardisComponent.Id.CLOAK).isEnabled() ? cloakLight.pivotY : cloakLight.pivotY + 1;
+		cloak.yaw = tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get() ? cloak.yaw + 1.575f : cloak.yaw;
+		cloakLight.pivotY = tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get() ? cloakLight.pivotY : cloakLight.pivotY + 1;
 
 		// Ground Search Control Movements
 		ModelPart groundSearch = this.bone.getChild("panels").getChild("p_4").getChild("bone98").getChild("bone99").getChild("bone100").getChild("s_knob");
-		groundSearch.pivotZ = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
+		groundSearch.pivotZ = !tardis.travel().horizontalSearch().get() ? groundSearch.pivotZ - 1.5f : groundSearch.pivotZ; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		// Hail Mary Control Movements
 		ModelPart hailMary = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("s_lever").getChild("bone61");
-		hailMary.roll = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY) ? hailMary.roll + 1.75f : hailMary.roll;
+		hailMary.roll = tardis.stats().hailMary().get() ? hailMary.roll + 1.75f : hailMary.roll;
 		ModelPart hailMaryWarningLight = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sym_lamp").getChild("bone97");
-		hailMaryWarningLight.pivotY = !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY) ? hailMaryWarningLight.pivotY : hailMaryWarningLight.pivotY + 1;
+		hailMaryWarningLight.pivotY = !tardis.stats().hailMary().get() ? hailMaryWarningLight.pivotY : hailMaryWarningLight.pivotY + 1;
 
 		// Hads Alarm Control Movements
 		ModelPart hadsAlarms = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_6").getChild("bone143");
 		ModelPart hadsAlarmsLightsOne = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp4").getChild("bone145");
 		ModelPart hadsAlarmsLightsTwo = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("sym_lamp5").getChild("bone141");
-		if (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.ALARM_ENABLED)) {
+		if (tardis.alarm().getAlarms().get()) {
 			hadsAlarms.roll = hadsAlarms.roll + 1.75f;
 		} else {
             hadsAlarmsLightsOne.pivotY = hadsAlarmsLightsOne.pivotY + 1;
@@ -928,7 +926,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		}
 
 		ModelPart security = this.bone.getChild("panels").getChild("p_6").getChild("bone132").getChild("bone133").getChild("bone134").getChild("s_lever_7").getChild("bone144");
-		security.roll = (PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY)) ? security.roll + 1.75f : security.roll;
+		security.roll = (tardis.stats().security().get()) ? security.roll + 1.75f : security.roll;
 
 		// Increment Control Movements
 		ModelPart increment = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68").getChild("bone69").getChild("s_crank_3").getChild("bone74");
@@ -943,7 +941,7 @@ public class HartnellConsoleModel extends ConsoleModel {
 		antiGrav.pivotX = !tardis.travel().antigravs().get() ? antiGrav.pivotX : antiGrav.pivotX + 1;
 
 		ModelPart shield = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_6").getChild("bone57");
-		shield.pivotX = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_VISUALLY_SHIELDED) ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;
+		shield.pivotX = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get() ? tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get() ? shield.pivotX + 0.5f : shield.pivotX + 1 : shield.pivotX;
 
 		ModelPart siegeProtocol = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49").getChild("bone50").getChild("sl_switch_5").getChild("bone56");
 		siegeProtocol.pivotX = !tardis.siege().isActive() ? siegeProtocol.pivotX : siegeProtocol.pivotX + 1;

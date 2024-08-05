@@ -3,7 +3,7 @@ package loqor.ait.core.blocks;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DetectorBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TardisCrashData;
+import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -157,17 +157,17 @@ public class DetectorBlock extends WallMountedBlock implements BlockEntityProvid
 		FLIGHT(tardis -> tardis.travel().getState() != TravelHandlerBase.State.LANDED ? 15 : 0),
 		POWER(tardis -> tardis.engine().hasPower() ? 15 : 0),
 		CRASHED(tardis -> {
-			TardisCrashData.State state = tardis.crash().getState();
+			TardisCrashHandler.State state = tardis.crash().getState();
 
-			if (state == TardisCrashData.State.NORMAL)
+			if (state == TardisCrashHandler.State.NORMAL)
 				return 0;
 
-			return state == TardisCrashData.State.UNSTABLE ? 7 : 15;
+			return state == TardisCrashHandler.State.UNSTABLE ? 7 : 15;
 		}),
 		DOOR_LOCKED(tardis -> tardis.door().locked() ? 15 : 0),
 		DOOR_OPEN(tardis -> tardis.door().isOpen() ? 15 : 0),
 		SONIC(tardis -> tardis.sonic().hasConsoleSonic() ? 15 : 0),
-		ALARMS(tardis -> tardis.alarm().isEnabled() ? 15 : 0);
+		ALARMS(tardis -> tardis.alarm().getAlarms().get() ? 15 : 0);
 
         private final String name;
 		private final Function<Tardis, Integer> func;

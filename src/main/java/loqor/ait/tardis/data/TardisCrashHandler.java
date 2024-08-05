@@ -3,13 +3,16 @@ package loqor.ait.tardis.data;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.EquipmentSlot;
@@ -24,12 +27,16 @@ import net.minecraft.server.world.ServerWorld;
 import org.joml.Vector3f;
 
 
-public class TardisCrashData extends TardisComponent implements TardisTickable {
-	public static final String TARDIS_RECOVERY_STATE = "tardis_recovery_state";
-	public static final String TARDIS_REPAIR_TICKS = "tardis_recovery_ticks";
-
+public class TardisCrashHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final Property<State> STATE_PROPERTY = Property.forEnum("state",State.class, State.NORMAL);
+	private final Value<State> state = STATE_PROPERTY.create(this);
+	private static final IntProperty TARDIS_REPAIR_TICKS_PROPERTY = new IntProperty("repair_ticks", 0);
+	private final Value<Integer> tardisRepairTicks = TARDIS_REPAIR_TICKS_PROPERTY.create(this);
+	@Exclude
 	private static final String DELAY_ID_START = AITMod.MOD_ID + "-tardiscrashrecoverydelay-";
+	@Exclude
 	public static final Integer UNSTABLE_TICK_START_THRESHOLD = 2_400;
+	@Exclude
 	public static final Integer MAX_REPAIR_TICKS = 7_000;
 
 	public boolean isToxic() {
@@ -41,10 +48,16 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 	}
 
 	@Override
+	public void onLoaded() {
+		state.of(this, STATE_PROPERTY);
+		tardisRepairTicks.of(this, TARDIS_REPAIR_TICKS_PROPERTY);
+	}
+
+	@Override
 	public void tick(MinecraftServer server) {
 
-		if (PropertiesHandler.get(tardis(), TARDIS_RECOVERY_STATE) == null) {
-			PropertiesHandler.set(tardis(), TARDIS_RECOVERY_STATE, State.NORMAL);
+		if (state.get() == null) {
+			state.set(State.NORMAL);
 		}
 
 		if (getRepairTicks() > 0) {
@@ -88,7 +101,7 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 		if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString())) return;
 		if (!TardisUtil.isInteriorNotEmpty(tardis)) return;
 		int loyaltySubAmount = AITMod.RANDOM.nextInt(10, 25);
-		for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInInterior(tardis)) {
+		for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInsideInterior(tardis)) {
 			ItemStack stack = serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD);
 
 			if (stack.isIn(AITModTags.Items.FULL_RESPIRATORS) || stack.isIn(AITModTags.Items.HALF_RESPIRATORS))
@@ -104,24 +117,22 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 		DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(), (long) TimeUtil.secondsToMilliseconds(2));
 	}
 
-	public TardisCrashData() {
+	public TardisCrashHandler() {
 		super(Id.CRASH_DATA);
 	}
 
 	public State getState() {
-		if (PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE) == null)
+		if (state.get() == null)
 			return State.NORMAL;
-		if (PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE) instanceof State)
-			return (State) PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE);
-		return State.valueOf((String) PropertiesHandler.get(tardis().properties(), TARDIS_RECOVERY_STATE));
+        return state.get();
 	}
 
-	public void setState(State state) {
-		PropertiesHandler.set(tardis().properties(), TARDIS_RECOVERY_STATE, state);
+	public void setState(State tardisState) {
+		state.set(tardisState);
 	}
 
 	public Integer getRepairTicks() {
-		return PropertiesHandler.getInt(tardis().properties(), TARDIS_REPAIR_TICKS);
+		return tardisRepairTicks.get();
 	}
 
 	public int getRepairTicksAsSeconds() {
@@ -133,11 +144,11 @@ public class TardisCrashData extends TardisComponent implements TardisTickable {
 			setRepairTicks(MAX_REPAIR_TICKS);
 			return;
 		}
-		PropertiesHandler.set(tardis().properties(), TARDIS_REPAIR_TICKS, ticks);
+		tardisRepairTicks.set(ticks);
 	}
 
 	public void addRepairTicks(Integer ticks) {
-		PropertiesHandler.set(tardis().properties(), TARDIS_REPAIR_TICKS, getRepairTicks() + ticks);
+		tardisRepairTicks.set(getRepairTicks() + ticks);
 	}
 
 	public enum State {

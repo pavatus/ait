@@ -6,7 +6,6 @@ import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -182,10 +181,6 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
 		world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
 		world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
 		world.spawnParticles(ParticleTypes.HEART, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F, 0.5F);
-	}
-
-	public boolean isConsoleDisabled() {
-		return PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.CONSOLE_DISABLED);
 	}
 
 	@Override

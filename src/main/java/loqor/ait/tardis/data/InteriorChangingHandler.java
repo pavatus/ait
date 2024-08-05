@@ -6,9 +6,13 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,13 +21,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-public class InteriorChangingHandler extends TardisComponent implements TardisTickable {
-    public static final String IS_REGENERATING = "is_regenerating";
-	public static final String QUEUED_INTERIOR = "queued_interior";
+public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final BoolProperty IS_REGENERATING_PROPERTY = new BoolProperty("regenerating", false);
+    private final BoolValue isRegenerating = IS_REGENERATING_PROPERTY.create(this);
+	private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "queued_interior", new Identifier(""));
+	private final Value<Identifier> queuedInterior = QUEUED_INTERIOR_PROPERTY.create(this);
 	public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
 
     public InteriorChangingHandler() {
 		super(Id.INTERIOR);
+	}
+
+	@Override
+	public void onLoaded() {
+		queuedInterior.of(this, QUEUED_INTERIOR_PROPERTY);
+		isRegenerating.of(this, IS_REGENERATING_PROPERTY);
 	}
 
 	static {
@@ -44,19 +56,19 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 	}
 
 	private void setGenerating(boolean var) {
-		PropertiesHandler.set(this.tardis(), IS_REGENERATING, var);
+		isRegenerating.set(var);
 	}
 
 	public boolean isGenerating() {
-		return PropertiesHandler.getBool(this.tardis().properties(), IS_REGENERATING);
+		return isRegenerating.get();
 	}
 
 	private void setQueuedInterior(TardisDesktopSchema schema) {
-		PropertiesHandler.set(this.tardis(), QUEUED_INTERIOR, schema.id());
+		queuedInterior.set(schema.id());
 	}
 
 	public TardisDesktopSchema getQueuedInterior() {
-		return DesktopRegistry.getInstance().get(PropertiesHandler.getIdentifier(this.tardis().properties(), QUEUED_INTERIOR));
+		return DesktopRegistry.getInstance().get(queuedInterior.get());
 	}
 
 	public void queueInteriorChange(TardisDesktopSchema schema) {
@@ -90,8 +102,8 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 
 		tardis.alarm().disable();
 
-		boolean previouslyLocked = tardis.door().previouslyLocked();
-		DoorData.lockTardis(previouslyLocked, tardis, null, false);
+		boolean previouslyLocked = tardis.door().previouslyLocked().get();
+		DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
 
 		tardis.engine().hasEngineCore().set(false);
 		tardis.engine().disablePower();
@@ -130,7 +142,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 			travel.crash();
 
 		if (this.isGenerating()) {
-			if (!this.tardis().alarm().isEnabled())
+			if (!this.tardis().alarm().getAlarms().get())
 				this.tardis().alarm().enable();
 		}
 
@@ -146,7 +158,7 @@ public class InteriorChangingHandler extends TardisComponent implements TardisTi
 		}
 
 		if (isInteriorEmpty() && !this.tardis().door().locked()) {
-			DoorData.lockTardis(true, this.tardis(), null, true);
+			DoorHandler.lockTardis(true, this.tardis(), null, true);
 		}
 		if (isInteriorEmpty() && !clearedOldInterior) {
 			this.tardis().getDesktop().clearOldInterior(getQueuedInterior());

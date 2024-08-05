@@ -4,7 +4,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -40,7 +40,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
 		float newAlpha = alpha;
 
-		if (tardis.getHandlers().getCloak().isEnabled()) {
+		if (tardis.cloak().cloaked().get()) {
 			PlayerEntity player = MinecraftClient.getInstance().player;
 
 			if (!(tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION))) {
@@ -76,5 +76,5 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
 	}
 
-	public abstract Animation getAnimationForDoorState(DoorData.DoorStateEnum state);
+	public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
 }

@@ -5,7 +5,6 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +38,7 @@ public class EngineBlockEntity extends LinkableBlockEntity implements NamedScree
 
 	public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player) {
 		if (world.isClient() || this.findTardis().isEmpty()) return;
-		boolean security = PropertiesHandler.getBool(this.findTardis().get().properties(), SecurityControl.SECURITY_KEY);
+		boolean security = this.findTardis().get().stats().security().get();
 		if (security) {
 			if (!SecurityControl.hasMatchingKey((ServerPlayerEntity) player, this.findTardis().get())) {
 				return;

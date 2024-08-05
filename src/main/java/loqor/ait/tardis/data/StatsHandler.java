@@ -10,9 +10,10 @@ import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
-import loqor.ait.tardis.data.properties.v2.Property;
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
@@ -26,33 +27,44 @@ import java.text.DateFormat;
 import java.time.Instant;
 import java.util.*;
 
-// is StatsData a good name for this class?
-public class StatsData extends KeyedTardisComponent {
+public class StatsHandler extends KeyedTardisComponent {
 
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
 	private static List<String> NAME_CACHE;
-	private static final String NAME_KEY = "name";
-	private static final String PLAYER_CREATOR_NAME_KEY = "player_creator_name";
-	private static final String DATE_KEY = "date";
+	private static final Property<String> NAME_PROPERTY = new Property<>(Property.Type.STR, "name", "");
+	private final Value<String> tardisName = NAME_PROPERTY.create(this);
+	private static final Property<String> PLAYER_CREATOR_NAME_PROPERTY = new Property<>(Property.Type.STR, "player_creator_name", "");
+	private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME_PROPERTY.create(this);
+	private static final Property<String> DATE = new Property<>(Property.Type.STR, "date", "");
+	private final Value<String> creationDate = DATE.create(this);
     private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
 	private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks", new HashSet<>());
 	private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
 	private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
+	private static final BoolProperty SECURITY = new BoolProperty("security", false);
+	private final BoolValue security = SECURITY.create(this);
+	private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
+	private final BoolValue hailMary = HAIL_MARY.create(this);
 
-	public StatsData() {
+	public StatsHandler() {
 		super(Id.STATS);
 	}
 
 	@Override
 	public void onCreate() {
 		this.markCreationDate();
-		this.setName(StatsData.getRandomName());
+		this.setName(StatsHandler.getRandomName());
 	}
 
 	@Override
 	public void onLoaded() {
 		skybox.of(this, SKYBOX);
 		unlocks.of(this, UNLOCKS);
+		tardisName.of(this, NAME_PROPERTY);
+		playerCreatorName.of(this, PLAYER_CREATOR_NAME_PROPERTY);
+		creationDate.of(this, DATE);
+		security.of(this, SECURITY);
+		hailMary.of(this, HAIL_MARY);
 
 		for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
 			this.unlock(it.next(), false);
@@ -80,7 +92,7 @@ public class StatsData extends KeyedTardisComponent {
 	}
 
 	public String getName() {
-		String name = (String) PropertiesHandler.get(tardis().properties(), NAME_KEY);
+		String name = tardisName.get();
 
 		if (name == null) {
 			name = getRandomName();
@@ -90,8 +102,16 @@ public class StatsData extends KeyedTardisComponent {
 		return name;
 	}
 
+	public BoolValue security() {
+		return security;
+	}
+
+	public BoolValue hailMary() {
+		return hailMary;
+	}
+
 	public String getPlayerCreatorName() {
-		String name = (String) PropertiesHandler.get(tardis().properties(), PLAYER_CREATOR_NAME_KEY);
+		String name = tardisName.get();
 
 		if (name == null) {
 			name = getRandomName();
@@ -103,16 +123,16 @@ public class StatsData extends KeyedTardisComponent {
 
 
 	public void setName(String name) {
-		PropertiesHandler.set(tardis(), NAME_KEY, name);
+		tardisName.set(name);
 	}
 
 	public void setPlayerCreatorName(String name) {
-		PropertiesHandler.set(tardis(), PLAYER_CREATOR_NAME_KEY, name);
+		playerCreatorName.set(name);
 	}
 
 	public static String getRandomName() {
-		if (StatsData.shouldGenerateNames())
-			StatsData.loadNames();
+		if (StatsHandler.shouldGenerateNames())
+			StatsHandler.loadNames();
 
 		if (NAME_CACHE == null)
 			return "";
@@ -155,12 +175,12 @@ public class StatsData extends KeyedTardisComponent {
 	public Date getCreationDate() {
 		Tardis tardis = this.tardis();
 
-		if (PropertiesHandler.get(tardis.properties(), DATE_KEY) == null) {
+		if (creationDate.get() == null) {
 			AITMod.LOGGER.error(tardis.getUuid().toString() + " was missing creation date! Resetting to now");
 			markCreationDate();
 		}
 
-		String date = PropertiesHandler.getString(tardis.properties(), DATE_KEY);
+		String date = creationDate.get();
 
 		try {
 			return DateFormat.getDateTimeInstance(DateFormat.LONG, 3).parse(date);
@@ -177,11 +197,10 @@ public class StatsData extends KeyedTardisComponent {
 	}
 
 	public void markCreationDate() {
-		PropertiesHandler.set(tardis().properties(), DATE_KEY,
-				DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(Date.from(Instant.now())));
+		creationDate.set(DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(Date.from(Instant.now())));
 	}
 
 	public void markPlayerCreatorName() {
-		PropertiesHandler.set(tardis().properties(), PLAYER_CREATOR_NAME_KEY, this.getPlayerCreatorName());
+		playerCreatorName.set(this.getPlayerCreatorName());
 	}
 }

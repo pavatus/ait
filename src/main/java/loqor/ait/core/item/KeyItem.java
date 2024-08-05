@@ -2,13 +2,12 @@ package loqor.ait.core.item;
 
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.item.TooltipContext;
@@ -18,13 +17,11 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
@@ -133,7 +130,7 @@ public class KeyItem extends LinkableItem {
 		if (player.getItemCooldownManager().isCoolingDown(stack.getItem()))
 			return;
 
-		if (!PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY))
+		if (!tardis.stats().hailMary().get())
 			return;
 
 		TravelHandler travel = tardis.travel();
@@ -167,8 +164,8 @@ public class KeyItem extends LinkableItem {
 
 		player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
-		PropertiesHandler.set(tardis.properties(), PropertiesHandler.HAIL_MARY, false);
-		PropertiesHandler.set(tardis.properties(), PropertiesHandler.PREVIOUSLY_LOCKED, false);
+		tardis.stats().hailMary().set(false);
+		tardis.<DoorHandler>handler(TardisComponent.Id.DOOR).previouslyLocked().set(false);
 
 		// like a sound to show its been called
 		world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);

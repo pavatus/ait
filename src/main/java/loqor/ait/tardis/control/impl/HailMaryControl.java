@@ -2,7 +2,6 @@ package loqor.ait.tardis.control.impl;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +20,7 @@ public class HailMaryControl extends Control {
 			return false;
 		}
 
-		PropertiesHandler.set(tardis, PropertiesHandler.HAIL_MARY, !PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HAIL_MARY));
+		tardis.stats().hailMary().set(!tardis.stats().hailMary().get());
 		tardis.removeFuel(50 * tardis.travel().instability());
 
 		return true;

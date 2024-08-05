@@ -66,7 +66,7 @@ public class PermissionCommand {
         }
 
         public boolean run(String key, String fallback, Predicate<PermissionHandler> func) {
-            boolean result = func.test(this.tardis.getHandlers().getPermissions());
+            boolean result = func.test(this.tardis.permissions());
 
             this.source.sendFeedback(() -> Text.translatableWithFallback(
                     key, fallback, this.permission, this.player.getName(), result

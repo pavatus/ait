@@ -6,7 +6,6 @@ import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
@@ -15,8 +14,7 @@ import net.minecraft.sound.SoundCategory;
 
 import java.util.ArrayList;
 
-// All this is CLIENT ONLY!!
-// Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
+// Client only class. One of the last surviving remnants of Duzocode.
 public class ClientAlarmHandler extends SoundHandler {
 	public static LoopingSound CLOISTER_INTERIOR;
 
@@ -64,7 +62,7 @@ public class ClientAlarmHandler extends SoundHandler {
 	}
 
 	public boolean isEnabled() {
-		return PropertiesHandler.getBool(this.tardis().properties(), PropertiesHandler.ALARM_ENABLED);
+		return this.tardis().alarm().getAlarms().get();
 	}
 
 	public void tick(MinecraftClient client) {

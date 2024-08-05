@@ -5,7 +5,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.Block;

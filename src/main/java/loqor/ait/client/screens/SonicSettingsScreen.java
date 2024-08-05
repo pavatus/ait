@@ -51,7 +51,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
     @Override
     protected void init() {
         NbtCompound nbt = tardis().sonic()
-                .get(SonicHandler.HAS_CONSOLE_SONIC).getOrCreateNbt();
+                .getConsoleSonic().getOrCreateNbt();
 
         SonicSchema schema = SonicItem.findSchema(nbt);
         this.selectedSonic = SonicRegistry.getInstance().toList().indexOf(schema);
@@ -106,14 +106,14 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     public void sendSonicChangePacket() {
-        if(!tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC))
+        if(!tardis().sonic().hasConsoleSonic())
             return;
 
         SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
         if (!tardis().isUnlocked(schema)) return;
 
-        SonicItem.setSchema(tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC), schema);
+        SonicItem.setSchema(tardis().sonic().getConsoleSonic(), schema);
         ClientTardisUtil.changeSonicWithScreen(this.tardis().getUuid(), schema);
     }
 
@@ -148,11 +148,11 @@ public class SonicSettingsScreen extends ConsoleScreen {
         if (this.tardis() == null)
             return;
 
-        if(!this.tardis().sonic().hasSonic(SonicHandler.HAS_CONSOLE_SONIC)) {
+        if(!this.tardis().sonic().hasConsoleSonic()) {
             return;
         }
 
-        ItemStack sonic = this.tardis().sonic().get(SonicHandler.HAS_CONSOLE_SONIC);
+        ItemStack sonic = this.tardis().sonic().getConsoleSonic();
         NbtCompound nbt = sonic.getOrCreateNbt();
 
         if (this.tardis() != null) {

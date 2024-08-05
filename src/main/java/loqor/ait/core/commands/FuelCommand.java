@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.FuelData;
+import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -20,15 +20,15 @@ public class FuelCommand {
 		dispatcher.register(literal(AITMod.MOD_ID)
 				.then(literal("fuel").requires(source -> source.hasPermissionLevel(2))
 						.then(literal("add").then(argument("tardis", TardisArgumentType.tardis())
-								.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelData.TARDIS_MAX_FUEL))
+								.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelHandler.TARDIS_MAX_FUEL))
 										.executes(FuelCommand::add))))
 						.then(literal("remove").requires(source -> source.hasPermissionLevel(2))
 								.then(argument("tardis", TardisArgumentType.tardis())
-										.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelData.TARDIS_MAX_FUEL))
+										.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelHandler.TARDIS_MAX_FUEL))
 												.executes(FuelCommand::remove))))
 						.then(literal("set").requires(source -> source.hasPermissionLevel(2))
 								.then(argument("tardis", TardisArgumentType.tardis())
-										.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelData.TARDIS_MAX_FUEL))
+										.then(argument("amount", DoubleArgumentType.doubleArg(0, FuelHandler.TARDIS_MAX_FUEL))
 												.executes(FuelCommand::set))))
 						.then(literal("get").requires(source -> source.hasPermissionLevel(2))
 								.then(argument("tardis", TardisArgumentType.tardis())
@@ -69,7 +69,7 @@ public class FuelCommand {
 
 		double fuel = DoubleArgumentType.getDouble(context, "amount");
 
-		if (fuel > FuelData.TARDIS_MAX_FUEL) {
+		if (fuel > FuelHandler.TARDIS_MAX_FUEL) {
 			source.sendMessage(Text.translatableWithFallback("tardis.fuel.max", "TARDIS fuel is at max!"));
 			return 0;
 		}

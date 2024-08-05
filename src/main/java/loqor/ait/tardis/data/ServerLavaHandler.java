@@ -1,19 +1,27 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ServerLavaHandler extends TardisComponent implements TardisTickable {
+public class ServerLavaHandler extends KeyedTardisComponent implements TardisTickable {
+
+	private static final BoolProperty LAVA_OUTSIDE = new BoolProperty("lava_outside", false);
+	private final BoolValue lavaOutside = LAVA_OUTSIDE.create(this);
 
 	public ServerLavaHandler() {
 		super(Id.LAVA_OUTSIDE);
+	}
+	@Override
+	public void onLoaded() {
+		lavaOutside.of(this, LAVA_OUTSIDE);
 	}
 
 	public void enable() {
@@ -25,18 +33,12 @@ public class ServerLavaHandler extends TardisComponent implements TardisTickable
 	}
 
 	private void set(boolean var) {
-		PropertiesHandler.set(this.tardis(), PropertiesHandler.LAVA_OUTSIDE, var);
+		lavaOutside.set(var);
 	}
 
 	public boolean isEnabled() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.LAVA_OUTSIDE);
+		return lavaOutside.get();
 	}
-
-	public void toggle() {
-		if (isEnabled()) disable();
-		else enable();
-	}
-
 	@Override
 	public void tick(MinecraftServer server) {
 		if (this.isEnabled() &&

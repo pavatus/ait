@@ -2,10 +2,11 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -21,42 +22,57 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ShieldData extends TardisComponent implements TardisTickable {
-	public static String IS_SHIELDED = "is_shielded";
-	public static String IS_VISUALLY_SHIELDED = "is_visually_shielded";
+public class ShieldHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final BoolProperty IS_SHIELDED = new BoolProperty("is_shielded", false);
+	private final BoolValue isShielded = IS_SHIELDED.create(this);
+	public static BoolProperty IS_VISUALLY_SHIELDED = new BoolProperty("is_visually_shielded", false);
+	private final BoolValue isVisuallyShielded = IS_VISUALLY_SHIELDED.create(this);
 
-	public ShieldData() {
+	public ShieldHandler() {
 		super(Id.SHIELDS);
+	}
+	@Override
+	public void onLoaded() {
+		isShielded.of(this, IS_SHIELDED);
+		isVisuallyShielded.of(this, IS_VISUALLY_SHIELDED);
+	}
+
+	public BoolValue shielded() {
+		return isShielded;
+	}
+
+	public BoolValue visuallyShielded() {
+		return isVisuallyShielded;
 	}
 
 	public void enable() {
-		PropertiesHandler.set(this.tardis(), IS_SHIELDED, true);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, true, this.areVisualShieldsActive());
+		this.shielded().set(true);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, true, this.visuallyShielded().get());
 	}
 
 	public void disable() {
-		PropertiesHandler.set(this.tardis(), IS_SHIELDED, false);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, false, this.areVisualShieldsActive());
+		this.shielded().set(false);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, false, this.visuallyShielded().get());
 	}
 
 	public void toggle() {
-		if (this.areShieldsActive())
+		if (this.shielded().get())
 			this.disable();
 		else this.enable();
 	}
 
 	public void enableVisuals() {
-		PropertiesHandler.set(this.tardis(), IS_VISUALLY_SHIELDED, true);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.areShieldsActive(), true);
+		this.visuallyShielded().set(true);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.shielded().get(), true);
 	}
 
 	public void disableVisuals() {
-		PropertiesHandler.set(this.tardis(), IS_VISUALLY_SHIELDED, false);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.areShieldsActive(), false);
+		this.visuallyShielded().set(false);
+		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.shielded().get(), false);
 	}
 
 	public void toggleVisuals() {
-		if (this.areVisualShieldsActive())
+		if (this.visuallyShielded().get())
 			this.disableVisuals();
 		else this.enableVisuals();
 	}
@@ -66,17 +82,9 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 		this.disable();
 	}
 
-	public boolean areShieldsActive() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), IS_SHIELDED);
-	}
-
-	public boolean areVisualShieldsActive() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), IS_VISUALLY_SHIELDED);
-	}
-
 	@Override
 	public void tick(MinecraftServer server) {
-		if (!this.areShieldsActive())
+		if (!this.shielded().get())
 			return;
 
 		TravelHandler travel = tardis.travel();
@@ -101,7 +109,7 @@ public class ShieldData extends TardisComponent implements TardisTickable {
 					if (entity instanceof ServerPlayerEntity player && entity.isSubmergedInWater())
 						player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
 
-					if (this.areVisualShieldsActive()) {
+					if (this.visuallyShielded().get()) {
 						Vec3d centerExteriorPos = exteriorPos.toCenterPos();
 
 						if (entity.squaredDistanceTo(centerExteriorPos) <= 8f) {

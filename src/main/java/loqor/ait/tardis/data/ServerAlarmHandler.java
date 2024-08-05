@@ -1,10 +1,12 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.core.data.base.Exclude;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.Entity;
@@ -14,49 +16,59 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 // use this as reference for starting other looping sounds on the exterior
-public class ServerAlarmHandler extends TardisComponent implements TardisTickable {
+public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTickable {
+	@Exclude
 	public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
-	private int soundCounter = 0; // decides when to start the next cloister sound
+	@Exclude
+	private int soundCounter = 0;
+	private static final BoolProperty ALARMS_ENABLED = new BoolProperty("alarms_enabled", false);
+	private final BoolValue alarmsEnabled = ALARMS_ENABLED.create(this);
+	private static final BoolProperty HOSTILE_PRESENCE = new BoolProperty("hostile_presence", true);
+	private final BoolValue hostilePresence = HOSTILE_PRESENCE.create(this);
 
 	public ServerAlarmHandler() {
 		super(Id.ALARMS);
 	}
 
+	@Override
+	public void onLoaded() {
+		alarmsEnabled.of(this, ALARMS_ENABLED);
+		hostilePresence.of(this, HOSTILE_PRESENCE);
+	}
+
 	public void enable() {
-		this.set(true);
+		this.alarmsEnabled.set(true);
 	}
 
 	public void disable() {
-		this.set(false);
+		this.alarmsEnabled.set(false);
 	}
 
-	private void set(boolean var) {
-		PropertiesHandler.set(this.tardis(), PropertiesHandler.ALARM_ENABLED, var);
+	public BoolValue getAlarms() {
+		return alarmsEnabled;
 	}
-
-	public boolean isEnabled() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), PropertiesHandler.ALARM_ENABLED);
+	public BoolValue hostilePresence() {
+		return hostilePresence;
 	}
 
 	public void toggle() {
-		if (isEnabled()) disable();
+		if (getAlarms().get()) disable();
 		else enable();
 	}
 
 	@Override
 	public void tick(MinecraftServer server) {
-		// @TODO make a new control that makes it (by default) detect hostile entities in the interior plus a check when it's been cleared of all hostile entities - Loqor
-		if (!isEnabled() && PropertiesHandler.getBool(tardis.getHandlers().getProperties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE)) {
+		if (!this.getAlarms().get() && this.hostilePresence().get()) {
 			for (Entity entity : TardisUtil.getEntitiesInInterior(tardis(), 200)) {
 				if ((entity instanceof HostileEntity && !entity.hasCustomName()) || entity instanceof ServerPlayerEntity player &&
-						tardis.getHandlers().getLoyalties().get(player).level() == Loyalty.Type.REJECT.level) {
+						tardis.loyalty().get(player).level() == Loyalty.Type.REJECT.level) {
 					this.enable();
 				}
 			}
 			return;
 		}
 
-		if (!tardis.alarm().isEnabled())
+		if (!this.getAlarms().get())
 			return;
 
 		if (tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)
@@ -66,7 +78,9 @@ public class ServerAlarmHandler extends TardisComponent implements TardisTickabl
 
 		if (soundCounter >= CLOISTER_LENGTH_TICKS) {
 			soundCounter = 0;
-			tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
+			tardis.travel().position().getWorld()
+					.playSound(null, tardis.travel().position().getPos(),
+							AITSounds.CLOISTER, SoundCategory.AMBIENT, 0.5f, 0.5f);
 		}
 	}
 }

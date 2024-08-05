@@ -1,6 +1,6 @@
-package loqor.ait.tardis.data.properties.v2.integer;
+package loqor.ait.tardis.data.properties.integer;
 
-import loqor.ait.tardis.data.properties.v2.Value;
+import loqor.ait.tardis.data.properties.Value;
 
 public class IntValue extends Value<Integer> {
 

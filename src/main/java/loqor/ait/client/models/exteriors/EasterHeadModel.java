@@ -3,7 +3,7 @@ package loqor.ait.client.models.exteriors;
 import loqor.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.RealTardisEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -69,7 +69,7 @@ public class EasterHeadModel extends ExteriorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> EasterHeadAnimations.EASTER_HEAD_EXTERIOR_CLOSE_ANIMATION;
 			case FIRST -> EasterHeadAnimations.EASTER_HEAD_EXTERIOR_OPEN_ANIMATION;

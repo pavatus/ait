@@ -6,7 +6,6 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,8 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class SecurityControl extends Control {
-
-	public static final String SECURITY_KEY = "security";
 
 	public SecurityControl() {
 		// ⨷ ?
@@ -37,14 +34,14 @@ public class SecurityControl extends Control {
 		if (!hasMatchingKey(player, tardis))
 			return false;
 
-		boolean security = PropertiesHandler.getBool(tardis.properties(), SECURITY_KEY);
-		PropertiesHandler.set(tardis, SECURITY_KEY, !security);
+		boolean security = tardis.stats().security().get();
+		tardis.stats().security().set(!security);
         return true;
 	}
 
 	public static void runSecurityProtocols(Tardis tardis) {
-		boolean security = PropertiesHandler.getBool(tardis.properties(), SECURITY_KEY);
-		boolean leaveBehind = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.LEAVE_BEHIND);
+		boolean security = tardis.stats().security().get();
+		boolean leaveBehind = tardis.travel().leaveBehind().get();
 
 		if (!security)
 			return;
@@ -52,7 +49,7 @@ public class SecurityControl extends Control {
 		List<ServerPlayerEntity> forRemoval = new ArrayList<>();
 
 		if (leaveBehind) {
-			for (ServerPlayerEntity player : TardisUtil.getPlayersInInterior(tardis)) {
+			for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
 				if (!hasMatchingKey(player, tardis)) {
 					forRemoval.add(player);
 				}

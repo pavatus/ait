@@ -1,4 +1,4 @@
-package loqor.ait.tardis.data.properties.v2;
+package loqor.ait.tardis.data.properties;
 
 import com.google.gson.*;
 import loqor.ait.AITMod;
@@ -64,7 +64,7 @@ public class Value<T> implements Disposable {
     }
 
     protected void sync() {
-        if (!(this.holder.tardis() instanceof ServerTardis tardis)) {
+        if (this.holder == null ||!(this.holder.tardis() instanceof ServerTardis tardis)) {
             AITMod.LOGGER.warn("Can't sync on a client world!", new IllegalAccessException());
             return;
         }

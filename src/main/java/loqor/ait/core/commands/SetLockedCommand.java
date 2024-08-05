@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,7 +30,7 @@ public class SetLockedCommand {
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 		boolean locked = BoolArgumentType.getBool(context, "locked");
 
-		DoorData.lockTardis(locked, tardis, source, true);
+		DoorHandler.lockTardis(locked, tardis, source, true);
 		return Command.SINGLE_SUCCESS;
 	}
 }

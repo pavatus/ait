@@ -7,10 +7,9 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.ShieldData;
+import loqor.ait.tardis.data.FuelHandler;
+import loqor.ait.tardis.data.ShieldHandler;
 import loqor.ait.tardis.data.WaypointHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -1362,11 +1361,11 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Fuel Gauge
 		controls.getChild("ctrl_1").getChild("bone13").getChild("compass").getChild("needle").pitch =
-				-(float) (((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
+				-(float) (((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
 
 		ModelPart fuelLowWarningLight = controls.getChild("p_ctrl_4").getChild("bone41").getChild("light").getChild("bone45");
 		// Low Fuel Light
-		fuelLowWarningLight.visible = (tardis.getFuel() <= (FuelData.TARDIS_MAX_FUEL / 10));
+		fuelLowWarningLight.visible = (tardis.getFuel() <= (FuelHandler.TARDIS_MAX_FUEL / 10));
 
 		// Anti-gravs Lever
 		controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = !tardis.travel().antigravs().get() ?
@@ -1416,18 +1415,18 @@ public class CoralConsoleModel extends ConsoleModel {
 
 		// Shields
 		ModelPart shield = controls.getChild("p_ctrl_4").getChild("bone41").getChild("pully").getChild("bone47");
-		shield.pivotX = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.pivotX - 1 : shield.pivotX;
+		shield.pivotX = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get() ? shield.pivotX - 1 : shield.pivotX;
 
 		// Autopilot
 		ModelPart autopilot = controls.getChild("ctrl_4").getChild("bone15").getChild("switch24").getChild("bone19");
 		autopilot.pivotY = tardis.travel().autopilot() ? autopilot.pivotY + 1 : autopilot.pivotY;
 
 		ModelPart security = controls.getChild("ctrl_4").getChild("bone15").getChild("switch25").getChild("bone20");
-		security.pivotY = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pivotY + 1 : security.pivotY;
+		security.pivotY = tardis.stats().security().get() ? security.pivotY + 1 : security.pivotY;
 
 		// Ground Searching
 		ModelPart groundSearch = controls.getChild("p_ctrl_6").getChild("bone62").getChild("bow").getChild("bone68");
-		groundSearch.pitch = PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? groundSearch.pitch - 0.5f : groundSearch.pitch; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
+		groundSearch.pitch = tardis.travel().horizontalSearch().get() ? groundSearch.pitch - 0.5f : groundSearch.pitch; // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 		matrices.pop();

@@ -3,9 +3,9 @@ package loqor.ait.registry.impl;
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.CloakData;
-import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.SiegeData;
+import loqor.ait.tardis.data.CloakHandler;
+import loqor.ait.tardis.data.ShieldHandler;
+import loqor.ait.tardis.data.SiegeHandler;
 import loqor.ait.tardis.data.mood.MoodDictatedEvent;
 import loqor.ait.tardis.data.mood.TardisMood;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -86,7 +86,7 @@ public class MoodEventPoolRegistry {
         }, 80, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
         RANDOM_SIEGE = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_siege"), tardis -> {
-            tardis.<SiegeData>handler(TardisComponent.Id.SIEGE).setActive(true);
+            tardis.<SiegeHandler>handler(TardisComponent.Id.SIEGE).setActive(true);
         }, 256, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
         FAST_RETURN_AND_TAKEOFF = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_return_and_takeoff"), tardis -> {
@@ -131,21 +131,21 @@ public class MoodEventPoolRegistry {
         }, 32, TardisMood.Alignment.NEUTRAL));
 
         SHIELD_ACTIVATION = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "shield_activation"), tardis -> {
-            ShieldData shields = tardis.handler(TardisComponent.Id.SHIELDS);
+            ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
             shields.enable();
 
-            if (shields.areVisualShieldsActive())
+            if (shields.visuallyShielded().get())
                 shields.disableVisuals();
         }, 96, TardisMood.Alignment.NEUTRAL));
 
         CLOAKING_WHEN_AFRAID = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "cloaking_when_afraid"),
-                tardis -> tardis.<CloakData>handler(TardisComponent.Id.CLOAK).enable(), 96, TardisMood.Alignment.NEUTRAL, TardisMood.Moods.FEARFUL));
+                tardis -> tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().set(true), 96, TardisMood.Alignment.NEUTRAL, TardisMood.Moods.FEARFUL));
 
         ACTIVATE_AUTOPILOT = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "activate_autopilot"),
                 tardis -> tardis.travel().autopilot(true), 128, TardisMood.Alignment.NEUTRAL));
 
         AUTO_REFUEL = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "auto_refuel"),
-                tardis -> tardis.fuel().setRefueling(true), 32, TardisMood.Alignment.POSITIVE));
+                tardis -> tardis.fuel().getRefueling().set(true), 32, TardisMood.Alignment.POSITIVE));
 
         ADD_LOYALTY = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "add_loyalty"), tardis ->
                 TardisUtil.getPlayersInsideInterior(tardis).forEach(player ->

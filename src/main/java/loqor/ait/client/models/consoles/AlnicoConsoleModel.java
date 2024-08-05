@@ -3,11 +3,10 @@ package loqor.ait.client.models.consoles;
 import loqor.ait.client.animation.console.alnico.AlnicoAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.SecurityControl;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.FuelData;
-import loqor.ait.tardis.data.ShieldData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.FuelHandler;
+import loqor.ait.tardis.data.ShieldHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -836,7 +835,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		autoPilot.pitch = tardis.travel().autopilot() ? autoPilot.pitch + 0.5f : autoPilot.pitch;
 
 		ModelPart security = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel").getChild("longswitch4");
-		security.pitch = PropertiesHandler.getBool(tardis.properties(), SecurityControl.SECURITY_KEY) ? security.pitch + 0.5f : security.pitch;
+		security.pitch = tardis.stats().security().get() ? security.pitch + 0.5f : security.pitch;
 
 		ModelPart siegeMode = alnico.getChild("section3").getChild("controls3").getChild("siegemode").getChild("lever");
 		siegeMode.pitch = tardis.siege().isActive() ? siegeMode.pitch + 0.9f : siegeMode.pitch;
@@ -845,16 +844,16 @@ public class AlnicoConsoleModel extends ConsoleModel {
 		refueler.yaw = !tardis.isRefueling() ? refueler.yaw - 0.7854f : refueler.yaw;
 
 		ModelPart fuelGauge = alnico.getChild("section3").getChild("controls3").getChild("geiger").getChild("needle");
-		fuelGauge.roll = (float) (((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 2) - 1);
+		fuelGauge.roll = (float) (((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 2) - 1);
 
 		ModelPart increment = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch5");
 		increment.pitch = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.pitch + 1.5f : increment.pitch + 1.25f : increment.pitch + 1f : increment.pitch + 0.5f : increment.pitch;
 
 		ModelPart shield = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2").getChild("longswitch8");
-		shield.pitch = PropertiesHandler.getBool(tardis.properties(), ShieldData.IS_SHIELDED) ? shield.pitch + 1f : shield.pitch;
+		shield.pitch = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get() ? shield.pitch + 1f : shield.pitch;
 
 		ModelPart landtype = alnico.getChild("section1").getChild("controls").getChild("tinyswitch2").getChild("bone2");
-		landtype.yaw = landtype.yaw + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.FIND_GROUND) ? 1.5708f : 0); // FIXME use TravelHandler#horizontalSearch/#verticalSearch
+		landtype.yaw = landtype.yaw + ((tardis.travel().horizontalSearch().get() ? 1.5708f : 0)); // FIXME use TravelHandler#horizontalSearch/#verticalSearch
 
 		ModelPart antigravs = alnico.getChild("section1").getChild("controls").getChild("tinyswitch").getChild("bone3");
 		antigravs.yaw = antigravs.yaw + (tardis.travel().antigravs().get() ? 1.5708f : 0);

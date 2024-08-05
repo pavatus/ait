@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.TardisCrashData;
+import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -20,7 +20,7 @@ public class SetRepairTicksCommand {
 		dispatcher.register(literal(AITMod.MOD_ID)
 				.then(literal("repair").then(literal("set").requires(source -> source.hasPermissionLevel(2))
 						.then(argument("tardis", TardisArgumentType.tardis())
-								.then(argument("ticks", IntegerArgumentType.integer(0, TardisCrashData.MAX_REPAIR_TICKS))
+								.then(argument("ticks", IntegerArgumentType.integer(0, TardisCrashHandler.MAX_REPAIR_TICKS))
 										.executes(SetRepairTicksCommand::runCommand))))));
 	}
 
@@ -28,17 +28,17 @@ public class SetRepairTicksCommand {
 		ServerCommandSource source = context.getSource();
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-		if (tardis.getHandlers().getCrashData().getRepairTicks() >= TardisCrashData.MAX_REPAIR_TICKS) {
+		if (tardis.crash().getRepairTicks() >= TardisCrashHandler.MAX_REPAIR_TICKS) {
 			source.sendMessage(Text.translatableWithFallback("tardis.repair.max", "TARDIS repair ticks are at max!"));
 			return 0;
 		}
 
 		int repairTicksAmount = IntegerArgumentType.getInteger(context, "ticks");
-		tardis.getHandlers().getCrashData().setRepairTicks(repairTicksAmount);
+		tardis.crash().setRepairTicks(repairTicksAmount);
 
 		source.sendMessage(Text.translatableWithFallback("tardis.repair.set",
 				"Set repair ticks for [%s] to: [%s]", tardis.getUuid(),
-				tardis.getHandlers().getCrashData().getRepairTicks())
+				tardis.crash().getRepairTicks())
 		);
 
 		return Command.SINGLE_SUCCESS;

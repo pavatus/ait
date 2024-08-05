@@ -28,8 +28,8 @@ import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.pos.PosType;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.OvergrownData;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.OvergrownHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
@@ -122,7 +122,7 @@ public class TardisUtil {
 		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, ServerTardisManager.receiveTardis(
 				(tardis, server, player, handler, buf, responseSender) -> {
 					Identifier id = buf.readIdentifier();
-					SonicItem.setSchema(tardis.sonic().get(SonicHandler.HAS_CONSOLE_SONIC), id);
+					SonicItem.setSchema(tardis.sonic().getConsoleSonic(), id);
 		}));
 
 		ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR,
@@ -164,20 +164,20 @@ public class TardisUtil {
 						if (tardis.loyalty().get(player).level() < Loyalty.Type.PILOT.level)
 							return;
 
-						if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
+						if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
 							return;
 
 						player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
 						if (player.getVehicle() instanceof RealTardisEntity real) {
-							DoorData.DoorStateEnum state = tardis.door().getDoorState();
-							if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
-								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+							DoorHandler.DoorStateEnum state = tardis.door().getDoorState();
+							if (state == DoorHandler.DoorStateEnum.CLOSED || state == DoorHandler.DoorStateEnum.FIRST) {
+								DoorHandler.useDoor(tardis, player.getServerWorld(), null, player);
 								if (tardis.door().isDoubleDoor()) {
-									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+									DoorHandler.useDoor(tardis, player.getServerWorld(), null, player);
 								}
 							} else {
-								DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+								DoorHandler.useDoor(tardis, player.getServerWorld(), null, player);
 							}
 							return;
 						}
@@ -191,17 +191,17 @@ public class TardisUtil {
 							if (!player.isSneaking()) {
 								// annoying bad code
 
-								DoorData.DoorStateEnum state = tardis.door().getDoorState();
-								if (state == DoorData.DoorStateEnum.CLOSED || state == DoorData.DoorStateEnum.FIRST) {
-									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+								DoorHandler.DoorStateEnum state = tardis.door().getDoorState();
+								if (state == DoorHandler.DoorStateEnum.CLOSED || state == DoorHandler.DoorStateEnum.FIRST) {
+									DoorHandler.useDoor(tardis, player.getServerWorld(), null, player);
 									if (tardis.door().isDoubleDoor()) {
-										DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+										DoorHandler.useDoor(tardis, player.getServerWorld(), null, player);
 									}
 								} else {
-									DoorData.useDoor(tardis, player.getServerWorld(), null, player);
+									DoorHandler.useDoor(tardis, player.getServerWorld(), null, player);
 								}
 							} else {
-								DoorData.toggleLock(tardis, player);
+								DoorHandler.toggleLock(tardis, player);
 							}
 						}
 					});

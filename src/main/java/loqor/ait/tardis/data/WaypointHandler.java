@@ -2,8 +2,9 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.item.WaypointItem;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.entity.ItemEntity;
@@ -12,25 +13,30 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
-public class WaypointHandler extends TardisComponent {
-
-	public static final String HAS_CARTRIDGE = "has_cartridge";
+public class WaypointHandler extends KeyedTardisComponent {
+	public static final BoolProperty HAS_CARTRIDGE = new BoolProperty("has_cartridge", false);
+	private final BoolValue hasCartridge = HAS_CARTRIDGE.create(this);
 	private Waypoint current; // The current waypoint in the slot ( tried to make it optional, but that caused a gson crash )
 
 	public WaypointHandler() {
 		super(Id.WAYPOINTS);
 	}
 
+	@Override
+	public void onLoaded() {
+		hasCartridge.of(this, HAS_CARTRIDGE);
+	}
+
 	public boolean hasCartridge() {
-		return PropertiesHandler.getBool(this.tardis().properties(), HAS_CARTRIDGE);
+		return hasCartridge.get();
 	}
 
 	public void markHasCartridge() {
-		PropertiesHandler.set(this.tardis(), HAS_CARTRIDGE, true);
+		hasCartridge.set(true);
 	}
 
 	private void clearCartridge() {
-		PropertiesHandler.set(this.tardis(), HAS_CARTRIDGE, false);
+		hasCartridge.set(false);
 	}
 
 	/**

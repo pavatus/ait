@@ -15,8 +15,8 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.CloakData;
-import loqor.ait.tardis.data.OvergrownData;
+import loqor.ait.tardis.data.CloakHandler;
+import loqor.ait.tardis.data.OvergrownHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
@@ -55,7 +55,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		Tardis tardis = optionalTardis.get();
 		profiler.swap("render");
 		//System.out.println(entity.getAlpha());
-		if (entity.getAlpha() > 0 || !tardis.getHandlers().<CloakData>get(TardisComponent.Id.CLOAK).isEnabled())
+		if (entity.getAlpha() > 0 || !tardis.getHandlers().<CloakHandler>get(TardisComponent.Id.CLOAK).cloaked().get())
 			this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		profiler.pop();
 
@@ -162,13 +162,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		), light, overlay, 1, 1, 1, alpha);
 
 		// @TODO uhhh, should we make it so the biome textures are the overgrowth per biome, or should they be separate? - Loqor
-		if (tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
-			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownData>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, alpha);
+		if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, alpha);
 		}
 
 		if (emission != null) {
 			profiler.push("emission");
-			boolean alarms = tardis.alarm().isEnabled();
+			boolean alarms = tardis.alarm().getAlarms().get();
 
 			ClientLightUtil.renderEmissivable(
 					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
@@ -195,13 +195,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		profiler.pop();
 		matrices.pop();
 
-		if (!tardis.sonic().hasSonic(SonicHandler.HAS_EXTERIOR_SONIC)) {
+		if (!tardis.sonic().hasExteriorSonic()) {
 			profiler.pop();
 			return;
 		}
 
 		profiler.push("sonic");
-		ItemStack stack = tardis.sonic().get(SonicHandler.HAS_EXTERIOR_SONIC);
+		ItemStack stack = tardis.sonic().getExteriorSonic();
 
 		if (stack == null || entity.getWorld() == null) {
 			profiler.pop();

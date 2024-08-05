@@ -1,25 +1,34 @@
 package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
-public class OvergrownData extends TardisComponent implements TardisTickable {
-	public static final String IS_OVERGROWN = "overgrown";
+public class OvergrownHandler extends KeyedTardisComponent implements TardisTickable {
+	private static final BoolProperty IS_OVERGROWN_PROPERTY = new BoolProperty("is_overgrown", false);
+	private final BoolValue overgrown = IS_OVERGROWN_PROPERTY.create(this);
+	@Exclude
 	public static final int MAXIMUM_TICKS = 600;
 	public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
 	private static Random random;
 	private int ticks; // same as usual
 
-	public OvergrownData() {
+	public OvergrownHandler() {
 		super(Id.OVERGROWN);
+	}
+
+	@Override
+	public void onLoaded() {
+		overgrown.of(this, IS_OVERGROWN_PROPERTY);
 	}
 
 	public int getTicks() {
@@ -39,11 +48,11 @@ public class OvergrownData extends TardisComponent implements TardisTickable {
 	}
 
 	public boolean isOvergrown() {
-		return PropertiesHandler.getBool(this.tardis().getHandlers().getProperties(), IS_OVERGROWN);
+		return overgrown.get();
 	}
 
 	public void setOvergrown(boolean var) {
-		PropertiesHandler.set(this.tardis(), IS_OVERGROWN, var);
+		overgrown.set(var);
 	}
 
 	public void removeVegetation() {

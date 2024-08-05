@@ -26,7 +26,7 @@ public class GetCreatorCommand {
 		ServerCommandSource source = context.getSource();
 		ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-		source.sendMessage(Text.literal(tardis.getHandlers().getStats().getPlayerCreatorName()));
+		source.sendMessage(Text.literal(tardis.stats().getPlayerCreatorName()));
 		return Command.SINGLE_SUCCESS;
 	}
 }

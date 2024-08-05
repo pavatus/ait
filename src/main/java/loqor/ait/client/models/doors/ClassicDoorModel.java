@@ -2,7 +2,7 @@ package loqor.ait.client.models.doors;
 
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorData;
+import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -51,7 +51,7 @@ public class ClassicDoorModel extends DoorModel {
 	}
 
 	@Override
-	public Animation getAnimationForDoorState(DoorData.DoorStateEnum state) {
+	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
 		return switch (state) {
 			case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
 			case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
@@ -72,7 +72,7 @@ public class ClassicDoorModel extends DoorModel {
 		matrices.translate(0, -1.5, 0.35);
 		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
 
-		DoorData door = doorEntity.tardis().get().door();
+		DoorHandler door = doorEntity.tardis().get().door();
 
 		this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
 		this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 5F : 0.0F;

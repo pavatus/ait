@@ -9,7 +9,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.data.properties.PropertiesHolder;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 
 import java.util.Objects;
@@ -57,7 +57,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return exterior;
 	}
 
-	public DoorData door() {
+	public DoorHandler door() {
 		return this.getHandlers().get(TardisComponent.Id.DOOR);
 	}
 
@@ -85,8 +85,12 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 		return this.handler(TardisComponent.Id.ALARMS);
 	}
 
-	public StatsData stats() {
+	public StatsHandler stats() {
 		return this.handler(TardisComponent.Id.STATS);
+	}
+
+	public InteriorChangingHandler interiorChangingHandler() {
+		return this.handler(TardisComponent.Id.INTERIOR);
 	}
 
 	public EngineHandler engine() {
@@ -112,42 +116,38 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public double addFuel(double fuel) {
-		return this.<FuelData>handler(TardisComponent.Id.FUEL).addFuel(fuel);
+		return this.<FuelHandler>handler(TardisComponent.Id.FUEL).addFuel(fuel);
 	}
 
 	public void removeFuel(double fuel) {
-		this.<FuelData>handler(TardisComponent.Id.FUEL).removeFuel(fuel);
+		this.<FuelHandler>handler(TardisComponent.Id.FUEL).removeFuel(fuel);
 	}
 
 	public double getFuel() {
-		return this.<FuelData>handler(TardisComponent.Id.FUEL).getCurrentFuel();
+		return this.<FuelHandler>handler(TardisComponent.Id.FUEL).getCurrentFuel();
 	}
 
 	public void setFuelCount(double i) {
-		this.<FuelData>handler(TardisComponent.Id.FUEL).setCurrentFuel(i);
+		this.<FuelHandler>handler(TardisComponent.Id.FUEL).setCurrentFuel(i);
 	}
 
 	public boolean isRefueling() {
-		return this.<FuelData>handler(TardisComponent.Id.FUEL).isRefueling();
+		return this.<FuelHandler>handler(TardisComponent.Id.FUEL).getRefueling().get();
 	}
 
 	public void setRefueling(boolean b) {
-		this.<FuelData>handler(TardisComponent.Id.FUEL).setRefueling(b);
+		this.<FuelHandler>handler(TardisComponent.Id.FUEL).getRefueling().set(b);
 	}
 
 	public boolean isInDanger() {
-		return this.<HADSData>handler(TardisComponent.Id.HADS).isInDanger();
+		return this.<HadsHandler>handler(TardisComponent.Id.HADS).isInDanger();
 	}
 
-	public FuelData fuel() {
+	public FuelHandler fuel() {
 		return this.handler(TardisComponent.Id.FUEL);
 	}
 
-	public PropertiesHolder properties() {
-		return this.handler(TardisComponent.Id.PROPERTIES);
-	}
-
-	public TardisCrashData crash() {
+	public TardisCrashHandler crash() {
 		return this.handler(TardisComponent.Id.CRASH_DATA);
 	}
 
@@ -178,27 +178,39 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 	}
 
 	public boolean areShieldsActive() {
-		return this.<ShieldData>handler(TardisComponent.Id.SHIELDS).areShieldsActive();
+		return this.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get();
 	}
 
 	public boolean areVisualShieldsActive() {
-		return this.<ShieldData>handler(TardisComponent.Id.SHIELDS).areVisualShieldsActive();
+		return this.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get();
 	}
 
-	public SiegeData siege() {
+	public SiegeHandler siege() {
 		return this.handler(TardisComponent.Id.SIEGE);
 	}
 
 	public boolean isSiegeBeingHeld() {
-		return this.<SiegeData>handler(TardisComponent.Id.SIEGE).isSiegeBeingHeld();
+		return this.<SiegeHandler>handler(TardisComponent.Id.SIEGE).isSiegeBeingHeld();
 	}
 
 	public void setSiegeBeingHeld(UUID b) {
-		this.<SiegeData>handler(TardisComponent.Id.SIEGE).setSiegeBeingHeld(b);
+		this.<SiegeHandler>handler(TardisComponent.Id.SIEGE).setSiegeBeingHeld(b);
 	}
 
 	@Override
 	public String toString() {
 		return uuid.toString();
+	}
+
+	public PermissionHandler permissions() {
+		return this.handler(TardisComponent.Id.PERMISSIONS);
+	}
+
+	public OvergrownHandler overgrown() {
+		return this.handler(TardisComponent.Id.OVERGROWN);
+	}
+
+	public CloakHandler cloak() {
+		return this.handler(TardisComponent.Id.CLOAK);
 	}
 }

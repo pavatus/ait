@@ -9,8 +9,9 @@ import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.DoorData;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.RealFlightHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
@@ -102,7 +103,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 				return;
 
 			if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
-				DoorData.toggleLock(tardis, (ServerPlayerEntity) player);
+				DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
 			} else {
 				world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				player.sendMessage(Text.translatable("tardis.key.identity_error"), true); //TARDIS does not identify with key
@@ -112,7 +113,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		}
 
 		if (tardis.travel().isLanded() || tardis.travel().inFlight())
-			DoorData.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+			DoorHandler.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
 	}
 
 	public Direction getFacing() {
@@ -140,7 +141,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (tardis.getLockedTardis())
 			return;
 
-		if (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.IS_FALLING))
+		if (tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().get())
 			return;
 
 		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())

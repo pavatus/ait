@@ -4,7 +4,6 @@ import loqor.ait.AITMod;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -23,6 +22,8 @@ import java.awt.*;
 
 public class TardisSecurityScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/security_menu.png");
+	public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
+	public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
 	int bgHeight = 117;
 	int bgWidth = 191;
 	int left, top;
@@ -61,9 +62,9 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.LEAVE_BEHIND));
+		buf.writeBoolean(!tardis().travel().leaveBehind().get());
 
-		ClientPlayNetworking.send(PropertiesHandler.LEAVEBEHIND, buf);
+		ClientPlayNetworking.send(LEAVEBEHIND, buf);
 	}
 
 	private void changeMinimumLoyalty() {
@@ -79,9 +80,9 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		PacketByteBuf buf = PacketByteBufs.create();
 
 		buf.writeUuid(tardis().getUuid());
-		buf.writeBoolean(!PropertiesHandler.getBool(tardis().properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE));
+		buf.writeBoolean(!tardis().alarm().hostilePresence().get());
 
-		ClientPlayNetworking.send(PropertiesHandler.HOSTILEALARMS, buf);
+		ClientPlayNetworking.send(HOSTILEALARMS, buf);
 	}
 
 	private <T extends ClickableWidget> void addButton(T button) {
@@ -116,8 +117,8 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
 		ClientTardis tardis = this.tardis();
 
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.LEAVE_BEHIND) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
-		context.drawText(this.textRenderer, Text.literal(": " + (PropertiesHandler.getBool(tardis.properties(), PropertiesHandler.HOSTILE_PRESENCE_TOGGLE) ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (tardis.travel().leaveBehind().get() ? "ON" : "OFF")), (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
+		context.drawText(this.textRenderer, Text.literal(": " + (tardis.alarm().hostilePresence().get() ? "ON" : "OFF")), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
 		context.drawText(this.textRenderer, Text.literal(": " + getMinimumLoyalty(tardis)), (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
 

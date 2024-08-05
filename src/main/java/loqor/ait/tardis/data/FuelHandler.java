@@ -6,28 +6,35 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
-public class FuelData extends TardisComponent implements ArtronHolder, TardisTickable {
+public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
 	@Exclude
 	public static final double TARDIS_MAX_FUEL = 50000;
-	public static final String FUEL_COUNT = "fuel_count"; // todo this gets synced too much, needs changing.
-	public static final String REFUELING = "refueling";
+	private static final Property<Double> FUEL_COUNT_PROPERTY = new Property<>(Property.Type.DOUBLE, "fuel_count", 1000d);
+	private final Value<Double> fuelCount = FUEL_COUNT_PROPERTY.create(this);
+	private static final BoolProperty IS_REFUELING = new BoolProperty("is_refueling", false);
+	private final BoolValue isRefueling = IS_REFUELING.create(this);
+	@Override
+	public void onLoaded() {
+		isRefueling.of(this, IS_REFUELING);
+	}
 
-	public FuelData() {
+	public FuelHandler() {
 		super(Id.FUEL);
 	}
 
-	private static void createFuelSyncDelay(Tardis tardis) {
+	/*private static void createFuelSyncDelay(Tardis tardis) {
 		DeltaTimeManager.createDelay(tardis.getUuid() + "-fuel-sync", 5 * 1000L);
 	}
 
@@ -49,26 +56,26 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 
 	private static boolean isDrainOnDelay(Tardis tardis) {
 		return DeltaTimeManager.isStillWaitingOnDelay("tardis-" + tardis.getUuid().toString() + "-fueldraindelay");
-	}
+	}*/
 
 	@Override
 	public double getCurrentFuel() {
-		if (PropertiesHandler.get(tardis().properties(), FUEL_COUNT) == null) {
+		if (fuelCount.get() == null) {
 			AITMod.LOGGER.warn("Fuel count was null, setting to 0");
 			this.setCurrentFuel(0);
 		}
 
-		return (double) PropertiesHandler.get(tardis().properties(), FUEL_COUNT);
+		return fuelCount.get();
 	}
 
 	@Override
 	public void setCurrentFuel(double fuel) {
 		double prev = getCurrentFuel();
 
-		PropertiesHandler.set(tardis(), FUEL_COUNT, fuel, !isSyncOnDelay(tardis()));
+		fuelCount.set(fuel);
 
-		if (!isSyncOnDelay(tardis()))
-			createFuelSyncDelay(tardis());
+		// if (!isSyncOnDelay(tardis()))
+		// 	createFuelSyncDelay(tardis());
 
 		// fire the event if ran out of fuel
 		// this may get ran multiple times though for some reason
@@ -82,12 +89,8 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 		return TARDIS_MAX_FUEL;
 	}
 
-	public void setRefueling(boolean var) {
-		PropertiesHandler.set(tardis(), REFUELING, var);
-	}
-
-	public boolean isRefueling() {
-		return PropertiesHandler.getBool(tardis().properties(), REFUELING);
+	public BoolValue getRefueling() {
+		return isRefueling;
 	}
 
 	@Override
@@ -101,35 +104,35 @@ public class FuelData extends TardisComponent implements ArtronHolder, TardisTic
 		TravelHandlerBase.State state = travel.getState();
 
 		if (state == TravelHandlerBase.State.LANDED) {
-			if (this.isRefueling() && this.getCurrentFuel() < FuelData.TARDIS_MAX_FUEL && (!isRefuelOnDelay(tardis))) {
+			if (this.getRefueling().get() && this.getCurrentFuel() < FuelHandler.TARDIS_MAX_FUEL /*&& (!isRefuelOnDelay(tardis))*/) {
 				if (RiftChunkManager.isRiftChunk(pos.getPos()) && RiftChunkManager.getArtronLevels(world, pos.getPos()) > 0) {
 					RiftChunkManager.setArtronLevels(world, pos.getPos(), RiftChunkManager.getArtronLevels(world, pos.getPos()) - 1); // we shouldn't need to check how much it has because we can't even get here if don't have atleast one artron in the chunk
 					addFuel(9);
 				} else {
 					addFuel(7);
 				}
-				createRefuelDelay(tardis);
+				// createRefuelDelay(tardis);
 			}
 
-			if (!isRefueling() && !isDrainOnDelay(tardis)) {
-				createDrainDelay(tardis);
+			if (!getRefueling().get() /* && !isDrainOnDelay(tardis)*/) {
+				// createDrainDelay(tardis);
 				removeFuel(0.25 * travel.instability());
 			}
 		}
 
 		if (state == TravelHandlerBase.State.FLIGHT) {
-			if (!isDrainOnDelay(tardis)) {
-				createDrainDelay(tardis);
+			//if (!isDrainOnDelay(tardis)) {
+			//	createDrainDelay(tardis);
 				removeFuel((4 ^ travel.speed()) * travel.instability());
-			}
+			//}
 
 			// TODO: make a crash method to avoid isGrowth checks outside of interiorchanginghandler
 			if (!tardis.engine().hasPower() && !tardis.isGrowth())
 				  travel.crash(); // hehe force land if you don't have enough fuel
 		}
 
-		if ((state == TravelHandlerBase.State.DEMAT || state == TravelHandlerBase.State.MAT) && !isDrainOnDelay(tardis)) {
-			createDrainDelay(tardis);
+		if ((state == TravelHandlerBase.State.DEMAT || state == TravelHandlerBase.State.MAT)/* && !isDrainOnDelay(tardis)*/) {
+			//createDrainDelay(tardis);
 			removeFuel(5 * travel.instability());
 		}
 	}

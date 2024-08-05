@@ -3,7 +3,6 @@ package loqor.ait.tardis.control.impl;
 import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.data.properties.PropertiesHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -32,7 +31,7 @@ public class SiegeModeControl extends Control {
 			return true;
 
 		tardis.siege().setActive(!tardis.siege().isActive());
-		PropertiesHandler.set(tardis, PropertiesHandler.ALARM_ENABLED, false);
+		tardis.alarm().getAlarms().set(false);
 
 		player.sendMessage((tardis.siege().isActive() ? enabled : disabled), true);
 		return false;
