@@ -91,6 +91,7 @@ public class HadsHandler extends KeyedTardisComponent implements TardisTickable 
 			return;
 		}
 
+		// FIXME this is dumb.
 		if (state == TravelHandlerBase.State.FLIGHT)
 			travel.rematerialize();
 
