@@ -166,6 +166,10 @@ public class DirectedGlobalPos {
             return new Cached(world, pos, rotation);
         }
 
+        public static Cached create(RegistryKey<World> world, BlockPos pos, byte rotation) {
+            return new Cached(world, pos, rotation);
+        }
+
         private static Cached createSame(ServerWorld world, RegistryKey<World> dimension, BlockPos pos, byte rotation) {
             if (world == null)
                 return new Cached(dimension, pos, rotation);
