@@ -56,7 +56,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -344,6 +343,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
-        map.putBlock(AITBlocks.WAYPOINT_BANK_BLOCK, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.WAYPOINT_BANK, RenderLayer.getCutout());
     }
 }

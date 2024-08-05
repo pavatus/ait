@@ -7,6 +7,7 @@ import loqor.ait.core.blocks.WaypointBankBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.item.WaypointItem;
+import loqor.ait.core.util.StackUtil;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,6 +29,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
 
     private final WaypointData[] waypoints = new WaypointData[WaypointBankBlock.MAX_COUNT];
@@ -35,6 +39,19 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
 
     public WaypointBankBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE, pos, state);
+    }
+
+    public void dropItems() {
+        List<ItemStack> stacks = new ArrayList<>();
+
+        for (WaypointData data : this.waypoints) {
+            if (data == null)
+                continue;
+
+            stacks.add(data.toStack());
+        }
+
+        StackUtil.scatter(this.world, this.pos, stacks);
     }
 
     public ActionResult onUse(World world, BlockState state, PlayerEntity player, Hand hand, int slot) {

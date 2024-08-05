@@ -2,11 +2,13 @@ package loqor.ait.core.blocks;
 
 import loqor.ait.core.blockentities.WaypointBankBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.util.WorldUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -14,6 +16,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
@@ -67,17 +70,6 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
         };
     }
 
-    private static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        BlockPos blockPos = pos.down();
-        BlockState blockState = world.getBlockState(blockPos);
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
-
-        if (doubleBlockHalf == DoubleBlockHalf.UPPER && blockState.isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
-            world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
-        }
-    }
-
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         Optional<Vec2f> hitPos = getHitPos(hit, state.get(HorizontalFacingBlock.FACING));
@@ -96,59 +88,8 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
-
-        if (!(direction.getAxis() != Direction.Axis.Y || doubleBlockHalf == DoubleBlockHalf.LOWER != (direction == Direction.UP) || neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf)) {
-            world.breakBlock(pos, false);
-            return Blocks.AIR.getDefaultState();
-        }
-
-        if (doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos))
-            return Blocks.AIR.getDefaultState();
-
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
-
-    @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-
-        if (world.isClient())
-            return;
-
-        if (player.isCreative()) {
-            WaypointBankBlock.onBreakInCreative(world, pos, state, player);
-        } else {
-            TallPlantBlock.dropStacks(state, world, pos, null, player, player.getMainHandStack());
-        }
-    }
-
-    @Override
-    public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
-        super.afterBreak(world, player, pos, Blocks.AIR.getDefaultState(), blockEntity, tool);
-    }
-
-    @Override
     public long getRenderingSeed(BlockState state, BlockPos pos) {
         return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
-    }
-
-    @Override
-    @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-
-        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx))
-            return super.getPlacementState(ctx);
-
-        return null;
     }
 
     @Nullable
@@ -168,5 +109,56 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, HALF);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        DoubleBlockHalf half = state.get(HALF);
+
+        if (direction.getAxis() == Direction.Axis.Y && half == DoubleBlockHalf.LOWER == (direction == Direction.UP))
+            return neighborState.isOf(this) && neighborState.get(HALF) != half
+                    ? state.with(FACING, neighborState.get(FACING))
+                    : Blocks.AIR.getDefaultState();
+
+        return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos)
+                ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        BlockPos blockPos = ctx.getBlockPos();
+        World world = ctx.getWorld();
+
+        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx))
+            return super.getPlacementState(ctx).with(HALF, DoubleBlockHalf.LOWER);
+
+        return null;
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!world.isClient() && player.isCreative())
+            WorldUtil.onBreakHalfInCreative(world, pos, state, player);
+
+        super.onBreak(world, pos, state, player);
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.isOf(newState.getBlock()))
+            return;
+
+        if (world.getBlockEntity(pos) instanceof WaypointBankBlockEntity bank) {
+            bank.dropItems();
+            world.updateComparators(pos, this);
+        }
+
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 }

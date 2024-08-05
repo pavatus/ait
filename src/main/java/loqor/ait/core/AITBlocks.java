@@ -27,10 +27,8 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block CONSOLE = new ConsoleBlock(FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
-    @AssignedName(value = "waypoint_bank")
-    public static final Block WAYPOINT_BANK_BLOCK = new WaypointBankBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3));
-    @AssignedName(value = "landing_pad")
-    public static final Block LANDING_PAD_BLOCK = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+    public static final Block WAYPOINT_BANK = new WaypointBankBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3));
+    public static final Block LANDING_PAD = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
     @NoBlockItem
     public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool().instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));

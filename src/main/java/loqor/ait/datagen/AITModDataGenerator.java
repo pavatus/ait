@@ -676,7 +676,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.control.telepathic.choosing", "The TARDIS is choosing...");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ON");
-        provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: ON");
+        provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: OFF");
 
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
