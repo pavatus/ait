@@ -1,6 +1,5 @@
 package loqor.ait.tardis.control.impl;
 
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -34,7 +33,7 @@ public class AutoPilotControl extends Control {
 				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 
-			tardis.flight().enterFlight(player);
+			//tardis.flight().enterFlight(player);
 			return true;
 		}
 
