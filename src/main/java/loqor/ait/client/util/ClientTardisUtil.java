@@ -26,7 +26,6 @@ public class ClientTardisUtil {
 	private static int alarmDeltaTick;
 	private static boolean alarmDeltaDirection; // true for increasing false for decreasing
 	private static int powerDeltaTick;
-	public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
 
 	private static ClientTardis currentTardis;
 
@@ -61,7 +60,7 @@ public class ClientTardisUtil {
 		PacketByteBuf buf = PacketByteBufs.create();
 		buf.writeUuid(uuid);
 		buf.writeIdentifier(schema.id());
-		ClientPlayNetworking.send(CHANGE_SONIC, buf);
+		ClientPlayNetworking.send(TardisUtil.CHANGE_SONIC, buf);
 	}
 
 	public static void snapToOpenDoors(Tardis tardis) {

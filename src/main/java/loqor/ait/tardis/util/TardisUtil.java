@@ -78,6 +78,9 @@ import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class TardisUtil {
+	public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
+	public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
+	public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
 	@Deprecated
 	private static final Random RANDOM = AITMod.RANDOM;
 
@@ -119,7 +122,7 @@ public class TardisUtil {
 			TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
 		});
 
-		ServerPlayNetworking.registerGlobalReceiver(ClientTardisUtil.CHANGE_SONIC, ServerTardisManager.receiveTardis(
+		ServerPlayNetworking.registerGlobalReceiver(CHANGE_SONIC, ServerTardisManager.receiveTardis(
 				(tardis, server, player, handler, buf, responseSender) -> {
 					Identifier id = buf.readIdentifier();
 					SonicItem.setSchema(tardis.sonic().getConsoleSonic(), id);

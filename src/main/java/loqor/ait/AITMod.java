@@ -194,7 +194,7 @@ public class AITMod implements ModInitializer {
 					});
 				}));
 
-		ServerPlayNetworking.registerGlobalReceiver(TardisSecurityScreen.LEAVEBEHIND, ServerTardisManager.receiveTardis(
+		ServerPlayNetworking.registerGlobalReceiver(TardisUtil.LEAVEBEHIND, ServerTardisManager.receiveTardis(
 				(tardis, server, player, handler, buf, responseSender) -> {
 					boolean behind = buf.readBoolean();
 
@@ -206,7 +206,7 @@ public class AITMod implements ModInitializer {
 					});
 				}));
 
-		ServerPlayNetworking.registerGlobalReceiver(TardisSecurityScreen.HOSTILEALARMS, ServerTardisManager.receiveTardis(
+		ServerPlayNetworking.registerGlobalReceiver(TardisUtil.HOSTILEALARMS, ServerTardisManager.receiveTardis(
 				(tardis, server, player, handler, buf, responseSender) -> {
 					boolean hostile = buf.readBoolean();
 

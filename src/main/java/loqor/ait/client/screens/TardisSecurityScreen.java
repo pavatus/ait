@@ -4,6 +4,7 @@ import loqor.ait.AITMod;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
+import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -22,8 +23,6 @@ import java.awt.*;
 
 public class TardisSecurityScreen extends ConsoleScreen {
 	private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/tardis/consoles/monitors/security_menu.png");
-	public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
-	public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
 	int bgHeight = 117;
 	int bgWidth = 191;
 	int left, top;
@@ -64,7 +63,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		buf.writeUuid(tardis().getUuid());
 		buf.writeBoolean(!tardis().travel().leaveBehind().get());
 
-		ClientPlayNetworking.send(LEAVEBEHIND, buf);
+		ClientPlayNetworking.send(TardisUtil.LEAVEBEHIND, buf);
 	}
 
 	private void changeMinimumLoyalty() {
@@ -82,7 +81,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 		buf.writeUuid(tardis().getUuid());
 		buf.writeBoolean(!tardis().alarm().hostilePresence().get());
 
-		ClientPlayNetworking.send(HOSTILEALARMS, buf);
+		ClientPlayNetworking.send(TardisUtil.HOSTILEALARMS, buf);
 	}
 
 	private <T extends ClickableWidget> void addButton(T button) {
