@@ -150,7 +150,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         }
 
         public static WaypointData fromStack(ItemStack stack) {
-            if (stack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
+            if (!stack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
                 return null;
 
             int color = ((DyeableItem) AITItems.WAYPOINT_CARTRIDGE).getColor(stack);
