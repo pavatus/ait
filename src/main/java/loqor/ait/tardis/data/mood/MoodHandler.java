@@ -19,6 +19,8 @@ import java.util.*;
 public class MoodHandler extends TardisComponent implements TardisTickable {
 
     // FIXME Loqor, you sure you want this to be a static? It will affect ALL TARDIS'.
+
+    // nooo not static :<<<<<
     public static TardisMood.Moods[] PRIORITY_MOODS;
 
     @Exclude private MoodDictatedEvent moodEvent;

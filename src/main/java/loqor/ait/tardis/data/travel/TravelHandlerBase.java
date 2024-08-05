@@ -1,6 +1,7 @@
 package loqor.ait.tardis.data.travel;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
@@ -27,18 +28,17 @@ import net.minecraft.world.border.WorldBorder;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@SuppressWarnings("removal")
 public abstract class TravelHandlerBase extends KeyedTardisComponent implements TardisTickable {
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
     private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
     private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
     private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position",
-            DirectedGlobalPos.Cached.create((ServerWorld) null, new BlockPos(0, 0, 0), (byte) 0));
+            DirectedGlobalPos.Cached.create(TardisUtil.getOverworld(), new BlockPos(0, 0, 0), (byte) 0));
     private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination",
-            DirectedGlobalPos.Cached.create((ServerWorld) null, new BlockPos(0, 0, 0), (byte) 0));
+            DirectedGlobalPos.Cached.create(TardisUtil.getOverworld(), new BlockPos(0, 0, 0), (byte) 0));
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position",
-            DirectedGlobalPos.Cached.create((ServerWorld) null, new BlockPos(0, 0, 0), (byte) 0));
+            DirectedGlobalPos.Cached.create(TardisUtil.getOverworld(), new BlockPos(0, 0, 0), (byte) 0));
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", false);
     private static final BoolProperty ANTIGRAVS = new BoolProperty("ANTIGRAVS",false);
