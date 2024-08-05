@@ -165,19 +165,15 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, alpha);
 		}
 
-		if (!(alpha > 0) && emission != null) {
-			profiler.push("emission");
-			boolean alarms = tardis.alarm().enabled().get();
+		profiler.push("emission");
+		boolean alarms = tardis.alarm().enabled().get();
 
-			ClientLightUtil.renderEmissivable(
-					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
-					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, alpha
-			);
+		ClientLightUtil.renderEmissivable(
+				tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
+				matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, alpha
+		);
 
-			profiler.pop();
-		}
-
-		profiler.push("biome");
+		profiler.swap("biome");
 
 		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
