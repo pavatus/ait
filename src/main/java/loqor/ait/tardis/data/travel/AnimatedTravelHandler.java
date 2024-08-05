@@ -16,9 +16,8 @@ public abstract class AnimatedTravelHandler extends ProgressiveTravelHandler {
 
         State state = this.getState();
 
-        if (state.animated()) {
+        if (state.animated())
             this.tickAnimationProgress(state);
-        }
     }
 
     private void tickAnimationProgress(State state) {

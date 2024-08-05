@@ -304,7 +304,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.resetFlight();
 
         this.position().getWorld().scheduleBlockTick(this.position().getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
-        DoorHandler.lockTardis(tardis.<DoorHandler>handler(Id.DOOR).previouslyLocked().get(), this.tardis, null, false);
+        DoorHandler.lockTardis(tardis.door().previouslyLocked().get(), this.tardis, null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
 

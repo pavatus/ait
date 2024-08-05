@@ -40,7 +40,6 @@ public class HandBrakeControl extends Control {
 		this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
 		TravelHandler travel = tardis.travel();
 
-		// TODO(travel): replace with proper travel methods
 		if (handbrake && travel.getState() == TravelHandlerBase.State.FLIGHT) {
 			if (travel.autopilot()) {
 				travel.stopHere();

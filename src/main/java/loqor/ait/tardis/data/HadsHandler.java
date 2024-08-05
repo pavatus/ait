@@ -19,7 +19,7 @@ import java.util.List;
 
 public class HadsHandler extends KeyedTardisComponent implements TardisTickable {
 
-	private static final BoolProperty HADS_ENABLED = new BoolProperty("enabled", true);
+	private static final BoolProperty HADS_ENABLED = new BoolProperty("enabled", false);
 	private static final BoolProperty IS_IN_ACTIVE_DANGER = new BoolProperty("is_in_active_danger", false);
 
 	private final BoolValue enabled = HADS_ENABLED.create(this);

@@ -168,13 +168,10 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 
         Tardis tardis = this.tardis();
 
-        if (!(this instanceof TravelHandler travel))
-            return;
-
-        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && travel.getState() == TravelHandlerBase.State.LANDED)
+        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && this.getState() == TravelHandlerBase.State.LANDED)
             this.recalculate();
 
-        if (this.isInFlight() && !travel.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
+        if (this.isInFlight() && !this.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
             this.recalculate();
 
         if (server.getTicks() % 2 == 0)

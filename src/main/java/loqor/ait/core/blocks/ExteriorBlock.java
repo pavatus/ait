@@ -1,6 +1,5 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;

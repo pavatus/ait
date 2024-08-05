@@ -30,7 +30,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
     private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
-    private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
+
     private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) null);
     private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) null);
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) null);
@@ -49,6 +49,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     protected final Value<DirectedGlobalPos.Cached> destination = DESTINATION.create(this);
     protected final Value<DirectedGlobalPos.Cached> previousPosition = PREVIOUS_POSITION.create(this);
 
+    private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
     protected final BoolValue crashing = CRASHING.create(this);
     protected final BoolValue antigravs = ANTIGRAVS.create(this);
 
