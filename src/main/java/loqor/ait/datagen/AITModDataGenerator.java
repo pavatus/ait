@@ -172,7 +172,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK))
                     .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ))
             );
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.WAYPOINT_BANK_BLOCK, 1)
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.WAYPOINT_BANK, 1)
                     .pattern("RTR")
                     .pattern("BWB")
                     .pattern("IEI")
@@ -439,6 +439,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addSound("tardis/eighth_demat", AITSounds.EIGHT_DEMAT);
             provider.addSound("tardis/eighth_mat", AITSounds.EIGHT_MAT);
             provider.addSound("tardis/ghost_mat", AITSounds.GHOST_MAT);
+            provider.addSound("tardis/waypoint_activate", AITSounds.WAYPOINT_ACTIVATE);
 
             // Controls
             provider.addSound("controls/demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
@@ -622,8 +623,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.mechanical", "Mechanical");
         provider.addTranslation("sonic.ait.song", "Song");
 
-        provider.addTranslation(AITBlocks.WAYPOINT_BANK_BLOCK, "Waypoint Bank");
-        provider.addTranslation(AITBlocks.LANDING_PAD_BLOCK, "Landing Pad");
+        provider.addTranslation(AITBlocks.WAYPOINT_BANK, "Waypoint Bank");
+        provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Pad");
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");

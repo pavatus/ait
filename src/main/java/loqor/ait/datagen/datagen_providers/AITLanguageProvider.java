@@ -33,7 +33,7 @@ public class AITLanguageProvider extends FabricLanguageProvider {
 			try {
 				translationBuilder.add(existingFilePath);
 			} catch (Exception e) {
-				LOGGER.warn("Failed to add existing language file! " + "(" + languageType.name().toLowerCase() + ") | ", e);
+                LOGGER.warn("Failed to add existing language file! ({}) | ", languageType.name().toLowerCase(), e);
 			}
 		});
 	}
