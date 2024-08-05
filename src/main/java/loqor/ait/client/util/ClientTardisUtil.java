@@ -1,6 +1,5 @@
 package loqor.ait.client.util;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
@@ -12,7 +11,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
@@ -147,7 +145,7 @@ public class ClientTardisUtil {
 		}
 		Tardis tardis = getCurrentTardis();
 
-		if (!tardis.alarm().getAlarms().get()) {
+		if (!tardis.alarm().enabled().get()) {
 			if (getAlarmDelta() != MAX_ALARM_DELTA_TICKS)
 				setAlarmDelta(getAlarmDelta() + 1);
 			return;

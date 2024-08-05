@@ -69,16 +69,18 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
 
 		if (getRepairTicks() <= 0) {
 			setState(State.NORMAL);
-			alarms.disable();
+			alarms.enabled().set(false);
 			return;
 		}
-		if (getState() != State.NORMAL) {
-			alarms.enable();
-		}
+
+		if (getState() != State.NORMAL)
+			alarms.enabled().set(true);
+
 		if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState() && getRepairTicks() > 0) {
 			setState(State.UNSTABLE);
-			alarms.disable();
+			alarms.enabled().set(false);
 		}
+
 		DirectedGlobalPos.Cached exteriorPosition = tardis.travel().position();
 		ServerWorld exteriorWorld = exteriorPosition.getWorld();
 		if (tardis.door().isOpen() && this.getState() != State.NORMAL) {

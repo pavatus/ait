@@ -90,7 +90,7 @@ public class RealTardisRenderer extends EntityRenderer<RealTardisEntity> {
 		this.model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), entity.getWorld().getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
 		if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {
-			boolean alarms = tardis.alarm().getAlarms().get();
+			boolean alarms = tardis.alarm().enabled().get();
 			this.model.renderRealWorld(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(getEmission(tardis), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 		}
 

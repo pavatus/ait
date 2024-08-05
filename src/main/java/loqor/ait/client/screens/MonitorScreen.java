@@ -308,7 +308,7 @@ public class MonitorScreen extends ConsoleScreen {
 
         boolean isExtUnlocked = tardis.isUnlocked(variant.parent());
         boolean hasPower = tardis.engine().hasPower();
-        boolean alarms = tardis.alarm().getAlarms().get();
+        boolean alarms = tardis.alarm().enabled().get();
 
         stack.push();
         stack.translate(0, 0, 500f);

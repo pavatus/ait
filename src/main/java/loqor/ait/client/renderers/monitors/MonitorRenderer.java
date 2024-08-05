@@ -109,7 +109,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 		String name = tardis.stats().getName();
 		this.textRenderer.drawWithOutline(Text.of(name).asOrderedText(), 98 - (this.textRenderer.getWidth(name)), 90, 0xFFFFFF, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
-		if (tardis.alarm().getAlarms().get())
+		if (tardis.alarm().enabled().get())
 			this.textRenderer.drawWithOutline(Text.of("⚠").asOrderedText(), 84, 0, 0xFE0000, 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
 		matrices.pop();

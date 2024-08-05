@@ -17,13 +17,14 @@ import net.minecraft.sound.SoundCategory;
 
 // use this as reference for starting other looping sounds on the exterior
 public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTickable {
-	@Exclude
-	public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
-	@Exclude
-	private int soundCounter = 0;
-	private static final BoolProperty ALARMS_ENABLED = new BoolProperty("alarms_enabled", false);
-	private final BoolValue alarmsEnabled = ALARMS_ENABLED.create(this);
+
+	@Exclude public static final int CLOISTER_LENGTH_TICKS = 3 * 20;
+	@Exclude private int soundCounter = 0;
+
+	private static final BoolProperty ENABLED = new BoolProperty("enabled", false);
 	private static final BoolProperty HOSTILE_PRESENCE = new BoolProperty("hostile_presence", true);
+
+	private final BoolValue enabled = ENABLED.create(this);
 	private final BoolValue hostilePresence = HOSTILE_PRESENCE.create(this);
 
 	public ServerAlarmHandler() {
@@ -32,43 +33,35 @@ public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTi
 
 	@Override
 	public void onLoaded() {
-		alarmsEnabled.of(this, ALARMS_ENABLED);
+		enabled.of(this, ENABLED);
 		hostilePresence.of(this, HOSTILE_PRESENCE);
 	}
 
-	public void enable() {
-		this.alarmsEnabled.set(true);
-	}
-
-	public void disable() {
-		this.alarmsEnabled.set(false);
-	}
-
-	public BoolValue getAlarms() {
-		return alarmsEnabled;
+	public BoolValue enabled() {
+		return enabled;
 	}
 	public BoolValue hostilePresence() {
 		return hostilePresence;
 	}
 
 	public void toggle() {
-		if (getAlarms().get()) disable();
-		else enable();
+		this.enabled.flatMap(value -> !value);
 	}
 
 	@Override
 	public void tick(MinecraftServer server) {
-		if (!this.getAlarms().get() && this.hostilePresence().get()) {
+		if (server.getTicks() % 20 == 0 && !this.enabled().get() && this.hostilePresence().get()) {
 			for (Entity entity : TardisUtil.getEntitiesInInterior(tardis(), 200)) {
 				if ((entity instanceof HostileEntity && !entity.hasCustomName()) || entity instanceof ServerPlayerEntity player &&
 						tardis.loyalty().get(player).level() == Loyalty.Type.REJECT.level) {
-					this.enable();
+					tardis.alarm().enabled().set(true);
 				}
 			}
+
 			return;
 		}
 
-		if (!this.getAlarms().get())
+		if (!this.enabled().get())
 			return;
 
 		if (tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)

@@ -31,7 +31,7 @@ public class SiegeModeControl extends Control {
 			return true;
 
 		tardis.siege().setActive(!tardis.siege().isActive());
-		tardis.alarm().getAlarms().set(false);
+		tardis.alarm().enabled().set(false);
 
 		player.sendMessage((tardis.siege().isActive() ? enabled : disabled), true);
 		return false;

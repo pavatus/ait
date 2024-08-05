@@ -88,7 +88,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 		setGenerating(true);
 
 		DeltaTimeManager.createDelay("interior_change-" + tardis.getUuid().toString(), 100L);
-		tardis.alarm().enable();
+		tardis.alarm().enabled().set(true);
 
 		tardis.getDesktop().getConsolePos().clear();
 
@@ -100,7 +100,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         this.setGenerating(false);
 		clearedOldInterior = false;
 
-		tardis.alarm().disable();
+		tardis.alarm().enabled().set(false);
 
 		boolean previouslyLocked = tardis.door().previouslyLocked().get();
 		DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
@@ -141,14 +141,12 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 		if (server.getTicks() % 10 == 0 && travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
 			travel.crash();
 
-		if (this.isGenerating()) {
-			if (!this.tardis().alarm().getAlarms().get())
-				this.tardis().alarm().enable();
-		}
+		if (this.isGenerating())
+			tardis.alarm().enabled().set(true);
 
 		if (!this.canQueue()) {
 			this.setGenerating(false);
-			this.tardis().alarm().disable();
+			this.tardis.alarm().enabled().set(false);
 			return;
 		}
 

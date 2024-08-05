@@ -80,7 +80,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 
 	public void setSiegeBeingHeld(UUID playerId) {
 		if (playerId != null)
-			tardis().alarm().enable();
+			this.tardis.alarm().enabled().set(true);
 
 		heldKey.set(playerId);
 	}
@@ -102,7 +102,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 			TardisUtil.giveEffectToInteriorPlayers(this.tardis, new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0, false, false));
 		} else {
 			sound = AITSounds.SIEGE_DISABLE;
-			this.tardis.alarm().disable();
+			this.tardis.alarm().enabled().set(false);
 
 			if (this.tardis.getExterior().findExteriorBlock().isEmpty())
 				this.tardis.travel().placeExterior(false);

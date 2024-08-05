@@ -4,7 +4,6 @@ import loqor.ait.client.animation.console.steam.SteamAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.data.ShieldHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -909,7 +908,7 @@ public class SteamConsoleModel extends ConsoleModel {
 		increment.roll = IncrementManager.increment(tardis) >= 10 ? IncrementManager.increment(tardis) >= 100 ? IncrementManager.increment(tardis) >= 1000 ? IncrementManager.increment(tardis) >= 10000 ? increment.roll - (1.3963F * 2) : increment.roll - (1.047225F * 2) : increment.roll - (0.69815F * 2) : increment.roll - 0.69815F : increment.roll;
 
 		ModelPart alarms = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever4").getChild("bone22");
-		alarms.roll = tardis.alarm().getAlarms().get() ? 0.4363F : -0.5672F;
+		alarms.roll = tardis.alarm().enabled().get() ? 0.4363F : -0.5672F;
 
 		ModelPart security = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever2").getChild("bone20");
 		security.roll = (tardis.stats().security().get() ? 0.4363F : -0.5672F);

@@ -47,7 +47,7 @@ public class FoggyUtils {
 		if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_FOG() &&
 				ClientTardisUtil.isPlayerInATardis() &&
 				!tardis.crash().isToxic() &&
-				!tardis.alarm().getAlarms().get() &&
+				!tardis.alarm().enabled().get() &&
 				tardis.engine().hasPower()
 		) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));

@@ -110,7 +110,7 @@ public class MoodEventPoolRegistry {
         }, 256, TardisMood.Alignment.NEGATIVE));
 
         RANDOM_ALARM_ACTIVATION = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_alarm_activation"), 
-                tardis -> tardis.alarm().enable(), 32, TardisMood.Alignment.NEGATIVE));
+                tardis -> tardis.alarm().enabled().set(true), 32, TardisMood.Alignment.NEGATIVE));
 
         RANDOM_THROTTLING_UP = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_throttling_up"), tardis -> {
             if (tardis.travel().inFlight())

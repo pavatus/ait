@@ -96,7 +96,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         }
 
         tardis.door().setLocked(true);
-        tardis.alarm().getAlarms().set(true);
+        tardis.alarm().enabled().set(true);
         this.antigravs().set(false);
 
         this.speed(0);

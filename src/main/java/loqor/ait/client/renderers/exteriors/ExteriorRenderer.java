@@ -17,7 +17,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.CloakHandler;
 import loqor.ait.tardis.data.OvergrownHandler;
-import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -168,7 +167,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		if (!(alpha > 0) && emission != null) {
 			profiler.push("emission");
-			boolean alarms = tardis.alarm().getAlarms().get();
+			boolean alarms = tardis.alarm().enabled().get();
 
 			ClientLightUtil.renderEmissivable(
 					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),

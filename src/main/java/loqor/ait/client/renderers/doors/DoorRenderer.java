@@ -108,7 +108,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         profiler.push("emission");
 
-		boolean alarms = tardis.alarm().getAlarms().get();
+		boolean alarms = tardis.alarm().enabled().get();
 
         ClientLightUtil.renderEmissivable(
                 tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
