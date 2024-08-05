@@ -148,7 +148,7 @@ public class ClientTardisUtil {
 		}
 		Tardis tardis = getCurrentTardis();
 
-		if (!tardis.getHandlers().getAlarms().getAlarms().get()) {
+		if (!tardis.alarm().getAlarms().get()) {
 			if (getAlarmDelta() != MAX_ALARM_DELTA_TICKS)
 				setAlarmDelta(getAlarmDelta() + 1);
 			return;
