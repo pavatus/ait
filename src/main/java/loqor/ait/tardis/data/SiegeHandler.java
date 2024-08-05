@@ -31,7 +31,7 @@ import java.util.UUID;
 public class SiegeHandler extends KeyedTardisComponent implements TardisTickable {
 	private static final Property<UUID> HELD_KEY = new Property<>(Property.Type.UUID, "siege_held_uuid", new UUID(0, 0));
 	private final Value<UUID> heldKey = HELD_KEY.create(this);
-	private static final BoolProperty ACTIVE = new BoolProperty("siege_mode", Property.warnCompat("siege_mode", false));
+	private static final BoolProperty ACTIVE = new BoolProperty("siege_mode", false);
 	private static final IntProperty SIEGE_TIME = new IntProperty("siege_time", 0);
 	private final IntValue siegeTime = SIEGE_TIME.create(this);
 	private final BoolValue active = ACTIVE.create(this);

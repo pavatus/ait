@@ -19,6 +19,7 @@ import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -32,14 +33,17 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
     private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
     private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) Property.warnCompat("position", null));
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) Property.warnCompat("destination", null));
-    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) Property.warnCompat("previous_position", null));
+    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position",
+            DirectedGlobalPos.Cached.create((ServerWorld) null, new BlockPos(0, 0, 0), (byte) 0));
+    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination",
+            DirectedGlobalPos.Cached.create((ServerWorld) null, new BlockPos(0, 0, 0), (byte) 0));
+    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position",
+            DirectedGlobalPos.Cached.create((ServerWorld) null, new BlockPos(0, 0, 0), (byte) 0));
 
-    private static final BoolProperty CRASHING = new BoolProperty("crashing", Property.warnCompat("crashing", false));
-    private static final BoolProperty ANTIGRAVS = new BoolProperty("ANTIGRAVS", Property.warnCompat("antigravs", false));
+    private static final BoolProperty CRASHING = new BoolProperty("crashing", false);
+    private static final BoolProperty ANTIGRAVS = new BoolProperty("ANTIGRAVS",false);
 
-    private static final IntProperty SPEED = new IntProperty("speed", Property.warnCompat("speed", 0));
+    private static final IntProperty SPEED = new IntProperty("speed", 0);
     private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
 
     private static final Property<GroundSearch> VGROUND_SEARCH = Property.forEnum("yground_search", GroundSearch.class, GroundSearch.CEILING);
