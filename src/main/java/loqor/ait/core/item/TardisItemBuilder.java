@@ -101,7 +101,7 @@ public class TardisItemBuilder extends Item {
                 .exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
                 .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
                 .<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
-                    engine.hasEngineCore().set(true);
+                    engine.linkEngine(0, 0);
                     engine.enablePower();
                 }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty
 						-> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER))
