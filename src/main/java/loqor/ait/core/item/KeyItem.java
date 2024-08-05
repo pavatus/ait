@@ -142,7 +142,7 @@ public class KeyItem extends LinkableItem {
 		if (!keyType.hasProtocol(Protocols.HAIL))
 			return;
 
-		if (tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
+		if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
 			return;
 
 		if (player.getHealth() > 4 || player.getWorld() == TardisUtil.getTardisDimension())
