@@ -28,6 +28,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 	@Override
 	public void onLoaded() {
 		isRefueling.of(this, IS_REFUELING);
+		fuelCount.of(this, FUEL_COUNT_PROPERTY);
 	}
 
 	public FuelHandler() {

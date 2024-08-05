@@ -722,6 +722,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
+        // Exteriors
+        provider.addTranslation("exterior.ait.tokamak", "Tokamak");
+
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
         provider.addTranslation("screen.ait.gravity", "> Gravity: %s");

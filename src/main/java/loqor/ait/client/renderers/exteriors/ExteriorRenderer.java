@@ -55,7 +55,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		Tardis tardis = optionalTardis.get();
 		profiler.swap("render");
 		//System.out.println(entity.getAlpha());
-		if (entity.getAlpha() > 0 || !tardis.getHandlers().<CloakHandler>get(TardisComponent.Id.CLOAK).cloaked().get())
+		if (entity.getAlpha() > 0 || !tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get())
 			this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
 		profiler.pop();
 
@@ -166,7 +166,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, alpha);
 		}
 
-		if (emission != null) {
+		if (!(alpha > 0) && emission != null) {
 			profiler.push("emission");
 			boolean alarms = tardis.alarm().getAlarms().get();
 
@@ -184,10 +184,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
 			Identifier biomeTexture = handler.getBiomeKey().get(exteriorVariant.overrides());
 
-			if (biomeTexture != null && !texture.equals(biomeTexture)) {
+			if (!(alpha > 0) && (biomeTexture != null && !texture.equals(biomeTexture))) {
 				// yes i know it says emission, but go fuck yourself <3
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(
-						AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, true)
+						AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)
 				), light, overlay, 1, 1, 1, alpha);
 			}
 		}
