@@ -115,7 +115,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 				// createRefuelDelay(tardis);
 			}
 
-			if (!getRefueling().get() /* && !isDrainOnDelay(tardis)*/) {
+			if (!getRefueling().get() && tardis.engine().hasPower()/* && !isDrainOnDelay(tardis)*/) {
 				// createDrainDelay(tardis);
 				removeFuel(0.25 * travel.instability());
 			}
