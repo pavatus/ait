@@ -1,7 +1,6 @@
 package loqor.ait.core;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.annotations.AssignedName;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import loqor.ait.AITMod;
 import loqor.ait.core.blocks.DoorBlock;
@@ -28,6 +27,8 @@ public class AITBlocks implements BlockRegistryContainer {
             .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
     public static final Block WAYPOINT_BANK = new WaypointBankBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3));
+
+    @NoBlockItem
     public static final Block LANDING_PAD = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
     @NoBlockItem
