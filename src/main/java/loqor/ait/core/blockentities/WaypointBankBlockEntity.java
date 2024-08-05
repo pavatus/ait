@@ -41,6 +41,10 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         super(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE, pos, state);
     }
 
+    public void unselect() {
+        this.selected = -1;
+    }
+
     public void dropItems() {
         List<ItemStack> stacks = new ArrayList<>();
 
