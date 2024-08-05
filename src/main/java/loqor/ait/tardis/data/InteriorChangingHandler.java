@@ -105,8 +105,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 		boolean previouslyLocked = tardis.door().previouslyLocked().get();
 		DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
 
-		tardis.engine().hasEngineCore().set(false);
-		tardis.engine().disablePower();
+		tardis.engine().unlinkEngine();
 
 		if (tardis.hasGrowthExterior()) {
 			TravelHandler travel = tardis.travel();

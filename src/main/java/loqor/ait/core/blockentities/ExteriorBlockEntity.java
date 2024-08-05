@@ -147,7 +147,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		if (!previouslyLocked && tardis.travel().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
 			TardisUtil.teleportInside(tardis, entity);
 
-		if (!tardis.door().isOpen())
+		if (tardis.door().isClosed())
 			return;
 
 		if (!tardis.getLockedTardis() && (!DependencyChecker.hasPortals() || !tardis.getExterior().getVariant().hasPortals()))
