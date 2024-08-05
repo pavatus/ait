@@ -1,5 +1,6 @@
 package loqor.ait.tardis.animation;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
@@ -7,6 +8,7 @@ import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class PulsatingAnimation extends ExteriorAnimation {
+
 	private static final int PULSE_LENGTH = 20;
 
 	private int pulses = 0;
@@ -35,11 +37,24 @@ public class PulsatingAnimation extends ExteriorAnimation {
 		this.timeLeft--;
 	}
 
+	@Override
+	public boolean reset() {
+		if (!super.reset())
+			return false;
+
+		this.pulses = 0;
+		return true;
+	}
+
 	public float getPulseAlpha() {
 		if (timeLeft != maxTime && timeLeft % PULSE_LENGTH == 0)
 			pulses++;
 
-		return (float) ((float) (pulses / Math.floor((double) maxTime / PULSE_LENGTH)) + (Math.cos(timeLeft * frequency) * intensity)); // @TODO find alternative math or ask cwaig if we're allowed to use this, loqor says "its just math" but im still saying this just in case.
+		float alpha = (float) ((float) (pulses / Math.floor((double) maxTime / PULSE_LENGTH))
+                        + (Math.cos(timeLeft * frequency) * intensity));
+
+		AITMod.LOGGER.info("alpha: {}; time left {}; pulses: {}", alpha, timeLeft, pulses);
+		return alpha;
 	}
 
 	@Override
@@ -51,6 +66,8 @@ public class PulsatingAnimation extends ExteriorAnimation {
 
 		this.frequency = sound.frequency();
 		this.intensity = sound.intensity();
+
+		this.pulses = 0;
 		return true;
 	}
 }

@@ -1,5 +1,6 @@
 package loqor.ait.core.blocks;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;
@@ -297,8 +298,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		if (world.isClient())
 			return;
 
-		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (blockEntity instanceof ExteriorBlockEntity exterior)
+		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior)
 			exterior.onEntityCollision(entity);
 	}
 

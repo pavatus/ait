@@ -19,7 +19,6 @@ import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -37,7 +36,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) null);
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", false);
-    private static final BoolProperty ANTIGRAVS = new BoolProperty("ANTIGRAVS",false);
+    private static final BoolProperty ANTIGRAVS = new BoolProperty("antigravs",false);
 
     private static final IntProperty SPEED = new IntProperty("speed", 0);
     private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);

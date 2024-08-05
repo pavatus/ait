@@ -25,6 +25,9 @@ public class WorldUtil {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
+        if (world.getBlockState(pos.down()).blocksMovement())
+            return cached;
+
         if (hSearch) {
             BlockPos temp = findSafeXZ(world, pos, SAFE_RADIUS);
 

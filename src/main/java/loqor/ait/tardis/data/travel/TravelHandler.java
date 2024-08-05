@@ -17,31 +17,18 @@ import loqor.ait.tardis.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public non-sealed class TravelHandler extends ProgressiveTravelHandler implements CrashableTardisTravel {
+public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
-    private int animationTicks;
-
     public TravelHandler() {
         super(Id.TRAVEL);
-    }
-
-    @Override
-    public void tick(MinecraftServer server) {
-        super.tick(server);
-        State state = this.getState();
-
-        if (state.animated()) {
-            this.tickAnimationProgress(state);
-        }
     }
 
     @Override
@@ -79,14 +66,6 @@ public non-sealed class TravelHandler extends ProgressiveTravelHandler implement
 
         if (!this.tardis.flight().isActive())
             this.rematerialize();
-    }
-
-    private void tickAnimationProgress(State state) {
-        if (this.animationTicks++ < state.effect().length())
-            return;
-
-        this.animationTicks = 0;
-        state.finish(this);
     }
 
     @Override

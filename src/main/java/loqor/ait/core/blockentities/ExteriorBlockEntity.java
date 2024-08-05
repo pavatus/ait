@@ -12,6 +12,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.link.v2.block.AbstractLinkableBlockEntity;
@@ -142,15 +143,19 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		Tardis tardis = ref.get();
+		TravelHandler travel = tardis.travel();
+
 		boolean previouslyLocked = tardis.door().previouslyLocked().get();
 
-		if (!previouslyLocked && tardis.travel().getState() == TravelHandlerBase.State.MAT && this.getAlpha() >= 0.9f)
+		if (!previouslyLocked && travel.getState() == TravelHandlerBase.State.MAT
+				&& travel.getAnimTicks() >= 0.9 * travel.getMaxAnimTicks())
 			TardisUtil.teleportInside(tardis, entity);
 
 		if (tardis.door().isClosed())
 			return;
 
-		if (!tardis.getLockedTardis() && (!DependencyChecker.hasPortals() || !tardis.getExterior().getVariant().hasPortals()))
+		if (!tardis.getLockedTardis() && (!DependencyChecker.hasPortals()
+				|| !tardis.getExterior().getVariant().hasPortals()))
 			TardisUtil.teleportInside(tardis, entity);
 	}
 
@@ -169,8 +174,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (!world.isClient())
             return;
 
-        if (state.animated())
-            this.getAnimation().tick(tardis);
+        if (state.animated()) this.getAnimation().tick(tardis);
+		else this.getAnimation().reset();
 
         this.exteriorLightBlockState(state);
         this.checkAnimations();
@@ -218,6 +223,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		return this.animation;
 	}
 
+	@Environment(EnvType.CLIENT)
 	public float getAlpha() {
 		return this.getAnimation().getAlpha();
 	}

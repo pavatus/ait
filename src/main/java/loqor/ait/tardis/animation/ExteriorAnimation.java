@@ -26,6 +26,8 @@ public abstract class ExteriorAnimation {
 	protected int timeLeft, maxTime, startTime;
 	protected float alpha = 1;
 
+	private boolean isDone = false;
+
 	public ExteriorAnimation(ExteriorBlockEntity exterior) {
 		this.exterior = exterior;
 	}
@@ -56,9 +58,17 @@ public abstract class ExteriorAnimation {
 
 	public abstract void tick(Tardis tardis);
 
+	public boolean reset() {
+		if (this.isDone)
+			return false;
+
+		this.isDone = true;
+		return true;
+	}
+
 	public boolean setupAnimation(TravelHandlerBase.State state) {
 		if (exterior.tardis().isEmpty()) {
-			AITMod.LOGGER.error("Tardis for exterior " + exterior + " was null! Panic!!!!");
+            AITMod.LOGGER.error("Tardis for exterior {} was null!", exterior);
 			this.alpha = 0f; // just make me vanish.
 			return false;
 		}
