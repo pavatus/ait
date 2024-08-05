@@ -18,36 +18,38 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class HadsHandler extends KeyedTardisComponent implements TardisTickable {
-	private static final BoolProperty HADS_ENABLED = new BoolProperty("hads_enabled", true);
-	private final BoolValue hadsEnabled = HADS_ENABLED.create(this);
+
+	private static final BoolProperty HADS_ENABLED = new BoolProperty("enabled", true);
 	private static final BoolProperty IS_IN_ACTIVE_DANGER = new BoolProperty("is_in_active_danger", false);
-	private final BoolValue isInDanger = IS_IN_ACTIVE_DANGER.create(this);
+
+	private final BoolValue enabled = HADS_ENABLED.create(this);
+	private final BoolValue inDanger = IS_IN_ACTIVE_DANGER.create(this);
 
 	public HadsHandler() {
 		super(Id.HADS);
 	}
 
-	public boolean isHADSActive() {
-		return hadsEnabled.get();
+	public boolean isActive() {
+		return enabled.get();
 	}
 
 	public void setIsInDanger(boolean bool) {
-		isInDanger.set(bool);
+		inDanger.set(bool);
 	}
 
 	public boolean isInDanger() {
-		return isInDanger.get();
+		return inDanger.get();
 	}
 
 	@Override
 	public void onLoaded() {
-		hadsEnabled.of(this, HADS_ENABLED);
-		isInDanger.of(this, IS_IN_ACTIVE_DANGER);
+		enabled.of(this, HADS_ENABLED);
+		inDanger.of(this, IS_IN_ACTIVE_DANGER);
 	}
 
 	@Override
 	public void tick(MinecraftServer server) {
-		if (isHADSActive())
+		if (isActive())
 			tickingForDanger(tardis.travel().position().getWorld());
 	}
 
@@ -96,7 +98,7 @@ public class HadsHandler extends KeyedTardisComponent implements TardisTickable 
 			alarm.enabled().set(false);
 	}
 
-    public BoolValue hads() {
-		return hadsEnabled;
+    public BoolValue enabled() {
+		return enabled;
     }
 }

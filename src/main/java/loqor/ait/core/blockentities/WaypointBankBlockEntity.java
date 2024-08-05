@@ -67,7 +67,14 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     private ActionResult insert(BlockState state, ItemStack stack, int slot) {
-        this.waypoints[slot] = WaypointData.fromStack(stack);
+        WaypointData inserted = WaypointData.fromStack(stack);
+
+        if (inserted == null)
+            return ActionResult.FAIL;
+
+        stack.decrement(1);
+
+        this.waypoints[slot] = inserted;
         this.sync(state);
 
         return ActionResult.SUCCESS;
@@ -143,6 +150,9 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         }
 
         public static WaypointData fromStack(ItemStack stack) {
+            if (stack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
+                return null;
+
             int color = ((DyeableItem) AITItems.WAYPOINT_CARTRIDGE).getColor(stack);
             Waypoint waypoint = Waypoint.fromStack(stack);
 
@@ -155,13 +165,16 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
             WaypointItem.setPos(result, this.pos);
             result.setCustomName(Text.literal(this.name));
 
-            ((DyeableItem) AITItems.WAYPOINT_CARTRIDGE).setColor(result, this.color);
+            if (this.color != WaypointItem.DEFAULT_COLOR)
+                ((DyeableItem) AITItems.WAYPOINT_CARTRIDGE).setColor(result, this.color);
+
             return result;
         }
 
         public void toNbt(NbtCompound nbt) {
             nbt.putInt("color", this.color);
             nbt.putString("name", this.name);
+
             if (this.pos != null)
                 nbt.put("pos",this.pos.toNbt());
         }

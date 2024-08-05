@@ -110,7 +110,6 @@ public class AITModClient implements ClientModInitializer {
         */
 
         WorldRenderEvents.END.register(context -> {
-
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
             if (tardis == null)
@@ -121,7 +120,6 @@ public class AITModClient implements ClientModInitializer {
                 star.renderStar(context, tardis);
                 star.renderShine(context, tardis);
             }
-
         });
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN, (client, handler, buf, responseSender) -> {

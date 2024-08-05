@@ -9,6 +9,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.joml.Vector2i;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -72,6 +73,11 @@ public class Property<T> {
 
         public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
         public static final Type<Direction> DIRECTION = new Type<>(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(Direction.class));
+
+        public static final Type<Vector2i> VEC2I = new Type<>((buf, vector2i) -> {
+            buf.writeInt(vector2i.x);
+            buf.writeInt(vector2i.y);
+        }, buf -> new Vector2i(buf.readInt(), buf.readInt()));
 
         public static final Type<String> STR = new Type<>(PacketByteBuf::writeString, PacketByteBuf::readString);
 

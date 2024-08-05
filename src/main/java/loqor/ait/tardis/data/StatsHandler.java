@@ -31,19 +31,21 @@ public class StatsHandler extends KeyedTardisComponent {
 
 	private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
 	private static List<String> NAME_CACHE;
-	private static final Property<String> NAME_PROPERTY = new Property<>(Property.Type.STR, "name", "");
-	private final Value<String> tardisName = NAME_PROPERTY.create(this);
-	private static final Property<String> PLAYER_CREATOR_NAME_PROPERTY = new Property<>(Property.Type.STR, "player_creator_name", "");
-	private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME_PROPERTY.create(this);
+
+	private static final Property<String> NAME = new Property<>(Property.Type.STR, "name", "");
+	private static final Property<String> PLAYER_CREATOR_NAME = new Property<>(Property.Type.STR, "player_creator_name", "");
 	private static final Property<String> DATE = new Property<>(Property.Type.STR, "date", "");
-	private final Value<String> creationDate = DATE.create(this);
-    private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
+	private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox", AITDimensions.TARDIS_DIM_WORLD);
 	private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks", new HashSet<>());
-	private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
-	private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
 	private static final BoolProperty SECURITY = new BoolProperty("security", false);
-	private final BoolValue security = SECURITY.create(this);
 	private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
+
+	private final Value<String> tardisName = NAME.create(this);
+	private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME.create(this);
+	private final Value<String> creationDate = DATE.create(this);
+    private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
+	private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
+	private final BoolValue security = SECURITY.create(this);
 	private final BoolValue hailMary = HAIL_MARY.create(this);
 
 	public StatsHandler() {
@@ -60,8 +62,8 @@ public class StatsHandler extends KeyedTardisComponent {
 	public void onLoaded() {
 		skybox.of(this, SKYBOX);
 		unlocks.of(this, UNLOCKS);
-		tardisName.of(this, NAME_PROPERTY);
-		playerCreatorName.of(this, PLAYER_CREATOR_NAME_PROPERTY);
+		tardisName.of(this, NAME);
+		playerCreatorName.of(this, PLAYER_CREATOR_NAME);
 		creationDate.of(this, DATE);
 		security.of(this, SECURITY);
 		hailMary.of(this, HAIL_MARY);
@@ -80,7 +82,6 @@ public class StatsHandler extends KeyedTardisComponent {
 	}
 
 	private void unlock(Unlockable unlockable, boolean sync) {
-		// TODO implement native v2 collection properties to avoid this
 		this.unlocks.flatMap(strings -> {
 			strings.add(unlockable.id().toString());
 			return strings;
@@ -176,7 +177,7 @@ public class StatsHandler extends KeyedTardisComponent {
 		Tardis tardis = this.tardis();
 
 		if (creationDate.get() == null) {
-			AITMod.LOGGER.error(tardis.getUuid().toString() + " was missing creation date! Resetting to now");
+            AITMod.LOGGER.error("{} was missing creation date! Resetting to now", tardis.getUuid().toString());
 			markCreationDate();
 		}
 
@@ -185,7 +186,7 @@ public class StatsHandler extends KeyedTardisComponent {
 		try {
 			return DateFormat.getDateTimeInstance(DateFormat.LONG, 3).parse(date);
 		} catch (Exception e) {
-			AITMod.LOGGER.error("Failed to parse date from " + date);
+            AITMod.LOGGER.error("Failed to parse date from {}", date);
 			this.markCreationDate();
 
 			return Date.from(Instant.now());

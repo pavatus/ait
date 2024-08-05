@@ -12,28 +12,24 @@ import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
-import loqor.ait.tardis.data.properties.integer.IntProperty;
-import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector2i;
 
 import java.util.Random;
 
 public class EngineHandler extends KeyedTardisComponent {
 
+    private static final Vector2i ZERO = new Vector2i();
+
     private static final BoolProperty POWER = new BoolProperty("power", false);
-    private static final BoolProperty HAS_ENGINE_CORE = new BoolProperty("has_engine_core", false);
-    private static final IntProperty ENGINE_CORE_X = new IntProperty("engine_core_x", 0);
-    private static final IntProperty ENGINE_CORE_Z = new IntProperty("engine_core_z", 0);
+    private static final Property<Vector2i> ENGINE_CORE_POS = new Property<>(Property.Type.VEC2I, "engine_core_pos", (Vector2i) null);
 
     private final BoolValue power = POWER.create(this);
-    private final BoolValue hasEngineCore = HAS_ENGINE_CORE.create(this);
-    private final IntValue engineCorePositionX = ENGINE_CORE_X.create(this);
-    private final IntValue engineCorePositionZ = ENGINE_CORE_Z.create(this);
+    private final Value<Vector2i> engineCorePos = ENGINE_CORE_POS.create(this);
 
     public EngineHandler() {
         super(Id.ENGINE);
@@ -46,21 +42,25 @@ public class EngineHandler extends KeyedTardisComponent {
     @Override
     public void onLoaded() {
         power.of(this, POWER);
-        hasEngineCore.of(this, HAS_ENGINE_CORE);
-        engineCorePositionX.of(this, ENGINE_CORE_X);
-        engineCorePositionZ.of(this, ENGINE_CORE_Z);
+        engineCorePos.of(this, ENGINE_CORE_POS);
     }
 
-    public Value<Boolean> hasEngineCore() {
-        return hasEngineCore;
+    public boolean hasEngineCore() {
+        return engineCorePos.get() != null;
     }
 
-    public Value<Integer> engineCorePositionX() {
-        return engineCorePositionX;
+    public Vector2i getCorePos() {
+        Vector2i result = engineCorePos.get();
+        return result != null ? result : ZERO;
     }
 
-    public Value<Integer> engineCorePositionZ() {
-        return engineCorePositionZ;
+    public void linkEngine(int x, int z) {
+        engineCorePos.set(new Vector2i(x, z));
+    }
+
+    public void unlinkEngine() {
+        engineCorePos.set((Vector2i) null);
+        this.disablePower();
     }
 
     public boolean hasPower() {
@@ -97,7 +97,7 @@ public class EngineHandler extends KeyedTardisComponent {
         // disabling protocols
         tardis.travel().antigravs().set(false);
         tardis.stats().hailMary().set(false);
-        tardis.<HadsHandler>handler(Id.HADS).hads().set(false);
+        tardis.<HadsHandler>handler(Id.HADS).enabled().set(false);
     }
 
     public void enablePower() {
@@ -107,10 +107,9 @@ public class EngineHandler extends KeyedTardisComponent {
         if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
             return; // cant enable power if not enough fuel
 
-        if (this.tardis.siege().isActive())
-            this.tardis.siege().setActive(false);
+        this.tardis.siege().setActive(false);
 
-        if (!this.hasEngineCore.get())
+        if (!this.hasEngineCore())
             return;
 
         this.power.set(true);
@@ -134,11 +133,5 @@ public class EngineHandler extends KeyedTardisComponent {
         world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos())
                 .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
         );
-    }
-
-    public Vec3d engineCorePosition() {
-        return new Vec3d(this.engineCorePositionX.get(),
-                0,
-                this.engineCorePositionZ.get());
     }
 }

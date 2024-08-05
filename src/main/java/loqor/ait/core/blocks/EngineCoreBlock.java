@@ -3,14 +3,11 @@ package loqor.ait.core.blocks;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ConduitBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -31,7 +28,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("deprecation")
 public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
+
     public static final BooleanProperty WATERLOGGED;
     protected static final VoxelShape SHAPE;
 
@@ -40,10 +39,12 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
         this.setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, true));
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(WATERLOGGED);
     }
 
+    @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EngineCoreBlockEntity(pos, state);
     }
@@ -53,41 +54,45 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
         return checkType(type, AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, world.isClient ? EngineCoreBlockEntity::clientTick : EngineCoreBlockEntity::serverTick);
     }
 
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
+        if (state.get(WATERLOGGED))
             world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
 
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
             world.breakBlock(pos, !((PlayerEntity) placer).isCreative());
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.ENGINE_CORE_BLOCK)));
             return;
         }
+
         super.onPlaced(world, pos, state, placer, itemStack);
     }
 
-
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (world.getBlockEntity(pos) instanceof EngineCoreBlockEntity engineCoreBlockEntity) {
+        if (world.getBlockEntity(pos) instanceof EngineCoreBlockEntity engineCoreBlockEntity)
             engineCoreBlockEntity.onBreak(world, pos, state, player);
-        }
+
         super.onBreak(world, pos, state, player);
     }
 
@@ -97,6 +102,7 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
         return this.getDefaultState().with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
 
+    @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }

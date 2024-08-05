@@ -1,19 +1,13 @@
 package loqor.ait.core.blockentities;
 
-import com.google.common.collect.Lists;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.EngineHandler;
-import loqor.ait.tardis.link.LinkableBlockEntity;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
@@ -26,97 +20,57 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
+public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
 
-public class EngineCoreBlockEntity extends LinkableBlockEntity {
+    private final List<BlockPos> activatingBlocks = new ArrayList<>();
+
     public int ticks;
     private float ticksActive;
-    private boolean active;
-    private boolean eyeOpen;
-    private final List<BlockPos> activatingBlocks = Lists.newArrayList();
-    @Nullable
-    private LivingEntity targetEntity;
-    @Nullable
-    private UUID targetUuid;
+
     private long nextAmbientSoundTime;
+    private boolean active;
 
     public EngineCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, pos, state);
-    }
-
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        if (nbt.containsUuid("Target")) {
-            this.targetUuid = nbt.getUuid("Target");
-        } else {
-            this.targetUuid = null;
-        }
-
-    }
-
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        if (this.targetEntity != null) {
-            nbt.putUuid("Target", this.targetEntity.getUuid());
-        }
-
-    }
-
-    @Override
-    public Optional<Tardis> findTardis() {
-        if (this.tardisId == null && this.hasWorld()) {
-            assert this.getWorld() != null;
-            Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-            if (found != null)
-                this.setTardis(found);
-        }
-        return super.findTardis();
     }
 
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
 
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.createNbt();
-    }
-
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD
+                || !blockEntity.isLinked())
+            return;
 
-        if(blockEntity.findTardis().isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) return;
-
-        ++blockEntity.ticks;
+        blockEntity.ticks++;
         long l = world.getTime();
+
         List<BlockPos> list = blockEntity.activatingBlocks;
-        if (l % 40L == 0L) {
+
+        if (l % 40L == 0L)
             blockEntity.active = updateActivatingBlocks(world, pos, list);
-            openEye(blockEntity, list);
-        }
 
-        updateTargetEntity(world, pos, blockEntity);
-        spawnNautilusParticles(world, pos, list, blockEntity.targetEntity, blockEntity.ticks);
-        if (blockEntity.isActive()) {
+        spawnNautilusParticles(world, pos, list, blockEntity.ticks);
+
+        if (blockEntity.isActive())
             ++blockEntity.ticksActive;
-        }
-
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
-        Optional<Tardis> tardis = blockEntity.findTardis();
-
-        if(tardis.isEmpty() || world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || !blockEntity.isLinked())
             return;
 
-        ++blockEntity.ticks;
+        blockEntity.ticks++;
         long l = world.getTime();
+
         List<BlockPos> list = blockEntity.activatingBlocks;
+
         if (l % 40L == 0L) {
             boolean bl = updateActivatingBlocks(world, pos, list);
 
@@ -124,17 +78,13 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 SoundEvent soundEvent = bl ? SoundEvents.BLOCK_CONDUIT_ACTIVATE : SoundEvents.BLOCK_CONDUIT_DEACTIVATE;
                 world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                tardis.get().engine().hasEngineCore().set(bl);
-                tardis.get().engine().engineCorePositionX().set(pos.getX());
-                tardis.get().engine().engineCorePositionZ().set(pos.getZ());
+                blockEntity.tardis().get().engine().linkEngine(pos.getX(), pos.getZ());
             }
 
             blockEntity.active = bl;
-            openEye(blockEntity, list);
 
-            if (bl) {
+            if (bl)
                 givePlayersEffects(world, pos, list);
-            }
         }
 
         if (blockEntity.isActive()) {
@@ -147,10 +97,6 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 world.playSound(null, pos, SoundEvents.BLOCK_CONDUIT_AMBIENT_SHORT, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
-    }
-
-    private static void openEye(EngineCoreBlockEntity blockEntity, List<BlockPos> activatingBlocks) {
-        blockEntity.setEyeOpen(!activatingBlocks.isEmpty()); // @TODO: do not forget to change this for release
     }
 
     private static boolean updateActivatingBlocks(World world, BlockPos pos, List<BlockPos> activatingBlocks) {
@@ -188,32 +134,7 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         }
     }
 
-    private static void updateTargetEntity(World world, BlockPos pos, EngineCoreBlockEntity blockEntity) {
-        if (blockEntity.targetUuid == null) {
-            blockEntity.targetEntity = null;
-        } else if (blockEntity.targetEntity == null || !blockEntity.targetEntity.getUuid().equals(blockEntity.targetUuid)) {
-            blockEntity.targetEntity = findTargetEntity(world, pos, blockEntity.targetUuid);
-            if (blockEntity.targetEntity == null) {
-                blockEntity.targetUuid = null;
-            }
-        }
-
-    }
-
-    private static Box getAttackZone(BlockPos pos) {
-        int i = pos.getX();
-        int j = pos.getY();
-        int k = pos.getZ();
-        return (new Box(i,j,k,(i + 1),(j + 1), k + 1)).expand(8.0);
-    }
-
-    @Nullable
-    private static LivingEntity findTargetEntity(World world, BlockPos pos, UUID uuid) {
-        List<LivingEntity> list = world.getEntitiesByClass(LivingEntity.class, getAttackZone(pos), (entity) -> entity.getUuid().equals(uuid));
-        return list.size() == 1 ? list.get(0) : null;
-    }
-
-    private static void spawnNautilusParticles(World world, BlockPos pos, List<BlockPos> activatingBlocks, @Nullable Entity entity, int ticks) {
+    private static void spawnNautilusParticles(World world, BlockPos pos, List<BlockPos> activatingBlocks, int ticks) {
         Random random = world.random;
         double d = MathHelper.sin((float)(ticks + 35) * 0.1F) / 2.0F + 0.5F;
         d = (d * d + d) * 0.30000001192092896;
@@ -231,28 +152,10 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
                 world.addParticle(ParticleTypes.NAUTILUS, vec3d.x, vec3d.y, vec3d.z, f, g, h);
             }
         }
-
-        if (entity != null) {
-            Vec3d vec3d2 = new Vec3d(entity.getX(), entity.getEyeY(), entity.getZ());
-            float i = (-0.5F + random.nextFloat()) * (3.0F + entity.getWidth());
-            float j = -1.0F + random.nextFloat() * entity.getHeight();
-            f = (-0.5F + random.nextFloat()) * (3.0F + entity.getWidth());
-            Vec3d vec3d3 = new Vec3d(i, j, f);
-            world.addParticle(ParticleTypes.NAUTILUS, vec3d2.x, vec3d2.y, vec3d2.z, vec3d3.x, vec3d3.y, vec3d3.z);
-        }
-
     }
 
     public boolean isActive() {
         return this.active;
-    }
-
-    public boolean isEyeOpen() {
-        return this.eyeOpen;
-    }
-
-    private void setEyeOpen(boolean eyeOpen) {
-        this.eyeOpen = eyeOpen;
     }
 
     public float getRotation(float tickDelta) {
@@ -266,18 +169,8 @@ public class EngineCoreBlockEntity extends LinkableBlockEntity {
         if (!this.active)
             return;
 
-        Optional<Tardis> tardis = this.findTardis();
-
-        if (tardis.isEmpty())
-            return;
-
-        EngineHandler engine = tardis.get().engine();
-        engine.hasEngineCore().set(false);
-        engine.engineCorePositionX().set(0);
-        engine.engineCorePositionX().set(0);
-
-        if (engine.hasPower())
-            engine.disablePower();
+        if (this.isLinked())
+            this.tardis().get().engine().unlinkEngine();
     }
 
     public enum VortexEyeState {

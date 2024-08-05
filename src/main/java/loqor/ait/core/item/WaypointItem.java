@@ -5,7 +5,6 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.control.impl.waypoint.LoadWaypointControl;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.DyeableItem;
@@ -17,13 +16,14 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class WaypointItem extends Item implements DyeableItem {
+
+	public static final int DEFAULT_COLOR = 16777215;
 	public static final String POS_KEY = "pos";
 
 	public WaypointItem(Settings settings) {
@@ -74,7 +74,7 @@ public class WaypointItem extends Item implements DyeableItem {
 		if (nbt != null && nbt.contains(COLOR_KEY, NbtElement.NUMBER_TYPE))
 			return nbt.getInt(COLOR_KEY);
 
-		return 16777215; // white
+		return DEFAULT_COLOR; // white
 	}
 
 	public static ItemStack create(Waypoint pos) {

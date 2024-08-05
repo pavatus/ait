@@ -1,29 +1,22 @@
 package loqor.ait.client.renderers;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.TardisStarModel;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EnderDragonEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 
 public class TardisStar {
+
     public static final Identifier TARDIS_STAR_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_star.png");
     private static final float HALF_SQRT_3 = (float)(Math.sqrt(3.0) / 2.0);
-    private float value = 0;
 
     public void renderStar(WorldRenderContext context, Tardis tardis) {
         Camera camera = context.camera();
@@ -34,16 +27,16 @@ public class TardisStar {
             return;
 
         Vec3d cameraPos = camera.getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().engineCorePosition().x, context.world().getBottomY() -90, tardis.engine().engineCorePosition().z);
+        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(), context.world().getBottomY() -90, tardis.engine().getCorePos().y());
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
         matrixStack.translate(
-                tardis.engine().hasEngineCore().get() ? diff.x - .5: 0,
+                tardis.engine().hasEngineCore() ? diff.x - .5: 0,
                 diff.y,
-                tardis.engine().hasEngineCore().get() ? diff.z - .5 : 0);
+                tardis.engine().hasEngineCore() ? diff.z - .5 : 0);
         matrixStack.scale(20f, 20f, 20f);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(((float)MinecraftClient.getInstance().player.age / 200.0f) * 360f));
@@ -62,7 +55,7 @@ public class TardisStar {
         MatrixStack matrixStack = new MatrixStack();
         VertexConsumerProvider provider = context.consumers();
         Vec3d cameraPos = context.camera().getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().engineCorePosition().x, context.world().getBottomY() - 90, tardis.engine().engineCorePosition().z);
+        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(), context.world().getBottomY() - 90, tardis.engine().getCorePos().y());
         Vec3d diff = targetPos.subtract(cameraPos);
 
         if (provider == null)
@@ -76,9 +69,9 @@ public class TardisStar {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
         matrixStack.translate(
-                tardis.engine().hasEngineCore().get() ? diff.x - .5: 0,
+                tardis.engine().hasEngineCore() ? diff.x - .5: 0,
                 diff.y,
-                tardis.engine().hasEngineCore().get() ? diff.z - .5: 0);
+                tardis.engine().hasEngineCore() ? diff.z - .5: 0);
         if (!tardis.isRefueling())
             matrixStack.scale(4, 4, 4);
         else
@@ -126,6 +119,6 @@ public class TardisStar {
     }
 
     public static void putDeathLightPositiveZTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
-        buffer.vertex(matrix, 0.0f, radius, 1.0f * width).color(255, 154, 0, 0).next();
+        buffer.vertex(matrix, 0.0f, radius, width).color(255, 154, 0, 0).next();
     }
 }
