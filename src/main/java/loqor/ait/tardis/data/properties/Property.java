@@ -123,10 +123,4 @@ public class Property<T> {
             return o.get() == null ? NULL : UPDATE;
         }
     }
-
-    @Deprecated(forRemoval = true)
-    public static <T> T warnCompat(String name, T val) {
-        AITMod.LOGGER.warn("Property {} needs to get v1 compatibility!", name);
-        return val;
-    }
 }
