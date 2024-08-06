@@ -10,6 +10,8 @@ import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.util.EnumSet;
+import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -29,7 +31,9 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class KeyItem extends LinkableItem {
 
@@ -37,14 +41,21 @@ public class KeyItem extends LinkableItem {
 
 	public KeyItem(Settings settings, Protocols... abs) {
 		super(settings.maxCount(1), true);
-		this.protocols = EnumSet.copyOf(List.of(abs));
+
+		this.protocols = new EnumSet<>(Protocols::values);
+		this.protocols.addAll(abs);
 	}
 
-	public enum Protocols {
+	public enum Protocols implements Ordered {
 		SNAP,
 		HAIL,
 		PERCEPTION,
-		SKELETON
+		SKELETON;
+
+		@Override
+		public int index() {
+			return ordinal();
+		}
 	}
 
 	public boolean hasProtocol(Protocols var) {

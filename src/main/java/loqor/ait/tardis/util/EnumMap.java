@@ -1,7 +1,5 @@
 package loqor.ait.tardis.util;
 
-import loqor.ait.tardis.base.TardisComponent;
-
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Supplier;
