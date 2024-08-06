@@ -54,7 +54,9 @@ public class TardisStar {
     }
 
     public void renderShine(WorldRenderContext context, Tardis tardis) {
-        if (tardis.isGrowth()) return;
+        if (tardis.isGrowth())
+            return;
+
         MatrixStack matrixStack = new MatrixStack();
         VertexConsumerProvider provider = context.consumers();
         Vec3d cameraPos = context.camera().getPos();
