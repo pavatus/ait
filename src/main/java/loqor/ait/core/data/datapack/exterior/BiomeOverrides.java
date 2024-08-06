@@ -2,7 +2,6 @@ package loqor.ait.core.data.datapack.exterior;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import loqor.ait.core.data.datapack.DatapackExterior;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.util.EnumMap;
 import net.minecraft.util.Identifier;
@@ -45,6 +44,10 @@ public record BiomeOverrides(
         return new Builder();
     }
 
+    public static Builder builder(BiomeOverrides overrides) {
+        return new Builder(overrides);
+    }
+
     public static final Codec<BiomeOverrides> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Identifier.CODEC.optionalFieldOf("snowy").forGetter(o -> Optional.ofNullable(o.snowy)),
@@ -61,7 +64,16 @@ public record BiomeOverrides(
 
         private final EnumMap<BiomeHandler.BiomeType, Identifier> map = new EnumMap<>(() -> BiomeHandler.BiomeType.VALUES, Identifier[]::new);
 
-        private Builder() {
+        private Builder() { }
+
+        private Builder(BiomeOverrides overrides) {
+            this.with(BiomeHandler.BiomeType.SNOWY, overrides.snowy)
+                    .with(BiomeHandler.BiomeType.SCULK, overrides.sculk)
+                    .with(BiomeHandler.BiomeType.SANDY, overrides.sandy)
+                    .with(BiomeHandler.BiomeType.RED_SANDY, overrides.redSandy)
+                    .with(BiomeHandler.BiomeType.MUDDY, overrides.muddy)
+                    .with(BiomeHandler.BiomeType.CHORUS, overrides.chorus)
+                    .with(BiomeHandler.BiomeType.CHERRY, overrides.cherry);
         }
 
         public Builder with(BiomeHandler.BiomeType type, Identifier id) {
