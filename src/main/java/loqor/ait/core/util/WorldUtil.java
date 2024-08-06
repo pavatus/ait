@@ -78,43 +78,49 @@ public class WorldUtil {
 
     private static int findSafeMedianY(ServerWorld world, BlockPos pos) {
         BlockPos upCursor = pos;
+        BlockState floorUp = world.getBlockState(upCursor.down());
         BlockState curUp = world.getBlockState(upCursor);
         BlockState aboveUp = world.getBlockState(upCursor.up());
 
         BlockPos downCursor = pos;
+        BlockState floorDown = world.getBlockState(downCursor.down());
         BlockState curDown = world.getBlockState(downCursor);
         BlockState aboveDown = world.getBlockState(downCursor.down());
 
         while (true) {
-            if (isSafe(curUp, aboveUp))
+            if (isSafe(floorUp, curUp, aboveUp))
                 return upCursor.getY();
 
-            if (isSafe(curDown, aboveDown))
+            if (isSafe(floorDown, curDown, aboveDown))
                 return downCursor.getY();
 
             upCursor = upCursor.up();
             downCursor = downCursor.down();
 
+            floorUp = curUp;
             curUp = aboveUp;
             aboveUp = world.getBlockState(upCursor);
 
+            floorDown = curDown;
             curDown = aboveDown;
             aboveDown = world.getBlockState(downCursor);
         }
     }
 
     private static int findSafeBottomY(ServerWorld world, BlockPos pos) {
-        BlockPos cursor = pos.withY(world.getBottomY() + 1);
+        BlockPos cursor = pos.withY(world.getBottomY() + 2);
 
-        BlockState current = world.getBlockState(cursor.down());
-        BlockState above = world.getBlockState(cursor);
+        BlockState floor = world.getBlockState(cursor.down());
+        BlockState current = world.getBlockState(cursor);
+        BlockState above = world.getBlockState(cursor.up());
 
         while (true) {
-            if (isSafe(current, above))
+            if (isSafe(floor, current, above))
                 return cursor.getY();
 
             cursor = cursor.up();
 
+            floor = current;
             current = above;
             above = world.getBlockState(cursor);
         }
@@ -131,6 +137,10 @@ public class WorldUtil {
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 x & 15, z & 15
         ) + 1;
+    }
+
+    private static boolean isSafe(BlockState floor, BlockState block1, BlockState block2) {
+        return isFloor(floor) && !block1.blocksMovement() && !block2.blocksMovement();
     }
 
     private static boolean isSafe(BlockState block1, BlockState block2) {
