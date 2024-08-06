@@ -8,6 +8,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 public class AITModTags {
+
 	public static class Blocks {
 		public static final TagKey<Block> SONIC_INTERACTABLE = createTag("sonic_interactable");
 
@@ -23,6 +24,7 @@ public class AITModTags {
 		public static final TagKey<Item> CLUSTER_MAX_HARVESTABLES = createTag("cluster_max_harvestables");
 
 		public static final TagKey<Item> NO_BOP = createTag("no_bop");
+		public static final TagKey<Item> KEY = createTag("key");
 		public static final TagKey<Item> LINK = createTag("link"); // TODO use the tag instead of the item instanceof
 
 		private static TagKey<Item> createTag(String name) {

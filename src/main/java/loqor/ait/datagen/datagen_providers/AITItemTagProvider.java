@@ -38,5 +38,10 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 
 		getOrCreateTagBuilder(AITModTags.Items.HALF_RESPIRATORS)
 				.add(AITItems.FACELESS_RESPIRATOR);
+
+		getOrCreateTagBuilder(AITModTags.Items.KEY)
+				.add(AITItems.IRON_KEY, AITItems.GOLD_KEY,
+						AITItems.CLASSIC_KEY, AITItems.NETHERITE_KEY,
+						AITItems.SKELETON_KEY);
 	}
 }

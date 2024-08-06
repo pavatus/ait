@@ -3,6 +3,7 @@ package loqor.ait.core.item;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.AITModTags;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorHandler;
@@ -28,22 +29,22 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class KeyItem extends LinkableItem {
-	private final List<Protocols> protocols;
+
+	private final EnumSet<Protocols> protocols;
 
 	public KeyItem(Settings settings, Protocols... abs) {
 		super(settings.maxCount(1), true);
-		this.protocols = List.of(abs);
+		this.protocols = EnumSet.copyOf(List.of(abs));
 	}
 
 	public enum Protocols {
 		SNAP,
 		HAIL,
-		PERCEPTION
+		PERCEPTION,
+		SKELETON
 	}
 
 	public boolean hasProtocol(Protocols var) {
@@ -51,26 +52,15 @@ public class KeyItem extends LinkableItem {
 	}
 
 	public static boolean isKeyInInventory(PlayerEntity player) {
-		return getFirstKeyStackInInventory(player) != null;
-	}
-
-	public static ItemStack getFirstKeyStackInInventory(PlayerEntity player) {
-		for (ItemStack itemStack : player.getInventory().main) {
-			if (!itemStack.isEmpty() && itemStack.getItem() instanceof KeyItem) {
-				return itemStack;
-			}
-		}
-
-		return null;
+		return player.getInventory().contains(AITModTags.Items.KEY);
 	}
 
 	public static Collection<ItemStack> getKeysInInventory(PlayerEntity player) {
 		List<ItemStack> items = new ArrayList<>();
 
 		for (ItemStack stack : player.getInventory().main) {
-			if (stack != null && stack.getItem() instanceof KeyItem) {
+			if (stack != null && stack.getItem() instanceof KeyItem)
 				items.add(stack);
-			}
 		}
 
 		return items;
@@ -80,13 +70,12 @@ public class KeyItem extends LinkableItem {
 		Collection<ItemStack> keys = getKeysInInventory(player);
 
 		for (ItemStack stack : keys) {
-			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
+			KeyItem key = (KeyItem) stack.getItem();
 
-			if (stack.getItem() == AITItems.SKELETON_KEY)
+			if (key.hasProtocol(Protocols.SKELETON))
 				return true;
 
-			if (found == null)
-				continue;
+			Tardis found = KeyItem.getTardis(player.getWorld(), stack);
 
 			if (found == tardis)
 				return true;
@@ -97,8 +86,6 @@ public class KeyItem extends LinkableItem {
 
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-		super.inventoryTick(stack, world, entity, slot, selected);
-
 		if (!(entity instanceof ServerPlayerEntity player))
 			return;
 
