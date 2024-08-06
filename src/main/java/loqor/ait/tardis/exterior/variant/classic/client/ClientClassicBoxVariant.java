@@ -18,7 +18,8 @@ public abstract class ClientClassicBoxVariant extends ClientExteriorVariantSchem
 
 	protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
 			.with(type -> type.getTexture(CATEGORY_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
-					BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY
+					BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
+					BiomeHandler.BiomeType.SANDY
 			).build();
 
 

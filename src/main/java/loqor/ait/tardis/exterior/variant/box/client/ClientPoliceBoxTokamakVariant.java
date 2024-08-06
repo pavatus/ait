@@ -6,9 +6,11 @@ import org.joml.Vector3f;
 
 public class ClientPoliceBoxTokamakVariant extends ClientPoliceBoxVariant {
 
-	private static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
-			.with(type -> type.getTexture(CATEGORY_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
-					BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY
+	private final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
+			.with(type -> type.getTexture(CATEGORY_IDENTIFIER), BiomeHandler.BiomeType.CHERRY,
+					BiomeHandler.BiomeType.SANDY, BiomeHandler.BiomeType.RED_SANDY
+			).with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.CHORUS,
+					BiomeHandler.BiomeType.SNOWY
 			).build();
 
 	public ClientPoliceBoxTokamakVariant() {
