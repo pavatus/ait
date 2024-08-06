@@ -16,10 +16,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static loqor.ait.core.data.base.Exclude.Strategy.NETWORK;
+
 public class MoodHandler extends TardisComponent implements TardisTickable {
-
-    @Exclude public TardisMood.Moods[] priorityMoods;
-
+    @Exclude(strategy = NETWORK) public TardisMood.Moods[] priorityMoods;
     @Exclude private MoodDictatedEvent moodEvent;
     @Exclude private TardisMood.Moods winningMood;
 
