@@ -80,7 +80,9 @@ public class DataCommand {
         Value<T> value = keyed.getPropertyData().getExact(valueName);
         T obj = value.get();
 
-        source.sendMessage(Text.translatable("command.ait.data.get", valueName, obj.toString()));
+        String json = ServerTardisManager.getInstance().getFileGson().toJson(obj);
+
+        source.sendMessage(Text.translatable("command.ait.data.get", valueName, json));
         return Command.SINGLE_SUCCESS;
     }
 
