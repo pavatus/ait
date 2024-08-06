@@ -108,7 +108,7 @@ public class AITModClient implements ClientModInitializer {
         });
         */
 
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
+        WorldRenderEvents.LAST.register(context -> {
             if (!ClientTardisUtil.isPlayerInATardis())
                 return;
 
