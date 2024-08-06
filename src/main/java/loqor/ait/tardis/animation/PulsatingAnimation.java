@@ -1,6 +1,5 @@
 package loqor.ait.tardis.animation;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.tardis.Tardis;
@@ -50,11 +49,8 @@ public class PulsatingAnimation extends ExteriorAnimation {
 		if (timeLeft != maxTime && timeLeft % PULSE_LENGTH == 0)
 			pulses++;
 
-		float alpha = (float) ((float) (pulses / Math.floor((double) maxTime / PULSE_LENGTH))
+        return (float) ((float) (pulses / Math.floor((double) maxTime / PULSE_LENGTH))
                         + (Math.cos(timeLeft * frequency) * intensity));
-
-		AITMod.LOGGER.info("alpha: {}; time left {}; pulses: {}", alpha, timeLeft, pulses);
-		return alpha;
 	}
 
 	@Override
