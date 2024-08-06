@@ -16,18 +16,23 @@ import org.joml.Matrix4f;
 public class TardisStar {
 
     public static final Identifier TARDIS_STAR_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_star.png");
-    private static final float HALF_SQRT_3 = (float)(Math.sqrt(3.0) / 2.0);
+    private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0) / 2.0);
 
-    public void renderStar(WorldRenderContext context, Tardis tardis) {
+    public static void render(WorldRenderContext context, Tardis tardis) {
+        renderStar(context, tardis);
+        renderShine(context, tardis);
+    }
+
+    public static void renderStar(WorldRenderContext context, Tardis tardis) {
         Camera camera = context.camera();
-
         VertexConsumerProvider provider = context.consumers();
 
-        if (provider == null)
-            return;
-
         Vec3d cameraPos = camera.getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(), context.world().getBottomY() -90, tardis.engine().getCorePos().y());
+        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
+                context.world().getBottomY() -90,
+                tardis.engine().getCorePos().y()
+        );
+
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
@@ -53,18 +58,20 @@ public class TardisStar {
                 tardis.isGrowth() ? 0.1f : 1, tardis.isGrowth() ? 0.1f : 1, 1f);
     }
 
-    public void renderShine(WorldRenderContext context, Tardis tardis) {
+    public static void renderShine(WorldRenderContext context, Tardis tardis) {
         if (tardis.isGrowth())
             return;
 
         MatrixStack matrixStack = new MatrixStack();
         VertexConsumerProvider provider = context.consumers();
-        Vec3d cameraPos = context.camera().getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(), context.world().getBottomY() - 90, tardis.engine().getCorePos().y());
-        Vec3d diff = targetPos.subtract(cameraPos);
 
-        if (provider == null)
-            return;
+        Vec3d cameraPos = context.camera().getPos();
+        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
+                context.world().getBottomY() - 90,
+                tardis.engine().getCorePos().y()
+        );
+
+        Vec3d diff = targetPos.subtract(cameraPos);
 
         float l = (MinecraftClient.getInstance().getTickDelta() / 50120L);
         float sinFunc = (float) (Math.sin(l) * 0.5f + 0.5f);
@@ -74,27 +81,32 @@ public class TardisStar {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
         matrixStack.translate(
-                tardis.engine().hasEngineCore() ? diff.x - .5: 0,
+                tardis.engine().hasEngineCore() ? diff.x - .5 : 0,
                 diff.y,
-                tardis.engine().hasEngineCore() ? diff.z - .5: 0);
+                tardis.engine().hasEngineCore() ? diff.z - .5 : 0);
         if (!tardis.isRefueling())
             matrixStack.scale(4, 4, 4);
         else
             matrixStack.scale(4 + sinFunc, 4 + sinFunc, 4 + sinFunc);
+
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200f) * 360f));
+
         float m = Math.min(l > 0.8f ? (l - 0.8f) / 0.2f : 0.0f, 1.0f);
-        int n = 0;
-        while ((float)n < (0.5) / 2.0f * 120.0f) {
+
+        for (int n = 0; n < 30; n++) {
             matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((random.nextFloat() * 360.0f)));
             matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((random.nextFloat() * 360.0f)));
             matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((random.nextFloat() * 360.0f)));
             matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((random.nextFloat() * 360.0f)));
             matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((random.nextFloat() * 360.0f)));
             matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((random.nextFloat() * 360.0f + l * 90.0f)));
+
             float o = random.nextFloat() * 10.0f + 10.0f + m * 10.0f;
             float p = random.nextFloat() * 0.5f + 1.0f + m * 2.0f;
+
             Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
             int q = (int)(255f * (1.0f - m));
+
             TardisStar.putDeathLightSourceVertex(vertexConsumer4, matrix4f, q);
             TardisStar.putDeathLightNegativeXTerminalVertex(vertexConsumer4, matrix4f, o, p);
             TardisStar.putDeathLightPositiveXTerminalVertex(vertexConsumer4, matrix4f, o, p);
@@ -107,7 +119,6 @@ public class TardisStar {
             TardisStar.putDeathLightSourceVertex(vertexConsumer4, matrix4f, q);
             TardisStar.putDeathLightPositiveZTerminalVertex(vertexConsumer4, matrix4f, o, p);
             TardisStar.putDeathLightPositiveZTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            n++;
         }
     }
 

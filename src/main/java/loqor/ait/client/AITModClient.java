@@ -108,7 +108,7 @@ public class AITModClient implements ClientModInitializer {
         });
         */
 
-        WorldRenderEvents.END.register(context -> {
+        WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             if (!ClientTardisUtil.isPlayerInATardis())
                 return;
 
@@ -117,9 +117,7 @@ public class AITModClient implements ClientModInitializer {
             if (tardis == null)
                 return;
 
-            TardisStar star = new TardisStar();
-            star.renderStar(context, tardis);
-            star.renderShine(context, tardis);
+            TardisStar.render(context, tardis);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(OPEN_SCREEN, (client, handler, buf, responseSender) -> {
