@@ -132,7 +132,7 @@ public class MonitorScreen extends ConsoleScreen {
 			whichDirectionVariant(true);
 		}, this.textRenderer));
 		Text desktopSettingsText = Text.literal("⚙");
-		this.addButton(new PressableTextWidget((width / 2 + 2), (height / 2 + 7),
+		this.addButton(new PressableTextWidget((width / 2 - 6), (height / 2 + 57),
 				this.textRenderer.getWidth(desktopSettingsText), 10, Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.WHITE), button -> toInteriorSettingsScreen(), this.textRenderer));
 		this.buttons.forEach(buttons -> {
 			// buttons.visible = false;
@@ -230,9 +230,6 @@ public class MonitorScreen extends ConsoleScreen {
 		else
 			context.drawTexture(TEXTURE, this.buttons.get(0).getX() - 11, this.buttons.get(0).getY() - 5, 40, 186, 53, 20);
 
-		// around the battery
-		// context.drawTexture(TEXTURE, i + 1, j + 129, 0, this.tardis().getFuel() > 250 ? 150 : 165, 99, 15);
-
 		// arrow buttons
 		if (!this.buttons.get(1).isHovered())
 			context.drawTexture(TEXTURE, this.buttons.get(1).getX() - 7, this.buttons.get(1).getY() - 5, 0, 166, 20, 20);
@@ -255,12 +252,7 @@ public class MonitorScreen extends ConsoleScreen {
 		else
 			context.drawTexture(TEXTURE, this.buttons.get(5).getX() - 7, this.buttons.get(5).getY() - 5, 186, 186, 20, 20);
 
-		// fuel markers @TODO come back and actually do the rest of it with the halves and the red parts too
-		/*for (int p = 0; p < Math.round((this.tardis().getFuel() / FuelData.TARDIS_MAX_FUEL) * 12); ++p) {
-			context.drawTexture(TEXTURE, i + 3 + (8 * p), j + 131, 99, 150, 7, 11);
-		}*/
-
-		context.drawTexture(TEXTURE, i + 30, j + 144, 0, this.tardis().getFuel() > (FuelHandler.TARDIS_MAX_FUEL / 4) ? 225 : 234,
+		context.drawTexture(TEXTURE, i + 16, j + 144, 0, this.tardis().getFuel() > (FuelHandler.TARDIS_MAX_FUEL / 4) ? 225 : 234,
 				(int) (85 * this.tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL), 9);
 
         int progress = this.tardis().travel().getDurationAsPercentage();
@@ -278,7 +270,7 @@ public class MonitorScreen extends ConsoleScreen {
 				uvOffset = UV_BASE;
 			}
 
-            context.drawTexture(TEXTURE, i + 25 + (index * 19), j + 113,
+            context.drawTexture(TEXTURE, i + 11 + (index * 19), j + 113,
                     this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
                             ? progress >= 100 ? 76 : uvOffset : UV_BASE, 206, 19, 19
             );
@@ -328,17 +320,12 @@ public class MonitorScreen extends ConsoleScreen {
 
 		context.drawCenteredTextWithShadow(
 				this.textRenderer, variant.parent().text(), (centerWidth +70),
-				(centerHeight + 64), 5636095
-		);
-
-		context.drawCenteredTextWithShadow(
-				this.textRenderer, Text.literal("AIT"), (centerWidth +70),
-				(centerHeight + 34), 5636095
-		);
-
-		context.drawCenteredTextWithShadow(
-				this.textRenderer, Text.literal("Native Variants"), (centerWidth +70),
 				(centerHeight + 44), 5636095
+		);
+
+		context.drawCenteredTextWithShadow(
+				this.textRenderer, variant.parent().id().getNamespace().toUpperCase(), (centerWidth +70),
+				(centerHeight + 34), 5636095
 		);
 
         stack.pop();
@@ -421,14 +408,14 @@ public class MonitorScreen extends ConsoleScreen {
         String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
 
         // position
-		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 119), (height / 2 - 72), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, dimensionText, (width / 2 - 119), (height / 2 - 62), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 112), (height / 2 - 52), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 119), (height / 2 - 48), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, dimensionText, (width / 2 - 119), (height / 2 - 38), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 119), (height / 2 - 28), 0xFFFFFF, true);
 
 		// destination
-		context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 119), (height / 2 - 7), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, dDimensionText, (width / 2 - 119), (height / 2 + 3), 0xFFFFFF, true);
-		context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 112), (height / 2 + 13), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 119), (height / 2 - 10), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, dDimensionText, (width / 2 - 119), (height / 2), 0xFFFFFF, true);
+		context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 119), (height / 2 + 10), 0xFFFFFF, true);
     }
 
 	@Override
