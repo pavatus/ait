@@ -1,6 +1,6 @@
 package loqor.ait.api;
 
-import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
@@ -13,14 +13,14 @@ public interface WorldWithTardis {
 
     boolean ait$hasTardis();
 
-    final class Lookup extends HashMap<ChunkPos, Set<Tardis>> {
+    final class Lookup extends HashMap<ChunkPos, Set<ServerTardis>> {
 
-        public void put(ChunkPos pos, Tardis tardis) {
+        public void put(ChunkPos pos, ServerTardis tardis) {
             this.computeIfAbsent(pos, chunkPos -> new HashSet<>()).add(tardis);
         }
 
-        public void remove(ChunkPos pos, Tardis tardis) {
-            Set<Tardis> set = this.get(pos);
+        public void remove(ChunkPos pos, ServerTardis tardis) {
+            Set<ServerTardis> set = this.get(pos);
 
             if (set == null)
                 return;

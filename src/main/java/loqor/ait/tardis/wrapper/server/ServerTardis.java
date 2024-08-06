@@ -4,6 +4,7 @@ import com.google.gson.InstanceCreator;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -34,12 +35,23 @@ import java.util.UUID;
 
 public class ServerTardis extends Tardis {
 
+	@Exclude
+	private boolean removed;
+
 	public ServerTardis(UUID uuid, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
 		super(uuid, new ServerTardisDesktop(schema), new TardisExterior(variantType));
 	}
 
 	private ServerTardis() {
 		super();
+	}
+
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+
+	public boolean isRemoved() {
+		return removed;
 	}
 
 	public void sync() {

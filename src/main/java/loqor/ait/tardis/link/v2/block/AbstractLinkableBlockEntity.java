@@ -3,6 +3,7 @@ package loqor.ait.tardis.link.v2.block;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.v2.Linkable;
 import loqor.ait.tardis.link.v2.TardisRef;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -72,8 +73,9 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
         if (!(this.world instanceof ServerWorld serverWorld))
             return;
 
+
         ServerTardisManager.getInstance().unmark(
-                serverWorld, this.ref.get(), new ChunkPos(this.pos)
+                serverWorld, (ServerTardis) this.ref.get(), new ChunkPos(this.pos)
         );
     }
 
@@ -92,7 +94,7 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
     private void mark() {
         if (this.world instanceof ServerWorld serverWorld)
             ServerTardisManager.getInstance().mark(serverWorld,
-                    this.tardis().get(), new ChunkPos(this.pos));
+                    (ServerTardis) this.tardis().get(), new ChunkPos(this.pos));
     }
 
     private void handleLink() {

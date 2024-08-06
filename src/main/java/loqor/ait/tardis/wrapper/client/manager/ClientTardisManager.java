@@ -61,8 +61,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	}
 
 	private void remove(PacketByteBuf buf) {
-		UUID tardisid = buf.readUuid();
-		this.lookup.remove(tardisid);
+		this.lookup.remove(buf.readUuid());
 	}
 
 	@Override

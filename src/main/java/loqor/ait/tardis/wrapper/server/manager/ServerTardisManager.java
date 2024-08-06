@@ -2,7 +2,6 @@ package loqor.ait.tardis.wrapper.server.manager;
 
 import com.google.gson.GsonBuilder;
 import io.wispforest.owo.ops.WorldOps;
-import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
@@ -50,7 +49,7 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     private static ServerTardisManager instance;
     private final TardisFileManager<ServerTardis> fileManager = new TardisFileManager<>();
 
-    private final Set<Tardis> needsUpdate = new HashSet<>();
+    private final Set<ServerTardis> needsUpdate = new HashSet<>();
 
     public static void init() {
         instance = new ServerTardisManager();
@@ -65,26 +64,32 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
 
         TardisEvents.SYNC_TARDIS.register((player, chunk) -> {
             WorldWithTardis tardisWorld = (WorldWithTardis) chunk.getWorld();
-            Set<Tardis> set = tardisWorld.ait$lookup().get(chunk.getPos());
+            Set<ServerTardis> set = tardisWorld.ait$lookup().get(chunk.getPos());
 
             if (set == null)
                 return;
 
-            for (Tardis tardis : set) {
-                AITMod.LOGGER.debug("Sending tardis {} at chunk {}", tardis.getUuid(), chunk);
+            for (ServerTardis tardis : set) {
+                if (tardis.isRemoved())
+                    continue;
+
                 this.sendTardis(player, tardis);
             }
         });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerTardis tardis : this.lookup.values()) {
+                if (tardis.isRemoved())
+                    continue;
+
                 tardis.tick(server);
             }
         });
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
-            for (Tardis tardis : this.needsUpdate) {
-                long start = System.currentTimeMillis();
+            for (ServerTardis tardis : this.needsUpdate) {
+                if (tardis.isRemoved())
+                    continue;
 
                 DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
@@ -92,7 +97,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                     continue;
 
                 ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
-
                 ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
 
                 ThreadedAnvilChunkStorage storage = ((ServerChunkManagerAccessor) chunkManager)
@@ -106,9 +110,8 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                 for (ServerPlayerEntity player : players) {
                     sendTardis(player, tardis);
                 }
-
-                AITMod.LOGGER.debug("Updating tardis took {}ms", System.currentTimeMillis() - start);
             }
+
             this.needsUpdate.clear();
         });
     }
@@ -121,7 +124,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void sendTardis(ServerPlayerEntity player, Tardis tardis) {
-
         if (tardis == null)
             return;
 
@@ -133,18 +135,18 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     private void sendTardisRemoval(MinecraftServer server, Tardis tardis) {
-
         if (tardis == null)
             return;
 
         PacketByteBuf data = PacketByteBufs.create();
         data.writeUuid(tardis.getUuid());
 
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList())
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             ServerPlayNetworking.send(player, REMOVE, data);
+        }
     }
 
-    public void sendTardis(Tardis tardis) {
+    public void sendTardis(ServerTardis tardis) {
         if (tardis == null || this.networkGson == null)
             return;
 
@@ -155,11 +157,12 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
     }
 
     public void sendTardis(TardisComponent component) {
-        sendTardis(component.tardis()); // TODO
+        if (component.tardis() instanceof ServerTardis tardis)
+            sendTardis(tardis); // TODO
     }
 
     public void sendPropertyV2ToSubscribers(Tardis tardis, Value<?> value) {
-        sendTardis(tardis); // TODO
+        sendTardis((ServerTardis) tardis); // TODO
     }
 
     public void sendToSubscribers(ServerTardis tardis) {
@@ -173,16 +176,17 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         return tardis;
     }
 
-    public void remove(MinecraftServer server, Tardis tardis) {
+    public void remove(MinecraftServer server, ServerTardis tardis) {
+        tardis.setRemoved(true);
+
         ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
 
         // Remove the exterior if it exists
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
         if (exteriorPos != null) {
-            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
-                TardisUtil.teleportOutside(tardis, player);
-            });
+            TardisUtil.getPlayersInsideInterior(tardis).forEach(player ->
+                    TardisUtil.teleportOutside(tardis, player));
 
             World world = exteriorPos.getWorld();
             BlockPos pos = exteriorPos.getPos();
@@ -241,11 +245,11 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
         );
     }
 
-    public void mark(ServerWorld world, Tardis tardis, ChunkPos chunk) {
+    public void mark(ServerWorld world, ServerTardis tardis, ChunkPos chunk) {
         ((WorldWithTardis) world).ait$lookup().put(chunk, tardis);
     }
 
-    public void unmark(ServerWorld world, Tardis tardis, ChunkPos chunk) {
+    public void unmark(ServerWorld world, ServerTardis tardis, ChunkPos chunk) {
         WorldWithTardis withTardis = (WorldWithTardis) world;
 
         if (!withTardis.ait$hasTardis())
