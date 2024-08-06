@@ -1,6 +1,5 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.AITMod;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.ExteriorBlock;

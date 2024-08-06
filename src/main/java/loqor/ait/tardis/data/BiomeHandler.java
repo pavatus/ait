@@ -23,6 +23,7 @@ import java.util.function.Function;
  * TODO reminder to work on this more, making it so you have to brush off different biomes if you don't just demat/remat + having to land on the respective blocks / has to snow for it to take effect.
  */
 public class BiomeHandler extends KeyedTardisComponent {
+
     private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
     private final Value<BiomeType> type = TYPE.create(this);
 

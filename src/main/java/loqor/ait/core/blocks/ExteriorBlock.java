@@ -14,6 +14,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.RealFlightHandler;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import net.minecraft.block.*;
@@ -202,9 +203,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
-        TravelHandlerBase.State travelState = tardis.travel().getState();
+		TravelHandler travel = tardis.travel();
 
-        if (travelState == TravelHandlerBase.State.LANDED || ((ExteriorBlockEntity) blockEntity).getAlpha() > 0.75)
+        if (travel.getState() == TravelHandlerBase.State.LANDED
+				|| travel.getAnimTicks() >= 0.75 * travel.getMaxAnimTicks())
             return getNormalShape(state);
 
 		if (DependencyChecker.hasPortals()) {
@@ -357,11 +359,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         Tardis tardis = this.findTardis(((ServerWorld) world), pos);
 
-        if (tardis == null) {
+        if (tardis == null)
             return;
-        }
 
-        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+        tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
     }
 
 	private static boolean canFallThrough(World world, BlockPos pos) {
