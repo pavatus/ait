@@ -2,12 +2,12 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.api.tardis.ArtronHolderItem;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.data.base.Exclude;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.bool.BoolValue;
+import loqor.ait.tardis.data.properties.Property;
+import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.entity.ItemEntity;
@@ -17,19 +17,15 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 public class SonicHandler extends KeyedTardisComponent implements ArtronHolderItem, TardisTickable {
 
-	private static final BoolProperty HAS_CONSOLE_SONIC_PROPERTY = new BoolProperty("has_console_sonic", false);
-	private final BoolValue hasConsoleSonic = HAS_CONSOLE_SONIC_PROPERTY.create(this);
-	private static final BoolProperty HAS_EXTERIOR_SONIC_PROPERTY = new BoolProperty("has_exterior_sonic", false);
-	private final BoolValue hasExteriorSonic = HAS_EXTERIOR_SONIC_PROPERTY.create(this);
-	private ItemStack console; // The current sonic in the console
-	private ItemStack exterior; // The current sonic in the exterior's keyhole
+	private static final Property<ItemStack> CONSOLE_SONIC = new Property<>(Property.Type.ITEM_STACK, "console_sonic", (ItemStack) null);
+	private static final Property<ItemStack> EXTERIOR_SONIC = new Property<>(Property.Type.ITEM_STACK, "exterior_sonic", (ItemStack) null);
 
-	@Exclude
-	private int sfxTicks = 0; // Sonic use sound tick for exterior
+	private final Value<ItemStack> consoleSonic = CONSOLE_SONIC.create(this); // The current sonic in the console
+	private final Value<ItemStack> exteriorSonic = EXTERIOR_SONIC.create(this); // The current sonic in the exterior's keyhole
 
 	public SonicHandler() {
 		super(Id.SONIC);
@@ -37,79 +33,61 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 
 	@Override
 	public void onLoaded() {
-		hasConsoleSonic.of(this, HAS_CONSOLE_SONIC_PROPERTY);
-		hasExteriorSonic.of(this, HAS_EXTERIOR_SONIC_PROPERTY);
-	}
-
-	public boolean hasConsoleSonic() {
-		return hasConsoleSonic.get();
+		consoleSonic.of(this, CONSOLE_SONIC);
+		exteriorSonic.of(this, EXTERIOR_SONIC);
 	}
 
 	public ItemStack getConsoleSonic() {
-		return console;
-	}
-
-	public boolean hasExteriorSonic() {
-		return hasExteriorSonic.get();
+		return this.consoleSonic.get();
 	}
 
 	public ItemStack getExteriorSonic() {
-		return exterior;
+		return this.exteriorSonic.get();
 	}
 
-	public void markHasConsoleSonic() {
-		hasConsoleSonic.set(true);
+	public void insertConsoleSonic(ItemStack sonic, BlockPos consolePos) {
+		insertAnySonic(this.consoleSonic, sonic, stack -> spawnItem(
+				TardisUtil.getTardisDimension(), consolePos, stack
+		));
 	}
 
-	public void clearConsoleSonicMark() {
-		hasConsoleSonic.set(false);
+	public void insertExteriorSonic(ItemStack sonic) {
+		insertAnySonic(this.exteriorSonic, sonic, stack -> spawnItem(
+				this.tardis.travel().position(), stack
+		));
 	}
 
-	public void markHasExteriorSonic() {
-		hasExteriorSonic.set(true);
+	public ItemStack takeConsoleSonic() {
+		return takeAnySonic(this.consoleSonic);
 	}
 
-	public void clearExteriorSonicMark() {
-		hasExteriorSonic.set(false);
+	public ItemStack takeExteriorSonic() {
+		return takeAnySonic(this.exteriorSonic);
 	}
 
-	/**
-	 * Sets the new sonic
-	 */
-	public void setConsoleSonic(ItemStack var, boolean spawnItem, BlockPos consolePos) {
-		Optional<ItemStack> prev = Optional.ofNullable(console);
+	private static ItemStack takeAnySonic(Value<ItemStack> value) {
+		ItemStack result = value.get();
+		value.set((ItemStack) null);
 
-		this.console = var;
-
-		if (spawnItem && prev.isPresent() && console != null)
-			spawnItem(consolePos, prev.get());
+		return result;
 	}
 
-	public void setExteriorSonic(ItemStack var, boolean spawnItem, BlockPos exteriorPos) {
-		Optional<ItemStack> prev = Optional.ofNullable(exterior);
+	private static void insertAnySonic(Value<ItemStack> value, ItemStack sonic, Consumer<ItemStack> spawner) {
+		value.flatMap(stack -> {
+			if (stack != null)
+				spawner.accept(stack);
 
-		this.exterior = var;
-
-		if (spawnItem && prev.isPresent() && console != null)
-			spawnItem(exteriorPos, prev.get());
+			return sonic;
+		});
 	}
 
-	public void clearExterior(boolean spawnItem, BlockPos exterior) {
-		this.setExteriorSonic(null, spawnItem, exterior);
-	}
-
-	public void spawnConsoleItem(BlockPos consolePos) {
-
-		SonicHandler.spawnItem(consolePos, console);
-
-		this.clearConsoleSonicMark();
-	}
-
-	public static void spawnItem(BlockPos pos, ItemStack sonic) {
-		World world = TardisUtil.getTardisDimension();
+	public static void spawnItem(World world, BlockPos pos, ItemStack sonic) {
 		ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), sonic);
-
 		world.spawnEntity(entity);
+	}
+
+	public static void spawnItem(DirectedGlobalPos.Cached cached, ItemStack sonic) {
+		spawnItem(cached.getWorld(), cached.getPos(), sonic);
 	}
 
 	@Override
@@ -119,10 +97,14 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 
 	@Override
 	public void tick(MinecraftServer server) {
-		if (this.hasConsoleSonic()) {
-			ItemStack sonic = this.console;
+		if (server.getTicks() % 10 != 0)
+			return;
 
-			if (this.hasMaxFuel(sonic))
+		ItemStack consoleSonic = this.consoleSonic.get();
+		ItemStack exteriorSonic = this.exteriorSonic.get();
+
+		if (consoleSonic != null) {
+			if (this.hasMaxFuel(consoleSonic))
 				return;
 
 			// Safe to get as ^ that method runs the check for us
@@ -131,14 +113,11 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 			if (!tardis.engine().hasPower())
 				return;
 
-			this.addFuel(1, sonic);
-			tardis.fuel().removeFuel(1);
+			this.addFuel(10, consoleSonic);
+			tardis.fuel().removeFuel(10);
 		}
 
-		if (this.hasExteriorSonic()) {
-			sfxTicks++;
-
-			ItemStack sonic = this.exterior;
+		if (exteriorSonic != null) {
 			ServerTardis tardis = (ServerTardis) this.tardis();
 
 			TardisCrashHandler crash = tardis.crash();
@@ -151,14 +130,12 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 
 			crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 5);
 
-			if (sfxTicks % SonicItem.SONIC_SFX_LENGTH == 0) {
+			if (server.getTicks() % SonicItem.SONIC_SFX_LENGTH == 0) {
 				tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
 						AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
 			}
 
-			this.removeFuel(1, sonic);
-		} else if (sfxTicks > 0) {
-			sfxTicks = 0;
+			this.removeFuel(10, exteriorSonic);
 		}
 	}
 }

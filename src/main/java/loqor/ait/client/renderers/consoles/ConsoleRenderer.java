@@ -6,7 +6,6 @@ import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.SonicHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -73,11 +72,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		matrices.pop();
 		profiler.swap("sonic"); // } emission / sonic {
-
-		if (!tardis.sonic().hasConsoleSonic()) {
-			profiler.pop(); // } sonic
-			return;
-		}
 
 		ItemStack stack = tardis.sonic().getConsoleSonic();
 

@@ -1,8 +1,8 @@
 package loqor.ait.tardis.data.properties;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -100,6 +100,9 @@ public class Property<T> {
 
             return result;
         });
+
+        public static final Type<ItemStack> ITEM_STACK = new Type<>(PacketByteBuf::writeItemStack, PacketByteBuf::readItemStack);
+
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;
 

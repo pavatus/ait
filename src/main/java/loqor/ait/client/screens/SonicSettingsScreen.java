@@ -106,12 +106,13 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     public void sendSonicChangePacket() {
-        if(!tardis().sonic().hasConsoleSonic())
+        if (this.tardis().sonic().getConsoleSonic() == null)
             return;
 
         SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
 
-        if (!tardis().isUnlocked(schema)) return;
+        if (!this.tardis().isUnlocked(schema))
+            return;
 
         SonicItem.setSchema(tardis().sonic().getConsoleSonic(), schema);
         ClientTardisUtil.changeSonicWithScreen(this.tardis().getUuid(), schema);
@@ -148,9 +149,8 @@ public class SonicSettingsScreen extends ConsoleScreen {
         if (this.tardis() == null)
             return;
 
-        if(!this.tardis().sonic().hasConsoleSonic()) {
+        if (this.tardis().sonic().getConsoleSonic() == null)
             return;
-        }
 
         ItemStack sonic = this.tardis().sonic().getConsoleSonic();
         NbtCompound nbt = sonic.getOrCreateNbt();

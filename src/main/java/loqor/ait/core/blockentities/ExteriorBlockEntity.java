@@ -63,7 +63,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 			return;
 
 		SonicHandler handler = tardis.sonic();
-		boolean hasSonic = handler.hasExteriorSonic();
+
+		boolean hasSonic = handler.getExteriorSonic() != null;
 		boolean shouldEject = player.isSneaking();
 
 		if (player.getMainHandStack().getItem() instanceof KeyItem
@@ -87,9 +88,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
 		if (hasSonic) {
 			if (shouldEject) {
-				player.giveItemStack(handler.getExteriorSonic());
-				handler.clearExterior(false, pos);
-				handler.clearExteriorSonicMark();
+				player.giveItemStack(handler.takeExteriorSonic());
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
 				return;
 			}
@@ -114,8 +113,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 				if (!(stack.getItem() instanceof SonicItem))
 					return;
 
-				handler.setExteriorSonic(stack, true, pos);
-				handler.markHasExteriorSonic();
+				handler.insertExteriorSonic(stack);
 
 				player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 				world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);

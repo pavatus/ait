@@ -25,11 +25,9 @@ public class SonicPortControl extends Control {
 	@Override
 	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
 		SonicHandler handler = tardis.sonic();
-		boolean hasSonic = handler.hasConsoleSonic();
-		boolean shouldEject = leftClick || player.isSneaking();
 
-		if (hasSonic && shouldEject) {
-			handler.spawnConsoleItem(console);
+		if (handler.getConsoleSonic() != null && (leftClick || player.isSneaking())) {
+			SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
 			return true;
 		}
 
@@ -52,8 +50,7 @@ public class SonicPortControl extends Control {
 		if (!(stack.getItem() instanceof SonicItem))
 			return false;
 
-		handler.setConsoleSonic(stack, true, console);
-		handler.markHasConsoleSonic();
+		handler.insertConsoleSonic(stack, console);
 		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
 		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);

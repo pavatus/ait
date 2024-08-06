@@ -193,11 +193,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		profiler.pop();
 		matrices.pop();
 
-		if (!tardis.sonic().hasExteriorSonic()) {
-			profiler.pop();
-			return;
-		}
-
 		profiler.push("sonic");
 		ItemStack stack = tardis.sonic().getExteriorSonic();
 
