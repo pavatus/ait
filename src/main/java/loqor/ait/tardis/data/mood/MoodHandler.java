@@ -18,10 +18,7 @@ import java.util.*;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
 
-    // FIXME Loqor, you sure you want this to be a static? It will affect ALL TARDIS'.
-
-    // nooo not static :<<<<<
-    public static TardisMood.Moods[] PRIORITY_MOODS;
+    @Exclude public TardisMood.Moods[] priorityMoods;
 
     @Exclude private MoodDictatedEvent moodEvent;
     @Exclude private TardisMood.Moods winningMood;
@@ -93,8 +90,8 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     public void raceMoods() {
         Map<TardisMood.Moods, Integer> moodWeights = new HashMap<>();
 
-        TardisMood.Moods[] moods = PRIORITY_MOODS.length == 0 ?
-                TardisMood.Moods.VALUES : PRIORITY_MOODS;
+        TardisMood.Moods[] moods = priorityMoods.length == 0 ?
+                TardisMood.Moods.VALUES : priorityMoods;
 
         for (TardisMood.Moods mood : moods) {
             int weight = 8 + (AITMod.RANDOM.nextInt(0, 11) * 8);
@@ -169,6 +166,6 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
                     TardisMood.Moods.VALUES.length)];
         }
 
-        PRIORITY_MOODS = moods;
+        priorityMoods = moods;
     }
 }

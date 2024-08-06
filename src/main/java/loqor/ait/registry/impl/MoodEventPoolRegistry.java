@@ -26,7 +26,9 @@ public class MoodEventPoolRegistry {
     public static final SimpleRegistry<MoodDictatedEvent> REGISTRY =
             FabricRegistryBuilder.createSimple(RegistryKey.<MoodDictatedEvent>ofRegistry(
                     new Identifier(AITMod.MOD_ID, "mood_event_pool"))).buildAndRegister();
+
     private static final Random random = Random.create();
+
     public static MoodDictatedEvent register(MoodDictatedEvent schema) {
         return Registry.register(REGISTRY, schema.id(), schema);
     }
