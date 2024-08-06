@@ -1,5 +1,5 @@
 {
 	"textures": {
-		"particle": "ait:block/block_particles/waypoint_bank"
+		"particle": "ait:block/particles/waypoint_bank"
 	}
 }

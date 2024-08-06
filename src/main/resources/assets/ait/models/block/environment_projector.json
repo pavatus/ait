@@ -3,7 +3,7 @@
 	"texture_size": [80, 80],
 	"textures": {
 		"1": "ait:block/environment_projector",
-		"particle": "ait:block/block_particles/environment_projector"
+		"particle": "ait:block/particles/environment_projector"
 	},
 	"elements": [
 		{
