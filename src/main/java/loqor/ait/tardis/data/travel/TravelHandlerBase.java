@@ -41,7 +41,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final IntProperty SPEED = new IntProperty("speed", 0);
     private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
 
-    private static final Property<GroundSearch> VGROUND_SEARCH = Property.forEnum("yground_search", GroundSearch.class, GroundSearch.CEILING);
+    private static final Property<GroundSearch> VGROUND_SEARCH = Property.forEnum("vground_search", GroundSearch.class, GroundSearch.CEILING);
     private static final BoolProperty HGROUND_SEARCH = new BoolProperty("hground_search", true);
 
     protected final Value<State> state = STATE.create(this);

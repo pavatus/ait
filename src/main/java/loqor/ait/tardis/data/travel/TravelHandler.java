@@ -121,7 +121,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             this.runAnimations(exterior);
 
         BiomeHandler biome = this.tardis.handler(Id.BIOME);
-        biome.update();
+        biome.update(globalPos);
 
         if (schedule && !this.antigravs.get())
             world.scheduleBlockTick(pos, AITBlocks.EXTERIOR_BLOCK, 2);
@@ -227,7 +227,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.state.set(State.DEMAT);
         SoundEvent sound = this.getState().effect().sound();
 
-        // Play materialize sound at the position
+        // Play dematerialize sound at the position
         this.position().getWorld().playSound(null,
                 this.position().getPos(), sound, SoundCategory.BLOCKS
         );

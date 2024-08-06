@@ -32,7 +32,7 @@ public class WorldUtil {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
-        if (world.getBlockState(pos.down()).blocksMovement())
+        if (isSafe(world, pos))
             return cached;
 
         if (hSearch) {
@@ -68,15 +68,7 @@ public class WorldUtil {
             for (int z = minZ; z < maxZ; z++) {
                 pos.setX(x).setZ(z);
 
-                BlockState floor = world.getBlockState(pos.down());
-
-                if (!floor.blocksMovement())
-                    continue;
-
-                BlockState curUp = world.getBlockState(pos);
-                BlockState aboveUp = world.getBlockState(pos.up());
-
-                if (!curUp.blocksMovement() && !aboveUp.blocksMovement())
+                if (isSafe(world, pos))
                     return pos;
             }
         }
@@ -94,13 +86,10 @@ public class WorldUtil {
         BlockState aboveDown = world.getBlockState(downCursor.down());
 
         while (true) {
-            System.out.println("At top y: " + upCursor.getY());
-            System.out.println("At bottom y: " + downCursor.getY());
-
-            if (!curUp.blocksMovement() && !aboveUp.blocksMovement())
+            if (isSafe(curUp, aboveUp))
                 return upCursor.getY();
 
-            if (!curDown.blocksMovement() && !aboveDown.blocksMovement())
+            if (isSafe(curDown, aboveDown))
                 return downCursor.getY();
 
             upCursor = upCursor.up();
@@ -121,9 +110,7 @@ public class WorldUtil {
         BlockState above = world.getBlockState(cursor);
 
         while (true) {
-            System.out.println("At y: " + cursor.getY());
-
-            if (!current.blocksMovement() && !above.blocksMovement())
+            if (isSafe(current, above))
                 return cursor.getY();
 
             cursor = cursor.up();
@@ -144,6 +131,26 @@ public class WorldUtil {
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 x & 15, z & 15
         ) + 1;
+    }
+
+    private static boolean isSafe(BlockState block1, BlockState block2) {
+        return !block1.blocksMovement() && !block2.blocksMovement();
+    }
+
+    private static boolean isFloor(BlockState floor) {
+        return floor.blocksMovement();
+    }
+
+    private static boolean isSafe(World world, BlockPos pos) {
+        BlockState floor = world.getBlockState(pos.down());
+
+        if (!isFloor(floor))
+            return false;
+
+        BlockState curUp = world.getBlockState(pos);
+        BlockState aboveUp = world.getBlockState(pos.up());
+
+        return isSafe(curUp, aboveUp);
     }
 
     @Environment(EnvType.CLIENT)
