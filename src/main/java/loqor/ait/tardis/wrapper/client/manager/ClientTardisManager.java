@@ -14,6 +14,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +22,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
@@ -57,6 +58,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 			ClientSoundManager.tick(client);
 		});
 
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
 		ClientLoginConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
 	}
 
@@ -73,7 +75,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		data.writeUuid(uuid);
 
 		if (consumer != null)
-			this.subscribers.put(uuid, consumer);
+			this.subscribers.put(uuid, consumer);;
 
 		MinecraftClient.getInstance().executeTask(() ->
 				ClientPlayNetworking.send(ASK, data));
@@ -115,11 +117,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
 	private void sync(UUID uuid, String json) {
 		try {
-			long start = System.currentTimeMillis();
-
 			ClientTardis tardis = this.readTardis(this.networkGson, json);
 			tardis.travel();
-			// AITMod.LOGGER.debug("Received {}", tardis);
 
 			synchronized (this) {
 				ClientTardis old = this.lookup.put(tardis);
@@ -130,8 +129,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 				for (Consumer<ClientTardis> consumer : this.subscribers.removeAll(uuid)) {
 					consumer.accept(tardis);
 				}
-
-				// AITMod.LOGGER.debug("Synced TARDIS on the client in {}ms", System.currentTimeMillis() - start);
 			}
 		} catch(Throwable t) {
 			AITMod.LOGGER.error("Received malformed JSON file {}", json);
