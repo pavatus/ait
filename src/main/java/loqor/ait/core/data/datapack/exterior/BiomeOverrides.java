@@ -51,12 +51,12 @@ public record BiomeOverrides(
     public static final Codec<BiomeOverrides> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Identifier.CODEC.optionalFieldOf("snowy").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("sculk").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("sandy").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("red_sandy").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("muddy").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("chorus").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("cherry").forGetter(o -> Optional.ofNullable(o.snowy))
+                    Identifier.CODEC.optionalFieldOf("sculk").forGetter(o -> Optional.ofNullable(o.sculk)),
+                    Identifier.CODEC.optionalFieldOf("sandy").forGetter(o -> Optional.ofNullable(o.sandy)),
+                    Identifier.CODEC.optionalFieldOf("red_sandy").forGetter(o -> Optional.ofNullable(o.redSandy)),
+                    Identifier.CODEC.optionalFieldOf("muddy").forGetter(o -> Optional.ofNullable(o.muddy)),
+                    Identifier.CODEC.optionalFieldOf("chorus").forGetter(o -> Optional.ofNullable(o.chorus)),
+                    Identifier.CODEC.optionalFieldOf("cherry").forGetter(o -> Optional.ofNullable(o.cherry))
             ).apply(instance, BiomeOverrides::create)
     );
 
