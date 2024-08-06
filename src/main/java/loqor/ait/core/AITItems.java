@@ -11,11 +11,17 @@ import loqor.ait.core.item.link.MercurialLinkItem;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
 import loqor.ait.core.util.AITArmorMaterials;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.util.Rarity;
 
 public class AITItems implements ItemRegistryContainer {
+	public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
+			.statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
+			.statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 500, 1), 0.5F).build();
 	// TARDIS
 	public static final Item TARDIS_ITEM = new TardisItemBuilder(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
 	public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
@@ -43,6 +49,7 @@ public class AITItems implements ItemRegistryContainer {
 	// Crafting items
 	public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 	public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+	public static final Item ZEITON_DUST = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
 
 	// Machine parts
 	public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON, new OwoItemSettings()/*.group(AITMod.AIT_ITEM_GROUP)*/);

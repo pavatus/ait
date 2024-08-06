@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
@@ -83,6 +84,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             conditionsFromItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE))
                     .criterion(hasItem(Items.GOLD_NUGGET),
                             conditionsFromItem(Items.GOLD_NUGGET))
+            );
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BREWING, AITItems.ZEITON_DUST, 4)
+                    .input(AITItems.ZEITON_SHARD)
+                    .criterion(hasItem(AITItems.ZEITON_SHARD),
+                            conditionsFromItem(AITItems.ZEITON_SHARD))
             );
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.CHARGED_ZEITON_CRYSTAL, 1)
                     .pattern("ZZZ")
@@ -573,6 +579,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
         provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
+        provider.addTranslation(AITItems.ZEITON_DUST, "Zeiton Dust");
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
 
