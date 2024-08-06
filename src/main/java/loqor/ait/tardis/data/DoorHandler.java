@@ -275,7 +275,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 			return false;
 		}
 
-		if (tardis.getLockedTardis() || tardis.sonic().hasExteriorSonic()) {
+		if (tardis.getLockedTardis() || tardis.sonic().getExteriorSonic() != null) {
 			if (player != null && pos != null) {
 				player.sendMessage(Text.literal("\uD83D\uDD12"), true);
 				world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);

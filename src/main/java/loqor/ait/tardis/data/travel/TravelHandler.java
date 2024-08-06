@@ -53,7 +53,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         int speed = this.speed();
 
         if (speed > 0 && this.getState() == State.LANDED && !this.handbrake()
-                && !this.tardis.sonic().hasExteriorSonic()) {
+                && this.tardis.sonic().getExteriorSonic() == null) {
             this.dematerialize();
             return;
         }

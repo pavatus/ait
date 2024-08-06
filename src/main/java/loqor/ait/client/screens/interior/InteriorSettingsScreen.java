@@ -102,12 +102,13 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 		createTextButton(Text.translatable("screen.ait.interiorsettings.back"), (button -> backToExteriorChangeScreen()));
 		createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole").formatted(this.console != null ? Formatting.WHITE : Formatting.GRAY), button -> sendCachePacket());
 		createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
-		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(tardis().sonic().hasConsoleSonic() ? Formatting.WHITE : Formatting.GRAY),
-				(button -> {
-					if(tardis().sonic().hasConsoleSonic()) {
+		createTextButton(Text.translatable("screen.ait.sonic.button").formatted(
+				tardis().sonic().getConsoleSonic() != null
+						? Formatting.WHITE : Formatting.GRAY),
+				button -> {
+					if (tardis().sonic().getConsoleSonic() != null)
 						toSonicScreen();
-					}
-				}));
+				});
 
 		this.createCompatButtons();
 		TardisClientEvents.SETTINGS_SETUP.invoker().onSetup(this);
