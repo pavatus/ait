@@ -1,6 +1,5 @@
 package loqor.ait.registry.impl;
 
-import loqor.ait.AITMod;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.core.data.datapack.DatapackDesktop;
@@ -8,7 +7,8 @@ import loqor.ait.tardis.desktops.DefaultCaveDesktop;
 import loqor.ait.tardis.desktops.DevDesktop;
 
 public class DesktopRegistry extends UnlockableRegistry<TardisDesktopSchema> {
-	private static DesktopRegistry INSTANCE;
+
+	private final static DesktopRegistry INSTANCE = new DesktopRegistry();
 
 	protected DesktopRegistry() {
 		super(DatapackDesktop::fromInputStream, DatapackDesktop.CODEC, "desktop", true);
@@ -20,11 +20,6 @@ public class DesktopRegistry extends UnlockableRegistry<TardisDesktopSchema> {
 	}
 
 	public static DesktopRegistry getInstance() {
-		if (INSTANCE == null) {
-			AITMod.LOGGER.debug("DesktopRegistry was not initialized, Creating a new instance");
-			INSTANCE = new DesktopRegistry();
-		}
-
 		return INSTANCE;
 	}
 
