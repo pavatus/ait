@@ -15,7 +15,6 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
