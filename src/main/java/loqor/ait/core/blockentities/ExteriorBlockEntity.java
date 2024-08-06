@@ -1,5 +1,6 @@
 package loqor.ait.core.blockentities;
 
+import loqor.ait.AITMod;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.ExteriorBlock;
@@ -170,6 +171,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         TravelHandlerBase travel = tardis.travel();
         TravelHandlerBase.State state = travel.getState();
+
+		if (!world.isClient()) {
+			if (tardis.travel().isLanded()) {
+				world.scheduleBlockTick(this.getPos(), this.getCachedState().getBlock(), 2);
+			}
+		}
 
         if (!world.isClient())
             return;

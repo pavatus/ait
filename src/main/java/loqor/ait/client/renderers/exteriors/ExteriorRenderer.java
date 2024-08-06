@@ -123,7 +123,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		}
 
 		matrices.push();
-		matrices.translate(0.5, 0, 0.5);
+		matrices.translate(0.5f, 0.0f, 0.5f);
 
 		if (MinecraftClient.getInstance().player == null) {
 			profiler.pop();
@@ -168,18 +168,21 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		profiler.push("emission");
 		boolean alarms = tardis.alarm().enabled().get();
 
-		ClientLightUtil.renderEmissivable(
-				tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
-				matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, alpha
-		);
+
+		if (alpha > 0.105f)
+			ClientLightUtil.renderEmissivable(
+					tardis.engine().hasPower(), model::renderWithAnimations, emission, entity, this.model.getPart(),
+					matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, alpha
+			);
 
 		profiler.swap("biome");
 
 		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+
 			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
 			Identifier biomeTexture = handler.getBiomeKey().get(exteriorVariant.overrides());
 
-			if (!(alpha > 0) && (biomeTexture != null && !texture.equals(biomeTexture))) {
+			if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture))) {
 				// yes i know it says emission, but go fuck yourself <3
 				model.renderWithAnimations(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(
 						AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)
