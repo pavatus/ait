@@ -31,7 +31,7 @@ public class TardisStar {
 
         Vec3d cameraPos = camera.getPos();
         Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
-                context.world().getBottomY() -90,
+                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90),
                 tardis.engine().getCorePos().y()
         );
 
@@ -56,8 +56,8 @@ public class TardisStar {
         matrixStack.scale(0.9f, 0.9f, 0.9f);
         TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
                 provider.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(TARDIS_STAR_TEXTURE, true)),
-                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, tardis.isGrowth() ? 0.1f : 1,
-                tardis.isGrowth() ? 0.1f : 1, tardis.isGrowth() ? 0.1f : 1, 1f);
+                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1,
+                tardis.isGrowth() ? 0.2f : 1, tardis.isGrowth() ? 0f : 1, 1f);
     }
 
     public static void renderShine(WorldRenderContext context, Tardis tardis) {
@@ -69,7 +69,7 @@ public class TardisStar {
 
         Vec3d cameraPos = context.camera().getPos();
         Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
-                context.world().getBottomY() - 90,
+                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90),
                 tardis.engine().getCorePos().y()
         );
 
@@ -83,9 +83,9 @@ public class TardisStar {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
         matrixStack.translate(
-                tardis.engine().hasEngineCore() ? diff.x - .5 : 0,
+                tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX(),
                 diff.y,
-                tardis.engine().hasEngineCore() ? diff.z - .5 : 0);
+                tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ());
         if (!tardis.isRefueling())
             matrixStack.scale(4, 4, 4);
         else
@@ -109,34 +109,34 @@ public class TardisStar {
             Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
             int q = (int)(255f * (1.0f - m));
 
-            TardisStar.putDeathLightSourceVertex(vertexConsumer4, matrix4f, q);
-            TardisStar.putDeathLightNegativeXTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightPositiveXTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightSourceVertex(vertexConsumer4, matrix4f, q);
-            TardisStar.putDeathLightPositiveXTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightPositiveZTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightSourceVertex(vertexConsumer4, matrix4f, q);
-            TardisStar.putDeathLightPositiveZTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightNegativeXTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightSourceVertex(vertexConsumer4, matrix4f, q);
-            TardisStar.putDeathLightPositiveZTerminalVertex(vertexConsumer4, matrix4f, o, p);
-            TardisStar.putDeathLightPositiveZTerminalVertex(vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightSourceVertex(tardis, vertexConsumer4, matrix4f, q);
+            TardisStar.putDeathLightNegativeXTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightPositiveXTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightSourceVertex(tardis, vertexConsumer4, matrix4f, q);
+            TardisStar.putDeathLightPositiveXTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightPositiveZTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightSourceVertex(tardis, vertexConsumer4, matrix4f, q);
+            TardisStar.putDeathLightPositiveZTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightNegativeXTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightSourceVertex(tardis, vertexConsumer4, matrix4f, q);
+            TardisStar.putDeathLightPositiveZTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
+            TardisStar.putDeathLightPositiveZTerminalVertex(tardis, vertexConsumer4, matrix4f, o, p);
         }
     }
 
-    public static void putDeathLightSourceVertex(VertexConsumer buffer, Matrix4f matrix, int alpha) {
+    public static void putDeathLightSourceVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix, int alpha) {
         buffer.vertex(matrix, 0.0f, 0.0f, 0.0f).color(255, 255, 255, alpha).next();
     }
 
-    public static void putDeathLightNegativeXTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
-        buffer.vertex(matrix, -HALF_SQRT_3 * width, radius, -0.5f * width).color(255, 154, 0, 0).next();
+    public static void putDeathLightNegativeXTerminalVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
+        buffer.vertex(matrix, -HALF_SQRT_3 * width, radius, -0.5f * width).color(255, tardis.isGrowth() ? 30 : 154, 0, 0).next();
     }
 
-    public static void putDeathLightPositiveXTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
-        buffer.vertex(matrix, HALF_SQRT_3 * width, radius, -0.5f * width).color(255, 154, 0, 0).next();
+    public static void putDeathLightPositiveXTerminalVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
+        buffer.vertex(matrix, HALF_SQRT_3 * width, radius, -0.5f * width).color(255, tardis.isGrowth() ? 30 : 154, 0, 0).next();
     }
 
-    public static void putDeathLightPositiveZTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
-        buffer.vertex(matrix, 0.0f, radius, width).color(255, 154, 0, 0).next();
+    public static void putDeathLightPositiveZTerminalVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix, float radius, float width) {
+        buffer.vertex(matrix, 0.0f, radius, width).color(255, tardis.isGrowth() ? 30 : 154, 0, 0).next();
     }
 }

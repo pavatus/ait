@@ -2,11 +2,8 @@ package loqor.ait.mixin.server;
 
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
