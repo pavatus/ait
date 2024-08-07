@@ -20,8 +20,6 @@ public class TardisStar {
 
     public static void render(WorldRenderContext context, Tardis tardis) {
         renderStar(context, tardis);
-
-        // I'll fix this when I get my Ritalin again and my rendering knowledge decides to return. - Loqor
         renderShine(context, tardis);
     }
 
@@ -40,10 +38,14 @@ public class TardisStar {
         MatrixStack matrixStack = new MatrixStack();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
-        matrixStack.translate(
-                tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX(),
-                diff.y,
-                tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ());
+        if (tardis.isGrowth()) {
+            matrixStack.translate(cameraPos.getX(), diff.y, cameraPos.getZ());
+        } else {
+            matrixStack.translate(
+                    tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX() - .5,
+                    diff.y,
+                    tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ() - .5);
+        }
         matrixStack.scale(20f, 20f, 20f);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(((float)MinecraftClient.getInstance().player.age / 200.0f) * 360f));
@@ -76,16 +78,20 @@ public class TardisStar {
         Vec3d diff = targetPos.subtract(cameraPos);
 
         float l = (MinecraftClient.getInstance().getTickDelta() / 50120L);
-        float sinFunc = (float) (Math.sin(l) * 0.5f + 0.5f);
+        float sinFunc = (float) Math.sin((MinecraftClient.getInstance().player.age / 400f * 220f) * 0.2f + 0.2f);
         Random random = Random.create(432L);
         VertexConsumer vertexConsumer4 = provider.getBuffer(AITRenderLayers.getLightning());
         matrixStack.push();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
-        matrixStack.translate(
-                tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX(),
-                diff.y,
-                tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ());
+        if (tardis.isGrowth()) {
+            matrixStack.translate(cameraPos.getX(), diff.y, cameraPos.getZ());
+        } else {
+            matrixStack.translate(
+                    tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX() - .5,
+                    diff.y,
+                    tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ() - .5);
+        }
         if (!tardis.isRefueling())
             matrixStack.scale(4, 4, 4);
         else
