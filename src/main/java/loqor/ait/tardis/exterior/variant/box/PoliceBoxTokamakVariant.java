@@ -17,7 +17,7 @@ public class PoliceBoxTokamakVariant extends PoliceBoxVariant {
 	}
 
 	@Override
-	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+	public Vec3d adjustPortalPos(Vec3d pos, byte direction) {
         /*return switch(direction) {
             case DOWN, UP -> pos;
             case NORTH -> pos.add(0,0.207,-0.63f);

@@ -20,6 +20,8 @@ public class TardisStar {
 
     public static void render(WorldRenderContext context, Tardis tardis) {
         renderStar(context, tardis);
+
+        // I'll fix this when I get my Ritalin again and my rendering knowledge decides to return. - Loqor
         renderShine(context, tardis);
     }
 
@@ -39,9 +41,9 @@ public class TardisStar {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
         matrixStack.translate(
-                tardis.engine().hasEngineCore() ? diff.x - .5: 0,
+                tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX(),
                 diff.y,
-                tardis.engine().hasEngineCore() ? diff.z - .5 : 0);
+                tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ());
         matrixStack.scale(20f, 20f, 20f);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(((float)MinecraftClient.getInstance().player.age / 200.0f) * 360f));

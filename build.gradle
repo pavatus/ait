@@ -90,15 +90,15 @@ dependencies {
     modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-	
+
     modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.ip_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation("com.github.qouteall:GravityChanger:${project.gravity_version}") {
+    modCompileOnlyApi("com.github.qouteall:GravityChanger:${project.gravity_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-	
+
     modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:11.0.99") {
         exclude(group: "net.fabricmc.fabric-api")
     }

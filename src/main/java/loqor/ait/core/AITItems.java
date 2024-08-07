@@ -39,7 +39,7 @@ public class AITItems implements ItemRegistryContainer {
 	public static final Item CLASSIC_KEY = new KeyItem(new OwoItemSettings().rarity(Rarity.EPIC).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP, KeyItem.Protocols.HAIL);
 
 	// Creative only skeleton key
-	public static final Item SKELETON_KEY = new KeyItem(new OwoItemSettings().rarity(Rarity.EPIC).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SKELETON);
+	public static final Item SKELETON_KEY = new KeyItem(new OwoItemSettings().rarity(Rarity.EPIC).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SKELETON, KeyItem.Protocols.HAIL, KeyItem.Protocols.SNAP);
 
 	public static final Item GOLD_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Gold Key", "Gold Nugget");
 	public static final Item NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Netherite Key", "Netherite Scrap");
