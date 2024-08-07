@@ -63,7 +63,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
 		if (siege) {
 			model = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
-			texture = SiegeModeModel.TEXTURE;
+			texture = tardis.siege().texture().get();
 		}
 
 		model.renderFalling(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);

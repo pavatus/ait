@@ -81,7 +81,7 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
-        // siegeItemPredicate();
+        siegeItemPredicate();
 
         DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky);
 
@@ -308,14 +308,14 @@ public class AITModClient implements ClientModInitializer {
         });
     }
 
-    /*public static void siegeItemPredicate() {
+    public static void siegeItemPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("bricked"), (itemStack, clientWorld, livingEntity, integer) -> {
             if (itemStack.getOrCreateNbt().contains(SiegeTardisItem.CURRENT_TEXTURE_KEY)) {
                 return itemStack.getOrCreateNbt().getInt(SiegeTardisItem.CURRENT_TEXTURE_KEY);
             }
             return 0.0f;
         });
-    }*/
+    }
 
     public static void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
