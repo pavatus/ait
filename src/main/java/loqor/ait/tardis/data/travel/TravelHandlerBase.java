@@ -193,9 +193,13 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
                 border.clamp(pos.getX(), pos.getY(), pos.getZ())
         );
 
-        this.forceDestination(WorldUtil.locateSafe(
-                cached, this.vGroundSearch.get(), this.hGroundSearch.get()
-        ));
+        if (!this.antigravs.get()) {
+            cached = WorldUtil.locateSafe(
+                    cached, this.vGroundSearch.get(), this.hGroundSearch.get()
+            );
+        }
+
+        this.forceDestination(cached);
     }
 
     public void forceDestination(DirectedGlobalPos.Cached cached) {
