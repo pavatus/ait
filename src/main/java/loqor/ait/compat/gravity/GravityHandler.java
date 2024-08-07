@@ -54,7 +54,7 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     }
 
     private void onTick() {
-        List<LivingEntity> list = TardisUtil.getEntitiesInsideInterior(this.tardis, EntityTags::canChangeGravity);
+        List<LivingEntity> list = TardisUtil.getLivingInInterior(this.tardis, EntityTags::canChangeGravity);
 
         for (LivingEntity entity : list) {
             GravityChangerAPI.getGravityComponent(entity).setBaseGravityDirection(this.direction.get());

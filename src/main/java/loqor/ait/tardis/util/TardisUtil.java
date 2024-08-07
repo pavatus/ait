@@ -482,8 +482,12 @@ public class TardisUtil {
 		return list;
 	}
 
-	public static List<LivingEntity> getEntitiesInsideInterior(Tardis tardis, Predicate<LivingEntity> predicate) {
-		return fastFlatLookup(LivingEntity.class, TardisUtil.getTardisDimension(), tardis.getDesktop().getCorners().getBox(), predicate);
+	public static List<LivingEntity> getLivingInInterior(Tardis tardis, Predicate<LivingEntity> predicate) {
+		return getEntitiesInBox(LivingEntity.class, TardisUtil.getTardisDimension(), tardis.getDesktop().getCorners().getBox(), predicate);
+	}
+
+	public static <T extends Entity> List<T> getEntitiesInBox(Class<T> clazz, World world, Box box, Predicate<T> predicate) {
+		return fastFlatLookup(clazz, world, box, predicate);
 	}
 
 	private static <T extends EntityLike> void forEachInFlatBox(SectionedEntityCacheAccessor<T> accessor, Box box, LazyIterationConsumer<EntityTrackingSection<T>> consumer) {

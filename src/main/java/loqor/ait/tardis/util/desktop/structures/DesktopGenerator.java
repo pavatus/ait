@@ -4,6 +4,7 @@ import loqor.ait.api.Structure;
 import loqor.ait.core.data.Corners;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -47,7 +48,7 @@ public class DesktopGenerator {
 			level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
 		}
 
-		level.getEntitiesByClass(ItemFrameEntity.class, corners.getBox(), itemFrameEntity -> true)
+		TardisUtil.getEntitiesInBox(ItemFrameEntity.class, level, corners.getBox(), frame -> true)
 				.forEach(frame -> frame.remove(Entity.RemovalReason.DISCARDED));
 	}
 }
