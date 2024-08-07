@@ -3,7 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "ait:block/detector_block",
-		"particle": "ait:block/detector_block"
+		"particle": "ait:block/particles/detector_block"
 	},
 	"elements": [
 		{
