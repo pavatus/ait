@@ -136,7 +136,7 @@ public class WorldUtil {
         ).sampleHeightmap(
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 x & 15, z & 15
-        );
+        ) + 1;
     }
 
     private static boolean isSafe(BlockState floor, BlockState block1, BlockState block2) {
