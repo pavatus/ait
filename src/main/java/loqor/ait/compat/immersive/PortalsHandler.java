@@ -34,6 +34,11 @@ public class PortalsHandler extends KeyedTardisComponent {
         TardisEvents.DOOR_OPEN.register(PortalsHandler::createPortals);
         TardisEvents.DOOR_CLOSE.register(PortalsHandler::removePortals);
 
+        TardisEvents.ON_EXTERIOR_CHANGE.register((tardis) -> {
+            PortalsHandler.removePortals(tardis);
+            PortalsHandler.createPortals(tardis);
+        });
+
         TardisEvents.DOOR_MOVE.register(((tardis, previous)
                 -> PortalsHandler.removePortals(tardis)));
     }

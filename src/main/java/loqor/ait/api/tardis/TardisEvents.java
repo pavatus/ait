@@ -121,6 +121,12 @@ public final class TardisEvents {
 		}
 	});
 
+	public static final Event<OnExteriorChange> ON_EXTERIOR_CHANGE = EventFactory.createArrayBacked(OnExteriorChange.class, callbacks -> tardis -> {
+		for (OnExteriorChange callback : callbacks) {
+			callback.onExteriorChange(tardis);
+		}
+	});
+
 	/**
 	 * Called when a TARDIS successfully ( passed all checks ) starts to take off, before anything else is ran
 	 */
@@ -246,6 +252,11 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface ReconfigureDesktop {
 		void reconfigure(Tardis tardis);
+	}
+
+	@FunctionalInterface
+	public interface OnExteriorChange {
+		void onExteriorChange(Tardis tardis);
 	}
 
 	public enum Interaction {

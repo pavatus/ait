@@ -112,7 +112,7 @@ public class StatsHandler extends KeyedTardisComponent {
 	}
 
 	public String getPlayerCreatorName() {
-		String name = tardisName.get();
+		String name = playerCreatorName.get();
 
 		if (name == null) {
 			name = getRandomName();
