@@ -34,9 +34,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class SiegeHandler extends KeyedTardisComponent implements TardisTickable {
-	@Exclude(strategy = Exclude.Strategy.NETWORK)
+
 	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode.png");
-	@Exclude(strategy = Exclude.Strategy.NETWORK)
 	public static final Identifier BRICK_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode_brick.png");
 	private static final Property<UUID> HELD_KEY = new Property<>(Property.Type.UUID, "siege_held_uuid", new UUID(0, 0));
 	private final Value<UUID> heldKey = HELD_KEY.create(this);
