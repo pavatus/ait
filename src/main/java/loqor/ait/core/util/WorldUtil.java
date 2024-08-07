@@ -85,14 +85,14 @@ public class WorldUtil {
         BlockPos downCursor = pos;
         BlockState floorDown = world.getBlockState(downCursor.down());
         BlockState curDown = world.getBlockState(downCursor);
-        BlockState aboveDown = world.getBlockState(downCursor.down());
+        BlockState aboveDown = world.getBlockState(downCursor.up());
 
         while (true) {
-            if (upCursor.getY() < world.getBottomY() && isSafe(floorUp, curUp, aboveUp))
-                return upCursor.getY();
+            if (upCursor.getY() < world.getTopY() && isSafe(floorUp, curUp, aboveUp))
+                return upCursor.getY() - 1;
 
-            if (downCursor.getY() < world.getTopY() && isSafe(floorDown, curDown, aboveDown))
-                return downCursor.getY();
+            if (downCursor.getY() > world.getBottomY() && isSafe(floorDown, curDown, aboveDown))
+                return downCursor.getY() + 1;
 
             upCursor = upCursor.up();
             downCursor = downCursor.down();
@@ -101,9 +101,9 @@ public class WorldUtil {
             curUp = aboveUp;
             aboveUp = world.getBlockState(upCursor);
 
-            floorDown = curDown;
             curDown = aboveDown;
-            aboveDown = world.getBlockState(downCursor);
+            aboveDown = floorDown;
+            floorDown = world.getBlockState(downCursor);
         }
     }
 
@@ -116,7 +116,7 @@ public class WorldUtil {
 
         while (true) {
             if (isSafe(floor, current, above))
-                return cursor.getY();
+                return cursor.getY() - 1;
 
             cursor = cursor.up();
 
