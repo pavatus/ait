@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import java.util.Optional;
 
-public record TardisMood(Moods moods, Alignment type, int weight) {
+public record TardisMood(Moods moods, Alignment alignment, int weight) {
 
     public static final Codec<TardisMood> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(

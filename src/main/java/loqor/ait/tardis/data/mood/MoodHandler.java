@@ -19,9 +19,9 @@ import java.util.*;
 import static loqor.ait.core.data.base.Exclude.Strategy.NETWORK;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
-    @Exclude(strategy = NETWORK) public TardisMood.Moods[] priorityMoods;
+    public TardisMood.Moods[] priorityMoods;
     @Exclude private MoodDictatedEvent moodEvent;
-    @Exclude private TardisMood.Moods winningMood;
+    @Exclude private TardisMood winningMood;
 
     /**
      * Do NOT under any circumstances run logic in this constructor.
@@ -53,11 +53,14 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
         TardisMood.Alignment alignment = this.moodEvent.getMoodTypeCompatibility();
 
+        //System.out.println(this.winningMood.alignment() + " | " + alignment);
+
         if (this.winningMood.alignment() == TardisMood.Alignment.NEUTRAL ||
                 (this.winningMood.alignment() == alignment
-                        && (this.moodEvent.getMoodsList().isEmpty()
-                        || this.moodEvent.getMoodsList().contains(this.winningMood)))
+                        /*&& (this.moodEvent.getMoodsList().isEmpty()
+                        || this.moodEvent.getMoodsList().contains(this.winningMood))*/)
         ) {
+            System.out.println(this.winningMood.weight() + " | " + this.moodEvent.getCost());
             if (this.winningMood.weight() >= this.moodEvent.getCost()) {
                 if (this.getEvent() == null) {
                     this.winningMood = null;
@@ -66,8 +69,8 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
                 switch (this.winningMood.alignment()) {
                     case NEGATIVE -> handleNegativeMood(alignment);
-                    case POSITIVE -> handlePositiveMood(this.winningMood, alignment);
-                    case NEUTRAL -> handleNeutralMood(this.moodEvent, alignment, this.winningMood);
+                    case POSITIVE -> handlePositiveMood(this.winningMood.moods(), alignment);
+                    case NEUTRAL -> handleNeutralMood(this.moodEvent, alignment, this.winningMood.moods());
                 }
             }
         } else {
@@ -100,9 +103,12 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
             moodWeights.put(mood, Math.min(weight, 256));
         }
 
-        this.winningMood = moodWeights.entrySet().stream()
-                .max(Comparator.comparingInt(Map.Entry::getValue))
-                .map(Map.Entry::getKey).orElse(null);
+        Map.Entry<TardisMood.Moods, Integer> moodWin = moodWeights.entrySet().stream()
+                .max(Comparator.comparingInt(Map.Entry::getValue)).orElse(null);
+
+        TardisMood.Moods key = moodWin.getKey();
+
+        this.winningMood = new TardisMood(key, moodWin.getKey().alignment(), moodWin.getValue());
 
         this.tardis().getDesktop().getConsolePos().forEach(console ->
                 TardisUtil.getTardisDimension().playSound(null, BlockPos.ofFloored(console.toCenterPos()),
@@ -110,6 +116,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     }
 
     private void handleNegativeMood(TardisMood.Alignment alignment) {
+        System.out.print(alignment);
         if (alignment == TardisMood.Alignment.NEGATIVE) {
             this.moodEvent.execute(this.tardis());
             this.updateEvent(null);
@@ -126,6 +133,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     }
 
     private void handlePositiveMood(TardisMood.Moods mood, TardisMood.Alignment alignment) {
+        System.out.print(mood + " | " + alignment);
         if (alignment == TardisMood.Alignment.POSITIVE) {
             this.moodEvent.execute(this.tardis());
             this.updateEvent(null);
@@ -142,6 +150,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     }
 
     private void handleNeutralMood(MoodDictatedEvent mDE, TardisMood.Alignment alignment, TardisMood.Moods winningMood) {
+        System.out.println(mDE + " | " + alignment + " | " + winningMood);
         if (alignment == TardisMood.Alignment.NEUTRAL) {
             if (winningMood.weight() + winningMood.swayWeight() >= mDE.getCost()) {
                 this.moodEvent.execute(this.tardis());

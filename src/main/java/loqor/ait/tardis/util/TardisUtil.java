@@ -666,7 +666,7 @@ public class TardisUtil {
 		List<ServerWorld> dims = new ArrayList<>();
 
 		server.getWorlds().forEach(dim -> {
-			if (isBlacklisted(dim.getRegistryKey()))
+			if (!isBlacklisted(dim.getRegistryKey()))
 				dims.add(dim);
 		});
 

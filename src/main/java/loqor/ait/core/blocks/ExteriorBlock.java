@@ -60,7 +60,6 @@ import java.util.function.ToIntFunction;
 
 @SuppressWarnings("deprecation")
 public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBreak, Waterloggable {
-
 	public static final byte MAX_ROTATION_INDEX = (byte) RotationPropertyHelper.getMax();
 	private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
 	public static final IntProperty ROTATION = Properties.ROTATION;

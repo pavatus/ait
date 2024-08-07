@@ -92,19 +92,25 @@ public class MoodEventPoolRegistry {
         }, 256, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
         FAST_RETURN_AND_TAKEOFF = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_return_and_takeoff"), tardis -> {
+            System.out.println("IM A RACIST METHOD AAA");
             TravelHandler travel = tardis.travel();
 
             if (tardis.door().isOpen())
                 tardis.door().closeDoors();
 
+            travel.autopilot(true);
+
             travel.handbrake(false);
+
+            travel.speed(1);
+
             boolean same = travel.destination().equals(travel.previousPosition());
 
             if (travel.previousPosition() != null)
                 travel.forceDestination(same ? travel.position() : travel.previousPosition());
 
             travel.dematerialize();
-        }, 128, TardisMood.Alignment.NEGATIVE));
+        }, 128, TardisMood.Alignment.NEUTRAL, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
         RANDOM_POWER_OFF = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_power_off"), tardis -> {
             if (!tardis.travel().inFlight())
