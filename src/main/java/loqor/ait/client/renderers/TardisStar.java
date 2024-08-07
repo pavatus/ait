@@ -22,7 +22,7 @@ public class TardisStar {
         renderStar(context, tardis);
 
         // I'll fix this when I get my Ritalin again and my rendering knowledge decides to return. - Loqor
-        // renderShine(context, tardis);
+        renderShine(context, tardis);
     }
 
     public static void renderStar(WorldRenderContext context, Tardis tardis) {

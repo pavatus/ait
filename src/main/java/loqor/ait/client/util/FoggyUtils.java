@@ -44,7 +44,7 @@ public class FoggyUtils {
 					stack.isIn(AITModTags.Items.FULL_RESPIRATORS) ? 0.015f: 0.35f);
 		}
 
-		if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_FOG() &&
+		/*if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_FOG() &&
 				ClientTardisUtil.isPlayerInATardis() &&
 				!tardis.crash().isToxic() &&
 				!tardis.alarm().enabled().get() &&
@@ -56,7 +56,7 @@ public class FoggyUtils {
 
 			int loyaltyLevel = tardis.loyalty().get(MinecraftClient.getInstance().player).level();
 			RenderSystem.setShaderFogColor(1 - loyaltyLevel / 100f, 0, loyaltyLevel / 100f, 0.025f);
-		}
+		}*/
 
 		/*if(MinecraftClient.getInstance().world != null &&MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
 			RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));

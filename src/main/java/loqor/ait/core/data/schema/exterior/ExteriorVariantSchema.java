@@ -117,7 +117,7 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 		return this.category().hasPortals();
 	}
 
-	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+	public Vec3d adjustPortalPos(Vec3d pos, byte direction) {
 		return pos; // just cus some dont have portals
 	}
 

@@ -35,7 +35,7 @@ public class PortalsHandler {
 	}
 
 	public static void removePortals(Tardis tardis) {
-		if (tardis == null) return;
+		if (tardis == null || tardis.door() == null) return;
 
 		if (tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
 			return; // todo move to a seperate method so we can remove without checks
@@ -90,7 +90,7 @@ public class PortalsHandler {
 				tardis.getExterior().getVariant().portalHeight() // height
 		);
 
-		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
+		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), 180 + RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
 		DQuaternion doorQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
 
 		PortalAPI.setPortalOrientationQuaternion(portal, quat);
@@ -126,7 +126,7 @@ public class PortalsHandler {
 		);
 
 		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
-		DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
+		DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), 180 + RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
 
 		PortalAPI.setPortalOrientationQuaternion(portal, quat);
 		portal.setOtherSideOrientation(extQuat);
@@ -146,7 +146,7 @@ public class PortalsHandler {
 		BlockPos pos = directed.getPos();
 
 		return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
-				RotationPropertyHelper.toDirection(directed.getRotation()).get()
+				directed.getRotation()
 		);
 	}
 

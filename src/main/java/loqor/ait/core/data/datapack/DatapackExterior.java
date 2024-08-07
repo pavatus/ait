@@ -116,7 +116,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
 	}
 
 	@Override
-	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
+	public Vec3d adjustPortalPos(Vec3d pos, byte direction) {
 		return this.getParent().adjustPortalPos(pos, direction);
 	}
 
