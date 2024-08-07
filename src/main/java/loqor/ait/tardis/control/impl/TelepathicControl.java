@@ -1,5 +1,6 @@
 package loqor.ait.tardis.control.impl;
 
+import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
@@ -8,6 +9,7 @@ import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.NameTagItem;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -44,6 +46,16 @@ public class TelepathicControl extends Control {
 
 		if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security)
 			return false;
+
+		if (player.getMainHandStack().getItem() == Items.BRICK) {
+			tardis.siege().texture().set(SiegeModeModel.BRICK_TEXTURE);
+			return false;
+		}
+
+		if (player.getMainHandStack().getItem() == Items.STONE) {
+			tardis.siege().texture().set(SiegeModeModel.TEXTURE);
+			return false;
+		}
 
 		if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
 			if (linker instanceof SonicItem)

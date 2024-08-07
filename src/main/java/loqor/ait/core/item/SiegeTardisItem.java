@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
@@ -26,6 +27,8 @@ import java.util.UUID;
 
 // todo fix so many issues with having more than one of this item
 public class SiegeTardisItem extends Item {
+
+	public static final String CURRENT_TEXTURE_KEY = "siege_current_texture";
 
 	public SiegeTardisItem(Settings settings) {
 		super(settings.maxCount(1));
@@ -205,5 +208,6 @@ public class SiegeTardisItem extends Item {
 	public static void setTardis(ItemStack stack, Tardis tardis) {
 		NbtCompound data = stack.getOrCreateNbt();
 		data.putUuid("tardis-uuid", tardis.getUuid());
+		data.putInt(CURRENT_TEXTURE_KEY, tardis.siege().texture().get().equals(SiegeModeModel.BRICK_TEXTURE) ? 1 : 0);
 	}
 }

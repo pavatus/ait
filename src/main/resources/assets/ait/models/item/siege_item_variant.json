@@ -2,7 +2,7 @@
 	"credit": "Made with love",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "ait:item/siege_item"
+		"0": "ait:item/siege_mode_brick_item"
 	},
 	"elements": [
 		{
@@ -65,9 +65,5 @@
 			"translation": [0, 6, 0],
 			"scale": [1.5, 1.5, 1.5]
 		}
-	},
-	"overrides": [
-		{"predicate": {"bricked": 0}, "model": "ait:item/siege_item"},
-		{"predicate": {"bricked": 1}, "model": "ait:item/siege_item_variant"}
-	]
+	}
 }
