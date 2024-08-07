@@ -14,6 +14,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClientSonicSoundHandler extends SoundHandler {
     public static PositionedLoopingSound SONIC_SOUND;
