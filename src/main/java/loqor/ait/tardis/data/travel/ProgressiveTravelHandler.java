@@ -190,7 +190,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
             return;
         }
 
-        this.setFlightTicks((int) (Math.log(this.getFlightTicks() + this.speed() / 2) * this.getFlightTicks()));
+        if (server.getTicks() % (this.maxSpeed.get() - this.speed() + 1) == 0)
+            this.setFlightTicks(this.getFlightTicks() + 1);
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {
