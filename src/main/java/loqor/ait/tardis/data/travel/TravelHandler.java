@@ -284,7 +284,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
-        this.destination(this.getProgress());
+        this.destination(this.getProgress(), true);
         this.forcePosition(this.destination());
 
         // Play materialize sound at the destination
