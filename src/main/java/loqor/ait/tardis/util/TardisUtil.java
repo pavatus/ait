@@ -666,7 +666,7 @@ public class TardisUtil {
 		List<ServerWorld> dims = new ArrayList<>();
 
 		server.getWorlds().forEach(dim -> {
-			if (isBlacklisted(dim.getRegistryKey()))
+			if (!isBlacklisted(dim.getRegistryKey()))
 				dims.add(dim);
 		});
 
@@ -675,7 +675,7 @@ public class TardisUtil {
 
 	public static boolean isBlacklisted(RegistryKey<World> world) {
 		for (RegistryKey<World> blacklisted : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
-			if (world == blacklisted)
+			if (world.equals(blacklisted))
 				return true;
 		}
 
