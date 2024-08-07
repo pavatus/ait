@@ -2,10 +2,12 @@ package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.Property;
@@ -15,6 +17,7 @@ import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 import org.joml.Vector2i;
@@ -37,6 +40,16 @@ public class EngineHandler extends KeyedTardisComponent {
 
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.engine().disablePower());
+
+        TardisEvents.RECONFIGURE_DESKTOP.register(tardis -> {
+            if (!tardis.engine().hasEngineCore())
+                return;
+
+            DirectedGlobalPos.Cached cached = tardis.travel().position();
+
+            StackUtil.spawn(cached.getWorld(), cached.getPos().up(),
+                    new ItemStack(AITBlocks.ENGINE_CORE_BLOCK));
+        });
     }
 
     @Override

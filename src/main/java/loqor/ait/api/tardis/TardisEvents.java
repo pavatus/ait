@@ -115,6 +115,12 @@ public final class TardisEvents {
 		}
 	});
 
+	public static final Event<ReconfigureDesktop> RECONFIGURE_DESKTOP = EventFactory.createArrayBacked(ReconfigureDesktop.class, callbacks -> tardis -> {
+		for (ReconfigureDesktop callback : callbacks) {
+			callback.reconfigure(tardis);
+		}
+	});
+
 	/**
 	 * Called when a TARDIS successfully ( passed all checks ) starts to take off, before anything else is ran
 	 */
@@ -235,6 +241,11 @@ public final class TardisEvents {
 	@FunctionalInterface
 	public interface UnloadTardis {
 		void unload(ServerPlayerEntity player, ChunkPos chunk);
+	}
+
+	@FunctionalInterface
+	public interface ReconfigureDesktop {
+		void reconfigure(Tardis tardis);
 	}
 
 	public enum Interaction {

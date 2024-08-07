@@ -92,6 +92,8 @@ public class TardisDesktop extends TardisComponent {
 		long currentTime = System.currentTimeMillis();
 		this.schema = schema;
 
+		TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
+
 		DesktopGenerator generator = new DesktopGenerator(this.schema);
 		generator.place(this.tardis, (ServerWorld) TardisUtil.getTardisDimension(), this.corners);
 
