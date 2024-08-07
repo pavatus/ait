@@ -675,7 +675,7 @@ public class TardisUtil {
 
 	public static boolean isBlacklisted(RegistryKey<World> world) {
 		for (RegistryKey<World> blacklisted : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
-			if (world == blacklisted)
+			if (world.equals(blacklisted))
 				return true;
 		}
 
