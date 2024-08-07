@@ -15,6 +15,7 @@
     "networking.ServerChunkManagerAccessor",
     "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
+    "server.BedInTardisMixin",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
