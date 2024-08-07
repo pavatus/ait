@@ -134,7 +134,7 @@ public class WorldUtil {
                 ChunkSectionPos.getSectionCoord(x),
                 ChunkSectionPos.getSectionCoord(z)
         ).sampleHeightmap(
-                Heightmap.Type.WORLD_SURFACE,
+                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 x & 15, z & 15
         );
     }
