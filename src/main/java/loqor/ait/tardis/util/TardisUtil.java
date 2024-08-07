@@ -660,14 +660,21 @@ public class TardisUtil {
 
 	public static List<ServerWorld> getDimensions(MinecraftServer server) {
 		List<ServerWorld> dims = new ArrayList<>();
-		Iterable<ServerWorld> allDims = server.getWorlds();
 
-		// fixme this is easiest/stupidest way to do this without letting them get to the tardis dim :p - Loqor
-		allDims.forEach(dim -> {
-			if (dim.getRegistryKey() != TardisUtil.getTardisDimension().getRegistryKey())
+		server.getWorlds().forEach(dim -> {
+			if (isBlacklisted(dim.getRegistryKey()))
 				dims.add(dim);
 		});
 
 		return dims;
+	}
+
+	public static boolean isBlacklisted(RegistryKey<World> world) {
+		for (RegistryKey<World> blacklisted : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
+			if (world == blacklisted)
+				return true;
+		}
+
+		return false;
 	}
 }

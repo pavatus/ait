@@ -42,6 +42,8 @@ public class DimensionControl extends Control {
 			next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
 		}
 
+
+
 		// FIXME we should make it so that once the ender dragon is defeated, the end is unlocked; also make that a config option as well for the server. - Loqor
 
 		ServerWorld destWorld = dims.get(next);
