@@ -82,8 +82,6 @@ public class GravityHandler extends KeyedTardisComponent implements TardisTickab
     }
 
     public static void init() {
-        AITMod.LOGGER.info("AIT - Setting up interior gravity");
-
         ServerPlayNetworking.registerGlobalReceiver(SYNC, ServerTardisManager.receiveTardis(
                 (tardis, server, player, handler, buf, responseSender) -> {
                     if (tardis == null)

@@ -5,7 +5,6 @@ import io.wispforest.owo.ops.WorldOps;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
-import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.SerialDimension;
@@ -278,9 +277,6 @@ public class ServerTardisManager extends TardisManager<ServerTardis, MinecraftSe
                 }
 
                 tardis.door().closeDoors();
-
-                if (DependencyChecker.hasPortals())
-                    PortalsHandler.removePortals(tardis);
             }
 
             this.fileManager.saveTardis(server, this, tardis);

@@ -1,12 +1,14 @@
 package loqor.ait.compat.immersive;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
@@ -18,142 +20,140 @@ import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
-// NEVER EVER ACCESS THIS CLASS OR YO GAME GON CRAAASH
-public class PortalsHandler {
-	private static final HashMap<UUID, List<TardisPortal>> portals = new HashMap<>();
+public class PortalsHandler extends KeyedTardisComponent {
 
-	public static void init() {
-		AITMod.LOGGER.info("AIT - Setting up BOTI");
+    static final IdLike ID = new AbstractId<>("PORTALS", PortalsHandler::new, PortalsHandler.class);
 
-		TardisEvents.DOOR_OPEN.register((PortalsHandler::createPortals));
-		TardisEvents.DOOR_CLOSE.register((PortalsHandler::removePortals));
-		TardisEvents.DOOR_MOVE.register(((tardis, previous) -> removePortals(tardis)));
-	}
+    @Exclude private List<TardisPortal> portals = new ArrayList<>();
 
-	public static void removePortals(Tardis tardis) {
-		if (tardis == null || tardis.door() == null) return;
+    public static void init() {
+        TardisComponentRegistry.getInstance().register(ID);
 
-		if (tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
-			return; // todo move to a seperate method so we can remove without checks
+        TardisEvents.DOOR_OPEN.register(PortalsHandler::createPortals);
+        TardisEvents.DOOR_CLOSE.register(PortalsHandler::removePortals);
 
-		List<TardisPortal> list = portals.get(tardis.getUuid());
+        TardisEvents.DOOR_MOVE.register(((tardis, previous)
+                -> PortalsHandler.removePortals(tardis)));
+    }
 
-		if (list == null)
-			return;
+    public PortalsHandler() {
+        super(ID);
+    }
 
-		for (TardisPortal portal : list) {
-			PortalManipulation.removeConnectedPortals(portal, (p) -> {});
-			portal.discard();
-		}
+    @Override
+    public void onLoaded() {
+        this.portals = new ArrayList<>();
+    }
 
-		// i  have trust issues with code
-		portals.remove(tardis.getUuid());
-	}
+    private static void createPortals(Tardis tardis) {
+        if (tardis == null)
+            return;
 
-	private static void createPortals(Tardis tardis) {
-		if (tardis == null)
-			return;
+        if (!tardis.getExterior().getVariant().hasPortals())
+            return;
 
-		if (!tardis.getExterior().getVariant().hasPortals())
-			return;
+        PortalsHandler handler = tardis.handler(ID);
 
-		List<TardisPortal> list = new ArrayList<>();
+        if (tardis.travel().getState() == TravelHandlerBase.State.LANDED)
+            handler.portals.add(createExteriorPortal(tardis));
 
-		TardisPortal interior = createInteriorPortal(tardis);
+        handler.portals.add(createInteriorPortal(tardis));
+    }
 
-		if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
-			list.add(createExteriorPortal(tardis));
-		}
+    private static void removePortals(Tardis tardis) {
+        if (tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
+            return;
 
-		list.add(interior);
-		portals.put(tardis.getUuid(), list);
-	}
+        PortalsHandler handler = tardis.handler(ID);
 
-	private static TardisPortal createExteriorPortal(Tardis tardis) {
-		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
-				? tardis.travel().position() : tardis.travel().getProgress();
+        for (TardisPortal portal : handler.portals) {
+            PortalManipulation.removeConnectedPortals(portal, (p) -> {});
+            portal.discard();
+        }
+    }
 
-		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
-		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
+    private static TardisPortal createExteriorPortal(Tardis tardis) {
+        DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
+                ? tardis.travel().position() : tardis.travel().getProgress();
 
-		TardisPortal portal = new TardisPortal(exteriorPos.getWorld(), tardis);
+        Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
+        Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
-		portal.setOrientationAndSize(
-				new Vec3d(1, 0, 0), // axisW
-				new Vec3d(0, 1, 0), // axisH
-				tardis.getExterior().getVariant().portalWidth(), // width
-				tardis.getExterior().getVariant().portalHeight() // height
-		);
+        TardisPortal portal = new TardisPortal(exteriorPos.getWorld(), tardis);
 
-		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), 180 + RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
-		DQuaternion doorQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
+        portal.setOrientationAndSize(
+                new Vec3d(1, 0, 0), // axisW
+                new Vec3d(0, 1, 0), // axisH
+                tardis.getExterior().getVariant().portalWidth(), // width
+                tardis.getExterior().getVariant().portalHeight() // height
+        );
 
-		PortalAPI.setPortalOrientationQuaternion(portal, quat);
-		portal.setOtherSideOrientation(doorQuat);
+        DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), 180 + RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
+        DQuaternion doorQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
 
-		portal.setOriginPos(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
+        PortalAPI.setPortalOrientationQuaternion(portal, quat);
+        portal.setOtherSideOrientation(doorQuat);
 
-		portal.setDestinationDimension(TardisUtil.getTardisDimension().getRegistryKey());
-		portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
+        portal.setOriginPos(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
 
-		portal.renderingMergable = true;
-		portal.getWorld().spawnEntity(portal);
+        portal.setDestinationDimension(TardisUtil.getTardisDimension().getRegistryKey());
+        portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
 
-		return portal;
-	}
+        portal.renderingMergable = true;
+        portal.getWorld().spawnEntity(portal);
 
-	// todo allow for multiple interior doors
-	private static TardisPortal createInteriorPortal(Tardis tardis) {
-		DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
-		DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
-				? tardis.travel().position() : tardis.travel().getProgress();
+        return portal;
+    }
 
-		Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
-		Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
+    private static TardisPortal createInteriorPortal(Tardis tardis) {
+        DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
+                ? tardis.travel().position() : tardis.travel().getProgress();
 
-		TardisPortal portal = new TardisPortal(TardisUtil.getTardisDimension(), tardis);
+        Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
+        Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
-		portal.setOrientationAndSize(
-				new Vec3d(1, 0, 0), // axisW
-				new Vec3d(0, 1, 0), // axisH
-				tardis.getExterior().getVariant().portalWidth(), // width
-				tardis.getExterior().getVariant().portalHeight() // height
-		);
+        TardisPortal portal = new TardisPortal(TardisUtil.getTardisDimension(), tardis);
 
-		DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
-		DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), 180 + RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
+        portal.setOrientationAndSize(
+                new Vec3d(1, 0, 0), // axisW
+                new Vec3d(0, 1, 0), // axisH
+                tardis.getExterior().getVariant().portalWidth(), // width
+                tardis.getExterior().getVariant().portalHeight() // height
+        );
 
-		PortalAPI.setPortalOrientationQuaternion(portal, quat);
-		portal.setOtherSideOrientation(extQuat);
+        DQuaternion quat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), RotationPropertyHelper.toDegrees(doorPos.getRotation()));
+        DQuaternion extQuat = DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), 180 + RotationPropertyHelper.toDegrees(exteriorPos.getRotation()));
 
-		portal.setOriginPos(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
+        PortalAPI.setPortalOrientationQuaternion(portal, quat);
+        portal.setOtherSideOrientation(extQuat);
 
-		portal.setDestinationDimension(exteriorPos.getWorld().getRegistryKey());
-		portal.setDestination(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
+        portal.setOriginPos(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
 
-		portal.renderingMergable = true;
-		portal.getWorld().spawnEntity(portal);
+        portal.setDestinationDimension(exteriorPos.getWorld().getRegistryKey());
+        portal.setDestination(new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
 
-		return portal;
-	}
+        portal.renderingMergable = true;
+        portal.getWorld().spawnEntity(portal);
 
-	private static Vec3d adjustExteriorPos(ExteriorVariantSchema exterior, DirectedGlobalPos.Cached directed) {
-		BlockPos pos = directed.getPos();
+        return portal;
+    }
 
-		return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
-				directed.getRotation()
-		);
-	}
+    private static Vec3d adjustExteriorPos(ExteriorVariantSchema exterior, DirectedGlobalPos.Cached directed) {
+        BlockPos pos = directed.getPos();
 
-	private static Vec3d adjustInteriorPos(DoorSchema door, DirectedBlockPos directed) {
-		BlockPos pos = directed.getPos();
-		return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
-				RotationPropertyHelper.toDirection(directed.getRotation()).get()
-		);
-	}
+        return exterior.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
+                directed.getRotation()
+        );
+    }
+
+    private static Vec3d adjustInteriorPos(DoorSchema door, DirectedBlockPos directed) {
+        BlockPos pos = directed.getPos();
+        return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
+                RotationPropertyHelper.toDirection(directed.getRotation()).get()
+        );
+    }
 }

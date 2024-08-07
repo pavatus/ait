@@ -5,8 +5,6 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.AITModInitializer;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
@@ -117,10 +115,6 @@ public class AITMod implements ModInitializer {
 		entityAttributeRegister();
 
 		BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES, CUSTOM_GEODE_PLACED_KEY);
-
-		// ip support
-		if (DependencyChecker.hasPortals())
-			PortalsHandler.init();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
 			TeleportInteriorCommand.register(dispatcher);
