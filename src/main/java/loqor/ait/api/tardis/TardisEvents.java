@@ -121,9 +121,9 @@ public final class TardisEvents {
 		}
 	});
 
-	public static final Event<OnExteriorChange> ON_EXTERIOR_CHANGE = EventFactory.createArrayBacked(OnExteriorChange.class, callbacks -> tardis -> {
+	public static final Event<OnExteriorChange> EXTERIOR_CHANGE = EventFactory.createArrayBacked(OnExteriorChange.class, callbacks -> tardis -> {
 		for (OnExteriorChange callback : callbacks) {
-			callback.onExteriorChange(tardis);
+			callback.onChange(tardis);
 		}
 	});
 
@@ -256,7 +256,7 @@ public final class TardisEvents {
 
 	@FunctionalInterface
 	public interface OnExteriorChange {
-		void onExteriorChange(Tardis tardis);
+		void onChange(Tardis tardis);
 	}
 
 	public enum Interaction {

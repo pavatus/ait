@@ -152,7 +152,7 @@ public class TardisUtil {
                                             .travel().position().getWorld().getRegistryKey()),
                                     tardis.travel().position().getPos());
                         }
-						TardisEvents.ON_EXTERIOR_CHANGE.invoker().onExteriorChange(tardis);
+						TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
 					});
 				}
 		);
