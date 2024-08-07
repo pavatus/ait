@@ -5,7 +5,6 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import loqor.ait.api.AITModInitializer;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.*;
@@ -146,6 +145,7 @@ public class AITMod implements ModInitializer {
 			DataCommand.register(dispatcher);
 			TravelDebugCommand.register(dispatcher);
 			VersionCommand.register(dispatcher);
+			SafePosCommand.register(dispatcher);
 		}));
 
 		TardisEvents.CRASH.register(tardis -> {

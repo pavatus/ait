@@ -2,10 +2,7 @@ package loqor.ait.core;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import loqor.ait.AITMod;
-import loqor.ait.core.commands.argument.IdentifierWildcardArgumentType;
-import loqor.ait.core.commands.argument.JsonElementArgumentType;
-import loqor.ait.core.commands.argument.PermissionArgumentType;
-import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.commands.argument.*;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.util.Identifier;
@@ -19,6 +16,7 @@ public class AITArgumentTypes {
         register("wildcard_resource_location", IdentifierWildcardArgumentType.class, IdentifierWildcardArgumentType::wildcard);
         register("permission", PermissionArgumentType.class, PermissionArgumentType::permission);
         register("json", JsonElementArgumentType.class, JsonElementArgumentType::jsonElement);
+        register("ground_search", GroundSearchArgumentType.class, GroundSearchArgumentType::groundSearch);
     }
 
     private static <T extends ArgumentType<?>> void register(String name, Class<T> t, Supplier<T> supplier) {

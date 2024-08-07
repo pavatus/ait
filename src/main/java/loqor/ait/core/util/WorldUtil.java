@@ -88,10 +88,10 @@ public class WorldUtil {
         BlockState aboveDown = world.getBlockState(downCursor.down());
 
         while (true) {
-            if (isSafe(floorUp, curUp, aboveUp))
+            if (upCursor.getY() < world.getBottomY() && isSafe(floorUp, curUp, aboveUp))
                 return upCursor.getY();
 
-            if (isSafe(floorDown, curDown, aboveDown))
+            if (downCursor.getY() < world.getTopY() && isSafe(floorDown, curDown, aboveDown))
                 return downCursor.getY();
 
             upCursor = upCursor.up();

@@ -19,6 +19,7 @@ import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -265,7 +266,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         }
     }
 
-    public enum GroundSearch {
+    public enum GroundSearch implements StringIdentifiable {
         NONE {
             @Override
             public GroundSearch next() {
@@ -290,6 +291,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
                 return FLOOR;
             }
         };
+
+        @Override
+        public String asString() {
+            return toString();
+        }
 
         public abstract GroundSearch next();
     }
