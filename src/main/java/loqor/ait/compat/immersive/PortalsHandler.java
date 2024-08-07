@@ -63,7 +63,7 @@ public class PortalsHandler extends KeyedTardisComponent {
     }
 
     private static void removePortals(Tardis tardis) {
-        if (tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
+        if (tardis.door() == null || tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED)
             return;
 
         PortalsHandler handler = tardis.handler(ID);
