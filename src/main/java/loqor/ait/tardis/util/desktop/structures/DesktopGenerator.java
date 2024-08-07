@@ -6,6 +6,8 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktopSchema;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
@@ -36,14 +38,16 @@ public class DesktopGenerator {
 
 		template.place(level, BlockPos.ofFloored(corners.getBox().getCenter()),
 				BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS,
-				level.getRandom(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD
+				level.getRandom(), Block.FORCE_STATE
 		);
 	}
 
-	public static void clearArea(ServerWorld level, Corners interiorCorners) {
-		// @TODO: Just delete the chunks instead of doing this
-		for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst().add(0, -64, 0), interiorCorners.getSecond().add(0, 256, 0))) {
-			level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NO_REDRAW | Block.SKIP_DROPS);
+	public static void clearArea(ServerWorld level, Corners corners) {
+		for (BlockPos pos : BlockPos.iterate(corners.getFirst().add(0, -64, 0), corners.getSecond().add(0, 256, 0))) {
+			level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
 		}
+
+		level.getEntitiesByClass(ItemFrameEntity.class, corners.getBox(), itemFrameEntity -> true)
+				.forEach(frame -> frame.remove(Entity.RemovalReason.DISCARDED));
 	}
 }

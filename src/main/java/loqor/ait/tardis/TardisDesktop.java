@@ -57,7 +57,7 @@ public class TardisDesktop extends TardisComponent {
 
 	@Override
 	public void onCreate() {
-		this.changeInterior(schema);
+		this.changeInterior(schema, false);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class TardisDesktop extends TardisComponent {
 	}
 
 	public void setInteriorDoorPos(DirectedBlockPos pos) {
-		TardisEvents.DOOR_MOVE.invoker().onMove(tardis(), pos);
+		TardisEvents.DOOR_MOVE.invoker().onMove(this.tardis, pos);
 		this.doorPos = pos;
 	}
 
@@ -88,11 +88,12 @@ public class TardisDesktop extends TardisComponent {
 		return corners;
 	}
 
-	public void changeInterior(TardisDesktopSchema schema) {
+	public void changeInterior(TardisDesktopSchema schema, boolean sendEvent) {
 		long currentTime = System.currentTimeMillis();
 		this.schema = schema;
 
-		TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
+		if (sendEvent)
+			TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
 		DesktopGenerator generator = new DesktopGenerator(this.schema);
 		generator.place(this.tardis, (ServerWorld) TardisUtil.getTardisDimension(), this.corners);

@@ -165,7 +165,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 		}
 
 		if (isInteriorEmpty() && clearedOldInterior) {
-			this.tardis().getDesktop().changeInterior(getQueuedInterior());
+			this.tardis().getDesktop().changeInterior(this.getQueuedInterior(), true);
 			onCompletion();
 		}
 	}
