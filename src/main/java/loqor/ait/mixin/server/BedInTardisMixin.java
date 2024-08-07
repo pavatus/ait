@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BedBlock.class)
 public class BedInTardisMixin {
-    @Inject(at = @At("TAIL"), method = "onUse")
+    @Inject(at = @At("HEAD"), method = "onUse")
     private void ait$useOn(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (world.isClient()) {
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
