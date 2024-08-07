@@ -53,9 +53,11 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
         TardisMood.Alignment alignment = this.moodEvent.getMoodTypeCompatibility();
 
-        if (this.winningMood.alignment().equals(TardisMood.Alignment.NEUTRAL) ||
-                (this.winningMood.alignment() == alignment && (this.moodEvent.getMoodsList().contains(this.winningMood) ||
-                this.moodEvent.getMoodsList().isEmpty()))) {
+        if (this.winningMood.alignment() == TardisMood.Alignment.NEUTRAL ||
+                (this.winningMood.alignment() == alignment
+                        && (this.moodEvent.getMoodsList().isEmpty()
+                        || this.moodEvent.getMoodsList().contains(this.winningMood)))
+        ) {
             if (this.winningMood.weight() >= this.moodEvent.getCost()) {
                 if (this.getEvent() == null) {
                     this.winningMood = null;

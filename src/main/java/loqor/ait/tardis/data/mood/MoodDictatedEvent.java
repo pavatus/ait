@@ -4,7 +4,9 @@ import loqor.ait.AITMod;
 import loqor.ait.tardis.Tardis;
 import net.minecraft.util.Identifier;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public interface MoodDictatedEvent {
 
@@ -16,7 +18,7 @@ public interface MoodDictatedEvent {
 
     int getCost();
 
-    List<TardisMood.Moods> getMoodsList();
+    Set<TardisMood.Moods> getMoodsList();
 
     TardisMood.Alignment getMoodTypeCompatibility();
 
@@ -24,14 +26,14 @@ public interface MoodDictatedEvent {
         private final Identifier id;
         private final ExecuteMoodEvent execute;
         private final int cost;
-        private final List<TardisMood.Moods> moodsList;
+        private final Set<TardisMood.Moods> moodsList;
         private final TardisMood.Alignment alignmentCompatibility;
 
         public Builder(Identifier id, ExecuteMoodEvent execute, int cost, TardisMood.Alignment alignment, TardisMood.Moods... moods) {
             this.id = id;
             this.execute = execute;
             this.cost = cost;
-            this.moodsList = List.of(moods);
+            this.moodsList = new HashSet<>(List.of(moods));
             this.alignmentCompatibility = alignment;
         }
 
@@ -55,7 +57,7 @@ public interface MoodDictatedEvent {
         }
 
         @Override
-        public List<TardisMood.Moods> getMoodsList() {
+        public Set<TardisMood.Moods> getMoodsList() {
             return this.moodsList;
         }
 
