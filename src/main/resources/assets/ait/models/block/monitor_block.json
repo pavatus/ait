@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "ait:blockentities/monitors/crt_monitor"
+    "particle": "ait:block/particles/crt_monitor"
   }
 }
