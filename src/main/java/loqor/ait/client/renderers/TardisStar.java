@@ -39,12 +39,12 @@ public class TardisStar {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
         if (tardis.isGrowth()) {
-            matrixStack.translate(cameraPos.getX(), diff.y, cameraPos.getZ());
+            matrixStack.translate(tardis.getDesktop().doorPos().getPos().getX(), diff.y, tardis.getDesktop().doorPos().getPos().getX());
         } else {
             matrixStack.translate(
-                    tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX() - .5,
+                    tardis.engine().getCorePos().x != 0 ? diff.x - .5 : tardis.getDesktop().doorPos().getPos().getX() - .5,
                     diff.y,
-                    tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ() - .5);
+                    tardis.engine().getCorePos().y != 0 ? diff.z - .5 : tardis.getDesktop().doorPos().getPos().getX() - .5);
         }
         matrixStack.scale(20f, 20f, 20f);
 
@@ -85,12 +85,12 @@ public class TardisStar {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
         if (tardis.isGrowth()) {
-            matrixStack.translate(cameraPos.getX(), diff.y, cameraPos.getZ());
+            matrixStack.translate(tardis.getDesktop().doorPos().getPos().getX(), diff.y, tardis.getDesktop().doorPos().getPos().getX());
         } else {
             matrixStack.translate(
-                    tardis.engine().getCorePos().x != 0 ? diff.x - .5 : cameraPos.getX() - .5,
+                    tardis.engine().getCorePos().x != 0 ? diff.x - .5 : tardis.getDesktop().doorPos().getPos().getX() - .5,
                     diff.y,
-                    tardis.engine().getCorePos().y != 0 ? diff.z - .5 : cameraPos.getZ() - .5);
+                    tardis.engine().getCorePos().y != 0 ? diff.z - .5 : tardis.getDesktop().doorPos().getPos().getX() - .5);
         }
         if (!tardis.isRefueling())
             matrixStack.scale(4, 4, 4);

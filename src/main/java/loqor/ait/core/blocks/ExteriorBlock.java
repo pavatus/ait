@@ -69,7 +69,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 	public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
 	public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
 			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
-	public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 13.0, 16.0, 32.0, 16.0),
+	public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 11.0, 16.0, 32.0, 16.0),
 			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
 	public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
 

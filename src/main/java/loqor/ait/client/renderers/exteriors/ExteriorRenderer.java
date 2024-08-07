@@ -67,7 +67,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 			matrices.push();
 			matrices.translate(0.5f, 0.5f, 0.5f);
-			siege.renderWithAnimations(entity, siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.siege().texture().get())), light, overlay, 1, 1, 1, 1);
+			siege.renderWithAnimations(entity, siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(SiegeModeModel.TEXTURE)), light, overlay, 1, 1, 1, 1);
 
 			matrices.pop();
 			profiler.pop();

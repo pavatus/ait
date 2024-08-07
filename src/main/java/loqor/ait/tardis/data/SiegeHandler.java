@@ -38,8 +38,8 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 	private static final IntProperty SIEGE_TIME = new IntProperty("siege_time", 0);
 	private final IntValue siegeTime = SIEGE_TIME.create(this);
 	private final BoolValue active = ACTIVE.create(this);
-	private static final Property<Identifier> SIEGE_TEXTURE_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "siege_texture", SiegeModeModel.TEXTURE);
-	private final Value<Identifier> texture = SIEGE_TEXTURE_PROPERTY.create(this);
+	// private static final Property<Identifier> SIEGE_TEXTURE_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "siege_texture", SiegeModeModel.TEXTURE);
+	// private final Value<Identifier> texture = SIEGE_TEXTURE_PROPERTY.create(this);
 
 	public SiegeHandler() {
 		super(Id.SIEGE);
@@ -66,12 +66,12 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 		active.of(this, ACTIVE);
 		siegeTime.of(this, SIEGE_TIME);
 		heldKey.of(this, HELD_KEY);
-		texture.of(this, SIEGE_TEXTURE_PROPERTY);
+		// texture.of(this, SIEGE_TEXTURE_PROPERTY);
 	}
 
-	public Value<Identifier> texture() {
+	/*public Value<Identifier> texture() {
 		return texture;
-	}
+	}*/
 
 	public boolean isActive() {
 		return active.get();
