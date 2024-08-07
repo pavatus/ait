@@ -4,6 +4,7 @@ import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.SiegeHandler;
 import loqor.ait.tardis.link.LinkableItem;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -208,6 +209,6 @@ public class SiegeTardisItem extends Item {
 	public static void setTardis(ItemStack stack, Tardis tardis) {
 		NbtCompound data = stack.getOrCreateNbt();
 		data.putUuid("tardis-uuid", tardis.getUuid());
-		data.putInt(CURRENT_TEXTURE_KEY, tardis.siege().texture().get().equals(SiegeModeModel.BRICK_TEXTURE) ? 1 : 0);
+		data.putInt(CURRENT_TEXTURE_KEY, tardis.siege().texture().get().equals(SiegeHandler.BRICK_TEXTURE) ? 1 : 0);
 	}
 }

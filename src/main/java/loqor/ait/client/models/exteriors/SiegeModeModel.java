@@ -15,8 +15,6 @@ import net.minecraft.util.Identifier;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class SiegeModeModel extends ExteriorModel {
-	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode.png");
-	public static final Identifier BRICK_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode_brick.png");
 	private final ModelPart body;
 
 	public SiegeModeModel(ModelPart root) {

@@ -1,7 +1,9 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -32,13 +34,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class SiegeHandler extends KeyedTardisComponent implements TardisTickable {
+	@Exclude(strategy = Exclude.Strategy.NETWORK)
+	public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode.png");
+	@Exclude(strategy = Exclude.Strategy.NETWORK)
+	public static final Identifier BRICK_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/exteriors/siege_mode/siege_mode_brick.png");
 	private static final Property<UUID> HELD_KEY = new Property<>(Property.Type.UUID, "siege_held_uuid", new UUID(0, 0));
 	private final Value<UUID> heldKey = HELD_KEY.create(this);
 	private static final BoolProperty ACTIVE = new BoolProperty("siege_mode", false);
 	private static final IntProperty SIEGE_TIME = new IntProperty("siege_time", 0);
 	private final IntValue siegeTime = SIEGE_TIME.create(this);
 	private final BoolValue active = ACTIVE.create(this);
-	private static final Property<Identifier> SIEGE_TEXTURE_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "siege_texture", SiegeModeModel.TEXTURE);
+	private static final Property<Identifier> SIEGE_TEXTURE_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "siege_texture", TEXTURE);
 	private final Value<Identifier> texture = SIEGE_TEXTURE_PROPERTY.create(this);
 
 	public SiegeHandler() {

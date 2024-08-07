@@ -6,6 +6,7 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.data.SiegeHandler;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
 import net.minecraft.item.ItemStack;
@@ -48,12 +49,12 @@ public class TelepathicControl extends Control {
 			return false;
 
 		if (player.getMainHandStack().getItem() == Items.BRICK) {
-			tardis.siege().texture().set(SiegeModeModel.BRICK_TEXTURE);
+			tardis.siege().texture().set(SiegeHandler.BRICK_TEXTURE);
 			return false;
 		}
 
 		if (player.getMainHandStack().getItem() == Items.STONE) {
-			tardis.siege().texture().set(SiegeModeModel.TEXTURE);
+			tardis.siege().texture().set(SiegeHandler.TEXTURE);
 			return false;
 		}
 
