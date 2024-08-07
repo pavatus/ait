@@ -24,7 +24,7 @@ public class DesktopGenerator {
 	}
 
 	public void place(Tardis tardis, ServerWorld level, Corners corners) {
-		Optional <StructureTemplate> optional = this.schema.findTemplate();
+		Optional<StructureTemplate> optional = this.schema.findTemplate();
 
 		if (optional.isEmpty())
 			return;
@@ -43,7 +43,7 @@ public class DesktopGenerator {
 	public static void clearArea(ServerWorld level, Corners interiorCorners) {
 		// @TODO: Just delete the chunks instead of doing this
 		for (BlockPos pos : BlockPos.iterate(interiorCorners.getFirst().add(0, -64, 0), interiorCorners.getSecond().add(0, 256, 0))) {
-			level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NO_REDRAW);
+			level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NO_REDRAW | Block.SKIP_DROPS);
 		}
 	}
 }
