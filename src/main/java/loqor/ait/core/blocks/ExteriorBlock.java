@@ -71,6 +71,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
 	public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 11.0, 16.0, 32.0, 16.0),
 			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
+
+	public static final VoxelShape PORTALS_SHAPE_DIAGONAL = VoxelShapes.union(Block.createCuboidShape(11.0, 0.0, 11.0, 16.0, 32.0, 16.0),
+			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
 	public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
 
 	public ExteriorBlock(Settings settings) {
@@ -199,7 +202,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
 		// todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
 		if (DependencyChecker.hasPortals())
-			if (tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
+			if (!tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
 				return getLedgeShape(state);
 
 		TravelHandler travel = tardis.travel();
@@ -219,8 +222,14 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 		Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
 
 		if(direction.isEmpty()) {
+			if (DependencyChecker.hasPortals()) {
+				return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), PORTALS_SHAPE_DIAGONAL);
+			}
 			return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
 		} else {
+			if (DependencyChecker.hasPortals()) {
+				return rotateShape(Direction.NORTH, direction.get(), PORTALS_SHAPE);
+			}
 			return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
 		}
 	}

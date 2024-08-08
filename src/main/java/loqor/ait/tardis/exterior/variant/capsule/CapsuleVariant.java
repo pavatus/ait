@@ -44,13 +44,13 @@ public abstract class CapsuleVariant extends ExteriorVariantSchema {
 	public Vec3d adjustPortalPos(Vec3d pos, byte direction) {
 		return switch (direction) {
 			case 0 -> pos.add(0, 0.1, -0.5); // NORTH
-			case 1, 2, 3 -> pos; // NORTH EAST
+			case 1, 2, 3 -> pos.add(0.38, 0.1, -0.38); // NORTH EAST p n
 			case 4 -> pos.add(0.5, 0.1, 0); // EAST
-			case 5, 6, 7 -> pos; // SOUTH EAST
+			case 5, 6, 7 -> pos.add(0.38, 0.1, 0.38); // SOUTH EAST p p
 			case 8 -> pos.add(0, 0.1, 0.5); // SOUTH
-			case 9, 10, 11 -> pos; // SOUTH WEST
+			case 9, 10, 11 -> pos.add(-0.38, 0.1, 0.38); // SOUTH WEST n p
 			case 12 -> pos.add(-0.5, 0.1, 0); // WEST
-			case 13, 14, 15 -> pos; // NORTH WEST
+			case 13, 14, 15 -> pos.add(-0.38, 0.1, -0.38); // NORTH WEST n n
 			default -> pos;
 		};
 	}

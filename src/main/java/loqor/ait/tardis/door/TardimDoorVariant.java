@@ -23,10 +23,10 @@ public class TardimDoorVariant extends DoorSchema {
 	public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
 		return switch (direction) {
 			case DOWN, UP -> pos;
-			case NORTH -> pos.add(0, 0, 0.25f);
-			case SOUTH -> pos.add(0, 0, -0.25f);
-			case WEST -> pos.add(0.25f, 0, 0);
-			case EAST -> pos.add(-0.25f, 0, 0);
+			case NORTH -> pos.add(0, 0, -0.499f);
+			case SOUTH -> pos.add(0, 0, 0.499f);
+			case WEST -> pos.add(-0.499f, 0, 0);
+			case EAST -> pos.add(0.499f, 0, 0);
 		};
 	}
 }
