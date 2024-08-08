@@ -62,7 +62,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             return;
 
         if (this.tardis.crash().getState() == TardisCrashHandler.State.UNSTABLE)
-            this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
+            this.forceDestination(cached -> TravelUtil.jukePos(cached, 1, 10));
 
         if (!this.tardis.flight().isActive())
             this.rematerialize();

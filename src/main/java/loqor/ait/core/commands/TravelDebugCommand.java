@@ -43,7 +43,7 @@ public class TravelDebugCommand {
         ServerWorld world = DimensionArgumentType.getDimensionArgument(context, "dimension");
         BlockPos pos = BlockPosArgumentType.getBlockPos(context, "pos");
 
-        tardis.travel().destination(cached -> cached.world(world).pos(pos));
+        tardis.travel().forceDestination(cached -> cached.world(world).pos(pos));
         return Command.SINGLE_SUCCESS;
     }
 

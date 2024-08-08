@@ -84,7 +84,7 @@ public class MoodEventPoolRegistry {
         CHANGE_DIM = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "change_dim"), tardis -> {
             List<ServerWorld> listOfDims = TardisUtil.getDimensions(tardis.travel().destination().getWorld().getServer());
             ServerWorld randomWorld = listOfDims.get(random.nextInt(listOfDims.size()));
-            tardis.travel().destination(cached -> cached.world(randomWorld));
+            tardis.travel().forceDestination(cached -> cached.world(randomWorld));
         }, 80, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
         RANDOM_SIEGE = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_siege"), tardis -> {

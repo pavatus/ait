@@ -211,8 +211,13 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         this.destination.set(cached);
     }
 
+    // only use when you're sure the position you're g
     public void destination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
         this.destination(position.apply(this.destination()));
+    }
+
+    public void forceDestination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+        this.forceDestination(position.apply(this.destination()));
     }
 
     public DirectedGlobalPos.Cached previousPosition() {
