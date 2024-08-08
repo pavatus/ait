@@ -1,5 +1,6 @@
 {
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "particle": "minecraft:block/barrier"
+    "all": "ait:block/engine_core_block"
   }
 }

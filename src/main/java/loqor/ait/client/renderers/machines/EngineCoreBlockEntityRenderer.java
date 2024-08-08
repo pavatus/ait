@@ -1,12 +1,17 @@
 package loqor.ait.client.renderers.machines;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.models.decoration.TardisStarModel;
 import loqor.ait.client.models.machines.EngineCoreModel;
+import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
 import loqor.ait.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -18,11 +23,9 @@ import net.minecraft.util.math.RotationAxis;
 @Environment(EnvType.CLIENT)
 public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<EngineCoreBlockEntity> {
 
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/machines/engine_core.png");
-    public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID, "textures/blockentities/machines/engine_core_emission.png");
+    public static final Identifier TARDIS_STAR_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_star.png");
 
     private final EngineCoreModel model;
-    private int tickForSpin;
 
     public EngineCoreBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
         this.model = new EngineCoreModel(EngineCoreModel.getTexturedModelData().createModel());
@@ -30,7 +33,6 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
 
     @Override
     public void render(EngineCoreBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        tickForSpin++;
 
         if (!entity.isLinked())
             return;
@@ -39,19 +41,23 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
         boolean power = tardis.engine().hasPower();
 
         matrices.push();
-        matrices.translate(0.5f, 1f, 0.5f);
+        matrices.translate(0.5f, 0.35f, 0.5f);
+        matrices.scale(0.25f, 0.25f, 0.25f);
 
-        if (power && entity.isActive())
-            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) tickForSpin / 2000L) * 360.0f));
-
-        model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light, overlay, 1, 1, 1, 1);
+        if (power && entity.isActive()) {
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200L) * 360.0f));
+        }
 
         if (entity.isActive()) {
-            ClientLightUtil.renderEmissive(
-                    ClientLightUtil.Renderable.create(model::render), EMISSION, entity, this.model.getPart(), matrices, vertexConsumers,
-                    light, overlay, 1, 1, 1, 1
-            );
+            TardisStarModel.getTexturedModelData().createModel().render(matrices,
+                    vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(TARDIS_STAR_TEXTURE, true)),
+                    LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 0f, 0f, 0f, 0.5f);
         }
+
+        matrices.scale(0.9f, 0.9f, 0.9f);
+        TardisStarModel.getTexturedModelData().createModel().render(matrices,
+                vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(TARDIS_STAR_TEXTURE, true)),
+                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 0.13f, 0f, 0.4f, 1f);
 
         matrices.pop();
     }

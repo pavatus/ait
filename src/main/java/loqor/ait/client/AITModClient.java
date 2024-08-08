@@ -349,9 +349,10 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.LARGE_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.MEDIUM_ZEITON_BUD, RenderLayer.getCutout());
         map.putBlock(AITBlocks.SMALL_ZEITON_BUD, RenderLayer.getCutout());
-        map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getTranslucent());
+        map.putBlock(AITBlocks.MACHINE_CASING, RenderLayer.getCutout());
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.WAYPOINT_BANK, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.ENGINE_CORE_BLOCK, RenderLayer.getCutout());
     }
 }
