@@ -1,214 +1,750 @@
 {
   "variants": {
-    "face=ceiling,facing=east,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=ceiling,facing=east,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 180,
       "y": 270
     },
-    "face=ceiling,facing=east,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=ceiling,facing=east,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 180,
       "y": 270
     },
-    "face=ceiling,facing=north,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=ceiling,facing=north,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 180,
       "y": 180
     },
-    "face=ceiling,facing=north,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=ceiling,facing=north,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 180,
       "y": 180
     },
-    "face=ceiling,facing=south,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=ceiling,facing=south,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 180
     },
-    "face=ceiling,facing=south,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=ceiling,facing=south,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 180
     },
-    "face=ceiling,facing=west,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=ceiling,facing=west,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 180,
       "y": 90
     },
-    "face=ceiling,facing=west,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=ceiling,facing=west,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 180,
       "y": 90
     },
-    "face=floor,facing=east,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=floor,facing=east,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "y": 90
     },
-    "face=floor,facing=east,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=floor,facing=east,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "y": 90
     },
-    "face=floor,facing=north,powered=false,inverted=false": {
-      "model": "ait:block/detector_block"
+    "face=floor,facing=north,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off"
     },
-    "face=floor,facing=north,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on"
+    "face=floor,facing=north,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on"
     },
-    "face=floor,facing=south,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=floor,facing=south,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "y": 180
     },
-    "face=floor,facing=south,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=floor,facing=south,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "y": 180
     },
-    "face=floor,facing=west,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=floor,facing=west,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "y": 270
     },
-    "face=floor,facing=west,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=floor,facing=west,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "y": 270
     },
-    "face=wall,facing=east,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=wall,facing=east,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 90,
       "y": 90
     },
-    "face=wall,facing=east,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=wall,facing=east,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 90,
       "y": 90
     },
-    "face=wall,facing=north,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=wall,facing=north,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 90
     },
-    "face=wall,facing=north,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=wall,facing=north,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 90
     },
-    "face=wall,facing=south,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=wall,facing=south,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 90,
       "y": 180
     },
-    "face=wall,facing=south,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=wall,facing=south,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 90,
       "y": 180
     },
-    "face=wall,facing=west,powered=false,inverted=false": {
-      "model": "ait:block/detector_block",
+    "face=wall,facing=west,type=flight,powered=false": {
+      "model": "ait:block/detector/flight_off",
       "x": 90,
       "y": 270
     },
-    "face=wall,facing=west,powered=true,inverted=false": {
-      "model": "ait:block/detector_power_on",
+    "face=wall,facing=west,type=flight,powered=true": {
+      "model": "ait:block/detector/flight_on",
       "x": 90,
       "y": 270
     },
-    "face=ceiling,facing=east,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+
+    "face=ceiling,facing=east,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 180,
       "y": 270
     },
-    "face=ceiling,facing=east,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=ceiling,facing=east,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 180,
       "y": 270
     },
-    "face=ceiling,facing=north,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=ceiling,facing=north,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 180,
       "y": 180
     },
-    "face=ceiling,facing=north,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=ceiling,facing=north,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 180,
       "y": 180
     },
-    "face=ceiling,facing=south,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=ceiling,facing=south,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 180
     },
-    "face=ceiling,facing=south,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=ceiling,facing=south,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 180
     },
-    "face=ceiling,facing=west,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=ceiling,facing=west,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 180,
       "y": 90
     },
-    "face=ceiling,facing=west,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=ceiling,facing=west,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 180,
       "y": 90
     },
-    "face=floor,facing=east,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=floor,facing=east,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "y": 90
     },
-    "face=floor,facing=east,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=floor,facing=east,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "y": 90
     },
-    "face=floor,facing=north,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off"
+    "face=floor,facing=north,type=power,powered=false": {
+      "model": "ait:block/detector/power_off"
     },
-    "face=floor,facing=north,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on"
+    "face=floor,facing=north,type=power,powered=true": {
+      "model": "ait:block/detector/power_on"
     },
-    "face=floor,facing=south,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=floor,facing=south,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "y": 180
     },
-    "face=floor,facing=south,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=floor,facing=south,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "y": 180
     },
-    "face=floor,facing=west,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=floor,facing=west,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "y": 270
     },
-    "face=floor,facing=west,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=floor,facing=west,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "y": 270
     },
-    "face=wall,facing=east,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=wall,facing=east,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 90,
       "y": 90
     },
-    "face=wall,facing=east,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=wall,facing=east,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 90,
       "y": 90
     },
-    "face=wall,facing=north,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=wall,facing=north,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 90
     },
-    "face=wall,facing=north,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=wall,facing=north,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 90
     },
-    "face=wall,facing=south,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=wall,facing=south,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 90,
       "y": 180
     },
-    "face=wall,facing=south,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=wall,facing=south,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
       "x": 90,
       "y": 180
     },
-    "face=wall,facing=west,powered=false,inverted=true": {
-      "model": "ait:block/detector_vortex_off",
+    "face=wall,facing=west,type=power,powered=false": {
+      "model": "ait:block/detector/power_off",
       "x": 90,
       "y": 270
     },
-    "face=wall,facing=west,powered=true,inverted=true": {
-      "model": "ait:block/detector_vortex_on",
+    "face=wall,facing=west,type=power,powered=true": {
+      "model": "ait:block/detector/power_on",
+      "x": 90,
+      "y": 270
+    },
+
+    "face=ceiling,facing=east,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=north,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=north,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=south,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 180
+    },
+    "face=ceiling,facing=south,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 180
+    },
+    "face=ceiling,facing=west,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "y": 90
+    },
+    "face=floor,facing=east,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "y": 90
+    },
+    "face=floor,facing=north,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off"
+    },
+    "face=floor,facing=north,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on"
+    },
+    "face=floor,facing=south,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "y": 180
+    },
+    "face=floor,facing=south,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "y": 180
+    },
+    "face=floor,facing=west,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "y": 270
+    },
+    "face=floor,facing=west,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "y": 270
+    },
+    "face=wall,facing=east,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=east,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=north,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 90
+    },
+    "face=wall,facing=north,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 90
+    },
+    "face=wall,facing=south,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west,type=crashed,powered=false": {
+      "model": "ait:block/detector/crashed_off",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,type=crashed,powered=true": {
+      "model": "ait:block/detector/crashed_on",
+      "x": 90,
+      "y": 270
+    },
+
+    "face=ceiling,facing=east,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=north,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=north,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=south,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 180
+    },
+    "face=ceiling,facing=south,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 180
+    },
+    "face=ceiling,facing=west,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "y": 90
+    },
+    "face=floor,facing=east,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "y": 90
+    },
+    "face=floor,facing=north,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off"
+    },
+    "face=floor,facing=north,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on"
+    },
+    "face=floor,facing=south,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "y": 180
+    },
+    "face=floor,facing=south,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "y": 180
+    },
+    "face=floor,facing=west,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "y": 270
+    },
+    "face=floor,facing=west,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "y": 270
+    },
+    "face=wall,facing=east,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=east,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=north,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 90
+    },
+    "face=wall,facing=north,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 90
+    },
+    "face=wall,facing=south,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west,type=door_locked,powered=false": {
+      "model": "ait:block/detector/locked_off",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,type=door_locked,powered=true": {
+      "model": "ait:block/detector/locked_on",
+      "x": 90,
+      "y": 270
+    },
+
+    "face=ceiling,facing=east,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=north,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=north,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=south,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 180
+    },
+    "face=ceiling,facing=south,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 180
+    },
+    "face=ceiling,facing=west,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "y": 90
+    },
+    "face=floor,facing=east,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "y": 90
+    },
+    "face=floor,facing=north,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off"
+    },
+    "face=floor,facing=north,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on"
+    },
+    "face=floor,facing=south,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "y": 180
+    },
+    "face=floor,facing=south,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "y": 180
+    },
+    "face=floor,facing=west,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "y": 270
+    },
+    "face=floor,facing=west,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "y": 270
+    },
+    "face=wall,facing=east,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=east,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=north,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 90
+    },
+    "face=wall,facing=north,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 90
+    },
+    "face=wall,facing=south,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west,type=door_open,powered=false": {
+      "model": "ait:block/detector/open_off",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,type=door_open,powered=true": {
+      "model": "ait:block/detector/open_on",
+      "x": 90,
+      "y": 270
+    },
+
+    "face=ceiling,facing=east,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=north,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=north,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=south,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 180
+    },
+    "face=ceiling,facing=south,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 180
+    },
+    "face=ceiling,facing=west,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "y": 90
+    },
+    "face=floor,facing=east,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "y": 90
+    },
+    "face=floor,facing=north,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off"
+    },
+    "face=floor,facing=north,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on"
+    },
+    "face=floor,facing=south,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "y": 180
+    },
+    "face=floor,facing=south,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "y": 180
+    },
+    "face=floor,facing=west,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "y": 270
+    },
+    "face=floor,facing=west,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "y": 270
+    },
+    "face=wall,facing=east,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=east,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=north,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 90
+    },
+    "face=wall,facing=north,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 90
+    },
+    "face=wall,facing=south,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west,type=sonic,powered=false": {
+      "model": "ait:block/detector/sonic_off",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,type=sonic,powered=true": {
+      "model": "ait:block/detector/sonic_on",
+      "x": 90,
+      "y": 270
+    },
+
+    "face=ceiling,facing=east,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=east,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=north,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=north,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 180,
+      "y": 180
+    },
+    "face=ceiling,facing=south,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 180
+    },
+    "face=ceiling,facing=south,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 180
+    },
+    "face=ceiling,facing=west,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 180,
+      "y": 90
+    },
+    "face=ceiling,facing=west,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "y": 90
+    },
+    "face=floor,facing=east,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "y": 90
+    },
+    "face=floor,facing=north,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off"
+    },
+    "face=floor,facing=north,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on"
+    },
+    "face=floor,facing=south,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "y": 180
+    },
+    "face=floor,facing=south,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "y": 180
+    },
+    "face=floor,facing=west,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "y": 270
+    },
+    "face=floor,facing=west,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "y": 270
+    },
+    "face=wall,facing=east,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=east,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 90,
+      "y": 90
+    },
+    "face=wall,facing=north,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 90
+    },
+    "face=wall,facing=north,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 90
+    },
+    "face=wall,facing=south,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=south,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west,type=alarms,powered=false": {
+      "model": "ait:block/detector/alarms_off",
+      "x": 90,
+      "y": 270
+    },
+    "face=wall,facing=west,type=alarms,powered=true": {
+      "model": "ait:block/detector/alarms_on",
       "x": 90,
       "y": 270
     }

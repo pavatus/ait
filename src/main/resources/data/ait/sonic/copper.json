@@ -1,0 +1,13 @@
+{
+  "id": "ait:copper",
+  "models": {
+    "inactive": "ait:item/sonic/copper/inactive",
+    "interaction": "ait:item/sonic/copper/interaction",
+    "overload": "ait:item/sonic/copper/overload",
+    "scanning": "ait:item/sonic/copper/scanning",
+    "tardis": "ait:item/sonic/copper/tardis"
+  },
+  "loyalty": {
+    "type": "PILOT"
+  }
+}

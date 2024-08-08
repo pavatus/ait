@@ -1,0 +1,15 @@
+{
+  "type": "ait:time_vortex_type",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "ait:time_vortex",
+      "lakes": false,
+      "features": false,
+      "layers": [],
+      "structures": {
+        "structures": {}
+      }
+    }
+  }
+}

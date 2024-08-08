@@ -1,26 +1,43 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "mdteam.ait.mixin",
+  "package": "loqor.ait.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "loqor.ait.compat.AITMixinPlugin",
   "mixins": [
+    "DismountEntityMixin",
+    "client.experimental_screen.LevelSummaryMixin",
+    "compat.gravity.EntityTagsMixin",
+    "lookup.EntityTrackingSectionAccessor",
+    "lookup.SectionedEntityCacheAccessor",
+    "lookup.SimpleEntityLookupAccessor",
+    "lookup.WorldInvoker",
+    "networking.ServerChunkManagerAccessor",
+    "networking.ServerWorldMixin",
+    "networking.ThreadedAnvilChunkStorageMixin",
+    "server.BedInTardisMixin",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
     "server.ServerPlayerMixin",
-    "server.StructureTemplateMixin"
+    "server.ServerWorldMixin",
+    "server.StructureTemplateMixin",
+    "server.structure.StructureTemplateAccessor",
+    "server.structure.StructureTemplateMixin"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.TitleScreenMixin",
+    "client.experimental_screen.CreateWorldScreenMixin",
+    "client.experimental_screen.WorldOpenFlowsMixin",
+    "client.rendering.BakedModelManagerMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",
+    "client.rendering.HeldItemRendererMixin",
     "client.rendering.PlayerEntityRendererMixin",
-    "client.rendering.PlayerPoseRendererMixin",
-    "client.rendering.SkyboxMixin",
-    "client.rendering.WindowMixin"
+    "client.rendering.SkyboxMixin"
   ],
   "injectors": {
     "defaultRequire": 1

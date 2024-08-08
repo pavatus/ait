@@ -25,16 +25,22 @@ Recommended to play with 8GB of RAM **minimum** singleplayer.
 
 Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
-## Compatability
+## Compatibility
 
-### If you have [Regeneration](https://modrinth.com/mod/regeneration)
-
-- Adds special functionality when you regenerate inside a tardis
-- Your TARDIS will panic, crashing and flying randomly.
-- Your TARDIS may randomly change interior or exterior
 ### If you have [Immersive Portals](https://modrinth.com/mod/immersiveportals)
 - Your TARDIS will be Bigger on the Inside (BOTI)
 - When you open the doors from the exterior you will be able to see the interior and vice versa
+
+### If you have [Gravity Changer (qouteall fork)](https://modrinth.com/mod/gravity-api-fork/versions)
+- Your TARDIS will be able to control the interior gravity from the [TARDIS Monitor](https://loqor.dev/ait/Monitor/)
+  
+## AIT Compatibility Addons
+
+### If you have [Adventures in Space](https://github.com/DrTheodor/adventures-in-space) and [Ad Astra](https://modrinth.com/mod/ad-astra)
+- Special compatibility with the TARDIS when playing with Ad Astra
+  
+### If you have [AIT: Computed](https://github.com/Duzos/aitcompute/tree/0.1.0.24-1.20.1-dev) and [Computer Craft](https://modrinth.com/mod/cc-tweaked)
+- Your TARDIS will be able to communicate with a turtle through the vortex
 
 ## Credits
 
@@ -42,6 +48,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - Loqor
 - Duzo
 - Dr. Theo
+- Nitrogenesis
 
 ---
 
@@ -60,11 +67,12 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ## Thank You's:
-- DocArcane (Credit for the Steampunk console design)
-- Jeryn (Suff) (Help with code)
-- Bug1312 (Help with code)
 - MagicMan(?) (Help with modeling)
+- Bug1312 (Help with code)
+- DocArcane (Credit for the Steampunk console design)
 - Creativious (Help with code)
+- Jeryn (Suff) (Help with code)
+- Maggie (Help with texturing)
 
 
 ## Links

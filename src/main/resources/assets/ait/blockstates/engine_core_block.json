@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "waterlogged=false": {
+      "model": "ait:block/engine_core_block"
+    },
+    "waterlogged=true": {
+      "model": "ait:block/engine_core_block"
+    }
+  }
+}

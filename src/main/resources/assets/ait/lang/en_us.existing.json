@@ -20,7 +20,11 @@
   "text.config.aitconfig.option.CUSTOM_MENU.tooltip": "Whether the custom title screen should show",
 
   "screen.ait.security.title": "Security",
-  "screen.ait.security.button": "> Security",
   "screen.ait.security.leave_behind": "> Toggle leaving behind",
-  "screen.ait.security.hostile_alarms": "> Toggle hostile alarms"
+  "screen.ait.security.hostile_alarms": "> Toggle hostile alarms",
+
+  "selectWorld.warning.experimental.question": "The TARDISes are experimental and could one day stop working. Do you wish to proceed with Gallifreyan technology?",
+  "selectWorld.backupQuestion.experimental": "Transdimentional Engineering Detected!",
+  "selectWorld.backupWarning.experimental": "The TARDISes are experimental and could one day stop working. Do you wish to proceed with messing around with Gallifreyan technology? Here be dragons!",
+  "selectWorld.warning.experimental.question": "The TARDISes are experimental and could one day stop working. Do you wish to proceed with playing around with Gallifreyan technology?"
 }

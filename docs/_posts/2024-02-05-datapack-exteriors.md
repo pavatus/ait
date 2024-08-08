@@ -5,7 +5,7 @@ categories: ["Tardis", "Specifics", "Datapacks", "Exteriors"]
 ---
 
 ## Exterior Texture
-- Make an exterior texture for any of the exteriors that exist in the mod. You may use any of the variants as a base, but remember whatever you borrow as a base cannot be claimed as your own, used in any other media (without permission from MDTeam), or distributed.
+- Make an exterior texture for any of the exteriors that exist in the mod. You may use any of the variants as a base, but remember whatever you borrow as a base cannot be claimed as your own, used in any other media (without permission from Loqor), or distributed.
 - Save this exterior texture to your datapack that is called by your own custom datapack namespace (see below), naming it whatever you like. but do remember to call it something you can remember, with **.png** as the image's format.
 > Side note: the interior door texture is contained within the exterior textures themselves, so do be aware of that.
 
@@ -82,7 +82,6 @@ And once you make sure the textures are inside of the directory above, then you'
 > - Police Box (I am only listing the ones that have different models):
 > > `default`
 > > `coral`
-> > `tokamak`
 > - Classic Police Box:
 > > `default`
 > - K2 Phone Booth:

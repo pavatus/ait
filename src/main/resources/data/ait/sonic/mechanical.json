@@ -1,0 +1,25 @@
+{
+  "id": "ait:mechanical",
+  "models": {
+    "inactive": "ait:item/sonic/mechanical/inactive",
+    "interaction": "ait:item/sonic/mechanical/interaction",
+    "overload": "ait:item/sonic/mechanical/overload",
+    "scanning": "ait:item/sonic/mechanical/scanning",
+    "tardis": "ait:item/sonic/mechanical/tardis"
+  },
+  "rendering": {
+    "position": {
+      "x": 10.0,
+      "y": 10.0,
+      "z": 0.0
+    },
+    "scale": {
+      "x": -1.5,
+      "y": -1.5,
+      "z": -1.5
+    }
+  },
+  "loyalty": {
+    "type": "OWNER"
+  }
+}

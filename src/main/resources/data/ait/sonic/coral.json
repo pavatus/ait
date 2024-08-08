@@ -1,0 +1,13 @@
+{
+  "id": "ait:coral",
+  "models": {
+    "inactive": "ait:item/sonic/coral/inactive",
+    "interaction": "ait:item/sonic/coral/interaction",
+    "overload": "ait:item/sonic/coral/overload",
+    "scanning": "ait:item/sonic/coral/scanning",
+    "tardis": "ait:item/sonic/coral/tardis"
+  },
+  "loyalty": {
+    "type": "NEUTRAL"
+  }
+}

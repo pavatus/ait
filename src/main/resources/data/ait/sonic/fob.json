@@ -1,0 +1,13 @@
+{
+  "id": "ait:fob",
+  "models": {
+    "inactive": "ait:item/sonic/fob/inactive",
+    "interaction": "ait:item/sonic/fob/interaction",
+    "overload": "ait:item/sonic/fob/overload",
+    "scanning": "ait:item/sonic/fob/scanning",
+    "tardis": "ait:item/sonic/fob/tardis"
+  },
+  "loyalty": {
+    "type": "PILOT"
+  }
+}

@@ -23,8 +23,8 @@ It is crafted with this recipe:
 
 ![Artron Collector Panel Recipe](../assets/ac-item-recipe.png)
 
-To use it, simply hold the item in your hand while in a rift chunk and it will drain the chunk.
-To fill up your tardis with it, shift right click the console.
+To use it, simply hold the item in your hand while in a rift chunk, and it will drain the chunk.
+To fill up your tardis with it, crouch right-click the console.
 
 ## Artron Collector Block
 

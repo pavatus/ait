@@ -1,0 +1,32 @@
+{
+  "variants": {
+    "facing=east,half=lower": {
+      "model": "ait:block/waypoint_bank",
+      "y": 0
+    },
+    "facing=north,half=lower": {
+      "model": "ait:block/waypoint_bank",
+      "y": 270
+    },
+    "facing=south,half=lower": {
+      "model": "ait:block/waypoint_bank",
+      "y": 90
+    },
+    "facing=west,half=lower": {
+      "model": "ait:block/waypoint_bank",
+      "y": 180
+    },
+    "facing=east,half=upper": {
+      "model": "ait:block/waypoint_bank_upper"
+    },
+    "facing=north,half=upper": {
+      "model": "ait:block/waypoint_bank_upper"
+    },
+    "facing=south,half=upper": {
+      "model": "ait:block/waypoint_bank_upper"
+    },
+    "facing=west,half=upper": {
+      "model": "ait:block/waypoint_bank_upper"
+    }
+  }
+}

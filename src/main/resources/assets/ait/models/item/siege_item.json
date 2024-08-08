@@ -65,5 +65,9 @@
 			"translation": [0, 6, 0],
 			"scale": [1.5, 1.5, 1.5]
 		}
-	}
+	},
+	"overrides": [
+		{"predicate": {"bricked": 0}, "model": "ait:item/siege_item"},
+		{"predicate": {"bricked": 1}, "model": "ait:item/siege_item_variant"}
+	]
 }
