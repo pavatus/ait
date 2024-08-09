@@ -126,7 +126,7 @@ public class TelepathicControl extends Control {
 				.thenOnServerThread(pos -> {
 					BlockPos newPos = pos != null ? pos.getFirst() : null;
 			if (newPos != null) {
-				tardis.travel().destination(cached -> cached.pos(newPos.withY(75)));
+				tardis.travel().forceDestination(cached -> cached.pos(newPos.withY(75)));
 				tardis.removeFuel(500 * tardis.travel().getHammerUses());
 				player.sendMessage(Text.translatable("tardis.message.control.telepathic.success"), true);
 			} else {
@@ -139,7 +139,7 @@ public class TelepathicControl extends Control {
 		AsyncLocatorUtil.locate(world, structureTagKey, center, radius, false)
 				.thenOnServerThread(pos -> {
 			if (pos != null) {
-				tardis.travel().destination(cached -> cached.pos(pos.withY(75)));
+				tardis.travel().forceDestination(cached -> cached.pos(pos.withY(75)));
 				tardis.removeFuel(500 * tardis.travel().instability());
 				player.sendMessage(Text.translatable("tardis.message.control.telepathic.success"), true);
 			} else {

@@ -106,9 +106,11 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
             for (int j = -1; j <= 1; ++j) {
                 for (int k = -1; k <= 1; ++k) {
                     BlockPos blockPos = pos.add(i, j, k);
-                    if (!world.isWater(blockPos)) {
+                    /*if (!world.isWater(blockPos)) {
                         return false;
-                    }
+                    }*/
+                    activatingBlocks.add(blockPos);
+                    return true;
                 }
             }
         }
@@ -135,6 +137,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     private static void spawnNautilusParticles(World world, BlockPos pos, List<BlockPos> activatingBlocks, int ticks) {
+
         Random random = world.random;
         double d = MathHelper.sin((float)(ticks + 35) * 0.1F) / 2.0F + 0.5F;
         d = (d * d + d) * 0.30000001192092896;
@@ -144,13 +147,13 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
         float f;
         while(var9.hasNext()) {
             BlockPos blockPos = var9.next();
-            if (random.nextInt(50) == 0) {
+            //if (random.nextInt(1) == 0) {
                 BlockPos blockPos2 = blockPos.subtract(pos);
                 f = -0.5F + random.nextFloat() + (float)blockPos2.getX();
                 float g = -2.0F + random.nextFloat() + (float)blockPos2.getY();
                 float h = -0.5F + random.nextFloat() + (float)blockPos2.getZ();
                 world.addParticle(ParticleTypes.NAUTILUS, vec3d.x, vec3d.y, vec3d.z, f, g, h);
-            }
+            //}
         }
     }
 

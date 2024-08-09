@@ -46,7 +46,7 @@ public class DimensionControl extends Control {
 
 		ServerWorld destWorld = dims.get(next);
 
-		travel.destination(cached -> cached.world(destWorld));
+		travel.forceDestination(cached -> cached.world(destWorld));
 		messagePlayer(player, destWorld);
 
 		return true;

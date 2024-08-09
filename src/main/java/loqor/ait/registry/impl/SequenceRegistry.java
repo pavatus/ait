@@ -135,7 +135,7 @@ public class SequenceRegistry {
 
 		DIMENSIONAL_DRIFT_X = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_x"), (finishedTardis -> {
 					finishedTardis.travel().decreaseFlightTime(120);
-				}), (missedTardis -> missedTardis.travel().destination(cached -> {
+				}), (missedTardis -> missedTardis.travel().forceDestination(cached -> {
                     BlockPos pos = cached.getPos();
 
                     return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
@@ -145,7 +145,7 @@ public class SequenceRegistry {
 
 		DIMENSIONAL_DRIFT_Y = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_y"), (finishedTardis -> {
 					finishedTardis.travel().decreaseFlightTime(120);
-				}), (missedTardis -> missedTardis.travel().destination(cached -> {
+				}), (missedTardis -> missedTardis.travel().forceDestination(cached -> {
                     BlockPos pos = cached.getPos();
 
                     return cached.pos(
@@ -157,7 +157,7 @@ public class SequenceRegistry {
 
 		DIMENSIONAL_DRIFT_Z = register(Sequence.Builder.create(new Identifier(AITMod.MOD_ID, "dimensional_drift_z"), (finishedTardis -> {
 					finishedTardis.travel().decreaseFlightTime(120);
-				}), (missedTardis -> missedTardis.travel().destination(cached -> {
+				}), (missedTardis -> missedTardis.travel().forceDestination(cached -> {
                     BlockPos pos = cached.getPos();
 
                     return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
@@ -228,7 +228,7 @@ public class SequenceRegistry {
 				}), (missedTardis -> {
 					missedTardis.removeFuel(random.nextBetween(65, 250));
 
-					missedTardis.travel().destination(cached -> {
+					missedTardis.travel().forceDestination(cached -> {
 						BlockPos pos = cached.getPos();
 
 						return cached.pos(
