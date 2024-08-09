@@ -8,7 +8,6 @@ import loqor.ait.core.entities.base.LinkableDummyEntity;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.RealFlightHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.Block;
@@ -79,7 +78,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 		world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
 		world.spawnEntity(fallingBlockEntity);
 
-		exterior.tardis().get().<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().set(true);
+		exterior.tardis().get().flight().falling().set(true);
 	}
 
 	@Override

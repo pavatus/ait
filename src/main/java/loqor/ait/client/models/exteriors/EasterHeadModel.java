@@ -2,7 +2,6 @@ package loqor.ait.client.models.exteriors;
 
 import loqor.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -49,17 +48,6 @@ public class EasterHeadModel extends ExteriorModel {
 		this.head.getChild("door").pitch = (exterior.tardis().get().door().isOpen()) ? -45f : 0f;
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-		matrices.pop();
-	}
-
-	@Override
-	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		matrices.push();
-		matrices.translate(0, -1.5f, 0);
-
-		this.head.getChild("door").pitch = (realEntity.tardis().get().door().isOpen()) ? -45f : 0f;
-		super.renderRealWorld(realEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
 		matrices.pop();
 	}
 

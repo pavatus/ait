@@ -9,7 +9,6 @@ import loqor.ait.client.renderers.decoration.PlaqueRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
-import loqor.ait.client.renderers.entities.RealTardisRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
@@ -337,7 +336,6 @@ public class AITModClient implements ClientModInitializer {
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
-        EntityRendererRegistry.register(AITEntityTypes.TARDIS_REAL_ENTITY_TYPE, RealTardisRenderer::new);
     }
 
     public static void setupBlockRendering() {

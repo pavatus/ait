@@ -2,7 +2,6 @@ package loqor.ait.client.models.exteriors;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
@@ -64,10 +63,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 	}
 
 	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-	}
-
-	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 

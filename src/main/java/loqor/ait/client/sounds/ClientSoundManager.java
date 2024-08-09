@@ -6,24 +6,22 @@ import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
 import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
 import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
-import loqor.ait.client.sounds.rwf.ClientRWFSoundsHandler;
 import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
-@Environment(EnvType.CLIENT)
 /**
  * A class for playing + managing our custom sounds on the client, right now just a place to store the hum/alarm handlers
  */
+@Environment(EnvType.CLIENT)
 public class ClientSoundManager {
 	private static ClientHumHandler hum;
 	private static ClientAlarmHandler alarm;
 	private static ClientFlightHandler flight;
 	private static ClientCreakHandler creak;
 	private static ClientVortexSoundsHandler vortexSounds;
-	private static ClientRWFSoundsHandler rwfsounds;
 	private static ClientRainSoundHandler rainSound;
 	private static ClientLavaSoundHandler lavaSound;
 	private static ClientSonicSoundHandler sonicSound;
@@ -50,13 +48,6 @@ public class ClientSoundManager {
 		}
 
 		return flight;
-	}
-
-	public static ClientRWFSoundsHandler getRWFSounds() {
-		if (rwfsounds == null) {
-			rwfsounds = ClientRWFSoundsHandler.create();
-		}
-		return rwfsounds;
 	}
 
 	public static ClientCreakHandler getCreaks() {
@@ -110,9 +101,6 @@ public class ClientSoundManager {
 
 		if (getVortexSounds() != null)
 			getVortexSounds().tick(client);
-
-		if (getRWFSounds() != null)
-			getRWFSounds().tick(client);
 
 		if (getRainSound() != null)
 			getRainSound().tick(client);

@@ -56,7 +56,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     public boolean hasFinishedFlight() {
         return (this.getFlightTicks() >= this.getTargetTicks()
                 || this.getTargetTicks() == 0 || tardis.travel().isCrashing()
-        ) && !this.tardis.flight().isActive();
+        );
     }
 
     @Override
@@ -184,7 +184,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
             this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
             this.resetFlight();
 
-            if (this.autopilot() && !this.tardis.flight().isActive())
+            if (this.autopilot())
                 this.tardis().travel().rematerialize();
 
             return;

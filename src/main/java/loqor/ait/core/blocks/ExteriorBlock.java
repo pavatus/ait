@@ -13,7 +13,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.RealFlightHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
@@ -417,7 +416,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         world.scheduleBlockTick(pos, this, 2);
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
-		tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().set(false);
+		tardis.flight().falling().set(false);
 		DoorHandler.lockTardis(tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isGenerating(), tardis, null, false);
 	}
 

@@ -2,7 +2,6 @@ package loqor.ait.mixin.server;
 
 
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,11 +25,5 @@ public class ServerPlayerMixin {
 			TardisUtil.teleportInside(found, player);
 			player.fallDistance = 0;
 		}
-	}
-
-	@Inject(method="sendPickup", at = @At("HEAD"), cancellable = true)
-	private void ait$sendPickup(CallbackInfo ci) {
-		if(((ServerPlayerEntity) (Object) this).getVehicle() instanceof RealTardisEntity)
-			ci.cancel();
 	}
 }

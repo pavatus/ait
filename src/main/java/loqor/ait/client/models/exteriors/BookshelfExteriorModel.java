@@ -6,7 +6,6 @@ package loqor.ait.client.models.exteriors;// Made with Blockbench 4.10.1
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -118,22 +117,6 @@ public class BookshelfExteriorModel extends ExteriorModel {
 
 
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
-		matrices.pop();
-	}
-
-	@Override
-	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		matrices.push();
-		matrices.scale(1F, 1F, 1F);
-		matrices.translate(0, -1.5f, 0);
-
-		DoorHandler door = realEntity.tardis().get().door();
-
-		this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
-		this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
-
-		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
 	}

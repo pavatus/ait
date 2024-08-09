@@ -4,7 +4,6 @@ import io.wispforest.owo.registration.annotations.AssignedName;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.RealTardisEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -20,10 +19,6 @@ public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
 	@AssignedName("falling_tardis")
 	public static final EntityType<FallingTardisEntity> FALLING_TARDIS_TYPE = FabricEntityTypeBuilder.create(
 			SpawnGroup.MISC, FallingTardisEntity::new).dimensions(EntityDimensions.changing(0.98f, 0.98f)).build();
-
-	@AssignedName("tardis_real")
-	public static final EntityType<RealTardisEntity> TARDIS_REAL_ENTITY_TYPE = FabricEntityTypeBuilder.create(
-			SpawnGroup.MISC, RealTardisEntity::new).dimensions(EntityDimensions.changing(0.98f, 1.96f)).build();
 
 	@Override
 	public Registry<EntityType<?>> getRegistry() {

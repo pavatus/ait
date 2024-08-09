@@ -2,7 +2,6 @@ package loqor.ait.client.models.exteriors;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -46,16 +45,6 @@ public class DoomExteriorModel extends ExteriorModel {
 		matrices.translate(0, -1.05f, 0);
 		matrices.scale(0.7f, 0.7f, 0.7f);
 		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-		matrices.pop();
-	}
-
-	@Override
-	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		matrices.push();
-		matrices.translate(0, -1.05f, 0);
-		matrices.scale(0.7f, 0.7f, 0.7f);
-
-		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 		matrices.pop();
 	}
 

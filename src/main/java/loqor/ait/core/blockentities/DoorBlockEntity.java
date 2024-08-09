@@ -9,9 +9,7 @@ import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.RealFlightHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
@@ -141,7 +139,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 		if (tardis.getLockedTardis())
 			return;
 
-		if (tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().get())
+		if (tardis.flight().falling().get())
 			return;
 
 		if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())

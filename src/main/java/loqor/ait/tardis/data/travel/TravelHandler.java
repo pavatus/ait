@@ -9,7 +9,6 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.*;
@@ -64,8 +63,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.tardis.crash().getState() == TardisCrashHandler.State.UNSTABLE)
             this.destination(cached -> TravelUtil.jukePos(cached, 1, 10));
 
-        if (!this.tardis.flight().isActive())
-            this.rematerialize();
+        this.rematerialize();
     }
 
     @Override
@@ -191,7 +189,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL
                 || tardis.door().isOpen() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis)
-                || tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().get()
+                || tardis.flight().falling().get()
         ) {
             this.failDemat();
             return;

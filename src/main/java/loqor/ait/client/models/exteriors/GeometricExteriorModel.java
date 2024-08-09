@@ -6,7 +6,6 @@ package loqor.ait.client.models.exteriors;// Made with Blockbench 4.10.1
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.RealTardisEntity;
 import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -56,18 +55,6 @@ public class GeometricExteriorModel extends ExteriorModel {
 
 		this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
 		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
-		matrices.pop();
-	}
-
-	@Override
-	public void renderRealWorld(RealTardisEntity realEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		matrices.push();
-		matrices.scale(1f, 1F, 1F);
-		matrices.translate(0, -1.5f, 0);
-
-		this.geometric.getChild("door").pivotZ += realEntity.tardis().get().door().isOpen() ? -16f : 0f;
-		super.renderRealWorld(realEntity, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 
 		matrices.pop();
 	}
