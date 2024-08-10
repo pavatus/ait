@@ -1,13 +1,11 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.ShapeUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -25,7 +23,6 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -33,7 +30,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
@@ -60,10 +56,11 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door && door.tardis() != null && door.tardis().get().siege().isActive())
+		if (world.getBlockEntity(pos) instanceof DoorBlockEntity door
+				&& door.isLinked() && door.tardis().get().siege().isActive())
 			return VoxelShapes.empty();
 
-		return rotateShape(Direction.NORTH, state.get(FACING), NORTH_SHAPE);
+		return ShapeUtil.rotate(Direction.NORTH, state.get(FACING), NORTH_SHAPE);
 	}
 
 	@Override
@@ -76,19 +73,6 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 		}
 
 		super.onPlaced(world, pos, state, placer, itemStack);
-	}
-
-	public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-		VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
-
-		int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
-		for (int i = 0; i < times; i++) {
-			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
-			buffer[0] = buffer[1];
-			buffer[1] = VoxelShapes.empty();
-		}
-
-		return buffer[0];
 	}
 
 	@Override
