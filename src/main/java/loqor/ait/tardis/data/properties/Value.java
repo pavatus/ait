@@ -122,8 +122,8 @@ public class Value<T> implements Disposable {
         private final Class<?> clazz;
         private final Function<V, T> creator;
 
-        public Serializer(Function<V, T> creator) {
-            this(null, creator);
+        public Serializer(Property.Type<?> type, Function<V, T> creator) {
+            this(type.getClazz(), creator);
         }
 
         public Serializer(Class<?> clazz, Function<V, T> creator) {
@@ -131,11 +131,15 @@ public class Value<T> implements Disposable {
             this.creator = creator;
         }
 
+        protected Serializer(Function<V, T> creator) {
+            this((Class<?>) null, creator);
+        }
+
         @Override
         public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             Type type = clazz;
 
-            if (typeOfT instanceof ParameterizedType parameter)
+            if (clazz == null && typeOfT instanceof ParameterizedType parameter)
                 type = parameter.getActualTypeArguments()[0];
 
             return this.creator.apply(context.deserialize(json, type));

@@ -14,6 +14,6 @@ public class IntValue extends Value<Integer> {
     }
 
     public static Object serializer() {
-        return new Serializer<>(Integer.class, IntValue::new);
+        return new Serializer<>(IntProperty.TYPE, IntValue::new);
     }
 }

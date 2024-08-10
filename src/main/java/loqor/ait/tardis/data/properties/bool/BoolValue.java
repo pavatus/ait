@@ -4,11 +4,7 @@ import loqor.ait.tardis.data.properties.Value;
 
 public class BoolValue extends Value<Boolean> {
 
-    protected BoolValue(boolean value) {
-        super(value);
-    }
-
-    private BoolValue(Boolean value) {
+    protected BoolValue(Boolean value) {
         super(value);
     }
 
@@ -18,6 +14,6 @@ public class BoolValue extends Value<Boolean> {
     }
 
     public static Object serializer() {
-        return new Serializer<Boolean, BoolValue>(Boolean.class, BoolValue::new);
+        return new Serializer<>(BoolProperty.TYPE, BoolValue::new);
     }
 }

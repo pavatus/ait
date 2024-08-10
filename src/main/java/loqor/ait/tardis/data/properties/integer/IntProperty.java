@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class IntProperty extends Property<Integer> {
 
-    public static final Type<Integer> TYPE = new Type<>(PacketByteBuf::writeInt, PacketByteBuf::readInt);
+    public static final Type<Integer> TYPE = new Type<>(Integer.class, PacketByteBuf::writeInt, PacketByteBuf::readInt);
 
     public IntProperty(String name) {
         this(name, 0);

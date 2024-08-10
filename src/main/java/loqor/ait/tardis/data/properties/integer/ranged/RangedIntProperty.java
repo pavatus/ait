@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class RangedIntProperty extends Property<Integer> {
 
-    public static final Type<Integer> TYPE = new Type<>(PacketByteBuf::writeInt, PacketByteBuf::readInt);
+    public static final Type<Integer> TYPE = new Type<>(Integer.class, PacketByteBuf::writeInt, PacketByteBuf::readInt);
 
     private final int min;
     private final int max;

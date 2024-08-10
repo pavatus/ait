@@ -48,7 +48,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
 		DoorBlockEntity door = (DoorBlockEntity) tDoor;
 
-		if (door.tardis().isEmpty())
+		if (!door.isLinked())
 			return;
 
 		Tardis tardis = door.tardis().get();

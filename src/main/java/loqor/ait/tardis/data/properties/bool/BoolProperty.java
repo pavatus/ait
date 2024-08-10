@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class BoolProperty extends Property<Boolean> {
 
-    public static final Type<Boolean> TYPE = new Type<>(PacketByteBuf::writeBoolean, PacketByteBuf::readBoolean);
+    public static final Type<Boolean> TYPE = new Type<>(Boolean.class, PacketByteBuf::writeBoolean, PacketByteBuf::readBoolean);
 
     public BoolProperty(String name) {
         this(name, false);

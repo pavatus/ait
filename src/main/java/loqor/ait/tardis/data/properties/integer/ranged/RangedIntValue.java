@@ -12,10 +12,6 @@ public class RangedIntValue extends Value<Integer> {
         return new RangedIntValue(value);
     }
 
-    private RangedIntValue(Integer value) {
-        super(value);
-    }
-
     @Override
     public void set(Integer value, boolean sync) {
         super.set(RangedIntProperty.normalize(this.asRanged(), value), sync);
@@ -26,6 +22,6 @@ public class RangedIntValue extends Value<Integer> {
     }
 
     public static Object serializer() {
-        return new Serializer<Integer, RangedIntValue>(Integer.class, RangedIntValue::new);
+        return new Serializer<>(RangedIntProperty.TYPE, RangedIntValue::new);
     }
 }

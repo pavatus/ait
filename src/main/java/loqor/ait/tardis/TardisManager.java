@@ -18,6 +18,7 @@ import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
+import loqor.ait.tardis.data.properties.doubl3.DoubleValue;
 import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.data.properties.integer.ranged.RangedIntValue;
 import loqor.ait.tardis.util.TardisMap;
@@ -50,9 +51,6 @@ public abstract class TardisManager<T extends Tardis, C> {
 
 	public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
 	public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "remove_tardis");
-	public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_tardis");
-
-	public static final Identifier UPDATE_PROPERTY = new Identifier(AITMod.MOD_ID, "update_property");
 
 	protected final TardisMap<T> lookup = new TardisMap<>();
 
@@ -116,7 +114,8 @@ public abstract class TardisManager<T extends Tardis, C> {
 		return builder.registerTypeAdapter(Value.class, Value.serializer())
 				.registerTypeAdapter(BoolValue.class, BoolValue.serializer())
 				.registerTypeAdapter(IntValue.class, IntValue.serializer())
-				.registerTypeAdapter(RangedIntValue.class, RangedIntValue.serializer());
+				.registerTypeAdapter(RangedIntValue.class, RangedIntValue.serializer())
+				.registerTypeAdapter(DoubleValue.class, DoubleValue.serializer());
 	}
 
 	public static TardisManager<?, ?> getInstance(Entity entity) {

@@ -103,11 +103,11 @@ public class Property<T> {
 
         public static final Type<ItemStack> ITEM_STACK = new Type<>(ItemStack.class, PacketByteBuf::writeItemStack, PacketByteBuf::readItemStack);
 
-        private final Class<? extends T> clazz;
+        private final Class<?> clazz;
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;
 
-        public Type(Class<? extends T> clazz, BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
+        public Type(Class<?> clazz, BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
             this.clazz = clazz;
             this.encoder = encoder;
             this.decoder = decoder;
@@ -121,7 +121,7 @@ public class Property<T> {
             return this.decoder.apply(buf);
         }
 
-        public Class<? extends T> getClazz() {
+        public Class<?> getClazz() {
             return clazz;
         }
 
