@@ -2,6 +2,7 @@ package loqor.ait.core.blockentities;
 
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SiegeTardisItem;
@@ -181,7 +182,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (state.animated()) this.getAnimation().tick(tardis);
 		else this.getAnimation().reset();
 
-        this.exteriorLightBlockState(state);
+        this.exteriorLightBlockState(blockState, pos, state);
         this.checkAnimations();
 	}
 
@@ -232,11 +233,14 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 		return this.getAnimation().getAlpha();
 	}
 
-    private void exteriorLightBlockState(TravelHandlerBase.State state) {
+    private void exteriorLightBlockState(BlockState blockState, BlockPos pos, TravelHandlerBase.State state) {
         if (!state.animated())
             return;
 
-        this.getWorld().setBlockState(pos, this.getWorld().getBlockState(pos).with(
+		if (!blockState.isOf(AITBlocks.EXTERIOR_BLOCK))
+			return;
+
+        this.getWorld().setBlockState(pos, blockState.with(
                 ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)
         ));
     }
