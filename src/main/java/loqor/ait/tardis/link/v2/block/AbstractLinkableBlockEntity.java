@@ -73,7 +73,6 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
         if (!(this.world instanceof ServerWorld serverWorld))
             return;
 
-
         ServerTardisManager.getInstance().unmark(
                 serverWorld, (ServerTardis) this.ref.get(), new ChunkPos(this.pos)
         );
@@ -112,6 +111,7 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
+        this.mark();
         return createNbt();
     }
 
