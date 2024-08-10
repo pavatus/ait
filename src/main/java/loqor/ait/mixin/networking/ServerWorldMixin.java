@@ -20,7 +20,7 @@ public abstract class ServerWorldMixin implements WorldWithTardis {
     }
 
     @Override
-    public boolean ait$hasTardis() {
+    public boolean ait$hasLookup() {
         return this.tardisLookup != null;
     }
 }

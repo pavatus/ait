@@ -47,14 +47,11 @@ public class VersionCommand {
         if (!source.isExecutedByPlayer())
             return Command.SINGLE_SUCCESS;
 
-        WorldWithTardis withTardis = (WorldWithTardis) context.getSource().getWorld();
-
-        if (!withTardis.ait$hasTardis())
-            return Command.SINGLE_SUCCESS;
-
-        source.sendMessage(Text.empty());
-        source.sendMessage(Text.literal("TARDIS in chunk: "
-                + withTardis.ait$lookup().get(source.getPlayer().getChunkPos())));
+        ((WorldWithTardis) context.getSource().getWorld()).ait$withLookup(lookup -> {
+            source.sendMessage(Text.empty());
+            source.sendMessage(Text.literal("TARDIS in chunk: "
+                    + lookup.get(source.getPlayer().getChunkPos())));
+        });
 
         return Command.SINGLE_SUCCESS;
     }
