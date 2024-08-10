@@ -67,25 +67,25 @@ public class Property<T> {
 
     public static class Type<T> {
 
-        public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>((buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
-        public static final Type<DirectedGlobalPos.Cached> CDIRECTED_GLOBAL_POS = new Type<>((buf, pos) -> pos.write(buf), DirectedGlobalPos.Cached::read);
-        public static final Type<Identifier> IDENTIFIER = new Type<>(PacketByteBuf::writeIdentifier, PacketByteBuf::readIdentifier);
+        public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.class, (buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
+        public static final Type<DirectedGlobalPos.Cached> CDIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.Cached.class, (buf, pos) -> pos.write(buf), DirectedGlobalPos.Cached::read);
+        public static final Type<Identifier> IDENTIFIER = new Type<>(Identifier.class, PacketByteBuf::writeIdentifier, PacketByteBuf::readIdentifier);
 
-        public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
-        public static final Type<Direction> DIRECTION = new Type<>(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(Direction.class));
+        public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(RegistryKey.class, PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
+        public static final Type<Direction> DIRECTION = Type.forEnum(Direction.class);
 
-        public static final Type<Vector2i> VEC2I = new Type<>((buf, vector2i) -> {
+        public static final Type<Vector2i> VEC2I = new Type<>(Vector2i.class, (buf, vector2i) -> {
             buf.writeInt(vector2i.x);
             buf.writeInt(vector2i.y);
         }, buf -> new Vector2i(buf.readInt(), buf.readInt()));
 
-        public static final Type<String> STR = new Type<>(PacketByteBuf::writeString, PacketByteBuf::readString);
+        public static final Type<String> STR = new Type<>(String.class, PacketByteBuf::writeString, PacketByteBuf::readString);
 
-        public static final Type<UUID> UUID = new Type<>(PacketByteBuf::writeUuid, PacketByteBuf::readUuid);
+        public static final Type<UUID> UUID = new Type<>(UUID.class, PacketByteBuf::writeUuid, PacketByteBuf::readUuid);
 
-        public static final Type<Double> DOUBLE = new Type<>(PacketByteBuf::writeDouble, PacketByteBuf::readDouble);
+        public static final Type<Double> DOUBLE = new Type<>(Double.class, PacketByteBuf::writeDouble, PacketByteBuf::readDouble);
 
-        public static final Type<HashSet<String>> STR_SET = new Type<>((buf, strings) -> {
+        public static final Type<HashSet<String>> STR_SET = new Type<>(HashSet.class, (buf, strings) -> {
             buf.writeVarInt(strings.size());
 
             for (String str : strings)
@@ -101,12 +101,14 @@ public class Property<T> {
             return result;
         });
 
-        public static final Type<ItemStack> ITEM_STACK = new Type<>(PacketByteBuf::writeItemStack, PacketByteBuf::readItemStack);
+        public static final Type<ItemStack> ITEM_STACK = new Type<>(ItemStack.class, PacketByteBuf::writeItemStack, PacketByteBuf::readItemStack);
 
+        private final Class<? extends T> clazz;
         private final BiConsumer<PacketByteBuf, T> encoder;
         private final Function<PacketByteBuf, T> decoder;
 
-        public Type(BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
+        public Type(Class<? extends T> clazz, BiConsumer<PacketByteBuf, T> encoder, Function<PacketByteBuf, T> decoder) {
+            this.clazz = clazz;
             this.encoder = encoder;
             this.decoder = decoder;
         }
@@ -119,17 +121,17 @@ public class Property<T> {
             return this.decoder.apply(buf);
         }
 
+        public Class<? extends T> getClazz() {
+            return clazz;
+        }
+
         public static <T extends Enum<T>> Type<T> forEnum(Class<T> clazz) {
-            return new Type<>(PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(clazz));
+            return new Type<>(clazz, PacketByteBuf::writeEnumConstant, buf -> buf.readEnumConstant(clazz));
         }
     }
 
     public interface Mode {
         byte UPDATE = 0;
         byte NULL = 1;
-
-        static byte forValue(Value<?> o) {
-            return o.get() == null ? NULL : UPDATE;
-        }
     }
 }

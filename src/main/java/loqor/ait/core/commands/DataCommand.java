@@ -19,8 +19,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
-import java.lang.reflect.ParameterizedType;
-
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -102,7 +100,7 @@ public class DataCommand {
         }
 
         Value<T> value = keyed.getPropertyData().getExact(valueName);
-        Class<T> classOfT = DataCommand.reflectClassType(value);
+        Class<? extends T> classOfT = value.getProperty().getType().getClazz();
 
         T obj = ServerTardisManager.getInstance().getFileGson().fromJson(data.toString(), classOfT);
 
@@ -110,10 +108,5 @@ public class DataCommand {
         source.sendMessage(Text.translatable("command.ait.data.set", valueName, obj.toString()));
 
         return Command.SINGLE_SUCCESS;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> Class<T> reflectClassType(Value<T> value) {
-        return (Class<T>) ((ParameterizedType) value.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

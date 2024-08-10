@@ -24,11 +24,10 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 	@Override
 	public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		Tardis tardis = entity.tardis().get();
-
-		if (tardis == null)
+		if (!entity.isLinked())
 			return;
 
+		Tardis tardis = entity.tardis().get();
 		Profiler profiler = entity.getWorld().getProfiler();
 		profiler.push("console"); // console {
 
