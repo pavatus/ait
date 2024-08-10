@@ -261,7 +261,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 	@Override
 	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
+
+		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || !exterior.isLinked())
 			return getNormalShape(state);
 
         TravelHandlerBase.State travelState = exterior.tardis().get().travel().getState();
