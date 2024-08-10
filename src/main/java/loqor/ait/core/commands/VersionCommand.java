@@ -18,6 +18,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class VersionCommand {
 
     private static final ModContainer AIT = FabricLoader.getInstance().getModContainer(AITMod.MOD_ID).get();
+    private static final String VERSION = AIT.getMetadata().getVersion().getFriendlyString();
 
     private static final Text LOGO = Text.literal("""
            ::::::\\\\     ::::::::::::|| ::::::::::::::::||
@@ -41,7 +42,7 @@ public class VersionCommand {
         source.sendMessage(LOGO.copy().formatted(Formatting.GOLD));
         source.sendMessage(Text.translatable("message.ait.version")
                 .formatted(Formatting.GOLD).append(Text.literal(": ")
-                        .append(AIT.getMetadata().getVersion().getFriendlyString())));
+                        .append(VERSION).formatted(Formatting.WHITE)));
 
         if (!source.isExecutedByPlayer())
             return Command.SINGLE_SUCCESS;
