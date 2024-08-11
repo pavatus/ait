@@ -23,7 +23,7 @@ public class TardisExterior extends TardisComponent {
     }
 
     public ExteriorCategorySchema getCategory() {
-        if (exterior == null) {
+        if (exterior == null && this.isServer()) {
             AITMod.LOGGER.error("Exterior Category was null! Changing to a random one...");
             this.setType(CategoryRegistry.getInstance().getRandom());
         }
@@ -32,9 +32,9 @@ public class TardisExterior extends TardisComponent {
     }
 
     public ExteriorVariantSchema getVariant() {
-        if (variant == null) {
+        if (variant == null && this.isServer()) {
             AITMod.LOGGER.error("Variant was null! Changing to a random one...");
-            this.setVariant(ExteriorVariantRegistry.getInstance().getRandom(this.tardis()));
+            this.setVariant(ExteriorVariantRegistry.getInstance().pickRandomWithParent(CategoryRegistry.CAPSULE));
         }
 
         return variant;
@@ -43,9 +43,9 @@ public class TardisExterior extends TardisComponent {
     public void setType(ExteriorCategorySchema exterior) {
         this.exterior = exterior;
 
-        if (exterior != getVariant().category()) {
+        if (exterior != this.getVariant().category()) {
             AITMod.LOGGER.error("Force changing exterior variant to a random one to ensure it matches!");
-            setVariant(ExteriorVariantRegistry.getInstance().pickRandomWithParent(exterior));
+            this.setVariant(ExteriorVariantRegistry.getInstance().pickRandomWithParent(exterior));
         }
 
         this.sync();
