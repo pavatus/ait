@@ -8,6 +8,9 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.CompliantServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
@@ -28,12 +31,12 @@ public class ServerTardisManager extends CompliantServerTardisManager {
 
     private ServerTardisManager() {
         TardisEvents.SYNC_TARDIS.register(WorldWithTardis.forSync((player, tardisSet) -> {
-            for (ServerTardis tardis : tardisSet) {
-                if (tardis.isRemoved())
-                    continue;
-
-                this.sendTardis(player, tardis);
+            if (tardisSet.size() > 16) {
+                this.sendTardisBulk(player, tardisSet);
+                return;
             }
+
+            this.sendTardisAll(player, tardisSet);
         }));
 
         TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
@@ -76,7 +79,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
 
     @Override
     public void sendTardis(ServerTardis tardis) {
-        if (tardis == null || this.networkGson == null)
+        if (!canSend(tardis))
             return;
 
         if (this.fileManager.isLocked())
@@ -85,12 +88,40 @@ public class ServerTardisManager extends CompliantServerTardisManager {
         this.needsUpdate.add(tardis);
     }
 
+    protected void sendTardisBulk(ServerPlayerEntity player, Set<ServerTardis> set) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeInt(set.size());
+
+        for (ServerTardis tardis : set) {
+            if (!canSend(tardis))
+                continue;
+
+            data.writeUuid(tardis.getUuid());
+            data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
+        }
+
+        ServerPlayNetworking.send(player, SEND_BULK, data);
+    }
+
+    protected void sendTardisAll(ServerPlayerEntity player, Set<ServerTardis> set) {
+        for (ServerTardis tardis : set) {
+            if (!canSend(tardis))
+                continue;
+
+            this.sendTardis(player, tardis);
+        }
+    }
+
     public void mark(ServerWorld world, ServerTardis tardis, ChunkPos chunk) {
         ((WorldWithTardis) world).ait$lookup().put(chunk, tardis);
     }
 
     public void unmark(ServerWorld world, ServerTardis tardis, ChunkPos chunk) {
         ((WorldWithTardis) world).ait$withLookup(lookup -> lookup.remove(chunk, tardis));
+    }
+
+    private static boolean canSend(ServerTardis tardis) {
+        return tardis != null && !tardis.isRemoved();
     }
 
     public static ServerTardisManager getInstance() {

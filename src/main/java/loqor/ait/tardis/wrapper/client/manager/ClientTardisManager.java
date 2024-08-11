@@ -44,13 +44,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 		);
 
 		ClientPlayNetworking.registerGlobalReceiver(SEND_BULK,
-				(client, handler, buf, responseSender) -> {
-			int count = buf.readInt();
-
-			for (int i = 0; i < count; i++) {
-				this.sync(buf);
-			}
-				});
+				(client, handler, buf, responseSender) -> this.syncBulk(buf));
 
 		ClientPlayNetworking.registerGlobalReceiver(REMOVE,
 				(client, handler, buf, responseSender) -> this.remove(buf)
@@ -127,7 +121,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 	private void sync(UUID uuid, String json) {
 		try {
 			ClientTardis tardis = this.readTardis(this.networkGson, json);
-			tardis.travel();
+			tardis.travel(); // get a random element. if its null it will complain
 
 			synchronized (this) {
 				ClientTardis old = this.lookup.put(tardis);
@@ -139,7 +133,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 					consumer.accept(tardis);
 				}
 			}
-		} catch(Throwable t) {
+		} catch (Throwable t) {
 			AITMod.LOGGER.error("Received malformed JSON file {}", json);
 			AITMod.LOGGER.error("Failed to deserialize TARDIS data: ", t);
 		}
@@ -151,6 +145,14 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
 	private void sync(PacketByteBuf buf) {
 		this.sync(buf.readUuid(), buf);
+	}
+
+	private void syncBulk(PacketByteBuf buf) {
+		int count = buf.readInt();
+
+		for (int i = 0; i < count; i++) {
+			this.sync(buf);
+		}
 	}
 
 	@Override

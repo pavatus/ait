@@ -21,15 +21,15 @@ public abstract class ThreadedAnvilChunkStorageMixin {
     protected void sendWatchPackets(
             ThreadedAnvilChunkStorage instance, ServerPlayerEntity player, MutableObject<ChunkDataS2CPacket> cachedDataPacket, WorldChunk chunk
     ) {
-        TardisEvents.SYNC_TARDIS.invoker().sync(player, chunk);
         this.sendChunkDataPackets(player, cachedDataPacket, chunk);
+        TardisEvents.SYNC_TARDIS.invoker().sync(player, chunk);
     }
 
     @Redirect(method = "sendWatchPackets", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;sendUnloadChunkPacket(Lnet/minecraft/util/math/ChunkPos;)V"))
     protected void sendWatchPackets(
             ServerPlayerEntity instance, ChunkPos chunkPos
     ) {
-        TardisEvents.UNLOAD_TARDIS.invoker().unload(instance, chunkPos);
         instance.sendUnloadChunkPacket(chunkPos);
+        TardisEvents.UNLOAD_TARDIS.invoker().unload(instance, chunkPos);
     }
 }
