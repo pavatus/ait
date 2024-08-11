@@ -2,92 +2,64 @@ package loqor.ait.client.sounds.lava;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.ServerLavaHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.block.Blocks;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ClientLavaSoundHandler extends SoundHandler {
+
     public static LoopingSound LAVA_SOUND;
 
-    protected ClientLavaSoundHandler() {
-    }
-
-    public LoopingSound getRainSound() {
+    public LoopingSound getLavaSound(ClientTardis tardis) {
         if (LAVA_SOUND == null)
-            LAVA_SOUND = new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT,
-                    SoundCategory.BLOCKS,
-                    tardis().getDesktop().doorPos().getPos(), 0.2f);
+            LAVA_SOUND = this.createLavaSound(tardis);
 
         return LAVA_SOUND;
     }
 
-    public static ClientLavaSoundHandler create() {
-        if (MinecraftClient.getInstance().player == null) return null;
+    private PositionedLoopingSound createLavaSound(ClientTardis tardis) {
+        if (tardis.getDesktop().doorPos().getPos() == null)
+            return null;
 
+        return new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.BLOCKS,
+                tardis.getDesktop().doorPos().getPos(), 0.2f);
+    }
+
+    public static ClientLavaSoundHandler create() {
         ClientLavaSoundHandler handler = new ClientLavaSoundHandler();
-        handler.generate();
+
+        handler.generate(ClientTardisUtil.getCurrentTardis());
         return handler;
     }
 
-    private void generate() {
+    private void generate(ClientTardis tardis) {
+        if (LAVA_SOUND == null)
+            LAVA_SOUND = createLavaSound(tardis);
 
-        if (tardis() == null) return;
-
-        if (LAVA_SOUND == null && tardis().getDesktop().doorPos().getPos() != null)
-            LAVA_SOUND = new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT,
-                    SoundCategory.WEATHER,
-                    tardis().getDesktop().doorPos().getPos(), 0.2f);
-
-        this.sounds = new ArrayList<>();
-        this.sounds.add(
-                LAVA_SOUND
-        );
+        this.sounds = List.of(LAVA_SOUND);
     }
 
-    public boolean isPlayerInATardis() {
-        if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-            return false;
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-
-        return found != null;
-    }
-
-    public Tardis tardis() {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-
-        if (player == null)
-            return null;
-
-        return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-    }
-
-    public boolean isLanded() {
-        Tardis tardis = this.tardis();
-        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.LANDED);
+    private boolean shouldPlaySounds(ClientTardis tardis) {
+        return tardis != null && tardis.travel().getState() == TravelHandlerBase.State.LANDED
+                && tardis.<ServerLavaHandler>handler(TardisComponent.Id.LAVA_OUTSIDE).isEnabled();
     }
 
     public void tick(MinecraftClient client) {
-        if (this.sounds == null)
-            this.generate();
+        ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
-        if (isLanded() && isPlayerInATardis() && tardis().getHandlers().<ServerLavaHandler>get(TardisComponent.Id.LAVA_OUTSIDE).isEnabled()) {
-            this.startIfNotPlaying(getRainSound());
+        if (this.sounds == null)
+            this.generate(tardis);
+
+        if (this.shouldPlaySounds(tardis)) {
+            this.startIfNotPlaying(this.getLavaSound(tardis));
         } else {
             this.stopSound(LAVA_SOUND);
         }

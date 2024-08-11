@@ -47,6 +47,10 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
 		return this.getState() == State.UNSTABLE;
 	}
 
+	public boolean isNormal() {
+		return this.getState() == State.NORMAL;
+	}
+
 	@Override
 	public void onLoaded() {
 		state.of(this, STATE_PROPERTY);

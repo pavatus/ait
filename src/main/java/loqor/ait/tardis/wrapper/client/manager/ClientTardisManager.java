@@ -43,6 +43,15 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 				(client, handler, buf, responseSender) -> this.sync(buf)
 		);
 
+		ClientPlayNetworking.registerGlobalReceiver(SEND_BULK,
+				(client, handler, buf, responseSender) -> {
+			int count = buf.readInt();
+
+			for (int i = 0; i < count; i++) {
+				this.sync(buf);
+			}
+				});
+
 		ClientPlayNetworking.registerGlobalReceiver(REMOVE,
 				(client, handler, buf, responseSender) -> this.remove(buf)
 		);

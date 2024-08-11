@@ -13,8 +13,6 @@ import net.minecraft.util.math.Vec3d;
 
 import java.lang.reflect.Type;
 
-// todo add @Environment(value = EnvType.CLIENT) to client-only stuff if stuff starts crashing
-
 /**
  * This class provides information about a door for an exterior
  * <br><br>
@@ -36,12 +34,11 @@ public abstract class DoorSchema {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() == null) return false;
+		if (this == o)
+			return true;
 
-		DoorSchema that = (DoorSchema) o;
-
-		return id.equals(that.id);
+		return o instanceof DoorSchema that
+				&& id.equals(that.id);
 	}
 
 	public Identifier id() {

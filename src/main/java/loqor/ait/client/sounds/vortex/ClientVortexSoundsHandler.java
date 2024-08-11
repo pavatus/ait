@@ -2,85 +2,61 @@ package loqor.ait.client.sounds.vortex;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
-import loqor.ait.core.AITDimensions;
+import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ClientVortexSoundsHandler extends SoundHandler {
+
     public static LoopingSound VORTEX_SOUND;
 
-    protected ClientVortexSoundsHandler() {
-    }
-
-    public LoopingSound getVortexSound() {
+    public LoopingSound getVortexSound(ClientTardis tardis) {
         if (VORTEX_SOUND == null)
-            VORTEX_SOUND = new PositionedLoopingSound(AITSounds.VORTEX_SOUND,
-                    SoundCategory.AMBIENT,
-                    tardis().getDesktop().doorPos().getPos(), 0.1f);
+            VORTEX_SOUND = this.createVortexSound(tardis);
 
         return VORTEX_SOUND;
     }
 
-    public static ClientVortexSoundsHandler create() {
-        if (MinecraftClient.getInstance().player == null) return null;
+    private PositionedLoopingSound createVortexSound(ClientTardis tardis) {
+        if (tardis.getDesktop().doorPos().getPos() == null)
+            return null;
 
+        return new PositionedLoopingSound(AITSounds.VORTEX_SOUND, SoundCategory.AMBIENT,
+                tardis.getDesktop().doorPos().getPos(), 0.1f);
+    }
+
+    public static ClientVortexSoundsHandler create() {
         ClientVortexSoundsHandler handler = new ClientVortexSoundsHandler();
-        handler.generate();
+
+        handler.generate(ClientTardisUtil.getCurrentTardis());
         return handler;
     }
 
-    private void generate() {
+    private void generate(ClientTardis tardis) {
+        if (VORTEX_SOUND == null)
+            VORTEX_SOUND = this.createVortexSound(tardis);
 
-        if (tardis() == null) return;
-
-        if (VORTEX_SOUND == null && tardis().getDesktop().doorPos().getPos() != null)
-            VORTEX_SOUND = new PositionedLoopingSound(AITSounds.VORTEX_SOUND,
-                    SoundCategory.AMBIENT,
-                    tardis().getDesktop().doorPos().getPos(), 0.1f);
-
-        this.sounds = new ArrayList<>();
-        this.sounds.add(
-                VORTEX_SOUND
-        );
+        this.sounds = List.of(VORTEX_SOUND);
     }
 
-    public boolean isPlayerInATardis() {
-        if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-            return false;
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-
-        return found != null;
-    }
-
-    public Tardis tardis() {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-
-        if (player == null)
-            return null;
-
-        return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-    }
-
-    public boolean isInFlight() {
-        Tardis tardis = this.tardis();
-        return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT);
+    private boolean shouldPlaySound(ClientTardis tardis) {
+        return tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
     }
 
     public void tick(MinecraftClient client) {
-        if (this.sounds == null)
-            this.generate();
+        ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
-        if (isPlayerInATardis() && isInFlight()) {
-            this.startIfNotPlaying(getVortexSound());
+        if (this.sounds == null)
+            this.generate(tardis);
+
+        if (this.shouldPlaySound(tardis)) {
+            this.startIfNotPlaying(this.getVortexSound(tardis));
         } else {
             this.stopSound(VORTEX_SOUND);
         }

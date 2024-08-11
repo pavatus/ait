@@ -9,15 +9,15 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSonicSoundHandler extends SoundHandler {
+
     public static PositionedLoopingSound SONIC_SOUND;
+
     private boolean shouldPlay;
     private PlayerEntity player;
 
@@ -34,34 +34,29 @@ public class ClientSonicSoundHandler extends SoundHandler {
     }
 
     public PositionedLoopingSound getSonicSound() {
-
         if (SONIC_SOUND == null)
-            SONIC_SOUND = new PositionedLoopingSound(AITSounds.SONIC_USE,
-                    SoundCategory.PLAYERS,
-                    new BlockPos(0, 0, 0), 1f, 1f);
+            SONIC_SOUND = this.createSonicSound();
 
         return SONIC_SOUND;
     }
 
-    public static ClientSonicSoundHandler create() {
-        if (MinecraftClient.getInstance().player == null) return null;
+    private PositionedLoopingSound createSonicSound() {
+        return new PositionedLoopingSound(AITSounds.SONIC_USE, SoundCategory.PLAYERS,
+                new BlockPos(0, 0, 0), 1f, 1f);
+    }
 
+    public static ClientSonicSoundHandler create() {
         ClientSonicSoundHandler handler = new ClientSonicSoundHandler();
+
         handler.generate();
         return handler;
     }
 
     private void generate() {
-
         if (SONIC_SOUND == null)
-            SONIC_SOUND = new PositionedLoopingSound(AITSounds.SONIC_USE,
-                SoundCategory.PLAYERS,
-                    new BlockPos(0, 0, 0), 1f, 1f);
+            SONIC_SOUND = this.createSonicSound();
 
-        this.sounds = new ArrayList<>();
-        this.sounds.add(
-                SONIC_SOUND
-        );
+        this.sounds = List.of(SONIC_SOUND);
     }
 
     public boolean shouldPlay() {
@@ -70,14 +65,11 @@ public class ClientSonicSoundHandler extends SoundHandler {
 
     public boolean playerUsingSonic() {
         ItemStack handStack = this.getPlayer().getMainHandStack();
-        if (handStack == null || !(handStack.getItem() instanceof SonicItem)) return false;
-        NbtCompound nbt = this.getPlayer().getMainHandStack().getOrCreateNbt();
 
-        if (nbt.contains(SonicItem.MODE_KEY)) {
-            return nbt.getInt(SonicItem.MODE_KEY) != 0;
-        }
+        if (handStack == null || !(handStack.getItem() instanceof SonicItem))
+            return false;
 
-        return false;
+        return SonicItem.findModeInt(handStack) != 0;
     }
 
     public void shouldPlay(boolean shouldPlay) {
@@ -97,9 +89,10 @@ public class ClientSonicSoundHandler extends SoundHandler {
             this.generate();
 
         if (this.getPlayer() != null && this.shouldPlay() && playerUsingSonic()) {
-            this.startIfNotPlaying(getSonicSound());
-            getSonicSound().setPosition(this.getPlayer().getBlockPos());
-            getSonicSound().setPitch(-(this.getPlayer().getPitch() / 90f) + 1f);
+            this.startIfNotPlaying(this.getSonicSound());
+
+            this.getSonicSound().setPosition(this.getPlayer().getBlockPos());
+            this.getSonicSound().setPitch(-(this.getPlayer().getPitch() / 90f) + 1f);
         } else {
             this.stopSound(SONIC_SOUND);
         }

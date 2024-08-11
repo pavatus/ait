@@ -34,7 +34,7 @@ public class ClientTardisUtil {
 
 			ClientTardis newTardis = null;
 
-			if (client.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+			if (isPlayerInATardis(client))
 				newTardis = (ClientTardis) TardisUtil.findTardisByInterior(client.player.getBlockPos(), false);
 
 			currentTardis = newTardis;
@@ -73,8 +73,12 @@ public class ClientTardisUtil {
 	}
 
 	public static boolean isPlayerInATardis() {
-        return MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD;
+        return isPlayerInATardis(MinecraftClient.getInstance());
     }
+
+	private static boolean isPlayerInATardis(MinecraftClient client) {
+		return client.world != null && client.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD;
+	}
 
 	/**
 	 * Gets the tardis the player is currently inside

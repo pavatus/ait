@@ -2,18 +2,16 @@ package loqor.ait.client.sounds.hum;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
-import loqor.ait.core.AITDimensions;
+import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.registry.impl.HumsRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
@@ -22,48 +20,46 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static loqor.ait.AITMod.AIT_CONFIG;
 
 public class ClientHumHandler extends SoundHandler {
+
 	private LoopingSound current;
 
 	protected ClientHumHandler() {
-
 		ClientPlayNetworking.registerGlobalReceiver(ServerHumHandler.SEND,
 				(client, handler, buf, responseSender) -> {
 					Identifier id = buf.readIdentifier();
-
 					SoundInstance sound = findSoundById(id);
 
-					if (sound.getId() == SoundEvents.INTENTIONALLY_EMPTY.getId()) return;
-					if (!(sound instanceof LoopingSound)) return; // it aint a hum.
+					if (sound.getId() == SoundEvents.INTENTIONALLY_EMPTY.getId())
+						return;
 
-					this.setHum((LoopingSound) sound);
+					if (!(sound instanceof LoopingSound hum))
+						return; // it aint a hum.
+
+					this.setHum(ClientTardisUtil.getCurrentTardis(), hum);
 				});
 	}
 
-	public LoopingSound getHum() {
-		if (this.current == null) {
-			if (this.tardis() == null) return null;
-			this.current = (LoopingSound) findSoundByEvent(this.tardis().<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum().sound());
-		}
+	public LoopingSound getHum(ClientTardis tardis) {
+		if (this.current == null)
+			this.current = (LoopingSound) findSoundByEvent(tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum().sound());
 
 		return this.current;
 	}
 
-	public void setHum(LoopingSound hum) {
-		LoopingSound previous = this.getHum();
-
+	public void setHum(ClientTardis tardis, LoopingSound hum) {
+		LoopingSound previous = this.getHum(tardis);
 		this.current = hum;
 
 		this.stopSound(previous);
 	}
 
-	public void setServersHum(HumSound hum) {
+	public void setServersHum(ClientTardis tardis, HumSound hum) {
 		PacketByteBuf buf = PacketByteBufs.create();
-		buf.writeUuid(this.tardis().getUuid());
+		buf.writeUuid(tardis.getUuid());
 		buf.writeString(hum.id().getNamespace());
 		buf.writeString(hum.name());
 
@@ -71,16 +67,14 @@ public class ClientHumHandler extends SoundHandler {
 	}
 
 	public static ClientHumHandler create() {
-		if (MinecraftClient.getInstance().player == null) return null;
-
 		ClientHumHandler handler = new ClientHumHandler();
+
 		handler.generateHums();
 		return handler;
 	}
 
 	private void generateHums() {
-		this.sounds = new ArrayList<>();
-		this.sounds.addAll(registryToList());
+		this.sounds = registryToList();
 	}
 
 	/**
@@ -98,34 +92,18 @@ public class ClientHumHandler extends SoundHandler {
 		return list;
 	}
 
-	public boolean isPlayerInATardis() {
-		if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-			return false;
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-
-		return found != null;
-	}
-
-	public Tardis tardis() {
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		if (player == null) return null;
-		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-		return found;
+	private boolean shouldPlaySounds(ClientTardis tardis) {
+		return tardis != null && tardis.engine().hasPower();
 	}
 
 	public void tick(MinecraftClient client) {
-		if (this.sounds == null) this.generateHums();
+		ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
-		if (client.player == null) return;
+		if (this.sounds == null)
+			this.generateHums();
 
-		if (this.current != null && !isPlayerInATardis()) {
-			this.current = null;
-			return;
-		}
-
-		if (isPlayerInATardis() && tardis().engine().hasPower()) {
-			this.startIfNotPlaying(this.getHum());
+		if (this.shouldPlaySounds(tardis)) {
+			this.startIfNotPlaying(this.getHum(tardis));
 		} else {
 			this.stopSounds();
 		}

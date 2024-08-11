@@ -3,6 +3,7 @@ package loqor.ait.client.sounds.flight;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 
@@ -20,22 +21,25 @@ public class InteriorFlightSound extends PlayerFollowingLoopingSound {
 	@Override
 	public void tick() {
 		super.tick();
+		this.ticks++;
 
-		ticks++;
-		if (ticks >= PITCH_CHANGE_TICK) {
-			pitch = getRandomPitch();
-			ticks = 0;
+		if (this.ticks >= PITCH_CHANGE_TICK) {
+			this.pitch = getRandomPitch();
+			this.ticks = 0;
 		}
 
-		volume = (float) ((1f - (ClientTardisUtil.distanceFromConsole() / ClientFlightHandler.MAX_DISTANCE))); // laag?
+		this.volume = (float) ((1f - (ClientTardisUtil.distanceFromConsole() / ClientFlightHandler.MAX_DISTANCE))); // laag?
 	}
 
 	private static float getRandomPitch() {
-		if (ClientTardisUtil.getCurrentTardis() == null) return 1f;
+		ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
-		int speed = ClientTardisUtil.getCurrentTardis().travel().speed();
+		if (tardis == null)
+			return 1f;
 
-		if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown()) {
+		int speed = tardis.travel().speed();
+
+		if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown(tardis)) {
 			// todo i hate switch
 			return switch (speed) {
 				default -> 1.0f;

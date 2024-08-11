@@ -14,10 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoundHandler {
-	protected List<LoopingSound> sounds; // shouldnt really be LoopingSound
 
-	protected SoundHandler() {
-	}
+	protected List<LoopingSound> sounds; // shouldnt really be LoopingSound
 
 	public static SoundHandler create(LoopingSound... list) {
 		SoundHandler handler = new SoundHandler();
@@ -77,9 +75,8 @@ public class SoundHandler {
 	}
 
 	/**
-	 * Finds the first sound instance that matches the event given fixme i hate this sm and it doesnt work for sounds which are randomised
-	 *
-	 * @return
+	 * Finds the first sound instance that matches the event given
+	 * FIXME i hate this sm and it doesnt work for sounds which are randomised
 	 */
 	public SoundInstance findSoundByEvent(SoundEvent event) {
 		return findSoundById(event.getId());
@@ -91,10 +88,11 @@ public class SoundHandler {
 		for (SoundInstance sound : this.sounds) {
 			temp = sound.getId();
 
-			if (temp.equals(id)) return sound;
+			if (temp.equals(id))
+				return sound;
 		}
 
-		AITMod.LOGGER.error("Could not find sound " + id + " in list, returning empty sound!");
+        AITMod.LOGGER.error("Could not find sound {} in list, returning empty sound!", id);
 		return new PlayerFollowingLoopingSound(SoundEvents.INTENTIONALLY_EMPTY, SoundCategory.NEUTRAL);
 	}
 }
