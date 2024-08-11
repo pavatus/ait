@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers.doors;
 
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -117,16 +116,15 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         profiler.swap("biome");
 
-        if (!this.variant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+        if (this.variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
             Identifier biomeTexture = biome.getBiomeKey().get(this.variant.overrides());
 
-            if (biomeTexture != null && !texture.equals(biomeTexture) && tardis.travel().position().getWorld() != null
-                    && !(tardis.travel().position().getWorld().getBlockState(tardis.travel().position().getPos().down())
-                            .getBlock() instanceof AirBlock))
+            if (biomeTexture != null && !texture.equals(biomeTexture)) {
                 model.renderWithAnimations(entity, model.getPart(), matrices,
                         vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light,
                         overlay, 1, 1, 1, 1);
+            }
         }
 
         matrices.pop();

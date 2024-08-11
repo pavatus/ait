@@ -35,14 +35,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
         Tardis tardis = entity.tardis().get();
         Profiler profiler = entity.getWorld().getProfiler();
-        profiler.push("console"); // console {
-
-        profiler.push("render"); // } find_tardis / render {
 
         this.renderConsole(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
-        profiler.pop(); // } render
-
-        profiler.pop(); // } console
     }
 
     private void renderConsole(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices,

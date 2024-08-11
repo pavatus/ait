@@ -121,13 +121,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.push();
         matrices.translate(0.5f, 0.0f, 0.5f);
 
+        Identifier texture = this.variant.texture();
+        Identifier emission = this.variant.emission();
+
         if (MinecraftClient.getInstance().player == null) {
             profiler.pop();
             return;
         }
-
-        Identifier texture = this.variant.texture();
-        Identifier emission = this.variant.emission();
 
         float wrappedDegrees = MathHelper.wrapDegrees(MinecraftClient.getInstance().player.getHeadYaw() + h);
 
@@ -160,11 +160,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
 
-        // @TODO uhhh, should we make it so the biome textures are the overgrowth per
-        // biome, or
-        // should
-        // they be separate?
-        // - Loqor
         if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices,
                     vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(
@@ -182,12 +177,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         profiler.swap("biome");
 
-        if (!this.variant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+        if (this.variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
             Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides());
 
             if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture))) {
-                // yes i know it says emission, but go fuck yourself <3
                 model.renderWithAnimations(entity, this.model.getPart(), matrices,
                         vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)),
                         light, overlay, 1, 1, 1, alpha);
