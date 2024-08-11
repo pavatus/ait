@@ -1,5 +1,11 @@
 package loqor.ait.tardis.data.travel;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
+
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
@@ -8,11 +14,6 @@ import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
 
 public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 
@@ -54,9 +55,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     }
 
     public boolean hasFinishedFlight() {
-        return (this.getFlightTicks() >= this.getTargetTicks()
-                || this.getTargetTicks() == 0 || tardis.travel().isCrashing()
-        );
+        return (this.getFlightTicks() >= this.getTargetTicks() || this.getTargetTicks() == 0
+                || tardis.travel().isCrashing());
     }
 
     @Override
@@ -85,9 +85,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     }
 
     public DirectedGlobalPos.Cached getProgress() {
-        return TravelUtil.getPositionFromPercentage(
-                this.position(), this.destination(), this.getDurationAsPercentage()
-        );
+        return TravelUtil.getPositionFromPercentage(this.position(), this.destination(),
+                this.getDurationAsPercentage());
     }
 
     public void recalculate() {
@@ -97,9 +96,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 
     protected void startFlight() {
         this.setFlightTicks(0);
-        this.setTargetTicks(TravelUtil.getFlightDuration(
-                this.position(), this.destination())
-        );
+        this.setTargetTicks(TravelUtil.getFlightDuration(this.position(), this.destination()));
     }
 
     protected void resetFlight() {
@@ -168,10 +165,12 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 
         Tardis tardis = this.tardis();
 
-        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0) && this.getState() == TravelHandlerBase.State.LANDED)
+        if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0)
+                && this.getState() == TravelHandlerBase.State.LANDED)
             this.recalculate();
 
-        if (this.isInFlight() && !this.isCrashing() && this.getTargetTicks() == 0 && this.getFlightTicks() < this.getTargetTicks())
+        if (this.isInFlight() && !this.isCrashing() && this.getTargetTicks() == 0
+                && this.getFlightTicks() < this.getTargetTicks())
             this.recalculate();
 
         if (server.getTicks() % 2 == 0)
@@ -197,12 +196,9 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     public void triggerSequencingDuringFlight(Tardis tardis) {
         SequenceHandler sequences = tardis.sequence();
 
-        if (!this.autopilot.get()
-                && this.getDurationAsPercentage() < 100
-                && this.getState() == TravelHandlerBase.State.FLIGHT
-                && !sequences.hasActiveSequence()
-                && !this.position().equals(this.destination())
-                && this.getTargetTicks() > 100
+        if (!this.autopilot.get() && this.getDurationAsPercentage() < 100
+                && this.getState() == TravelHandlerBase.State.FLIGHT && !sequences.hasActiveSequence()
+                && !this.position().equals(this.destination()) && this.getTargetTicks() > 100
                 && random.nextBetween(0, 230 / (this.speed() == 0 ? 1 : this.speed())) == 7) {
             sequences.triggerRandomSequence(true);
         }

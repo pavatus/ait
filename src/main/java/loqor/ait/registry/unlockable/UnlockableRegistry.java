@@ -1,26 +1,30 @@
 package loqor.ait.registry.unlockable;
 
-import com.mojang.serialization.Codec;
-import loqor.ait.AITMod;
-import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import net.minecraft.util.Identifier;
-
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.mojang.serialization.Codec;
+
+import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
+import loqor.ait.registry.datapack.DatapackRegistry;
+import loqor.ait.registry.datapack.SimpleDatapackRegistry;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+
 public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDatapackRegistry<T> {
 
-    protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, Identifier packet, Identifier name, boolean sync) {
+    protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, Identifier packet,
+            Identifier name, boolean sync) {
         super(deserializer, codec, packet, name, sync);
     }
 
-    protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name, boolean sync) {
+    protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name,
+            boolean sync) {
         super(deserializer, codec, packet, name, sync);
     }
 
@@ -42,7 +46,8 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     public T getRandom(Tardis tardis, Random random) {
-        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random, this::fallback);
+        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random,
+                this::fallback);
     }
 
     public T getRandom(Tardis tardis) {

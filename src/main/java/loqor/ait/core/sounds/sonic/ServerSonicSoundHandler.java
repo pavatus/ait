@@ -1,30 +1,31 @@
 package loqor.ait.core.sounds.sonic;
 
-import loqor.ait.AITMod;
+import java.util.List;
+import java.util.UUID;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 
-import java.util.List;
-import java.util.UUID;
+import loqor.ait.AITMod;
 
 /**
- * @author Loqor
- * the reasoning behind this class is basically just a simple handler that is external to the entire tardis system
- * its specifically and only for updating client information from the server
+ * @author Loqor the reasoning behind this class is basically just a simple
+ *         handler that is external to the entire tardis system its specifically
+ *         and only for updating client information from the server
  */
-
 public class ServerSonicSoundHandler {
     public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_sonic_use");
     private boolean shouldPlay;
     private UUID playerUUID;
 
-    public ServerSonicSoundHandler() {}
+    public ServerSonicSoundHandler() {
+    }
 
     public boolean shouldPlay() {
         return this.shouldPlay;
@@ -53,7 +54,8 @@ public class ServerSonicSoundHandler {
 
         ServerPlayerEntity entity = server.getPlayerManager().getPlayer(this.getPlayerUUID());
 
-        if (entity == null) return;
+        if (entity == null)
+            return;
 
         ServerWorld world = entity.getServerWorld();
 

@@ -1,11 +1,11 @@
 package loqor.ait.tardis.link;
 
-import loqor.ait.tardis.Tardis;
-
 import java.util.Optional;
 
-public interface Linkable {
-	Optional<Tardis> findTardis(boolean isClient);
+import loqor.ait.tardis.Tardis;
 
-	void setTardis(Tardis tardis);
+public interface Linkable {
+    Optional<Tardis> findTardis(boolean isClient);
+
+    void setTardis(Tardis tardis);
 }

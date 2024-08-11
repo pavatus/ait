@@ -1,9 +1,10 @@
 package loqor.ait.compat;
 
+import net.fabricmc.api.ClientModInitializer;
+
 import loqor.ait.api.AITModInitializer;
 import loqor.ait.compat.gravity.GravityHandler;
 import loqor.ait.compat.immersive.PortalsHandler;
-import net.fabricmc.api.ClientModInitializer;
 
 public class Compat implements AITModInitializer, ClientModInitializer {
 

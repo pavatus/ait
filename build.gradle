@@ -1,6 +1,8 @@
 plugins {
     id "fabric-loom" version "1.5-SNAPSHOT"
     id "maven-publish"
+
+    id "com.diffplug.spotless" version "6.20.0"
 }
 
 apply from: 'versioning.gradle'
@@ -67,7 +69,7 @@ sourceSets {
     main {
         resources {
             srcDirs += [
-					"src/main/generated"
+                    "src/main/generated"
             ]
         }
     }
@@ -132,6 +134,30 @@ tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         it.options.release = targetJavaVersion
+    }
+}
+
+spotless {
+    format 'misc', {
+        // define the files to apply `misc` to
+        target '*.gradle', '.gitattributes', '.gitignore'
+
+        // define the steps to apply to those files
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+
+    java {
+        eclipse()
+
+        removeUnusedImports()
+        importOrder('java', 'javax', '', 'net.minecraft', group)
+
+        indentWithSpaces()
+        trimTrailingWhitespace()
+
+        formatAnnotations()
     }
 }
 

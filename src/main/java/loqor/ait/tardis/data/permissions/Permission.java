@@ -1,10 +1,10 @@
 package loqor.ait.tardis.data.permissions;
 
-import com.google.gson.*;
-
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
+
+import com.google.gson.*;
 
 public record Permission(String name, Permission parent, Map<String, Permission> children) implements PermissionLike {
 
@@ -29,22 +29,11 @@ public record Permission(String name, Permission parent, Map<String, Permission>
         PermissionWrapper SNAP = new PermissionWrapper("snap");
     }
 
-    public static final Permission LOOKUP = withChildren(
-            "tardis", null,
-            base -> withChildren(
-                    "use", base,
-                    USE.CONSOLE, USE.TRAVEL, USE.LINK
-            ),
-            base -> withChildren(
-                    "modify", base,
-                    MODIFY.PLACE, MODIFY.BREAK, MODIFY.INTERACT, MODIFY.CONTAINER,
-                    MODIFY.DESKTOP, MODIFY.EXTERIOR
-            ),
-            base -> withChildren(
-                    "special", base,
-                    SPECIAL.CLOAK, SPECIAL.SNAP
-            )
-    );
+    public static final Permission LOOKUP = withChildren("tardis", null,
+            base -> withChildren("use", base, USE.CONSOLE, USE.TRAVEL, USE.LINK),
+            base -> withChildren("modify", base, MODIFY.PLACE, MODIFY.BREAK, MODIFY.INTERACT, MODIFY.CONTAINER,
+                    MODIFY.DESKTOP, MODIFY.EXTERIOR),
+            base -> withChildren("special", base, SPECIAL.CLOAK, SPECIAL.SNAP));
 
     public static void collect(Collection<String> result, Permission root) {
         for (Permission permission : root.children.values()) {
@@ -65,7 +54,8 @@ public record Permission(String name, Permission parent, Map<String, Permission>
     }
 
     @SafeVarargs
-    public static Permission withChildren(String name, Permission parent, Function<Permission, Permission>... children) {
+    public static Permission withChildren(String name, Permission parent,
+            Function<Permission, Permission>... children) {
         Permission base = new Permission(name, parent, new HashMap<>());
 
         for (Function<Permission, Permission> func : children) {
@@ -88,7 +78,8 @@ public record Permission(String name, Permission parent, Map<String, Permission>
     }
 
     /**
-     * @return Returns the fully qualified permission id, unlike the permission property.
+     * @return Returns the fully qualified permission id, unlike the permission
+     *         property.
      */
     public String getId() {
         String base = "";
@@ -142,12 +133,14 @@ public record Permission(String name, Permission parent, Map<String, Permission>
     private static class Serializer implements JsonDeserializer<PermissionLike>, JsonSerializer<PermissionLike> {
 
         @Override
-        public PermissionLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public PermissionLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             return Permission.from(json.getAsString());
         }
 
         @Override
-        public JsonElement serialize(PermissionLike permission, Type type, JsonSerializationContext jsonSerializationContext) {
+        public JsonElement serialize(PermissionLike permission, Type type,
+                JsonSerializationContext jsonSerializationContext) {
             return new JsonPrimitive(permission.getId());
         }
     }

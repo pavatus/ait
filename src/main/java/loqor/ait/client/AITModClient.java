@@ -1,5 +1,30 @@
 package loqor.ait.client;
 
+import static loqor.ait.AITMod.*;
+
+import java.util.UUID;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
+
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
@@ -37,29 +62,6 @@ import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableBlockEntity;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.GlobalPos;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
-
-import static loqor.ait.AITMod.*;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
@@ -90,23 +92,16 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new AITHudOverlay());
 
         /*
-        ClientVortexDataHandler.init();
-        WorldRenderEvents.END.register(context -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            World world = client.player.getWorld();
-            if(world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
-                System.out.println("rendering");
-                VortexUtil vortex = new VortexUtil("space");
-                VortexData vortexData = ClientVortexDataHandler.getCachedVortexData(WorldUtil.getName(client));
-
-                if(vortexData != null) {
-                    for (VortexNode node : vortexData.nodes()) {
-                        vortex.renderVortexNodes(context, node);
-                    }
-                }
-            }
-        });
-        */
+         * ClientVortexDataHandler.init(); WorldRenderEvents.END.register(context -> {
+         * MinecraftClient client = MinecraftClient.getInstance(); World world =
+         * client.player.getWorld(); if(world.getRegistryKey() ==
+         * AITDimensions.TIME_VORTEX_WORLD) { System.out.println("rendering");
+         * VortexUtil vortex = new VortexUtil("space"); VortexData vortexData =
+         * ClientVortexDataHandler.getCachedVortexData(WorldUtil.getName(client));
+         *
+         * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
+         * vortex.renderVortexNodes(context, node); } } } });
+         */
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             if (!ClientTardisUtil.isPlayerInATardis())
@@ -159,28 +154,30 @@ public class AITModClient implements ClientModInitializer {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-                return;
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE,
+                (client, handler, buf, responseSender) -> {
+                    if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+                        return;
 
-            String id = buf.readString();
-            ConsoleTypeSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
-            BlockPos consolePos = buf.readBlockPos();
+                    String id = buf.readString();
+                    ConsoleTypeSchema type = ConsoleRegistry.REGISTRY.get(Identifier.tryParse(id));
+                    BlockPos consolePos = buf.readBlockPos();
 
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console)
-                console.setConsoleSchema(type.id());
-        });
+                    if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console)
+                        console.setConsoleSchema(type.id());
+                });
 
-        ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT, (client, handler, buf, responseSender) -> {
-            if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-                return;
+        ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT,
+                (client, handler, buf, responseSender) -> {
+                    if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+                        return;
 
-            Identifier id = Identifier.tryParse(buf.readString());
-            BlockPos consolePos = buf.readBlockPos();
+                    Identifier id = Identifier.tryParse(buf.readString());
+                    BlockPos consolePos = buf.readBlockPos();
 
-            if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console)
-                console.setVariant(id);
-        });
+                    if (client.world.getBlockEntity(consolePos) instanceof ConsoleGeneratorBlockEntity console)
+                        console.setVariant(id);
+                });
 
         ClientPlayNetworking.registerGlobalReceiver(ExteriorAnimation.UPDATE,
                 (client, handler, buf, responseSender) -> {
@@ -192,7 +189,8 @@ public class AITModClient implements ClientModInitializer {
                             return;
 
                         // todo remember to use the right world in future !!
-                        BlockEntity block = MinecraftClient.getInstance().world.getBlockEntity(tardis.travel().position().getPos());
+                        BlockEntity block = MinecraftClient.getInstance().world
+                                .getBlockEntity(tardis.travel().position().getPos());
 
                         if (!(block instanceof ExteriorBlockEntity exterior))
                             return;
@@ -202,12 +200,14 @@ public class AITModClient implements ClientModInitializer {
 
                         exterior.getAnimation().setupAnimation(TravelHandlerBase.State.values()[p]);
                     });
-                }
-        );
+                });
 
-        // does all this clientplaynetwrokigng shite really have to go in here, theres probably somewhere else it can go right??
-        ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf, responseSender) ->
-                client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
+        // does all this clientplaynetwrokigng shite really have to go in here, theres
+        // probably
+        // somewhere else it can go
+        // right??
+        ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
+                responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
 
         // FIXME well this seems pointless
         ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((block, world) -> {
@@ -215,7 +215,8 @@ public class AITModClient implements ClientModInitializer {
                 if (((LinkableBlockEntity) block).findTardis().isEmpty())
                     return;
 
-                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(), null);
+                ClientTardisManager.getInstance().loadTardis(((LinkableBlockEntity) block).findTardis().get().getUuid(),
+                        null);
             }
         });
     }
@@ -235,56 +236,63 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             default -> null;
             case 0 -> new MonitorScreen(tardis, console);
-            //case 1 -> new EngineScreen(tardis);
+            // case 1 -> new EngineScreen(tardis);
             case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
         };
     }
 
     public void riftScannerPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(), RiftScannerItem.getTarget(stack).getCenterAtY(75))));
+        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),
+                new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(),
+                        RiftScannerItem.getTarget(stack).getCenterAtY(75))));
     }
 
     public void chargedZeitonCrystalPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.CHARGED_ZEITON_CRYSTAL, new Identifier("fuel"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (livingEntity == null) return 0.0F;
-            if(itemStack.getItem() instanceof ChargedZeitonCrystalItem item) {
-                float value = (float) (item.getCurrentFuel(itemStack) / item.getMaxFuel(itemStack));
-                if(value > 0.0f && value < 0.5f) {
-                    return 0.5f;
-                } else if(value > 0.5f && value < 1.0f) {
-                    return 1.0f;
-                } else {
-                    return 0.0f;
-                }
-            }
+        ModelPredicateProviderRegistry.register(AITItems.CHARGED_ZEITON_CRYSTAL, new Identifier("fuel"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (livingEntity == null)
+                        return 0.0F;
+                    if (itemStack.getItem() instanceof ChargedZeitonCrystalItem item) {
+                        float value = (float) (item.getCurrentFuel(itemStack) / item.getMaxFuel(itemStack));
+                        if (value > 0.0f && value < 0.5f) {
+                            return 0.5f;
+                        } else if (value > 0.5f && value < 1.0f) {
+                            return 1.0f;
+                        } else {
+                            return 0.0f;
+                        }
+                    }
 
-            return 0.0F;
-        });
+                    return 0.0F;
+                });
     }
 
     public static void sonicModelPredicate() {
         SonicRegistry.getInstance().populateModels(CustomItemRendering::load);
 
-        CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"), (model, stack, world, entity, seed) -> {
-            SonicItem.Mode mode = SonicItem.findMode(stack);
-            SonicSchema.Models models = SonicItem.findSchema(stack).models();
+        CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"),
+                (model, stack, world, entity, seed) -> {
+                    SonicItem.Mode mode = SonicItem.findMode(stack);
+                    SonicSchema.Models models = SonicItem.findSchema(stack).models();
 
-            return switch (mode) {
-                case INACTIVE -> models.inactive();
-                case INTERACTION -> models.interaction();
-                case OVERLOAD -> models.overload();
-                case SCANNING -> models.scanning();
-                case TARDIS -> models.tardis();
-            };
-        });
+                    return switch (mode) {
+                        case INACTIVE -> models.inactive();
+                        case INTERACTION -> models.interaction();
+                        case OVERLOAD -> models.overload();
+                        case SCANNING -> models.scanning();
+                        case TARDIS -> models.tardis();
+                    };
+                });
     }
 
     public static void waypointPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if(itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
-                return 1.0f;
-            else return 0f;
-        });
+        ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
+                        return 1.0f;
+                    else
+                        return 0f;
+                });
 
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             if (tintIndex != 0)
@@ -296,41 +304,49 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void hammerPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("toymakered"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if(itemStack.getItem() instanceof HammerItem) {
-                if(itemStack.getName().getString().equalsIgnoreCase("Toymaker Hammer"))
-                    return 1.0f;
-                else
-                    return 0.0f;
-            }
-            return 0.0F;
-        });
+        ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("toymakered"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof HammerItem) {
+                        if (itemStack.getName().getString().equalsIgnoreCase("Toymaker Hammer"))
+                            return 1.0f;
+                        else
+                            return 0.0f;
+                    }
+                    return 0.0F;
+                });
     }
 
     public static void siegeItemPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("bricked"), (itemStack, clientWorld, livingEntity, integer) -> {
-            if (itemStack.getOrCreateNbt().contains(SiegeTardisItem.CURRENT_TEXTURE_KEY)) {
-                return itemStack.getOrCreateNbt().getInt(SiegeTardisItem.CURRENT_TEXTURE_KEY);
-            }
-            return 0.0f;
-        });
+        ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("bricked"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getOrCreateNbt().contains(SiegeTardisItem.CURRENT_TEXTURE_KEY)) {
+                        return itemStack.getOrCreateNbt().getInt(SiegeTardisItem.CURRENT_TEXTURE_KEY);
+                    }
+                    return 0.0f;
+                });
     }
 
     public static void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, ConsoleGeneratorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE,
+                ConsoleGeneratorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, ExteriorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, DoorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CORAL_BLOCK_ENTITY_TYPE, CoralRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.MONITOR_BLOCK_ENTITY_TYPE, MonitorRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE, ArtronCollectorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ARTRON_COLLECTOR_BLOCK_ENTITY_TYPE,
+                ArtronCollectorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLAQUE_BLOCK_ENTITY_TYPE, PlaqueRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE, WallMonitorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE,
+                WallMonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, EngineCoreBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE,
+                EngineCoreBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE, FabricatorRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE, WaypointBankBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE,
+                FabricatorRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
+                WaypointBankBlockEntityRenderer::new);
     }
 
     public static void entityRenderRegister() {

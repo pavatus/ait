@@ -1,5 +1,13 @@
 package loqor.ait.tardis.data;
 
+import java.util.Random;
+
+import org.joml.Vector2i;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.world.World;
+
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
@@ -17,19 +25,14 @@ import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.world.World;
-import org.joml.Vector2i;
-
-import java.util.Random;
 
 public class EngineHandler extends KeyedTardisComponent {
 
     private static final Vector2i ZERO = new Vector2i();
 
     private static final BoolProperty POWER = new BoolProperty("power", false);
-    private static final Property<Vector2i> ENGINE_CORE_POS = new Property<>(Property.Type.VEC2I, "engine_core_pos", (Vector2i) null);
+    private static final Property<Vector2i> ENGINE_CORE_POS = new Property<>(Property.Type.VEC2I, "engine_core_pos",
+            (Vector2i) null);
 
     private final BoolValue power = POWER.create(this);
     private final Value<Vector2i> engineCorePos = ENGINE_CORE_POS.create(this);
@@ -47,8 +50,7 @@ public class EngineHandler extends KeyedTardisComponent {
 
             DirectedGlobalPos.Cached cached = tardis.travel().position();
 
-            StackUtil.spawn(cached.getWorld(), cached.getPos().up(),
-                    new ItemStack(AITBlocks.ENGINE_CORE_BLOCK));
+            StackUtil.spawn(cached.getWorld(), cached.getPos().up(), new ItemStack(AITBlocks.ENGINE_CORE_BLOCK));
         });
     }
 
@@ -93,8 +95,7 @@ public class EngineHandler extends KeyedTardisComponent {
             return;
 
         DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay",
-                (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360))
-        );
+                (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360)));
 
         this.power.set(false);
         this.updateExteriorState();
@@ -143,8 +144,7 @@ public class EngineHandler extends KeyedTardisComponent {
         if (world == null)
             return;
 
-        world.setBlockState(pos.getPos(), world.getBlockState(pos.getPos())
-                .with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0)
-        );
+        world.setBlockState(pos.getPos(),
+                world.getBlockState(pos.getPos()).with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
     }
 }

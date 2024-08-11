@@ -1,10 +1,11 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.server.MinecraftServer;
+
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
-import net.minecraft.server.MinecraftServer;
 
 public class RealFlightHandler extends KeyedTardisComponent implements TardisTickable {
 

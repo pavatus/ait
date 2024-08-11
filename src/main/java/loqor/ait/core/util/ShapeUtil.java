@@ -1,13 +1,12 @@
 package loqor.ait.core.util;
 
-import loqor.ait.core.data.ShapeMap;
 import net.minecraft.block.Block;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+
+import loqor.ait.core.data.ShapeMap;
 
 public class ShapeUtil {
 
@@ -26,9 +25,8 @@ public class ShapeUtil {
         int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
 
         for (int i = 0; i < times; i++) {
-            shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> ref.buffer = VoxelShapes.combine(
-                    ref.buffer, VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR)
-            );
+            shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> ref.buffer = VoxelShapes.combine(ref.buffer,
+                    VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
 
             shape = ref.buffer;
             ref.buffer = VoxelShapes.empty();

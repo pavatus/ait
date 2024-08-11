@@ -1,17 +1,16 @@
 package loqor.ait.tardis.data.loyalty;
 
+import java.util.Optional;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import java.util.Optional;
-
 public record Loyalty(int level, Type type) {
 
-    public static final Codec<Loyalty> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    Codec.STRING.optionalFieldOf("type").forGetter(loyalty -> Optional.of(loyalty.type.toString())),
-                    Codec.INT.optionalFieldOf("level").forGetter(loyalty -> Optional.of(loyalty.level))
-            ).apply(instance, (Loyalty::deserialize)));
+    public static final Codec<Loyalty> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(Codec.STRING.optionalFieldOf("type").forGetter(loyalty -> Optional.of(loyalty.type.toString())),
+                    Codec.INT.optionalFieldOf("level").forGetter(loyalty -> Optional.of(loyalty.level)))
+            .apply(instance, (Loyalty::deserialize)));
 
     public Loyalty(Type type) {
         this(type.level, type);
@@ -65,11 +64,7 @@ public record Loyalty(int level, Type type) {
     }
 
     public enum Type {
-        REJECT(0),
-        NEUTRAL(10),
-        COMPANION(35),
-        PILOT(60),
-        OWNER(100);
+        REJECT(0), NEUTRAL(10), COMPANION(35), PILOT(60), OWNER(100);
 
         public final int level;
 

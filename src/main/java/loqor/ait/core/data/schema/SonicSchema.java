@@ -1,14 +1,16 @@
 package loqor.ait.core.data.schema;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import net.minecraft.util.Identifier;
+
 import loqor.ait.core.data.BasicSchema;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import net.minecraft.util.Identifier;
-
-import java.util.Optional;
-import java.util.function.Consumer;
 
 public abstract class SonicSchema extends BasicSchema implements Unlockable {
 
@@ -64,16 +66,16 @@ public abstract class SonicSchema extends BasicSchema implements Unlockable {
         return o instanceof SonicSchema that && id.equals(that.id);
     }
 
-    public record Models(Identifier inactive, Identifier interaction, Identifier overload, Identifier scanning, Identifier tardis) {
-        public static final Codec<Models> CODEC = RecordCodecBuilder.create(
-                instance -> instance.group(
-                        Identifier.CODEC.fieldOf("inactive").forGetter(Models::inactive),
-                        Identifier.CODEC.fieldOf("interaction").forGetter(Models::interaction),
-                        Identifier.CODEC.fieldOf("overload").forGetter(Models::overload),
-                        Identifier.CODEC.fieldOf("scanning").forGetter(Models::scanning),
-                        Identifier.CODEC.fieldOf("tardis").forGetter(Models::tardis)
-                ).apply(instance, Models::new)
-        );
+    public record Models(Identifier inactive, Identifier interaction, Identifier overload, Identifier scanning,
+            Identifier tardis) {
+        public static final Codec<Models> CODEC = RecordCodecBuilder
+                .create(instance -> instance
+                        .group(Identifier.CODEC.fieldOf("inactive").forGetter(Models::inactive),
+                                Identifier.CODEC.fieldOf("interaction").forGetter(Models::interaction),
+                                Identifier.CODEC.fieldOf("overload").forGetter(Models::overload),
+                                Identifier.CODEC.fieldOf("scanning").forGetter(Models::scanning),
+                                Identifier.CODEC.fieldOf("tardis").forGetter(Models::tardis))
+                        .apply(instance, Models::new));
 
         public void load(Consumer<Identifier> consumer) {
             consumer.accept(inactive);
@@ -85,25 +87,20 @@ public abstract class SonicSchema extends BasicSchema implements Unlockable {
     }
 
     public record Rendering(Optional<Offset> positionOffset, Optional<Offset> scaleOffset) {
-        public static final Codec<Rendering> CODEC = RecordCodecBuilder.create(
-                instance -> instance.group(
-                        Offset.CODEC.optionalFieldOf("position").forGetter(Rendering::positionOffset),
-                        Offset.CODEC.optionalFieldOf("scale").forGetter(Rendering::scaleOffset)
-                ).apply(instance, Rendering::new)
-        );
+        public static final Codec<Rendering> CODEC = RecordCodecBuilder.create(instance -> instance
+                .group(Offset.CODEC.optionalFieldOf("position").forGetter(Rendering::positionOffset),
+                        Offset.CODEC.optionalFieldOf("scale").forGetter(Rendering::scaleOffset))
+                .apply(instance, Rendering::new));
 
         public Rendering() {
             this(Optional.of(new Offset()), Optional.of(new Offset()));
         }
 
         public record Offset(float x, float y, float z) {
-            static final Codec<Offset> CODEC = RecordCodecBuilder.create(
-                    instance -> instance.group(
-                            Codec.FLOAT.fieldOf("x").forGetter(Offset::x),
-                            Codec.FLOAT.fieldOf("y").forGetter(Offset::y),
-                            Codec.FLOAT.fieldOf("z").forGetter(Offset::z)
-                    ).apply(instance, Offset::new)
-            );
+            static final Codec<Offset> CODEC = RecordCodecBuilder.create(instance -> instance
+                    .group(Codec.FLOAT.fieldOf("x").forGetter(Offset::x), Codec.FLOAT.fieldOf("y").forGetter(Offset::y),
+                            Codec.FLOAT.fieldOf("z").forGetter(Offset::z))
+                    .apply(instance, Offset::new));
 
             public Offset() {
                 this(0, 0, 0);

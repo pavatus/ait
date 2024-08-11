@@ -1,6 +1,14 @@
 package loqor.ait.tardis.data.properties;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import com.google.gson.*;
+
+import net.minecraft.network.PacketByteBuf;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -8,20 +16,18 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.util.Disposable;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.network.PacketByteBuf;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Value<T> implements Disposable {
 
     /**
-     * Due to a circular-dependency between a component and a property, it should be excluded.
+     * Due to a circular-dependency between a component and a property, it should be
+     * excluded.
      */
-    @Exclude private TardisComponent holder;
-    @Exclude protected Property<T> property;
+    @Exclude
+    private TardisComponent holder;
+
+    @Exclude
+    protected Property<T> property;
 
     private T value;
 
@@ -64,7 +70,7 @@ public class Value<T> implements Disposable {
     }
 
     protected void sync() {
-        if (this.holder == null ||!(this.holder.tardis() instanceof ServerTardis tardis)) {
+        if (this.holder == null || !(this.holder.tardis() instanceof ServerTardis tardis)) {
             AITMod.LOGGER.warn("Can't sync on a client world!", new IllegalAccessException());
             return;
         }
@@ -96,10 +102,10 @@ public class Value<T> implements Disposable {
 
     public void read(PacketByteBuf buf, byte mode) {
         if (this.property == null)
-            throw new IllegalStateException("Couldn't get the parent property value! Maybe you forgot to initialize the value field on load?");
+            throw new IllegalStateException(
+                    "Couldn't get the parent property value! Maybe you forgot to initialize the value field on load?");
 
-        T value = mode == Property.Mode.UPDATE
-                ? this.property.getType().decode(buf) : null;
+        T value = mode == Property.Mode.UPDATE ? this.property.getType().decode(buf) : null;
 
         this.set(value, false);
     }
@@ -136,7 +142,8 @@ public class Value<T> implements Disposable {
         }
 
         @Override
-        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             Type type = clazz;
 
             if (clazz == null && typeOfT instanceof ParameterizedType parameter)

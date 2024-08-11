@@ -1,9 +1,9 @@
 package loqor.ait.core.util.bsp;
 
+import java.util.Stack;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.util.bsp.BinaryTree.Node;
-
-import java.util.Stack;
 
 public class BTreeInorderIterator {
     private final Stack<Node> traversal;
@@ -35,5 +35,4 @@ public class BTreeInorderIterator {
             this.moveLeft(current.getRight());
         return current;
     }
-
 }

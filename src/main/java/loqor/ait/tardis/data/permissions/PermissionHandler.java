@@ -1,5 +1,17 @@
 package loqor.ait.tardis.data.permissions;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
+
 import loqor.ait.AITMod;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.loyalty.Loyalty;
@@ -7,22 +19,13 @@ import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class PermissionHandler extends KeyedTardisComponent {
 
     private static final Identifier P19_LOYALTY_SYNC = new Identifier(AITMod.MOD_ID, "p19_loyalty");
 
-    private static final Property<Loyalty.Type> P19_LOYALTY = Property.forEnum("p19_loyalty", Loyalty.Type.class, Loyalty.Type.COMPANION);
+    private static final Property<Loyalty.Type> P19_LOYALTY = Property.forEnum("p19_loyalty", Loyalty.Type.class,
+            Loyalty.Type.COMPANION);
 
     private final Map<UUID, PermissionMap> permissions;
     private final Value<Loyalty.Type> p19Loyalty = P19_LOYALTY.create(this);
@@ -39,8 +42,8 @@ public class PermissionHandler extends KeyedTardisComponent {
     static {
         // TODO: make properties have a built-in util to C->S
         // YES PLEASE :)))
-        ServerPlayNetworking.registerGlobalReceiver(P19_LOYALTY_SYNC, ServerTardisManager.receiveTardis(
-                (tardis, server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(P19_LOYALTY_SYNC,
+                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
                     if (tardis == null)
                         return;
 

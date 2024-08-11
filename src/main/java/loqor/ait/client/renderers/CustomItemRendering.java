@@ -1,23 +1,28 @@
 package loqor.ait.client.renderers;
 
-import loqor.ait.AITMod;
-import loqor.ait.client.renderers.model.OverriddenBakedModel;
+import java.util.HashSet;
+import java.util.Set;
+
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
+
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 
-import java.util.HashSet;
-import java.util.Set;
+import loqor.ait.AITMod;
+import loqor.ait.client.renderers.model.OverriddenBakedModel;
 
 public class CustomItemRendering {
 
     private static final Set<Identifier> MODEL_POOL = new HashSet<>();
 
     /**
-     * This method force loads the model *when the next model override will be registered*.
-     * @param model the model to load
+     * This method force loads the model *when the next model override will be
+     * registered*.
+     *
+     * @param model
+     *            the model to load
      */
     public static void load(Identifier model) {
         AITMod.LOGGER.info("Loaded " + model + " to the force-load list");
@@ -44,8 +49,7 @@ public class CustomItemRendering {
             ModelLoadingPlugin.register(context -> {
                 context.addModels(MODEL_POOL);
 
-                context.modifyModelAfterBake()
-                        .register(this::transform);
+                context.modifyModelAfterBake().register(this::transform);
             });
         }
 

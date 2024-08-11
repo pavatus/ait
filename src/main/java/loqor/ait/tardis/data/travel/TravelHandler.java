@@ -1,5 +1,15 @@
 package loqor.ait.tardis.data.travel;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
@@ -13,14 +23,6 @@ import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.*;
 import loqor.ait.tardis.util.NetworkUtil;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -90,7 +92,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     }
 
     /**
-     * Places an exterior, animates it if `animate` is true and schedules a block update.
+     * Places an exterior, animates it if `animate` is true and schedules a block
+     * update.
      */
     public ExteriorBlockEntity placeExterior(boolean animate) {
         return placeExterior(animate, true);
@@ -106,9 +109,9 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         boolean hasPower = this.tardis.engine().hasPower();
 
-        BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState().with(
-                ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation())
-        ).with(ExteriorBlock.LEVEL_9, hasPower ? 9 : 0);
+        BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState()
+                .with(ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation()))
+                .with(ExteriorBlock.LEVEL_9, hasPower ? 9 : 0);
 
         world.setBlockState(pos, blockState);
 
@@ -187,10 +190,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
                 this.increaseSpeed();
         }
 
-        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL
-                || tardis.door().isOpen() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis)
-                || tardis.flight().falling().get()
-        ) {
+        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL || tardis.door().isOpen()
+                || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis) || tardis.flight().falling().get()) {
             this.failDemat();
             return;
         }
@@ -200,9 +201,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     private void failDemat() {
         // demat will be cancelled
-        this.position().getWorld().playSound(null, this.position().getPos(),
-                AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f
-        );
+        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS,
+                1f, 1f);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 1f, 1f);
         TravelUtil.runDematCooldown(this.tardis);
@@ -210,11 +210,11 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     private void failRemat() {
         // Play failure sound at the current position
-        this.position().getWorld().playSound(null, this.position().getPos(),
-                AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f
-        );
+        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.FAIL_MAT, SoundCategory.BLOCKS,
+                1f, 1f);
 
-        // Play failure sound at the Tardis console position if the interior is not empty
+        // Play failure sound at the Tardis console position if the interior is not
+        // empty
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 1f, 1f);
 
         // Create materialization delay and return
@@ -226,9 +226,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         SoundEvent sound = this.getState().effect().sound();
 
         // Play dematerialize sound at the position
-        this.position().getWorld().playSound(null,
-                this.position().getPos(), sound, SoundCategory.BLOCKS
-        );
+        this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.runAnimations();
@@ -253,14 +251,16 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         this.finishRemat();
 
-        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_THUD,
+                SoundCategory.AMBIENT);
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
         NetworkUtil.sendToInterior(this.tardis(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }
 
     public void rematerialize() {
-        if (TardisEvents.MAT.invoker().onMat(tardis) == TardisEvents.Interaction.FAIL || TravelUtil.matCooldownn(tardis)) {
+        if (TardisEvents.MAT.invoker().onMat(tardis) == TardisEvents.Interaction.FAIL
+                || TravelUtil.matCooldownn(tardis)) {
             this.failRemat();
             return;
         }
@@ -286,9 +286,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.forcePosition(this.destination());
 
         // Play materialize sound at the destination
-        this.position().getWorld().playSound(null,
-                this.position().getPos(), sound, SoundCategory.BLOCKS
-        );
+        this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 10f, 1f);
         this.placeExterior(true, false); // we schedule block update in #finishRemat

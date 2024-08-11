@@ -1,43 +1,34 @@
 package loqor.ait.core.data.datapack.exterior;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.util.EnumMap;
-import net.minecraft.util.Identifier;
-
 import java.util.Optional;
 import java.util.function.Function;
 
-public record BiomeOverrides(
-        Identifier snowy, Identifier sculk, Identifier sandy,
-        Identifier redSandy, Identifier muddy, Identifier chorus,
-        Identifier cherry
-) {
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import net.minecraft.util.Identifier;
+
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.util.EnumMap;
+
+public record BiomeOverrides(Identifier snowy, Identifier sculk, Identifier sandy, Identifier redSandy,
+        Identifier muddy, Identifier chorus, Identifier cherry) {
 
     public static BiomeOverrides EMPTY = new BiomeOverrides(null, null, null, null, null, null, null);
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private static BiomeOverrides create(
-            Optional<Identifier> snowy, Optional<Identifier> sculk, Optional<Identifier> sandy,
-            Optional<Identifier> redSandy, Optional<Identifier> muddy, Optional<Identifier> chorus,
-            Optional<Identifier> cherry
-    ) {
-        return new BiomeOverrides(snowy.orElse(null), sculk.orElse(null), sandy.orElse(null),
-                redSandy.orElse(null), muddy.orElse(null), chorus.orElse(null),
-                cherry.orElse(null));
+    private static BiomeOverrides create(Optional<Identifier> snowy, Optional<Identifier> sculk,
+            Optional<Identifier> sandy, Optional<Identifier> redSandy, Optional<Identifier> muddy,
+            Optional<Identifier> chorus, Optional<Identifier> cherry) {
+        return new BiomeOverrides(snowy.orElse(null), sculk.orElse(null), sandy.orElse(null), redSandy.orElse(null),
+                muddy.orElse(null), chorus.orElse(null), cherry.orElse(null));
     }
 
     public static BiomeOverrides of(Function<BiomeHandler.BiomeType, Identifier> func) {
-        return new BiomeOverrides(
-                func.apply(BiomeHandler.BiomeType.SNOWY),
-                func.apply(BiomeHandler.BiomeType.SCULK),
-                func.apply(BiomeHandler.BiomeType.SANDY),
-                func.apply(BiomeHandler.BiomeType.RED_SANDY),
-                func.apply(BiomeHandler.BiomeType.MUDDY),
-                func.apply(BiomeHandler.BiomeType.CHORUS),
-                func.apply(BiomeHandler.BiomeType.CHERRY)
-        );
+        return new BiomeOverrides(func.apply(BiomeHandler.BiomeType.SNOWY), func.apply(BiomeHandler.BiomeType.SCULK),
+                func.apply(BiomeHandler.BiomeType.SANDY), func.apply(BiomeHandler.BiomeType.RED_SANDY),
+                func.apply(BiomeHandler.BiomeType.MUDDY), func.apply(BiomeHandler.BiomeType.CHORUS),
+                func.apply(BiomeHandler.BiomeType.CHERRY));
     }
 
     public static Builder builder() {
@@ -48,27 +39,28 @@ public record BiomeOverrides(
         return new Builder(overrides);
     }
 
-    public static final Codec<BiomeOverrides> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    Identifier.CODEC.optionalFieldOf("snowy").forGetter(o -> Optional.ofNullable(o.snowy)),
-                    Identifier.CODEC.optionalFieldOf("sculk").forGetter(o -> Optional.ofNullable(o.sculk)),
-                    Identifier.CODEC.optionalFieldOf("sandy").forGetter(o -> Optional.ofNullable(o.sandy)),
-                    Identifier.CODEC.optionalFieldOf("red_sandy").forGetter(o -> Optional.ofNullable(o.redSandy)),
-                    Identifier.CODEC.optionalFieldOf("muddy").forGetter(o -> Optional.ofNullable(o.muddy)),
-                    Identifier.CODEC.optionalFieldOf("chorus").forGetter(o -> Optional.ofNullable(o.chorus)),
-                    Identifier.CODEC.optionalFieldOf("cherry").forGetter(o -> Optional.ofNullable(o.cherry))
-            ).apply(instance, BiomeOverrides::create)
-    );
+    public static final Codec<BiomeOverrides> CODEC = RecordCodecBuilder
+            .create(instance -> instance
+                    .group(Identifier.CODEC.optionalFieldOf("snowy").forGetter(o -> Optional.ofNullable(o.snowy)),
+                            Identifier.CODEC.optionalFieldOf("sculk").forGetter(o -> Optional.ofNullable(o.sculk)),
+                            Identifier.CODEC.optionalFieldOf("sandy").forGetter(o -> Optional.ofNullable(o.sandy)),
+                            Identifier.CODEC.optionalFieldOf("red_sandy")
+                                    .forGetter(o -> Optional.ofNullable(o.redSandy)),
+                            Identifier.CODEC.optionalFieldOf("muddy").forGetter(o -> Optional.ofNullable(o.muddy)),
+                            Identifier.CODEC.optionalFieldOf("chorus").forGetter(o -> Optional.ofNullable(o.chorus)),
+                            Identifier.CODEC.optionalFieldOf("cherry").forGetter(o -> Optional.ofNullable(o.cherry)))
+                    .apply(instance, BiomeOverrides::create));
 
     public static class Builder {
 
-        private final EnumMap<BiomeHandler.BiomeType, Identifier> map = new EnumMap<>(() -> BiomeHandler.BiomeType.VALUES, Identifier[]::new);
+        private final EnumMap<BiomeHandler.BiomeType, Identifier> map = new EnumMap<>(
+                () -> BiomeHandler.BiomeType.VALUES, Identifier[]::new);
 
-        private Builder() { }
+        private Builder() {
+        }
 
         private Builder(BiomeOverrides overrides) {
-            this.with(BiomeHandler.BiomeType.SNOWY, overrides.snowy)
-                    .with(BiomeHandler.BiomeType.SCULK, overrides.sculk)
+            this.with(BiomeHandler.BiomeType.SNOWY, overrides.snowy).with(BiomeHandler.BiomeType.SCULK, overrides.sculk)
                     .with(BiomeHandler.BiomeType.SANDY, overrides.sandy)
                     .with(BiomeHandler.BiomeType.RED_SANDY, overrides.redSandy)
                     .with(BiomeHandler.BiomeType.MUDDY, overrides.muddy)
@@ -90,15 +82,10 @@ public record BiomeOverrides(
         }
 
         public BiomeOverrides build() {
-            return new BiomeOverrides(
-                    map.get(BiomeHandler.BiomeType.SNOWY),
-                    map.get(BiomeHandler.BiomeType.SCULK),
-                    map.get(BiomeHandler.BiomeType.SANDY),
-                    map.get(BiomeHandler.BiomeType.RED_SANDY),
-                    map.get(BiomeHandler.BiomeType.MUDDY),
-                    map.get(BiomeHandler.BiomeType.CHORUS),
-                    map.get(BiomeHandler.BiomeType.CHERRY)
-            );
+            return new BiomeOverrides(map.get(BiomeHandler.BiomeType.SNOWY), map.get(BiomeHandler.BiomeType.SCULK),
+                    map.get(BiomeHandler.BiomeType.SANDY), map.get(BiomeHandler.BiomeType.RED_SANDY),
+                    map.get(BiomeHandler.BiomeType.MUDDY), map.get(BiomeHandler.BiomeType.CHORUS),
+                    map.get(BiomeHandler.BiomeType.CHERRY));
         }
     }
 }

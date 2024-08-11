@@ -1,5 +1,12 @@
 package loqor.ait.tardis.manager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import net.minecraft.server.network.ServerPlayerEntity;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
@@ -12,12 +19,6 @@ import loqor.ait.tardis.data.StatsHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.server.network.ServerPlayerEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Consumer;
 
 public class TardisBuilder {
 
@@ -64,9 +65,8 @@ public class TardisBuilder {
         return this.<StatsHandler>with(TardisComponent.Id.STATS, stats -> {
             stats.setPlayerCreatorName(player.getName().getString());
             stats.markPlayerCreatorName();
-        }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyalty ->
-                loyalty.set(player, new Loyalty(Loyalty.Type.COMPANION))
-        );
+        }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
+                loyalty -> loyalty.set(player, new Loyalty(Loyalty.Type.COMPANION)));
     }
 
     private void validate() {

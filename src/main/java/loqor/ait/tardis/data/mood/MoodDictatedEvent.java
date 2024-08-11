@@ -1,12 +1,13 @@
 package loqor.ait.tardis.data.mood;
 
-import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
-import net.minecraft.util.Identifier;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
+import loqor.ait.tardis.Tardis;
 
 public interface MoodDictatedEvent {
 
@@ -29,7 +30,8 @@ public interface MoodDictatedEvent {
         private final Set<TardisMood.Moods> moodsList;
         private final TardisMood.Alignment alignmentCompatibility;
 
-        public Builder(Identifier id, ExecuteMoodEvent execute, int cost, TardisMood.Alignment alignment, TardisMood.Moods... moods) {
+        public Builder(Identifier id, ExecuteMoodEvent execute, int cost, TardisMood.Alignment alignment,
+                TardisMood.Moods... moods) {
             this.id = id;
             this.execute = execute;
             this.cost = cost;
@@ -37,7 +39,8 @@ public interface MoodDictatedEvent {
             this.alignmentCompatibility = alignment;
         }
 
-        public static MoodDictatedEvent create(Identifier id, ExecuteMoodEvent execute, int cost, TardisMood.Alignment alignment, TardisMood.Moods... moods) {
+        public static MoodDictatedEvent create(Identifier id, ExecuteMoodEvent execute, int cost,
+                TardisMood.Alignment alignment, TardisMood.Moods... moods) {
             return new MoodDictatedEvent.Builder(id, execute, cost, alignment, moods);
         }
 

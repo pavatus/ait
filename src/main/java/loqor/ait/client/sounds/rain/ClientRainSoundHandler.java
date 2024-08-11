@@ -1,5 +1,11 @@
 package loqor.ait.client.sounds.rain;
 
+import java.util.List;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
@@ -8,11 +14,6 @@ import loqor.ait.tardis.data.ServerRainHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-
-import java.util.List;
 
 public class ClientRainSoundHandler extends SoundHandler {
 
@@ -30,8 +31,7 @@ public class ClientRainSoundHandler extends SoundHandler {
             return null;
 
         return new PositionedLoopingSound(SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER,
-                tardis.getDesktop().doorPos().getPos(), 0.1f
-        );
+                tardis.getDesktop().doorPos().getPos(), 0.1f);
     }
 
     public static ClientRainSoundHandler create() {

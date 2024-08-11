@@ -1,8 +1,7 @@
 package loqor.ait.tardis.exterior.variant.plinth;
 
-
 public class PlinthSoulVariant extends PlinthVariant {
-	public PlinthSoulVariant() {
-		super("soul");
-	}
+    public PlinthSoulVariant() {
+        super("soul");
+    }
 }

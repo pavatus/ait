@@ -1,80 +1,83 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class ServerLavaHandler extends KeyedTardisComponent implements TardisTickable {
 
-	private static final BoolProperty LAVA_OUTSIDE = new BoolProperty("lava_outside", false);
-	private final BoolValue lavaOutside = LAVA_OUTSIDE.create(this);
+    private static final BoolProperty LAVA_OUTSIDE = new BoolProperty("lava_outside", false);
+    private final BoolValue lavaOutside = LAVA_OUTSIDE.create(this);
 
-	public ServerLavaHandler() {
-		super(Id.LAVA_OUTSIDE);
-	}
-	@Override
-	public void onLoaded() {
-		lavaOutside.of(this, LAVA_OUTSIDE);
-	}
+    public ServerLavaHandler() {
+        super(Id.LAVA_OUTSIDE);
+    }
 
-	public void enable() {
-		this.set(true);
-	}
+    @Override
+    public void onLoaded() {
+        lavaOutside.of(this, LAVA_OUTSIDE);
+    }
 
-	public void disable() {
-		this.set(false);
-	}
+    public void enable() {
+        this.set(true);
+    }
 
-	private void set(boolean var) {
-		lavaOutside.set(var);
-	}
+    public void disable() {
+        this.set(false);
+    }
 
-	public boolean isEnabled() {
-		return lavaOutside.get();
-	}
-	@Override
-	public void tick(MinecraftServer server) {
-		if (this.isEnabled() &&
-				tardis.travel().position().getWorld() != null && !isInLava()) {
-			this.disable();
-			return;
-		}
+    private void set(boolean var) {
+        lavaOutside.set(var);
+    }
 
-		if (this.isEnabled())
-			return;
+    public boolean isEnabled() {
+        return lavaOutside.get();
+    }
 
-		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
-			return;
+    @Override
+    public void tick(MinecraftServer server) {
+        if (this.isEnabled() && tardis.travel().position().getWorld() != null && !isInLava()) {
+            this.disable();
+            return;
+        }
 
-		if (tardis.travel().position().getWorld() != null && isInLava()) {
-			this.enable();
-		}
-	}
+        if (this.isEnabled())
+            return;
 
-	public boolean isInLava() {
-		Tardis tardis = this.tardis();
+        if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+            return;
 
-		if (tardis.travel().position().getWorld() == null) return false;
+        if (tardis.travel().position().getWorld() != null && isInLava()) {
+            this.enable();
+        }
+    }
 
-		World world = tardis.travel().position().getWorld();
-		BlockPos tardisPos = tardis.travel().position().getPos();
+    public boolean isInLava() {
+        Tardis tardis = this.tardis();
 
-		for (int xOffset = -1; xOffset <= 1; xOffset++) {
-			for (int yOffset = -1; yOffset <= 1; yOffset++) {
-				BlockPos blockPos = tardisPos.add(xOffset, 0, yOffset);
-				if (world.getBlockState(blockPos).getBlock() == Blocks.LAVA) {
-					return true;
-				}
-			}
-		}
+        if (tardis.travel().position().getWorld() == null)
+            return false;
 
-		return false;
-	}
+        World world = tardis.travel().position().getWorld();
+        BlockPos tardisPos = tardis.travel().position().getPos();
+
+        for (int xOffset = -1; xOffset <= 1; xOffset++) {
+            for (int yOffset = -1; yOffset <= 1; yOffset++) {
+                BlockPos blockPos = tardisPos.add(xOffset, 0, yOffset);
+                if (world.getBlockState(blockPos).getBlock() == Blocks.LAVA) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

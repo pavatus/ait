@@ -5,21 +5,21 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 public class BlockEntityPreLoadEvent {
 
-	private static boolean first = true;
+    private static boolean first = true;
 
-	public static final Event<Load> LOAD = EventFactory.createArrayBacked(Load.class, callbacks -> () -> {
-		if (!first)
-			return;
+    public static final Event<Load> LOAD = EventFactory.createArrayBacked(Load.class, callbacks -> () -> {
+        if (!first)
+            return;
 
-		for (Load callback : callbacks) {
-			callback.onBlockEntityPreLoad();
-		}
+        for (Load callback : callbacks) {
+            callback.onBlockEntityPreLoad();
+        }
 
-		first = false;
-	});
+        first = false;
+    });
 
-	@FunctionalInterface
-	public interface Load {
-		void onBlockEntityPreLoad();
-	}
+    @FunctionalInterface
+    public interface Load {
+        void onBlockEntityPreLoad();
+    }
 }

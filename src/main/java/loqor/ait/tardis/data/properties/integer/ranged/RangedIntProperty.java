@@ -1,11 +1,12 @@
 package loqor.ait.tardis.data.properties.integer.ranged;
 
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.Property;
+import java.util.function.Function;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.function.Function;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.Property;
 
 public class RangedIntProperty extends Property<Integer> {
 

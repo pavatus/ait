@@ -1,5 +1,10 @@
 package loqor.ait.client.sounds.vortex;
 
+import java.util.List;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
+
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
@@ -7,10 +12,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundCategory;
-
-import java.util.List;
 
 public class ClientVortexSoundsHandler extends SoundHandler {
 

@@ -3,9 +3,9 @@ package loqor.ait.core.util.bsp;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import loqor.ait.core.util.vortex.VortexNode;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.core.util.vortex.VortexNode;
 
 public class BinaryTree {
     protected Node rootNode;

@@ -1,6 +1,7 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.MachineCasingBlockEntity;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -12,7 +13,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.blockentities.MachineCasingBlockEntity;
 
 public class MachineCasingBlock extends Block implements BlockEntityProvider {
 
@@ -21,7 +23,8 @@ public class MachineCasingBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
         if (world.isClient())
             return ActionResult.SUCCESS;
 
@@ -41,8 +44,7 @@ public class MachineCasingBlock extends Block implements BlockEntityProvider {
         super.onBreak(world, pos, state, player);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new MachineCasingBlockEntity(pos, state);
     }

@@ -1,14 +1,16 @@
 package loqor.ait.tardis.data.properties.doubl3;
 
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.Property;
+import java.util.function.Function;
+
 import net.minecraft.network.PacketByteBuf;
 
-import java.util.function.Function;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.Property;
 
 public class DoubleProperty extends Property<Double> {
 
-    public static final Type<Double> TYPE = new Type<>(Double.class, PacketByteBuf::writeDouble, PacketByteBuf::readDouble);
+    public static final Type<Double> TYPE = new Type<>(Double.class, PacketByteBuf::writeDouble,
+            PacketByteBuf::readDouble);
 
     public DoubleProperty(String name) {
         this(name, 0);

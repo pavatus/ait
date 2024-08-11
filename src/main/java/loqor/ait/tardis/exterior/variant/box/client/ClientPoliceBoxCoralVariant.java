@@ -6,21 +6,20 @@ import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.tardis.data.BiomeHandler;
 
 public class ClientPoliceBoxCoralVariant extends ClientPoliceBoxVariant {
-	public ClientPoliceBoxCoralVariant() {
-		super("coral");
-	}
+    public ClientPoliceBoxCoralVariant() {
+        super("coral");
+    }
 
-	private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientPoliceBoxVariant.OVERRIDES)
-			.with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.SANDY)
-			.build();
+    private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientPoliceBoxVariant.OVERRIDES)
+            .with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.SANDY).build();
 
-	@Override
-	public ExteriorModel model() {
-		return new PoliceBoxCoralModel(PoliceBoxCoralModel.getTexturedModelData().createModel());
-	}
+    @Override
+    public ExteriorModel model() {
+        return new PoliceBoxCoralModel(PoliceBoxCoralModel.getTexturedModelData().createModel());
+    }
 
-	@Override
-	public BiomeOverrides overrides() {
-		return OVERRIDES;
-	}
+    @Override
+    public BiomeOverrides overrides() {
+        return OVERRIDES;
+    }
 }

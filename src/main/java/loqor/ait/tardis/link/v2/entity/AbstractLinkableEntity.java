@@ -1,8 +1,8 @@
 package loqor.ait.tardis.link.v2.entity;
 
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.v2.Linkable;
-import loqor.ait.tardis.link.v2.TardisRef;
+import java.util.Optional;
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -12,17 +12,20 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-import java.util.UUID;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.link.v2.Linkable;
+import loqor.ait.tardis.link.v2.TardisRef;
 
 public interface AbstractLinkableEntity extends Linkable {
 
     World getWorld();
+
     DataTracker getDataTracker();
 
     TrackedData<Optional<UUID>> getTracked();
 
     TardisRef asRef();
+
     void setRef(TardisRef ref);
 
     @Override

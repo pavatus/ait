@@ -1,15 +1,9 @@
 package loqor.ait.core.entities;
 
-import loqor.ait.client.util.ClientShakeUtil;
-import loqor.ait.core.*;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.entities.base.LinkableDummyEntity;
-import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -36,232 +30,238 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Predicate;
+import loqor.ait.client.util.ClientShakeUtil;
+import loqor.ait.core.*;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.entities.base.LinkableDummyEntity;
+import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.util.TardisUtil;
 
 public class FallingTardisEntity extends LinkableDummyEntity {
 
-	private static final int HURT_MAX = 100;
-	private static final float HURT_AMOUNT = 40f;
+    private static final int HURT_MAX = 100;
+    private static final float HURT_AMOUNT = 40f;
 
-	public int timeFalling;
+    public int timeFalling;
 
-	@Nullable
-	public NbtCompound blockEntityData;
-	private BlockState state;
+    @Nullable public NbtCompound blockEntityData;
 
-	public FallingTardisEntity(EntityType<? extends Entity> entityType, World world) {
-		super(entityType, world);
-	}
+    private BlockState state;
 
-	private FallingTardisEntity(World world, Vec3d pos, BlockState state, Tardis tardis) {
-		super(AITEntityTypes.FALLING_TARDIS_TYPE, world);
+    public FallingTardisEntity(EntityType<? extends Entity> entityType, World world) {
+        super(entityType, world);
+    }
 
-		this.intersectionChecked = true;
-		this.state = state;
+    private FallingTardisEntity(World world, Vec3d pos, BlockState state, Tardis tardis) {
+        super(AITEntityTypes.FALLING_TARDIS_TYPE, world);
 
-		this.link(tardis);
-		this.setPosition(pos.subtract(0f, 0.5f, 0f));
-		this.setVelocity(Vec3d.ZERO);
-	}
+        this.intersectionChecked = true;
+        this.state = state;
 
-	public static void spawnFromBlock(World world, BlockPos pos, BlockState state) {
-		if (!(world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior))
-			return;
+        this.link(tardis);
+        this.setPosition(pos.subtract(0f, 0.5f, 0f));
+        this.setVelocity(Vec3d.ZERO);
+    }
 
-		FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(
-				world, pos.toCenterPos(), state.contains(Properties.WATERLOGGED)
-				? state.with(Properties.WATERLOGGED, false) : state, exterior.tardis().get()
-		);
+    public static void spawnFromBlock(World world, BlockPos pos, BlockState state) {
+        if (!(world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior))
+            return;
 
-		world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
-		world.spawnEntity(fallingBlockEntity);
+        FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(world, pos.toCenterPos(),
+                state.contains(Properties.WATERLOGGED) ? state.with(Properties.WATERLOGGED, false) : state,
+                exterior.tardis().get());
 
-		exterior.tardis().get().flight().falling().set(true);
-	}
+        world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
+        world.spawnEntity(fallingBlockEntity);
 
-	@Override
-	protected MoveEffect getMoveEffect() {
-		return MoveEffect.NONE;
-	}
+        exterior.tardis().get().flight().falling().set(true);
+    }
 
-	@Override
-	protected void tickInVoid() {
-		this.stopFalling(true);
-	}
+    @Override
+    protected MoveEffect getMoveEffect() {
+        return MoveEffect.NONE;
+    }
 
- 	@Override
-	public void tick() {
-		this.timeFalling++;
+    @Override
+    protected void tickInVoid() {
+        this.stopFalling(true);
+    }
 
-   		if (!this.hasNoGravity())
-        	this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
+    @Override
+    public void tick() {
+        this.timeFalling++;
 
-		this.move(MovementType.SELF, this.getVelocity());
+        if (!this.hasNoGravity())
+            this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 
-		Tardis tardis = this.tardis().get();
+        this.move(MovementType.SELF, this.getVelocity());
 
-		if (tardis == null)
-			return;
+        Tardis tardis = this.tardis().get();
 
-		this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.05f : 0.98f));
+        if (tardis == null)
+            return;
 
-		if (this.getY() <= (double) this.getWorld().getBottomY() + 2)
-			this.tickInVoid();
+        this.setVelocity(this.getVelocity().multiply(tardis.travel().isCrashing() ? 1.05f : 0.98f));
 
-		if (this.getWorld().isClient())
-			return;
+        if (this.getY() <= (double) this.getWorld().getBottomY() + 2)
+            this.tickInVoid();
 
-		tardis.getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(
-				null, console, SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F)
-		);
+        if (this.getWorld().isClient())
+            return;
 
-		if (tardis.travel().antigravs().get()) {
-			this.stopFalling(true);
-			return;
-		}
+        tardis.getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(null, console,
+                SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F));
 
-		BlockPos blockPos = this.getBlockPos();
+        if (tardis.travel().antigravs().get()) {
+            this.stopFalling(true);
+            return;
+        }
 
-		if (blockPos == null)
-			return;
+        BlockPos blockPos = this.getBlockPos();
 
-		tardis.travel().forcePosition(cached -> cached.pos(blockPos)
-				.world(this.getWorld().getRegistryKey()));
+        if (blockPos == null)
+            return;
 
-		if (this.isOnGround())
-			this.stopFalling(false);
-	}
+        tardis.travel().forcePosition(cached -> cached.pos(blockPos).world(this.getWorld().getRegistryKey()));
 
-	public void stopFalling(boolean antigravs) {
-		Tardis tardis = this.tardis().get();
-		TravelHandler travel = tardis.travel();
+        if (this.isOnGround())
+            this.stopFalling(false);
+    }
 
-		if (antigravs)
-			travel.antigravs().set(true);
+    public void stopFalling(boolean antigravs) {
+        Tardis tardis = this.tardis().get();
+        TravelHandler travel = tardis.travel();
 
-		Block block = this.state.getBlock();
-		BlockPos blockPos = this.getBlockPos();
+        if (antigravs)
+            travel.antigravs().set(true);
 
-		boolean isCrashing = travel.isCrashing();
+        Block block = this.state.getBlock();
+        BlockPos blockPos = this.getBlockPos();
 
-		if (this.getWorld().isClient()) {
-			if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
-				ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
+        boolean isCrashing = travel.isCrashing();
 
-			return;
-		}
+        if (this.getWorld().isClient()) {
+            if (MinecraftClient.getInstance().world != null
+                    && MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+                ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
 
-		TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
-			SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
-			float volume = isCrashing ? 1.0F : 3.0F;
+            return;
+        }
 
-			player.playSound(sound, volume, 1.0f);
-		});
+        TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
+            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
+            float volume = isCrashing ? 1.0F : 3.0F;
 
-		if (ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), blockPos))
-			ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), blockPos);
+            player.playSound(sound, volume, 1.0f);
+        });
 
-		if (isCrashing) {
-			this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-					10, true, World.ExplosionSourceType.MOB
-			);
+        if (ForcedChunkUtil.isChunkForced((ServerWorld) this.getWorld(), blockPos))
+            ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), blockPos);
 
-			travel.setCrashing(false);
-		}
+        if (isCrashing) {
+            this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 10, true,
+                    World.ExplosionSourceType.MOB);
 
-		if (this.state.contains(Properties.WATERLOGGED) && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER)
-			this.state = this.state.with(Properties.WATERLOGGED, true);
+            travel.setCrashing(false);
+        }
 
-		if (block instanceof ExteriorBlock exterior)
-			exterior.onLanding(tardis, this.getWorld(), blockPos);
+        if (this.state.contains(Properties.WATERLOGGED)
+                && this.getWorld().getFluidState(blockPos).getFluid() == Fluids.WATER)
+            this.state = this.state.with(Properties.WATERLOGGED, true);
 
-		travel.placeExterior(false);
-		this.discard();
-	}
+        if (block instanceof ExteriorBlock exterior)
+            exterior.onLanding(tardis, this.getWorld(), blockPos);
 
-	@Override
-	public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
-		int i = MathHelper.ceil(fallDistance - 1.0F);
+        travel.placeExterior(false);
+        this.discard();
+    }
 
-		if (i >= 0) {
-			Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY);
-			DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
-			float f = (float) Math.min(MathHelper.floor((float) i * HURT_AMOUNT), HURT_MAX);
+    @Override
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+        int i = MathHelper.ceil(fallDistance - 1.0F);
 
-			this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate)
-					.forEach(entity -> {
-						if (entity instanceof ShulkerEntity shulker) {
-							shulker.kill();
-						}
-						entity.damage(damageSource2, f);
-					});
-		}
+        if (i >= 0) {
+            Predicate<Entity> predicate = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR
+                    .and(EntityPredicates.VALID_LIVING_ENTITY);
+            DamageSource damageSource2 = AITDamageTypes.of(getWorld(), AITDamageTypes.TARDIS_SQUASH_DAMAGE_TYPE);
+            float f = (float) Math.min(MathHelper.floor((float) i * HURT_AMOUNT), HURT_MAX);
+
+            this.getWorld().getOtherEntities(this, this.getBoundingBox(), predicate).forEach(entity -> {
+                if (entity instanceof ShulkerEntity shulker) {
+                    shulker.kill();
+                }
+                entity.damage(damageSource2, f);
+            });
+        }
 
         return false;
     }
 
-	@Override
-	public void writeCustomDataToNbt(NbtCompound nbt) {
-		super.writeCustomDataToNbt(nbt);
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
 
-		nbt.put("BlockState", NbtHelper.fromBlockState(this.state));
-		nbt.putInt("Time", this.timeFalling);
+        nbt.put("BlockState", NbtHelper.fromBlockState(this.state));
+        nbt.putInt("Time", this.timeFalling);
 
-		if (this.blockEntityData != null)
-			nbt.put("TileEntityData", this.blockEntityData);
-	}
+        if (this.blockEntityData != null)
+            nbt.put("TileEntityData", this.blockEntityData);
+    }
 
-	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt) {
-		super.readCustomDataFromNbt(nbt);
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
 
-		this.state = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK), nbt.getCompound("BlockState"));
-		this.timeFalling = nbt.getInt("Time");
+        this.state = NbtHelper.toBlockState(this.getWorld().createCommandRegistryWrapper(RegistryKeys.BLOCK),
+                nbt.getCompound("BlockState"));
+        this.timeFalling = nbt.getInt("Time");
 
-		if (nbt.contains("TileEntityData", 10))
-			this.blockEntityData = nbt.getCompound("TileEntityData");
+        if (nbt.contains("TileEntityData", 10))
+            this.blockEntityData = nbt.getCompound("TileEntityData");
 
-		if (this.state.isAir())
-			this.state = AITBlocks.EXTERIOR_BLOCK.getDefaultState();
-	}
+        if (this.state.isAir())
+            this.state = AITBlocks.EXTERIOR_BLOCK.getDefaultState();
+    }
 
-	public BlockState getBlockState() {
-		return this.state;
-	}
+    public BlockState getBlockState() {
+        return this.state;
+    }
 
-	@Override
-	protected Text getDefaultName() {
-		return Text.translatable("entity.minecraft.falling_block_type", AITBlocks.EXTERIOR_BLOCK.getName());
-	}
+    @Override
+    protected Text getDefaultName() {
+        return Text.translatable("entity.minecraft.falling_block_type", AITBlocks.EXTERIOR_BLOCK.getName());
+    }
 
-	@Override
-	public boolean entityDataRequiresOperator() {
-		return true;
-	}
+    @Override
+    public boolean entityDataRequiresOperator() {
+        return true;
+    }
 
-	@Override
-	public boolean hasNoGravity() {
-		return false;
-	}
+    @Override
+    public boolean hasNoGravity() {
+        return false;
+    }
 
-	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket() {
-		return new EntitySpawnS2CPacket(this, Block.getRawIdFromState(this.getBlockState()));
-	}
+    @Override
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
+        return new EntitySpawnS2CPacket(this, Block.getRawIdFromState(this.getBlockState()));
+    }
 
-	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-		super.onSpawnPacket(packet);
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        super.onSpawnPacket(packet);
 
-		this.state = Block.getStateFromRawId(packet.getEntityData());
-		this.intersectionChecked = true;
+        this.state = Block.getStateFromRawId(packet.getEntityData());
+        this.intersectionChecked = true;
 
-		double d = packet.getX();
-		double e = packet.getY();
-		double f = packet.getZ();
+        double d = packet.getX();
+        double e = packet.getY();
+        double f = packet.getZ();
 
-		this.setPosition(d, e, f);
-	}
+        this.setPosition(d, e, f);
+    }
 }

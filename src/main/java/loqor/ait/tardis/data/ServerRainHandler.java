@@ -1,57 +1,59 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.server.MinecraftServer;
+
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import net.minecraft.server.MinecraftServer;
 
 public class ServerRainHandler extends KeyedTardisComponent implements TardisTickable {
-	private static final BoolProperty RAIN_FALLING = new BoolProperty("raining", false);
-	private final BoolValue rainFalling = RAIN_FALLING.create(this);
+    private static final BoolProperty RAIN_FALLING = new BoolProperty("raining", false);
+    private final BoolValue rainFalling = RAIN_FALLING.create(this);
 
-	public ServerRainHandler() {
-		super(Id.RAINING);
-	}
-	@Override
-	public void onLoaded() {
-		rainFalling.of(this, RAIN_FALLING);
-	}
+    public ServerRainHandler() {
+        super(Id.RAINING);
+    }
 
-	public void enable() {
-		this.set(true);
-	}
+    @Override
+    public void onLoaded() {
+        rainFalling.of(this, RAIN_FALLING);
+    }
 
-	public void disable() {
-		this.set(false);
-	}
+    public void enable() {
+        this.set(true);
+    }
 
-	private void set(boolean var) {
-		rainFalling.set(var);
-	}
+    public void disable() {
+        this.set(false);
+    }
 
-	public boolean isEnabled() {
-		return rainFalling.get();
-	}
+    private void set(boolean var) {
+        rainFalling.set(var);
+    }
 
-	@Override
-	public void tick(MinecraftServer server) {
+    public boolean isEnabled() {
+        return rainFalling.get();
+    }
 
-		if (this.isEnabled() &&
-				tardis.travel().position().getWorld() != null && !tardis.travel().position().getWorld().isRaining()) {
-			this.disable();
-			return;
-		}
+    @Override
+    public void tick(MinecraftServer server) {
 
-		if (this.isEnabled())
-			return;
+        if (this.isEnabled() && tardis.travel().position().getWorld() != null
+                && !tardis.travel().position().getWorld().isRaining()) {
+            this.disable();
+            return;
+        }
 
-		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
-			return;
+        if (this.isEnabled())
+            return;
 
-		if (tardis.travel().position().getWorld() != null && tardis.travel().position().getWorld().isRaining()) {
-			this.enable();
-		}
-	}
+        if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+            return;
+
+        if (tardis.travel().position().getWorld() != null && tardis.travel().position().getWorld().isRaining()) {
+            this.enable();
+        }
+    }
 }

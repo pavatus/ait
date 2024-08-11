@@ -1,5 +1,17 @@
 package loqor.ait.tardis.data;
 
+import java.util.function.Function;
+
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import org.apache.commons.lang3.StringUtils;
+
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
@@ -7,20 +19,11 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.util.Ordered;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.function.Function;
 
 /**
- * @author Loqor
- * TODO reminder to work on this more, making it so you have to brush off different biomes if you don't just demat/remat + having to land on the respective blocks / has to snow for it to take effect.
+ * @author Loqor TODO reminder to work on this more, making it so you have to
+ *         brush off different biomes if you don't just demat/remat + having to
+ *         land on the respective blocks / has to snow for it to take effect.
  */
 public class BiomeHandler extends KeyedTardisComponent {
 
@@ -55,10 +58,12 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     private static BiomeType getTagForBiome(RegistryEntry<Biome> biome) {
-        if (biome.isIn(ConventionalBiomeTags.SNOWY) || biome.isIn(ConventionalBiomeTags.SNOWY_PLAINS) || biome.isIn(ConventionalBiomeTags.ICY))
+        if (biome.isIn(ConventionalBiomeTags.SNOWY) || biome.isIn(ConventionalBiomeTags.SNOWY_PLAINS)
+                || biome.isIn(ConventionalBiomeTags.ICY))
             return BiomeType.SNOWY;
 
-        if (biome.isIn(ConventionalBiomeTags.DESERT) || biome.isIn(ConventionalBiomeTags.BEACH) || biome.isIn(ConventionalBiomeTags.DEAD))
+        if (biome.isIn(ConventionalBiomeTags.DESERT) || biome.isIn(ConventionalBiomeTags.BEACH)
+                || biome.isIn(ConventionalBiomeTags.DEAD))
             return BiomeType.SANDY;
 
         if (biome.isIn(ConventionalBiomeTags.BADLANDS))
@@ -85,14 +90,10 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     public enum BiomeType implements StringIdentifiable, Ordered {
-        DEFAULT,
-        SNOWY("_snowy", BiomeOverrides::snowy),
-        SCULK("_sculk", BiomeOverrides::sculk),
-        SANDY("_sand", BiomeOverrides::sandy),
-        RED_SANDY("_red_sand", BiomeOverrides::redSandy),
-        MUDDY("_mud", BiomeOverrides::muddy),
-        CHORUS("_chorus", BiomeOverrides::chorus),
-        CHERRY("_cherry", BiomeOverrides::cherry);
+        DEFAULT, SNOWY("_snowy", BiomeOverrides::snowy), SCULK("_sculk", BiomeOverrides::sculk), SANDY("_sand",
+                BiomeOverrides::sandy), RED_SANDY("_red_sand", BiomeOverrides::redSandy), MUDDY("_mud",
+                        BiomeOverrides::muddy), CHORUS("_chorus",
+                                BiomeOverrides::chorus), CHERRY("_cherry", BiomeOverrides::cherry);
 
         public static final BiomeType[] VALUES = BiomeType.values();
 
@@ -119,8 +120,7 @@ public class BiomeHandler extends KeyedTardisComponent {
 
             String path = texture.getPath();
 
-            return new Identifier(AITMod.MOD_ID, path.substring(
-                    0, path.length() - 4) + this.suffix + ".png");
+            return new Identifier(AITMod.MOD_ID, path.substring(0, path.length() - 4) + this.suffix + ".png");
         };
 
         public Identifier get(BiomeOverrides overrides) {

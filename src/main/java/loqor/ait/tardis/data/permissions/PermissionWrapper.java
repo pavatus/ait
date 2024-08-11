@@ -54,7 +54,8 @@ public class PermissionWrapper implements PermissionLike {
             return this.equals(wrapper.permission); // delegates to the second if statement
 
         if (obj instanceof Permission other)
-            return this.permission != null && this.permission.equals(other); // delegates to the permission's equals method
+            return this.permission != null && this.permission.equals(other); // delegates to the permission's equals
+                                                                                // method
 
         return false;
     }

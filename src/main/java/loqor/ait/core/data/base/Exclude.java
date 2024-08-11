@@ -11,8 +11,6 @@ public @interface Exclude {
     Strategy strategy() default Strategy.ALL;
 
     enum Strategy {
-        ALL,
-        NETWORK,
-        FILE
+        ALL, NETWORK, FILE
     }
 }

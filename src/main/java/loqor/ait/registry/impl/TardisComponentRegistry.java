@@ -1,15 +1,16 @@
 package loqor.ait.registry.impl;
 
-import com.google.gson.*;
-import loqor.ait.AITMod;
-import loqor.ait.registry.Registry;
-import loqor.ait.tardis.base.TardisComponent;
-
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import com.google.gson.*;
+
+import loqor.ait.AITMod;
+import loqor.ait.registry.Registry;
+import loqor.ait.tardis.base.TardisComponent;
 
 public class TardisComponentRegistry implements Registry {
 
@@ -83,10 +84,14 @@ public class TardisComponentRegistry implements Registry {
         return new Serializer();
     }
 
-    private static class Serializer implements JsonSerializer<TardisComponent.IdLike>, JsonDeserializer<TardisComponent.IdLike> {
+    private static class Serializer
+            implements
+                JsonSerializer<TardisComponent.IdLike>,
+                JsonDeserializer<TardisComponent.IdLike> {
 
         @Override
-        public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             String id = json.getAsString();
             return TardisComponentRegistry.getInstance().get(id);
         }

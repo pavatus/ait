@@ -1,13 +1,12 @@
 package loqor.ait.core.item;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 
-import loqor.ait.core.util.AITArmorMaterial;
-import loqor.ait.core.util.AITArmorMaterials;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
@@ -29,6 +28,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
+import loqor.ait.core.util.AITArmorMaterial;
+import loqor.ait.core.util.AITArmorMaterials;
 
 public class WearableArmorItem extends Item implements Equipment {
     private static final EnumMap MODIFIERS = Util.make(new EnumMap(Type.class), (uuidMap) -> {
@@ -52,18 +54,19 @@ public class WearableArmorItem extends Item implements Equipment {
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public static boolean dispenseArmor(BlockPointer pointer, ItemStack armor) {
-        BlockPos blockPos = pointer.getPos().offset((Direction)pointer.getBlockState().get(DispenserBlock.FACING));
-        List<LivingEntity> list = pointer.getWorld().getEntitiesByClass(LivingEntity.class, new Box(blockPos), EntityPredicates.EXCEPT_SPECTATOR.and(new EntityPredicates.Equipable(armor)));
+        BlockPos blockPos = pointer.getPos().offset((Direction) pointer.getBlockState().get(DispenserBlock.FACING));
+        List<LivingEntity> list = pointer.getWorld().getEntitiesByClass(LivingEntity.class, new Box(blockPos),
+                EntityPredicates.EXCEPT_SPECTATOR.and(new EntityPredicates.Equipable(armor)));
         if (list.isEmpty()) {
             return false;
         } else {
-            LivingEntity livingEntity = (LivingEntity)list.get(0);
+            LivingEntity livingEntity = (LivingEntity) list.get(0);
             EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(armor);
             ItemStack itemStack = armor.split(1);
             livingEntity.equipStack(equipmentSlot, itemStack);
             if (livingEntity instanceof MobEntity) {
-                ((MobEntity)livingEntity).setEquipmentDropChance(equipmentSlot, 2.0F);
-                ((MobEntity)livingEntity).setPersistent();
+                ((MobEntity) livingEntity).setEquipmentDropChance(equipmentSlot, 2.0F);
+                ((MobEntity) livingEntity).setPersistent();
             }
 
             return true;
@@ -84,11 +87,15 @@ public class WearableArmorItem extends Item implements Equipment {
         this.knockbackResistance = material.getKnockbackResistance();
         DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        UUID uUID = (UUID)MODIFIERS.get(type);
-        builder.put(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(uUID, "Armor modifier", this.protection, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, new EntityAttributeModifier(uUID, "Armor toughness", this.toughness, EntityAttributeModifier.Operation.ADDITION));
+        UUID uUID = (UUID) MODIFIERS.get(type);
+        builder.put(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(uUID, "Armor modifier", this.protection,
+                EntityAttributeModifier.Operation.ADDITION));
+        builder.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, new EntityAttributeModifier(uUID, "Armor toughness",
+                this.toughness, EntityAttributeModifier.Operation.ADDITION));
         if (material == AITArmorMaterials.NETHERITE) {
-            builder.put(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, new EntityAttributeModifier(uUID, "Armor knockback resistance", this.knockbackResistance, EntityAttributeModifier.Operation.ADDITION));
+            builder.put(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
+                    new EntityAttributeModifier(uUID, "Armor knockback resistance", this.knockbackResistance,
+                            EntityAttributeModifier.Operation.ADDITION));
         }
 
         this.attributeModifiers = builder.build();
@@ -135,10 +142,8 @@ public class WearableArmorItem extends Item implements Equipment {
     }
 
     public enum Type {
-        HELMET(EquipmentSlot.HEAD, "helmet"),
-        CHESTPLATE(EquipmentSlot.CHEST, "chestplate"),
-        LEGGINGS(EquipmentSlot.LEGS, "leggings"),
-        BOOTS(EquipmentSlot.FEET, "boots");
+        HELMET(EquipmentSlot.HEAD, "helmet"), CHESTPLATE(EquipmentSlot.CHEST,
+                "chestplate"), LEGGINGS(EquipmentSlot.LEGS, "leggings"), BOOTS(EquipmentSlot.FEET, "boots");
 
         private final EquipmentSlot equipmentSlot;
         private final String name;

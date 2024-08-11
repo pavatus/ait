@@ -1,10 +1,11 @@
 package loqor.ait.client.screens;
 
-import loqor.ait.AITMod;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
 
 public class BlueprintFabricatorScreen extends Screen {
 
@@ -15,7 +16,6 @@ public class BlueprintFabricatorScreen extends Screen {
     public BlueprintFabricatorScreen(Text title) {
         super(title);
     }
-
 
     protected void drawBackground(DrawContext context) {
         int i = (this.width - this.backgroundWidth) / 2;

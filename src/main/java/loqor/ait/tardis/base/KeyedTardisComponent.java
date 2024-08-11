@@ -6,13 +6,16 @@ import loqor.ait.tardis.data.properties.Value;
 
 public abstract class KeyedTardisComponent extends TardisComponent {
 
-    @Exclude(strategy = Exclude.Strategy.FILE) private PropertyMap data = new PropertyMap();
+    @Exclude(strategy = Exclude.Strategy.FILE)
+    private PropertyMap data = new PropertyMap();
 
     /**
-     * Do NOT under any circumstances run logic in this constructor.
-     * Default field values should be inlined. All logic should be done in an appropriate init method.
+     * Do NOT under any circumstances run logic in this constructor. Default field
+     * values should be inlined. All logic should be done in an appropriate init
+     * method.
      *
-     * @implNote The {@link TardisComponent#tardis()} will always be null at the time this constructor gets called.
+     * @implNote The {@link TardisComponent#tardis()} will always be null at the
+     *           time this constructor gets called.
      */
     public KeyedTardisComponent(IdLike id) {
         super(id);

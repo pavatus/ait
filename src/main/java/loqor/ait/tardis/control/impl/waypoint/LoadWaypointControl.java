@@ -1,10 +1,5 @@
 package loqor.ait.tardis.control.impl.waypoint;
 
-import loqor.ait.core.data.Waypoint;
-import loqor.ait.core.item.WaypointItem;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.control.Control;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -13,30 +8,38 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.data.Waypoint;
+import loqor.ait.core.item.WaypointItem;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.control.Control;
+
 public class LoadWaypointControl extends Control {
-	public LoadWaypointControl() {
-		super("load_waypoint");
-	}
+    public LoadWaypointControl() {
+        super("load_waypoint");
+    }
 
-	@Override
-	public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-		if (leftClick) {
-			tardis.waypoint().spawnItem(console);
-			return true;
-		}
+    @Override
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
+            boolean leftClick) {
+        if (leftClick) {
+            tardis.waypoint().spawnItem(console);
+            return true;
+        }
 
-		ItemStack itemStack = player.getMainHandStack();
-		if (!(itemStack.getItem() instanceof WaypointItem))
-			return false;
+        ItemStack itemStack = player.getMainHandStack();
+        if (!(itemStack.getItem() instanceof WaypointItem))
+            return false;
 
-		if (WaypointItem.getPos(itemStack) == null)
-			WaypointItem.setPos(itemStack, tardis.travel().position());
+        if (WaypointItem.getPos(itemStack) == null)
+            WaypointItem.setPos(itemStack, tardis.travel().position());
 
-		tardis.waypoint().markHasCartridge();
-		tardis.waypoint().set(Waypoint.fromStack(itemStack), console, true);
-		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+        tardis.waypoint().markHasCartridge();
+        tardis.waypoint().set(Waypoint.fromStack(itemStack), console, true);
+        player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f, 1);
-		return true;
-	}
+        TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f,
+                1);
+        return true;
+    }
 }

@@ -2,14 +2,19 @@ package loqor.ait.mixin.client.rendering;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import loqor.ait.AITMod;
-import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.client.util.SkyboxUtil;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.tardis.Tardis;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
@@ -22,238 +27,256 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import loqor.ait.AITMod;
+import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.client.util.SkyboxUtil;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.tardis.Tardis;
 
 @Mixin(WorldRenderer.class)
 public abstract class SkyboxMixin {
 
-	@Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
-	@Shadow protected abstract void renderEndSky(MatrixStack matrices);
+    @Shadow
+    protected abstract void renderEndSky(MatrixStack matrices);
 
-	@Shadow private @Nullable ClientWorld world;
-	@Shadow private @Nullable VertexBuffer lightSkyBuffer;
-	@Shadow @Final private static Identifier SUN;
-	@Shadow @Final private static Identifier MOON_PHASES;
-	@Shadow private @Nullable VertexBuffer starsBuffer;
-	@Shadow private @Nullable VertexBuffer darkSkyBuffer;
+    @Shadow
+    private @Nullable ClientWorld world;
 
-	@Shadow public abstract void render(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f projectionMatrix);
+    @Shadow
+    private @Nullable VertexBuffer lightSkyBuffer;
 
-	@Unique private static WorldRenderContext context;
+    @Shadow
+    @Final
+    private static Identifier SUN;
 
-	@Inject(method = "<clinit>", at = @At("TAIL"))
-	private static void init(CallbackInfo ci) {
-		WorldRenderEvents.AFTER_SETUP.register(ctx -> context = ctx);
-	}
+    @Shadow
+    @Final
+    private static Identifier MOON_PHASES;
 
-	@Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
-	public void ait$renderSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
-		if (this.world == null)
-			return;
+    @Shadow
+    private @Nullable VertexBuffer starsBuffer;
 
-		if (this.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-			this.renderSkyDynamically(matrices, projectionMatrix, tickDelta, camera, fogCallback, ci);
-			this.world.getProfiler().swap("projector");
-		}
+    @Shadow
+    private @Nullable VertexBuffer darkSkyBuffer;
 
-		if (this.world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
-			SkyboxUtil.renderTardisSky(matrices);
-			ci.cancel();
-		}
-	}
+    @Shadow
+    public abstract void render(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline,
+            Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
+            Matrix4f projectionMatrix);
 
-	@Unique
-	private void renderSkyDynamically(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, Runnable fogCallback, CallbackInfo ci) {
-		if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR() || context == null) {
-			SkyboxUtil.renderTardisSky(matrices);
-			ci.cancel();
+    @Unique private static WorldRenderContext context;
 
-			return;
-		}
+    @Inject(method = "<clinit>", at = @At("TAIL"))
+    private static void init(CallbackInfo ci) {
+        WorldRenderEvents.AFTER_SETUP.register(ctx -> context = ctx);
+    }
 
-		Tardis tardis = ClientTardisUtil.getCurrentTardis();
+    @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
+    public void ait$renderSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera,
+            boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
+        if (this.world == null)
+            return;
 
-		if (tardis == null)
-			return;
+        if (this.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+            this.renderSkyDynamically(matrices, projectionMatrix, tickDelta, camera, fogCallback, ci);
+            this.world.getProfiler().swap("projector");
+        }
+
+        if (this.world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
+            SkyboxUtil.renderTardisSky(matrices);
+            ci.cancel();
+        }
+    }
+
+    @Unique private void renderSkyDynamically(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera,
+            Runnable fogCallback, CallbackInfo ci) {
+        if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR() || context == null) {
+            SkyboxUtil.renderTardisSky(matrices);
+            ci.cancel();
+
+            return;
+        }
+
+        Tardis tardis = ClientTardisUtil.getCurrentTardis();
+
+        if (tardis == null)
+            return;
 
         RegistryKey<World> skyboxWorld = tardis.stats().skybox().get();
 
-		if (skyboxWorld == World.OVERWORLD) {
-			this.renderOverworldSky(matrices, projectionMatrix, tickDelta, camera, fogCallback);
+        if (skyboxWorld == World.OVERWORLD) {
+            this.renderOverworldSky(matrices, projectionMatrix, tickDelta, camera, fogCallback);
 
-			ci.cancel();
-			return;
-		}
-
-		if (skyboxWorld == World.END) {
-			this.renderEndSky(matrices);
-
-			ci.cancel();
-			return;
-		}
-
-		if (skyboxWorld == World.NETHER) {
-			ci.cancel();
-			return;
-		}
-
-		DimensionRenderingRegistry.SkyRenderer renderer = DimensionRenderingRegistry.getSkyRenderer(skyboxWorld);
-
-		if (renderer != null) {
-			renderer.render(context);
-			ci.cancel();
+            ci.cancel();
+            return;
         }
-	}
 
-	@Unique
-	private void renderOverworldSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, Runnable fogCallback) {
-		float q;
-		float p;
-		float o;
-		int m;
-		float k;
-		float i;
+        if (skyboxWorld == World.END) {
+            this.renderEndSky(matrices);
 
-		Vec3d vec3d = world.getSkyColor(camera.getPos(), tickDelta);
+            ci.cancel();
+            return;
+        }
 
-		float f = (float) vec3d.x;
-		float g = (float) vec3d.y;
-		float h = (float) vec3d.z;
+        if (skyboxWorld == World.NETHER) {
+            ci.cancel();
+            return;
+        }
 
-		BackgroundRenderer.setFogBlack();
-		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        DimensionRenderingRegistry.SkyRenderer renderer = DimensionRenderingRegistry.getSkyRenderer(skyboxWorld);
 
-		RenderSystem.depthMask(false);
-		RenderSystem.setShaderColor(f, g, h, 1.0f);
+        if (renderer != null) {
+            renderer.render(context);
+            ci.cancel();
+        }
+    }
 
-		ShaderProgram shaderProgram = RenderSystem.getShader();
+    @Unique private void renderOverworldSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera,
+            Runnable fogCallback) {
+        float q;
+        float p;
+        float o;
+        int m;
+        float k;
+        float i;
 
-		this.lightSkyBuffer.bind();
-		this.lightSkyBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix, shaderProgram);
+        Vec3d vec3d = world.getSkyColor(camera.getPos(), tickDelta);
 
-		VertexBuffer.unbind();
-		RenderSystem.enableBlend();
+        float f = (float) vec3d.x;
+        float g = (float) vec3d.y;
+        float h = (float) vec3d.z;
 
-		float[] fs = world.getDimensionEffects().getFogColorOverride(world.getSkyAngle(tickDelta), tickDelta);
+        BackgroundRenderer.setFogBlack();
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 
-		if (fs != null) {
-			RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-			RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.depthMask(false);
+        RenderSystem.setShaderColor(f, g, h, 1.0f);
 
-			matrices.push();
-			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
+        ShaderProgram shaderProgram = RenderSystem.getShader();
 
-			i = MathHelper.sin(world.getSkyAngleRadians(tickDelta)) < 0.0f ? 180.0f : 0.0f;
+        this.lightSkyBuffer.bind();
+        this.lightSkyBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix, shaderProgram);
 
-			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(i));
-			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0f));
+        VertexBuffer.unbind();
+        RenderSystem.enableBlend();
 
-			float j = fs[0];
-			k = fs[1];
-			float l = fs[2];
+        float[] fs = world.getDimensionEffects().getFogColorOverride(world.getSkyAngle(tickDelta), tickDelta);
 
-			Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-			bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
-			bufferBuilder.vertex(matrix4f, 0.0f, 100.0f, 0.0f).color(j, k, l, fs[3]).next();
+        if (fs != null) {
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+            matrices.push();
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
+
+            i = MathHelper.sin(world.getSkyAngleRadians(tickDelta)) < 0.0f ? 180.0f : 0.0f;
+
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(i));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0f));
+
+            float j = fs[0];
+            k = fs[1];
+            float l = fs[2];
+
+            Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+            bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+            bufferBuilder.vertex(matrix4f, 0.0f, 100.0f, 0.0f).color(j, k, l, fs[3]).next();
 
             for (int n = 0; n <= 16; n++) {
-				o = (float) n * ((float) Math.PI * 2) / 16.0f;
-				p = MathHelper.sin(o);
-				q = MathHelper.cos(o);
+                o = (float) n * ((float) Math.PI * 2) / 16.0f;
+                p = MathHelper.sin(o);
+                q = MathHelper.cos(o);
 
-				bufferBuilder.vertex(matrix4f, p * 120.0f, q * 120.0f, -q * 40.0f * fs[3])
-						.color(fs[0], fs[1], fs[2], 0.0f).next();
-			}
+                bufferBuilder.vertex(matrix4f, p * 120.0f, q * 120.0f, -q * 40.0f * fs[3])
+                        .color(fs[0], fs[1], fs[2], 0.0f).next();
+            }
 
-			BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-			matrices.pop();
-		}
+            BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+            matrices.pop();
+        }
 
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE,
-				GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO
-		);
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE,
+                GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 
-		matrices.push();
-		i = 1.0f - world.getRainGradient(tickDelta);
+        matrices.push();
+        i = 1.0f - world.getRainGradient(tickDelta);
 
-		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, i);
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
-		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, i);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
 
-		Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
+        Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
 
-		k = 30.0f;
-		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-		RenderSystem.setShaderTexture(0, SUN);
+        k = 30.0f;
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShaderTexture(0, SUN);
 
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
-		bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();
-		bufferBuilder.vertex(matrix4f2, k, 100.0f, k).texture(1.0f, 1.0f).next();
-		bufferBuilder.vertex(matrix4f2, -k, 100.0f, k).texture(0.0f, 1.0f).next();
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
+        bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();
+        bufferBuilder.vertex(matrix4f2, k, 100.0f, k).texture(1.0f, 1.0f).next();
+        bufferBuilder.vertex(matrix4f2, -k, 100.0f, k).texture(0.0f, 1.0f).next();
 
-		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-		k = 20.0f;
+        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+        k = 20.0f;
 
-		RenderSystem.setShaderTexture(0, MOON_PHASES);
-		int r = world.getMoonPhase();
-		int s = r % 4;
-		m = r / 4 % 2;
+        RenderSystem.setShaderTexture(0, MOON_PHASES);
+        int r = world.getMoonPhase();
+        int s = r % 4;
+        m = r / 4 % 2;
 
-		float t = (float)(s) / 4.0f;
-		o = (float)(m) / 2.0f;
-		p = (float)(s + 1) / 4.0f;
-		q = (float)(m + 1) / 2.0f;
+        float t = (float) (s) / 4.0f;
+        o = (float) (m) / 2.0f;
+        p = (float) (s + 1) / 4.0f;
+        q = (float) (m + 1) / 2.0f;
 
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		bufferBuilder.vertex(matrix4f2, -k, -100.0f, k).texture(p, q).next();
-		bufferBuilder.vertex(matrix4f2, k, -100.0f, k).texture(t, q).next();
-		bufferBuilder.vertex(matrix4f2, k, -100.0f, -k).texture(t, o).next();
-		bufferBuilder.vertex(matrix4f2, -k, -100.0f, -k).texture(p, o).next();
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrix4f2, -k, -100.0f, k).texture(p, q).next();
+        bufferBuilder.vertex(matrix4f2, k, -100.0f, k).texture(t, q).next();
+        bufferBuilder.vertex(matrix4f2, k, -100.0f, -k).texture(t, o).next();
+        bufferBuilder.vertex(matrix4f2, -k, -100.0f, -k).texture(p, o).next();
 
-		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-		float u = world.method_23787(tickDelta) * i;
+        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+        float u = world.method_23787(tickDelta) * i;
 
-		if (u > 0.0f) {
-			RenderSystem.setShaderColor(u, u, u, u);
-			BackgroundRenderer.clearFog();
+        if (u > 0.0f) {
+            RenderSystem.setShaderColor(u, u, u, u);
+            BackgroundRenderer.clearFog();
 
-			this.starsBuffer.bind();
-			this.starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix, GameRenderer.getPositionProgram());
+            this.starsBuffer.bind();
+            this.starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
+                    GameRenderer.getPositionProgram());
 
-			VertexBuffer.unbind();
-			fogCallback.run();
-		}
+            VertexBuffer.unbind();
+            fogCallback.run();
+        }
 
-		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-		RenderSystem.disableBlend();
-		RenderSystem.defaultBlendFunc();
-		matrices.pop();
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+        matrices.pop();
 
-		RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0f);
-		double d = this.client.player.getCameraPosVec(tickDelta).y - this.world.getLevelProperties().getSkyDarknessHeight(this.world);
+        RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0f);
+        double d = this.client.player.getCameraPosVec(tickDelta).y
+                - this.world.getLevelProperties().getSkyDarknessHeight(this.world);
 
-		if (d < 0.0) {
-			matrices.push();
-			matrices.translate(0.0f, 12.0f, 0.0f);
+        if (d < 0.0) {
+            matrices.push();
+            matrices.translate(0.0f, 12.0f, 0.0f);
 
-			this.darkSkyBuffer.bind();
-			this.darkSkyBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix, shaderProgram);
+            this.darkSkyBuffer.bind();
+            this.darkSkyBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix, shaderProgram);
 
-			VertexBuffer.unbind();
-			matrices.pop();
-		}
+            VertexBuffer.unbind();
+            matrices.pop();
+        }
 
-		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-		RenderSystem.depthMask(true);
-	}
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.depthMask(true);
+    }
 }

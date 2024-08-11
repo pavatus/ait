@@ -1,7 +1,12 @@
 package loqor.ait.tardis.data.properties;
 
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.base.KeyedTardisComponent;
+import java.util.HashSet;
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import org.joml.Vector2i;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
@@ -9,12 +14,9 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.joml.Vector2i;
 
-import java.util.HashSet;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.base.KeyedTardisComponent;
 
 public class Property<T> {
 
@@ -67,11 +69,15 @@ public class Property<T> {
 
     public static class Type<T> {
 
-        public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.class, (buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
-        public static final Type<DirectedGlobalPos.Cached> CDIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.Cached.class, (buf, pos) -> pos.write(buf), DirectedGlobalPos.Cached::read);
-        public static final Type<Identifier> IDENTIFIER = new Type<>(Identifier.class, PacketByteBuf::writeIdentifier, PacketByteBuf::readIdentifier);
+        public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.class,
+                (buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
+        public static final Type<DirectedGlobalPos.Cached> CDIRECTED_GLOBAL_POS = new Type<>(
+                DirectedGlobalPos.Cached.class, (buf, pos) -> pos.write(buf), DirectedGlobalPos.Cached::read);
+        public static final Type<Identifier> IDENTIFIER = new Type<>(Identifier.class, PacketByteBuf::writeIdentifier,
+                PacketByteBuf::readIdentifier);
 
-        public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(RegistryKey.class, PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
+        public static final Type<RegistryKey<World>> WORLD_KEY = new Type<>(RegistryKey.class,
+                PacketByteBuf::writeRegistryKey, buf -> buf.readRegistryKey(RegistryKeys.WORLD));
         public static final Type<Direction> DIRECTION = Type.forEnum(Direction.class);
 
         public static final Type<Vector2i> VEC2I = new Type<>(Vector2i.class, (buf, vector2i) -> {
@@ -79,11 +85,13 @@ public class Property<T> {
             buf.writeInt(vector2i.y);
         }, buf -> new Vector2i(buf.readInt(), buf.readInt()));
 
-        public static final Type<String> STR = new Type<>(String.class, PacketByteBuf::writeString, PacketByteBuf::readString);
+        public static final Type<String> STR = new Type<>(String.class, PacketByteBuf::writeString,
+                PacketByteBuf::readString);
 
         public static final Type<UUID> UUID = new Type<>(UUID.class, PacketByteBuf::writeUuid, PacketByteBuf::readUuid);
 
-        public static final Type<Double> DOUBLE = new Type<>(Double.class, PacketByteBuf::writeDouble, PacketByteBuf::readDouble);
+        public static final Type<Double> DOUBLE = new Type<>(Double.class, PacketByteBuf::writeDouble,
+                PacketByteBuf::readDouble);
 
         public static final Type<HashSet<String>> STR_SET = new Type<>(HashSet.class, (buf, strings) -> {
             buf.writeVarInt(strings.size());
@@ -101,7 +109,8 @@ public class Property<T> {
             return result;
         });
 
-        public static final Type<ItemStack> ITEM_STACK = new Type<>(ItemStack.class, PacketByteBuf::writeItemStack, PacketByteBuf::readItemStack);
+        public static final Type<ItemStack> ITEM_STACK = new Type<>(ItemStack.class, PacketByteBuf::writeItemStack,
+                PacketByteBuf::readItemStack);
 
         private final Class<?> clazz;
         private final BiConsumer<PacketByteBuf, T> encoder;

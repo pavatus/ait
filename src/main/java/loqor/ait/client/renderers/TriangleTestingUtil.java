@@ -2,11 +2,12 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import org.joml.Matrix4f;
+
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
 
 public class TriangleTestingUtil {
 
@@ -28,9 +29,10 @@ public class TriangleTestingUtil {
 
         buffer.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR);
         for (int i = 0; i < 6; ++i) {
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(i * ((i > 1f && i < 3f) ||  i == 4 ? 120f : 60F)), 0, 0, 0);
+            matrixStack.multiply(
+                    RotationAxis.POSITIVE_Y.rotationDegrees(i * ((i > 1f && i < 3f) || i == 4 ? 120f : 60F)), 0, 0, 0);
             buffer.vertex(positionMatrix, -0.5f, 1, -0.865625f).color(1f, 1f, 1f, 1f).texture(0f, 0f).next();
-            buffer.vertex(positionMatrix, 0, 0, /*-0.865625f*/0).color(1f, 0f, 0f, 1f).texture(0f, 1f).next();
+            buffer.vertex(positionMatrix, 0, 0, /*-0.865625f*/ 0).color(1f, 0f, 0f, 1f).texture(0f, 1f).next();
             buffer.vertex(positionMatrix, 0.5f, 1, -0.865625f).color(0f, 0f, 1f, 1f).texture(1f, 0f).next();
         }
 

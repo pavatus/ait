@@ -1,14 +1,15 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.LinkableBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
+import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
 
 import java.util.Optional;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.link.LinkableBlockEntity;
 
 public class PlaqueBlockEntity extends LinkableBlockEntity {
 
@@ -18,7 +19,7 @@ public class PlaqueBlockEntity extends LinkableBlockEntity {
 
     @Override
     public Optional<Tardis> findTardis() {
-        if(this.tardisId == null && this.hasWorld()) {
+        if (this.tardisId == null && this.hasWorld()) {
             assert this.getWorld() != null;
             Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
             if (found != null)

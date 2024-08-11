@@ -1,7 +1,7 @@
 package loqor.ait.tardis.exterior.variant.tardim;
 
 public class TardimFireVariant extends TardimVariant {
-	public TardimFireVariant() {
-		super("fire");
-	}
+    public TardimFireVariant() {
+        super("fire");
+    }
 }

@@ -1,14 +1,5 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.properties.bool.BoolProperty;
-import loqor.ait.tardis.data.properties.bool.BoolValue;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -22,121 +13,138 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.properties.bool.BoolProperty;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
+
 public class ShieldHandler extends KeyedTardisComponent implements TardisTickable {
-	private static final BoolProperty IS_SHIELDED = new BoolProperty("is_shielded", false);
-	private final BoolValue isShielded = IS_SHIELDED.create(this);
-	public static BoolProperty IS_VISUALLY_SHIELDED = new BoolProperty("is_visually_shielded", false);
-	private final BoolValue isVisuallyShielded = IS_VISUALLY_SHIELDED.create(this);
+    private static final BoolProperty IS_SHIELDED = new BoolProperty("is_shielded", false);
+    private final BoolValue isShielded = IS_SHIELDED.create(this);
+    public static BoolProperty IS_VISUALLY_SHIELDED = new BoolProperty("is_visually_shielded", false);
+    private final BoolValue isVisuallyShielded = IS_VISUALLY_SHIELDED.create(this);
 
-	public ShieldHandler() {
-		super(Id.SHIELDS);
-	}
-	@Override
-	public void onLoaded() {
-		isShielded.of(this, IS_SHIELDED);
-		isVisuallyShielded.of(this, IS_VISUALLY_SHIELDED);
-	}
+    public ShieldHandler() {
+        super(Id.SHIELDS);
+    }
 
-	public BoolValue shielded() {
-		return isShielded;
-	}
+    @Override
+    public void onLoaded() {
+        isShielded.of(this, IS_SHIELDED);
+        isVisuallyShielded.of(this, IS_VISUALLY_SHIELDED);
+    }
 
-	public BoolValue visuallyShielded() {
-		return isVisuallyShielded;
-	}
+    public BoolValue shielded() {
+        return isShielded;
+    }
 
-	public void enable() {
-		this.shielded().set(true);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, true, this.visuallyShielded().get());
-	}
+    public BoolValue visuallyShielded() {
+        return isVisuallyShielded;
+    }
 
-	public void disable() {
-		this.shielded().set(false);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, false, this.visuallyShielded().get());
-	}
+    public void enable() {
+        this.shielded().set(true);
+        TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, true, this.visuallyShielded().get());
+    }
 
-	public void toggle() {
-		if (this.shielded().get())
-			this.disable();
-		else this.enable();
-	}
+    public void disable() {
+        this.shielded().set(false);
+        TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, false, this.visuallyShielded().get());
+    }
 
-	public void enableVisuals() {
-		this.visuallyShielded().set(true);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.shielded().get(), true);
-	}
+    public void toggle() {
+        if (this.shielded().get())
+            this.disable();
+        else
+            this.enable();
+    }
 
-	public void disableVisuals() {
-		this.visuallyShielded().set(false);
-		TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.shielded().get(), false);
-	}
+    public void enableVisuals() {
+        this.visuallyShielded().set(true);
+        TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.shielded().get(), true);
+    }
 
-	public void toggleVisuals() {
-		if (this.visuallyShielded().get())
-			this.disableVisuals();
-		else this.enableVisuals();
-	}
+    public void disableVisuals() {
+        this.visuallyShielded().set(false);
+        TardisEvents.TOGGLE_SHIELDS.invoker().onShields(this.tardis, this.shielded().get(), false);
+    }
 
-	public void disableAll() {
-		this.disableVisuals();
-		this.disable();
-	}
+    public void toggleVisuals() {
+        if (this.visuallyShielded().get())
+            this.disableVisuals();
+        else
+            this.enableVisuals();
+    }
 
-	@Override
-	public void tick(MinecraftServer server) {
-		if (!this.shielded().get())
-			return;
+    public void disableAll() {
+        this.disableVisuals();
+        this.disable();
+    }
 
-		TravelHandler travel = tardis.travel();
+    @Override
+    public void tick(MinecraftServer server) {
+        if (!this.shielded().get())
+            return;
 
-		if (!this.tardis.engine().hasPower())
-			this.disableAll();
+        TravelHandler travel = tardis.travel();
 
-		if (travel.getState() == TravelHandlerBase.State.FLIGHT)
-			return;
+        if (!this.tardis.engine().hasPower())
+            this.disableAll();
 
-		tardis.removeFuel(2 * travel.instability()); // idle drain of 2 fuel per tick
-		DirectedGlobalPos.Cached globalExteriorPos = travel.position();
+        if (travel.getState() == TravelHandlerBase.State.FLIGHT)
+            return;
 
-		World world = globalExteriorPos.getWorld();
-		BlockPos exteriorPos = globalExteriorPos.getPos();
+        tardis.removeFuel(2 * travel.instability()); // idle drain of 2 fuel per tick
+        DirectedGlobalPos.Cached globalExteriorPos = travel.position();
 
-		world.getOtherEntities(null, new Box(exteriorPos).expand(8f))
-				.stream().filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
-				.filter(entity -> !(entity instanceof ServerPlayerEntity player
-						&& tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players with loyalty
-				.forEach(entity -> {
-					if (entity instanceof ServerPlayerEntity player && entity.isSubmergedInWater())
-						player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
+        World world = globalExteriorPos.getWorld();
+        BlockPos exteriorPos = globalExteriorPos.getPos();
 
-					if (this.visuallyShielded().get()) {
-						Vec3d centerExteriorPos = exteriorPos.toCenterPos();
+        world.getOtherEntities(null, new Box(exteriorPos).expand(8f)).stream()
+                .filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
+                .filter(entity -> !(entity instanceof ServerPlayerEntity player
+                        && tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players with loyalty
+                .forEach(entity -> {
+                    if (entity instanceof ServerPlayerEntity player && entity.isSubmergedInWater())
+                        player.addStatusEffect(
+                                new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
 
-						if (entity.squaredDistanceTo(centerExteriorPos) <= 8f) {
-							Vec3d motion = entity.getBlockPos().toCenterPos().subtract(centerExteriorPos).normalize().multiply(0.1f);
+                    if (this.visuallyShielded().get()) {
+                        Vec3d centerExteriorPos = exteriorPos.toCenterPos();
 
-							if (entity instanceof ProjectileEntity projectile) {
-								BlockPos pos = projectile.getBlockPos();
+                        if (entity.squaredDistanceTo(centerExteriorPos) <= 8f) {
+                            Vec3d motion = entity.getBlockPos().toCenterPos().subtract(centerExteriorPos).normalize()
+                                    .multiply(0.1f);
 
-								if (projectile instanceof TridentEntity) {
-									projectile.getVelocity().add(motion.multiply(2f));
+                            if (entity instanceof ProjectileEntity projectile) {
+                                BlockPos pos = projectile.getBlockPos();
 
-									world.playSound(null, pos, SoundEvents.ITEM_TRIDENT_HIT, SoundCategory.BLOCKS, 1f, 1f);
-									return;
-								}
+                                if (projectile instanceof TridentEntity) {
+                                    projectile.getVelocity().add(motion.multiply(2f));
 
-								world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.BLOCKS, 1f, 1f);
+                                    world.playSound(null, pos, SoundEvents.ITEM_TRIDENT_HIT, SoundCategory.BLOCKS, 1f,
+                                            1f);
+                                    return;
+                                }
 
-								projectile.discard();
-								return;
-							}
+                                world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_BURN, SoundCategory.BLOCKS, 1f,
+                                        1f);
 
-							entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
+                                projectile.discard();
+                                return;
+                            }
 
-							entity.velocityDirty = true;
-							entity.velocityModified = true;
-						}
-					}
-				});
-	}
+                            entity.setVelocity(entity.getVelocity().add(motion.multiply(2f)));
+
+                            entity.velocityDirty = true;
+                            entity.velocityModified = true;
+                        }
+                    }
+                });
+    }
 }

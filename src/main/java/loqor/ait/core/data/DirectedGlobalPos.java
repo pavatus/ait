@@ -1,9 +1,12 @@
 package loqor.ait.core.data;
 
+import java.lang.reflect.Type;
+import java.util.Objects;
+
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import loqor.ait.core.data.base.Exclude;
+
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
@@ -17,20 +20,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-import java.lang.reflect.Type;
-import java.util.Objects;
+import loqor.ait.core.data.base.Exclude;
 
 public class DirectedGlobalPos {
 
-    public static final Codec<DirectedGlobalPos> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    World.CODEC.fieldOf("dimension")
-                            .forGetter(DirectedGlobalPos::getDimension),
-                    BlockPos.CODEC.fieldOf("pos")
-                            .forGetter(DirectedGlobalPos::getPos),
-                    Codec.BYTE.fieldOf("rotation")
-                            .forGetter(DirectedGlobalPos::getRotation)
-            ).apply(instance, DirectedGlobalPos::create));
+    public static final Codec<DirectedGlobalPos> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(World.CODEC.fieldOf("dimension").forGetter(DirectedGlobalPos::getDimension),
+                    BlockPos.CODEC.fieldOf("pos").forGetter(DirectedGlobalPos::getPos),
+                    Codec.BYTE.fieldOf("rotation").forGetter(DirectedGlobalPos::getRotation))
+            .apply(instance, DirectedGlobalPos::create));
 
     private final RegistryKey<World> dimension;
     private final BlockPos pos;
@@ -100,8 +98,7 @@ public class DirectedGlobalPos {
         if (!(o instanceof DirectedGlobalPos globalPos))
             return false;
 
-        return Objects.equals(this.dimension, globalPos.dimension)
-                && Objects.equals(this.pos, globalPos.pos)
+        return Objects.equals(this.dimension, globalPos.dimension) && Objects.equals(this.pos, globalPos.pos)
                 && Objects.equals(this.rotation, globalPos.rotation);
     }
 
@@ -151,7 +148,8 @@ public class DirectedGlobalPos {
 
     public static class Cached extends DirectedGlobalPos {
 
-        @Exclude private ServerWorld world;
+        @Exclude
+        private ServerWorld world;
 
         private Cached(RegistryKey<World> key, BlockPos pos, byte rotation) {
             super(key, pos, rotation);
@@ -177,7 +175,8 @@ public class DirectedGlobalPos {
             return Cached.create(world, pos, rotation);
         }
 
-        private static Cached createNew(ServerWorld lastWorld, RegistryKey<World> newWorldKey, BlockPos pos, byte rotation) {
+        private static Cached createNew(ServerWorld lastWorld, RegistryKey<World> newWorldKey, BlockPos pos,
+                byte rotation) {
             if (lastWorld == null)
                 return new Cached(newWorldKey, pos, rotation);
 
@@ -252,7 +251,8 @@ public class DirectedGlobalPos {
     private static class Serializer implements JsonDeserializer<DirectedGlobalPos>, JsonSerializer<DirectedGlobalPos> {
 
         @Override
-        public DirectedGlobalPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public DirectedGlobalPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             JsonObject obj = json.getAsJsonObject();
 
             RegistryKey<World> dimension = context.deserialize(obj.get("dimension"), RegistryKey.class);

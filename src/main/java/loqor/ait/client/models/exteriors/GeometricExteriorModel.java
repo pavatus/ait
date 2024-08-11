@@ -1,81 +1,94 @@
-package loqor.ait.client.models.exteriors;// Made with Blockbench 4.10.1
+package loqor.ait.client.models.exteriors; // Made with Blockbench 4.10.1
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 
-
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.tardis.data.DoorHandler;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
+import loqor.ait.client.animation.exterior.door.DoorAnimations;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.tardis.data.DoorHandler;
+
 public class GeometricExteriorModel extends ExteriorModel {
-	private final ModelPart geometric;
-	public GeometricExteriorModel(ModelPart root) {
-		this.geometric = root.getChild("geometric");
-	}
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData geometric = modelPartData.addChild("geometric", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+    private final ModelPart geometric;
 
-		ModelPartData body = geometric.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-16.0F, -44.0F, -8.0F, 32.0F, 44.0F, 24.0F, new Dilation(0.05F))
-				.uv(49, 69).cuboid(8.0F, -40.0F, -8.0F, 0.0F, 40.0F, 24.0F, new Dilation(0.0F))
-				.uv(0, 69).cuboid(-8.0F, -40.0F, -8.0F, 0.0F, 40.0F, 24.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+    public GeometricExteriorModel(ModelPart root) {
+        this.geometric = root.getChild("geometric");
+    }
 
-		ModelPartData door = geometric.addChild("door", ModelPartBuilder.create().uv(98, 97).cuboid(-8.0F, -40.0F, -8.0F, 16.0F, 40.0F, 2.0F, new Dilation(0.0F))
-				.uv(113, 0).cuboid(-8.0F, -38.0F, 15.75F, 16.0F, 36.0F, 0.0F, new Dilation(0.0F))
-				.uv(98, 72).cuboid(-8.0F, -2.0F, -6.0F, 16.0F, 2.0F, 22.0F, new Dilation(0.0F))
-				.uv(91, 47).cuboid(-8.0F, -40.0F, -6.0F, 16.0F, 2.0F, 22.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-		return TexturedModelData.of(modelData, 256, 256);
-	}
-	@Override
-	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		geometric.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-	}
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        ModelPartData geometric = modelPartData.addChild("geometric", ModelPartBuilder.create(),
+                ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-	@Override
-	public ModelPart getPart() {
-		return geometric;
-	}
+        ModelPartData body = geometric.addChild("body",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-16.0F, -44.0F, -8.0F, 32.0F, 44.0F, 24.0F, new Dilation(0.05F)).uv(49, 69)
+                        .cuboid(8.0F, -40.0F, -8.0F, 0.0F, 40.0F, 24.0F, new Dilation(0.0F)).uv(0, 69)
+                        .cuboid(-8.0F, -40.0F, -8.0F, 0.0F, 40.0F, 24.0F, new Dilation(0.0F)),
+                ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-	@Override
-	public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-		if (exterior.tardis().isEmpty())
-			return;
+        ModelPartData door = geometric.addChild("door",
+                ModelPartBuilder.create().uv(98, 97)
+                        .cuboid(-8.0F, -40.0F, -8.0F, 16.0F, 40.0F, 2.0F, new Dilation(0.0F)).uv(113, 0)
+                        .cuboid(-8.0F, -38.0F, 15.75F, 16.0F, 36.0F, 0.0F, new Dilation(0.0F)).uv(98, 72)
+                        .cuboid(-8.0F, -2.0F, -6.0F, 16.0F, 2.0F, 22.0F, new Dilation(0.0F)).uv(91, 47)
+                        .cuboid(-8.0F, -40.0F, -6.0F, 16.0F, 2.0F, 22.0F, new Dilation(0.0F)),
+                ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        return TexturedModelData.of(modelData, 256, 256);
+    }
 
-		matrices.push();
-		matrices.scale(1F, 1F, 1F);
-		matrices.translate(0, -1.5f, 0);
+    @Override
+    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red,
+            float green, float blue, float alpha) {
+        geometric.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
 
-		DoorHandler door = exterior.tardis().get().door();
+    @Override
+    public ModelPart getPart() {
+        return geometric;
+    }
 
-		this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
-		super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+    @Override
+    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,
+            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        if (exterior.tardis().isEmpty())
+            return;
 
-		matrices.pop();
-	}
+        matrices.push();
+        matrices.scale(1F, 1F, 1F);
+        matrices.translate(0, -1.5f, 0);
 
-	@Override
-	public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-		matrices.push();
-		matrices.scale(1F, 1F, 1F);
-		matrices.translate(0, -1.5f, 0);
+        DoorHandler door = exterior.tardis().get().door();
 
-		super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-		matrices.pop();
-	}
+        this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
+        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
-	@Override
-	public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-		return switch (state) {
-			case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-			case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-			case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-			case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-		};
-	}
+        matrices.pop();
+    }
+
+    @Override
+    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
+            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.scale(1F, 1F, 1F);
+        matrices.translate(0, -1.5f, 0);
+
+        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+        return switch (state) {
+            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
+        };
+    }
 }

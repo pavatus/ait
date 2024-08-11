@@ -1,25 +1,29 @@
 package loqor.ait.registry.datapack;
 
+import java.io.InputStream;
+import java.util.function.Function;
+
 import com.mojang.serialization.Codec;
-import loqor.ait.AITMod;
-import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.tardis.util.TardisUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import java.io.InputStream;
-import java.util.function.Function;
+import loqor.ait.AITMod;
+import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.tardis.util.TardisUtil;
 
-public abstract class SimpleDatapackRegistry<T extends Identifiable> extends DatapackRegistry<T> implements SimpleSynchronousResourceReloadListener {
+public abstract class SimpleDatapackRegistry<T extends Identifiable> extends DatapackRegistry<T>
+        implements
+            SimpleSynchronousResourceReloadListener {
 
     private final Function<InputStream, T> deserializer;
     private final Codec<T> codec;
@@ -27,7 +31,8 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
     private final Identifier name;
     private final boolean sync;
 
-    public SimpleDatapackRegistry(Function<InputStream, T> deserializer, Codec<T> codec, Identifier packet, Identifier name, boolean sync) {
+    public SimpleDatapackRegistry(Function<InputStream, T> deserializer, Codec<T> codec, Identifier packet,
+            Identifier name, boolean sync) {
         this.deserializer = deserializer;
         this.codec = codec;
         this.packet = packet;
@@ -35,8 +40,10 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         this.sync = sync;
     }
 
-    protected SimpleDatapackRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name, boolean sync) {
-        this(deserializer, codec, new Identifier(AITMod.MOD_ID, "sync_" + packet), new Identifier(AITMod.MOD_ID, name), sync);
+    protected SimpleDatapackRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name,
+            boolean sync) {
+        this(deserializer, codec, new Identifier(AITMod.MOD_ID, "sync_" + packet), new Identifier(AITMod.MOD_ID, name),
+                sync);
     }
 
     protected SimpleDatapackRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String name, boolean sync) {
@@ -48,14 +55,14 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
             return;
 
         ClientPlayNetworking.registerGlobalReceiver(this.packet,
-                (client, handler, buf, responseSender) -> this.readFromServer(buf)
-        );
+                (client, handler, buf, responseSender) -> this.readFromServer(buf));
     }
 
     /**
      * @implNote Currently not implemented as there's no dedicated server-side logic
      */
-    public void onServerInit() { }
+    public void onServerInit() {
+    }
 
     public void onCommonInit() {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(this);
@@ -63,8 +70,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         if (!this.sync)
             return;
 
-        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined)
-                -> this.syncToClient(player));
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> this.syncToClient(player));
     }
 
     @Override
@@ -122,7 +128,8 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         this.clearCache();
         this.defaults();
 
-        for (Identifier id : manager.findResources(this.name.getPath(), filename -> filename.getPath().endsWith(".json")).keySet()) {
+        for (Identifier id : manager
+                .findResources(this.name.getPath(), filename -> filename.getPath().endsWith(".json")).keySet()) {
             try (InputStream stream = manager.getResource(id).get().getInputStream()) {
                 T created = this.read(stream);
 

@@ -1,26 +1,24 @@
 package loqor.ait.core.data;
 
+import java.lang.reflect.Type;
+import java.util.Objects;
+import java.util.function.Function;
+
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-import java.lang.reflect.Type;
-import java.util.Objects;
-import java.util.function.Function;
-
 public class DirectedBlockPos {
 
-    public static final Codec<DirectedBlockPos> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    BlockPos.CODEC.fieldOf("pos")
-                            .forGetter(DirectedBlockPos::getPos),
-                    Codec.BYTE.fieldOf("rotation")
-                            .forGetter(DirectedBlockPos::getRotation)
-            ).apply(instance, DirectedBlockPos::create));
+    public static final Codec<DirectedBlockPos> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(BlockPos.CODEC.fieldOf("pos").forGetter(DirectedBlockPos::getPos),
+                    Codec.BYTE.fieldOf("rotation").forGetter(DirectedBlockPos::getRotation))
+            .apply(instance, DirectedBlockPos::create));
 
     private final BlockPos pos;
     private final byte rotation;
@@ -43,11 +41,9 @@ public class DirectedBlockPos {
     }
 
     public DirectedBlockPos apply(Function<Integer, Integer> func) {
-        return DirectedBlockPos.create(new BlockPos(
-                func.apply(this.pos.getX()),
-                func.apply(this.pos.getY()),
-                func.apply(this.pos.getZ())
-        ), this.rotation);
+        return DirectedBlockPos.create(
+                new BlockPos(func.apply(this.pos.getX()), func.apply(this.pos.getY()), func.apply(this.pos.getZ())),
+                this.rotation);
     }
 
     public static DirectedBlockPos create(BlockPos pos, byte rotation) {
@@ -113,7 +109,8 @@ public class DirectedBlockPos {
     private static class Serializer implements JsonDeserializer<DirectedBlockPos>, JsonSerializer<DirectedBlockPos> {
 
         @Override
-        public DirectedBlockPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public DirectedBlockPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             JsonObject obj = json.getAsJsonObject();
 
             int x = obj.get("x").getAsInt();

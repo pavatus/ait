@@ -1,14 +1,16 @@
 package loqor.ait.tardis.data.properties.bool;
 
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.properties.Property;
+import java.util.function.Function;
+
 import net.minecraft.network.PacketByteBuf;
 
-import java.util.function.Function;
+import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.Property;
 
 public class BoolProperty extends Property<Boolean> {
 
-    public static final Type<Boolean> TYPE = new Type<>(Boolean.class, PacketByteBuf::writeBoolean, PacketByteBuf::readBoolean);
+    public static final Type<Boolean> TYPE = new Type<>(Boolean.class, PacketByteBuf::writeBoolean,
+            PacketByteBuf::readBoolean);
 
     public BoolProperty(String name) {
         this(name, false);

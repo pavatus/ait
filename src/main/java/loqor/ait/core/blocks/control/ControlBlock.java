@@ -1,8 +1,9 @@
 package loqor.ait.core.blocks.control;
 
-import loqor.ait.core.blockentities.control.ControlBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.item.control.ControlBlockItem;
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,59 +17,63 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import loqor.ait.core.blockentities.control.ControlBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.item.control.ControlBlockItem;
 
 public abstract class ControlBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
-	public ControlBlock(Settings settings) {
-		super(settings);
-	}
+    public ControlBlock(Settings settings) {
+        super(settings);
+    }
 
-	@Override
-	public Item asItem() {
-		return null;//this.getItem();
-	}
+    @Override
+    public Item asItem() {
+        return null; // this.getItem();
+    }
 
-	//protected abstract ControlBlockItem getItem();
+    // protected abstract ControlBlockItem getItem();
 
-	@Override
-	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-		Optional<String> id = ControlBlockItem.findControlId(itemStack);
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+            ItemStack itemStack) {
+        Optional<String> id = ControlBlockItem.findControlId(itemStack);
 
-		if (id.isEmpty()) return;
+        if (id.isEmpty())
+            return;
 
-		BlockEntity be = world.getBlockEntity(pos);
-		if (!(be instanceof ControlBlockEntity)) return;
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof ControlBlockEntity))
+            return;
 
-		((ControlBlockEntity) be).setControl(id.get());
-	}
+        ((ControlBlockEntity) be).setControl(id.get());
+    }
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (!world.isClient()) {
-			BlockEntity be = world.getBlockEntity(pos);
-			if (be instanceof ControlBlockEntity) {
-				boolean success = ((ControlBlockEntity) be).run((ServerPlayerEntity) player, false);
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
+        if (!world.isClient()) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof ControlBlockEntity) {
+                boolean success = ((ControlBlockEntity) be).run((ServerPlayerEntity) player, false);
 
-				return (success) ? ActionResult.SUCCESS : ActionResult.FAIL;
-			}
-		}
+                return (success) ? ActionResult.SUCCESS : ActionResult.FAIL;
+            }
+        }
 
-		return ActionResult.SUCCESS;
-	}
+        return ActionResult.SUCCESS;
+    }
 
-	@Override
-	public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-		if (!world.isClient()) {
-			BlockEntity be = world.getBlockEntity(pos);
-			if (be instanceof ControlBlockEntity) {
-				((ControlBlockEntity) be).run((ServerPlayerEntity) player, true);
-			}
-		}
+    @Override
+    public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        if (!world.isClient()) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof ControlBlockEntity) {
+                ((ControlBlockEntity) be).run((ServerPlayerEntity) player, true);
+            }
+        }
 
-		super.onBlockBreakStart(state, world, pos, player);
-	}
-
+        super.onBlockBreakStart(state, world, pos, player);
+    }
 }

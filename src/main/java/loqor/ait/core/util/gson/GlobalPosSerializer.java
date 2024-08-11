@@ -1,17 +1,19 @@
 package loqor.ait.core.util.gson;
 
+import java.lang.reflect.Type;
+
 import com.google.gson.*;
+
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 
-import java.lang.reflect.Type;
-
 public class GlobalPosSerializer implements JsonDeserializer<GlobalPos>, JsonSerializer<GlobalPos> {
 
     @Override
-    public GlobalPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public GlobalPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
         RegistryKey<World> dimension = context.deserialize(obj.get("dimension"), RegistryKey.class);

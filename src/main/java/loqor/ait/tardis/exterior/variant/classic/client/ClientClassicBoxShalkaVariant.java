@@ -5,12 +5,12 @@ import loqor.ait.client.models.exteriors.ExteriorModel;
 
 public class ClientClassicBoxShalkaVariant extends ClientClassicBoxVariant {
 
-	public ClientClassicBoxShalkaVariant() {
-		super("shalka");
-	}
+    public ClientClassicBoxShalkaVariant() {
+        super("shalka");
+    }
 
-	@Override
-	public ExteriorModel model() {
-		return new ClassicHudolinExteriorModel(ClassicHudolinExteriorModel.getTexturedModelData().createModel());
-	}
+    @Override
+    public ExteriorModel model() {
+        return new ClassicHudolinExteriorModel(ClassicHudolinExteriorModel.getTexturedModelData().createModel());
+    }
 }

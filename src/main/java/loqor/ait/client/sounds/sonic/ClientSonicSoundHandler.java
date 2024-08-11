@@ -1,18 +1,20 @@
 package loqor.ait.client.sounds.sonic;
 
-import loqor.ait.client.sounds.PositionedLoopingSound;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
-import loqor.ait.tardis.util.SoundHandler;
+import java.util.List;
+
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import loqor.ait.client.sounds.PositionedLoopingSound;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
+import loqor.ait.tardis.util.SoundHandler;
 
 public class ClientSonicSoundHandler extends SoundHandler {
 
@@ -24,7 +26,8 @@ public class ClientSonicSoundHandler extends SoundHandler {
     protected ClientSonicSoundHandler() {
         ClientPlayNetworking.registerGlobalReceiver(ServerSonicSoundHandler.SEND,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null) return;
+                    if (client.world == null)
+                        return;
                     boolean shouldPlay = buf.readBoolean();
                     PlayerEntity entity = client.world.getPlayerByUuid(buf.readUuid());
 
@@ -41,8 +44,7 @@ public class ClientSonicSoundHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createSonicSound() {
-        return new PositionedLoopingSound(AITSounds.SONIC_USE, SoundCategory.PLAYERS,
-                new BlockPos(0, 0, 0), 1f, 1f);
+        return new PositionedLoopingSound(AITSounds.SONIC_USE, SoundCategory.PLAYERS, new BlockPos(0, 0, 0), 1f, 1f);
     }
 
     public static ClientSonicSoundHandler create() {

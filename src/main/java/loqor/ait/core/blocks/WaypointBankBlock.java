@@ -1,8 +1,9 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.WaypointBankBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.util.WorldUtil;
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -18,9 +19,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import loqor.ait.core.blockentities.WaypointBankBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.util.WorldUtil;
 
 @SuppressWarnings("deprecation")
 public class WaypointBankBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
@@ -31,7 +33,8 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
 
     public WaypointBankBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(HALF, DoubleBlockHalf.LOWER));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(HALF,
+                DoubleBlockHalf.LOWER));
     }
 
     private static int getSlotForHitPos(Vec2f hitPos, DoubleBlockHalf half) {
@@ -75,7 +78,8 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
         Optional<Vec2f> hitPos = getHitPos(hit, state.get(HorizontalFacingBlock.FACING));
 
         if (hitPos.isEmpty())
@@ -93,11 +97,11 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
 
     @Override
     public long getRenderingSeed(BlockState state, BlockPos pos) {
-        return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
+        return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(),
+                pos.getZ());
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         if (state.get(HALF) == DoubleBlockHalf.UPPER)
             return null;
@@ -121,7 +125,8 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
+            WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         DoubleBlockHalf half = state.get(HALF);
 
         if (direction.getAxis() == Direction.Axis.Y && half == DoubleBlockHalf.LOWER == (direction == Direction.UP))
@@ -130,12 +135,12 @@ public class WaypointBankBlock extends HorizontalDirectionalBlock implements Blo
                     : Blocks.AIR.getDefaultState();
 
         return half == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos)
-                ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+                ? Blocks.AIR.getDefaultState()
+                : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
-    @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+    @Nullable public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
 

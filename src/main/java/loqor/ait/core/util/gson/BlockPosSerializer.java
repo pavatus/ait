@@ -1,14 +1,16 @@
 package loqor.ait.core.util.gson;
 
-import com.google.gson.*;
-import net.minecraft.util.math.BlockPos;
-
 import java.lang.reflect.Type;
+
+import com.google.gson.*;
+
+import net.minecraft.util.math.BlockPos;
 
 public class BlockPosSerializer implements JsonDeserializer<BlockPos>, JsonSerializer<BlockPos> {
 
     @Override
-    public BlockPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public BlockPos deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
         int x = obj.get("x").getAsInt();

@@ -1,15 +1,17 @@
 package loqor.ait.core.data.schema;
 
-import com.google.gson.*;
-import loqor.ait.core.util.StackUtil;
-import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.registry.impl.MachineRecipeRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.*;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+
+import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.core.util.StackUtil;
+import loqor.ait.registry.impl.MachineRecipeRegistry;
 
 public class MachineRecipeSchema implements Identifiable {
 
@@ -54,10 +56,14 @@ public class MachineRecipeSchema implements Identifiable {
         return new Serializer();
     }
 
-    private static class Serializer implements JsonSerializer<MachineRecipeSchema>, JsonDeserializer<MachineRecipeSchema> {
+    private static class Serializer
+            implements
+                JsonSerializer<MachineRecipeSchema>,
+                JsonDeserializer<MachineRecipeSchema> {
 
         @Override
-        public MachineRecipeSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public MachineRecipeSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             return MachineRecipeRegistry.getInstance().get(new Identifier(json.getAsJsonPrimitive().getAsString()));
         }
 

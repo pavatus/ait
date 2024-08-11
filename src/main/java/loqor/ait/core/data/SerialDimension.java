@@ -1,78 +1,85 @@
 package loqor.ait.core.data;
 
+import java.lang.reflect.Type;
+
 import com.google.gson.*;
-import loqor.ait.core.data.base.Exclude;
-import loqor.ait.tardis.util.TardisUtil;
+
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-import java.lang.reflect.Type;
+import loqor.ait.core.data.base.Exclude;
+import loqor.ait.tardis.util.TardisUtil;
 
 public class SerialDimension {
-	@Exclude private final World dimension;
-	private final String value;
+    @Exclude
+    private final World dimension;
 
-	public SerialDimension(World dimension) {
-		this.dimension = dimension;
-		this.value = this.dimension.getRegistryKey().getValue().toString();
-	}
+    private final String value;
 
-	/**
-	 * @deprecated This method is strictly for serialization purposes to the client. - Loqor
-	 **/
-	@Deprecated
-	private SerialDimension(Identifier value) {
-		this.dimension = null;
-		this.value = value.getPath();
-	}
+    public SerialDimension(World dimension) {
+        this.dimension = dimension;
+        this.value = this.dimension.getRegistryKey().getValue().toString();
+    }
 
-	public SerialDimension(String value) {
-		this(TardisUtil.findWorld(value));
-	}
+    /**
+     * @deprecated This method is strictly for serialization purposes to the client.
+     *             - Loqor
+     **/
+    @Deprecated
+    private SerialDimension(Identifier value) {
+        this.dimension = null;
+        this.value = value.getPath();
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public SerialDimension(String value) {
+        this(TardisUtil.findWorld(value));
+    }
 
-	public World get() {
-		return dimension;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof SerialDimension other)
-			return this.value.equals(other.getValue());
+    public World get() {
+        return dimension;
+    }
 
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SerialDimension other)
+            return this.value.equals(other.getValue());
 
-	public static Object serializer() {
-		return new Serializer();
-	}
+        return false;
+    }
 
-	private static class Serializer implements JsonSerializer<SerialDimension>, JsonDeserializer<SerialDimension> {
+    public static Object serializer() {
+        return new Serializer();
+    }
 
-		@Override
-		public SerialDimension deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-			return new SerialDimension(json.getAsString());
-		}
+    private static class Serializer implements JsonSerializer<SerialDimension>, JsonDeserializer<SerialDimension> {
 
-		@Override
-		public JsonElement serialize(SerialDimension src, Type typeOfSrc, JsonSerializationContext context) {
-			return new JsonPrimitive(src.getValue());
-		}
-	}
+        @Override
+        public SerialDimension deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return new SerialDimension(json.getAsString());
+        }
 
-	public static class ClientSerializer implements JsonSerializer<SerialDimension>, JsonDeserializer<SerialDimension> {
+        @Override
+        public JsonElement serialize(SerialDimension src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getValue());
+        }
+    }
 
-		@Override
-		public SerialDimension deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-			return new SerialDimension(new Identifier(json.getAsString()));
-		}
+    public static class ClientSerializer implements JsonSerializer<SerialDimension>, JsonDeserializer<SerialDimension> {
 
-		@Override
-		public JsonElement serialize(SerialDimension src, Type typeOfSrc, JsonSerializationContext context) {
-			return new JsonPrimitive(src.getValue());
-		}
-	}
+        @Override
+        public SerialDimension deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return new SerialDimension(new Identifier(json.getAsString()));
+        }
+
+        @Override
+        public JsonElement serialize(SerialDimension src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getValue());
+        }
+    }
 }

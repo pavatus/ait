@@ -1,17 +1,18 @@
 package loqor.ait.tardis.data.travel;
 
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class TravelUtil {
 
@@ -26,19 +27,19 @@ public class TravelUtil {
 
             for (int i = 0; i <= limit; i++) {
                 dest = dest.pos(
-                        world.random.nextBoolean() ? world.random.nextInt(max) == 0 ? 1 : world.random.nextInt(max) :
-                                world.random.nextInt(max) == -0 ? -1 : -world.random.nextInt(max), dest.getPos().getY(),
-                        world.random.nextBoolean() ? world.random.nextInt(max) == 0 ? 1 : world.random.nextInt(max) :
-                                world.random.nextInt(max) == -0 ? -1 : -world.random.nextInt(max)
-                );
+                        world.random.nextBoolean()
+                                ? world.random.nextInt(max) == 0 ? 1 : world.random.nextInt(max)
+                                : world.random.nextInt(max) == -0 ? -1 : -world.random.nextInt(max),
+                        dest.getPos().getY(),
+                        world.random.nextBoolean()
+                                ? world.random.nextInt(max) == 0 ? 1 : world.random.nextInt(max)
+                                : world.random.nextInt(max) == -0 ? -1 : -world.random.nextInt(max));
             }
 
             return dest;
         });
 
-        future.thenAccept(cached -> cached.getWorld().getServer().submit(
-                () -> consumer.accept(cached)
-        ));
+        future.thenAccept(cached -> cached.getWorld().getServer().submit(() -> consumer.accept(cached)));
 
         AsyncLocatorUtil.LOCATING_EXECUTOR_SERVICE.submit(() -> future);
     }
@@ -53,7 +54,8 @@ public class TravelUtil {
             travel.dematerialize();
     }
 
-    public static DirectedGlobalPos.Cached getPositionFromPercentage(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination, int percentage) {
+    public static DirectedGlobalPos.Cached getPositionFromPercentage(DirectedGlobalPos.Cached source,
+            DirectedGlobalPos.Cached destination, int percentage) {
         // https://stackoverflow.com/questions/33907276/calculate-point-between-two-coordinates-based-on-a-percentage
         if (percentage == 0)
             return source;
@@ -65,11 +67,8 @@ public class TravelUtil {
         BlockPos pos = source.getPos();
         BlockPos diff = destination.getPos().subtract(pos);
 
-        return destination.pos(pos.add(
-                (int) (diff.getX() * per),
-                (int) (diff.getY() * per),
-                (int) (diff.getZ() * per)
-        ));
+        return destination
+                .pos(pos.add((int) (diff.getX() * per), (int) (diff.getY() * per), (int) (diff.getZ() * per)));
     }
 
     public static int getFlightDuration(DirectedGlobalPos.Cached source, DirectedGlobalPos.Cached destination) {
@@ -84,9 +83,7 @@ public class TravelUtil {
         Random random = TardisUtil.random();
         multiplier *= random.nextInt(0, 2) == 0 ? 1 : -1;
 
-        return pos.offset(random.nextInt(min, max) * multiplier, 0,
-                random.nextInt(min, max) * multiplier
-        );
+        return pos.offset(random.nextInt(min, max) * multiplier, 0, random.nextInt(min, max) * multiplier);
     }
 
     public static DirectedGlobalPos.Cached jukePos(DirectedGlobalPos.Cached pos, int min, int max) {

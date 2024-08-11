@@ -1,40 +1,40 @@
 package loqor.ait.api.tardis;
 
 public interface ArtronHolder {
-	double getCurrentFuel();
+    double getCurrentFuel();
 
-	void setCurrentFuel(double var);
+    void setCurrentFuel(double var);
 
-	default double addFuel(double var) {
-		double previousFuel = this.getCurrentFuel();
+    default double addFuel(double var) {
+        double previousFuel = this.getCurrentFuel();
         double toAdd = var + previousFuel;
 
-		if (toAdd >= this.getMaxFuel()) {
-			this.setCurrentFuel(this.getMaxFuel());
-			return toAdd - this.getMaxFuel();
-		}
+        if (toAdd >= this.getMaxFuel()) {
+            this.setCurrentFuel(this.getMaxFuel());
+            return toAdd - this.getMaxFuel();
+        }
 
-		this.setCurrentFuel(toAdd);
-		return 0;
-	}
+        this.setCurrentFuel(toAdd);
+        return 0;
+    }
 
-	default void removeFuel(double var) {
-		double toRemove = this.getCurrentFuel() - var;
+    default void removeFuel(double var) {
+        double toRemove = this.getCurrentFuel() - var;
 
-		if (toRemove < 0) {
-			this.setCurrentFuel(0);
-			return;
-		}
+        if (toRemove < 0) {
+            this.setCurrentFuel(0);
+            return;
+        }
 
-		this.setCurrentFuel(toRemove);
-	}
+        this.setCurrentFuel(toRemove);
+    }
 
-	double getMaxFuel();
+    double getMaxFuel();
 
-	default boolean isOutOfFuel() {
-		return this.getCurrentFuel() <= 0;
-	}
+    default boolean isOutOfFuel() {
+        return this.getCurrentFuel() <= 0;
+    }
 
-	// boolean isRefueling();
-	// void setRefueling(boolean var);
+    // boolean isRefueling();
+    // void setRefueling(boolean var);
 }

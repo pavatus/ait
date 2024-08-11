@@ -21,25 +21,30 @@ public abstract class Initializable<T extends Initializable.Context> {
     /**
      * Called first in the initialization sequence.
      */
-    protected void onEarlyInit(T ctx) { }
+    protected void onEarlyInit(T ctx) {
+    }
 
     /**
      * Called after a {@link #onLoaded()} or {@link #onCreate()} is called.
      */
-    protected void onInit(T ctx) { }
+    protected void onInit(T ctx) {
+    }
 
     /**
      * Called when the component is created. Server-side only.
      */
-    public void onCreate() { }
+    public void onCreate() {
+    }
 
     /**
      * Called when the component is loaded from a file or received on the client.
      */
-    public void onLoaded() { }
+    public void onLoaded() {
+    }
 
     public interface Context {
         boolean created();
+
         boolean deserialized();
     }
 }

@@ -1,5 +1,18 @@
 package loqor.ait.tardis.data.loyalty;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Formatting;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.base.Nameable;
@@ -12,18 +25,6 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Formatting;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
 
 public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     private final Map<UUID, Loyalty> data;
@@ -65,9 +66,10 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
         List<ServerPlayerEntity> list = TardisUtil.getPlayersInsideInterior(tardis);
 
         for (ServerPlayerEntity player : list) {
-            this.addLevel(player, (this.get(player).level() >= Loyalty.Type.NEUTRAL.level &&
-                    this.get(player).level() < Loyalty.Type.COMPANION.level &&
-                    AITMod.RANDOM.nextInt(0, 20) == 14) ? 1 : 0);
+            this.addLevel(player,
+                    (this.get(player).level() >= Loyalty.Type.NEUTRAL.level
+                            && this.get(player).level() < Loyalty.Type.COMPANION.level
+                            && AITMod.RANDOM.nextInt(0, 20) == 14) ? 1 : 0);
         }
     }
 
@@ -81,19 +83,23 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
         ServerTardis tardis = (ServerTardis) this.tardis();
 
-        boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema));
-        playSound = DesktopRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema)) || playSound;
-        playSound = ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema)) || playSound;
-        playSound = SonicRegistry.getInstance().tryUnlock(tardis, loyalty, schema -> this.playUnlockEffects(player, schema)) || playSound;
+        boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty,
+                schema -> this.playUnlockEffects(player, schema));
+        playSound = DesktopRegistry.getInstance().tryUnlock(tardis, loyalty,
+                schema -> this.playUnlockEffects(player, schema)) || playSound;
+        playSound = ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty,
+                schema -> this.playUnlockEffects(player, schema)) || playSound;
+        playSound = SonicRegistry.getInstance().tryUnlock(tardis, loyalty,
+                schema -> this.playUnlockEffects(player, schema)) || playSound;
 
         if (playSound)
-            player.getServerWorld().playSound(null, player.getBlockPos(),
-                    SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.2F, 1.0F);
+            player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+                    SoundCategory.PLAYERS, 0.2F, 1.0F);
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
-        player.sendMessage(nameable.text().copy().append(" unlocked!")
-                .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD), false);
+        player.sendMessage(nameable.text().copy().append(" unlocked!").formatted(Formatting.BOLD, Formatting.ITALIC,
+                Formatting.GOLD), false);
     }
 
     public void addLevel(ServerPlayerEntity player, int level) {

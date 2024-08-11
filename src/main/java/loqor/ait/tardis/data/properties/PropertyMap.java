@@ -1,8 +1,8 @@
 package loqor.ait.tardis.data.properties;
 
-import loqor.ait.tardis.util.Disposable;
-
 import java.util.HashMap;
+
+import loqor.ait.tardis.util.Disposable;
 
 public class PropertyMap extends HashMap<String, Value<?>> implements Disposable {
 

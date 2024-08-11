@@ -1,12 +1,11 @@
 package loqor.ait.tardis.control.sequences;
 
-import loqor.ait.core.data.base.Exclude;
-import loqor.ait.registry.impl.SequenceRegistry;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.util.TardisUtil;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -17,190 +16,200 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
-import java.util.UUID;
-import java.util.function.Consumer;
+import loqor.ait.core.data.base.Exclude;
+import loqor.ait.registry.impl.SequenceRegistry;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
+import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.util.TardisUtil;
 
 public class SequenceHandler extends TardisComponent implements TardisTickable {
-	@Exclude
-	private RecentControls recent;
-	private int ticks = 0;
-	@Exclude
-	private Sequence activeSequence;
-	private static final Random random = Random.create();
-	private UUID playerUUID;
+    @Exclude
+    private RecentControls recent;
 
-	public SequenceHandler() {
-		super(Id.SEQUENCE);
-	}
+    private int ticks = 0;
 
-	@Override
-	protected void onInit(InitContext ctx) {
-		recent = new RecentControls(tardis.getUuid());
-		activeSequence = null;
-	}
+    @Exclude
+    private Sequence activeSequence;
 
-	public void setActivePlayer(ServerPlayerEntity player) {
-		this.playerUUID = player.getUuid();
-	}
+    private static final Random random = Random.create();
+    private UUID playerUUID;
 
-	public ServerPlayerEntity getActivePlayer() {
-		if (this.playerUUID == null)
-			return null;
+    public SequenceHandler() {
+        super(Id.SEQUENCE);
+    }
 
-		return (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
-	}
+    @Override
+    protected void onInit(InitContext ctx) {
+        recent = new RecentControls(tardis.getUuid());
+        activeSequence = null;
+    }
 
-	public void add(Control control, ServerPlayerEntity player, BlockPos console) {
-		if (this.getActiveSequence() == null || recent == null)
-			return;
+    public void setActivePlayer(ServerPlayerEntity player) {
+        this.playerUUID = player.getUuid();
+    }
 
-		recent.add(control);
-		ticks = 0;
+    public ServerPlayerEntity getActivePlayer() {
+        if (this.playerUUID == null)
+            return null;
 
-		this.setActivePlayer(player);
-		this.doesControlIndexMatch(control);
-		this.compareToSequences(console);
-	}
+        return (ServerPlayerEntity) TardisUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
+    }
 
-	public boolean doesControlIndexMatch(Control control) {
-		if (recent == null || this.getActiveSequence() == null)
-			return false;
+    public void add(Control control, ServerPlayerEntity player, BlockPos console) {
+        if (this.getActiveSequence() == null || recent == null)
+            return;
 
-		if (recent.indexOf(control) != this.getActiveSequence().getControls().indexOf(control)) {
-			recent.remove(control);
-			return false;
-		}
+        recent.add(control);
+        ticks = 0;
 
-		return true;
-	}
+        this.setActivePlayer(player);
+        this.doesControlIndexMatch(control);
+        this.compareToSequences(console);
+    }
 
-	public boolean hasActiveSequence() {
-		return this.activeSequence != null;
-	}
+    public boolean doesControlIndexMatch(Control control) {
+        if (recent == null || this.getActiveSequence() == null)
+            return false;
 
-	public void setActiveSequence(@Nullable Sequence sequence, boolean setTicksTo0) {
-		if (setTicksTo0)
-			this.ticks = 0;
+        if (recent.indexOf(control) != this.getActiveSequence().getControls().indexOf(control)) {
+            recent.remove(control);
+            return false;
+        }
 
-		this.activeSequence = sequence;
+        return true;
+    }
 
-		if (this.activeSequence == null)
-			return;
+    public boolean hasActiveSequence() {
+        return this.activeSequence != null;
+    }
 
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(tardis()));
-	}
+    public void setActiveSequence(@Nullable Sequence sequence, boolean setTicksTo0) {
+        if (setTicksTo0)
+            this.ticks = 0;
 
-	public void triggerRandomSequence(boolean setTicksTo0) {
-		if (setTicksTo0)
-			ticks = 0;
+        this.activeSequence = sequence;
 
-		int rand = random.nextBetween(0, SequenceRegistry.REGISTRY.size());
-		Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
+        if (this.activeSequence == null)
+            return;
 
-		if (sequence == null)
-			return;
+        this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(tardis()));
+    }
 
-		this.activeSequence = sequence;
-		this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(this.tardis));
+    public void triggerRandomSequence(boolean setTicksTo0) {
+        if (setTicksTo0)
+            ticks = 0;
 
-		this.tardis().getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BEACON_POWER_SELECT);
-	}
+        int rand = random.nextBetween(0, SequenceRegistry.REGISTRY.size());
+        Sequence sequence = SequenceRegistry.REGISTRY.get(rand);
 
-	@Nullable
-	public Sequence getActiveSequence() {
-		return activeSequence;
-	}
+        if (sequence == null)
+            return;
 
-	private void compareToSequences(BlockPos console) {
-		if (this.getActiveSequence() == null)
-			return;
+        this.activeSequence = sequence;
+        this.activeSequence.sendMessageToInteriorPlayers(TardisUtil.getPlayersInsideInterior(this.tardis));
 
-		if (this.recent == null)
-			this.recent = new RecentControls(this.tardis().getUuid());
+        this.tardis().getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BEACON_POWER_SELECT);
+    }
 
-		if (this.getActiveSequence().isFinished(this.recent)) {
-			recent.clear();
-			this.getActiveSequence().execute(this.tardis(), this.getActivePlayer());
+    @Nullable public Sequence getActiveSequence() {
+        return activeSequence;
+    }
 
-			this.doCompletedControlEffects(console);
-			this.setActiveSequence(null, true);
-		} else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
-			recent.clear();
-			this.getActiveSequence().executeMissed(this.tardis(), this.getActivePlayer());
+    private void compareToSequences(BlockPos console) {
+        if (this.getActiveSequence() == null)
+            return;
 
-			this.doMissedControlEffects(console);
-			this.setActiveSequence(null, true);
-		} else if (recent.size() >= this.getActiveSequence().getControls().size()) {
-			recent.clear();
-		}
-	}
+        if (this.recent == null)
+            this.recent = new RecentControls(this.tardis().getUuid());
 
-	private void doMissedControlEffects(@Nullable BlockPos console) {
-		Consumer<BlockPos> effects = SequenceHandler::missedControlEffects;
+        if (this.getActiveSequence().isFinished(this.recent)) {
+            recent.clear();
+            this.getActiveSequence().execute(this.tardis(), this.getActivePlayer());
 
-		if (console == null) {
-			this.tardis.getDesktop().getConsolePos().forEach(effects);
-			return;
-		}
+            this.doCompletedControlEffects(console);
+            this.setActiveSequence(null, true);
+        } else if (this.getActiveSequence().wasMissed(this.recent, ticks)) {
+            recent.clear();
+            this.getActiveSequence().executeMissed(this.tardis(), this.getActivePlayer());
 
-		effects.accept(console);
-	}
+            this.doMissedControlEffects(console);
+            this.setActiveSequence(null, true);
+        } else if (recent.size() >= this.getActiveSequence().getControls().size()) {
+            recent.clear();
+        }
+    }
 
-	public static void missedControlEffects(BlockPos console) {
-		ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
+    private void doMissedControlEffects(@Nullable BlockPos console) {
+        Consumer<BlockPos> effects = SequenceHandler::missedControlEffects;
 
-		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
-		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
+        if (console == null) {
+            this.tardis.getDesktop().getConsolePos().forEach(effects);
+            return;
+        }
 
-		world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F, 5.0F);
-		world.spawnParticles(ParticleTypes.ANGRY_VILLAGER, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F, 0.5F);
-		world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
-		world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
-	}
+        effects.accept(console);
+    }
 
-	private void doCompletedControlEffects(@Nullable BlockPos console) {
-		Consumer<BlockPos> effects = SequenceHandler::completedControlEffects;
+    public static void missedControlEffects(BlockPos console) {
+        ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
 
-		if (console == null) {
-			this.tardis.getDesktop().getConsolePos().forEach(effects);
-			return;
-		}
+        TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+        Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
-		effects.accept(console);
-	}
+        world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F,
+                5.0F);
+        world.spawnParticles(ParticleTypes.ANGRY_VILLAGER, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F,
+                0.5F);
+        world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
+        world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(),
+                vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);
+    }
 
-	public static void completedControlEffects(BlockPos console) {
-		ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
+    private void doCompletedControlEffects(@Nullable BlockPos console) {
+        Consumer<BlockPos> effects = SequenceHandler::completedControlEffects;
 
-		TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f, 1f);
-		Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
+        if (console == null) {
+            this.tardis.getDesktop().getConsolePos().forEach(effects);
+            return;
+        }
 
-		world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
-		world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
-		world.spawnParticles(ParticleTypes.HEART, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F, 0.5F);
-	}
+        effects.accept(console);
+    }
 
-	@Override
-	public void tick(MinecraftServer server) {
-		if (this.getActiveSequence() == null)
-			return;
+    public static void completedControlEffects(BlockPos console) {
+        ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
 
-		this.ticks++;
-		if (this.ticks >= this.getActiveSequence().timeToFail()) {
-			this.compareToSequences(null);
+        TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f,
+                1f);
+        Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
-			this.recent.clear();
-			this.ticks = 0;
-		}
-	}
+        world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);
+        world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F,
+                5.0F);
+        world.spawnParticles(ParticleTypes.HEART, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F, 0.5F);
+    }
 
-	public boolean controlPartOfSequence(Control control) {
-		if (this.getActiveSequence() == null)
-			return false;
+    @Override
+    public void tick(MinecraftServer server) {
+        if (this.getActiveSequence() == null)
+            return;
 
-		return this.getActiveSequence().controlPartOfSequence(control);
-	}
+        this.ticks++;
+        if (this.ticks >= this.getActiveSequence().timeToFail()) {
+            this.compareToSequences(null);
+
+            this.recent.clear();
+            this.ticks = 0;
+        }
+    }
+
+    public boolean controlPartOfSequence(Control control) {
+        if (this.getActiveSequence() == null)
+            return false;
+
+        return this.getActiveSequence().controlPartOfSequence(control);
+    }
 }

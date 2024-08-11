@@ -1,10 +1,5 @@
 package loqor.ait.client.renderers.decoration;
 
-import loqor.ait.client.models.decoration.PlaqueModel;
-import loqor.ait.AITMod;
-import loqor.ait.core.blockentities.PlaqueBlockEntity;
-import loqor.ait.core.blocks.PlaqueBlock;
-import loqor.ait.tardis.Tardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -18,9 +13,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
+import loqor.ait.client.models.decoration.PlaqueModel;
+import loqor.ait.core.blockentities.PlaqueBlockEntity;
+import loqor.ait.core.blocks.PlaqueBlock;
+import loqor.ait.tardis.Tardis;
+
 public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityRenderer<T> {
 
-    public static final Identifier PLAQUE_TEXTURE = new Identifier(AITMod.MOD_ID, ("textures/blockentities/decoration/plaque.png"));
+    public static final Identifier PLAQUE_TEXTURE = new Identifier(AITMod.MOD_ID,
+            ("textures/blockentities/decoration/plaque.png"));
     private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
     private final PlaqueModel plaqueModel;
 
@@ -29,7 +31,8 @@ public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityR
     }
 
     @Override
-    public void render(PlaqueBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(PlaqueBlockEntity entity, float tickDelta, MatrixStack matrices,
+            VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
         BlockState blockState = entity.getCachedState();
 
@@ -43,11 +46,13 @@ public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityR
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
-        this.plaqueModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(PLAQUE_TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.plaqueModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(PLAQUE_TEXTURE)),
+                light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
         matrices.pop();
 
-        if(entity.findTardis().isEmpty()) return;
+        if (entity.findTardis().isEmpty())
+            return;
         Tardis tardis = entity.findTardis().get();
 
         matrices.push();
@@ -58,9 +63,15 @@ public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityR
         float xVal = 0;
         matrices.translate(xVal, -35f, 35f);
 
-        this.textRenderer.drawWithOutline(Text.of(tardis.stats().getCreationString()).asOrderedText(), xVal - ((float) this.textRenderer.getWidth(tardis.stats().getCreationString()) / 2), 35, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of("-========-").asOrderedText(), xVal - ((float) this.textRenderer.getWidth("-========-") / 2), 55, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of(tardis.stats().getName()).asOrderedText(), xVal - ((float) this.textRenderer.getWidth(tardis.stats().getName()) / 2), 75, 0xFFFFFF,0x000000, matrices.peek().getPositionMatrix(),vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(Text.of(tardis.stats().getCreationString()).asOrderedText(),
+                xVal - ((float) this.textRenderer.getWidth(tardis.stats().getCreationString()) / 2), 35, 0xFFFFFF,
+                0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(Text.of("-========-").asOrderedText(),
+                xVal - ((float) this.textRenderer.getWidth("-========-") / 2), 55, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        this.textRenderer.drawWithOutline(Text.of(tardis.stats().getName()).asOrderedText(),
+                xVal - ((float) this.textRenderer.getWidth(tardis.stats().getName()) / 2), 75, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
 
         matrices.pop();
     }

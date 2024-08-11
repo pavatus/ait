@@ -3,16 +3,18 @@ package loqor.ait.core.util.vortex;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import loqor.ait.core.util.bsp.BinaryTree;
+
 import net.minecraft.util.math.Vec3d;
 
-/*
-    VORTEX_NODE_BRANCH SERIALISED BINARY LAYOUT
-    [ GUARD_TYPE | POS:X | POS:Y | POS:Z | PTL:X | PTL:Y | PTL:Z | PTR:X | PTR:Y | PTR:Z | GUARD_END ]
+import loqor.ait.core.util.bsp.BinaryTree;
 
-    VORTEX_NODE_LEAF LAYOUT
-    [ GUARD_TYPE | POS:X | POS:Y | POS:Z | GUARD_END ]
- */
+/*
+   VORTEX_NODE_BRANCH SERIALISED BINARY LAYOUT
+   [ GUARD_TYPE | POS:X | POS:Y | POS:Z | PTL:X | PTL:Y | PTL:Z | PTR:X | PTR:Y | PTR:Z | GUARD_END ]
+
+   VORTEX_NODE_LEAF LAYOUT
+   [ GUARD_TYPE | POS:X | POS:Y | POS:Z | GUARD_END ]
+*/
 
 public class VortexNode {
     private final boolean isLeaf;
@@ -101,7 +103,7 @@ public class VortexNode {
     private static Vec3d getOptionalVec3d(ByteArrayDataInput in) {
         double x = in.readDouble();
 
-        if ((int)x == EMPTY_VEC3D_FILLER) {
+        if ((int) x == EMPTY_VEC3D_FILLER) {
             in.skipBytes(Double.BYTES * 2);
             return null;
         }
@@ -127,7 +129,8 @@ public class VortexNode {
     }
 
     private static void putEmptyVec3d(ByteArrayDataOutput out) {
-        for (int i = 0; i < 3; i++) putEmptyVec3dElement(out);
+        for (int i = 0; i < 3; i++)
+            putEmptyVec3dElement(out);
     }
 
     public Vec3d getPos() {

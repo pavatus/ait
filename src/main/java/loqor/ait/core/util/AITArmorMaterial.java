@@ -1,8 +1,9 @@
 package loqor.ait.core.util;
 
-import loqor.ait.core.item.WearableArmorItem;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
+
+import loqor.ait.core.item.WearableArmorItem;
 
 public interface AITArmorMaterial {
     int getDurability(WearableArmorItem.Type type);

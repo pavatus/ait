@@ -1,9 +1,9 @@
 package loqor.ait.core.util.bsp;
 
+import java.util.Random;
+
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.Random;
 
 public class BTreeGenerator {
     private final int maxDepth;

@@ -1,5 +1,10 @@
 package loqor.ait.tardis.base;
 
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
@@ -16,270 +21,306 @@ import loqor.ait.tardis.util.Ordered;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 /**
  * Base class for all tardis components.
  *
- * @implNote There should be NO logic run in the constructor. If you need to have such logic,
- * implement it in an appropriate init method!
+ * @implNote There should be NO logic run in the constructor. If you need to
+ *           have such logic, implement it in an appropriate init method!
  */
 public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> implements Disposable {
 
-	@Exclude
-	protected Tardis tardis;
-	private final IdLike id;
+    @Exclude
+    protected Tardis tardis;
 
-	/**
-	 * Do NOT under any circumstances run logic in this constructor.
-	 * Default field values should be inlined. All logic should be done in an appropriate init method.
-	 * @implNote The {@link TardisComponent#tardis()} will always be null at the time this constructor gets called.
-	 */
-	public TardisComponent(IdLike id) {
-		this.id = id;
-	}
+    private final IdLike id;
 
-	public void postInit(InitContext ctx) { }
+    /**
+     * Do NOT under any circumstances run logic in this constructor. Default field
+     * values should be inlined. All logic should be done in an appropriate init
+     * method.
+     *
+     * @implNote The {@link TardisComponent#tardis()} will always be null at the
+     *           time this constructor gets called.
+     */
+    public TardisComponent(IdLike id) {
+        this.id = id;
+    }
 
-	/**
-	 * Syncs this object and all its properties to the client.
-	 * @implNote Server-side only.
-	 * @deprecated Use properties v2.
-	 */
-	@Deprecated
-	protected void sync() {
-		if (this.isClient()) {
-			AITMod.LOGGER.warn("Attempted to sync a component ON a client!", new IllegalAccessException());
-			return;
-		}
+    public void postInit(InitContext ctx) {
+    }
 
-		ServerTardisManager.getInstance().sendTardis(this);
-	}
+    /**
+     * Syncs this object and all its properties to the client.
+     *
+     * @implNote Server-side only.
+     * @deprecated Use properties v2.
+     */
+    @Deprecated
+    protected void sync() {
+        if (this.isClient()) {
+            AITMod.LOGGER.warn("Attempted to sync a component ON a client!", new IllegalAccessException());
+            return;
+        }
 
-	public Tardis tardis() {
-		return this.tardis;
-	}
+        ServerTardisManager.getInstance().sendTardis(this);
+    }
 
-	public IdLike getId() {
-		return id;
-	}
+    public Tardis tardis() {
+        return this.tardis;
+    }
 
-	public void setTardis(Tardis tardis) {
-		this.tardis = tardis;
-	}
+    public IdLike getId() {
+        return id;
+    }
 
-	public boolean isClient() {
-		return this.tardis() instanceof ClientTardis;
-	}
+    public void setTardis(Tardis tardis) {
+        this.tardis = tardis;
+    }
 
-	public boolean isServer() {
-		return this.tardis() instanceof ServerTardis;
-	}
+    public boolean isClient() {
+        return this.tardis() instanceof ClientTardis;
+    }
 
-	public TardisManager<?, ?> parentManager() {
-		return TardisManager.getInstance(this.tardis);
-	}
+    public boolean isServer() {
+        return this.tardis() instanceof ServerTardis;
+    }
 
-	@Override
-	public void dispose() {
-		this.tardis = null;
-	}
+    public TardisManager<?, ?> parentManager() {
+        return TardisManager.getInstance(this.tardis);
+    }
 
-	public static void init(TardisComponent component, Tardis tardis, InitContext context) {
-		component.setTardis(tardis);
-		Initializable.init(component, context);
-	}
+    @Override
+    public void dispose() {
+        this.tardis = null;
+    }
 
-	public enum Id implements IdLike {
-		// Base parts.
-		DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
-		EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
-		HANDLERS(TardisHandlersManager.class, null),
-		TRAVEL(TravelHandler.class, TravelHandler::new),
-		DOOR(DoorHandler.class, DoorHandler::new),
-		SONIC(SonicHandler.class, SonicHandler::new),
-		PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
-		LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
-		ENGINE(EngineHandler.class, EngineHandler::new),
-		FLIGHT(RealFlightHandler.class, RealFlightHandler::new),
-		BIOME(BiomeHandler.class, BiomeHandler::new, null),
-		SHIELDS(ShieldHandler.class, ShieldHandler::new, null),
-		STATS(StatsHandler.class, StatsHandler::new, null),
-		CRASH_DATA(TardisCrashHandler.class, TardisCrashHandler::new, null),
-		WAYPOINTS(WaypointHandler.class, WaypointHandler::new, null),
-		OVERGROWN(OvergrownHandler.class, OvergrownHandler::new, null),
-		HUM(ServerHumHandler.class, ServerHumHandler::new, null),
-		ALARMS(ServerAlarmHandler.class, ServerAlarmHandler::new, null),
-		RAINING(ServerRainHandler.class, ServerRainHandler::new, null),
-		LAVA_OUTSIDE(ServerLavaHandler.class, ServerLavaHandler::new, null),
-		INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new, null),
-		SEQUENCE(SequenceHandler.class, SequenceHandler::new, null),
-		MOOD(MoodHandler.class, MoodHandler::new, null),
-		FUEL(FuelHandler.class, FuelHandler::new, null),
-		HADS(HadsHandler.class, HadsHandler::new, null),
-		SIEGE(SiegeHandler.class, SiegeHandler::new, null),
-		CLOAK(CloakHandler.class, CloakHandler::new, null),
-		INCREMENT(IncrementManager.class, IncrementManager::new, null);
+    public static void init(TardisComponent component, Tardis tardis, InitContext context) {
+        component.setTardis(tardis);
+        Initializable.init(component, context);
+    }
 
-		private final BiConsumer<ClientTardis, TardisComponent> setter;
-		private final Supplier<TardisComponent> creator;
+    public enum Id implements IdLike {
+        // Base parts.
+        DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop), EXTERIOR(TardisExterior.class, null,
+                ClientTardis::setExterior), HANDLERS(TardisHandlersManager.class, null), TRAVEL(TravelHandler.class,
+                        TravelHandler::new), DOOR(DoorHandler.class, DoorHandler::new), SONIC(SonicHandler.class,
+                                SonicHandler::new), PERMISSIONS(PermissionHandler.class,
+                                        PermissionHandler::new), LOYALTY(LoyaltyHandler.class,
+                                                LoyaltyHandler::new), ENGINE(EngineHandler.class,
+                                                        EngineHandler::new), FLIGHT(RealFlightHandler.class,
+                                                                RealFlightHandler::new), BIOME(BiomeHandler.class,
+                                                                        BiomeHandler::new, null), SHIELDS(
+                                                                                ShieldHandler.class, ShieldHandler::new,
+                                                                                null), STATS(StatsHandler.class,
+                                                                                        StatsHandler::new,
+                                                                                        null), CRASH_DATA(
+                                                                                                TardisCrashHandler.class,
+                                                                                                TardisCrashHandler::new,
+                                                                                                null), WAYPOINTS(
+                                                                                                        WaypointHandler.class,
+                                                                                                        WaypointHandler::new,
+                                                                                                        null), OVERGROWN(
+                                                                                                                OvergrownHandler.class,
+                                                                                                                OvergrownHandler::new,
+                                                                                                                null), HUM(
+                                                                                                                        ServerHumHandler.class,
+                                                                                                                        ServerHumHandler::new,
+                                                                                                                        null), ALARMS(
+                                                                                                                                ServerAlarmHandler.class,
+                                                                                                                                ServerAlarmHandler::new,
+                                                                                                                                null), RAINING(
+                                                                                                                                        ServerRainHandler.class,
+                                                                                                                                        ServerRainHandler::new,
+                                                                                                                                        null), LAVA_OUTSIDE(
+                                                                                                                                                ServerLavaHandler.class,
+                                                                                                                                                ServerLavaHandler::new,
+                                                                                                                                                null), INTERIOR(
+                                                                                                                                                        InteriorChangingHandler.class,
+                                                                                                                                                        InteriorChangingHandler::new,
+                                                                                                                                                        null), SEQUENCE(
+                                                                                                                                                                SequenceHandler.class,
+                                                                                                                                                                SequenceHandler::new,
+                                                                                                                                                                null), MOOD(
+                                                                                                                                                                        MoodHandler.class,
+                                                                                                                                                                        MoodHandler::new,
+                                                                                                                                                                        null), FUEL(
+                                                                                                                                                                                FuelHandler.class,
+                                                                                                                                                                                FuelHandler::new,
+                                                                                                                                                                                null), HADS(
+                                                                                                                                                                                        HadsHandler.class,
+                                                                                                                                                                                        HadsHandler::new,
+                                                                                                                                                                                        null), SIEGE(
+                                                                                                                                                                                                SiegeHandler.class,
+                                                                                                                                                                                                SiegeHandler::new,
+                                                                                                                                                                                                null), CLOAK(
+                                                                                                                                                                                                        CloakHandler.class,
+                                                                                                                                                                                                        CloakHandler::new,
+                                                                                                                                                                                                        null), INCREMENT(
+                                                                                                                                                                                                                IncrementManager.class,
+                                                                                                                                                                                                                IncrementManager::new,
+                                                                                                                                                                                                                null);
 
-		private final Class<? extends TardisComponent> clazz;
+        private final BiConsumer<ClientTardis, TardisComponent> setter;
+        private final Supplier<TardisComponent> creator;
 
-		private Integer index = null;
+        private final Class<? extends TardisComponent> clazz;
 
-		<T extends TardisComponent>Id(Class<T> clazz, Supplier<T> creator) {
-			this(clazz, creator, ClientTardis::set);
-		}
+        private Integer index = null;
 
-		@SuppressWarnings("unchecked")
-		<T extends TardisComponent>Id(Class<T> clazz, Supplier<T> creator, BiConsumer<ClientTardis, T> setter) {
-			this.clazz = clazz;
-			this.creator = (Supplier<TardisComponent>) creator;
-			this.setter = (BiConsumer<ClientTardis, TardisComponent>) setter;
-		}
+        <T extends TardisComponent> Id(Class<T> clazz, Supplier<T> creator) {
+            this(clazz, creator, ClientTardis::set);
+        }
 
-		@Override
-		public Class<? extends TardisComponent> clazz() {
-			return clazz;
-		}
+        @SuppressWarnings("unchecked")
+        <T extends TardisComponent> Id(Class<T> clazz, Supplier<T> creator, BiConsumer<ClientTardis, T> setter) {
+            this.clazz = clazz;
+            this.creator = (Supplier<TardisComponent>) creator;
+            this.setter = (BiConsumer<ClientTardis, TardisComponent>) setter;
+        }
 
-		@Override
-		public void set(ClientTardis tardis, TardisComponent component) {
-			this.setter.accept(tardis, component);
-		}
+        @Override
+        public Class<? extends TardisComponent> clazz() {
+            return clazz;
+        }
 
-		@Override
-		public TardisComponent get(ClientTardis tardis) {
-			return switch (this) {
-				case DESKTOP -> tardis.getDesktop();
-				case EXTERIOR -> tardis.getExterior();
-				case HANDLERS -> tardis.getHandlers();
-				default -> tardis.handler(this);
-			};
-		}
+        @Override
+        public void set(ClientTardis tardis, TardisComponent component) {
+            this.setter.accept(tardis, component);
+        }
 
-		@Override
-		public TardisComponent create() {
-			return this.creator.get();
-		}
+        @Override
+        public TardisComponent get(ClientTardis tardis) {
+            return switch (this) {
+                case DESKTOP -> tardis.getDesktop();
+                case EXTERIOR -> tardis.getExterior();
+                case HANDLERS -> tardis.getHandlers();
+                default -> tardis.handler(this);
+            };
+        }
 
-		@Override
-		public boolean creatable() {
-			return this.creator != null;
-		}
+        @Override
+        public TardisComponent create() {
+            return this.creator.get();
+        }
 
-		@Override
-		public boolean mutable() {
-			return this.setter != null;
-		}
+        @Override
+        public boolean creatable() {
+            return this.creator != null;
+        }
 
-		@Override
-		public int index() {
-			return index;
-		}
+        @Override
+        public boolean mutable() {
+            return this.setter != null;
+        }
 
-		@Override
-		public void index(int i) {
-			this.index = i;
-		}
+        @Override
+        public int index() {
+            return index;
+        }
 
-		public static IdLike[] ids() {
-			return Id.values();
-		}
-	}
+        @Override
+        public void index(int i) {
+            this.index = i;
+        }
 
-	public interface IdLike extends Ordered {
+        public static IdLike[] ids() {
+            return Id.values();
+        }
+    }
 
-		Class<? extends TardisComponent> clazz();
-		void set(ClientTardis tardis, TardisComponent component);
+    public interface IdLike extends Ordered {
 
-		default TardisComponent get(ClientTardis tardis) {
-			return tardis.handler(this);
-		}
+        Class<? extends TardisComponent> clazz();
 
-		TardisComponent create();
-		boolean creatable();
+        void set(ClientTardis tardis, TardisComponent component);
 
-		boolean mutable();
+        default TardisComponent get(ClientTardis tardis) {
+            return tardis.handler(this);
+        }
 
-		String name();
+        TardisComponent create();
 
-		int index();
-		void index(int i);
-	}
+        boolean creatable();
 
-	public static class AbstractId<T extends TardisComponent> implements IdLike {
+        boolean mutable();
 
-		private final String name;
-		private final Supplier<T> creator;
-		private final Class<T> clazz;
+        String name();
 
-		private int index;
+        int index();
 
-		public AbstractId(String name, Supplier<T> creator, Class<T> clazz) {
-			this.name = name;
-			this.creator = creator;
-			this.clazz = clazz;
-		}
+        void index(int i);
+    }
 
-		@Override
-		public Class<T> clazz() {
-			return this.clazz;
-		}
+    public static class AbstractId<T extends TardisComponent> implements IdLike {
 
-		@Override
-		public void set(ClientTardis tardis, TardisComponent component) {
-			tardis.set(component);
-		}
+        private final String name;
+        private final Supplier<T> creator;
+        private final Class<T> clazz;
 
-		@Override
-		public TardisComponent create() {
-			return this.creator.get();
-		}
+        private int index;
 
-		@Override
-		public boolean creatable() {
-			return true;
-		}
+        public AbstractId(String name, Supplier<T> creator, Class<T> clazz) {
+            this.name = name;
+            this.creator = creator;
+            this.clazz = clazz;
+        }
 
-		@Override
-		public boolean mutable() {
-			return true;
-		}
+        @Override
+        public Class<T> clazz() {
+            return this.clazz;
+        }
 
-		@Override
-		public String name() {
-			return this.name;
-		}
+        @Override
+        public void set(ClientTardis tardis, TardisComponent component) {
+            tardis.set(component);
+        }
 
-		@Override
-		public int index() {
-			return this.index;
-		}
+        @Override
+        public TardisComponent create() {
+            return this.creator.get();
+        }
 
-		@Override
-		public void index(int i) {
-			this.index = i;
-		}
-	}
+        @Override
+        public boolean creatable() {
+            return true;
+        }
 
-	public record InitContext(@Nullable DirectedGlobalPos.Cached pos, boolean deserialized) implements Initializable.Context {
+        @Override
+        public boolean mutable() {
+            return true;
+        }
 
-		public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
-			return new InitContext(pos, false);
-		}
+        @Override
+        public String name() {
+            return this.name;
+        }
 
-		public static InitContext deserialize() {
-			return new InitContext(null, true);
-		}
+        @Override
+        public int index() {
+            return this.index;
+        }
 
-		@Override
-		public boolean created() {
-			return !deserialized;
-		}
-	}
+        @Override
+        public void index(int i) {
+            this.index = i;
+        }
+    }
+
+    public record InitContext(@Nullable DirectedGlobalPos.Cached pos,
+            boolean deserialized) implements Initializable.Context {
+
+        public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
+            return new InitContext(pos, false);
+        }
+
+        public static InitContext deserialize() {
+            return new InitContext(null, true);
+        }
+
+        @Override
+        public boolean created() {
+            return !deserialized;
+        }
+    }
 }

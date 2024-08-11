@@ -1,5 +1,17 @@
 package loqor.ait.core.util.vortex.server;
 
+import java.nio.file.Path;
+
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.util.bsp.BTreeGenerator;
@@ -7,27 +19,17 @@ import loqor.ait.core.util.bsp.BinaryTree;
 import loqor.ait.core.util.vortex.VortexData;
 import loqor.ait.core.util.vortex.VortexDataHelper;
 import loqor.ait.tardis.manager.TardisFileManager;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
-
-import java.nio.file.Path;
 
 public class ServerVortexDataHandler {
     /*
-        Registers a callback for receiving a VortexData object request from client. Must only
-        be called by the server.
+     * Registers a callback for receiving a VortexData object request from client.
+     * Must only be called by the server.
      */
     public static void init() {
         /*
-        Registers a callback for SERVER_STARTED event to check if the vortex data is present,
-        and if not, generates and stores it.
-        */
+         * Registers a callback for SERVER_STARTED event to check if the vortex data is
+         * present, and if not, generates and stores it.
+         */
         ServerLifecycleEvents.SERVER_STARTED.register((server -> {
             if (isVortexDataPresent(server)) {
                 AITMod.LOGGER.info("ServerVortexDataHelper: Found VortexData present in server world directory");
@@ -42,14 +44,15 @@ public class ServerVortexDataHandler {
             }
         }));
 
-        //ServerPlayNetworking.registerGlobalReceiver(VortexDataHelper.REQUEST_SYNC_PACKET,
-        //        (((server, player, handler, buf, responseSender) -> ServerVortexDataHandler.sendSyncPacketTo(player))));
+        // ServerPlayNetworking.registerGlobalReceiver(VortexDataHelper.REQUEST_SYNC_PACKET,
+        // (((server, player, handler, buf, responseSender) ->
+        // ServerVortexDataHandler.sendSyncPacketTo(player))));
     }
 
     /*
-        Sends SYNC_PACKET to the client. Must be registered as a callback for
-        ServerPlayConnectionEvents.JOIN. Caller shall be the server, or else
-        the call to this function becomes obsolete.
+     * Sends SYNC_PACKET to the client. Must be registered as a callback for
+     * ServerPlayConnectionEvents.JOIN. Caller shall be the server, or else the call
+     * to this function becomes obsolete.
      */
     private static void sendSyncPacketTo(PlayerEntity player) {
         if (player.getWorld().isClient()) {
@@ -63,44 +66,40 @@ public class ServerVortexDataHandler {
         buf.writeBytes(vortexData.serialize());
         ServerPlayNetworking.send((ServerPlayerEntity) player, VortexDataHelper.SYNC_PACKET, buf);
 
-        AITMod.LOGGER.info("SEND {} -> {}",
-                VortexDataHelper.SYNC_PACKET,
-                player.getName()
-        );
+        AITMod.LOGGER.info("SEND {} -> {}", VortexDataHelper.SYNC_PACKET, player.getName());
     }
 
     /*
-        Returns true if the server has generated vortex data, false if otherwise.
+     * Returns true if the server has generated vortex data, false if otherwise.
      */
     public static boolean isVortexDataPresent(MinecraftServer server) {
         return getVortexDataPath(server).toFile().exists();
     }
 
     /*
-        Returns the path to a world save stored vortex data file.
+     * Returns the path to a world save stored vortex data file.
      */
     public static Path getVortexDataPath(MinecraftServer server) {
-        return TardisFileManager.getRootSavePath(server)
-                .resolve(VortexDataHelper.VORTEX_DATA_SERVER_CACHE_PATH);
+        return TardisFileManager.getRootSavePath(server).resolve(VortexDataHelper.VORTEX_DATA_SERVER_CACHE_PATH);
     }
 
     /*
-        Returns a VortexData object stored in the world save directory. Must
-        be only called by the server.
+     * Returns a VortexData object stored in the world save directory. Must be only
+     * called by the server.
      */
     public static VortexData getVortexData(MinecraftServer server) {
         return VortexDataHelper.readVortexData(getVortexDataPath(server));
     }
 
     /*
-        Stores a server-generated vortex data.
+     * Stores a server-generated vortex data.
      */
     public static void storeVortexData(MinecraftServer server, VortexData data) {
         VortexDataHelper.storeVortexData(getVortexDataPath(server), data);
     }
 
     /*
-        Generates random data for the time vortex and returns a serialised result.
+     * Generates random data for the time vortex and returns a serialised result.
      */
     public static VortexData generateData(MinecraftServer server) {
         long seed = server.getWorld(AITDimensions.TIME_VORTEX_WORLD).getSeed();
@@ -111,10 +110,8 @@ public class ServerVortexDataHandler {
 
         vortexTreeGenerator.gen(vortexTree);
 
-        AITMod.LOGGER.info(
-                "ServerVortexDataHelper: Server vortex data generated, total nodes: {}",
-                BinaryTree.Node.getChildrenCount(vortexTree.getRootNode())
-        );
+        AITMod.LOGGER.info("ServerVortexDataHelper: Server vortex data generated, total nodes: {}",
+                BinaryTree.Node.getChildrenCount(vortexTree.getRootNode()));
 
         AITMod.LOGGER.info("ServerVortexDataHelper: Serialising vortex data");
 

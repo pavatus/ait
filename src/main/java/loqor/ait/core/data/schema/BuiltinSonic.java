@@ -1,17 +1,16 @@
 package loqor.ait.core.data.schema;
 
-import loqor.ait.AITMod;
+import static loqor.ait.AITMod.MOD_ID;
+
 import net.minecraft.util.Identifier;
 
-import static loqor.ait.AITMod.MOD_ID;
+import loqor.ait.AITMod;
 
 public class BuiltinSonic extends SonicSchema {
 
     private static final String prefix = "item/sonic/";
 
-    private static final String[] MODES = new String[] {
-            "inactive", "interaction", "overload", "scanning", "tardis"
-    };
+    private static final String[] MODES = new String[]{"inactive", "interaction", "overload", "scanning", "tardis"};
 
     protected BuiltinSonic(Identifier id, Models models) {
         super(id, models, new Rendering());
@@ -26,8 +25,7 @@ public class BuiltinSonic extends SonicSchema {
 
         Identifier sonicId = new Identifier(AITMod.MOD_ID, id);
 
-        return new BuiltinSonic(sonicId, new Models(
-                identifiers[0], identifiers[1], identifiers[2], identifiers[3], identifiers[4]
-        ));
+        return new BuiltinSonic(sonicId,
+                new Models(identifiers[0], identifiers[1], identifiers[2], identifiers[3], identifiers[4]));
     }
 }

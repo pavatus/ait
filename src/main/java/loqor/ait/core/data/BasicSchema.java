@@ -1,9 +1,10 @@
 package loqor.ait.core.data;
 
-import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.core.data.base.Nameable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.core.data.base.Nameable;
 
 public abstract class BasicSchema implements Identifiable, Nameable {
 
@@ -23,9 +24,7 @@ public abstract class BasicSchema implements Identifiable, Nameable {
             String[] parts = id.getPath().split("/");
             String last = parts[parts.length - 1];
 
-            this.text = Text.translatable(
-                    this.prefix + "." + id.getNamespace() + "." + last
-            );
+            this.text = Text.translatable(this.prefix + "." + id.getNamespace() + "." + last);
         }
 
         return text;

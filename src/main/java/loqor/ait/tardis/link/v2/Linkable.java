@@ -1,9 +1,9 @@
 package loqor.ait.tardis.link.v2;
 
+import java.util.UUID;
+
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
-
-import java.util.UUID;
 
 public interface Linkable {
 
@@ -14,9 +14,11 @@ public interface Linkable {
     TardisRef tardis();
 
     /**
-     * @implNote This method is called when the TardsRef instance gets created.
-     * This means that the ref is no longer null BUT the TARDIS instance still could be missing.
-     * Primarily this is true for {@link InteriorLinkableBlockEntity}s
+     * @implNote This method is called when the TardsRef instance gets created. This
+     *           means that the ref is no longer null BUT the TARDIS instance still
+     *           could be missing. Primarily this is true for
+     *           {@link InteriorLinkableBlockEntity}s
      */
-    default void onLinked() { }
+    default void onLinked() {
+    }
 }

@@ -1,8 +1,11 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.PlugBoardBlockEntity;
-import loqor.ait.core.data.ShapeMap;
-import loqor.ait.core.util.ShapeUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,11 +29,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import loqor.ait.core.blockentities.PlugBoardBlockEntity;
+import loqor.ait.core.data.ShapeMap;
+import loqor.ait.core.util.ShapeUtil;
 
 @SuppressWarnings("deprecation")
 public class PlugBoardBlock extends Block implements BlockEntityProvider {
@@ -56,9 +58,8 @@ public class PlugBoardBlock extends Block implements BlockEntityProvider {
             VoxelShape button = buttons.get(i);
             final int index = i;
 
-            HANDLES[i] = new Handle<>(ShapeUtil.rotations(Direction.NORTH, button)
-                    .build(), ctx -> ctx.entity.onClick(ctx.player, ctx.hand, index)
-            );
+            HANDLES[i] = new Handle<>(ShapeUtil.rotations(Direction.NORTH, button).build(),
+                    ctx -> ctx.entity.onClick(ctx.player, ctx.hand, index));
         }
     }
 
@@ -88,11 +89,13 @@ public class PlugBoardBlock extends Block implements BlockEntityProvider {
 
     public PlugBoardBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        this.setDefaultState(
+                this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
         if (!(world.getBlockEntity(pos) instanceof PlugBoardBlockEntity casing))
             return ActionResult.FAIL;
 
@@ -116,8 +119,7 @@ public class PlugBoardBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+    @Nullable public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState();
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         World worldView = ctx.getWorld();
@@ -134,7 +136,8 @@ public class PlugBoardBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
+            WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos))
             return Blocks.AIR.getDefaultState();
 
@@ -167,13 +170,13 @@ public class PlugBoardBlock extends Block implements BlockEntityProvider {
         return super.getFluidState(state);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new PlugBoardBlockEntity(pos, state);
     }
 
-    public record Context(PlayerEntity player, Hand hand, PlugBoardBlockEntity entity) { }
+    public record Context(PlayerEntity player, Hand hand, PlugBoardBlockEntity entity) {
+    }
 
     public record Handle<T>(ShapeMap shape, Consumer<T> runnable) {
 
@@ -191,14 +194,11 @@ public class PlugBoardBlock extends Block implements BlockEntityProvider {
             double minZ = s.getMin(Direction.Axis.Z);
             double maxZ = s.getMax(Direction.Axis.Z);
 
-            boolean checkX = mouseX >= (minX * 16)
-                    && mouseX <= (maxX * 16);
+            boolean checkX = mouseX >= (minX * 16) && mouseX <= (maxX * 16);
 
-            boolean checkY = mouseY >= (minY * 16)
-                    && mouseY <= (maxY * 16);
+            boolean checkY = mouseY >= (minY * 16) && mouseY <= (maxY * 16);
 
-            boolean checkZ = mouseZ >= (minZ * 16)
-                    && mouseZ <= (maxZ * 16);
+            boolean checkZ = mouseZ >= (minZ * 16) && mouseZ <= (maxZ * 16);
 
             if (checkX && checkY && checkZ)
                 this.runnable.accept(t);

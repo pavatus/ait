@@ -1,12 +1,10 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.api.ICantBreak;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.item.HammerItem;
+import java.util.Random;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -31,139 +29,150 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
+import loqor.ait.api.ICantBreak;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.item.HammerItem;
 
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
-	public ConsoleBlock(Settings settings) {
-		super(settings);
-	}
+    public ConsoleBlock(Settings settings) {
+        super(settings);
+    }
 
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		return makeShape();
-	}
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return makeShape();
+    }
 
-	@Nullable
-	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		return new ConsoleBlockEntity(pos, state);
-	}
+    @Nullable @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new ConsoleBlockEntity(pos, state);
+    }
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
-			consoleBlockEntity.useOn(world, player.isSneaking(), player);
-			ItemStack itemStack = player.getStackInHand(hand);
-			if (itemStack.getItem() instanceof HammerItem) {
-				itemStack.getItem().useOnBlock(new ItemUsageContext(world, player, hand, itemStack, hit));
-			}
-		}
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
+            consoleBlockEntity.useOn(world, player.isSneaking(), player);
+            ItemStack itemStack = player.getStackInHand(hand);
+            if (itemStack.getItem() instanceof HammerItem) {
+                itemStack.getItem().useOnBlock(new ItemUsageContext(world, player, hand, itemStack, hit));
+            }
+        }
 
+        return ActionResult.SUCCESS;
+    }
 
-		return ActionResult.SUCCESS;
-	}
+    public VoxelShape makeShape() {
+        VoxelShape shape = VoxelShapes.empty();
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0, 0, 1, 0.875, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0.875, -0.25, 1, 1, 1.25), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 1, 0, 1, 1.125, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.25, 0.875, 0, 1.25, 1, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, -0.125, 1.1875, 1, 0),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, 1, 1.1875, 1, 1.125),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(1, 0.875, -0.1875, 1.125, 1, 1.1875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.125, 0.875, -0.1875, 0, 1, 1.1875),
+                BooleanBiFunction.OR);
 
-	public VoxelShape makeShape() {
-		VoxelShape shape = VoxelShapes.empty();
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0, 0, 1, 0.875, 1), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0.875, -0.25, 1, 1, 1.25), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 1, 0, 1, 1.125, 1), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.25, 0.875, 0, 1.25, 1, 1), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, -0.125, 1.1875, 1, 0), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, 1, 1.1875, 1, 1.125), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(1, 0.875, -0.1875, 1.125, 1, 1.1875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.125, 0.875, -0.1875, 0, 1, 1.1875), BooleanBiFunction.OR);
+        return shape;
+    }
 
-		return shape;
-	}
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state,
+            @NotNull BlockEntityType<T> type) {
+        return (world1, blockPos, blockState, ticker) -> {
+            if (ticker instanceof ConsoleBlockEntity console) {
+                console.tick(world, blockPos, blockState, console);
+            }
+        };
+    }
 
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-		return (world1, blockPos, blockState, ticker) -> {
-			if (ticker instanceof ConsoleBlockEntity console) {
-				console.tick(world, blockPos, blockState, console);
-			}
-		};
-	}
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+            ItemStack itemStack) {
+        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+            // dont place yo
+            world.breakBlock(pos, true);
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                    new ItemStack(AITBlocks.CONSOLE)));
+            return;
+        }
 
-	@Override
-	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-		if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
-			// dont place yo
-			world.breakBlock(pos, true);
-			world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, new ItemStack(AITBlocks.CONSOLE)));
-			return;
-		}
+        super.onPlaced(world, pos, state, placer, itemStack);
 
-		super.onPlaced(world, pos, state, placer, itemStack);
+        if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            consoleBlockEntity.markNeedsControl();
+        }
+    }
 
-		if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
-			consoleBlockEntity.markNeedsControl();
-		}
-	}
+    @Override
+    public boolean emitsRedstonePower(BlockState state) {
+        return true;
+    }
 
-	@Override
+    @Override
+    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+        return 15;
+    }
 
-	public boolean emitsRedstonePower(BlockState state) {
-		return true;
-	}
+    @Override
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
+        if (entity instanceof PlayerEntity player) {
+            Random random = new Random();
+            int x_random = random.nextInt(1, 10);
+            int y_random = random.nextInt(1, 10);
+            int z_random = random.nextInt(1, 10);
 
-	@Override
-	public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-		return 15;
-	}
+            boolean is_x_negative = false;
+            boolean is_z_negative = false;
+            if (random.nextInt(1, 3) == 1) {
+                is_x_negative = true;
+            }
+            if (random.nextInt(1, 3) == 1) {
+                is_z_negative = true;
+            }
 
-	@Override
-	public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
-		if (entity instanceof PlayerEntity player) {
-			Random random = new Random();
-			int x_random = random.nextInt(1, 10);
-			int y_random = random.nextInt(1, 10);
-			int z_random = random.nextInt(1, 10);
+            world.playSound(null, pos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 4f, 1f);
 
-			boolean is_x_negative = false;
-			boolean is_z_negative = false;
-			if (random.nextInt(1, 3) == 1) {
-				is_x_negative = true;
-			}
-			if (random.nextInt(1, 3) == 1) {
-				is_z_negative = true;
-			}
+            player.addVelocity(0.15f * x_random * (is_x_negative ? -1 : 1), 0.1f * y_random,
+                    0.15f * z_random * (is_z_negative ? -1 : 1));
 
-			world.playSound(null, pos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 4f, 1f);
+            if (player instanceof ServerPlayerEntity) {
+                for (int i = 0; i < 100; i++) {
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.ANGRY_VILLAGER,
+                            pos.getX() + random.nextFloat(-2, 3), pos.getY() + random.nextFloat(2),
+                            pos.getZ() + random.nextFloat(-2, 3), 1, random.nextFloat(-5, 5), random.nextFloat(-5, 5),
+                            random.nextFloat(-5, 5), 1f);
+                }
+            }
+        }
+        super.onSteppedOn(world, pos, state, entity);
+    }
 
-			player.addVelocity(0.15f * x_random * (is_x_negative ? -1 : 1), 0.1f * y_random, 0.15f * z_random * (is_z_negative ? -1 : 1));
+    // This will literally never happen
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        super.onBroken(world, pos, state);
 
-			if (player instanceof ServerPlayerEntity) {
-				for (int i = 0; i < 100; i++) {
-					((ServerWorld) world).spawnParticles(ParticleTypes.ANGRY_VILLAGER, pos.getX() + random.nextFloat(-2, 3), pos.getY() + random.nextFloat(2), pos.getZ() + random.nextFloat(-2, 3), 1, random.nextFloat(-5, 5), random.nextFloat(-5, 5), random.nextFloat(-5, 5), 1f);
-				}
-			}
-		}
-		super.onSteppedOn(world, pos, state, entity);
-	}
+        if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity console) {
+            console.onBroken();
+        }
+    }
 
-	// This will literally never happen
-	@Override
-	public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-		super.onBroken(world, pos, state);
-
-		if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity console) {
-			console.onBroken();
-		}
-	}
-
-	@Override
-	public void onTryBreak(World world, BlockPos pos, BlockState state) {
-
-	}
+    @Override
+    public void onTryBreak(World world, BlockPos pos, BlockState state) {
+    }
 }

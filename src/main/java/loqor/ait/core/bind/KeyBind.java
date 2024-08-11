@@ -1,14 +1,15 @@
 package loqor.ait.core.bind;
 
-import loqor.ait.AITMod;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import java.util.function.Consumer;
+
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 
-import java.util.function.Consumer;
+import loqor.ait.AITMod;
 
 public class KeyBind {
 
@@ -37,11 +38,8 @@ public class KeyBind {
     }
 
     public void register() {
-        this.self = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key." + AITMod.MOD_ID + "." + name,
-                this.type, this.code,
-                "category." + AITMod.MOD_ID + "." + category
-        ));
+        this.self = KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + AITMod.MOD_ID + "." + name, this.type,
+                this.code, "category." + AITMod.MOD_ID + "." + category));
     }
 
     protected boolean shouldTrigger(MinecraftClient client) {

@@ -1,11 +1,19 @@
 package loqor.ait.core.commands;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+
+import net.minecraft.command.CommandSource;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.JsonElementArgumentType;
 import loqor.ait.core.commands.argument.TardisArgumentType;
@@ -15,17 +23,13 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
-import net.minecraft.command.CommandSource;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
 
 public class DataCommand {
 
-    public static final SuggestionProvider<ServerCommandSource> COMPONENT_SUGGESTION = (context, builder) ->
-            CommandSource.suggestMatching(TardisComponentRegistry.getInstance().getValues().stream().map(TardisComponent.IdLike::name), builder);
+    public static final SuggestionProvider<ServerCommandSource> COMPONENT_SUGGESTION = (context,
+            builder) -> CommandSource.suggestMatching(
+                    TardisComponentRegistry.getInstance().getValues().stream().map(TardisComponent.IdLike::name),
+                    builder);
 
     public static final SuggestionProvider<ServerCommandSource> VALUE_SUGGESTION = (context, builder) -> {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
@@ -36,29 +40,19 @@ public class DataCommand {
         if (!(tardis.handler(id) instanceof KeyedTardisComponent keyed))
             return builder.buildFuture(); // womp womp
 
-        return CommandSource.suggestMatching(keyed.getPropertyData().values()
-                .stream().map(value -> value.getProperty().getName()), builder);
+        return CommandSource.suggestMatching(
+                keyed.getPropertyData().values().stream().map(value -> value.getProperty().getName()), builder);
     };
 
-
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("data").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", TardisArgumentType.tardis())
-                                .then(argument("component", StringArgumentType.word())
-                                        .suggests(COMPONENT_SUGGESTION)
-                                        .then(argument("value", StringArgumentType.word())
-                                                .suggests(VALUE_SUGGESTION)
-                                                .then(literal("set")
-                                                        .then(argument("data", JsonElementArgumentType.jsonElement())
-                                                                .executes(DataCommand::runSet)))
-                                                .then(literal("get")
-                                                        .executes(DataCommand::runGet))
-                                        )
-                                )
-                        )
-                )
-        );
+        dispatcher.register(literal(AITMod.MOD_ID).then(literal("data").requires(source -> source.hasPermissionLevel(2))
+                .then(argument("tardis", TardisArgumentType.tardis()).then(argument("component",
+                        StringArgumentType.word())
+                        .suggests(COMPONENT_SUGGESTION)
+                        .then(argument("value", StringArgumentType.word()).suggests(VALUE_SUGGESTION)
+                                .then(literal("set").then(argument("data", JsonElementArgumentType.jsonElement())
+                                        .executes(DataCommand::runSet)))
+                                .then(literal("get").executes(DataCommand::runGet)))))));
     }
 
     private static <T> int runGet(CommandContext<ServerCommandSource> context) {

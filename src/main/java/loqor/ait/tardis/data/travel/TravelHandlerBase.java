@@ -1,5 +1,14 @@
 package loqor.ait.tardis.data.travel;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.border.WorldBorder;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -18,31 +27,27 @@ import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.border.WorldBorder;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class TravelHandlerBase extends KeyedTardisComponent implements TardisTickable {
 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
     private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
 
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) null);
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) null);
-    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) null);
+    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) null);
+    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) null);
+    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) null);
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", false);
-    private static final BoolProperty ANTIGRAVS = new BoolProperty("antigravs",false);
+    private static final BoolProperty ANTIGRAVS = new BoolProperty("antigravs", false);
 
     private static final IntProperty SPEED = new IntProperty("speed", 0);
     private static final IntProperty MAX_SPEED = new IntProperty("max_speed", 7);
 
-    private static final Property<GroundSearch> VGROUND_SEARCH = Property.forEnum("vground_search", GroundSearch.class, GroundSearch.CEILING);
+    private static final Property<GroundSearch> VGROUND_SEARCH = Property.forEnum("vground_search", GroundSearch.class,
+            GroundSearch.CEILING);
     private static final BoolProperty HGROUND_SEARCH = new BoolProperty("hground_search", true);
 
     protected final Value<State> state = STATE.create(this);
@@ -103,10 +108,12 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         if (crash.getState() != TardisCrashHandler.State.NORMAL)
             crash.addRepairTicks(2 * this.speed());
 
-        if (this.hammerUses > 0 && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
+        if (this.hammerUses > 0
+                && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
             this.hammerUses--;
 
-            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay", (long) TimeUtil.secondsToMilliseconds(10));
+            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay",
+                    (long) TimeUtil.secondsToMilliseconds(10));
         }
     }
 
@@ -193,14 +200,10 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         WorldBorder border = cached.getWorld().getWorldBorder();
         BlockPos pos = cached.getPos();
 
-        cached = border.contains(pos) ? cached : cached.pos(
-                border.clamp(pos.getX(), pos.getY(), pos.getZ())
-        );
+        cached = border.contains(pos) ? cached : cached.pos(border.clamp(pos.getX(), pos.getY(), pos.getZ()));
 
         if (!this.antigravs.get()) {
-            cached = WorldUtil.locateSafe(
-                    cached, this.vGroundSearch.get(), this.hGroundSearch.get()
-            );
+            cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
         }
 
         this.forceDestination(cached);
@@ -237,10 +240,8 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     public enum State {
-        LANDED,
-        DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat),
-        FLIGHT(AITSounds.FLIGHT_ANIM),
-        MAT(AITSounds.MAT_ANIM, TravelHandler::finishRemat);
+        LANDED, DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat), FLIGHT(AITSounds.FLIGHT_ANIM), MAT(
+                AITSounds.MAT_ANIM, TravelHandler::finishRemat);
 
         private final MatSound sound;
         private final boolean animated;

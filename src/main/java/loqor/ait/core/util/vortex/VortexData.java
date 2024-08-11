@@ -1,11 +1,11 @@
 package loqor.ait.core.util.vortex;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public record VortexData(List<VortexNode> nodes) {
     public void serialize(ByteArrayDataOutput out) {

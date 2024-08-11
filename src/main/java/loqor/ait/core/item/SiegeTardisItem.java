@@ -1,11 +1,11 @@
 package loqor.ait.core.item;
 
-import loqor.ait.client.models.exteriors.SiegeModeModel;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.SiegeHandler;
-import loqor.ait.tardis.link.LinkableItem;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -20,195 +20,199 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.SiegeHandler;
+import loqor.ait.tardis.link.LinkableItem;
 
 // todo fix so many issues with having more than one of this item
 public class SiegeTardisItem extends Item {
 
-	public static final String CURRENT_TEXTURE_KEY = "siege_current_texture";
+    public static final String CURRENT_TEXTURE_KEY = "siege_current_texture";
 
-	public SiegeTardisItem(Settings settings) {
-		super(settings.maxCount(1));
-	}
+    public SiegeTardisItem(Settings settings) {
+        super(settings.maxCount(1));
+    }
 
-	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-		super.inventoryTick(stack, world, entity, slot, selected);
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
 
-		if (world.isClient())
-			return;
+        if (world.isClient())
+            return;
 
-		Tardis tardis = SiegeTardisItem.getTardis(world, stack);
+        Tardis tardis = SiegeTardisItem.getTardis(world, stack);
 
-		if (tardis == null) {
-			stack.setCount(0);
-			return;
-		}
-
-        if (!tardis.siege().isActive()) {
-			tardis.setSiegeBeingHeld(null);
-			stack.setCount(0);
-			return;
-		}
-
-		UUID heldId = tardis.siege().getHeldPlayerUUID();
-
-		// todo this might be laggy
-		if (entity instanceof ServerPlayerEntity player) {
-			if (tardis.getExterior().findExteriorBlock().isEmpty()) {
-				if (heldId == null) {
-					tardis.siege().setSiegeBeingHeld(player.getUuid());
-					return;
-				}
-			}
-
-			if (!(Objects.equals(player.getUuid(), heldId))) {
-				int found = findSlot(player, tardis);
-				player.getInventory().setStack(found, ItemStack.EMPTY);
-				return;
-			}
-
-			if (getSiegeCount(player, tardis) > 1) {
-				int foundSlot = findSlot(player, tardis);
-				if (foundSlot == slot) {
-					player.getInventory().setStack(slot, ItemStack.EMPTY);
-				}
-			}
-		}
-
-		tardis.travel().forcePosition(fromEntity(entity));
-
-		if (!tardis.isSiegeBeingHeld()) {
-			tardis.setSiegeBeingHeld(entity.getUuid());
-		}
-	}
-
-	@Override
-	public ActionResult useOnBlock(ItemUsageContext context) {
-		if (context.getHand() != Hand.MAIN_HAND)
-			return ActionResult.FAIL; // bc i cba
-
-		if (context.getWorld().isClient())
-			return ActionResult.SUCCESS;
-
-		ItemStack stack = context.getStack();
-		Tardis tardis = SiegeTardisItem.getTardis(context.getWorld(), stack);
-
-		ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
-		player.getMainHandStack().setCount(0);
-
-		if (tardis == null) {
-			player.getInventory().markDirty();
-			return ActionResult.FAIL;
-		}
+        if (tardis == null) {
+            stack.setCount(0);
+            return;
+        }
 
         if (!tardis.siege().isActive()) {
-			tardis.setSiegeBeingHeld(null);
-			player.getInventory().markDirty();
-			return ActionResult.FAIL;
-		}
+            tardis.setSiegeBeingHeld(null);
+            stack.setCount(0);
+            return;
+        }
 
-		placeTardis(tardis, fromItemContext(context));
+        UUID heldId = tardis.siege().getHeldPlayerUUID();
 
-		if (player.isCreative()) {
-			int slot = findSlot(player, tardis);
+        // todo this might be laggy
+        if (entity instanceof ServerPlayerEntity player) {
+            if (tardis.getExterior().findExteriorBlock().isEmpty()) {
+                if (heldId == null) {
+                    tardis.siege().setSiegeBeingHeld(player.getUuid());
+                    return;
+                }
+            }
 
-			if (slot == -1) {
-				return ActionResult.SUCCESS; // how
-			}
+            if (!(Objects.equals(player.getUuid(), heldId))) {
+                int found = findSlot(player, tardis);
+                player.getInventory().setStack(found, ItemStack.EMPTY);
+                return;
+            }
 
-			player.getInventory().setStack(slot, ItemStack.EMPTY);
-		}
+            if (getSiegeCount(player, tardis) > 1) {
+                int foundSlot = findSlot(player, tardis);
+                if (foundSlot == slot) {
+                    player.getInventory().setStack(slot, ItemStack.EMPTY);
+                }
+            }
+        }
 
-		player.getInventory().markDirty();
-		return ActionResult.SUCCESS;
-	}
+        tardis.travel().forcePosition(fromEntity(entity));
 
-	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-		NbtCompound tag = stack.getOrCreateNbt();
-		String text = tag.contains("tardis-uuid") ? tag.getUuid("tardis-uuid").toString().substring(0, 8)
-				: Text.translatable("tooltip.ait.remoteitem.notardis").getString();
+        if (!tardis.isSiegeBeingHeld()) {
+            tardis.setSiegeBeingHeld(entity.getUuid());
+        }
+    }
 
-		tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
-	}
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        if (context.getHand() != Hand.MAIN_HAND)
+            return ActionResult.FAIL; // bc i cba
 
-	public static DirectedGlobalPos.Cached fromItemContext(ItemUsageContext context) {
-		return DirectedGlobalPos.Cached.create((ServerWorld) context.getWorld(), context.getBlockPos().offset(context.getSide()), (byte) 0);
-	}
+        if (context.getWorld().isClient())
+            return ActionResult.SUCCESS;
 
-	public static DirectedGlobalPos.Cached fromEntity(Entity entity) {
-		return DirectedGlobalPos.Cached.create((ServerWorld) entity.getWorld(), BlockPos.ofFloored(entity.getPos()), (byte) 0);
-	}
+        ItemStack stack = context.getStack();
+        Tardis tardis = SiegeTardisItem.getTardis(context.getWorld(), stack);
 
-	public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis) {
-		int count = 0;
+        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+        player.getMainHandStack().setCount(0);
 
-		for (int i = 0; i < 36; i++) {
-			Tardis other = SiegeTardisItem.getTardis(player.getWorld(), player.getInventory().getStack(i));
+        if (tardis == null) {
+            player.getInventory().markDirty();
+            return ActionResult.FAIL;
+        }
 
-			if (other == null)
-				continue;
+        if (!tardis.siege().isActive()) {
+            tardis.setSiegeBeingHeld(null);
+            player.getInventory().markDirty();
+            return ActionResult.FAIL;
+        }
 
-			if (other == tardis)
-				count++;
-		}
+        placeTardis(tardis, fromItemContext(context));
 
-		return count;
-	}
+        if (player.isCreative()) {
+            int slot = findSlot(player, tardis);
 
-	public static int findSlot(ServerPlayerEntity player, Tardis tardis) {
-		Tardis found;
+            if (slot == -1) {
+                return ActionResult.SUCCESS; // how
+            }
 
-		for (ItemStack stack : player.getInventory().main) {
-			found = SiegeTardisItem.getTardis(player.getWorld(), stack);
+            player.getInventory().setStack(slot, ItemStack.EMPTY);
+        }
 
-			if (found == null)
-				continue;
+        player.getInventory().markDirty();
+        return ActionResult.SUCCESS;
+    }
 
-			if (found.equals(tardis)) {
-				return player.getInventory().indexOf(stack);
-			}
-		}
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        NbtCompound tag = stack.getOrCreateNbt();
+        String text = tag.contains("tardis-uuid")
+                ? tag.getUuid("tardis-uuid").toString().substring(0, 8)
+                : Text.translatable("tooltip.ait.remoteitem.notardis").getString();
 
-		return -1;
-	}
+        tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
+    }
 
-	public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
-		if (tardis.travel().handbrake())
-			return;
+    public static DirectedGlobalPos.Cached fromItemContext(ItemUsageContext context) {
+        return DirectedGlobalPos.Cached.create((ServerWorld) context.getWorld(),
+                context.getBlockPos().offset(context.getSide()), (byte) 0);
+    }
 
-		tardis.travel().deleteExterior();
-		tardis.siege().setSiegeBeingHeld(player.getUuid());
-		player.getInventory().insertStack(create(tardis));
-		player.getInventory().markDirty();
-	}
+    public static DirectedGlobalPos.Cached fromEntity(Entity entity) {
+        return DirectedGlobalPos.Cached.create((ServerWorld) entity.getWorld(), BlockPos.ofFloored(entity.getPos()),
+                (byte) 0);
+    }
 
-	public static void placeTardis(Tardis tardis, DirectedGlobalPos.Cached pos) {
-		tardis.travel().forcePosition(pos);
-		tardis.travel().placeExterior(false);
-		tardis.setSiegeBeingHeld(null);
-	}
+    public static int getSiegeCount(ServerPlayerEntity player, Tardis tardis) {
+        int count = 0;
 
-	public static ItemStack create(Tardis tardis) {
-		ItemStack stack = new ItemStack(AITItems.SIEGE_ITEM);
-		stack.setCount(1);
+        for (int i = 0; i < 36; i++) {
+            Tardis other = SiegeTardisItem.getTardis(player.getWorld(), player.getInventory().getStack(i));
 
-		setTardis(stack, tardis);
-		return stack;
-	}
+            if (other == null)
+                continue;
 
-	public static Tardis getTardis(World world, ItemStack stack) {
-		return LinkableItem.getTardisFromUuid(world, stack, "tardis-uuid");
-	}
+            if (other == tardis)
+                count++;
+        }
 
-	public static void setTardis(ItemStack stack, Tardis tardis) {
-		NbtCompound data = stack.getOrCreateNbt();
-		data.putUuid("tardis-uuid", tardis.getUuid());
-		data.putInt(CURRENT_TEXTURE_KEY, tardis.siege().texture().get().equals(SiegeHandler.BRICK_TEXTURE) ? 1 : 0);
-	}
+        return count;
+    }
+
+    public static int findSlot(ServerPlayerEntity player, Tardis tardis) {
+        Tardis found;
+
+        for (ItemStack stack : player.getInventory().main) {
+            found = SiegeTardisItem.getTardis(player.getWorld(), stack);
+
+            if (found == null)
+                continue;
+
+            if (found.equals(tardis)) {
+                return player.getInventory().indexOf(stack);
+            }
+        }
+
+        return -1;
+    }
+
+    public static void pickupTardis(Tardis tardis, ServerPlayerEntity player) {
+        if (tardis.travel().handbrake())
+            return;
+
+        tardis.travel().deleteExterior();
+        tardis.siege().setSiegeBeingHeld(player.getUuid());
+        player.getInventory().insertStack(create(tardis));
+        player.getInventory().markDirty();
+    }
+
+    public static void placeTardis(Tardis tardis, DirectedGlobalPos.Cached pos) {
+        tardis.travel().forcePosition(pos);
+        tardis.travel().placeExterior(false);
+        tardis.setSiegeBeingHeld(null);
+    }
+
+    public static ItemStack create(Tardis tardis) {
+        ItemStack stack = new ItemStack(AITItems.SIEGE_ITEM);
+        stack.setCount(1);
+
+        setTardis(stack, tardis);
+        return stack;
+    }
+
+    public static Tardis getTardis(World world, ItemStack stack) {
+        return LinkableItem.getTardisFromUuid(world, stack, "tardis-uuid");
+    }
+
+    public static void setTardis(ItemStack stack, Tardis tardis) {
+        NbtCompound data = stack.getOrCreateNbt();
+        data.putUuid("tardis-uuid", tardis.getUuid());
+        data.putInt(CURRENT_TEXTURE_KEY, tardis.siege().texture().get().equals(SiegeHandler.BRICK_TEXTURE) ? 1 : 0);
+    }
 }

@@ -1,9 +1,10 @@
 package loqor.ait.core.item.part;
 
-import loqor.ait.core.AITItems;
+import java.util.function.Supplier;
+
 import net.minecraft.item.Item;
 
-import java.util.function.Supplier;
+import loqor.ait.core.AITItems;
 
 public class MachinePartItem extends AbstractMachinePartItem<MachinePartItem.Type> {
 
@@ -12,10 +13,8 @@ public class MachinePartItem extends AbstractMachinePartItem<MachinePartItem.Typ
     }
 
     public enum Type {
-        CONDENSER(() -> AITItems.CONDENSER),
-        MANIPULATOR(() -> AITItems.MANIPULATOR),
-        BULB(() -> AITItems.BULB),
-        INDUCTOR(() -> AITItems.INDUCTOR);
+        CONDENSER(() -> AITItems.CONDENSER), MANIPULATOR(() -> AITItems.MANIPULATOR), BULB(
+                () -> AITItems.BULB), INDUCTOR(() -> AITItems.INDUCTOR);
 
         private final Supplier<Item> toItem;
 

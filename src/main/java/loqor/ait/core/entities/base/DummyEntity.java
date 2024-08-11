@@ -1,13 +1,13 @@
 package loqor.ait.core.entities.base;
 
+import java.util.Collections;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
-
-import java.util.Collections;
 
 public abstract class DummyEntity extends Entity {
 
@@ -52,14 +52,15 @@ public abstract class DummyEntity extends Entity {
         return false;
     }
 
-
+    @Override
+    protected void initDataTracker() {
+    }
 
     @Override
-    protected void initDataTracker() { }
+    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) { }
-
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) { }
+    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    }
 }

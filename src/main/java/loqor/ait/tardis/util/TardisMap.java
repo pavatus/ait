@@ -1,9 +1,9 @@
 package loqor.ait.tardis.util;
 
-import loqor.ait.tardis.Tardis;
-
 import java.util.HashMap;
 import java.util.UUID;
+
+import loqor.ait.tardis.Tardis;
 
 public class TardisMap<T extends Tardis> extends HashMap<UUID, T> {
 

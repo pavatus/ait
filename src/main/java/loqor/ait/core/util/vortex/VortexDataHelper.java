@@ -1,13 +1,14 @@
 package loqor.ait.core.util.vortex;
 
-import loqor.ait.AITMod;
-import net.minecraft.util.Identifier;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
 
 public class VortexDataHelper {
     public static final String VORTEX_DATA_SERVER_CACHE_PATH = "vortex/vortex_nodes.ait-data";
@@ -16,8 +17,8 @@ public class VortexDataHelper {
     public static final Identifier REQUEST_SYNC_PACKET = new Identifier(AITMod.MOD_ID, "request_vortex_sync");
 
     /*
-        Returns a VortexData object read from a cached vortex.dat. Can be
-        called by either server or client.
+     * Returns a VortexData object read from a cached vortex.dat. Can be called by
+     * either server or client.
      */
     public static VortexData readVortexData(Path path) {
         try (InputStream in = Files.newInputStream(path)) {
@@ -30,7 +31,7 @@ public class VortexDataHelper {
     }
 
     /*
-        Stores VortexData object to a file.
+     * Stores VortexData object to a file.
      */
     public static void storeVortexData(Path path, VortexData data) {
         try {

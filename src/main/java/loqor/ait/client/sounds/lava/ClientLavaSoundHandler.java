@@ -1,5 +1,11 @@
 package loqor.ait.client.sounds.lava;
 
+import java.util.List;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
@@ -8,11 +14,6 @@ import loqor.ait.tardis.data.ServerLavaHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-
-import java.util.List;
 
 public class ClientLavaSoundHandler extends SoundHandler {
 

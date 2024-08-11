@@ -1,10 +1,10 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.util.StackUtil;
-import loqor.ait.registry.impl.MachineRecipeRegistry;
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,10 +15,12 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.util.StackUtil;
+import loqor.ait.registry.impl.MachineRecipeRegistry;
 
 public class MachineCasingBlockEntity extends BlockEntity {
 
@@ -72,8 +74,7 @@ public class MachineCasingBlockEntity extends BlockEntity {
         StackUtil.readUnordered(nbt, this.parts);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }

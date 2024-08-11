@@ -5,7 +5,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Custom and lightweight map implementation for enums. I know {@link java.util.EnumMap} exists, but it's different.
+ * Custom and lightweight map implementation for enums. I know
+ * {@link java.util.EnumMap} exists, but it's different.
  */
 public class EnumMap<K extends Ordered, V> {
 
@@ -33,12 +34,13 @@ public class EnumMap<K extends Ordered, V> {
 
     /**
      * @implNote Will return ALL values, including nulls.
-     * @return All values associated with each variant of an enum, null if no value is present.
+     * @return All values associated with each variant of an enum, null if no value
+     *         is present.
      */
     public V[] values() {
         return this.values;
     }
-    
+
     public void clear() {
         Arrays.fill(this.values, null);
     }
