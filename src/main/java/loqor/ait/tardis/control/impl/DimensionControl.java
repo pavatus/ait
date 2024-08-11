@@ -1,19 +1,19 @@
 package loqor.ait.tardis.control.impl;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.util.AsyncLocatorUtil;
 
 public class DimensionControl extends Control {
 
@@ -31,27 +31,19 @@ public class DimensionControl extends Control {
         TravelHandler travel = tardis.travel();
         DirectedGlobalPos.Cached dest = travel.destination();
 
-        List<ServerWorld> dims = TardisUtil.getDimensions(world.getServer());
-        int current = dims.indexOf(dest.getWorld() == null ? World.OVERWORLD : dest.getWorld());
+        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+            List<ServerWorld> dims = WorldUtil.getOpenWorlds();
+            int current = WorldUtil
+                    .worldIndex(dest.getWorld() == null ? world.getServer().getOverworld() : dest.getWorld());
 
-        int next;
-        if (!player.isSneaking()) {
-            next = ((current + 1) > dims.size() - 1) ? 0 : current + 1;
-        } else {
-            next = ((current - 1) < 0) ? dims.size() - 1 : current - 1;
-        }
+            int next = DimensionControl.cycle(dims, current, !player.isSneaking());
+            return dims.get(next);
+        }).thenAccept(destWorld -> {
+            travel.forceDestination(cached -> cached.world(destWorld));
+            messagePlayer(player, destWorld);
+        });
 
-        // FIXME we should make it so that once the ender dragon is defeated, the end is
-        // unlocked;
-        // also
-        // make that a
-        // config option as well for the server. - Loqor
-
-        ServerWorld destWorld = dims.get(next);
-
-        travel.forceDestination(cached -> cached.world(destWorld));
-        messagePlayer(player, destWorld);
-
+        AsyncLocatorUtil.LOCATING_EXECUTOR_SERVICE.submit(() -> future);
         return true;
     }
 
@@ -60,5 +52,17 @@ public class DimensionControl extends Control {
                 .append(WorldUtil.worldText(world.getRegistryKey()));
 
         player.sendMessage(message, true);
+    }
+
+    private static int cycle(List<ServerWorld> worlds, int current, boolean increase) {
+        final int lastIndex = worlds.size() - 1;
+
+        if (increase) {
+            current += 1;
+            return current > lastIndex ? 0 : current;
+        }
+
+        current -= 1;
+        return current < 0 ? lastIndex : current;
     }
 }

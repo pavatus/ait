@@ -1,7 +1,11 @@
 package loqor.ait.core.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,6 +15,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -22,13 +27,53 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 @SuppressWarnings("deprecation")
 public class WorldUtil {
 
+    private static List<ServerWorld> worlds;
     private static final int SAFE_RADIUS = 3;
+
+    public static void init() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> worlds = getDimensions(server));
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> worlds = null);
+    }
+
+    public static List<ServerWorld> getDimensions(MinecraftServer server) {
+        List<ServerWorld> worlds = new ArrayList<>();
+
+        for (ServerWorld world : server.getWorlds()) {
+            if (isOpen(world.getRegistryKey()))
+                worlds.add(world);
+        }
+
+        return worlds;
+    }
+
+    public static boolean isOpen(RegistryKey<World> world) {
+        for (Identifier blacklisted : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
+            if (world.getValue().equals(blacklisted))
+                return false;
+        }
+
+        return true;
+    }
+
+    public static int worldIndex(ServerWorld world) {
+        for (int i = 0; i < worlds.size(); i++) {
+            if (world == worlds.get(i))
+                return i;
+        }
+
+        return -1;
+    }
+
+    public static List<ServerWorld> getOpenWorlds() {
+        return worlds;
+    }
 
     public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached,
             TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {

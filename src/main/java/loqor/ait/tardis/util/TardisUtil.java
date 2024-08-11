@@ -648,24 +648,4 @@ public class TardisUtil {
 
         return new Corners(first, second);
     }
-
-    public static List<ServerWorld> getDimensions(MinecraftServer server) {
-        List<ServerWorld> dims = new ArrayList<>();
-
-        server.getWorlds().forEach(dim -> {
-            if (!isBlacklisted(dim.getRegistryKey()))
-                dims.add(dim);
-        });
-
-        return dims;
-    }
-
-    public static boolean isBlacklisted(RegistryKey<World> world) {
-        for (RegistryKey<World> blacklisted : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
-            if (world.equals(blacklisted))
-                return true;
-        }
-
-        return false;
-    }
 }

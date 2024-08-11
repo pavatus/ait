@@ -21,7 +21,7 @@ public class TravelUtil {
     public static void randomPos(Tardis tardis, int limit, int max, Consumer<DirectedGlobalPos.Cached> consumer) {
         TravelHandler travel = tardis.travel();
 
-        CompletableFuture<DirectedGlobalPos.Cached> future = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             DirectedGlobalPos.Cached dest = travel.destination();
             ServerWorld world = dest.getWorld();
 
@@ -37,9 +37,7 @@ public class TravelUtil {
             }
 
             return dest;
-        });
-
-        future.thenAccept(cached -> cached.getWorld().getServer().submit(() -> consumer.accept(cached)));
+        }).thenAccept(consumer);
 
         AsyncLocatorUtil.LOCATING_EXECUTOR_SERVICE.submit(() -> future);
     }

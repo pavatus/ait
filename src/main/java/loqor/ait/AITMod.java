@@ -46,6 +46,7 @@ import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.StackUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -112,7 +113,9 @@ public class AITMod implements ModInitializer {
         // important to init after items registration
         BlueprintRegistry.init();
 
+        WorldUtil.init();
         TardisUtil.init();
+
         ServerTardisManager.init();
         RiftChunkManager.init();
         TardisCriterions.init();

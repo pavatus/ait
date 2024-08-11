@@ -15,6 +15,7 @@ import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakHandler;
 import loqor.ait.tardis.data.ShieldHandler;
@@ -85,9 +86,9 @@ public class MoodEventPoolRegistry {
     public static void init() {
 
         CHANGE_DIM = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "change_dim"), tardis -> {
-            List<ServerWorld> listOfDims = TardisUtil
-                    .getDimensions(tardis.travel().destination().getWorld().getServer());
+            List<ServerWorld> listOfDims = WorldUtil.getOpenWorlds();
             ServerWorld randomWorld = listOfDims.get(random.nextInt(listOfDims.size()));
+
             tardis.travel().forceDestination(cached -> cached.world(randomWorld));
         }, 80, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
