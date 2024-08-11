@@ -20,6 +20,9 @@ import net.minecraft.util.profiler.Profiler;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 
+	private ClientConsoleVariantSchema variant;
+	private ConsoleModel model;
+
     public ConsoleRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
@@ -42,9 +45,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 	private void renderConsole(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		profiler.push("model");
 
-		ClientConsoleVariantSchema variant = entity.getVariant().getClient();
-        ConsoleModel console = variant.model();
-
+		this.updateModel(entity);
 		boolean hasPower = tardis.engine().hasPower();
 
 		matrices.push();
@@ -52,11 +53,11 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		if (!AITMod.AIT_CONFIG.DISABLE_CONSOLE_ANIMATIONS()) {
 			profiler.swap("animate");
-			console.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
+			model.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
 		}
 
 		profiler.swap("render");
-		console.renderWithAnimations(entity, console.getPart(), matrices, vertexConsumers.getBuffer(
+		model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(
 				RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1, 1, 1, 1
 		);
 
@@ -64,7 +65,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 			profiler.swap("emission"); // emission {
 
 			ClientLightUtil.renderEmissive(
-					console::renderWithAnimations, variant.emission(), entity, console.getPart(),
+					model::renderWithAnimations, variant.emission(), entity, model.getPart(),
 					matrices, vertexConsumers, light, overlay, 1, 1, 1, 1
 			);
 		}
@@ -90,5 +91,14 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
 		matrices.pop();
 		profiler.pop(); // } sonic
+	}
+
+	private void updateModel(T entity) {
+		ClientConsoleVariantSchema variant = entity.getVariant().getClient();
+
+		if (this.variant != variant) {
+			this.variant = variant;
+			this.model = variant.model();
+		}
 	}
 }

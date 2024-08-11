@@ -4,7 +4,6 @@ import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.BasicSchema;
-import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.CategoryRegistry;

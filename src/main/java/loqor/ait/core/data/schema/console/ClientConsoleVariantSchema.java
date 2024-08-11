@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientConsoleVariantSchema implements Identifiable {
+
 	private final Identifier parent;
 	private final Identifier id;
 
@@ -34,9 +35,8 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
 		if (this == o)
 			return true;
 
-		ClientConsoleVariantSchema that = (ClientConsoleVariantSchema) o;
-
-		return id.equals(that.id);
+		return o instanceof ClientConsoleVariantSchema other
+				&& this.id.equals(other.id);
 	}
 
 	public ConsoleVariantSchema parent() {

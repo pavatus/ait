@@ -12,7 +12,6 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.CloakHandler;
@@ -34,9 +33,13 @@ import net.minecraft.util.profiler.Profiler;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 
+	private static final Identifier SHIELDS = new Identifier(AITMod.MOD_ID, "textures/environment/shields.png");
+
+	private static final SiegeModeModel SIEGE_MODEL = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
+	private static final ShieldsModel SHIELDS_MODEL = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());;
+
+	private ClientExteriorVariantSchema variant;
 	private ExteriorModel model;
-	private static final SiegeModeModel siege = new SiegeModeModel(SiegeModeModel.getTexturedModelData().createModel());
-	private static final ShieldsModel shieldsModel = new ShieldsModel(ShieldsModel.getTexturedModelData().createModel());;
 
 	public ExteriorRenderer(BlockEntityRendererFactory.Context ctx) { }
 
@@ -53,9 +56,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		Tardis tardis = optionalTardis.get();
 		profiler.swap("render");
-		//System.out.println(entity.getAlpha());
+
 		if (entity.getAlpha() > 0 || !tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get())
 			this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
+
 		profiler.pop();
 
 		profiler.pop();
@@ -67,7 +71,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 			matrices.push();
 			matrices.translate(0.5f, 0.5f, 0.5f);
-			siege.renderWithAnimations(entity, siege.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.siege().texture().get())), light, overlay, 1, 1, 1, 1);
+			SIEGE_MODEL.renderWithAnimations(entity, SIEGE_MODEL.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.siege().texture().get())), light, overlay, 1, 1, 1, 1);
 
 			matrices.pop();
 			profiler.pop();
@@ -81,21 +85,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			return;
 		}
 
-		ClientExteriorVariantSchema exteriorVariant = tardis.getExterior().getVariant().getClient();
-		TardisExterior tardisExterior = tardis.getExterior();
-
-		if (tardisExterior == null || exteriorVariant == null) {
-			profiler.pop();
-			return;
-		}
-
-		Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
-
-		if (model != null && !(model.getClass().isInstance(modelClass)))
-			model = null;
-
-		if (model == null)
-			this.model = exteriorVariant.model();
+		this.updateModel(tardis);
 
 		BlockState blockState = entity.getCachedState();
 		int k = blockState.get(ExteriorBlock.ROTATION);
@@ -108,13 +98,13 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 			float delta = (tickDelta + MinecraftClient.getInstance().player.age) * 0.03f;
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEnergySwirl(
-					this.getEnergySwirlTexture(), delta % 1.0F, (delta * 0.1F) % 1.0F)
+					SHIELDS, delta % 1.0F, (delta * 0.1F) % 1.0F)
 			);
 
 			matrices.push();
 			matrices.translate(0.5F, 0.0F, 0.5F);
 
-			shieldsModel.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, overlay,
+			SHIELDS_MODEL.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, overlay,
 					0f, 0.25f, 0.5f, alpha
 			);
 
@@ -130,17 +120,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 			return;
 		}
 
-		Identifier texture = exteriorVariant.texture();
-		Identifier emission = exteriorVariant.emission();
+		Identifier texture = this.variant.texture();
+		Identifier emission = this.variant.emission();
 
 		float wrappedDegrees = MathHelper.wrapDegrees(MinecraftClient.getInstance().player.getHeadYaw() + h);
 
-		if (exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
+		if (this.variant.equals(ClientExteriorVariantRegistry.DOOM)) {
 			texture = DoomConstants.getTextureForRotation(wrappedDegrees, tardis);
 			emission = DoomConstants.getEmissionForRotation(DoomConstants.getTextureForRotation(wrappedDegrees, tardis), tardis);
 		}
 
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM) ? h + 180f :
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(!this.variant.equals(ClientExteriorVariantRegistry.DOOM) ? h + 180f :
 				MinecraftClient.getInstance().player.getHeadYaw() + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
@@ -177,10 +167,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 		profiler.swap("biome");
 
-		if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
-
+		if (!this.variant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
 			BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
-			Identifier biomeTexture = handler.getBiomeKey().get(exteriorVariant.overrides());
+			Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides());
 
 			if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture))) {
 				// yes i know it says emission, but go fuck yourself <3
@@ -202,9 +191,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		}
 
 		matrices.push();
-		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f + h + exteriorVariant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
-		matrices.translate(exteriorVariant.sonicItemTranslations().x(), exteriorVariant.sonicItemTranslations().y(), exteriorVariant.sonicItemTranslations().z());
-		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(exteriorVariant.sonicItemRotations()[1]));
+		matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f + h + this.variant.sonicItemRotations()[0]), (float) entity.getPos().toCenterPos().x - entity.getPos().getX(), (float) entity.getPos().toCenterPos().y - entity.getPos().getY(), (float) entity.getPos().toCenterPos().z - entity.getPos().getZ());
+		matrices.translate(this.variant.sonicItemTranslations().x(), this.variant.sonicItemTranslations().y(), this.variant.sonicItemTranslations().z());
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.variant.sonicItemRotations()[1]));
 		matrices.scale(0.9f, 0.9f, 0.9f);
 
 		int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
@@ -214,12 +203,12 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 		profiler.pop();
 	}
 
-	@Override
-	public boolean rendersOutsideBoundingBox(T blockEntity) {
-		return true;
-	}
+	private void updateModel(Tardis tardis) {
+		ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
 
-	public Identifier getEnergySwirlTexture() {
-		return new Identifier(AITMod.MOD_ID, "textures/environment/shields.png");
+		if (this.variant != variant) {
+			this.variant = variant;
+			this.model = variant.model();
+		}
 	}
 }

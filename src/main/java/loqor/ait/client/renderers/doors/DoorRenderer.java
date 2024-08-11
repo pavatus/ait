@@ -8,9 +8,7 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.door.ClientDoorSchema;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
@@ -18,7 +16,6 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.OvergrownHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.link.v2.TardisRef;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -34,6 +31,9 @@ import net.minecraft.world.World;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 
+	private ClientExteriorVariantSchema variant;
+	private DoorModel model;
+
     public DoorRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
@@ -41,14 +41,11 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		Profiler profiler = entity.getWorld().getProfiler();
 		profiler.push("door");
 
-		profiler.push("find_tardis");
-		TardisRef optionalTardis = entity.tardis();
-
-		if (optionalTardis.isEmpty())
+		if (!entity.isLinked())
 			return;
 
-		Tardis tardis = optionalTardis.get();
-		profiler.swap("render");
+		Tardis tardis = entity.tardis().get();
+		profiler.push("render");
 
 		this.renderDoor(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
 		profiler.pop();
@@ -60,22 +57,15 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 		if (tardis.siege().isActive())
 			return;
 
-		ClientExteriorVariantSchema exteriorVariant = tardis.getExterior().getVariant().getClient();
-		ClientDoorSchema variant = ClientDoorRegistry.withParent(exteriorVariant.parent().door());
-
-        DoorModel model = variant.model();
-
-		if (model == null)
-			return;
+		this.updateModel(tardis);
 
 		BlockState blockState = entity.getCachedState();
 		float k = blockState.get(DoorBlock.FACING).asRotation();
 
-		Identifier texture = exteriorVariant.texture();
+		Identifier texture = this.variant.texture();
 
-		if (exteriorVariant.equals(ClientExteriorVariantRegistry.DOOM)) {
+		if (this.variant.equals(ClientExteriorVariantRegistry.DOOM))
 			texture = tardis.door().isOpen() ? DoomDoorModel.DOOM_DOOR_OPEN : DoomDoorModel.DOOM_DOOR;
-		}
 
 		if (DependencyChecker.hasPortals() && tardis.travel().getState() == TravelHandlerBase.State.LANDED
 				&& tardis.door().getDoorState() != DoorHandler.DoorStateEnum.CLOSED
@@ -102,23 +92,23 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
 		model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1 /*0.5f*/, 1);
 
-		if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
+		if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
 			model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())), light, overlay, 1, 1, 1, 1);
-		}
 
         profiler.push("emission");
 
 		boolean alarms = tardis.alarm().enabled().get();
 
         ClientLightUtil.renderEmissivable(
-                tardis.engine().hasPower(), model::renderWithAnimations, exteriorVariant.emission(), entity,
+                tardis.engine().hasPower(), model::renderWithAnimations, this.variant.emission(), entity,
                 model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1
         );
 
         profiler.swap("biome");
-        if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
+
+        if (!this.variant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-			Identifier biomeTexture = biome.getBiomeKey().get(exteriorVariant.overrides());
+			Identifier biomeTexture = biome.getBiomeKey().get(this.variant.overrides());
 
 			if (biomeTexture != null && !texture.equals(biomeTexture) && tardis.travel().position().getWorld() != null && !(tardis.travel().position().getWorld().getBlockState(tardis.travel().position().getPos().down()).getBlock() instanceof AirBlock))
                 model.renderWithAnimations(entity, model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light, overlay, 1, 1, 1, 1);
@@ -126,5 +116,14 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         matrices.pop();
 		profiler.pop();
+	}
+
+	private void updateModel(Tardis tardis) {
+		ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
+
+		if (this.variant != variant) {
+			this.variant = variant;
+			this.model = variant.getDoor().model();
+		}
 	}
 }

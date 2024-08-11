@@ -4,6 +4,8 @@ import com.google.gson.*;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
+import loqor.ait.core.data.schema.door.ClientDoorSchema;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.core.data.base.Identifiable;
@@ -17,8 +19,11 @@ import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientExteriorVariantSchema implements Identifiable {
+
 	private final Identifier parent;
 	private final Identifier id;
+
+	private ClientDoorSchema door;
 
 	protected ClientExteriorVariantSchema(Identifier parent, Identifier id) {
 		this.parent = parent;
@@ -32,11 +37,11 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null) return false;
-		if (!(o instanceof ClientExteriorVariantSchema that)) return false;
+		if (this == o)
+			return true;
 
-		return id.equals(that.id);
+		return o instanceof ClientExteriorVariantSchema other
+				&& this.id.equals(other.id);
 	}
 
 	public ExteriorVariantSchema parent() {
@@ -66,6 +71,13 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
 	 */
 	public ExteriorVariantSchema getDefaultVariant() {
 		return ExteriorVariantRegistry.getInstance().get(this.parent().id()).category().getDefaultVariant();
+	}
+
+	public ClientDoorSchema getDoor() {
+		if (this.door == null)
+			this.door = ClientDoorRegistry.withParent(this.parent().door());
+
+		return this.door;
 	}
 
 	public static Object serializer() {
