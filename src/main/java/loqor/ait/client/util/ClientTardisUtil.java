@@ -1,6 +1,5 @@
 package loqor.ait.client.util;
 
-import static loqor.ait.tardis.util.TardisUtil.CHANGE_EXTERIOR;
 import static loqor.ait.tardis.util.TardisUtil.SNAP;
 
 import java.util.UUID;
@@ -12,11 +11,13 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 
@@ -43,16 +44,17 @@ public class ClientTardisUtil {
         });
     }
 
-    public static void changeExteriorWithScreen(UUID uuid, String exterior, String variant, boolean variantchange) {
+    public static void changeExteriorWithScreen(UUID uuid, Identifier exterior, Identifier variant,
+            boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
-        buf.writeString(exterior);
+        buf.writeIdentifier(exterior);
         buf.writeBoolean(variantchange);
-        buf.writeString(variant);
-        ClientPlayNetworking.send(CHANGE_EXTERIOR, buf);
+        buf.writeIdentifier(variant);
+        ClientPlayNetworking.send(TardisExterior.CHANGE_EXTERIOR, buf);
     }
 
-    public static void changeExteriorWithScreen(ClientTardis tardis, String exterior, String variant,
+    public static void changeExteriorWithScreen(ClientTardis tardis, Identifier exterior, Identifier variant,
             boolean variantchange) {
         changeExteriorWithScreen(tardis.getUuid(), exterior, variant, variantchange);
     }
@@ -118,10 +120,10 @@ public class ClientTardisUtil {
     }
 
     public static void tickPowerDelta() {
-        if (!isPlayerInATardis())
-            return;
-
         Tardis tardis = getCurrentTardis();
+
+        if (tardis == null)
+            return;
 
         if (tardis.engine().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
             setPowerDelta(getPowerDelta() + 1);
@@ -131,9 +133,7 @@ public class ClientTardisUtil {
     }
 
     public static int getPowerDelta() {
-        if (!isPlayerInATardis())
-            return 0;
-        return powerDeltaTick;
+        return currentTardis != null ? powerDeltaTick : 0;
     }
 
     public static float getPowerDeltaForLerp() {
@@ -143,6 +143,7 @@ public class ClientTardisUtil {
     public static void setPowerDelta(int delta) {
         if (!isPlayerInATardis())
             return;
+
         powerDeltaTick = delta;
     }
 
@@ -152,6 +153,7 @@ public class ClientTardisUtil {
                 setAlarmDelta(0);
             return;
         }
+
         Tardis tardis = getCurrentTardis();
 
         if (!tardis.alarm().enabled().get()) {

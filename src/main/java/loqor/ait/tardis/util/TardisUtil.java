@@ -55,15 +55,11 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.util.StackUtil;
 import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
 import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;
 import loqor.ait.mixin.lookup.SimpleEntityLookupAccessor;
 import loqor.ait.mixin.lookup.WorldInvoker;
-import loqor.ait.registry.impl.CategoryRegistry;
-import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisManager;
@@ -88,7 +84,6 @@ public class TardisUtil {
     private static ServerWorld TARDIS_DIMENSION;
     private static ServerWorld TIME_VORTEX;
 
-    public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
 
     public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
@@ -127,34 +122,6 @@ public class TardisUtil {
                     Identifier id = buf.readIdentifier();
                     SonicItem.setSchema(tardis.sonic().getConsoleSonic(), id);
                 }));
-
-        ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR, (server, player, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
-            Identifier exteriorValue = Identifier.tryParse(buf.readString());
-            boolean variantChange = buf.readBoolean();
-            String variantValue = buf.readString();
-
-            ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
-                ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance()
-                        .get(Identifier.tryParse(variantValue));
-
-                // no hax
-                if (!tardis.isUnlocked(schema))
-                    return;
-
-                server.execute(() -> StackUtil.playBreak(player));
-
-                tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
-                WorldOps.updateIfOnServer(server.getWorld(tardis.travel().position().getWorld().getRegistryKey()),
-                        tardis.travel().position().getPos());
-                if (variantChange) {
-                    tardis.getExterior().setVariant(schema);
-                    WorldOps.updateIfOnServer(server.getWorld(tardis.travel().position().getWorld().getRegistryKey()),
-                            tardis.travel().position().getPos());
-                }
-                TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
-            });
-        });
 
         ServerPlayNetworking.registerGlobalReceiver(SNAP, (server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
