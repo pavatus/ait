@@ -83,16 +83,6 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
             if (isPlayerLookingWithSonic) {
                 textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000,
                         matrix4f, vertexConsumers, 0xFF);
-
-                // TODO so this is like not very well received so er im removing it :))))
-                /*
-                 * if (entity.getControl() instanceof RefuelerControl ||
-                 * entity.getIdentity().equals("RefuelerControl")) { Text fuelLevel =
-                 * Text.literal((int) ((tardis.getFuel() / FuelData.TARDIS_MAX_FUEL) * 100) +
-                 * "%"); textRenderer.drawWithOutline(fuelLevel.asOrderedText(), h / 2, (float)
-                 * fuelLevel.getString().length(), 0xF0F0F0, 0x000000, matrix4f,
-                 * vertexConsumers, 0xFF); }
-                 */
             }
         }
 
@@ -101,11 +91,11 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (hitresult == null)
             return;
 
-        boolean isPlayerHoldingScanningSonic = isScanningSonicInConsole(tardis);
+        boolean sonicInConsole = isScanningSonicInConsole(tardis);
         PlayerEntity player = MinecraftClient.getInstance().player;
 
-        if (!isPlayerHoldingScanningSonic || !entity.isPartOfSequence()
-                || !tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
+        if (!sonicInConsole || !entity.isPartOfSequence()
+                || tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
             return;
 
         matrices.push();
