@@ -18,7 +18,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
 
     @Override
     public ExteriorCategorySchema fallback() {
-        return null;
+        return CAPSULE;
     }
 
     @Override

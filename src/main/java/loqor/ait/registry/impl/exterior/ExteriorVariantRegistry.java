@@ -52,7 +52,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
     @Override
     public ExteriorVariantSchema fallback() {
-        return ExteriorVariantRegistry.BOX_DEFAULT;
+        return ExteriorVariantRegistry.CAPSULE_DEFAULT;
     }
 
     @Override

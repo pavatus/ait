@@ -13,35 +13,36 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 
 public class TardisExterior extends TardisComponent {
-    private ExteriorCategorySchema exterior;
+
+    private static final ExteriorCategorySchema MISSING_CATEGORY = CategoryRegistry.getInstance().fallback();
+    private static final ExteriorVariantSchema MISSING_VARIANT = ExteriorVariantRegistry.getInstance().fallback();
+
+    private ExteriorCategorySchema category;
     private ExteriorVariantSchema variant;
 
     public TardisExterior(ExteriorVariantSchema variant) {
         super(Id.EXTERIOR);
-        this.exterior = variant.category();
+
+        this.category = variant.category();
         this.variant = variant;
     }
 
     public ExteriorCategorySchema getCategory() {
-        if (exterior == null && this.isServer()) {
-            AITMod.LOGGER.error("Exterior Category was null! Changing to a random one...");
-            this.setType(CategoryRegistry.getInstance().getRandom());
-        }
+        if (this.category == null)
+            this.category = MISSING_CATEGORY;
 
-        return exterior;
+        return category;
     }
 
     public ExteriorVariantSchema getVariant() {
-        if (variant == null && this.isServer()) {
-            AITMod.LOGGER.error("Variant was null! Changing to a random one...");
-            this.setVariant(ExteriorVariantRegistry.getInstance().pickRandomWithParent(CategoryRegistry.CAPSULE));
-        }
+        if (this.variant == null)
+            this.variant = MISSING_VARIANT;
 
         return variant;
     }
 
     public void setType(ExteriorCategorySchema exterior) {
-        this.exterior = exterior;
+        this.category = exterior;
 
         if (exterior != this.getVariant().category()) {
             AITMod.LOGGER.error("Force changing exterior variant to a random one to ensure it matches!");
