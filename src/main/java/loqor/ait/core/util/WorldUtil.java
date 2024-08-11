@@ -1,9 +1,8 @@
 package loqor.ait.core.util;
 
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -23,12 +22,16 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
+
 @SuppressWarnings("deprecation")
 public class WorldUtil {
 
     private static final int SAFE_RADIUS = 3;
 
-    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
+    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached,
+            TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
@@ -88,22 +91,33 @@ public class WorldUtil {
         BlockState aboveDown = world.getBlockState(downCursor.up());
 
         while (true) {
-            if (upCursor.getY() < world.getTopY() && isSafe(floorUp, curUp, aboveUp))
-                return upCursor.getY() - 1;
+            boolean canGoUp = upCursor.getY() < world.getTopY();
+            boolean canGoDown = downCursor.getY() > world.getBottomY();
 
-            if (downCursor.getY() > world.getBottomY() && isSafe(floorDown, curDown, aboveDown))
-                return downCursor.getY() + 1;
+            if (!canGoUp && !canGoDown)
+                return pos.getY();
 
-            upCursor = upCursor.up();
-            downCursor = downCursor.down();
+            if (canGoUp) {
+                if (isSafe(floorUp, curUp, aboveUp))
+                    return upCursor.getY() - 1;
 
-            floorUp = curUp;
-            curUp = aboveUp;
-            aboveUp = world.getBlockState(upCursor);
+                upCursor = upCursor.up();
 
-            curDown = aboveDown;
-            aboveDown = floorDown;
-            floorDown = world.getBlockState(downCursor);
+                floorUp = curUp;
+                curUp = aboveUp;
+                aboveUp = world.getBlockState(upCursor);
+            }
+
+            if (canGoDown) {
+                if (isSafe(floorDown, curDown, aboveDown))
+                    return downCursor.getY() + 1;
+
+                downCursor = downCursor.down();
+
+                curDown = aboveDown;
+                aboveDown = floorDown;
+                floorDown = world.getBlockState(downCursor);
+            }
         }
     }
 
@@ -115,6 +129,9 @@ public class WorldUtil {
         BlockState above = world.getBlockState(cursor.up());
 
         while (true) {
+            if (cursor.getY() < world.getBottomY())
+                return pos.getY();
+
             if (isSafe(floor, current, above))
                 return cursor.getY() - 1;
 
@@ -130,13 +147,8 @@ public class WorldUtil {
         int x = pos.getX();
         int z = pos.getZ();
 
-        return world.getChunk(
-                ChunkSectionPos.getSectionCoord(x),
-                ChunkSectionPos.getSectionCoord(z)
-        ).sampleHeightmap(
-                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                x & 15, z & 15
-        ) + 1;
+        return world.getChunk(ChunkSectionPos.getSectionCoord(x), ChunkSectionPos.getSectionCoord(z))
+                .sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x & 15, z & 15) + 1;
     }
 
     private static boolean isSafe(BlockState floor, BlockState block1, BlockState block2) {
@@ -223,8 +235,11 @@ public class WorldUtil {
         BlockPos blockPos = pos.down();
         BlockState blockState = world.getBlockState(blockPos);
 
-        if (blockState.isOf(state.getBlock()) && blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) {
-            BlockState withFluid = blockState.getFluidState().isOf(Fluids.WATER) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+        if (blockState.isOf(state.getBlock())
+                && blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) {
+            BlockState withFluid = blockState.getFluidState().isOf(Fluids.WATER)
+                    ? Blocks.WATER.getDefaultState()
+                    : Blocks.AIR.getDefaultState();
 
             world.setBlockState(blockPos, withFluid, 35);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
