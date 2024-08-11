@@ -297,8 +297,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void renderDesktop(DrawContext context) {
-
-		if (this.selectedDesktop == null) return;
+		if (this.selectedDesktop == null)
+			return;
 
 		context.drawCenteredTextWithShadow(
 				this.textRenderer,
@@ -316,7 +316,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 				this.selectedDesktop.previewTexture().width * 2,
 				this.selectedDesktop.previewTexture().height * 2,
 				this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
-		//context.drawTexture(this.selectedDesktop.previewTexture().texture(), left + 151, top + 14, 91, 91, 0, 0, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2, this.selectedDesktop.previewTexture().width * 2, this.selectedDesktop.previewTexture().height * 2);
+
 		context.getMatrices().pop();
 	}
 
@@ -325,7 +325,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 	}
 
 	private void applyHum() {
-		ClientSoundManager.getHum().setServersHum(this.hum);
+		ClientSoundManager.getHum().setServersHum(this.tardis(), this.hum);
 		MinecraftClient.getInstance().setScreen(null);
 	}
 
