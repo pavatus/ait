@@ -52,7 +52,7 @@ public class Control {
         return SoundEvents.BLOCK_NOTE_BLOCK_BIT.value();
     }
 
-    public boolean shouldFailOnNoPower() {
+    public boolean requiresPower() {
         return true;
     }
 
@@ -98,7 +98,7 @@ public class Control {
     }
 
     public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-        if ((this.shouldFailOnNoPower() && !tardis.engine().hasPower()))
+        if ((this.requiresPower() && !tardis.engine().hasPower()))
             return false;
 
         if (isOnDelay(this, tardis))

@@ -36,7 +36,7 @@ public class PowerControl extends Control {
     }
 
     @Override
-    public boolean shouldFailOnNoPower() {
+    public boolean requiresPower() {
         return false;
     }
 

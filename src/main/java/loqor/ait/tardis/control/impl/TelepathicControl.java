@@ -70,31 +70,30 @@ public class TelepathicControl extends Control {
 
         if (player.getMainHandStack().getItem() instanceof NameTagItem) {
             ItemStack hand = player.getMainHandStack();
+
             if (!hand.hasCustomName())
                 return false;
+
             tardis.stats().setName(hand.getName().getString());
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
+
             if (!player.isCreative())
                 hand.decrement(1);
+
             return true;
         }
 
-        Text text = Text.translatable("tardis.message.control.telepathic.choosing"); // todo translatable
+        Text text = Text.translatable("tardis.message.control.telepathic.choosing");
         player.sendMessage(text, true);
 
         DirectedGlobalPos.Cached globalPos = tardis.travel().position();
 
         locateStructureOfInterest(player, tardis, globalPos.getWorld(), globalPos.getPos());
-
         return true;
     }
 
     public static void locateStructureOfInterest(ServerPlayerEntity player, Tardis tardis, ServerWorld world,
             BlockPos source) {
-        // TODO - create a tag "TardisStructureLikesTag" to save on performance + to
-        // make this code
-        // simpler
-
         if (world.getRegistryKey() == World.NETHER) {
             getStructureViaChunkGen(player, tardis, world, source, RADIUS, StructureKeys.FORTRESS);
         } else if (world.getRegistryKey() == World.END) {
@@ -119,7 +118,7 @@ public class TelepathicControl extends Control {
     }
 
     @Override
-    public boolean shouldFailOnNoPower() {
+    public boolean requiresPower() {
         return false;
     }
 

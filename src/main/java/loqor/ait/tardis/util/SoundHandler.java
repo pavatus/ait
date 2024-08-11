@@ -16,13 +16,24 @@ import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 
 public class SoundHandler {
 
+    private static final List<LoopingSound> EMPTY = List.of();
+
     protected List<LoopingSound> sounds; // shouldnt really be LoopingSound
+
+    protected void ofSounds(LoopingSound sound) {
+        if (sound == null) {
+            this.sounds = EMPTY;
+            return;
+        }
+
+        this.sounds = List.of(sound);
+    }
 
     public static SoundHandler create(LoopingSound... list) {
         SoundHandler handler = new SoundHandler();
 
         handler.sounds = new ArrayList<>();
-        handler.sounds.addAll(java.util.List.of(list));
+        handler.sounds.addAll(List.of(list));
 
         return handler;
     }

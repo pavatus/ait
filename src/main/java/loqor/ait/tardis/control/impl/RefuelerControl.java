@@ -47,7 +47,7 @@ public class RefuelerControl extends Control {
     }
 
     @Override
-    public boolean shouldFailOnNoPower() {
+    public boolean requiresPower() {
         return false;
     }
 }
