@@ -1,7 +1,5 @@
 package loqor.ait.client.sounds.sonic;
 
-import java.util.List;
-
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import net.minecraft.client.MinecraftClient;
@@ -58,7 +56,7 @@ public class ClientSonicSoundHandler extends SoundHandler {
         if (SONIC_SOUND == null)
             SONIC_SOUND = this.createSonicSound();
 
-        this.sounds = List.of(SONIC_SOUND);
+        this.ofSounds(SONIC_SOUND);
     }
 
     public boolean shouldPlay() {

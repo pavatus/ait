@@ -1,7 +1,5 @@
 package loqor.ait.client.sounds.rain;
 
-import java.util.List;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -27,7 +25,7 @@ public class ClientRainSoundHandler extends SoundHandler {
     }
 
     private LoopingSound createRainSound(ClientTardis tardis) {
-        if (tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER,
@@ -45,7 +43,7 @@ public class ClientRainSoundHandler extends SoundHandler {
         if (RAIN_SOUND == null)
             RAIN_SOUND = createRainSound(tardis);
 
-        this.sounds = List.of(RAIN_SOUND);
+        this.ofSounds(RAIN_SOUND);
     }
 
     private boolean shouldPlaySounds(ClientTardis tardis) {

@@ -1,7 +1,5 @@
 package loqor.ait.client.sounds.flight;
 
-import java.util.List;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -9,7 +7,6 @@ import net.minecraft.sound.SoundEvent;
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 
@@ -45,7 +42,7 @@ public class ClientFlightHandler extends SoundHandler {
         if (FLIGHT == null)
             FLIGHT = createFlightSound(tardis);
 
-        this.sounds = List.of(FLIGHT);
+        this.ofSounds(FLIGHT);
     }
 
     private void playFlightSound(ClientTardis tardis) {
@@ -54,12 +51,9 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySounds(ClientTardis tardis) {
-        return tardis != null && tardis.engine().hasPower() && (inFlight(tardis) || hasThrottleAndHandbrakeDown(tardis))
+        return tardis != null && tardis.engine().hasPower()
+                && (tardis.travel().inFlight() || hasThrottleAndHandbrakeDown(tardis))
                 && ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE;
-    }
-
-    private boolean inFlight(ClientTardis tardis) {
-        return tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
     }
 
     public boolean hasThrottleAndHandbrakeDown(ClientTardis tardis) {

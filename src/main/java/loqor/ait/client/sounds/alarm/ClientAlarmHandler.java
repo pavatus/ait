@@ -1,78 +1,58 @@
 package loqor.ait.client.sounds.alarm;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.util.ClientShakeUtil;
-import loqor.ait.core.AITDimensions;
+import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 // Client only class. One of the last surviving remnants of Duzocode.
 public class ClientAlarmHandler extends SoundHandler {
-    public static LoopingSound CLOISTER_INTERIOR;
 
-    protected ClientAlarmHandler() {
-    }
+    public static LoopingSound CLOISTER_INTERIOR;
 
     public LoopingSound getInteriorCloister() {
         if (CLOISTER_INTERIOR == null)
-            CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
+            CLOISTER_INTERIOR = createAlarmSound();
 
         return CLOISTER_INTERIOR;
     }
 
-    public static ClientAlarmHandler create() {
-        if (MinecraftClient.getInstance().player == null)
-            return null;
+    private LoopingSound createAlarmSound() {
+        return new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
+    }
 
+    public static ClientAlarmHandler create() {
         ClientAlarmHandler handler = new ClientAlarmHandler();
+
         handler.generate();
         return handler;
     }
 
     private void generate() {
         if (CLOISTER_INTERIOR == null)
-            CLOISTER_INTERIOR = new PlayerFollowingLoopingSound(AITSounds.CLOISTER, SoundCategory.AMBIENT, 10f);
+            CLOISTER_INTERIOR = createAlarmSound();
 
-        this.sounds = new ArrayList<>();
-        this.sounds.add(CLOISTER_INTERIOR);
+        this.ofSounds(CLOISTER_INTERIOR);
     }
 
-    public boolean isPlayerInATardis() {
-        if (MinecraftClient.getInstance().world == null
-                || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-            return false;
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-
-        return found != null;
-    }
-
-    public Tardis tardis() {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-        return found;
-    }
-
-    public boolean isEnabled() {
-        return this.tardis().alarm().enabled().get();
+    private boolean shouldPlaySound(ClientTardis tardis) {
+        return tardis != null && tardis.alarm().enabled().get();
     }
 
     public void tick(MinecraftClient client) {
+        ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
+
         if (this.sounds == null)
             this.generate();
 
-        if (isPlayerInATardis() && isEnabled()) {
-            this.startIfNotPlaying(getInteriorCloister());
-
+        if (this.shouldPlaySound(tardis)) {
+            this.startIfNotPlaying(this.getInteriorCloister());
             ClientShakeUtil.shake(0.15f);
         } else {
             this.stopSounds();

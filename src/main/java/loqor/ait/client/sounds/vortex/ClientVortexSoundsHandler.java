@@ -1,7 +1,5 @@
 package loqor.ait.client.sounds.vortex;
 
-import java.util.List;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 
@@ -25,7 +23,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createVortexSound(ClientTardis tardis) {
-        if (tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(AITSounds.VORTEX_SOUND, SoundCategory.AMBIENT,
@@ -43,7 +41,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
         if (VORTEX_SOUND == null)
             VORTEX_SOUND = this.createVortexSound(tardis);
 
-        this.sounds = List.of(VORTEX_SOUND);
+        this.ofSounds(VORTEX_SOUND);
     }
 
     private boolean shouldPlaySound(ClientTardis tardis) {

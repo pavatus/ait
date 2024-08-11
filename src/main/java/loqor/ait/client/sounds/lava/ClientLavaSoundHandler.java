@@ -1,7 +1,5 @@
 package loqor.ait.client.sounds.lava;
 
-import java.util.List;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -27,7 +25,7 @@ public class ClientLavaSoundHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createLavaSound(ClientTardis tardis) {
-        if (tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.BLOCKS,
@@ -45,7 +43,7 @@ public class ClientLavaSoundHandler extends SoundHandler {
         if (LAVA_SOUND == null)
             LAVA_SOUND = createLavaSound(tardis);
 
-        this.sounds = List.of(LAVA_SOUND);
+        this.ofSounds(LAVA_SOUND);
     }
 
     private boolean shouldPlaySounds(ClientTardis tardis) {
