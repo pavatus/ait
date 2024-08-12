@@ -73,7 +73,7 @@ public class DatapackConsole extends ConsoleVariantSchema {
 
         CODEC.decode(JsonOps.INSTANCE, json).get().ifLeft(var -> created.set(var.getFirst())).ifRight(err -> {
             created.set(null);
-            AITMod.LOGGER.error("Error decoding datapack console variant: " + err);
+            AITMod.LOGGER.error("Error decoding datapack console variant: {}", err);
         });
 
         return created.get();

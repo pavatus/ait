@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.joml.Vector3f;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
@@ -37,6 +38,9 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
  * @see ConsoleVariantRegistry#REGISTRY
  */
 public abstract class ConsoleVariantSchema extends BasicSchema implements Unlockable {
+
+    public static final float[] DEFAULT_SONIC_ROTATION = new float[]{120f, 135f};
+    public static final Vector3f DEFAULT_SONIC_POS = new Vector3f(0.1f, 1.2f, 0.26f);
 
     private final Identifier parent;
     private final Identifier id;

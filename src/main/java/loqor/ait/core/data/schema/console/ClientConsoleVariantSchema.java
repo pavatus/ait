@@ -60,11 +60,11 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
     }
 
     public Vector3f sonicItemTranslations() {
-        return new Vector3f(0.1f, 1.2f, 0.26f);
+        return ConsoleVariantSchema.DEFAULT_SONIC_POS;
     }
 
     public float[] sonicItemRotations() {
-        return new float[]{120f, 135f};
+        return ConsoleVariantSchema.DEFAULT_SONIC_ROTATION;
     }
 
     private static class Serializer

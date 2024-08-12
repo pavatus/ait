@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl.console.variant;
 
+import org.joml.Vector3f;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -97,6 +99,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             return convertNonDatapack(variant);
 
         return new ClientConsoleVariantSchema(variant.id()) {
+            private final ClientConsoleVariantSchema parentVariant = withSameParent(this);
+
             @Override
             public Identifier texture() {
                 return variant.texture();
@@ -109,7 +113,17 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
             @Override
             public ConsoleModel model() {
-                return withSameParent(this).model();
+                return parentVariant.model();
+            }
+
+            @Override
+            public float[] sonicItemRotations() {
+                return parentVariant.sonicItemRotations();
+            }
+
+            @Override
+            public Vector3f sonicItemTranslations() {
+                return parentVariant.sonicItemTranslations();
             }
         };
     }
