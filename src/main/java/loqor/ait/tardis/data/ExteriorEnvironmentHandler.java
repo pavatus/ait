@@ -23,7 +23,6 @@ public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements 
     private final BoolValue thundering = THUNDERING.create(this);
     private final BoolValue lava = LAVA.create(this);
 
-
     public ExteriorEnvironmentHandler() {
         super(Id.ENVIRONMENT);
     }

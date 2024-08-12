@@ -29,7 +29,7 @@ public class ClientThunderSoundHandler extends SoundHandler {
             return null;
 
         return new PositionedLoopingSound(AITSounds.THUNDER, SoundCategory.WEATHER,
-                tardis.getDesktop().doorPos().getPos(), 0.1f);
+                tardis.getDesktop().doorPos().getPos(), 0.3f);
     }
 
     public static ClientThunderSoundHandler create() {
