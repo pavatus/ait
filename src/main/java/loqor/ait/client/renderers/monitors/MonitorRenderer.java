@@ -42,9 +42,6 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
     @Override
     public void render(MonitorBlockEntity entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.tardis() == null)
-            return;
-
         BlockState blockState = entity.getCachedState();
 
         int k = blockState.get(SkullBlock.ROTATION);
