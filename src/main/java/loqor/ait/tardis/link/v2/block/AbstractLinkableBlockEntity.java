@@ -110,7 +110,9 @@ public abstract class AbstractLinkableBlockEntity extends BlockEntity implements
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        this.mark();
+        if (this.isLinked())
+            this.mark();
+
         return createNbt();
     }
 
