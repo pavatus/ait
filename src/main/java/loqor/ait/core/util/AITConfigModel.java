@@ -1,13 +1,12 @@
 package loqor.ait.core.util;
 
-import io.wispforest.owo.config.annotation.Config;
-import io.wispforest.owo.config.annotation.Modmenu;
-import io.wispforest.owo.config.annotation.SectionHeader;
-
-import net.minecraft.util.Identifier;
+import io.wispforest.owo.config.annotation.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 @Modmenu(modId = AITMod.MOD_ID)
@@ -17,8 +16,10 @@ public class AITConfigModel {
     @SectionHeader("Server")
     public boolean MINIFY_JSON = false;
 
-    public Identifier[] WORLDS_BLACKLIST = new Identifier[]{AITDimensions.TIME_VORTEX_WORLD.getValue(),
-            AITDimensions.TARDIS_DIM_WORLD.getValue()};
+    @Expanded @RestartRequired
+    public List<String> WORLDS_BLACKLIST = List.of(
+            AITDimensions.TIME_VORTEX_WORLD.getValue().toString(),
+            AITDimensions.TARDIS_DIM_WORLD.getValue().toString());
 
     public int TRAVEL_PER_TICK = 2;
 
