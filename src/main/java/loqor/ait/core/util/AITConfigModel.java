@@ -20,6 +20,8 @@ public class AITConfigModel {
     public Identifier[] WORLDS_BLACKLIST = new Identifier[]{AITDimensions.TIME_VORTEX_WORLD.getValue(),
             AITDimensions.TARDIS_DIM_WORLD.getValue()};
 
+    public int TRAVEL_PER_TICK = 2;
+
     @SectionHeader("Client")
     public float INTERIOR_HUM_VOLUME = 0.2f;
 
