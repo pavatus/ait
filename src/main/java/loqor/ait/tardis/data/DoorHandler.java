@@ -1,10 +1,5 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.core.blocks.DoorBlock;
-import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import net.minecraft.block.BlockState;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.AxeItem;

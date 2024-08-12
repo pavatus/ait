@@ -1,10 +1,5 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.state.property.IntProperty;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -21,6 +16,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -35,12 +31,16 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ShapeUtil;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.util.TardisUtil;
 
 @SuppressWarnings("deprecation")
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, Waterloggable {
