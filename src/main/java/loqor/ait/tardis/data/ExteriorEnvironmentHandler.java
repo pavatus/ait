@@ -16,7 +16,7 @@ import loqor.ait.tardis.data.travel.TravelHandlerBase;
 public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements TardisTickable {
 
     private static final BoolProperty RAINING = new BoolProperty("raining", false);
-    private static final BoolProperty THUNDERING = new BoolProperty("raining", false);
+    private static final BoolProperty THUNDERING = new BoolProperty("thundering", false);
     private static final BoolProperty LAVA = new BoolProperty("lava", false);
 
     private final BoolValue raining = RAINING.create(this);
