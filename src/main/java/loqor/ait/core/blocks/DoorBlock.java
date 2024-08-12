@@ -1,5 +1,10 @@
 package loqor.ait.core.blocks;
 
+import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.state.property.IntProperty;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -42,12 +47,36 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 12.1, 16.0, 32.0, 16.0);
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final IntProperty LEVEL_9 = ExteriorBlock.LEVEL_9;
+
+    static {
+        TardisEvents.DOOR_OPEN.register(tardis -> {
+            DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+            BlockPos exteriorPos = globalPos.getPos();
+            World exteriorWorld = globalPos.getWorld();
+
+            BlockState exteriorState = exteriorWorld.getBlockState(exteriorPos);
+            setDoorLight(tardis, exteriorState.get(ExteriorBlock.LEVEL_9));
+        });
+
+        TardisEvents.DOOR_CLOSE.register(tardis -> setDoorLight(tardis, 0));
+    }
+
+    private static void setDoorLight(Tardis tardis, int level) {
+        World world = TardisUtil.getTardisDimension();
+        BlockPos pos = tardis.getDesktop().doorPos().getPos();
+
+        BlockState state = world.getBlockState(pos);
+        world.setBlockState(pos, state.with(LEVEL_9, level));
+    }
 
     public DoorBlock(Settings settings) {
         super(settings);
 
-        this.setDefaultState(
-                this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        this.setDefaultState(this.getStateManager().getDefaultState()
+                .with(FACING, Direction.NORTH)
+                .with(WATERLOGGED, false)
+                .with(LEVEL_9, 0));
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,

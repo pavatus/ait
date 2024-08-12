@@ -1,5 +1,10 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.core.blocks.DoorBlock;
+import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.data.DirectedGlobalPos;
+import net.minecraft.block.BlockState;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.AxeItem;
@@ -85,7 +90,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
                     Vec3d motion = pos
                             .offset(RotationPropertyHelper.toDirection(directed.getRotation()).get().getOpposite())
-                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
+                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.075);
 
                     // Apply the motion to the entity
                     entity.setVelocity(entity.getVelocity().add(motion));
@@ -100,9 +105,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         if (directed == null)
             return false;
 
-        return (tardis.travel().getState() != TravelHandlerBase.State.LANDED
-                && tardis().travel().getState() != TravelHandlerBase.State.MAT) && !tardis.areShieldsActive()
-                && this.isOpen()
+        return tardis.travel().getState() != TravelHandlerBase.State.LANDED && this.isOpen()
+                && tardis.travel().getState() != TravelHandlerBase.State.MAT && !tardis.areShieldsActive()
                 && TardisUtil.getTardisDimension().getBlockEntity(directed.getPos()) instanceof DoorBlockEntity;
     }
 
