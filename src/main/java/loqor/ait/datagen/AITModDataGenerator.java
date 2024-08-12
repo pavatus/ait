@@ -570,6 +570,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.fuel.max", "TARDIS fuel is at max!");
 
         provider.addTranslation("message.ait.id", "TARDIS id: ");
+        provider.addTranslation("message.ait.click_to_copy", "Click to copy");
 
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
