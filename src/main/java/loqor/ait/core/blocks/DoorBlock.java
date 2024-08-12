@@ -174,7 +174,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, WATERLOGGED, LEVEL_9);
     }
 
     public FluidState getFluidState(BlockState state) {
