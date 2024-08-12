@@ -61,6 +61,9 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public ActionResult onUse(World world, BlockState state, PlayerEntity player, Hand hand, int slot) {
+        if (!this.isLinked())
+            return ActionResult.FAIL;
+
         ItemStack stack = player.getStackInHand(hand);
 
         if (world.isClient())
