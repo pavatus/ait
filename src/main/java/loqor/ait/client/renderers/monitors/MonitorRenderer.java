@@ -61,7 +61,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
         matrices.pop();
 
-        if (entity.tardis().isEmpty())
+        if (!entity.isLinked())
             return;
 
         Tardis tardis = entity.tardis().get();

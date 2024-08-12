@@ -40,9 +40,6 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
     @Override
     public void render(WallMonitorBlockEntity entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.tardis() == null)
-            return;
-
         BlockState blockState = entity.getCachedState();
 
         Direction k = blockState.get(PlaqueBlock.FACING);
@@ -56,7 +53,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         matrices.pop();
 
-        if (entity.tardis().isEmpty())
+        if (!entity.isLinked())
             return;
 
         Tardis tardis = entity.tardis().get();
