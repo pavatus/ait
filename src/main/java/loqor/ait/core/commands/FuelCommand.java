@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
@@ -43,8 +44,8 @@ public class FuelCommand {
         double fuel = DoubleArgumentType.getDouble(context, "amount");
         tardis.addFuel(fuel);
 
-        source.sendMessage(Text.translatableWithFallback("tardis.fuel.add", "Added fuel for [%s] to: [%sau]",
-                tardis.getUuid(), tardis.getFuel()));
+        source.sendMessage(
+                Text.translatable("message.ait.fuel.add", fuel, TextUtil.forTardis(tardis), tardis.getFuel()));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -56,8 +57,8 @@ public class FuelCommand {
         double fuel = DoubleArgumentType.getDouble(context, "amount");
         tardis.removeFuel(fuel);
 
-        source.sendMessage(Text.translatableWithFallback("tardis.fuel.remove", "Removed fuel from [%s] to: [%sau]",
-                tardis.getUuid(), tardis.getFuel()));
+        source.sendMessage(
+                Text.translatable("message.ait.fuel.remove", fuel, TextUtil.forTardis(tardis), tardis.getFuel()));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -69,13 +70,12 @@ public class FuelCommand {
         double fuel = DoubleArgumentType.getDouble(context, "amount");
 
         if (fuel > FuelHandler.TARDIS_MAX_FUEL) {
-            source.sendMessage(Text.translatableWithFallback("tardis.fuel.max", "TARDIS fuel is at max!"));
+            source.sendMessage(Text.translatable("message.ait.fuel.max"));
             return 0;
         }
 
         tardis.setFuelCount(fuel);
-        source.sendMessage(Text.translatableWithFallback("tardis.fuel.set", "Set fuel for [%s] to: [%sau]",
-                tardis.getUuid(), fuel));
+        source.sendMessage(Text.translatable("message.ait.fuel.set", TextUtil.forTardis(tardis), fuel));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -85,8 +85,7 @@ public class FuelCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
         double fuel = tardis.fuel().getCurrentFuel();
-        source.sendMessage(
-                Text.translatableWithFallback("tardis.fuel.get", "Fuel of [%s] is: [%sau]", tardis.getUuid(), fuel));
+        source.sendMessage(Text.translatable("tardis.fuel.get", TextUtil.forTardis(tardis), fuel));
 
         return (int) fuel;
     }

@@ -148,6 +148,7 @@ public class AITMod implements ModInitializer {
             TravelDebugCommand.register(dispatcher);
             VersionCommand.register(dispatcher);
             SafePosCommand.register(dispatcher);
+            ListCommand.register(dispatcher);
         }));
 
         TardisEvents.CRASH.register(tardis -> {

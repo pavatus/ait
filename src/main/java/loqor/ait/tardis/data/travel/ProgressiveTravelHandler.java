@@ -1,12 +1,12 @@
 package loqor.ait.tardis.data.travel;
 
-import loqor.ait.AITMod;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;

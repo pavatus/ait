@@ -563,6 +563,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
 
+        provider.addTranslation("message.ait.fuel.add", "Added %s fuel for %s; total: [%sau]");
+        provider.addTranslation("message.ait.fuel.remove", "Removed %s fuel for %s; total: [%sau]");
+        provider.addTranslation("message.ait.fuel.set", "Set fuel for %s; total: [%sau]");
+        provider.addTranslation("message.ait.fuel.get", "Fuel of %s is: [%sau]");
+        provider.addTranslation("message.ait.fuel.max", "TARDIS fuel is at max!");
+
+        provider.addTranslation("message.ait.id", "TARDIS id: ");
+
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         provider.addTranslation("message.ait.sonic.handbrakedisengaged",
