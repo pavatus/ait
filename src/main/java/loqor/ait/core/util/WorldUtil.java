@@ -34,10 +34,15 @@ import loqor.ait.tardis.data.travel.TravelHandlerBase;
 @SuppressWarnings("deprecation")
 public class WorldUtil {
 
+    private static List<Identifier> blacklisted = new ArrayList<>();
     private static List<ServerWorld> worlds;
     private static final int SAFE_RADIUS = 3;
 
     public static void init() {
+        for (String id : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
+            blacklisted.add(Identifier.tryParse(id));
+        }
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> worlds = getDimensions(server));
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> worlds = null);
     }
@@ -54,7 +59,7 @@ public class WorldUtil {
     }
 
     public static boolean isOpen(RegistryKey<World> world) {
-        for (Identifier blacklisted : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
+        for (Identifier blacklisted : blacklisted) {
             if (world.getValue().equals(blacklisted))
                 return false;
         }

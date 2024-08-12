@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
 import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
+import loqor.ait.client.sounds.fall.ClientFallSoundHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
 import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
@@ -28,6 +29,7 @@ public class ClientSoundManager {
     private static ClientRainSoundHandler rainSound;
     private static ClientLavaSoundHandler lavaSound;
     private static ClientSonicSoundHandler sonicSound;
+    private static ClientFallSoundHandler fallSound;
 
     public static ClientHumHandler getHum() {
         if (hum == null) {
@@ -88,6 +90,13 @@ public class ClientSoundManager {
         return sonicSound;
     }
 
+    public static ClientFallSoundHandler getFallSound() {
+        if (fallSound == null) {
+            fallSound = ClientFallSoundHandler.create();
+        }
+        return fallSound;
+    }
+
     public static void tick(MinecraftClient client) {
         if (getAlarm() != null)
             getAlarm().tick(client);
@@ -112,5 +121,8 @@ public class ClientSoundManager {
 
         if (getSonicSound() != null)
             getSonicSound().tick(client);
+
+        if (getFallSound() != null)
+            getFallSound().tick(client);
     }
 }
