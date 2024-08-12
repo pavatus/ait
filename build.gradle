@@ -149,7 +149,7 @@ spotless {
     }
 
     java {
-        eclipse()
+        //eclipse()
 
         removeUnusedImports()
         importOrder('java', 'javax', '', 'net.minecraft', group)

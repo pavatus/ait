@@ -1,5 +1,6 @@
 package loqor.ait.client.sounds;
 
+import loqor.ait.client.sounds.rain.ClientThunderSoundHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -27,6 +28,7 @@ public class ClientSoundManager {
     private static ClientCreakHandler creak;
     private static ClientVortexSoundsHandler vortexSounds;
     private static ClientRainSoundHandler rainSound;
+    private static ClientThunderSoundHandler thunderSound;
     private static ClientLavaSoundHandler lavaSound;
     private static ClientSonicSoundHandler sonicSound;
     private static ClientFallSoundHandler fallSound;
@@ -76,6 +78,13 @@ public class ClientSoundManager {
         return rainSound;
     }
 
+    public static ClientThunderSoundHandler getThunderSound() {
+        if (thunderSound == null) {
+            thunderSound = ClientThunderSoundHandler.create();
+        }
+        return thunderSound;
+    }
+
     public static ClientLavaSoundHandler getLavaSound() {
         if (lavaSound == null) {
             lavaSound = ClientLavaSoundHandler.create();
@@ -115,6 +124,9 @@ public class ClientSoundManager {
 
         if (getRainSound() != null)
             getRainSound().tick(client);
+
+        if (getThunderSound() != null)
+            getThunderSound().tick(client);
 
         if (getLavaSound() != null)
             getLavaSound().tick(client);

@@ -84,6 +84,8 @@ public class AITSounds implements SoundRegistryContainer {
 
     // Vortex Sounds
     public static final SoundEvent VORTEX_SOUND = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/vortex_sound"));
+    public static final SoundEvent RAIN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/exterior/rain"));
+    public static final SoundEvent THUNDER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/exterior/thunder"));
 
     // Tools
     public static final SoundEvent DING = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tools/goes_ding"));

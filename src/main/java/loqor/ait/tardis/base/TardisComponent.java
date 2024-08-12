@@ -26,7 +26,7 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
  * Base class for all tardis components.
  *
  * @implNote There should be NO logic run in the constructor. If you need to
- *           have such logic, implement it in an appropriate init method!
+ * have such logic, implement it in an appropriate init method!
  */
 public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> implements Disposable {
 
@@ -41,7 +41,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
      * method.
      *
      * @implNote The {@link TardisComponent#tardis()} will always be null at the
-     *           time this constructor gets called.
+     * time this constructor gets called.
      */
     public TardisComponent(IdLike id) {
         this.id = id;
@@ -102,64 +102,35 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
     public enum Id implements IdLike {
         // Base parts.
-        DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop), EXTERIOR(TardisExterior.class, null,
-                ClientTardis::setExterior), HANDLERS(TardisHandlersManager.class, null), TRAVEL(TravelHandler.class,
-                        TravelHandler::new), DOOR(DoorHandler.class, DoorHandler::new), SONIC(SonicHandler.class,
-                                SonicHandler::new), PERMISSIONS(PermissionHandler.class,
-                                        PermissionHandler::new), LOYALTY(LoyaltyHandler.class,
-                                                LoyaltyHandler::new), ENGINE(EngineHandler.class,
-                                                        EngineHandler::new), FLIGHT(RealFlightHandler.class,
-                                                                RealFlightHandler::new), BIOME(BiomeHandler.class,
-                                                                        BiomeHandler::new, null), SHIELDS(
-                                                                                ShieldHandler.class, ShieldHandler::new,
-                                                                                null), STATS(StatsHandler.class,
-                                                                                        StatsHandler::new,
-                                                                                        null), CRASH_DATA(
-                                                                                                TardisCrashHandler.class,
-                                                                                                TardisCrashHandler::new,
-                                                                                                null), WAYPOINTS(
-                                                                                                        WaypointHandler.class,
-                                                                                                        WaypointHandler::new,
-                                                                                                        null), OVERGROWN(
-                                                                                                                OvergrownHandler.class,
-                                                                                                                OvergrownHandler::new,
-                                                                                                                null), HUM(
-                                                                                                                        ServerHumHandler.class,
-                                                                                                                        ServerHumHandler::new,
-                                                                                                                        null), ALARMS(
-                                                                                                                                ServerAlarmHandler.class,
-                                                                                                                                ServerAlarmHandler::new,
-                                                                                                                                null), RAINING(
-                                                                                                                                        ServerRainHandler.class,
-                                                                                                                                        ServerRainHandler::new,
-                                                                                                                                        null), LAVA_OUTSIDE(
-                                                                                                                                                ServerLavaHandler.class,
-                                                                                                                                                ServerLavaHandler::new,
-                                                                                                                                                null), INTERIOR(
-                                                                                                                                                        InteriorChangingHandler.class,
-                                                                                                                                                        InteriorChangingHandler::new,
-                                                                                                                                                        null), SEQUENCE(
-                                                                                                                                                                SequenceHandler.class,
-                                                                                                                                                                SequenceHandler::new,
-                                                                                                                                                                null), MOOD(
-                                                                                                                                                                        MoodHandler.class,
-                                                                                                                                                                        MoodHandler::new,
-                                                                                                                                                                        null), FUEL(
-                                                                                                                                                                                FuelHandler.class,
-                                                                                                                                                                                FuelHandler::new,
-                                                                                                                                                                                null), HADS(
-                                                                                                                                                                                        HadsHandler.class,
-                                                                                                                                                                                        HadsHandler::new,
-                                                                                                                                                                                        null), SIEGE(
-                                                                                                                                                                                                SiegeHandler.class,
-                                                                                                                                                                                                SiegeHandler::new,
-                                                                                                                                                                                                null), CLOAK(
-                                                                                                                                                                                                        CloakHandler.class,
-                                                                                                                                                                                                        CloakHandler::new,
-                                                                                                                                                                                                        null), INCREMENT(
-                                                                                                                                                                                                                IncrementManager.class,
-                                                                                                                                                                                                                IncrementManager::new,
-                                                                                                                                                                                                                null);
+        DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
+        EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
+        HANDLERS(TardisHandlersManager.class, null),
+
+        // Modular componenet "handlers"
+        TRAVEL(TravelHandler.class, TravelHandler::new),
+        DOOR(DoorHandler.class, DoorHandler::new),
+        SONIC(SonicHandler.class, SonicHandler::new),
+        PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
+        LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
+        ENGINE(EngineHandler.class, EngineHandler::new),
+        FLIGHT(RealFlightHandler.class, RealFlightHandler::new),
+        BIOME(BiomeHandler.class, BiomeHandler::new),
+        SHIELDS(ShieldHandler.class, ShieldHandler::new),
+        STATS(StatsHandler.class, StatsHandler::new),
+        CRASH_DATA(TardisCrashHandler.class, TardisCrashHandler::new),
+        WAYPOINTS(WaypointHandler.class, WaypointHandler::new),
+        OVERGROWN(OvergrownHandler.class, OvergrownHandler::new),
+        HUM(ServerHumHandler.class, ServerHumHandler::new),
+        ALARMS(ServerAlarmHandler.class, ServerAlarmHandler::new),
+        ENVIRONMENT(ExteriorEnvironmentHandler.class, ExteriorEnvironmentHandler::new),
+        INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new),
+        SEQUENCE(SequenceHandler.class, SequenceHandler::new),
+        MOOD(MoodHandler.class, MoodHandler::new, null),
+        FUEL(FuelHandler.class, FuelHandler::new),
+        HADS(HadsHandler.class, HadsHandler::new),
+        SIEGE(SiegeHandler.class, SiegeHandler::new),
+        CLOAK(CloakHandler.class, CloakHandler::new),
+        INCREMENT(IncrementManager.class, IncrementManager::new);
 
         private final BiConsumer<ClientTardis, TardisComponent> setter;
         private final Supplier<TardisComponent> creator;
@@ -308,7 +279,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
     }
 
     public record InitContext(@Nullable DirectedGlobalPos.Cached pos,
-            boolean deserialized) implements Initializable.Context {
+                              boolean deserialized) implements Initializable.Context {
 
         public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
             return new InitContext(pos, false);

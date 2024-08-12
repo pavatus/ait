@@ -1,14 +1,14 @@
 package loqor.ait.client.sounds.rain;
 
+import loqor.ait.core.AITSounds;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.data.ExteriorEnvironmentHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.ServerRainHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -28,7 +28,7 @@ public class ClientRainSoundHandler extends SoundHandler {
         if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
             return null;
 
-        return new PositionedLoopingSound(SoundEvents.WEATHER_RAIN, SoundCategory.WEATHER,
+        return new PositionedLoopingSound(AITSounds.RAIN, SoundCategory.WEATHER,
                 tardis.getDesktop().doorPos().getPos(), 0.1f);
     }
 
@@ -48,7 +48,7 @@ public class ClientRainSoundHandler extends SoundHandler {
 
     private boolean shouldPlaySounds(ClientTardis tardis) {
         return tardis != null && tardis.travel().getState() == TravelHandlerBase.State.LANDED
-                && tardis.<ServerRainHandler>handler(TardisComponent.Id.RAINING).isEnabled();
+                && tardis.<ExteriorEnvironmentHandler>handler(TardisComponent.Id.ENVIRONMENT).isRaining();
     }
 
     public void tick(MinecraftClient client) {
