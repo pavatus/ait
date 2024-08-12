@@ -1,12 +1,11 @@
 package loqor.ait.core.util;
 
+import java.util.List;
+
 import io.wispforest.owo.config.annotation.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
-import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 @Modmenu(modId = AITMod.MOD_ID)

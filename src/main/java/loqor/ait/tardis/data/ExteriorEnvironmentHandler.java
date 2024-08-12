@@ -1,5 +1,10 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
@@ -7,10 +12,6 @@ import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements TardisTickable {
 

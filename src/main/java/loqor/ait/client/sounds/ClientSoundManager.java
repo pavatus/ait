@@ -1,6 +1,5 @@
 package loqor.ait.client.sounds;
 
-import loqor.ait.client.sounds.rain.ClientThunderSoundHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -13,6 +12,7 @@ import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
 import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
 import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
+import loqor.ait.client.sounds.rain.ClientThunderSoundHandler;
 import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 
