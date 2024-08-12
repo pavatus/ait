@@ -44,16 +44,15 @@ public class TardisArgumentType implements ArgumentType<TardisArgumentType.Serve
         String string = reader.getRemaining();
         Matcher matcher = VALID_CHARACTERS.matcher(string);
 
-        if (matcher.find()) {
-            String raw = matcher.group(1);
+        if (!matcher.find())
+            throw INVALID_UUID.create();
 
-            UUID uuid = UUID.fromString(raw);
-            reader.setCursor(reader.getCursor() + raw.length());
+        String raw = matcher.group(1);
 
-            return context -> ServerTardisManager.getInstance().demandTardis(context.getSource().getServer(), uuid);
-        }
+        UUID uuid = UUID.fromString(raw);
+        reader.setCursor(reader.getCursor() + raw.length());
 
-        throw INVALID_UUID.create();
+        return context -> ServerTardisManager.getInstance().demandTardis(context.getSource().getServer(), uuid);
     }
 
     @Override

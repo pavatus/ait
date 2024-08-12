@@ -24,31 +24,50 @@ import loqor.ait.tardis.wrapper.server.ServerTardis;
 public final class TeleportInteriorCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(
-                literal(AITMod.MOD_ID).then(literal("teleport").requires(source -> source.hasPermissionLevel(2))
-                        .then(literal("interior").then(argument("tardis", TardisArgumentType.tardis())
-                                .executes(TeleportInteriorCommand::runCommand)
-                                .then(argument("entities", EntityArgumentType.players())
-                                        .executes(TeleportInteriorCommand::runCommandWithPlayers))))));
+        dispatcher.register(literal(AITMod.MOD_ID).then(literal("teleport").requires(source -> source.hasPermissionLevel(2))
+                .then(argument("tardis", TardisArgumentType.tardis())
+                                .then(literal("interior").executes(TeleportInteriorCommand::tpSelfInterior)
+                                        .then(argument("entities", EntityArgumentType.players())
+                                                .executes(TeleportInteriorCommand::tpToExterior)))
+                                .then(literal("exterior").executes(TeleportInteriorCommand::tpSelfExterior)
+                                        .then(argument("entities", EntityArgumentType.players())
+                                                .executes(TeleportInteriorCommand::tpToExterior)))
+                )));
     }
 
-    private static int runCommand(CommandContext<ServerCommandSource> context) {
+    private static int tpSelfInterior(CommandContext<ServerCommandSource> context) {
         Entity source = context.getSource().getEntity();
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-        return teleportToInterior(tardis, Collections.singleton(source));
+        return tpToInterior(tardis, Collections.singleton(source));
     }
 
-    private static int runCommandWithPlayers(CommandContext<ServerCommandSource> context)
+    private static int tpSelfExterior(CommandContext<ServerCommandSource> context) {
+        Entity source = context.getSource().getEntity();
+        ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
+
+        return tpToExterior(tardis, Collections.singleton(source));
+    }
+
+    private static int tpToInterior(CommandContext<ServerCommandSource> context)
             throws CommandSyntaxException {
         Entity source = context.getSource().getEntity();
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
         Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
 
-        return teleportToInterior(tardis, source, entities);
+        return tpToInterior(tardis, source, entities);
     }
 
-    private static int teleportToInterior(ServerTardis tardis, Entity source, Collection<? extends Entity> players) {
+    private static int tpToExterior(CommandContext<ServerCommandSource> context)
+            throws CommandSyntaxException {
+        Entity source = context.getSource().getEntity();
+        ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
+        Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
+
+        return tpToExterior(tardis, source, entities);
+    }
+
+    private static int tpToInterior(ServerTardis tardis, Entity source, Collection<? extends Entity> players) {
         for (Entity player : players) {
             TardisUtil.teleportInside(tardis, player);
         }
@@ -59,10 +78,28 @@ public final class TeleportInteriorCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int teleportToInterior(ServerTardis tardis, Collection<? extends Entity> players) {
+    private static int tpToExterior(ServerTardis tardis, Entity source, Collection<? extends Entity> players) {
+        for (Entity player : players) {
+            TardisUtil.teleportOutside(tardis, player);
+        }
+
+        source.sendMessage(Text.translatableWithFallback("tardis.teleport.exterior.success",
+                "Successful teleport - interior of [" + tardis.getUuid().toString().substring(0, 7) + "]"));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int tpToInterior(ServerTardis tardis, Collection<? extends Entity> players) {
         if (players.isEmpty())
             return 0;
 
-        return teleportToInterior(tardis, players.stream().findFirst().get(), players);
+        return tpToInterior(tardis, players.stream().findFirst().get(), players);
+    }
+
+    private static int tpToExterior(ServerTardis tardis, Collection<? extends Entity> players) {
+        if (players.isEmpty())
+            return 0;
+
+        return tpToExterior(tardis, players.stream().findFirst().get(), players);
     }
 }
