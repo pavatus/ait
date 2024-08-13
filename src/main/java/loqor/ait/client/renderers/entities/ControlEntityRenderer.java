@@ -28,7 +28,6 @@ import loqor.ait.client.models.consoles.ControlModel;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.Loyalty;
 
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
