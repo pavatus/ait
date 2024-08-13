@@ -1,4 +1,4 @@
-package loqor.ait.core.data;
+package loqor.ait.tardis.data;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolder;
@@ -21,10 +21,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-public class RiftChunkData extends PersistentState {
+public class RiftChunkHandler extends PersistentState {
 	private HashMap<RegistryKey<World>, RiftChunkMap> chunks;
 
-	public RiftChunkData() {
+	public RiftChunkHandler() {
 		this.chunks = new HashMap<>();
 	}
 
@@ -52,25 +52,25 @@ public class RiftChunkData extends PersistentState {
 	public NbtCompound writeNbt(NbtCompound nbt) {
 		this.chunks.keySet().forEach(key -> nbt.put(key.getValue().toString(), chunks.get(key).serialize()));
 
-		this.updateAll(TardisUtil.getOverworld().getServer());
+		this.updateAll(TardisUtil.getOverworld().getServer()); // TODO - MAY cause lag.. maybe should be removed..
 
 		return nbt;
 	}
 
-	public static RiftChunkData loadNbt(NbtCompound nbt) {
-		RiftChunkData created = new RiftChunkData();
+	public static RiftChunkHandler loadNbt(NbtCompound nbt) {
+		RiftChunkHandler created = new RiftChunkHandler();
 
 		nbt.getKeys().forEach(key -> created.chunks.put(RegistryKey.of(RegistryKeys.WORLD, new Identifier(key)), new RiftChunkMap(nbt.getCompound(key))));
 
 		return created;
 	}
 
-	public static RiftChunkData getInstance(MinecraftServer server) {
+	public static RiftChunkHandler getInstance(MinecraftServer server) {
 		PersistentStateManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
 
-		RiftChunkData state = manager.getOrCreate(
-				RiftChunkData::loadNbt,
-				RiftChunkData::new,
+		RiftChunkHandler state = manager.getOrCreate(
+				RiftChunkHandler::loadNbt,
+				RiftChunkHandler::new,
 				AITMod.MOD_ID + "/rift_chunk"
 		);
 
@@ -78,7 +78,7 @@ public class RiftChunkData extends PersistentState {
 
 		return state;
 	}
-	public static RiftChunkData getInstance(World world) {
+	public static RiftChunkHandler getInstance(World world) {
 		return getInstance(world.getServer());
 	}
 

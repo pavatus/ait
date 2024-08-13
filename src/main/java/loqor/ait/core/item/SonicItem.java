@@ -1,12 +1,24 @@
 package loqor.ait.core.item;
 
-import java.util.List;
-import java.util.UUID;
-
-import loqor.ait.core.data.RiftChunkData;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-
+import loqor.ait.AITMod;
+import loqor.ait.api.tardis.ArtronHolderItem;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.schema.SonicSchema;
+import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
+import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.LegacyUtil;
+import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelUtil;
+import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -26,26 +38,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
-import loqor.ait.AITMod;
-import loqor.ait.api.tardis.ArtronHolderItem;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.SonicSchema;
-import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
-import loqor.ait.core.util.AITModTags;
-import loqor.ait.core.util.LegacyUtil;
-import loqor.ait.registry.impl.SonicRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.TardisUtil;
+import java.util.List;
+import java.util.UUID;
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static final double MAX_FUEL = 1000;
@@ -468,9 +465,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                             .formatted(Formatting.BOLD);
                     Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA)
                             .formatted(Formatting.BOLD);
-                    player.sendMessage((RiftChunkData.isRiftChunk(pos) ? found : notfound), true);
-                    if (RiftChunkData.isRiftChunk(pos))
-                        player.sendMessage(Text.literal("AU: " + (RiftChunkData.getInstance(world).getMap(world).getChunk(pos).orElseThrow().getCurrentFuel(world)))
+                    player.sendMessage((RiftChunkHandler.isRiftChunk(pos) ? found : notfound), true);
+                    if (RiftChunkHandler.isRiftChunk(pos))
+                        player.sendMessage(Text.literal("AU: " + (RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos).orElseThrow().getCurrentFuel(world)))
                                 .formatted(Formatting.GOLD));
                     return;
                 }

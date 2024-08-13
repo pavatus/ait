@@ -1,13 +1,8 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.core.data.RiftChunkData;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-
 import loqor.ait.api.tardis.ArtronHolder;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
@@ -17,6 +12,8 @@ import loqor.ait.tardis.data.properties.doubl3.DoubleValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
 
@@ -75,7 +72,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
         if (state == TravelHandlerBase.State.LANDED) {
             if (this.getRefueling().get() && this.getCurrentFuel() < FuelHandler.TARDIS_MAX_FUEL) {
-                RiftChunkData.RiftChunk chunk = RiftChunkData.getInstance(world).getMap(world).getChunk(pos.getPos()).orElse(null);
+                RiftChunkHandler.RiftChunk chunk = RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos.getPos()).orElse(null);
 
                 if (chunk != null && chunk.getCurrentFuel(world) > 0) {
                     chunk.removeFuel(2, world);
