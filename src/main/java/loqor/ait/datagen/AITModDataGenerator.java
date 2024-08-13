@@ -513,7 +513,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
-        provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Zeiton Block");
+        provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Block of Zeiton");
         provider.addTranslation(AITBlocks.ZEITON_CLUSTER, "Zeiton Cluster");
         provider.addTranslation(AITBlocks.BUDDING_ZEITON, "Budding Zeiton");
         provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
