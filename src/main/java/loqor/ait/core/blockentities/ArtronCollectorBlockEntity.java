@@ -1,13 +1,7 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.api.tardis.ArtronHolder;
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.item.ArtronCollectorItem;
-import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.tardis.data.RiftChunkHandler;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,7 +16,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.api.tardis.ArtronHolder;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.item.ArtronCollectorItem;
+import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.tardis.data.RiftChunkHandler;
 
 public class ArtronCollectorBlockEntity extends BlockEntity
         implements

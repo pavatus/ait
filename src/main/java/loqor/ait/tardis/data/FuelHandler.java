@@ -1,5 +1,8 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
+
 import loqor.ait.api.tardis.ArtronHolder;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -12,8 +15,6 @@ import loqor.ait.tardis.data.properties.doubl3.DoubleValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
 

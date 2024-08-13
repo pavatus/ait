@@ -1,5 +1,26 @@
 package loqor.ait.core.blockentities;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.joml.Vector3f;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.DustColorTransitionParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
@@ -19,25 +40,6 @@ import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
 

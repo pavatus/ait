@@ -1,8 +1,10 @@
 package loqor.ait.tardis.data;
 
-import loqor.ait.AITMod;
-import loqor.ait.api.tardis.ArtronHolder;
-import loqor.ait.tardis.util.TardisUtil;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -16,10 +18,9 @@ import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import loqor.ait.AITMod;
+import loqor.ait.api.tardis.ArtronHolder;
+import loqor.ait.tardis.util.TardisUtil;
 
 public class RiftChunkHandler extends PersistentState {
     private final HashMap<RegistryKey<World>, RiftChunkMap> chunks;

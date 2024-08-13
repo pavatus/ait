@@ -1,7 +1,5 @@
 package loqor.ait.core.item;
 
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.tardis.data.RiftChunkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +12,9 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.tardis.data.RiftChunkHandler;
 
 public class RiftScannerItem extends Item {
     private static final int MAX_ITERATIONS = 32;

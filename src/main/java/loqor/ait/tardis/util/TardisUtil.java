@@ -1,35 +1,18 @@
 package loqor.ait.tardis.util;
 
+import java.nio.file.Path;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import io.wispforest.owo.ops.WorldOps;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
-import loqor.ait.AITMod;
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.Corners;
-import loqor.ait.core.data.DirectedBlockPos;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.item.SonicItem;
-import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
-import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;
-import loqor.ait.mixin.lookup.SimpleEntityLookupAccessor;
-import loqor.ait.mixin.lookup.WorldInvoker;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.control.impl.pos.PosType;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.OvergrownHandler;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import org.jetbrains.annotations.Nullable;
+import qouteall.imm_ptl.core.api.PortalAPI;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -61,13 +44,32 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.entity.EntityLike;
 import net.minecraft.world.entity.EntityTrackingSection;
-import org.jetbrains.annotations.Nullable;
-import qouteall.imm_ptl.core.api.PortalAPI;
 
-import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import loqor.ait.AITMod;
+import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.Corners;
+import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
+import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;
+import loqor.ait.mixin.lookup.SimpleEntityLookupAccessor;
+import loqor.ait.mixin.lookup.WorldInvoker;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.control.impl.pos.PosType;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.OvergrownHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.permissions.PermissionHandler;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 @SuppressWarnings("unused")
 public class TardisUtil {

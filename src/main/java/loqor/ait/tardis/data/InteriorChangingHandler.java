@@ -1,5 +1,11 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.util.DeltaTimeManager;
@@ -15,11 +21,6 @@ import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty IS_REGENERATING_PROPERTY = new BoolProperty("regenerating", false);

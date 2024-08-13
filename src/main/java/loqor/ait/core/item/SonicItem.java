@@ -1,24 +1,11 @@
 package loqor.ait.core.item;
 
-import loqor.ait.AITMod;
-import loqor.ait.api.tardis.ArtronHolderItem;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.SonicSchema;
-import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
-import loqor.ait.core.util.AITModTags;
-import loqor.ait.core.util.LegacyUtil;
-import loqor.ait.registry.impl.SonicRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.RiftChunkHandler;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.TardisUtil;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -38,11 +25,26 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.UUID;
+import loqor.ait.AITMod;
+import loqor.ait.api.tardis.ArtronHolderItem;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.schema.SonicSchema;
+import loqor.ait.core.sounds.sonic.ServerSonicSoundHandler;
+import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.LegacyUtil;
+import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelUtil;
+import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.util.TardisUtil;
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static final double MAX_FUEL = 1000;

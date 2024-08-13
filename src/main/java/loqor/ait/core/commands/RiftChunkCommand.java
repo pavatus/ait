@@ -1,18 +1,20 @@
 package loqor.ait.core.commands;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import loqor.ait.AITMod;
-import loqor.ait.tardis.data.RiftChunkHandler;
+
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import loqor.ait.AITMod;
+import loqor.ait.tardis.data.RiftChunkHandler;
 
 public class RiftChunkCommand {
 
