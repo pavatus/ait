@@ -179,7 +179,7 @@ public class WorldUtil {
         BlockState above = world.getBlockState(cursor.up());
 
         while (true) {
-            if (cursor.getY() < world.getBottomY())
+            if (cursor.getY() > world.getTopY())
                 return pos.getY();
 
             if (isSafe(floor, current, above))
