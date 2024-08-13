@@ -5,12 +5,10 @@ import java.util.function.Consumer;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.api.tardis.ArtronHolderItem;
-import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -131,10 +129,13 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 
             crash.setRepairTicks(repairTicks <= 0 ? 0 : repairTicks - 5);
 
-            if (server.getTicks() % SonicItem.SONIC_SFX_LENGTH == 0) {
+            // TODO
+            /*
+            if () {
                 tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
                         AITSounds.SONIC_USE, SoundCategory.BLOCKS, 0.5f, 1f);
             }
+             */
 
             this.removeFuel(10, exteriorSonic);
         }
