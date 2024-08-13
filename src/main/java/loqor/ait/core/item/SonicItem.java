@@ -500,8 +500,13 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                 TravelHandler travel = tardis.travel();
 
-                DirectedGlobalPos.Cached target = DirectedGlobalPos.Cached.create(world, pos,
-                        (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
+                float rotation = player.getBodyYaw();
+
+                if (!world.getBlockState(pos).isAir()) {
+                    rotation = 180 - rotation;
+                }
+
+                DirectedGlobalPos.Cached target = DirectedGlobalPos.Cached.create(world, pos, (byte) RotationPropertyHelper.fromYaw(rotation));
 
                 boolean isPilot = tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT);
                 boolean isNearTardis = ExteriorAnimation.isNearTardis(player, tardis, 256);
@@ -511,9 +516,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                     if (isPilot)
                         TravelUtil.travelTo(tardis, target);
-                }
 
-                player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
+                    player.sendMessage(Text.translatable("message.ait.sonic.handbrakedisengaged"), true);
+                }
             }
         };
 
