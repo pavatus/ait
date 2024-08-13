@@ -173,4 +173,10 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         this.tardis().get().getDesktop().setInteriorDoorPos(
                 DirectedBlockPos.create(this.pos, (byte) RotationPropertyHelper.fromDirection(this.getFacing())));
     }
+
+    public void onBreak() {
+        if (this.tardis().isEmpty()) return;
+
+        this.tardis().get().door().closeDoors();
+    }
 }

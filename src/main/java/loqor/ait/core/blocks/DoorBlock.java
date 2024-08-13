@@ -160,6 +160,16 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             door.onEntityCollision(entity);
     }
 
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+
+        if (world.isClient()) return;
+        if (!(world.getBlockEntity(pos) instanceof DoorBlockEntity door)) return;
+
+        door.onBreak();
+    }
+
     @Nullable @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
