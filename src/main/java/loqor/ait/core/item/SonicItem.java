@@ -3,6 +3,11 @@ package loqor.ait.core.item;
 import java.util.List;
 import java.util.UUID;
 
+import loqor.ait.client.AITModClient;
+import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,8 +70,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         ItemStack stack = user.getStackInHand(hand);
         BlockPos pos = user.getBlockPos();
 
-        if (world.isClient())
+        if (world.isClient()) {
             return TypedActionResult.pass(stack);
+        }
 
         this.useSonic(world, user, pos, hand, stack);
         return TypedActionResult.consume(stack);
@@ -95,6 +101,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         shouldntContinue = false;
         setMode(stack, Mode.INACTIVE);
 
+        if (world.isClient())
+            ClientSoundManager.getSonicSound().onFinishUse((AbstractClientPlayerEntity) user);
+
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
     }
 
@@ -106,6 +115,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         shouldntContinue = false;
         setMode(stack, Mode.INACTIVE);
 
+        if (world.isClient())
+            ClientSoundManager.getSonicSound().onFinishUse((AbstractClientPlayerEntity) user);
+
         return stack;
     }
 
@@ -116,6 +128,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         if (remainingUseTicks % SONIC_SFX_LENGTH != 0)
             return;
+
+        if (world.isClient())
+            ClientSoundManager.getSonicSound().onUse((AbstractClientPlayerEntity) user);
 
         if (sonicIsInUse(stack))
             playSonicSoundsHere(player);
