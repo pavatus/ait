@@ -72,7 +72,7 @@ public class RiftChunkHandler extends PersistentState {
         RiftChunkHandler state = manager.getOrCreate(
                 RiftChunkHandler::loadNbt,
                 RiftChunkHandler::new,
-                AITMod.MOD_ID + "/rift_chunk"
+                AITMod.MOD_ID + "_rift_chunk"
         );
 
         state.markDirty();
