@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import loqor.ait.core.data.RiftChunkData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -103,11 +104,11 @@ public class RiftScannerItem extends Item {
     }
 
     private static boolean isRiftChunk(ChunkPos pos) {
-        return RiftChunkManager.isRiftChunk(pos);
+        return RiftChunkData.isRiftChunk(pos);
     }
 
     private static boolean hasSufficientFuel(ServerWorld world, ChunkPos pos) {
-        return RiftChunkManager.getArtronLevels(world, pos) >= 250;
+        return RiftChunkData.getInstance(world).getMap(world).getChunk(pos).orElseThrow().getCurrentFuel(world) >= 250;
     }
 
     private static ChunkPos getChunkInDirection(ChunkPos pos, Direction dir) {

@@ -2,6 +2,7 @@ package loqor.ait.core.blocks;
 
 import java.util.UUID;
 
+import loqor.ait.core.data.RiftChunkData;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -119,7 +120,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             return;
 
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
-                || (!RiftChunkManager.isRiftChunk(pos)
+                || (!RiftChunkData.isRiftChunk(pos)
                         && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;

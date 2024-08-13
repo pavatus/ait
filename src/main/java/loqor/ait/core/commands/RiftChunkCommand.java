@@ -7,6 +7,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 
+import loqor.ait.core.data.RiftChunkData;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.managers.RiftChunkManager;
+import net.minecraft.world.World;
 
 public class RiftChunkCommand {
 
@@ -32,7 +34,7 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerCommandSource source = context.getSource();
 
-        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
+        boolean isARiftChunk = RiftChunkData.isRiftChunk(targetBlockPos);
         Text isriftchunk = Text.translatable("message.ait.sonic.riftfound");
         Text notriftchunk = Text.translatable("message.ait.sonic.riftnotfound");
 
@@ -44,12 +46,14 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerCommandSource source = context.getSource();
 
-        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
+        boolean isARiftChunk = RiftChunkData.isRiftChunk(targetBlockPos);
+
+        World world = source.getWorld();
 
         Text message = !isARiftChunk
                 ? Text.translatable("command.ait.riftchunk.cannotgetlevel")
                 : Text.translatable("command.ait.riftchunk.getlevel",
-                        RiftChunkManager.getArtronLevels(source.getWorld(), targetBlockPos));
+                    RiftChunkData.getInstance(world).getMap(world).getChunk(targetBlockPos).get().getCurrentFuel(world));
 
         source.sendMessage(message);
         return 1;
@@ -61,14 +65,16 @@ public class RiftChunkCommand {
 
         Text message;
 
-        if (!RiftChunkManager.isRiftChunk(targetBlockPos)) {
+        if (!RiftChunkData.isRiftChunk(targetBlockPos)) {
             message = Text.translatable("command.ait.riftchunk.cannotsetlevel"); // This chunk is not a rift chunk, so
             // you can't
             // get the
             // artron levels of it
         } else {
             Integer artron = IntegerArgumentType.getInteger(context, "artron");
-            RiftChunkManager.setArtronLevels(source.getWorld(), targetBlockPos, artron);
+
+            World world = source.getWorld();
+            RiftChunkData.getInstance(world).getMap(world).getChunk(targetBlockPos).orElseThrow().setCurrentFuel(artron);
 
             message = Text.translatable("command.ait.riftchunk.setlevel", artron);
         }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import loqor.ait.core.data.RiftChunkData;
 import org.joml.Vector3f;
 
 import net.minecraft.block.BlockState;
@@ -245,7 +246,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         }
 
         ServerTardis tardis = (ServerTardis) this.tardis().get();
-        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
+        boolean isRiftChunk = RiftChunkData.isRiftChunk(tardis.travel().position().getPos());
 
         if (tardis.travel().isCrashing()) {
             serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,

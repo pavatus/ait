@@ -9,6 +9,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.PersistentState;
@@ -39,10 +40,19 @@ public class RiftChunkData extends PersistentState {
 		return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z, TardisUtil.getOverworld().getSeed(), 987234910L)
 				.nextInt(8) == 0;
 	}
+	public static boolean isRiftChunk(BlockPos pos) {
+		return isRiftChunk(new ChunkPos(pos));
+	}
+
+	private void updateAll(MinecraftServer server) {
+		this.chunks.values().forEach(map -> map.values().forEach(chunk -> chunk.update(server)));
+	}
 
 	@Override
 	public NbtCompound writeNbt(NbtCompound nbt) {
-		chunks.keySet().forEach(key -> nbt.put(key.getValue().toString(), chunks.get(key).serialize()));
+		this.chunks.keySet().forEach(key -> nbt.put(key.getValue().toString(), chunks.get(key).serialize()));
+
+		this.updateAll(TardisUtil.getOverworld().getServer());
 
 		return nbt;
 	}
@@ -61,10 +71,15 @@ public class RiftChunkData extends PersistentState {
 		RiftChunkData state = manager.getOrCreate(
 				RiftChunkData::loadNbt,
 				RiftChunkData::new,
-				AITMod.MOD_ID
+				AITMod.MOD_ID + "/rift_chunk"
 		);
 
+		state.markDirty();
+
 		return state;
+	}
+	public static RiftChunkData getInstance(World world) {
+		return getInstance(world.getServer());
 	}
 
 	public static class RiftChunkMap extends HashMap<ChunkPos, RiftChunk> {
@@ -92,6 +107,9 @@ public class RiftChunkData extends PersistentState {
 
 			this.put(pos, new RiftChunk(pos));
 			return Optional.of(this.get(pos));
+		}
+		public Optional<RiftChunk> getChunk(BlockPos pos) {
+			return this.getChunk(new ChunkPos(pos));
 		}
 
 		public NbtCompound serialize() {
@@ -147,16 +165,26 @@ public class RiftChunkData extends PersistentState {
 
 			return this.getCurrentFuel();
 		}
+		public double getCurrentFuel(World world) {
+			return this.getCurrentFuel(world.getServer());
+		}
 
 		public double addFuel(double count, MinecraftServer server) {
 			this.update(server);
 
 			return this.addFuel(count);
 		}
+		public double addFuel(double count, World world) {
+			return this.addFuel(count, world.getServer());
+		}
+
 		public void removeFuel(double count, MinecraftServer server) {
 			this.update(server);
 
 			this.removeFuel(count);
+		}
+		public void removeFuel(double count, World world) {
+			this.removeFuel(count, world.getServer());
 		}
 
 		@Override
@@ -180,11 +208,12 @@ public class RiftChunkData extends PersistentState {
 		private void update(int ticks) {
 			// work out how long its been
 			int time = ticks - this.lastTick;
-			this.lastTick = ticks;
 
-			if (time < 0) {
-				return; // something went wrong :(
+			if (time < 20) {
+				return; // too soon
 			}
+
+			this.lastTick = ticks;
 
 			// increase artron levels
 			this.addFuel(getArtronChangeFromTime(time));
@@ -197,7 +226,7 @@ public class RiftChunkData extends PersistentState {
 		}
 
 		private int getArtronChangeFromTime(int time) {
-			return time / 2; // 20 TPS -> 10 AU per second
+			return time / 20; // 20 TPS -> 1 AU per second
 		}
 
 		public NbtCompound serialize() {

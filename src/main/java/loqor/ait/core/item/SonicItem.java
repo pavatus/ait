@@ -3,6 +3,7 @@ package loqor.ait.core.item;
 import java.util.List;
 import java.util.UUID;
 
+import loqor.ait.core.data.RiftChunkData;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -467,9 +468,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                             .formatted(Formatting.BOLD);
                     Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA)
                             .formatted(Formatting.BOLD);
-                    player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
-                    if (RiftChunkManager.isRiftChunk(pos))
-                        player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getArtronLevels(world, pos)))
+                    player.sendMessage((RiftChunkData.isRiftChunk(pos) ? found : notfound), true);
+                    if (RiftChunkData.isRiftChunk(pos))
+                        player.sendMessage(Text.literal("AU: " + (RiftChunkData.getInstance(world).getMap(world).getChunk(pos).orElseThrow().getCurrentFuel(world)))
                                 .formatted(Formatting.GOLD));
                     return;
                 }

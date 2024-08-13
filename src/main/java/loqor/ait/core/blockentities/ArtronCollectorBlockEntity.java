@@ -1,5 +1,6 @@
 package loqor.ait.core.blockentities;
 
+import loqor.ait.core.data.RiftChunkData;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -109,14 +110,19 @@ public class ArtronCollectorBlockEntity extends BlockEntity
         if (world.isClient())
             return;
 
-        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3
-                && this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL
-                && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
-            RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 3);
+        // oh yes call this every tick good idea ( #notmyproblem )
+        RiftChunkData.RiftChunk chunk = RiftChunkData.getInstance(world).getMap(world).getChunk(pos).orElse(null);
+
+        if (shouldDrain(chunk)) {
+            chunk.removeFuel(3, world);
             this.addFuel(3);
+
             this.updateListeners();
             DeltaTimeManager.createDelay(getDelay(), 500L);
         }
+    }
+    private boolean shouldDrain(RiftChunkData.RiftChunk chunk) {
+        return chunk != null && chunk.getCurrentFuel(this.world) >= 3&& this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()));
     }
 
     private void updateListeners() {
