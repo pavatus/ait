@@ -94,7 +94,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         boolean sonicInConsole = isScanningSonicInConsole(tardis);
         PlayerEntity player = MinecraftClient.getInstance().player;
 
-        if (!sonicInConsole || !entity.isPartOfSequence() || tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
+        if (!sonicInConsole || !entity.isPartOfSequence()/* || tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)*/)
             return;
 
         matrices.push();
