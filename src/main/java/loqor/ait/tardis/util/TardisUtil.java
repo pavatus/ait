@@ -157,7 +157,7 @@ public class TardisUtil {
                             server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
                         }
                     } else {
-                        server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
+                        server.execute(() -> DoorHandler.toggleLock(tardis, player));
                     }
                 }
             });
