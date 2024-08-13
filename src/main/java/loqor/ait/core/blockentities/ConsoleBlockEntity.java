@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import loqor.ait.tardis.data.FuelHandler;
 import org.joml.Vector3f;
 
 import net.minecraft.block.BlockState;
@@ -277,7 +278,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
                     TardisUtil.random().nextBoolean() ? 0.5f : -0.5f, 0.025f);
         }
 
-        if (tardis.isRefueling()) {
+        if (tardis.isRefueling() && tardis.getFuel() < FuelHandler.TARDIS_MAX_FUEL) {
             serverWorld.spawnParticles((isRiftChunk) ? ParticleTypes.FIREWORK : ParticleTypes.END_ROD,
                     pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 1, 0, 0, 0,
                     (isRiftChunk) ? 0.05f : 0.025f);
