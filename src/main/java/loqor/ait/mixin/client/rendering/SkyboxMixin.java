@@ -104,7 +104,7 @@ public abstract class SkyboxMixin {
 
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
-        if (tardis == null)
+        if (tardis == null || tardis.stats().skybox() == null)
             return;
 
         RegistryKey<World> skyboxWorld = tardis.stats().skybox().get();
