@@ -1,37 +1,8 @@
 package loqor.ait;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.loader.api.FabricLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.PlacedFeature;
-
 import loqor.ait.api.AITModInitializer;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.*;
@@ -42,7 +13,6 @@ import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
-import loqor.ait.core.managers.RiftChunkManager;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.StackUtil;
@@ -61,6 +31,33 @@ import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.PlacedFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 public class AITMod implements ModInitializer {
 
