@@ -22,7 +22,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class RiftChunkHandler extends PersistentState {
-    private HashMap<RegistryKey<World>, RiftChunkMap> chunks;
+    private final HashMap<RegistryKey<World>, RiftChunkMap> chunks;
 
     public RiftChunkHandler() {
         this.chunks = new HashMap<>();
