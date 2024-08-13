@@ -7,11 +7,14 @@ import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.JsonObject;
+import loqor.ait.api.tardis.ArtronHolder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.WorldSavePath;
@@ -22,7 +25,9 @@ import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.tardis.util.TardisUtil;
+import net.minecraft.world.chunk.WorldChunk;
 
+@Deprecated(forRemoval = true)
 public class RiftChunkManager {
 
     public static void init() {

@@ -1,5 +1,7 @@
 package loqor.ait.mixin.server;
 
+import loqor.ait.core.managers.RiftChunkManager;
+import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
