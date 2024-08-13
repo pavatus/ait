@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 
 import io.wispforest.owo.ops.WorldOps;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
+import loqor.ait.tardis.link.v2.TardisRef;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -614,5 +615,9 @@ public class TardisUtil {
         second = PosType.Z.add(second, size.getZ() / 2);
 
         return new Corners(first, second);
+    }
+
+    public static void sendMessageToLinked(Tardis tardis, Text message) {
+        NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
     }
 }
