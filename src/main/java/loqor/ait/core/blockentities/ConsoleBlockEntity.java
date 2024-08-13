@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import loqor.ait.tardis.data.FuelHandler;
 import org.joml.Vector3f;
 
 import net.minecraft.block.BlockState;
@@ -35,6 +34,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.data.RiftChunkHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
