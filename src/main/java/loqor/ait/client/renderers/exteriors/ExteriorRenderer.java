@@ -1,7 +1,5 @@
 package loqor.ait.client.renderers.exteriors;
 
-import loqor.ait.client.AITModClient;
-import loqor.ait.client.util.ResourceChecker;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;

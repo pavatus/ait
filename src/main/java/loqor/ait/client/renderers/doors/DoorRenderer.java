@@ -1,7 +1,5 @@
 package loqor.ait.client.renderers.doors;
 
-import loqor.ait.client.AITModClient;
-import loqor.ait.client.util.ResourceChecker;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
