@@ -1,5 +1,7 @@
 package loqor.ait.tardis.data;
 
+import loqor.ait.tardis.TardisHandlersManager;
+import loqor.ait.tardis.util.NetworkUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
@@ -118,6 +120,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             travel.autopilot(true);
             travel.forceDemat();
         }
+
+        TardisUtil.sendMessageToLinked(tardis, Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
     }
 
     private void warnPlayers() {
