@@ -39,4 +39,8 @@ public abstract class LoopingSound extends MovingSoundInstance {
     public void setVolume(float volume) {
         this.volume = volume;
     }
+
+    public BlockPos getPosition() {
+        return new BlockPos((int) this.x, (int) this.y, (int) this.z);
+    }
 }
