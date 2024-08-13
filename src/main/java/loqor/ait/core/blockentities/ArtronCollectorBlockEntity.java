@@ -1,7 +1,13 @@
 package loqor.ait.core.blockentities;
 
-import org.jetbrains.annotations.Nullable;
-
+import loqor.ait.api.tardis.ArtronHolder;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.item.ArtronCollectorItem;
+import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.tardis.data.RiftChunkHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,15 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import loqor.ait.api.tardis.ArtronHolder;
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.item.ArtronCollectorItem;
-import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.core.util.DeltaTimeManager;
+import org.jetbrains.annotations.Nullable;
 
 public class ArtronCollectorBlockEntity extends BlockEntity
         implements
@@ -109,14 +107,19 @@ public class ArtronCollectorBlockEntity extends BlockEntity
         if (world.isClient())
             return;
 
-        if (RiftChunkManager.isRiftChunk(pos) && RiftChunkManager.getArtronLevels(world, pos) >= 3
-                && this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL
-                && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()))) {
-            RiftChunkManager.setArtronLevels(world, pos, RiftChunkManager.getArtronLevels(world, pos) - 3);
+        // oh yes call this every tick good idea ( #notmyproblem )
+        RiftChunkHandler.RiftChunk chunk = RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos).orElse(null);
+
+        if (shouldDrain(chunk)) {
+            chunk.removeFuel(3, world);
             this.addFuel(3);
+
             this.updateListeners();
             DeltaTimeManager.createDelay(getDelay(), 500L);
         }
+    }
+    private boolean shouldDrain(RiftChunkHandler.RiftChunk chunk) {
+        return chunk != null && chunk.getCurrentFuel(this.world) >= 3&& this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()));
     }
 
     private void updateListeners() {

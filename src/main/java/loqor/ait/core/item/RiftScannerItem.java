@@ -1,5 +1,7 @@
 package loqor.ait.core.item;
 
+import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.tardis.data.RiftChunkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,9 +14,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-
-import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.core.util.DeltaTimeManager;
 
 public class RiftScannerItem extends Item {
     private static final int MAX_ITERATIONS = 32;
@@ -103,11 +102,11 @@ public class RiftScannerItem extends Item {
     }
 
     private static boolean isRiftChunk(ChunkPos pos) {
-        return RiftChunkManager.isRiftChunk(pos);
+        return RiftChunkHandler.isRiftChunk(pos);
     }
 
     private static boolean hasSufficientFuel(ServerWorld world, ChunkPos pos) {
-        return RiftChunkManager.getArtronLevels(world, pos) >= 250;
+        return RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos).orElseThrow().getCurrentFuel(world) >= 250;
     }
 
     private static ChunkPos getChunkInDirection(ChunkPos pos, Direction dir) {

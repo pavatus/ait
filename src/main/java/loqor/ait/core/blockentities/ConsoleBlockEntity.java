@@ -1,12 +1,24 @@
 package loqor.ait.core.blockentities;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.joml.Vector3f;
-
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.control.Control;
+import loqor.ait.tardis.control.ControlTypes;
+import loqor.ait.tardis.control.sequences.SequenceHandler;
+import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.AnimationState;
@@ -20,26 +32,12 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
-import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.registry.impl.console.ConsoleRegistry;
-import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.control.ControlTypes;
-import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
 
@@ -245,7 +243,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         }
 
         ServerTardis tardis = (ServerTardis) this.tardis().get();
-        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
+        boolean isRiftChunk = RiftChunkHandler.isRiftChunk(tardis.travel().position().getPos());
 
         if (tardis.travel().isCrashing()) {
             serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,

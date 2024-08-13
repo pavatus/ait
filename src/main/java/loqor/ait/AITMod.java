@@ -117,7 +117,6 @@ public class AITMod implements ModInitializer {
         TardisUtil.init();
 
         ServerTardisManager.init();
-        RiftChunkManager.init();
         TardisCriterions.init();
 
         entityAttributeRegister();

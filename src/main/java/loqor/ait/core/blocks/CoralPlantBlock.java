@@ -1,9 +1,18 @@
 package loqor.ait.core.blocks;
 
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.advancement.TardisCriterions;
+import loqor.ait.core.blockentities.CoralBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
+import loqor.ait.tardis.manager.TardisBuilder;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -18,21 +27,13 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.*;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.advancement.TardisCriterions;
-import loqor.ait.core.blockentities.CoralBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.managers.RiftChunkManager;
-import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
-import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
@@ -119,7 +120,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             return;
 
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
-                || (!RiftChunkManager.isRiftChunk(pos)
+                || (!RiftChunkHandler.isRiftChunk(pos)
                         && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
