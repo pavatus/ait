@@ -4,6 +4,8 @@ import java.lang.reflect.Type;
 
 import com.google.gson.*;
 
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
@@ -42,6 +44,19 @@ public class Corners {
 
     public static Object serializer() {
         return new Serializer();
+    }
+
+    public NbtCompound toNbt() {
+        NbtCompound nbt = new NbtCompound();
+
+        nbt.put("first", NbtHelper.fromBlockPos(first));
+        nbt.put("second", NbtHelper.fromBlockPos(second));
+
+        return nbt;
+    }
+
+    public static Corners fromNbt(NbtCompound nbt) {
+        return new Corners(NbtHelper.toBlockPos(nbt.getCompound("first")), NbtHelper.toBlockPos(nbt.getCompound("second")));
     }
 
     private static class Serializer implements JsonDeserializer<Corners> {
