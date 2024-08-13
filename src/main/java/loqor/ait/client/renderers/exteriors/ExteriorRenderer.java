@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.exteriors;
 
+import loqor.ait.client.AITModClient;
+import loqor.ait.client.util.ResourceChecker;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -181,7 +183,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
             Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides());
 
-            if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture))) {
+            if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture)) && ResourceChecker.getInstance().exists(biomeTexture)) {
                 model.renderWithAnimations(entity, this.model.getPart(), matrices,
                         vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)),
                         light, overlay, 1, 1, 1, alpha);
