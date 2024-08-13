@@ -13,7 +13,7 @@ import loqor.ait.client.sounds.hum.ClientHumHandler;
 import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
 import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
 import loqor.ait.client.sounds.rain.ClientThunderSoundHandler;
-import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
+import loqor.ait.client.sounds.sonic.SonicSoundHandler;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 
 /**
@@ -30,7 +30,7 @@ public class ClientSoundManager {
     private static ClientRainSoundHandler rainSound;
     private static ClientThunderSoundHandler thunderSound;
     private static ClientLavaSoundHandler lavaSound;
-    private static ClientSonicSoundHandler sonicSound;
+    private static SonicSoundHandler sonicSound;
     private static ClientFallSoundHandler fallSound;
 
     public static ClientHumHandler getHum() {
@@ -92,9 +92,9 @@ public class ClientSoundManager {
         return lavaSound;
     }
 
-    public static ClientSonicSoundHandler getSonicSound() {
+    public static SonicSoundHandler getSonicSound() {
         if (sonicSound == null) {
-            sonicSound = ClientSonicSoundHandler.create();
+            sonicSound = new SonicSoundHandler();
         }
         return sonicSound;
     }
@@ -130,9 +130,6 @@ public class ClientSoundManager {
 
         if (getLavaSound() != null)
             getLavaSound().tick(client);
-
-        if (getSonicSound() != null)
-            getSonicSound().tick(client);
 
         if (getFallSound() != null)
             getFallSound().tick(client);
