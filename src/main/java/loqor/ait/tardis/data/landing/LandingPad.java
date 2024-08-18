@@ -520,9 +520,19 @@ public class LandingPad { // split this up into multiple files..?
 
             World world = TardisUtil.getOverworld().getServer().getWorld(destination.getDimension()); // #getWorld from destination is always null..?
 
-            Spot spot = findSpot(world, destination.getPos()).orElse(null);
+            Spot spot = null;
+            boolean success = false;
 
-            if (spot == null) return;
+            while (!success) {
+                spot = findSpot(world, destination.getPos()).orElse(null);
+
+                if (spot == null) return;
+
+                spot.verify(world);
+                if (spot.isOccupied()) continue;
+
+                success = true;
+            }
 
             this.claim(spot, true);
             this.tardis().travel().destination(destination.pos(this.current.getPos()));
