@@ -508,7 +508,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.song", "Song");
 
         provider.addTranslation(AITBlocks.WAYPOINT_BANK, "Waypoint Bank");
-        provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Pad");
+        provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
         provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
