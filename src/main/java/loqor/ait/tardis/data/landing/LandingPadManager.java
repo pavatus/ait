@@ -15,60 +15,61 @@ import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class LandingPadManager extends PersistentState {
-    private final HashMap<Long, LandingPadRegion> regions; // TODO - they arent per-world right now
+    private final HashMap<Long, Region> regions; // TODO - they arent per-world right now
 
     public LandingPadManager() {
         this.regions = new HashMap<>();
     }
 
-    private Optional<LandingPadRegion> getRegion(Long pos) {
+    private Optional<Region> getRegion(Long pos) {
         return Optional.ofNullable(regions.get(pos));
     }
-    private Optional<LandingPadRegion> getRegion(ChunkPos pos) {
+    private Optional<Region> getRegion(ChunkPos pos) {
         return this.getRegion(pos.toLong());
     }
-    public Optional<LandingPadRegion> getRegion(BlockPos pos) {
+    public Optional<Region> getRegion(BlockPos pos) {
         return this.getRegion(new ChunkPos(pos));
     }
 
-    private LandingPadRegion claim(ChunkPos pos) {
+    private Region claim(ChunkPos pos) {
         Long longPos = pos.toLong();
 
         if (regions.containsKey(longPos)) {
             throw new IllegalStateException("Region already occupied");
         }
 
-        LandingPadRegion created = new LandingPadRegion(pos);
+        Region created = new Region(pos);
         regions.put(longPos, created);
 
         return created;
     }
-    public LandingPadRegion claim(BlockPos pos) {
+    public Region claim(BlockPos pos) {
         return this.claim(new ChunkPos(pos));
     }
 
-    private LandingPadRegion release(Long pos) {
+    private Region release(Long pos) {
         if (!this.regions.containsKey(pos)) {
             return null; // lol no exception
         }
 
 
-        LandingPadRegion released = this.regions.remove(pos);
+        Region released = this.regions.remove(pos);
 
         released.onRemoved();
 
         return released;
     }
-    private LandingPadRegion release(ChunkPos pos) {
+    private Region release(ChunkPos pos) {
         return this.release(pos.toLong());
     }
-    public LandingPadRegion release(BlockPos pos) {
+    public Region release(BlockPos pos) {
         return this.release(new ChunkPos(pos));
     }
 
@@ -100,20 +101,20 @@ public class LandingPadManager extends PersistentState {
         LandingPadManager created = new LandingPadManager();
 
         data.getKeys().forEach(key -> {
-            LandingPadRegion pad = new LandingPadRegion(data.getCompound(key));
+            Region pad = new Region(data.getCompound(key));
             created.regions.put(pad.toLong(), pad);
         });
 
         return created;
     }
-    public static class LandingPadRegion implements LandingPadListener {
+    public static class Region implements LandingPadListener {
         private final ChunkPos chunk;
         private final int maxSpots;
         private final int maxPerRow;
-        private final List<LandingPadSpot> spots;
-        private final Queue<LandingPadSpot> free;
+        private final List<Spot> spots;
+        private final Queue<Spot> free;
 
-        public LandingPadRegion(ChunkPos chunk) {
+        public Region(ChunkPos chunk) {
             this.chunk = chunk;
             // for now just assume 16x16
             this.maxSpots = getMaxSpots(16, 16);
@@ -121,7 +122,7 @@ public class LandingPadManager extends PersistentState {
             this.spots = new ArrayList<>();
             this.free = new LinkedList<>();
         }
-        public LandingPadRegion(NbtCompound data) {
+        public Region(NbtCompound data) {
             this(new ChunkPos(data.getLong("Chunk")));
 
             this.deserialize(data);
@@ -131,7 +132,7 @@ public class LandingPadManager extends PersistentState {
             return (sizeX * sizeY) / 4;
         }
 
-        public Optional<LandingPadSpot> getNextSpot() {
+        public Optional<Spot> getNextSpot() {
             if (!this.free.isEmpty()) {
                 return Optional.of(this.free.poll());
             }
@@ -142,32 +143,32 @@ public class LandingPadManager extends PersistentState {
 
             return Optional.of(this.generateSpot(false));
         }
-        private LandingPadSpot createSpot() {
-            LandingPadSpot created;
+        private Spot createSpot() {
+            Spot created;
 
             if (this.spots.isEmpty()) {
-                created = new LandingPadSpot(new BlockPos(this.chunk.getStartX() + 1, 64, this.chunk.getStartZ() + 1));
+                created = new Spot(new BlockPos(this.chunk.getStartX() + 1, 64, this.chunk.getStartZ() + 1));
                 return created;
             }
 
-            LandingPadSpot last = this.spots.get(this.spots.size() - 1);
+            Spot last = this.spots.get(this.spots.size() - 1);
 
             float rowCount = ((float) this.spots.size() / this.maxPerRow);
             boolean isNewRow = rowCount == Math.round(rowCount);
 
             if (!isNewRow) {
-                created = new LandingPadSpot(new BlockPos(last.getPos().getX() + 2, last.getPos().getY(), last.getPos().getZ()));
+                created = new Spot(new BlockPos(last.getPos().getX() + 2, last.getPos().getY(), last.getPos().getZ()));
                 return created;
             }
 
-            LandingPadSpot first = this.spots.get(0);
+            Spot first = this.spots.get(0);
 
-            created = new LandingPadSpot(new BlockPos(first.getPos().getX(), first.getPos().getY(), last.getPos().getZ() + 2));
+            created = new Spot(new BlockPos(first.getPos().getX(), first.getPos().getY(), last.getPos().getZ() + 2));
 
             return created;
         }
-        private LandingPadSpot generateSpot(boolean isFree) {
-            LandingPadSpot created = this.createSpot();
+        private Spot generateSpot(boolean isFree) {
+            Spot created = this.createSpot();
 
             this.spots.add(created);
             created.listen(this);
@@ -179,16 +180,16 @@ public class LandingPadManager extends PersistentState {
         }
 
         @Override
-        public void onClaim(LandingPadSpot spot) {
+        public void onClaim(Spot spot) {
 
         }
         @Override
-        public void onFree(LandingPadSpot spot) {
+        public void onFree(Spot spot) {
             this.free.add(spot);
         }
 
         public void onRemoved() {
-            for (LandingPadSpot spot : this.spots) {
+            for (Spot spot : this.spots) {
                 spot.release(true);
             }
         }
@@ -205,7 +206,7 @@ public class LandingPadManager extends PersistentState {
             NbtCompound spots = new NbtCompound();
 
             int count = 0;
-            for (LandingPadSpot spot : this.spots) {
+            for (Spot spot : this.spots) {
                 spots.put("Spot " + count++, spot.serialize());
             }
 
@@ -217,24 +218,24 @@ public class LandingPadManager extends PersistentState {
             NbtCompound spots = data.getCompound("Spots");
 
             for (String key : spots.getKeys()) {
-                LandingPadSpot created = new LandingPadSpot(spots.getCompound(key));
+                Spot created = new Spot(spots.getCompound(key));
                 created.listen(this);
                 this.spots.add(created);
             }
         }
     }
 
-    public static class LandingPadSpot {
+    public static class Spot {
         @Exclude
         private final List<LandingPadListener> listeners; // todo a list probably isnt the best for this
         private final BlockPos pos;
         private Tardis tardis;
 
-        public LandingPadSpot(BlockPos pos) {
+        public Spot(BlockPos pos) {
             this.pos = pos;
             this.listeners = new ArrayList<>();
         }
-        public LandingPadSpot(NbtCompound data) {
+        public Spot(NbtCompound data) {
             this(NbtHelper.toBlockPos(data.getCompound("Pos")));
 
             this.deserialize(data);
@@ -286,6 +287,15 @@ public class LandingPadManager extends PersistentState {
             this.listeners.add(listener);
         }
 
+        public void verify(World world) {
+            if (this.isOccupied()) return;
+
+            if(!(world.getBlockEntity(this.getPos()) instanceof ExteriorBlockEntity exterior)) return;
+            if (exterior.tardis().isEmpty()) return;
+
+            this.claim(exterior.tardis().get(), true);
+        }
+
         public NbtCompound serialize() {
             NbtCompound data = new NbtCompound();
 
@@ -313,24 +323,24 @@ public class LandingPadManager extends PersistentState {
         }
 
         public static class Serializer implements
-                JsonSerializer<LandingPadSpot>,
-                JsonDeserializer<LandingPadSpot> {
+                JsonSerializer<Spot>,
+                JsonDeserializer<Spot> {
 
             @Override
-            public LandingPadSpot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            public Spot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 NbtCompound data = context.deserialize(json, NbtCompound.class);
-                return new LandingPadSpot(data);
+                return new Spot(data);
             }
 
             @Override
-            public JsonElement serialize(LandingPadSpot src, Type typeOfSrc, JsonSerializationContext context) {
+            public JsonElement serialize(Spot src, Type typeOfSrc, JsonSerializationContext context) {
                 return context.serialize(src.serialize());
             }
         }
     }
 
     public interface LandingPadListener {
-        void onClaim(LandingPadSpot spot);
-        void onFree(LandingPadSpot spot);
+        void onClaim(Spot spot);
+        void onFree(Spot spot);
     }
 }

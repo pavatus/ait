@@ -102,7 +102,7 @@ public abstract class TardisManager<T extends Tardis, C> {
                 .registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
                 .registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())
                 .registerTypeAdapter(TardisDesktop.class, TardisDesktop.updater())
-                .registerTypeAdapter(LandingPadManager.LandingPadSpot.class, LandingPadManager.LandingPadSpot.serializer());
+                .registerTypeAdapter(LandingPadManager.Spot.class, LandingPadManager.Spot.serializer());
     }
 
     protected GsonBuilder getNetworkGson(GsonBuilder builder) {

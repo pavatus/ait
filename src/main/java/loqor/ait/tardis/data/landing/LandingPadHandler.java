@@ -15,7 +15,7 @@ import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class LandingPadHandler extends KeyedTardisComponent {
     @Exclude(strategy = Exclude.Strategy.NETWORK)
-    private LandingPadManager.LandingPadSpot current;
+    private LandingPadManager.Spot current;
 
     static {
         TardisEvents.MAT.register(LandingPadHandler::onMaterialise);
@@ -58,7 +58,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
         World world = TardisUtil.getOverworld().getServer().getWorld(destination.getDimension()); // #getWorld from destination is always null..?
 
-        LandingPadManager.LandingPadSpot spot = findSpot(world, destination.getPos()).orElse(null);
+        LandingPadManager.Spot spot = findSpot(world, destination.getPos()).orElse(null);
 
         if (spot == null) return;
 
@@ -66,19 +66,19 @@ public class LandingPadHandler extends KeyedTardisComponent {
         this.tardis().travel().destination(destination.pos(this.current.getPos()));
     }
 
-    private Optional<LandingPadManager.LandingPadSpot> findSpot(World world, BlockPos pos) {
-        LandingPadManager.LandingPadRegion region = findRegion(world, pos).orElse(null);
+    private Optional<LandingPadManager.Spot> findSpot(World world, BlockPos pos) {
+        LandingPadManager.Region region = findRegion(world, pos).orElse(null);
 
         if (region == null) return Optional.empty();
 
         return region.getNextSpot();
     }
-    private Optional<LandingPadManager.LandingPadRegion> findRegion(World world, BlockPos pos) {
+    private Optional<LandingPadManager.Region> findRegion(World world, BlockPos pos) {
         return LandingPadManager.getInstance(world).getRegion(pos);
     }
 
-    public LandingPadManager.LandingPadSpot release(boolean updateSpot) {
-        LandingPadManager.LandingPadSpot spot = this.current;
+    public LandingPadManager.Spot release(boolean updateSpot) {
+        LandingPadManager.Spot spot = this.current;
 
         if (updateSpot) {
             this.current.release(false);
@@ -87,7 +87,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
         this.current = null;
         return spot;
     }
-    public void claim(LandingPadManager.LandingPadSpot spot, boolean updateSpot) {
+    public void claim(LandingPadManager.Spot spot, boolean updateSpot) {
         this.current = spot;
 
         if (updateSpot) {
