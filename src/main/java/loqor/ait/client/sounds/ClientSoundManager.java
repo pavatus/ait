@@ -18,7 +18,7 @@ import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
 
 /**
  * A class for playing + managing our custom sounds on the client, right now
- * just a place to store the hum/alarm handlers
+ * TODO - refactor SoundHandler etc
  */
 @Environment(EnvType.CLIENT)
 public class ClientSoundManager {
