@@ -39,7 +39,7 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class LandingPad { // split this up into multiple files..?
-    public static class Manager extends PersistentState {
+    public static class Manager extends PersistentState implements Region.Listener {
         private final ServerWorld world;
         private final HashMap<Long, LandingPad.Region> regions;
 
@@ -68,6 +68,8 @@ public class LandingPad { // split this up into multiple files..?
             LandingPad.Region created = new LandingPad.Region(pos);
             regions.put(longPos, created);
 
+            created.addListener(this);
+
             Network.toAll(Network.Action.ADD, this.world, created);
 
             return created;
@@ -95,6 +97,26 @@ public class LandingPad { // split this up into multiple files..?
         }
         public LandingPad.Region release(BlockPos pos) {
             return this.release(new ChunkPos(pos));
+        }
+
+        @Override
+        public void onAdd(Region region, Spot spot) {
+            Network.toTracking(Network.Action.ADD, this.world, region);
+        }
+
+        @Override
+        public void onRegionRemoved(Region region) {
+
+        }
+
+        @Override
+        public void onClaim(Region region, Spot spot) {
+            Network.toTracking(Network.Action.ADD, this.world, region);
+        }
+
+        @Override
+        public void onFree(Region region, Spot spot) {
+            Network.toTracking(Network.Action.ADD, this.world, region);
         }
 
         @Override
@@ -129,14 +151,14 @@ public class LandingPad { // split this up into multiple files..?
 
             NbtList list = data.getList("Regions", NbtElement.COMPOUND_TYPE);
 
-            for (int i = 0; i < list.size(); i++) {
-                NbtCompound regionData = list.getCompound(i);
-                LandingPad.Region pad = new LandingPad.Region(regionData, world);
+            for (NbtElement nbt : list) {
+                LandingPad.Region pad = new LandingPad.Region((NbtCompound) nbt, world);
                 created.regions.put(pad.toLong(), pad);
             }
 
             return created;
         }
+
 
         public static class Network { // TODO - optimise network logic, rn it just sends EVERYTHING to EVERYONE (very bad)
             public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "landingpad_sync");
@@ -290,19 +312,29 @@ public class LandingPad { // split this up into multiple files..?
                 this.free.add(created);
 
             for (Listener listener : this.listeners) {
-                listener.onAdd(created);
+                listener.onAdd(this, created);
             }
 
             return created;
         }
 
+        public Collection<Spot> getSpots() {
+            return this.spots;
+        }
+
         @Override
         public void onClaim(Spot spot) {
-
+            for (Listener listener : this.listeners) {
+                listener.onClaim(this, spot);
+            }
         }
         @Override
         public void onFree(Spot spot) {
             this.free.add(spot);
+
+            for (Listener listener : this.listeners) {
+                listener.onFree(this, spot);
+            }
         }
 
         public void onRemoved() {
@@ -311,7 +343,7 @@ public class LandingPad { // split this up into multiple files..?
             }
 
             for (Listener listener : this.listeners) {
-                listener.onRegionRemoved();
+                listener.onRegionRemoved(this);
             }
         }
 
@@ -339,10 +371,10 @@ public class LandingPad { // split this up into multiple files..?
             return data;
         }
         private void deserialize(NbtCompound data, @Nullable ServerWorld world) {
-            NbtCompound spots = data.getCompound("Spots");
+            NbtList spots = data.getList("Spots", NbtElement.COMPOUND_TYPE);
 
-            for (String key : spots.getKeys()) {
-                Spot created = new Spot(spots.getCompound(key));
+            for (NbtElement nbt : spots) {
+                Spot created = new Spot((NbtCompound) nbt);
                 created.addListener(this);
                 this.spots.add(created);
 
@@ -352,15 +384,17 @@ public class LandingPad { // split this up into multiple files..?
         }
 
         public interface Listener {
-            void onAdd(Spot spot);
-            void onRegionRemoved();
+            void onAdd(Region region, Spot spot);
+            void onRegionRemoved(Region region);
+            void onClaim(Region region, Spot spot);
+            void onFree(Region region, Spot spot);
         }
     }
 
     public static class Spot {
         @Exclude
         private final List<Listener> listeners; // todo a list probably isnt the best for this
-        private final BlockPos pos;
+        private BlockPos pos;
         private Tardis tardis;
 
         public Spot(BlockPos pos) {
@@ -486,6 +520,7 @@ public class LandingPad { // split this up into multiple files..?
         static {
             TardisEvents.MAT.register(Handler::onMaterialise);
             TardisEvents.DEMAT.register(Handler::onDematerialise); // TODO - on enter flight event instead
+            TardisEvents.LANDED.register(Handler::onLand);
         }
 
         public Handler() {
@@ -509,6 +544,17 @@ public class LandingPad { // split this up into multiple files..?
 
         private TardisEvents.Interaction onMaterialise() {
             this.update();
+
+            return TardisEvents.Interaction.PASS;
+        }
+
+        private static TardisEvents.Interaction onLand(Tardis tardis) {
+            return tardis.landingPad().onLand();
+        }
+        private TardisEvents.Interaction onLand() {
+            if (this.current == null) return TardisEvents.Interaction.PASS;
+
+            this.current.pos = tardis.travel().position().getPos();
 
             return TardisEvents.Interaction.PASS;
         }

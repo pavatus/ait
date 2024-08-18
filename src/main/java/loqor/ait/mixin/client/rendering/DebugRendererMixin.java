@@ -9,12 +9,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
-import loqor.ait.client.renderers.ChunkBorderRenderer;
+import loqor.ait.client.renderers.LandingRegionRenderer;
 
 @Mixin(DebugRenderer.class)
 public class DebugRendererMixin {
     @Inject(method="render", at = @At("TAIL"))
     private void ait$renderWorld(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
-        ChunkBorderRenderer.getInstance().tryRender(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        LandingRegionRenderer.getInstance().tryRender(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }
 }
