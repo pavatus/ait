@@ -1,6 +1,8 @@
 package loqor.ait.registry.impl.exterior;
 
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionDefaultVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionFireVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSoulVariant;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;
@@ -176,6 +178,8 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema GEOMETRIC_SOUL;
     public static ClientExteriorVariantSchema GEOMETRIC_GILDED;
     public static ClientExteriorVariantSchema STALLION_DEFAULT;
+    public static ClientExteriorVariantSchema STALLION_FIRE;
+    public static ClientExteriorVariantSchema STALLION_SOUL;
 
     @Override
     public void onClientInit() {
@@ -248,5 +252,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         // Stallion
         STALLION_DEFAULT = register(new ClientStallionDefaultVariant());
+        STALLION_FIRE = register(new ClientStallionFireVariant());
+        STALLION_SOUL = register(new ClientStallionSoulVariant());
     }
 }
