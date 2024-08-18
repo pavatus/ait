@@ -7,6 +7,7 @@ import com.google.gson.*;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
@@ -79,7 +80,13 @@ public class LandingPadManager extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        regions.values().forEach(pad -> nbt.put(pad.toLong().toString(), pad.serialize()));
+        NbtList list = new NbtList();
+
+        for(Region region : regions.values()) {
+            list.add(region.serialize());
+        }
+
+        nbt.put("Regions", list);
 
         return nbt;
     }
@@ -101,8 +108,11 @@ public class LandingPadManager extends PersistentState {
     private static LandingPadManager loadNbt(ServerWorld world, NbtCompound data) {
         LandingPadManager created = new LandingPadManager(world);
 
-        for (String key : data.getKeys()) {
-            Region pad = new Region(data.getCompound(key), world);
+        NbtList list = data.getList("Regions", NbtElement.COMPOUND_TYPE);
+
+        for (int i = 0; i < list.size(); i++) {
+            NbtCompound regionData = list.getCompound(i);
+            Region pad = new Region(regionData, world);
             created.regions.put(pad.toLong(), pad);
         }
 
