@@ -13,6 +13,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.util.PossibleIdentifier;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -97,10 +98,10 @@ public class BiomeHandler extends KeyedTardisComponent {
 
         public static final BiomeType[] VALUES = BiomeType.values();
 
-        private final Function<BiomeOverrides, Identifier> func;
+        private final Function<BiomeOverrides, PossibleIdentifier> func;
         private final String suffix;
 
-        BiomeType(String suffix, Function<BiomeOverrides, Identifier> func) {
+        BiomeType(String suffix, Function<BiomeOverrides, PossibleIdentifier> func) {
             this.suffix = suffix;
             this.func = func;
         }
@@ -123,7 +124,7 @@ public class BiomeHandler extends KeyedTardisComponent {
             return new Identifier(AITMod.MOD_ID, path.substring(0, path.length() - 4) + this.suffix + ".png");
         };
 
-        public Identifier get(BiomeOverrides overrides) {
+        public PossibleIdentifier get(BiomeOverrides overrides) {
             if (overrides == null)
                 return null;
 
