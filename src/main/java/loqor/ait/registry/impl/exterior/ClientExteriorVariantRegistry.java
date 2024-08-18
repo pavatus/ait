@@ -1,8 +1,5 @@
 package loqor.ait.registry.impl.exterior;
 
-import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionDefaultVariant;
-import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionFireVariant;
-import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSoulVariant;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;
@@ -38,6 +35,9 @@ import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthSoulVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeTronVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionDefaultVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionFireVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSoulVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimSoulVariant;

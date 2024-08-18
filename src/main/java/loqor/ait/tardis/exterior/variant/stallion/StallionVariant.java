@@ -1,5 +1,8 @@
 package loqor.ait.tardis.exterior.variant.stallion;
 
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.schema.door.DoorSchema;
@@ -7,12 +10,8 @@ import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.door.CapsuleDoorVariant;
 import loqor.ait.tardis.door.StallionDoorVariant;
-import loqor.ait.tardis.exterior.category.CapsuleCategory;
 import loqor.ait.tardis.exterior.category.StallionCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 
 public abstract class StallionVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/stallion/stallion_";

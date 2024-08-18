@@ -1,13 +1,14 @@
 package loqor.ait.tardis.exterior.variant.stallion.client;
 
+import org.joml.Vector3f;
+
+import net.minecraft.util.Identifier;
+
 import loqor.ait.AITMod;
-import loqor.ait.client.models.exteriors.CapsuleExteriorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.StallionExteriorModel;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import net.minecraft.util.Identifier;
-import org.joml.Vector3f;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class ClientStallionVariant extends ClientExteriorVariantSchema {

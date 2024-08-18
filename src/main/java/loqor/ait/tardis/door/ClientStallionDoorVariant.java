@@ -1,7 +1,6 @@
 package loqor.ait.tardis.door;
 
 import loqor.ait.client.models.doors.DoorModel;
-import loqor.ait.client.models.doors.RenegadeDoorModel;
 import loqor.ait.client.models.doors.StallionDoorModel;
 import loqor.ait.core.data.schema.door.ClientDoorSchema;
 

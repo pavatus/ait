@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import loqor.ait.tardis.exterior.variant.stallion.StallionDefaultVariant;
-import loqor.ait.tardis.exterior.variant.stallion.StallionFireVariant;
-import loqor.ait.tardis.exterior.variant.stallion.StallionSoulVariant;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -42,6 +39,9 @@ import loqor.ait.tardis.exterior.variant.plinth.PlinthSoulVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeCabinetVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
+import loqor.ait.tardis.exterior.variant.stallion.StallionDefaultVariant;
+import loqor.ait.tardis.exterior.variant.stallion.StallionFireVariant;
+import loqor.ait.tardis.exterior.variant.stallion.StallionSoulVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
