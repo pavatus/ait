@@ -16,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPad;
 
 public class LandingPadBlock extends Block {
 
@@ -62,17 +62,17 @@ public class LandingPadBlock extends Block {
     }
 
     private static boolean isClaimed(ServerWorld world, BlockPos pos) {
-        LandingPadManager manager = LandingPadManager.getInstance(world);
+        LandingPad.Manager manager = LandingPad.Manager.getInstance(world);
 
         return manager.getRegion(pos).isPresent();
     }
     private static void claimChunk(ServerWorld world, BlockPos pos) {
-        LandingPadManager manager = LandingPadManager.getInstance(world);
+        LandingPad.Manager manager = LandingPad.Manager.getInstance(world);
 
         manager.claim(pos);
     }
     private static void releaseChunk(ServerWorld world, BlockPos pos) {
-        LandingPadManager manager = LandingPadManager.getInstance(world);
+        LandingPad.Manager manager = LandingPad.Manager.getInstance(world);
 
         manager.release(pos);
     }

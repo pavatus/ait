@@ -57,7 +57,7 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPad;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -209,7 +209,7 @@ public class AITModClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
                 responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
 
-        ClientPlayNetworking.registerGlobalReceiver(LandingPadManager.Network.SYNC, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(LandingPad.Manager.Network.SYNC, (client, handler, buf, responseSender) -> {
             ClientLandingManager.getInstance().receive(buf);
         });
     }

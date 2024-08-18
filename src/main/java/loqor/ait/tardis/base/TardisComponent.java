@@ -12,7 +12,7 @@ import loqor.ait.tardis.*;
 import loqor.ait.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
-import loqor.ait.tardis.data.landing.LandingPadHandler;
+import loqor.ait.tardis.data.landing.LandingPad;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.mood.MoodHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
@@ -132,7 +132,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         SIEGE(SiegeHandler.class, SiegeHandler::new),
         CLOAK(CloakHandler.class, CloakHandler::new),
         INCREMENT(IncrementManager.class, IncrementManager::new),
-        LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new),;
+        LANDING_PAD(LandingPad.Handler.class, LandingPad.Handler::new),;
 
         private final BiConsumer<ClientTardis, TardisComponent> setter;
         private final Supplier<TardisComponent> creator;

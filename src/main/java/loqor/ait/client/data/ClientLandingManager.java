@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
-import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPad;
 
 public class ClientLandingManager {
     private final MinecraftClient client;
@@ -27,40 +27,40 @@ public class ClientLandingManager {
         }));
     }
 
-    private final HashMap<RegistryKey<World>, HashMap<Long, LandingPadManager.Region>> regions; // world -> chunk long -> region
+    private final HashMap<RegistryKey<World>, HashMap<Long, LandingPad.Region>> regions; // world -> chunk long -> region
 
     public ClientLandingManager() {
         this.regions = new HashMap<>();
         this.client = MinecraftClient.getInstance();
     }
 
-    private HashMap<Long, LandingPadManager.Region> getRegions(RegistryKey<World> world) {
+    private HashMap<Long, LandingPad.Region> getRegions(RegistryKey<World> world) {
         return this.regions.computeIfAbsent(world, w -> new HashMap<>());
     }
-    private Optional<LandingPadManager.Region> getRegion(RegistryKey<World> world, long chunk) {
+    private Optional<LandingPad.Region> getRegion(RegistryKey<World> world, long chunk) {
         return Optional.ofNullable(this.getRegions(world).get(chunk));
     }
-    public Optional<LandingPadManager.Region> getRegion(ClientWorld world, BlockPos pos) {
+    public Optional<LandingPad.Region> getRegion(ClientWorld world, BlockPos pos) {
         return this.getRegion(world.getRegistryKey(), new ChunkPos(pos).toLong());
     }
 
-    private void addRegion(RegistryKey<World> world, long chunk, LandingPadManager.Region region) {
+    private void addRegion(RegistryKey<World> world, long chunk, LandingPad.Region region) {
         this.getRegions(world).put(chunk, region);
     }
-    private void addRegion(RegistryKey<World> world, LandingPadManager.Region region) {
+    private void addRegion(RegistryKey<World> world, LandingPad.Region region) {
         this.addRegion(world, region.toLong(), region);
     }
-    public void addRegion(ClientWorld world, LandingPadManager.Region region) {
+    public void addRegion(ClientWorld world, LandingPad.Region region) {
         this.addRegion(world.getRegistryKey(), region);
     }
 
     private void removeRegion(RegistryKey<World> world, long chunk) {
         this.getRegions(world).remove(chunk);
     }
-    private void removeRegion(RegistryKey<World> world, LandingPadManager.Region region) {
+    private void removeRegion(RegistryKey<World> world, LandingPad.Region region) {
         this.removeRegion(world, region.toLong());
     }
-    public void removeRegion(ClientWorld world, LandingPadManager.Region region) {
+    public void removeRegion(ClientWorld world, LandingPad.Region region) {
         this.removeRegion(world.getRegistryKey(), region);
     }
 
@@ -73,22 +73,22 @@ public class ClientLandingManager {
         long chunk = data.getLong("Chunk");
 
         int type = data.getInt("Type");
-        LandingPadManager.Network.Action action = LandingPadManager.Network.Action.values()[type];
+        LandingPad.Manager.Network.Action action = LandingPad.Manager.Network.Action.values()[type];
 
-        if (action == LandingPadManager.Network.Action.CLEAR) {
+        if (action == LandingPad.Manager.Network.Action.CLEAR) {
             this.clearWorld(world);
             return;
         }
 
-        if (action == LandingPadManager.Network.Action.REMOVE) {
+        if (action == LandingPad.Manager.Network.Action.REMOVE) {
             this.removeRegion(world, chunk);
             return;
         }
 
-        if (action == LandingPadManager.Network.Action.ADD) {
+        if (action == LandingPad.Manager.Network.Action.ADD) {
             NbtCompound region = data.getCompound("Region");
 
-            this.addRegion(world, chunk, new LandingPadManager.Region(region, null));
+            this.addRegion(world, chunk, new LandingPad.Region(region, null));
         }
     }
 
