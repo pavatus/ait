@@ -21,7 +21,6 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class LandingPadManager extends PersistentState {
     private final ServerWorld world;
@@ -309,11 +308,14 @@ public class LandingPadManager extends PersistentState {
             return data;
         }
         private void deserialize(MinecraftServer server, NbtCompound data) {
+            // causes crash - is set elsewhere instead
+            /*
             if (data.contains("Tardis")) {
                 ServerTardisManager.getInstance().getTardis(server, data.getUuid("Tardis"), tardis -> {
                     this.tardis = tardis;
                 });
             }
+             */
         }
         private void deserialize(NbtCompound data) {
             // uhh
