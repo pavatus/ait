@@ -10,6 +10,7 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.data.landing.LandingPadManager;
 
 public final class TardisEvents {
 
@@ -46,6 +47,12 @@ public final class TardisEvents {
     public static final Event<Crash> CRASH = EventFactory.createArrayBacked(Crash.class, callbacks -> tardis -> {
         for (Crash callback : callbacks) {
             callback.onCrash(tardis);
+        }
+    });
+
+    public static final Event<LandingPadAdjust> LANDING_PAD_ADJUST = EventFactory.createArrayBacked(LandingPadAdjust.class, callbacks -> (tardis, spot) -> {
+        for (LandingPadAdjust callback : callbacks) {
+            callback.onLandingPadAdjust(tardis, spot);
         }
     });
 
@@ -196,6 +203,14 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface Crash {
         void onCrash(Tardis tardis);
+    }
+
+    /**
+     * Called whenever a landing region adjusts where the tardis lands
+     */
+    @FunctionalInterface
+    public interface LandingPadAdjust {
+        void onLandingPadAdjust(Tardis tardis, LandingPadManager.Spot spot);
     }
 
     /**

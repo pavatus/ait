@@ -65,6 +65,8 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
         this.claim(spot, true);
         this.tardis().travel().destination(destination.pos(this.current.getPos()));
+
+        TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), spot);
     }
 
     private Optional<LandingPadManager.Spot> findSpot(World world, BlockPos pos) {
