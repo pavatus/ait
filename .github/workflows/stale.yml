@@ -26,7 +26,7 @@ jobs:
         days-before-issue-stale: 30
         days-before-issue-close: 4
         stale-issue-label: "stale"
-        stale-issue-message: "Is this still an issue? This issue is stale because it has been open for 30 days with no activity."
+        stale-issue-message: "This issue is stale because it has been open for 30 days with no activity."
         close-issue-message: "This issue was closed because it has been inactive for 4 days since being marked as stale."
         stale-pr-message: 'Stale pull request message'
         stale-pr-label: 'stale'
