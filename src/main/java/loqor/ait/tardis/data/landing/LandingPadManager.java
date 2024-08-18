@@ -1,8 +1,12 @@
 package loqor.ait.tardis.data.landing;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
+import com.google.gson.*;
+
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -11,9 +15,10 @@ import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class LandingPadManager extends PersistentState {
     private final HashMap<Long, LandingPadRegion> regions; // TODO - they arent per-world right now
@@ -30,6 +35,41 @@ public class LandingPadManager extends PersistentState {
     }
     public Optional<LandingPadRegion> getRegion(BlockPos pos) {
         return this.getRegion(new ChunkPos(pos));
+    }
+
+    private LandingPadRegion claim(ChunkPos pos) {
+        Long longPos = pos.toLong();
+
+        if (regions.containsKey(longPos)) {
+            throw new IllegalStateException("Region already occupied");
+        }
+
+        LandingPadRegion created = new LandingPadRegion(pos);
+        regions.put(longPos, created);
+
+        return created;
+    }
+    public LandingPadRegion claim(BlockPos pos) {
+        return this.claim(new ChunkPos(pos));
+    }
+
+    private LandingPadRegion release(Long pos) {
+        if (!this.regions.containsKey(pos)) {
+            return null; // lol no exception
+        }
+
+
+        LandingPadRegion released = this.regions.remove(pos);
+
+        released.onRemoved();
+
+        return released;
+    }
+    private LandingPadRegion release(ChunkPos pos) {
+        return this.release(pos.toLong());
+    }
+    public LandingPadRegion release(BlockPos pos) {
+        return this.release(new ChunkPos(pos));
     }
 
     @Override
@@ -83,6 +123,8 @@ public class LandingPadManager extends PersistentState {
         }
         public LandingPadRegion(NbtCompound data) {
             this(new ChunkPos(data.getLong("Chunk")));
+
+            this.deserialize(data);
         }
 
         private static int getMaxSpots(int sizeX, int sizeY) {
@@ -98,7 +140,7 @@ public class LandingPadManager extends PersistentState {
                 return Optional.empty();
             }
 
-            return Optional.of(this.generateSpot());
+            return Optional.of(this.generateSpot(false));
         }
         private LandingPadSpot createSpot() {
             LandingPadSpot created;
@@ -124,12 +166,14 @@ public class LandingPadManager extends PersistentState {
 
             return created;
         }
-        private LandingPadSpot generateSpot() {
+        private LandingPadSpot generateSpot(boolean isFree) {
             LandingPadSpot created = this.createSpot();
 
             this.spots.add(created);
-            this.free.add(created);
             created.listen(this);
+
+            if (isFree)
+                this.free.add(created);
 
             return created;
         }
@@ -143,6 +187,12 @@ public class LandingPadManager extends PersistentState {
             this.free.add(spot);
         }
 
+        public void onRemoved() {
+            for (LandingPadSpot spot : this.spots) {
+                spot.release(true);
+            }
+        }
+
         public Long toLong() {
             return this.chunk.toLong();
         }
@@ -152,12 +202,30 @@ public class LandingPadManager extends PersistentState {
 
             data.putLong("Chunk", chunk.toLong());
 
+            NbtCompound spots = new NbtCompound();
+
+            int count = 0;
+            for (LandingPadSpot spot : this.spots) {
+                spots.put("Spot " + count++, spot.serialize());
+            }
+
+            data.put("Spots", spots);
+
             return data;
         }
-        private void deserialize(NbtCompound data) {}
+        private void deserialize(NbtCompound data) {
+            NbtCompound spots = data.getCompound("Spots");
+
+            for (String key : spots.getKeys()) {
+                LandingPadSpot created = new LandingPadSpot(spots.getCompound(key));
+                created.listen(this);
+                this.spots.add(created);
+            }
+        }
     }
 
     public static class LandingPadSpot {
+        @Exclude
         private final List<LandingPadListener> listeners; // todo a list probably isnt the best for this
         private final BlockPos pos;
         private Tardis tardis;
@@ -165,6 +233,11 @@ public class LandingPadManager extends PersistentState {
         public LandingPadSpot(BlockPos pos) {
             this.pos = pos;
             this.listeners = new ArrayList<>();
+        }
+        public LandingPadSpot(NbtCompound data) {
+            this(NbtHelper.toBlockPos(data.getCompound("Pos")));
+
+            this.deserialize(data);
         }
 
         public BlockPos getPos() {
@@ -175,24 +248,34 @@ public class LandingPadManager extends PersistentState {
             return Optional.ofNullable(this.tardis);
         }
 
-        public void claim(Tardis tardis) {
-            if (this.tardis != null) {
-                throw new IllegalStateException("Already occupied");
+        public void claim(Tardis tardis, boolean updateTardis) {
+            if (this.isOccupied() && !this.tardis.equals(tardis)) {
+                throw new IllegalStateException("Spot already occupied");
             }
 
             this.tardis = tardis;
+
+            if (updateTardis)
+                this.tardis.landingPad().claim(this, false);
 
             for (LandingPadListener listener : this.listeners) {
                 listener.onClaim(this);
             }
         }
-        public Optional<Tardis> release() {
+        public Optional<Tardis> release(boolean updateTardis) {
             Tardis current = this.tardis;
+
+            if (current != null) {
+                if (updateTardis)
+                    current.landingPad().release(false);
+            }
+
             this.tardis = null;
 
             for (LandingPadListener listener : this.listeners) {
                 listener.onFree(this);
             }
+
             return Optional.ofNullable(current);
         }
         public boolean isOccupied() {
@@ -203,47 +286,46 @@ public class LandingPadManager extends PersistentState {
             this.listeners.add(listener);
         }
 
-        private void checkOccupant(World world) {
-            if (checkOccupantFlight(world)) return;
+        public NbtCompound serialize() {
+            NbtCompound data = new NbtCompound();
 
-            if (!(world.getBlockEntity(this.getPos()) instanceof ExteriorBlockEntity exterior)) {
-                this.release();
-                return;
-            }
+            if (this.tardis != null)
+                data.putUuid("Tardis", this.tardis.getUuid());
 
-            if (exterior.tardis().isEmpty()) {
-                // idk??
-                return;
-            }
+            data.put("Pos", NbtHelper.fromBlockPos(this.pos));
 
-            Tardis found = exterior.tardis().get();
-            if (this.tardis == null) {
-                this.claim(found);
-            }
-
-            if (!(this.tardis.equals(found))) {
-                this.claim(found);
-                return;
+            return data;
+        }
+        private void deserialize(MinecraftServer server, NbtCompound data) {
+            if (data.contains("Tardis")) {
+                ServerTardisManager.getInstance().getTardis(server, data.getUuid("Tardis"), tardis -> {
+                    this.tardis = tardis;
+                });
             }
         }
+        private void deserialize(NbtCompound data) {
+            // uhh
+            this.deserialize(TardisUtil.getOverworld().getServer(), data);
+        }
 
-        /**
-         * Checks occupancy flight to ensure theyre coming here
-         * @return true if they are
-         */
-        private boolean checkOccupantFlight(World world) {
-            if (this.tardis == null) return false;
+        public static Serializer serializer() {
+            return new Serializer();
+        }
 
-            TravelHandler travel = this.tardis.travel();
+        public static class Serializer implements
+                JsonSerializer<LandingPadSpot>,
+                JsonDeserializer<LandingPadSpot> {
 
-            boolean inFlight = travel.inFlight();
-            if (inFlight) {
-                if (this.getPos().equals(travel.destination().getPos())) return true;
-                this.release();
-                return false;
+            @Override
+            public LandingPadSpot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                NbtCompound data = context.deserialize(json, NbtCompound.class);
+                return new LandingPadSpot(data);
             }
 
-            return false;
+            @Override
+            public JsonElement serialize(LandingPadSpot src, Type typeOfSrc, JsonSerializationContext context) {
+                return context.serialize(src.serialize());
+            }
         }
     }
 

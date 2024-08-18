@@ -7,40 +7,62 @@ import net.minecraft.world.World;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class LandingPadHandler extends KeyedTardisComponent {
+    @Exclude(strategy = Exclude.Strategy.NETWORK)
     private LandingPadManager.LandingPadSpot current;
+
+    static {
+        TardisEvents.MAT.register(LandingPadHandler::onMaterialise);
+        TardisEvents.DEMAT.register(LandingPadHandler::onDematerialise); // TODO - on enter flight event instead
+    }
 
     public LandingPadHandler() {
         super(Id.LANDING_PAD);
-
-        TardisEvents.MAT.register(this::onMaterialise);
-        TardisEvents.DEMAT.register(this::onDematerialise);
     }
 
-    private TardisEvents.Interaction onDematerialise(Tardis tardis) {
+    private static TardisEvents.Interaction onDematerialise(Tardis tardis) {
+        return tardis.landingPad().onDematerialise();
+    }
+    private TardisEvents.Interaction onDematerialise() {
         if (this.current == null) return TardisEvents.Interaction.PASS;
 
-        this.release();
+        this.release(true);
 
         return TardisEvents.Interaction.PASS;
     }
 
-    private TardisEvents.Interaction onMaterialise(Tardis tardis) {
+    private static TardisEvents.Interaction onMaterialise(Tardis tardis) {
+        return tardis.landingPad().onMaterialise();
+    }
+
+    private TardisEvents.Interaction onMaterialise() {
         this.update();
 
         return TardisEvents.Interaction.PASS;
     }
 
     private void update() {
+        if (!(this.tardis() instanceof ServerTardis)) return;
+        if (this.current != null) {
+            // how..
+            return;
+        }
+
         DirectedGlobalPos.Cached destination = this.tardis().travel().destination();
-        LandingPadManager.LandingPadSpot spot = findSpot(destination.getWorld(), destination.getPos()).orElse(null);
+
+        World world = TardisUtil.getOverworld().getServer().getWorld(destination.getDimension()); // #getWorld from destination is always null..?
+
+        LandingPadManager.LandingPadSpot spot = findSpot(world, destination.getPos()).orElse(null);
 
         if (spot == null) return;
 
-        this.claim(spot);
+        this.claim(spot, true);
         this.tardis().travel().destination(destination.pos(this.current.getPos()));
     }
 
@@ -55,14 +77,21 @@ public class LandingPadHandler extends KeyedTardisComponent {
         return LandingPadManager.getInstance(world).getRegion(pos);
     }
 
-    private LandingPadManager.LandingPadSpot release() {
+    public LandingPadManager.LandingPadSpot release(boolean updateSpot) {
         LandingPadManager.LandingPadSpot spot = this.current;
-        this.current.release();
+
+        if (updateSpot) {
+            this.current.release(false);
+        }
+
         this.current = null;
         return spot;
     }
-    private void claim(LandingPadManager.LandingPadSpot spot) {
+    public void claim(LandingPadManager.LandingPadSpot spot, boolean updateSpot) {
         this.current = spot;
-        this.current.claim(this.tardis());
+
+        if (updateSpot) {
+            this.current.claim(this.tardis(), false);
+        }
     }
 }
