@@ -2,7 +2,7 @@
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
     "bottom": "ait:block/landing_pad_bottom",
-    "side": "ait:block/landing_pad_side",
-    "top": "ait:block/landing_pad_top"
+    "side": "ait:block/landing_zone_corner",
+    "top": "ait:block/landing_zone_corner"
   }
 }
