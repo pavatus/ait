@@ -10,10 +10,12 @@ import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.world.ServerWorld;
@@ -431,6 +433,22 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                             Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
+
+                if (block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.IRON_INGOT)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.GOLD_ORE || block == Blocks.DEEPSLATE_GOLD_ORE || block == Blocks.NETHER_GOLD_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.GOLD_INGOT)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
             }
         },
         SCANNING(Formatting.AQUA) {
@@ -449,6 +467,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 }
 
                 if (world == TardisUtil.getTardisDimension()) {
+                    if (tardis == null)
+                        return;
+
                     if (tardis.crash().isUnstable() || tardis.crash().isToxic()) {
                         player.sendMessage(Text.literal("Repair time: " + tardis.crash().getRepairTicks())
                                 .formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
@@ -490,6 +511,14 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                         tardis.travel().dematerialize();
                         return;
                     }
+
+                    if (player.getPitch() == 90 && !tardis.travel().inFlight()) {
+                        player.sendMessage(Text.translatable("message.ait.remoteitem.success2"), true);
+                        tardis.travel().handbrake(true);
+                        tardis.setRefueling(true);
+                        return;
+                    }
+
                     world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F,
                             0.2F);
                     player.sendMessage(Text.translatable("message.ait.remoteitem.warning3"), true);

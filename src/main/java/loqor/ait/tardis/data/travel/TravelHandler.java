@@ -191,7 +191,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         }
 
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL || tardis.door().isOpen()
-                || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis) || tardis.flight().falling().get()) {
+                || tardis.siege().isActive() || tardis.isSiegeBeingHeld() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis) || tardis.flight().falling().get()) {
             this.failDemat();
             return;
         }

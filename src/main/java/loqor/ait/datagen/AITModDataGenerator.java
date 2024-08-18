@@ -601,6 +601,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS is refueling and is unable to dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("message.ait.remoteitem.success1", "Dematerialized TARDIS");
+        provider.addTranslation("message.ait.remoteitem.success2", "Activated refueler and handbrake");
         provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
         provider.addTranslation("message.ait.version", "ᴠᴇʀꜱɪᴏɴ");
 
@@ -639,6 +640,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.tokamak", "Tokamak");
         provider.addTranslation("exterior.ait.coral", "Coral");
         provider.addTranslation("exterior.ait.futuristic", "Futuristic");
+        provider.addTranslation("exterior.ait.cherrywood", "Cherrywood");
 
         // Classic specific
         provider.addTranslation("exterior.ait.definitive", "Definitive");
