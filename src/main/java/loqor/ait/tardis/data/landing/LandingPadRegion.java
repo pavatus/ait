@@ -21,6 +21,7 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
     private final Queue<LandingPadSpot> free;
     @Exclude
     private final List<Listener> listeners; // todo a list probably isnt the best for this
+    private int defaultY = 64;
 
     public LandingPadRegion(ChunkPos chunk) {
         this.chunk = chunk;
@@ -51,14 +52,17 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
             return Optional.empty();
         }
 
-        return Optional.of(this.generateSpot(false));
+        // loqor says to do this :(
+        this.createAllSpots();
+
+        return this.getNextSpot();
     }
 
     private LandingPadSpot createSpot() {
         LandingPadSpot created;
 
         if (this.spots.isEmpty()) {
-            created = new LandingPadSpot(new BlockPos(this.chunk.getStartX() + 1, 64, this.chunk.getStartZ() + 1));
+            created = new LandingPadSpot(new BlockPos(this.chunk.getStartX() + 1, this.defaultY, this.chunk.getStartZ() + 1));
             return created;
         }
 
@@ -97,6 +101,24 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
 
     public Collection<LandingPadSpot> getSpots() {
         return this.spots;
+    }
+    private boolean hasMaxSpots() {
+        return this.spots.size() >= this.maxSpots;
+    }
+    private boolean isFull() {
+        return this.hasMaxSpots() && this.free.isEmpty();
+    }
+
+    private void createAllSpots() {
+        int toCreate = this.maxSpots - this.spots.size();
+
+        for (int i = 0; i < toCreate; i++) {
+            this.generateSpot(true);
+        }
+    }
+
+    public void setDefaultY(int y) {
+        this.defaultY = y;
     }
 
     @Override
@@ -146,6 +168,8 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
 
         data.put("Spots", spots);
 
+        data.putInt("DefaultY", this.defaultY);
+
         return data;
     }
 
@@ -160,6 +184,8 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
             if (world != null)
                 created.verify(world);
         }
+
+        this.defaultY = data.getInt("DefaultY");
     }
 
     public interface Listener {
