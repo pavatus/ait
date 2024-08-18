@@ -18,8 +18,10 @@ public class ThrottleControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
             boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this))
+        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
+            return false;
+        }
 
         if (tardis.isInDanger())
             return false;

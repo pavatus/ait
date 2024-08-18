@@ -115,7 +115,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
         if (this.timeFalling % 20 == 0)
             tardis.getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(null, console,
-                    SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 1.0F, 1.0F));
+                    SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 0.25F, 1.0F));
 
         if (tardis.travel().antigravs().get()) {
             this.stopFalling(true);

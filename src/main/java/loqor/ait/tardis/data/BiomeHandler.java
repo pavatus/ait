@@ -107,7 +107,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         }
 
         BiomeType() {
-            this(null, o -> null);
+            this(null, o -> PossibleIdentifier.empty());
         }
 
         @Override
@@ -126,7 +126,7 @@ public class BiomeHandler extends KeyedTardisComponent {
 
         public PossibleIdentifier get(BiomeOverrides overrides) {
             if (overrides == null)
-                return null;
+                return PossibleIdentifier.empty();
 
             return this.func.apply(overrides);
         }
