@@ -33,7 +33,7 @@ public class LandingRegionRenderer {
     private static Identifier getTexture(LandingPadSpot spot) {
         if (!spot.isOccupied()) return AVAILABLE;
 
-        Tardis tardis = spot.getTardis().get();
+        Tardis tardis = spot.getReference().get().get();
 
         if (tardis.travel().isLanded()) return OCCUPIED;
 

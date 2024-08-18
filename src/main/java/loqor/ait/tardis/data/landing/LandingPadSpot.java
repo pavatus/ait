@@ -16,13 +16,14 @@ import net.minecraft.world.World;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
 
 public class LandingPadSpot {
     @Exclude
     private final List<Listener> listeners; // todo a list probably isnt the best for this
     private BlockPos pos;
-    private Tardis tardis;
+    private TardisRef tardis;
 
     public LandingPadSpot(BlockPos pos) {
         this.pos = pos;
@@ -39,7 +40,7 @@ public class LandingPadSpot {
         return this.pos;
     }
 
-    public Optional<Tardis> getTardis() {
+    public Optional<TardisRef> getReference() {
         return Optional.ofNullable(this.tardis);
     }
 
@@ -48,10 +49,10 @@ public class LandingPadSpot {
             throw new IllegalStateException("Spot already occupied");
         }
 
-        this.tardis = tardis;
+        this.tardis = TardisRef.createAs(TardisUtil.getOverworld(), tardis);
 
         if (updateTardis)
-            this.tardis.landingPad().claim(this, false);
+            this.tardis.get().landingPad().claim(this, false);
 
         for (Listener listener : this.listeners) {
             listener.onClaim(this);
@@ -59,7 +60,7 @@ public class LandingPadSpot {
     }
 
     public Optional<Tardis> release(boolean updateTardis) {
-        Tardis current = this.tardis;
+        Tardis current = this.tardis.get();
 
         if (current != null) {
             if (updateTardis)
@@ -97,7 +98,7 @@ public class LandingPadSpot {
         NbtCompound data = new NbtCompound();
 
         if (this.tardis != null)
-            data.putUuid("Tardis", this.tardis.getUuid());
+            data.putUuid("Tardis", this.tardis.get().getUuid());
 
         data.put("Pos", NbtHelper.fromBlockPos(this.pos));
 
@@ -105,14 +106,6 @@ public class LandingPadSpot {
     }
 
     private void deserialize(MinecraftServer server, NbtCompound data) {
-        // causes crash - is set elsewhere instead
-        /*
-        if (data.contains("Tardis")) {
-            ServerTardisManager.getInstance().getTardis(server, data.getUuid("Tardis"), tardis -> {
-                this.tardis = tardis;
-            });
-        }
-         */
     }
 
     private void deserialize(NbtCompound data) {
@@ -127,7 +120,7 @@ public class LandingPadSpot {
     public void updatePosition() {
         if (!this.isOccupied()) return;
 
-        this.pos = this.getTardis().orElseThrow().travel().position().getPos();
+        this.pos = this.getReference().orElseThrow().get().travel().position().getPos();
     }
 
     public interface Listener {
