@@ -576,6 +576,11 @@ public class TardisUtil {
 
         player.sendMessage(text, true);
     }
+    public static void sendMessageToInterior(Tardis tardis, Text text) {
+        for (ServerPlayerEntity player : getPlayersInsideInterior(tardis)) {
+            player.sendMessage(text, true);
+        }
+    }
 
     public static ServerWorld findWorld(RegistryKey<World> key) {
         return TardisUtil.getTardisDimension().getServer().getWorld(key);

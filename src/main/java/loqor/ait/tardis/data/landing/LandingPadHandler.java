@@ -3,6 +3,7 @@ package loqor.ait.tardis.data.landing;
 import java.util.Optional;
 
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -66,7 +67,13 @@ public class LandingPadHandler extends KeyedTardisComponent {
         this.claim(spot, true);
         this.tardis().travel().destination(destination.pos(this.current.getPos()));
 
+        this.onAdjust(spot);
+    }
+
+    private void onAdjust(LandingPadManager.Spot spot) {
         TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), spot);
+
+        TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("tardis.message.landingpad.adjust"));
     }
 
     private Optional<LandingPadManager.Spot> findSpot(World world, BlockPos pos) {
