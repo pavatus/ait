@@ -50,6 +50,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema RENEGADE;
     public static ClientDoorSchema BOOKSHELF;
     public static ClientDoorSchema GEOMETRIC;
+    public static ClientDoorSchema STALLION;
 
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
@@ -66,5 +67,6 @@ public class ClientDoorRegistry {
         RENEGADE = register(new ClientRenegadeDoorVariant());
         BOOKSHELF = register(new ClientBookshelfDoorVariant());
         GEOMETRIC = register(new ClientGeometricDoorVariant());
+        STALLION = register(new ClientStallionDoorVariant());
     }
 }

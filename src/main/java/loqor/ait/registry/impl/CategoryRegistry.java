@@ -49,6 +49,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     public static ExteriorCategorySchema RENEGADE;
     public static ExteriorCategorySchema BOOKSHELF;
     public static ExteriorCategorySchema GEOMETRIC;
+    public static ExteriorCategorySchema STALLION;
 
     @Override
     protected void defaults() {
@@ -64,5 +65,6 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         RENEGADE = register(new RenegadeCategory());
         BOOKSHELF = register(new BookshelfCategory());
         GEOMETRIC = register(new GeometricCategory());
+        STALLION = register(new StallionCategory());
     }
 }

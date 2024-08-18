@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import loqor.ait.tardis.exterior.variant.stallion.StallionDefaultVariant;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -168,6 +169,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema GEOMETRIC_FIRE;
     public static ExteriorVariantSchema GEOMETRIC_SOUL;
     public static ExteriorVariantSchema GEOMETRIC_GILDED;
+    public static ExteriorVariantSchema STALLION_DEFAULT;
 
     @Override
     protected void defaults() {
@@ -237,5 +239,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         GEOMETRIC_FIRE = register(new GeometricFireVariant());
         GEOMETRIC_SOUL = register(new GeometricSoulVariant());
         GEOMETRIC_GILDED = register(new GeometricGildedVariant());
+
+        // Stallion
+        STALLION_DEFAULT = register(new StallionDefaultVariant());
     }
 }
