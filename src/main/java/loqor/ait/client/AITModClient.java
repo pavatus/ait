@@ -24,6 +24,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 
+import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
@@ -56,6 +57,7 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
+import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -206,6 +208,10 @@ public class AITModClient implements ClientModInitializer {
         // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
                 responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
+
+        ClientPlayNetworking.registerGlobalReceiver(LandingPadManager.Network.SYNC, (client, handler, buf, responseSender) -> {
+            ClientLandingManager.getInstance().receive(buf);
+        });
     }
 
     /**

@@ -4,14 +4,20 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import com.google.gson.*;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
+import net.fabricmc.fabric.api.networking.v1.*;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
@@ -24,6 +30,7 @@ import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.TardisUtil;
 
+// todo - split this into seperate files
 public class LandingPadManager extends PersistentState {
     private final ServerWorld world;
     private final HashMap<Long, Region> regions;
@@ -53,6 +60,8 @@ public class LandingPadManager extends PersistentState {
         Region created = new Region(pos);
         regions.put(longPos, created);
 
+        Network.toAll(Network.Action.ADD, this.world, created);
+
         return created;
     }
     public Region claim(BlockPos pos) {
@@ -68,6 +77,8 @@ public class LandingPadManager extends PersistentState {
         Region released = this.regions.remove(pos);
 
         released.onRemoved();
+
+        Network.toAll(Network.Action.REMOVE, this.world, released);
 
         return released;
     }
@@ -247,7 +258,9 @@ public class LandingPadManager extends PersistentState {
                 Spot created = new Spot(spots.getCompound(key));
                 created.addListener(this);
                 this.spots.add(created);
-                created.verify(world);
+
+                if (world != null)
+                    created.verify(world);
             }
         }
     }
@@ -315,6 +328,7 @@ public class LandingPadManager extends PersistentState {
         }
 
         public void verify(World world) {
+            if (world == null) return;
             if (this.isOccupied()) return;
 
             if(!(world.getBlockEntity(this.getPos()) instanceof ExteriorBlockEntity exterior)) return;
@@ -375,5 +389,83 @@ public class LandingPadManager extends PersistentState {
     public interface RegionListener {
         void onAdd(Spot spot);
         void onRegionRemoved();
+    }
+
+    public static class Network { // TODO - optimise network logic, rn it just sends EVERYTHING to EVERYONE (very bad)
+        public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "landingpad_sync");
+
+        private static void toPlayer(Action action, RegistryKey<World> world, Long chunk, Region region, ServerPlayerEntity player) {
+            NbtCompound data = new NbtCompound();
+
+            data.putInt("Type", action.ordinal());
+            data.putString("World", world.getValue().toString());
+            data.putLong("Chunk", chunk);
+
+            if (action == Action.ADD)
+                data.put("Region", region.serialize());
+
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeNbt(data);
+
+            ServerPlayNetworking.send(player, SYNC, buf);
+        }
+        private static void toPlayer(Action action, RegistryKey<World> world, Region region, ServerPlayerEntity player) {
+            toPlayer(action, world, region.toLong(), region, player);
+        }
+        public static void toPlayer(Action action, ServerWorld world, Region region, ServerPlayerEntity player) {
+            toPlayer(action, world.getRegistryKey(), region, player);
+        }
+
+        public static void toWorld(Action action, ServerWorld world, Region region) {
+            for (ServerPlayerEntity player : world.getPlayers()) {
+                toPlayer(action, world.getRegistryKey(), region, player);
+            }
+        }
+        public static void toTracking(Action action, ServerWorld world, Region region) {
+            for (ServerPlayerEntity player : PlayerLookup.tracking(world, new ChunkPos(region.toLong()))) {
+                toPlayer(action, world.getRegistryKey(), region.toLong(), region, player);
+            }
+        }
+        public static void toAll(Action action, ServerWorld world, Region region) {
+            for (ServerPlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
+                toPlayer(action, world.getRegistryKey(), region, player);
+            }
+        }
+
+        public static void toPlayer(LandingPadManager manager, ServerPlayerEntity player) {
+            toPlayer(Action.CLEAR, manager.world.getRegistryKey(), Long.valueOf("1"), null, player);
+
+            for (Region region : manager.regions.values()) {
+                toPlayer(Action.ADD, manager.world.getRegistryKey(), region, player);
+            }
+        }
+        public static void toWorld(LandingPadManager manager) {
+            for (ServerPlayerEntity player : manager.world.getPlayers()) {
+                toPlayer(manager, player);
+            }
+        }
+        public static void toAll(LandingPadManager manager) {
+            for (ServerPlayerEntity player : manager.world.getServer().getPlayerManager().getPlayerList()) {
+                toPlayer(manager, player);
+            }
+        }
+        static {
+            ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+                LandingPadManager manager = LandingPadManager.getInstance(handler.getPlayer().getServerWorld());
+
+                toPlayer(manager, handler.getPlayer());
+            });
+            ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+                LandingPadManager manager = LandingPadManager.getInstance(destination);
+
+                toPlayer(manager, player);
+            });
+        }
+
+        public enum Action {
+            ADD,
+            REMOVE,
+            CLEAR
+        }
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ColorHelper;
 
+import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 
 public class ChunkBorderRenderer {
@@ -23,7 +24,7 @@ public class ChunkBorderRenderer {
     }
 
     public boolean shouldRender() {
-        return false && ControlEntityRenderer.isPlayerHoldingScanningSonic(); // TODO - need to have access to LandingPadManager data on client somehow to make this work..
+        return ControlEntityRenderer.isPlayerHoldingScanningSonic() && ClientLandingManager.getInstance().getRegion(client.world, client.player.getBlockPos()).isPresent(); // TODO - constant calling of getRegion is extremely bad. work now, performance later :)
     }
 
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
@@ -37,16 +38,8 @@ public class ChunkBorderRenderer {
         float i = (float)((double)chunkPos.getStartZ() - cameraZ);
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getDebugLineStrip(1.0));
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-        for (j = -16; j <= 32; j += 16) {
-            for (k = -16; k <= 32; k += 16) {
-                vertexConsumer.vertex(matrix4f, h + (float)j, f, i + (float)k).color(1.0f, 0.0f, 0.0f, 0.0f).next();
-                vertexConsumer.vertex(matrix4f, h + (float)j, f, i + (float)k).color(1.0f, 0.0f, 0.0f, 0.5f).next();
-                vertexConsumer.vertex(matrix4f, h + (float)j, g, i + (float)k).color(1.0f, 0.0f, 0.0f, 0.5f).next();
-                vertexConsumer.vertex(matrix4f, h + (float)j, g, i + (float)k).color(1.0f, 0.0f, 0.0f, 0.0f).next();
-            }
-        }
         for (j = 2; j < 16; j += 2) {
-            k = j % 4 == 0 ? DARK_CYAN : YELLOW;
+            k = DARK_CYAN;
             vertexConsumer.vertex(matrix4f, h + (float)j, f, i).color(1.0f, 1.0f, 0.0f, 0.0f).next();
             vertexConsumer.vertex(matrix4f, h + (float)j, f, i).color(k).next();
             vertexConsumer.vertex(matrix4f, h + (float)j, g, i).color(k).next();
@@ -57,7 +50,7 @@ public class ChunkBorderRenderer {
             vertexConsumer.vertex(matrix4f, h + (float)j, g, i + 16.0f).color(1.0f, 1.0f, 0.0f, 0.0f).next();
         }
         for (j = 2; j < 16; j += 2) {
-            k = j % 4 == 0 ? DARK_CYAN : YELLOW;
+            k = DARK_CYAN;
             vertexConsumer.vertex(matrix4f, h, f, i + (float)j).color(1.0f, 1.0f, 0.0f, 0.0f).next();
             vertexConsumer.vertex(matrix4f, h, f, i + (float)j).color(k).next();
             vertexConsumer.vertex(matrix4f, h, g, i + (float)j).color(k).next();
@@ -69,7 +62,7 @@ public class ChunkBorderRenderer {
         }
         for (j = this.client.world.getBottomY(); j <= this.client.world.getTopY(); j += 2) {
             float l = (float)((double)j - cameraY);
-            int m = j % 8 == 0 ? DARK_CYAN : YELLOW;
+            int m = DARK_CYAN;
             vertexConsumer.vertex(matrix4f, h, l, i).color(1.0f, 1.0f, 0.0f, 0.0f).next();
             vertexConsumer.vertex(matrix4f, h, l, i).color(m).next();
             vertexConsumer.vertex(matrix4f, h, l, i + 16.0f).color(m).next();
