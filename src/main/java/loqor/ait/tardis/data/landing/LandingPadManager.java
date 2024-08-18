@@ -4,10 +4,12 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import com.google.gson.*;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
@@ -22,9 +24,11 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class LandingPadManager extends PersistentState {
-    private final HashMap<Long, Region> regions; // TODO - they arent per-world right now
+    private final ServerWorld world;
+    private final HashMap<Long, Region> regions;
 
-    public LandingPadManager() {
+    public LandingPadManager(ServerWorld world) {
+        this.world = world;
         this.regions = new HashMap<>();
     }
 
@@ -80,12 +84,12 @@ public class LandingPadManager extends PersistentState {
         return nbt;
     }
 
-    public static LandingPadManager getInstance(MinecraftServer server) {
-        PersistentStateManager manager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
+    public static LandingPadManager getInstance(ServerWorld world) {
+        PersistentStateManager manager = world.getPersistentStateManager();
 
         LandingPadManager state = manager.getOrCreate(
-                LandingPadManager::loadNbt,
-                LandingPadManager::new,
+                (data) -> LandingPadManager.loadNbt(world, data),
+                () -> new LandingPadManager(world),
                 AITMod.MOD_ID + "_landing_pad"
         );
 
@@ -93,20 +97,18 @@ public class LandingPadManager extends PersistentState {
 
         return state;
     }
-    public static LandingPadManager getInstance(World world) {
-        return getInstance(world.getServer());
-    }
 
-    private static LandingPadManager loadNbt(NbtCompound data) {
-        LandingPadManager created = new LandingPadManager();
+    private static LandingPadManager loadNbt(ServerWorld world, NbtCompound data) {
+        LandingPadManager created = new LandingPadManager(world);
 
-        data.getKeys().forEach(key -> {
-            Region pad = new Region(data.getCompound(key));
+        for (String key : data.getKeys()) {
+            Region pad = new Region(data.getCompound(key), world);
             created.regions.put(pad.toLong(), pad);
-        });
+        }
 
         return created;
     }
+
     public static class Region implements LandingPadListener {
         private final ChunkPos chunk;
         private final int maxSpots;
@@ -122,10 +124,10 @@ public class LandingPadManager extends PersistentState {
             this.spots = new ArrayList<>();
             this.free = new LinkedList<>();
         }
-        public Region(NbtCompound data) {
+        public Region(NbtCompound data, @Nullable ServerWorld world) {
             this(new ChunkPos(data.getLong("Chunk")));
 
-            this.deserialize(data);
+            this.deserialize(data, world);
         }
 
         private static int getMaxSpots(int sizeX, int sizeY) {
@@ -171,7 +173,7 @@ public class LandingPadManager extends PersistentState {
             Spot created = this.createSpot();
 
             this.spots.add(created);
-            created.listen(this);
+            created.addListener(this);
 
             if (isFree)
                 this.free.add(created);
@@ -214,13 +216,14 @@ public class LandingPadManager extends PersistentState {
 
             return data;
         }
-        private void deserialize(NbtCompound data) {
+        private void deserialize(NbtCompound data, @Nullable ServerWorld world) {
             NbtCompound spots = data.getCompound("Spots");
 
             for (String key : spots.getKeys()) {
                 Spot created = new Spot(spots.getCompound(key));
-                created.listen(this);
+                created.addListener(this);
                 this.spots.add(created);
+                created.verify(world);
             }
         }
     }
@@ -283,7 +286,7 @@ public class LandingPadManager extends PersistentState {
             return this.tardis != null;
         }
 
-        public void listen(LandingPadListener listener) {
+        public void addListener(LandingPadListener listener) {
             this.listeners.add(listener);
         }
 
@@ -295,7 +298,6 @@ public class LandingPadManager extends PersistentState {
 
             this.claim(exterior.tardis().get(), true);
         }
-
         public NbtCompound serialize() {
             NbtCompound data = new NbtCompound();
 

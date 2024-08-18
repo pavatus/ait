@@ -2,6 +2,7 @@ package loqor.ait.tardis.data.landing;
 
 import java.util.Optional;
 
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -74,7 +75,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
         return region.getNextSpot();
     }
     private Optional<LandingPadManager.Region> findRegion(World world, BlockPos pos) {
-        return LandingPadManager.getInstance(world).getRegion(pos);
+        return LandingPadManager.getInstance((ServerWorld) world).getRegion(pos);
     }
 
     public LandingPadManager.Spot release(boolean updateSpot) {
