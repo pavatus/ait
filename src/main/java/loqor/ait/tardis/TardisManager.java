@@ -34,7 +34,7 @@ import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.core.util.gson.*;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.landing.LandingPad;
+import loqor.ait.tardis.data.landing.LandingPadSpot;
 import loqor.ait.tardis.data.permissions.Permission;
 import loqor.ait.tardis.data.permissions.PermissionLike;
 import loqor.ait.tardis.data.properties.Value;
@@ -102,7 +102,7 @@ public abstract class TardisManager<T extends Tardis, C> {
                 .registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
                 .registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())
                 .registerTypeAdapter(TardisDesktop.class, TardisDesktop.updater())
-                .registerTypeAdapter(LandingPad.Spot.class, LandingPad.Spot.serializer());
+                .registerTypeAdapter(LandingPadSpot.class, LandingPadSpot.serializer());
     }
 
     protected GsonBuilder getNetworkGson(GsonBuilder builder) {

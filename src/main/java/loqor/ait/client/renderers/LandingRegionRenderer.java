@@ -15,7 +15,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.landing.LandingPad;
+import loqor.ait.tardis.data.landing.LandingPadRegion;
+import loqor.ait.tardis.data.landing.LandingPadSpot;
 
 public class LandingRegionRenderer {
     private static final int DARK_CYAN = ColorHelper.Argb.getArgb(255, 0, 155, 155);
@@ -29,7 +30,7 @@ public class LandingRegionRenderer {
         this.client = client;
     }
 
-    private static Identifier getTexture(LandingPad.Spot spot) {
+    private static Identifier getTexture(LandingPadSpot spot) {
         if (!spot.isOccupied()) return AVAILABLE;
 
         Tardis tardis = spot.getTardis().get();
@@ -58,17 +59,17 @@ public class LandingRegionRenderer {
         profiler.pop();
     }
     private void renderRegion(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        LandingPad.Region region = ClientLandingManager.getInstance().getRegion(client.world, client.player.getBlockPos()).orElseThrow();
+        LandingPadRegion region = ClientLandingManager.getInstance().getRegion(client.world, client.player.getBlockPos()).orElseThrow();
 
         if (region.getSpots().isEmpty()) {
             region.getNextSpot();
         }
 
-        for (LandingPad.Spot spot : region.getSpots()) {
+        for (LandingPadSpot spot : region.getSpots()) {
             renderSpot(spot, matrices, vertexConsumers, cameraX, cameraY, cameraZ);
 }
     }
-    private void renderSpot(LandingPad.Spot spot, MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+    private void renderSpot(LandingPadSpot spot, MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
         Camera camera = client.gameRenderer.getCamera();
         BlockPos spotPos = spot.getPos();
         Vec3d target = new Vec3d(spotPos.getX(), spotPos.getY(), spotPos.getZ() + 1f);

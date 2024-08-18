@@ -21,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-import loqor.ait.tardis.data.landing.LandingPad;
+import loqor.ait.tardis.data.landing.LandingPadManager;
 
 public class LandingPadBlock extends Block {
 
@@ -33,7 +33,7 @@ public class LandingPadBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         // REMOVE THIS METHOD LATER !!
         if (!world.isClient()) {
-            LandingPad.Manager.Network.toPlayer(LandingPad.Manager.getInstance((ServerWorld) world), (ServerPlayerEntity) player);
+            LandingPadManager.Network.toPlayer(LandingPadManager.getInstance((ServerWorld) world), (ServerPlayerEntity) player);
         }
 
         return super.onUse(state, world, pos, player, hand, hit);
@@ -77,17 +77,17 @@ public class LandingPadBlock extends Block {
     }
 
     private static boolean isClaimed(ServerWorld world, BlockPos pos) {
-        LandingPad.Manager manager = LandingPad.Manager.getInstance(world);
+        LandingPadManager manager = LandingPadManager.getInstance(world);
 
         return manager.getRegion(pos).isPresent();
     }
     private static void claimChunk(ServerWorld world, BlockPos pos) {
-        LandingPad.Manager manager = LandingPad.Manager.getInstance(world);
+        LandingPadManager manager = LandingPadManager.getInstance(world);
 
         manager.claim(pos);
     }
     private static void releaseChunk(ServerWorld world, BlockPos pos) {
-        LandingPad.Manager manager = LandingPad.Manager.getInstance(world);
+        LandingPadManager manager = LandingPadManager.getInstance(world);
 
         manager.release(pos);
     }

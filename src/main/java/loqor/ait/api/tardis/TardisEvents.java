@@ -10,7 +10,7 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.landing.LandingPad;
+import loqor.ait.tardis.data.landing.LandingPadSpot;
 
 public final class TardisEvents {
 
@@ -210,7 +210,7 @@ public final class TardisEvents {
      */
     @FunctionalInterface
     public interface LandingPadAdjust {
-        void onLandingPadAdjust(Tardis tardis, LandingPad.Spot spot);
+        void onLandingPadAdjust(Tardis tardis, LandingPadSpot spot);
     }
 
     /**
