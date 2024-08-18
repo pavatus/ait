@@ -245,6 +245,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Blocks.BEACON), conditionsFromItem(Blocks.BEACON)).input('E', Blocks.DRAGON_EGG)
                     .criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));
 
+            provider.addShapedRecipe(
+                    ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.LANDING_PAD, 1)
+                            .pattern(" E ")
+                            .pattern("ZCZ")
+                            .pattern("ZDZ")
+                            .input('E', Items.ENDER_EYE).input('Z', AITItems.ZEITON_SHARD).input('D', Items.DIAMOND).input('C', Items.COMPASS)
+                            .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
+                            .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                            .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
+                            .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS))
+                            );
+
             generateSmithingRecipes(provider);
             return provider;
         })));
