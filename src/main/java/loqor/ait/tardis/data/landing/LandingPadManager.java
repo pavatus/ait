@@ -108,12 +108,14 @@ public class LandingPadManager extends PersistentState {
         return created;
     }
 
-    public static class Region implements LandingPadListener {
+    public static class Region implements SpotListener {
         private final ChunkPos chunk;
         private final int maxSpots;
         private final int maxPerRow;
         private final List<Spot> spots;
         private final Queue<Spot> free;
+        @Exclude
+        private final List<RegionListener> listeners; // todo a list probably isnt the best for this
 
         public Region(ChunkPos chunk) {
             this.chunk = chunk;
@@ -122,6 +124,7 @@ public class LandingPadManager extends PersistentState {
             this.maxPerRow = 16 / 2;
             this.spots = new ArrayList<>();
             this.free = new LinkedList<>();
+            this.listeners = new ArrayList<>();
         }
         public Region(NbtCompound data, @Nullable ServerWorld world) {
             this(new ChunkPos(data.getLong("Chunk")));
@@ -177,6 +180,10 @@ public class LandingPadManager extends PersistentState {
             if (isFree)
                 this.free.add(created);
 
+            for (RegionListener listener : this.listeners) {
+                listener.onAdd(created);
+            }
+
             return created;
         }
 
@@ -193,6 +200,14 @@ public class LandingPadManager extends PersistentState {
             for (Spot spot : this.spots) {
                 spot.release(true);
             }
+
+            for (RegionListener listener : this.listeners) {
+                listener.onRegionRemoved();
+            }
+        }
+
+        public void addListener(RegionListener listener) {
+            this.listeners.add(listener);
         }
 
         public Long toLong() {
@@ -229,7 +244,7 @@ public class LandingPadManager extends PersistentState {
 
     public static class Spot {
         @Exclude
-        private final List<LandingPadListener> listeners; // todo a list probably isnt the best for this
+        private final List<SpotListener> listeners; // todo a list probably isnt the best for this
         private final BlockPos pos;
         private Tardis tardis;
 
@@ -261,7 +276,7 @@ public class LandingPadManager extends PersistentState {
             if (updateTardis)
                 this.tardis.landingPad().claim(this, false);
 
-            for (LandingPadListener listener : this.listeners) {
+            for (SpotListener listener : this.listeners) {
                 listener.onClaim(this);
             }
         }
@@ -275,7 +290,7 @@ public class LandingPadManager extends PersistentState {
 
             this.tardis = null;
 
-            for (LandingPadListener listener : this.listeners) {
+            for (SpotListener listener : this.listeners) {
                 listener.onFree(this);
             }
 
@@ -285,7 +300,7 @@ public class LandingPadManager extends PersistentState {
             return this.tardis != null;
         }
 
-        public void addListener(LandingPadListener listener) {
+        public void addListener(SpotListener listener) {
             this.listeners.add(listener);
         }
 
@@ -343,8 +358,12 @@ public class LandingPadManager extends PersistentState {
         }
     }
 
-    public interface LandingPadListener {
+    public interface SpotListener {
         void onClaim(Spot spot);
         void onFree(Spot spot);
+    }
+    public interface RegionListener {
+        void onAdd(Spot spot);
+        void onRegionRemoved();
     }
 }
