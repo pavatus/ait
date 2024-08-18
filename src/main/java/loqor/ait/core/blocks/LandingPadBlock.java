@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -17,7 +16,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-import loqor.ait.core.AITBlocks;
 import loqor.ait.tardis.data.landing.LandingPadManager;
 
 public class LandingPadBlock extends Block {
@@ -48,8 +46,6 @@ public class LandingPadBlock extends Block {
         if (isClaimed(serverWorld, pos)) {
             // dont place yo
             world.breakBlock(pos, true);
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(AITBlocks.LANDING_PAD)));
             return;
         }
 

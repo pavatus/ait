@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -219,11 +220,10 @@ public class LandingPadManager extends PersistentState {
 
             data.putLong("Chunk", chunk.toLong());
 
-            NbtCompound spots = new NbtCompound();
+            NbtList spots = new NbtList();
 
-            int count = 0;
             for (Spot spot : this.spots) {
-                spots.put("Spot " + count++, spot.serialize());
+                spots.add(spot.serialize());
             }
 
             data.put("Spots", spots);

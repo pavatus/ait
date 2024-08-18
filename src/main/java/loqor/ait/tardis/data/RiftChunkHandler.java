@@ -6,6 +6,8 @@ import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -116,14 +118,18 @@ public class RiftChunkHandler extends PersistentState {
         public NbtCompound serialize() {
             NbtCompound data = new NbtCompound();
 
-            this.values().forEach(chunk -> data.put(chunk.getUuid().toString(), chunk.serialize()));
+            NbtList chunks = new NbtList();
+            this.values().forEach(chunk -> chunks.add(chunk.serialize()));
+            data.put("Chunks", chunks);
 
             return data;
         }
 
         private void deserialize(NbtCompound data) {
-            data.getKeys().forEach(key -> {
-                RiftChunk generated = new RiftChunk(data.getCompound(key));
+            NbtList chunks = data.getList("Chunks", NbtElement.COMPOUND_TYPE);
+
+            chunks.forEach(nbt -> {
+                RiftChunk generated = new RiftChunk((NbtCompound) nbt);
                 this.put(generated.getPos(), generated);
             });
         }

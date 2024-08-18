@@ -51,10 +51,6 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
     private void update() {
         if (!(this.tardis() instanceof ServerTardis)) return;
-        if (this.current != null) {
-            // how..
-            return;
-        }
 
         DirectedGlobalPos.Cached destination = this.tardis().travel().destination();
 
