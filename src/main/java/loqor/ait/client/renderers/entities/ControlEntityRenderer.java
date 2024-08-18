@@ -185,7 +185,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         return nbt.getInt(SonicItem.PREV_MODE_KEY) == 3 || nbt.getInt(SonicItem.MODE_KEY) == 3;
     }
 
-    private static boolean isPlayerHoldingScanningSonic() {
+    public static boolean isPlayerHoldingScanningSonic() {
         PlayerEntity player = MinecraftClient.getInstance().player;
 
         if (player == null)

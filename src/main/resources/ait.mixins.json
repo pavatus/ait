@@ -36,7 +36,8 @@
     "client.rendering.HeadFeatureRendererMixin",
     "client.rendering.HeldItemRendererMixin",
     "client.rendering.PlayerEntityRendererMixin",
-    "client.rendering.SkyboxMixin"
+    "client.rendering.SkyboxMixin",
+    "client.rendering.DebugRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
