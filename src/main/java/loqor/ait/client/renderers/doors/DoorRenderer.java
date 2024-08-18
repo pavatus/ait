@@ -16,7 +16,6 @@ import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.client.util.ResourceChecker;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.DoorBlock;
@@ -119,9 +118,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         if (this.variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-            Identifier biomeTexture = biome.getBiomeKey().get(this.variant.overrides());
+            Identifier biomeTexture = biome.getBiomeKey().get(this.variant.overrides()).orElse(null);
 
-            if (biomeTexture != null && !texture.equals(biomeTexture) && ResourceChecker.getInstance().exists(biomeTexture)) {
+            if (biomeTexture != null && !texture.equals(biomeTexture)) {
                 model.renderWithAnimations(entity, model.getPart(), matrices,
                         vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)), light,
                         overlay, 1, 1, 1, 1);

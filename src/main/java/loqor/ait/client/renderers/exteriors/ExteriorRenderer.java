@@ -20,7 +20,6 @@ import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.client.util.ResourceChecker;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -180,9 +179,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         if (this.variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
-            Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides());
+            Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides()).orElse(null);
 
-            if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture)) && ResourceChecker.getInstance().exists(biomeTexture)) {
+            if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture))) {
                 model.renderWithAnimations(entity, this.model.getPart(), matrices,
                         vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)),
                         light, overlay, 1, 1, 1, alpha);
