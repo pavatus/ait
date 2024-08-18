@@ -26,7 +26,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     private void validateVortexSound(ClientTardis tardis) {
         boolean valid = Objects.equals(
                 tardis.getDesktop().doorPos().getPos(),
-                VORTEX_SOUND.getPosition()
+                this.getVortexSound(tardis).getPosition()
         );
 
         if (valid) return;
