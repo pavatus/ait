@@ -39,6 +39,9 @@ import loqor.ait.tardis.exterior.variant.plinth.PlinthSoulVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeCabinetVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeDefaultVariant;
 import loqor.ait.tardis.exterior.variant.renegade.RenegadeTronVariant;
+import loqor.ait.tardis.exterior.variant.stallion.StallionDefaultVariant;
+import loqor.ait.tardis.exterior.variant.stallion.StallionFireVariant;
+import loqor.ait.tardis.exterior.variant.stallion.StallionSoulVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.TardimSoulVariant;
@@ -168,6 +171,9 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema GEOMETRIC_FIRE;
     public static ExteriorVariantSchema GEOMETRIC_SOUL;
     public static ExteriorVariantSchema GEOMETRIC_GILDED;
+    public static ExteriorVariantSchema STALLION_DEFAULT;
+    public static ExteriorVariantSchema STALLION_FIRE;
+    public static ExteriorVariantSchema STALLION_SOUL;
 
     @Override
     protected void defaults() {
@@ -237,5 +243,10 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         GEOMETRIC_FIRE = register(new GeometricFireVariant());
         GEOMETRIC_SOUL = register(new GeometricSoulVariant());
         GEOMETRIC_GILDED = register(new GeometricGildedVariant());
+
+        // Stallion
+        STALLION_DEFAULT = register(new StallionDefaultVariant());
+        STALLION_FIRE = register(new StallionFireVariant());
+        STALLION_SOUL = register(new StallionSoulVariant());
     }
 }

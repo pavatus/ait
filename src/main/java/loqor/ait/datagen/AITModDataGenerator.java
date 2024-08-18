@@ -471,6 +471,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.plinth", "Plinth");
         provider.addTranslation("exterior.ait.bookshelf", "Bookshelf");
         provider.addTranslation("exterior.ait.classic", "Classic");
+        provider.addTranslation("exterior.ait.stallion", "Stallion");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
@@ -625,13 +626,41 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
-        // Exteriors
+        // Exterior translations
+
+        // All
+        provider.addTranslation("exterior.ait.default", "Default");
+        provider.addTranslation("exterior.ait.fire", "Fire");
+        provider.addTranslation("exterior.ait.soul", "Soul");
+        provider.addTranslation("exterior.ait.gilded", "Gilded");
+
+        // Police box specific
         provider.addTranslation("exterior.ait.tokamak", "Tokamak");
+        provider.addTranslation("exterior.ait.coral", "Coral");
+        provider.addTranslation("exterior.ait.futuristic", "Futuristic");
+
+        // Classic specific
+        provider.addTranslation("exterior.ait.definitive", "Definitive");
+        provider.addTranslation("exterior.ait.hudolin", "Hudolin");
+        provider.addTranslation("exterior.ait.exile", "Exile");
+        provider.addTranslation("exterior.ait.prime", "Prime");
+        provider.addTranslation("exterior.ait.ptored", "PTORed");
+        provider.addTranslation("exterior.ait.shalka", "Shalka");
+        provider.addTranslation("exterior.ait.mint", "Mint");
+        provider.addTranslation("exterior.ait.yeti", "Yeti");
+
+        // Renegade specific
+        provider.addTranslation("exterior.ait.cabinet", "Cabinet");
+        provider.addTranslation("exterior.ait.tron", "Tron");
+
+        // Booth specific
+        provider.addTranslation("exterior.ait.blue", "Blue");
+        provider.addTranslation("exterior.ait.vintage", "Vintage");
+        provider.addTranslation("exterior.ait.white", "White");
 
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
         provider.addTranslation("screen.ait.gravity", "> Gravity: %s");
-
         provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
         provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");

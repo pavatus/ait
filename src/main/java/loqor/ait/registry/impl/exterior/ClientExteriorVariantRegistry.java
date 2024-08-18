@@ -35,6 +35,9 @@ import loqor.ait.tardis.exterior.variant.plinth.client.ClientPlinthSoulVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeTronVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionDefaultVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionFireVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSoulVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimSoulVariant;
@@ -174,6 +177,9 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema GEOMETRIC_FIRE;
     public static ClientExteriorVariantSchema GEOMETRIC_SOUL;
     public static ClientExteriorVariantSchema GEOMETRIC_GILDED;
+    public static ClientExteriorVariantSchema STALLION_DEFAULT;
+    public static ClientExteriorVariantSchema STALLION_FIRE;
+    public static ClientExteriorVariantSchema STALLION_SOUL;
 
     @Override
     public void onClientInit() {
@@ -243,5 +249,10 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         GEOMETRIC_FIRE = register(new ClientGeometricFireVariant());
         GEOMETRIC_SOUL = register(new ClientGeometricSoulVariant());
         GEOMETRIC_GILDED = register(new ClientGeometricGildedVariant());
+
+        // Stallion
+        STALLION_DEFAULT = register(new ClientStallionDefaultVariant());
+        STALLION_FIRE = register(new ClientStallionFireVariant());
+        STALLION_SOUL = register(new ClientStallionSoulVariant());
     }
 }
