@@ -471,6 +471,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.plinth", "Plinth");
         provider.addTranslation("exterior.ait.bookshelf", "Bookshelf");
         provider.addTranslation("exterior.ait.classic", "Classic");
+        provider.addTranslation("exterior.ait.stallion", "Stallion");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
