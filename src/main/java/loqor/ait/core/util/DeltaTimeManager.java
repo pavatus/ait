@@ -2,6 +2,7 @@ package loqor.ait.core.util;
 
 import java.util.HashMap;
 
+@Deprecated
 public class DeltaTimeManager {
     private static final HashMap<String, Long> nextUpdateTimeMap = new HashMap<>();
 

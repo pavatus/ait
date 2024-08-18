@@ -9,7 +9,6 @@ import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.SoundHandler;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
@@ -21,27 +20,19 @@ public class ClientVortexSoundsHandler extends SoundHandler {
         if (VORTEX_SOUND == null)
             VORTEX_SOUND = this.createVortexSound(tardis);
 
-        if (shouldCheckSound())
-            this.checkSound(tardis);
-
         return VORTEX_SOUND;
     }
 
-    private void checkSound(ClientTardis tardis) { // TODO - could register to DOOR_MOVE event if it fires client-side too
+    private void validateVortexSound(ClientTardis tardis) {
         boolean valid = Objects.equals(
                 tardis.getDesktop().doorPos().getPos(),
                 VORTEX_SOUND.getPosition()
         );
 
-        DeltaTimeManager.createDelay("check-vortex-delay", 5000L);
-
         if (valid) return;
 
         this.stopSound(VORTEX_SOUND);
         VORTEX_SOUND = this.createVortexSound(tardis);
-    }
-    private boolean shouldCheckSound() {
-        return !DeltaTimeManager.isStillWaitingOnDelay("check-vortex-delay");
     }
 
     private PositionedLoopingSound createVortexSound(ClientTardis tardis) {
@@ -77,9 +68,13 @@ public class ClientVortexSoundsHandler extends SoundHandler {
             this.generate(tardis);
 
         if (this.shouldPlaySound(tardis)) {
-            this.startIfNotPlaying(this.getVortexSound(tardis));
-        } else {
-            this.stopSound(VORTEX_SOUND);
+            if (this.isPlaying(VORTEX_SOUND)) return;
+
+            this.validateVortexSound(tardis);
+            this.startSound(this.getVortexSound(tardis));
+            return;
         }
+
+        this.stopSound(VORTEX_SOUND);
     }
 }
