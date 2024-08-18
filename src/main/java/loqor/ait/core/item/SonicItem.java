@@ -467,6 +467,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 }
 
                 if (world == TardisUtil.getTardisDimension()) {
+                    if (tardis == null)
+                        return;
+
                     if (tardis.crash().isUnstable() || tardis.crash().isToxic()) {
                         player.sendMessage(Text.literal("Repair time: " + tardis.crash().getRepairTicks())
                                 .formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
