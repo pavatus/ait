@@ -1,10 +1,13 @@
 package loqor.ait.client.data;
 
-import loqor.ait.tardis.util.NetworkUtil;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.NbtCompound;
@@ -16,10 +19,7 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.landing.LandingPadRegion;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
+import loqor.ait.tardis.util.NetworkUtil;
 
 public class ClientLandingManager {
 

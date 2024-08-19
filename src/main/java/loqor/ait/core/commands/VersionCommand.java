@@ -5,8 +5,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import loqor.ait.tardis.data.landing.LandingPadManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
@@ -20,7 +18,8 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
-import net.minecraft.world.World;
+import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPadRegion;
 
 public class VersionCommand {
 

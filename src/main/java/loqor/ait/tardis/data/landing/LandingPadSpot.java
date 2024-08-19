@@ -1,14 +1,15 @@
 package loqor.ait.tardis.data.landing;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.v2.TardisRef;
-
-import java.util.Optional;
-import java.util.UUID;
 
 public class LandingPadSpot {
 
