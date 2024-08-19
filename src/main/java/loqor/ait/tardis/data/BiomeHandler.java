@@ -1,7 +1,5 @@
 package loqor.ait.tardis.data;
 
-import java.util.function.Function;
-
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,7 +11,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.util.PossibleIdentifier;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.tardis.base.KeyedTardisComponent;
@@ -91,23 +88,25 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     public enum BiomeType implements StringIdentifiable, Ordered {
-        DEFAULT, SNOWY("_snowy", BiomeOverrides::snowy), SCULK("_sculk", BiomeOverrides::sculk), SANDY("_sand",
-                BiomeOverrides::sandy), RED_SANDY("_red_sand", BiomeOverrides::redSandy), MUDDY("_mud",
-                        BiomeOverrides::muddy), CHORUS("_chorus",
-                                BiomeOverrides::chorus), CHERRY("_cherry", BiomeOverrides::cherry);
+        DEFAULT, SNOWY("_snowy"),
+        SCULK("_sculk"),
+        SANDY("_sand"),
+        RED_SANDY("_red_sand"),
+        MUDDY("_mud"),
+        CHORUS("_chorus"),
+        CHERRY("_cherry");
 
         public static final BiomeType[] VALUES = BiomeType.values();
+        public static final Codec<BiomeType> CODEC = StringIdentifiable.createCodec(() -> VALUES);
 
-        private final Function<BiomeOverrides, PossibleIdentifier> func;
         private final String suffix;
 
-        BiomeType(String suffix, Function<BiomeOverrides, PossibleIdentifier> func) {
+        BiomeType(String suffix) {
             this.suffix = suffix;
-            this.func = func;
         }
 
         BiomeType() {
-            this(null, o -> PossibleIdentifier.empty());
+            this(null);
         }
 
         @Override
@@ -120,15 +119,14 @@ public class BiomeHandler extends KeyedTardisComponent {
                 return texture;
 
             String path = texture.getPath();
-
             return new Identifier(AITMod.MOD_ID, path.substring(0, path.length() - 4) + this.suffix + ".png");
         };
 
-        public PossibleIdentifier get(BiomeOverrides overrides) {
+        public Identifier get(BiomeOverrides overrides) {
             if (overrides == null)
-                return PossibleIdentifier.empty();
+                return null;
 
-            return this.func.apply(overrides);
+            return overrides.get(this);
         }
 
         @Override

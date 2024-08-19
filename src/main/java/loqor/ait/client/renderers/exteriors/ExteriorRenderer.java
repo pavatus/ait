@@ -179,7 +179,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         if (this.variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
-            Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides()).orElse(null);
+            Identifier biomeTexture = handler.getBiomeKey().get(this.variant.overrides());
 
             if (alpha > 0.105f && (biomeTexture != null && !texture.equals(biomeTexture))) {
                 model.renderWithAnimations(entity, this.model.getPart(), matrices,

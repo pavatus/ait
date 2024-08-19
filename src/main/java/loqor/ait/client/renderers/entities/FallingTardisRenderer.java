@@ -87,7 +87,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 
         if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
             BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);
-            Identifier biomeTexture = handler.getBiomeKey().get(exteriorVariant.overrides()).orElse(null);
+            Identifier biomeTexture = handler.getBiomeKey().get(exteriorVariant.overrides());
 
             if (biomeTexture != null && !exteriorVariant.texture().equals(biomeTexture)) {
                 model.renderFalling(entity, model.getPart(), matrices,
