@@ -38,6 +38,7 @@ import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeTronVaria
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionDefaultVariant;
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionFireVariant;
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSoulVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSteelVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimSoulVariant;
@@ -180,6 +181,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_DEFAULT;
     public static ClientExteriorVariantSchema STALLION_FIRE;
     public static ClientExteriorVariantSchema STALLION_SOUL;
+    public static ClientExteriorVariantSchema STALLION_STEEL;
 
     @Override
     public void onClientInit() {
@@ -254,5 +256,6 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_DEFAULT = register(new ClientStallionDefaultVariant());
         STALLION_FIRE = register(new ClientStallionFireVariant());
         STALLION_SOUL = register(new ClientStallionSoulVariant());
+        STALLION_STEEL = register(new ClientStallionSteelVariant());
     }
 }
