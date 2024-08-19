@@ -7,6 +7,7 @@ import java.util.UUID;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -55,7 +56,6 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
@@ -101,6 +101,7 @@ public class AITMod implements ModInitializer {
         DoorRegistry.init();
 
         // ServerVortexDataHandler.init();
+        ServerLifecycleHooks.init();
 
         AITArgumentTypes.register();
 
@@ -258,10 +259,6 @@ public class AITMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             AIT_CONFIG.save();
             AsyncLocatorUtil.shutdownExecutorService();
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(LandingPadManager.Network.REQUEST, (server, player, handler, buf, responseSender) -> {
-            LandingPadManager.Network.toPlayer(LandingPadManager.Network.Action.ADD, player);
         });
 
         // TODO move to either TardisCriterions or one of TravelHandlers'

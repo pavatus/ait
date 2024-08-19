@@ -1,5 +1,6 @@
 package loqor.ait.api.tardis;
 
+import loqor.ait.core.data.DirectedGlobalPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
@@ -11,6 +12,8 @@ import net.minecraft.world.chunk.WorldChunk;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.landing.LandingPadSpot;
+
+import java.util.Optional;
 
 public final class TardisEvents {
 
@@ -36,6 +39,20 @@ public final class TardisEvents {
         }
 
         return Interaction.SUCCESS;
+    });
+
+    public static final Event<BeforeLand> BEFORE_LAND = EventFactory.createArrayBacked(BeforeLand.class, callbacks -> (tardis, pos) -> {
+        for (BeforeLand callback : callbacks) {
+            Result<DirectedGlobalPos.Cached> value = callback.onLanded(tardis, pos);
+
+            if (value.type() != Interaction.PASS)
+                return value;
+
+            if (value.result().isPresent())
+                pos = value.result().get();
+        }
+
+        return new Result<>(Interaction.SUCCESS, pos);
     });
 
     public static final Event<Landed> LANDED = EventFactory.createArrayBacked(Landed.class, callbacks -> tardis -> {
@@ -197,6 +214,17 @@ public final class TardisEvents {
         void onLanded(Tardis tardis);
     }
 
+    @FunctionalInterface
+    public interface BeforeLand {
+        /**
+         * Called when a TARDIS has finished landing
+         *
+         * @param tardis
+         *            the landed tardis
+         */
+        Result<DirectedGlobalPos.Cached> onLanded(Tardis tardis, DirectedGlobalPos.Cached pos);
+    }
+
     /**
      * Called when a TARDIS starts crashing
      */
@@ -300,5 +328,36 @@ public final class TardisEvents {
 
     public enum Interaction {
         SUCCESS, FAIL, PASS
+    }
+
+    public record Result<T>(Interaction type, Optional<T> t) {
+
+        public static <T> Result<T> success() {
+            return new Result<>(Interaction.SUCCESS);
+        }
+
+        public static <T> Result<T> fail() {
+            return new Result<>(Interaction.FAIL);
+        }
+
+        public static <T> Result<T> pass() {
+            return new Result<>(Interaction.PASS);
+        }
+
+        public Result(Interaction inter) {
+            this(inter, Optional.empty());
+        }
+
+        public Result(T t) {
+            this(Interaction.PASS, t);
+        }
+
+        public Result(Interaction inter, T t) {
+            this(inter, Optional.ofNullable(t));
+        }
+
+        public Optional<T> result() {
+            return t;
+        }
     }
 }

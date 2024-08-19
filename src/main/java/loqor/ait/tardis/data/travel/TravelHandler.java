@@ -272,9 +272,18 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.getState() != State.FLIGHT)
             return;
 
-        if (this.tardis.sequence().hasActiveSequence()) {
+        if (this.tardis.sequence().hasActiveSequence())
             this.tardis.sequence().setActiveSequence(null, true);
+
+        DirectedGlobalPos.Cached pos = this.getProgress();
+        TardisEvents.Result<DirectedGlobalPos.Cached> result = TardisEvents.BEFORE_LAND.invoker().onLanded(this.tardis, pos);
+
+        if (result.type() == TardisEvents.Interaction.FAIL) {
+            this.crash();
+            return;
         }
+
+        pos = result.result().orElse(pos);
 
         this.state.set(State.MAT);
         SoundEvent sound = this.getState().effect().sound();
@@ -282,8 +291,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
-        this.destination(this.getProgress(), true);
-        this.forcePosition(this.destination());
+        this.destination(pos, true);
+        this.forcePosition(pos);
 
         // Play materialize sound at the destination
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);

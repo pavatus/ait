@@ -17,7 +17,6 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import loqor.ait.tardis.data.landing.LandingPadManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
 
 public class LandingPadBlock extends Block {
 
@@ -32,50 +31,32 @@ public class LandingPadBlock extends Block {
         Vec3d centre = pos.up().toCenterPos();
         world.addParticle(ParticleTypes.GLOW, centre.getX(), centre.getY() - 0.5, centre.getZ(), 0.0, 0.0, 0.0);
 
-        if (random.nextDouble() < 0.2f) {
+        if (random.nextDouble() < 0.2f)
             world.playSound(centre.getX(), centre.getY(), centre.getZ(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 0.1f, 1f, true);
-        }
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
+        if (!(world instanceof ServerWorld serverWorld))
+            return;
 
-        if (world.isClient()) return;
-        ServerWorld serverWorld = (ServerWorld) world;
+        LandingPadManager manager = LandingPadManager.getInstance(serverWorld);
 
-        if (isClaimed(serverWorld, pos)) {
-            // dont place yo
+        if (manager.getRegionAt(pos) != null) {
             world.breakBlock(pos, true);
             return;
         }
 
-        claimChunk(serverWorld, pos);
+        manager.claim(pos);
     }
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         super.onStateReplaced(state, world, pos, newState, moved);
 
-        if (world.isClient()) return;
+        if (!(world instanceof ServerWorld serverWorld))
+            return;
 
-        releaseChunk((ServerWorld) world, pos);
-    }
-
-    private static boolean isClaimed(ServerWorld world, BlockPos pos) {
-        LandingPadManager manager = LandingPadManager.getInstance(world);
-
-        return manager.getRegion(pos).isPresent();
-    }
-    private static void claimChunk(ServerWorld world, BlockPos pos) {
-        LandingPadManager manager = LandingPadManager.getInstance(world);
-
-        LandingPadRegion region = manager.claim(pos);
-        region.setDefaultY(pos.getY());
-    }
-    private static void releaseChunk(ServerWorld world, BlockPos pos) {
-        LandingPadManager manager = LandingPadManager.getInstance(world);
-
-        manager.release(pos);
+        LandingPadManager.getInstance(serverWorld).releaseAt(pos);
     }
 }

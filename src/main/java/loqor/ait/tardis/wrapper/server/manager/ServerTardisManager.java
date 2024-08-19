@@ -4,19 +4,17 @@ import java.util.*;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.mixin.networking.ServerChunkManagerAccessor;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.CompliantServerTardisManager;
@@ -61,12 +59,8 @@ public class ServerTardisManager extends CompliantServerTardisManager {
                     continue;
 
                 ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
-                ServerChunkManager chunkManager = exteriorPos.getWorld().getChunkManager();
 
-                ThreadedAnvilChunkStorage storage = ((ServerChunkManagerAccessor) chunkManager)
-                        .getThreadedAnvilChunkStorage();
-
-                for (ServerPlayerEntity watching : storage.getPlayersWatchingChunk(chunkPos)) {
+                for (ServerPlayerEntity watching : PlayerLookup.tracking(exteriorPos.getWorld(), chunkPos)) {
                     this.sendTardis(watching, tardis);
                 }
 

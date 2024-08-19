@@ -192,7 +192,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     public void destination(DirectedGlobalPos.Cached cached, boolean force) {
-        if (this.destination().equals(cached) && !force)
+        if (!force && this.destination().equals(cached))
             return;
 
         cached.init(TravelHandlerBase.server());

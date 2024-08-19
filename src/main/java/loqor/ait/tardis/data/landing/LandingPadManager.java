@@ -1,237 +1,147 @@
 package loqor.ait.tardis.data.landing;
 
-import java.util.HashMap;
-import java.util.Optional;
-
+import loqor.ait.tardis.util.NetworkUtil;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import net.minecraft.world.chunk.WorldChunk;
+import org.jetbrains.annotations.Nullable;
 
-public class LandingPadManager extends PersistentState implements LandingPadRegion.Listener {
+@SuppressWarnings("UnstableApiUsage")
+public class LandingPadManager {
+
+    private static final AttachmentType<LandingPadRegion> PERSISTENT = AttachmentRegistry.createPersistent(
+            new Identifier(AITMod.MOD_ID, "landing_pads"), LandingPadRegion.CODEC
+    );
+
     private final ServerWorld world;
-    private final HashMap<Long, LandingPadRegion> regions;
 
     public LandingPadManager(ServerWorld world) {
         this.world = world;
-        this.regions = new HashMap<>();
     }
 
-    private Optional<LandingPadRegion> getRegion(Long pos) {
-        return Optional.ofNullable(regions.get(pos));
+    public @Nullable LandingPadRegion getRegion(ChunkPos pos) {
+        return this.world.getChunk(pos.x, pos.z).getAttached(PERSISTENT);
     }
 
-    private Optional<LandingPadRegion> getRegion(ChunkPos pos) {
-        return this.getRegion(pos.toLong());
-    }
-
-    public Optional<LandingPadRegion> getRegion(BlockPos pos) {
+    public @Nullable LandingPadRegion getRegion(long pos) {
         return this.getRegion(new ChunkPos(pos));
     }
 
-    private LandingPadRegion claim(ChunkPos pos) {
-        Long longPos = pos.toLong();
+    public @Nullable LandingPadRegion getRegionAt(BlockPos pos) {
+        return this.getRegion(new ChunkPos(pos));
+    }
 
-        if (regions.containsKey(longPos)) {
+    private LandingPadRegion claim(ChunkPos pos, int y) {
+        WorldChunk chunk = this.world.getChunk(pos.x, pos.z);
+
+        if (chunk.hasAttached(PERSISTENT))
             throw new IllegalStateException("Region already occupied");
-        }
 
-        LandingPadRegion created = new LandingPadRegion(pos);
-        regions.put(longPos, created);
+        LandingPadRegion created = new LandingPadRegion(pos, y);
+        chunk.setAttached(PERSISTENT, created);
 
-        created.addListener(this);
-
+        Network.syncTracked(Network.Action.ADD, this.world, pos);
         return created;
     }
 
     public LandingPadRegion claim(BlockPos pos) {
-        return this.claim(new ChunkPos(pos));
+        return this.claim(new ChunkPos(pos), pos.getY());
     }
 
-    private LandingPadRegion release(Long pos) {
-        if (!this.regions.containsKey(pos)) {
-            return null; // lol no exception
-        }
+    private @Nullable LandingPadRegion release(ChunkPos pos) {
+        LandingPadRegion result = this.world.getChunk(pos.x, pos.z).removeAttached(PERSISTENT);
 
-
-        LandingPadRegion released = this.regions.remove(pos);
-
-        released.onRemoved();
-
-        return released;
+        Network.syncTracked(Network.Action.REMOVE, this.world, pos);
+        return result;
     }
 
-    private LandingPadRegion release(ChunkPos pos) {
-        return this.release(pos.toLong());
-    }
-
-    public LandingPadRegion release(BlockPos pos) {
+    public @Nullable LandingPadRegion releaseAt(BlockPos pos) {
         return this.release(new ChunkPos(pos));
     }
 
-    @Override
-    public void onAdd(LandingPadRegion region, LandingPadSpot spot) {
-        Network.toTracking(Network.Action.ADD, this.world, region);
-    }
-
-    @Override
-    public void onRegionRemoved(LandingPadRegion region) {
-        Network.toTracking(Network.Action.REMOVE, this.world, region);
-    }
-
-    @Override
-    public void onClaim(LandingPadRegion region, LandingPadSpot spot) {
-        Network.toTracking(Network.Action.ADD, this.world, region);
-    }
-
-    @Override
-    public void onFree(LandingPadRegion region, LandingPadSpot spot) {
-        Network.toTracking(Network.Action.ADD, this.world, region);
-    }
-
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        NbtList list = new NbtList();
-
-        for (LandingPadRegion region : regions.values()) {
-            list.add(region.serialize());
-        }
-
-        nbt.put("Regions", list);
-
-        return nbt;
-    }
-
     public static LandingPadManager getInstance(ServerWorld world) {
-        PersistentStateManager manager = world.getPersistentStateManager();
-
-        LandingPadManager state = manager.getOrCreate(
-                (data) -> LandingPadManager.loadNbt(world, data),
-                () -> new LandingPadManager(world),
-                AITMod.MOD_ID + "_landing_pad"
-        );
-
-        state.markDirty();
-
-        return state;
+        return new LandingPadManager(world);
     }
-
-    private static LandingPadManager loadNbt(ServerWorld world, NbtCompound data) {
-        LandingPadManager created = new LandingPadManager(world);
-
-        NbtList list = data.getList("Regions", NbtElement.COMPOUND_TYPE);
-
-        for (NbtElement nbt : list) {
-            LandingPadRegion pad = new LandingPadRegion((NbtCompound) nbt, world);
-            created.regions.put(pad.toLong(), pad);
-        }
-
-        return created;
-    }
-
 
     public static class Network {
+
         public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "landingpad_sync");
         public static final Identifier REQUEST = new Identifier(AITMod.MOD_ID, "landingpad_request");
 
-        private static void toPlayer(Network.Action action, RegistryKey<World> world, Long chunk, LandingPadRegion region, ServerPlayerEntity player) {
-            NbtCompound data = new NbtCompound();
-
-            data.putInt("Type", action.ordinal());
-            data.putString("World", world.getValue().toString());
-            data.putLong("Chunk", chunk);
-
-            if (action == Network.Action.ADD)
-                data.put("Region", region.serialize());
-
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeNbt(data);
-
-            ServerPlayNetworking.send(player, SYNC, buf);
-        }
-
-        private static void toPlayer(Network.Action action, RegistryKey<World> world, LandingPadRegion region, ServerPlayerEntity player) {
-            toPlayer(action, world, region.toLong(), region, player);
-        }
-
-        public static void toPlayer(Network.Action action, ServerWorld world, LandingPadRegion region, ServerPlayerEntity player) {
-            toPlayer(action, world.getRegistryKey(), region, player);
-        }
-        public static void toPlayer(Action action, ServerPlayerEntity player) {
+        public static void syncForPlayer(Action action, ServerPlayerEntity player) {
             ServerWorld world = player.getServerWorld();
-            LandingPadManager manager = LandingPadManager.getInstance(world);
-            LandingPadRegion region = manager.getRegion(player.getBlockPos()).orElse(null);
 
-            if (region == null) return;
+            ChunkPos pos = player.getChunkPos();
+            PacketByteBuf buf = PacketByteBufs.create();
 
-            toPlayer(action, world, region, player);
-        }
+            if (action != Action.CLEAR)
+                buf.writeChunkPos(pos);
 
-        public static void toWorld(Network.Action action, ServerWorld world, LandingPadRegion region) {
-            for (ServerPlayerEntity player : world.getPlayers()) {
-                toPlayer(action, world.getRegistryKey(), region, player);
+            if (action == Action.ADD) {
+                LandingPadManager manager = LandingPadManager.getInstance(world);
+                LandingPadRegion region = manager.getRegion(pos);
+
+                if (region == null)
+                    return;
+
+                NetworkUtil.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
+                return;
             }
+
+            NetworkUtil.send(player, SYNC, buf);
         }
 
-        public static void toTracking(Network.Action action, ServerWorld world, LandingPadRegion region) {
-            for (ServerPlayerEntity player : PlayerLookup.tracking(world, new ChunkPos(region.toLong()))) {
-                toPlayer(action, world.getRegistryKey(), region.toLong(), region, player);
+        public static void syncTracked(Action action, ServerWorld world, ChunkPos pos) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeEnumConstant(action);
+
+            if (action != Action.CLEAR)
+                buf.writeChunkPos(pos);
+
+            if (action == Action.ADD) {
+                LandingPadManager manager = LandingPadManager.getInstance(world);
+                LandingPadRegion region = manager.getRegion(pos);
+
+                if (region == null)
+                    return;
+
+                for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
+                    NetworkUtil.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
+                }
+
+                return;
             }
-        }
 
-        public static void toAll(Network.Action action, ServerWorld world, LandingPadRegion region) {
-            for (ServerPlayerEntity player : world.getServer().getPlayerManager().getPlayerList()) {
-                toPlayer(action, world.getRegistryKey(), region, player);
-            }
-        }
-
-        public static void toPlayer(LandingPadManager manager, ServerPlayerEntity player) {
-            toPlayer(Network.Action.CLEAR, manager.world.getRegistryKey(), Long.valueOf("1"), null, player);
-
-            for (LandingPadRegion region : manager.regions.values()) {
-                toPlayer(Network.Action.ADD, manager.world.getRegistryKey(), region, player);
-            }
-        }
-
-        public static void toWorld(LandingPadManager manager) {
-            for (ServerPlayerEntity player : manager.world.getPlayers()) {
-                toPlayer(manager, player);
-            }
-        }
-
-        public static void toAll(LandingPadManager manager) {
-            for (ServerPlayerEntity player : manager.world.getServer().getPlayerManager().getPlayerList()) {
-                toPlayer(manager, player);
+            for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
+                NetworkUtil.send(player, SYNC, buf);
             }
         }
 
         static {
             ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-                LandingPadManager manager = LandingPadManager.getInstance(handler.getPlayer().getServerWorld());
-
-                toPlayer(manager, handler.getPlayer());
+                syncForPlayer(Action.ADD, handler.getPlayer());
             });
-            ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
-                LandingPadManager manager = LandingPadManager.getInstance(destination);
 
-                toPlayer(manager, player);
+            ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+                syncForPlayer(Action.CLEAR, player);
+                syncForPlayer(Action.ADD, player);
+            });
+
+            ServerPlayNetworking.registerGlobalReceiver(LandingPadManager.Network.REQUEST, (server, player, handler, buf, responseSender) -> {
+                syncForPlayer(Action.ADD, player);
             });
         }
 

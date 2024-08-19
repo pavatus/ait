@@ -5,8 +5,10 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import loqor.ait.core.data.base.Exclude;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
 import loqor.ait.tardis.Tardis;
@@ -102,6 +104,10 @@ public class TardisRef implements Disposable {
     @Override
     public void dispose() {
         this.cached = null;
+    }
+
+    public boolean contains(Tardis tardis) {
+        return this.get() == tardis;
     }
 
     public interface LoadFunc extends Function<UUID, Tardis> {

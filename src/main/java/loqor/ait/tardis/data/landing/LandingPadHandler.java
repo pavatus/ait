@@ -1,129 +1,68 @@
 package loqor.ait.tardis.data.landing;
 
-import java.util.Optional;
-
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import org.jetbrains.annotations.Nullable;
 
 public class LandingPadHandler extends KeyedTardisComponent {
-    @Exclude(strategy = Exclude.Strategy.NETWORK)
+
+    @Exclude
     private LandingPadSpot current;
 
     static {
-        TardisEvents.MAT.register(LandingPadHandler::onMaterialise);
-        TardisEvents.DEMAT.register(LandingPadHandler::onDematerialise); // TODO - on enter flight event instead
-        TardisEvents.LANDED.register(LandingPadHandler::onLand);
+        TardisEvents.BEFORE_LAND.register((tardis, destination)
+                -> new TardisEvents.Result<>(tardis.landingPad().update(destination)));
+
+        TardisEvents.DEMAT.register(tardis -> {
+            tardis.landingPad().release();
+            return TardisEvents.Interaction.PASS;
+        });
     }
 
     public LandingPadHandler() {
         super(Id.LANDING_PAD);
     }
 
-    private static TardisEvents.Interaction onDematerialise(Tardis tardis) {
-        return tardis.landingPad().onDematerialise();
-    }
-
-    private TardisEvents.Interaction onDematerialise() {
-        if (this.current == null) return TardisEvents.Interaction.PASS;
-
-        this.release(true);
-
-        return TardisEvents.Interaction.PASS;
-    }
-
-    private static TardisEvents.Interaction onMaterialise(Tardis tardis) {
-        return tardis.landingPad().onMaterialise();
-    }
-
-    private TardisEvents.Interaction onMaterialise() {
-        this.update();
-
-        return TardisEvents.Interaction.PASS;
-    }
-
-    private static TardisEvents.Interaction onLand(Tardis tardis) {
-        return tardis.landingPad().onLand();
-    }
-
-    private TardisEvents.Interaction onLand() {
-        if (this.current == null) return TardisEvents.Interaction.PASS;
-
-        this.current.updatePosition();
-
-        return TardisEvents.Interaction.PASS;
-    }
-
-    private void update() {
-        if (!(this.tardis() instanceof ServerTardis)) return;
-
+    private DirectedGlobalPos.Cached update(DirectedGlobalPos.Cached pos) {
         DirectedGlobalPos.Cached destination = this.tardis().travel().destination();
+        ServerWorld world = destination.getWorld();
 
-        World world = TardisUtil.getOverworld().getServer().getWorld(destination.getDimension()); // #getWorld from destination is always null..?
+        this.claim(findFreeSpot(world, destination.getPos()));
 
-        LandingPadSpot spot = null;
-        boolean success = false;
+        TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), this.current);
+        TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("message.ait.landingpad.adjust"));
 
-        while (!success) {
-            spot = findSpot(world, destination.getPos()).orElse(null);
-
-            if (spot == null) return;
-
-            spot.verify(world);
-            if (spot.isOccupied()) continue;
-
-            success = true;
-        }
-
-        this.claim(spot, true);
-        this.tardis().travel().destination(destination.pos(this.current.getPos()));
-
-        this.onAdjust(spot);
+        return destination.pos(this.current.getPos());
     }
 
-    private void onAdjust(LandingPadSpot spot) {
-        TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), spot);
+    private static @Nullable LandingPadSpot findFreeSpot(ServerWorld world, BlockPos pos) {
+        LandingPadRegion region = LandingPadManager.getInstance(world).getRegionAt(pos);
 
-        TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("tardis.message.landingpad.adjust"));
+        if (region == null)
+            return null;
+
+        return region.getFreeSpot();
     }
 
-    private Optional<LandingPadSpot> findSpot(World world, BlockPos pos) {
-        LandingPadRegion region = findRegion(world, pos).orElse(null);
-
-        if (region == null) return Optional.empty();
-
-        return region.getNextSpot();
-    }
-
-    private Optional<LandingPadRegion> findRegion(World world, BlockPos pos) {
-        return LandingPadManager.getInstance((ServerWorld) world).getRegion(pos);
-    }
-
-    public LandingPadSpot release(boolean updateSpot) {
+    public LandingPadSpot release() {
         LandingPadSpot spot = this.current;
-
-        if (updateSpot) {
-            this.current.release(false);
-        }
-
         this.current = null;
+
+        if (spot != null)
+            spot.release();
+
         return spot;
     }
 
-    public void claim(LandingPadSpot spot, boolean updateSpot) {
+    public void claim(LandingPadSpot spot) {
         this.current = spot;
-
-        if (updateSpot) {
-            this.current.claim(this.tardis(), false);
-        }
+        this.current.claim(this.tardis());
     }
 }

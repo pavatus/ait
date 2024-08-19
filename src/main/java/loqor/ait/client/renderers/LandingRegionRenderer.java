@@ -14,14 +14,14 @@ import net.minecraft.util.profiler.Profiler;
 import loqor.ait.AITMod;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.landing.LandingPadRegion;
 import loqor.ait.tardis.data.landing.LandingPadSpot;
 
 public class LandingRegionRenderer {
+
     private static final int DARK_CYAN = ColorHelper.Argb.getArgb(255, 0, 155, 155);
+
     private static final Identifier AVAILABLE = new Identifier(AITMod.MOD_ID, "textures/marker/available.png");
-    private static final Identifier LANDING = new Identifier(AITMod.MOD_ID, "textures/marker/landing.png");
     private static final Identifier OCCUPIED = new Identifier(AITMod.MOD_ID, "textures/marker/occupied.png");
 
     private final MinecraftClient client;
@@ -31,20 +31,11 @@ public class LandingRegionRenderer {
     }
 
     private static Identifier getTexture(LandingPadSpot spot) {
-        if (!spot.isOccupied()) return AVAILABLE;
-        if (spot.getReference().isEmpty()) return AVAILABLE;
-        if (spot.getReference().get().isEmpty()) return AVAILABLE;
-
-        Tardis tardis = spot.getReference().get().get();
-
-        if (tardis.travel().isLanded()) return OCCUPIED;
-
-        return LANDING;
+        return spot.isOccupied() ? OCCUPIED : AVAILABLE;
     }
 
-
     public boolean shouldRender() {
-        return ControlEntityRenderer.isPlayerHoldingScanningSonic() && ClientLandingManager.getInstance().getRegion(client.world, client.player.getBlockPos()).isPresent(); // TODO - constant calling of getRegion is extremely bad. work now, performance later :)
+        return ControlEntityRenderer.isPlayerHoldingScanningSonic() && ClientLandingManager.getInstance().getRegion(client.player.getChunkPos()) != null;
     }
 
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
@@ -60,17 +51,18 @@ public class LandingRegionRenderer {
         profiler.pop();
         profiler.pop();
     }
-    private void renderRegion(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        LandingPadRegion region = ClientLandingManager.getInstance().getRegion(client.world, client.player.getBlockPos()).orElseThrow();
 
-        if (region.getSpots().isEmpty()) {
-            region.getNextSpot();
-        }
+    private void renderRegion(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+        LandingPadRegion region = ClientLandingManager.getInstance().getRegion(client.player.getChunkPos());
+
+        if (region == null)
+            return;
 
         for (LandingPadSpot spot : region.getSpots()) {
             renderSpot(spot);
-}
+        }
     }
+
     private void renderSpot(LandingPadSpot spot) {
         renderSpinningTexture(spot.getPos(), getTexture(spot));
     }
@@ -111,7 +103,7 @@ public class LandingRegionRenderer {
     }
 
     private void renderChunk(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        int k;
+        int k = DARK_CYAN;
         int j;
         Entity entity = this.client.gameRenderer.getCamera().getFocusedEntity();
         float f = (float)((double)this.client.world.getBottomY() - cameraY);
@@ -122,7 +114,6 @@ public class LandingRegionRenderer {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getDebugLineStrip(1.0));
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
         for (j = 2; j < 16; j += 2) {
-            k = DARK_CYAN;
             vertexConsumer.vertex(matrix4f, h + (float)j, f, i).color(1.0f, 1.0f, 0.0f, 0.0f).next();
             vertexConsumer.vertex(matrix4f, h + (float)j, f, i).color(k).next();
             vertexConsumer.vertex(matrix4f, h + (float)j, g, i).color(k).next();
@@ -133,7 +124,6 @@ public class LandingRegionRenderer {
             vertexConsumer.vertex(matrix4f, h + (float)j, g, i + 16.0f).color(1.0f, 1.0f, 0.0f, 0.0f).next();
         }
         for (j = 2; j < 16; j += 2) {
-            k = DARK_CYAN;
             vertexConsumer.vertex(matrix4f, h, f, i + (float)j).color(1.0f, 1.0f, 0.0f, 0.0f).next();
             vertexConsumer.vertex(matrix4f, h, f, i + (float)j).color(k).next();
             vertexConsumer.vertex(matrix4f, h, g, i + (float)j).color(k).next();
@@ -176,16 +166,18 @@ public class LandingRegionRenderer {
     }
 
     public void tryRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        if (!this.shouldRender()) return;
+        if (!this.shouldRender())
+            return;
 
         this.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }
 
     private static LandingRegionRenderer INSTANCE;
+
     public static LandingRegionRenderer getInstance() {
-        if (INSTANCE == null) {
+        if (INSTANCE == null)
             INSTANCE = new LandingRegionRenderer(MinecraftClient.getInstance());
-        }
+
         return INSTANCE;
     }
 }

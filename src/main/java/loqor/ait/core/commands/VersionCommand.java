@@ -5,10 +5,14 @@ import static net.minecraft.server.command.CommandManager.literal;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPadRegion;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -16,6 +20,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
+import net.minecraft.world.World;
 
 public class VersionCommand {
 
@@ -44,10 +49,19 @@ public class VersionCommand {
         if (!source.isExecutedByPlayer())
             return Command.SINGLE_SUCCESS;
 
-        ((WorldWithTardis) context.getSource().getWorld()).ait$withLookup(lookup -> {
+        ServerWorld world = source.getWorld();
+        PlayerEntity player = source.getPlayer();
+
+        ((WorldWithTardis) world).ait$withLookup(lookup -> {
             source.sendMessage(Text.empty());
-            source.sendMessage(Text.literal("TARDIS in chunk: " + lookup.get(source.getPlayer().getChunkPos())));
+            source.sendMessage(Text.literal("TARDIS in chunk: " + lookup.get(player.getChunkPos())));
         });
+
+        LandingPadRegion region = LandingPadManager.getInstance(world).getRegion(player.getChunkPos());
+
+        if (region != null) {
+            source.sendMessage(Text.literal("LP in chunk: " + region));
+        }
 
         return Command.SINGLE_SUCCESS;
     }
