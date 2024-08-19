@@ -131,17 +131,6 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         return exterior;
     }
 
-    public void immediatelyLandHere(DirectedGlobalPos.Cached globalPos) {
-        this.deleteExterior();
-        this.state.set(TravelHandlerBase.State.LANDED);
-
-        this.forceDestination(globalPos);
-        this.forcePosition(globalPos);
-
-        this.placeExterior(false);
-        this.finishRemat();
-    }
-
     private void runAnimations(ExteriorBlockEntity exterior) {
         State state = this.getState();
         ExteriorAnimation animation = exterior.getAnimation();
@@ -289,7 +278,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 2f, 1f);
-        this.placeExterior(true, false); // we schedule block update in #finishRemat
+        this.placeExterior(true); // we schedule block update in #finishRemat
     }
 
     public void finishRemat() {
@@ -299,7 +288,6 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.state.set(State.LANDED);
         this.resetFlight();
 
-        this.position().getWorld().scheduleBlockTick(this.position().getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
         DoorHandler.lockTardis(tardis.door().previouslyLocked().get(), this.tardis, null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
