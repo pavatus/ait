@@ -84,9 +84,10 @@ public class LandingPadManager {
 
         public static void syncForPlayer(Action action, ServerPlayerEntity player) {
             ServerWorld world = player.getServerWorld();
-
             ChunkPos pos = player.getChunkPos();
+
             PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeEnumConstant(action);
 
             if (action != Action.CLEAR)
                 buf.writeChunkPos(pos);
