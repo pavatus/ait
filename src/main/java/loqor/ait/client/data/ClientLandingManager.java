@@ -54,13 +54,20 @@ public class ClientLandingManager {
 
     public void receive(PacketByteBuf buf) {
         LandingPadManager.Network.Action action = buf.readEnumConstant(LandingPadManager.Network.Action.class);
+
+        if (action == LandingPadManager.Network.Action.CLEAR) {
+            this.invalidate();
+            return;
+        }
+
         ChunkPos chunkPos = buf.readChunkPos();
 
-        switch (action) {
-            case ADD -> this.regions.put(chunkPos, NetworkUtil.receive(LandingPadRegion.CODEC, buf));
-            case REMOVE -> this.remove(chunkPos);
-            case CLEAR -> this.invalidate();
+        if (action == LandingPadManager.Network.Action.ADD) {
+            this.regions.put(chunkPos, NetworkUtil.receive(LandingPadRegion.CODEC, buf));
+            return;
         }
+
+        this.regions.remove(chunkPos);
     }
 
     private void invalidate() {
