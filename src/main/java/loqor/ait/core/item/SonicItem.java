@@ -3,6 +3,7 @@ package loqor.ait.core.item;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.util.math.ChunkPos;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +43,7 @@ import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.RiftChunkManager;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelUtil;
@@ -459,9 +460,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                             .formatted(Formatting.BOLD);
                     Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA)
                             .formatted(Formatting.BOLD);
-                    player.sendMessage((RiftChunkHandler.isRiftChunk(pos) ? found : notfound), true);
-                    if (RiftChunkHandler.isRiftChunk(pos))
-                        player.sendMessage(Text.literal("AU: " + (RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos).orElseThrow().getCurrentFuel(world)))
+                    player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
+                    if (RiftChunkManager.isRiftChunk(pos))
+                        player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
                                 .formatted(Formatting.GOLD));
                     return;
                 }
