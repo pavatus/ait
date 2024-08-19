@@ -18,8 +18,7 @@ public class LandingPadRegion {
     ).apply(instance, LandingPadRegion::create));
 
     private static final int CHUNK_LENGTH = 16;
-
-    private static final int MAX_SPOTS = CHUNK_LENGTH * CHUNK_LENGTH / 4;
+    private static final int MAX_SPOTS = (CHUNK_LENGTH * CHUNK_LENGTH) / 4;
     private static final int MAX_PER_ROW = CHUNK_LENGTH / 2;
 
     private final ChunkPos chunk;
@@ -60,17 +59,15 @@ public class LandingPadRegion {
                     this.chunk.getStartX() + 1, this.defaultY, this.chunk.getStartZ() + 1
             ));
 
-        // FIXME mid code
         float rowCount = ((float) this.spots.size() / MAX_PER_ROW);
         boolean isNewRow = rowCount == Math.round(rowCount);
+        BlockPos lastPos = this.spots.get(this.spots.size() - 1).getPos();
 
         if (!isNewRow)
-            return new LandingPadSpot(this.spots.get(this.spots.size() - 1)
-                    .getPos().add(2, 0, 0));
+            return new LandingPadSpot(lastPos.add(2, 0, 0));
 
-        return new LandingPadSpot(this.spots.get(0)
-                .getPos().add(0, 0, 2)
-        );
+        return new LandingPadSpot(new BlockPos(this.spots.get(0).getPos().getX(),
+                this.defaultY, lastPos.getZ() + 2));
     }
 
     private LandingPadSpot generateSpot() {

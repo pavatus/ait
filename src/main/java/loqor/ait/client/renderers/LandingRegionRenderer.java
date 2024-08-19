@@ -81,7 +81,7 @@ public class LandingRegionRenderer {
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180f));
-        matrices.translate(transform.x + 0.5f, transform.y, transform.z - 0.5f);
+        matrices.translate(transform.x + 0.5f, transform.y + 0.05f, transform.z - 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
 
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(client.player.age / 200f * 360f));

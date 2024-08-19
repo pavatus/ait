@@ -9,7 +9,7 @@ name: Automated donator builds
 
 on:
   push:
-    branches: [ "main", "iwannatrytomakelandpadstoo" ]
+    branches: [ "main" ]
 
 jobs:
   build:
