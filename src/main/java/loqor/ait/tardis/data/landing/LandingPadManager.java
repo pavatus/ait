@@ -58,8 +58,6 @@ public class LandingPadManager extends PersistentState implements LandingPadRegi
 
         created.addListener(this);
 
-        Network.toAll(Network.Action.ADD, this.world, created);
-
         return created;
     }
 
@@ -76,8 +74,6 @@ public class LandingPadManager extends PersistentState implements LandingPadRegi
         LandingPadRegion released = this.regions.remove(pos);
 
         released.onRemoved();
-
-        Network.toAll(Network.Action.REMOVE, this.world, released);
 
         return released;
     }
@@ -97,7 +93,7 @@ public class LandingPadManager extends PersistentState implements LandingPadRegi
 
     @Override
     public void onRegionRemoved(LandingPadRegion region) {
-
+        Network.toTracking(Network.Action.REMOVE, this.world, region);
     }
 
     @Override
@@ -151,8 +147,9 @@ public class LandingPadManager extends PersistentState implements LandingPadRegi
     }
 
 
-    public static class Network { // TODO - optimise network logic, rn it just sends EVERYTHING to EVERYONE (very bad)
+    public static class Network {
         public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "landingpad_sync");
+        public static final Identifier REQUEST = new Identifier(AITMod.MOD_ID, "landingpad_request");
 
         private static void toPlayer(Network.Action action, RegistryKey<World> world, Long chunk, LandingPadRegion region, ServerPlayerEntity player) {
             NbtCompound data = new NbtCompound();
@@ -176,6 +173,15 @@ public class LandingPadManager extends PersistentState implements LandingPadRegi
 
         public static void toPlayer(Network.Action action, ServerWorld world, LandingPadRegion region, ServerPlayerEntity player) {
             toPlayer(action, world.getRegistryKey(), region, player);
+        }
+        public static void toPlayer(Action action, ServerPlayerEntity player) {
+            ServerWorld world = player.getServerWorld();
+            LandingPadManager manager = LandingPadManager.getInstance(world);
+            LandingPadRegion region = manager.getRegion(player.getBlockPos()).orElse(null);
+
+            if (region == null) return;
+
+            toPlayer(action, world, region, player);
         }
 
         public static void toWorld(Network.Action action, ServerWorld world, LandingPadRegion region) {

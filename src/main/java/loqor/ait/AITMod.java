@@ -55,6 +55,7 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
+import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
@@ -257,6 +258,10 @@ public class AITMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             AIT_CONFIG.save();
             AsyncLocatorUtil.shutdownExecutorService();
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(LandingPadManager.Network.REQUEST, (server, player, handler, buf, responseSender) -> {
+            LandingPadManager.Network.toPlayer(LandingPadManager.Network.Action.ADD, player);
         });
 
         // TODO move to either TardisCriterions or one of TravelHandlers'

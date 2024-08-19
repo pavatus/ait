@@ -2,14 +2,12 @@ package loqor.ait.tardis.data.landing;
 
 import java.util.*;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 
 import loqor.ait.core.data.base.Exclude;
 
@@ -33,7 +31,7 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
         this.listeners = new ArrayList<>();
     }
 
-    public LandingPadRegion(NbtCompound data, @Nullable ServerWorld world) {
+    public LandingPadRegion(NbtCompound data, World world) {
         this(new ChunkPos(data.getLong("Chunk")));
 
         this.deserialize(data, world);
@@ -45,7 +43,7 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
 
     public Optional<LandingPadSpot> getNextSpot() {
         if (!this.free.isEmpty()) {
-            return Optional.of(this.free.poll());
+            return Optional.of(this.free.peek());
         }
 
         if (this.spots.size() >= this.maxSpots) {
@@ -173,15 +171,15 @@ public class LandingPadRegion implements LandingPadSpot.Listener {
         return data;
     }
 
-    private void deserialize(NbtCompound data, @Nullable ServerWorld world) {
+    private void deserialize(NbtCompound data, World world) {
         NbtList spots = data.getList("Spots", NbtElement.COMPOUND_TYPE);
 
         for (NbtElement nbt : spots) {
-            LandingPadSpot created = new LandingPadSpot((NbtCompound) nbt);
+            LandingPadSpot created = new LandingPadSpot((NbtCompound) nbt, world);
             created.addListener(this);
             this.spots.add(created);
 
-            if (world != null)
+            if (world != null && !world.isClient())
                 created.verify(world);
         }
 

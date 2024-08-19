@@ -32,6 +32,8 @@ public class LandingRegionRenderer {
 
     private static Identifier getTexture(LandingPadSpot spot) {
         if (!spot.isOccupied()) return AVAILABLE;
+        if (spot.getReference().isEmpty()) return AVAILABLE;
+        if (spot.getReference().get().isEmpty()) return AVAILABLE;
 
         Tardis tardis = spot.getReference().get().get();
 
@@ -66,16 +68,20 @@ public class LandingRegionRenderer {
         }
 
         for (LandingPadSpot spot : region.getSpots()) {
-            renderSpot(spot, matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+            renderSpot(spot);
 }
     }
-    private void renderSpot(LandingPadSpot spot, MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+    private void renderSpot(LandingPadSpot spot) {
+        renderSpinningTexture(spot.getPos(), getTexture(spot));
+    }
+
+    public static void renderSpinningTexture(BlockPos pos, Identifier texture) {
+        MinecraftClient client = MinecraftClient.getInstance();
         Camera camera = client.gameRenderer.getCamera();
-        BlockPos spotPos = spot.getPos();
-        Vec3d target = new Vec3d(spotPos.getX(), spotPos.getY(), spotPos.getZ() + 1f);
+        Vec3d target = new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1f);
         Vec3d transform = target.subtract(camera.getPos());
 
-        matrices = new MatrixStack();
+        MatrixStack matrices = new MatrixStack();
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -96,7 +102,7 @@ public class LandingRegionRenderer {
         buffer.vertex(positionMatrix, 1, 0, 0).color(1f, 1f, 1f, 1f).texture(1f, 0f).next();
 
         RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
-        RenderSystem.setShaderTexture(0, getTexture(spot));
+        RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableCull();
         tessellator.draw();
