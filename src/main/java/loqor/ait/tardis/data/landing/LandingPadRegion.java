@@ -101,6 +101,21 @@ public class LandingPadRegion {
         }
     }
 
+    public Optional<LandingPadSpot> getSpotAt(BlockPos pos) {
+        // is in this chunk?
+        if (this.chunk.toLong() != new ChunkPos(pos).toLong())
+            return Optional.empty();
+
+        // is in this region?
+        for (LandingPadSpot spot : this.spots) {
+            if (spot.getPos().equals(pos))
+                return Optional.of(spot);
+        }
+
+        // not found
+        return Optional.empty();
+    }
+
     @Override
     public String toString() {
         return "LandingPadRegion{" +

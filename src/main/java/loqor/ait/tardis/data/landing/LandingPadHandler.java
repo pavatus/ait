@@ -12,6 +12,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class LandingPadHandler extends KeyedTardisComponent {
 
@@ -30,6 +31,26 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
     public LandingPadHandler() {
         super(Id.LANDING_PAD);
+    }
+
+    @Override
+    public void postInit(InitContext ctx) {
+        super.postInit(ctx);
+
+        if (!(this.tardis() instanceof ServerTardis)) return;
+
+        // find old spot and claim
+        DirectedGlobalPos.Cached pos = this.tardis().travel().position();
+
+        LandingPadRegion region = LandingPadManager.getInstance(pos.getWorld()).getRegionAt(pos.getPos());
+        if (region == null) return;
+
+        LandingPadSpot found = region.getSpotAt(pos.getPos()).orElse(null);
+
+        if (found == null) return;
+        if (found.isOccupied()) return; // how..?
+
+        this.claim(found);
     }
 
     private DirectedGlobalPos.Cached update(DirectedGlobalPos.Cached pos) {
