@@ -229,7 +229,7 @@ public class AITMod implements ModInitializer {
                         if (tardis == null)
                             return;
 
-                        tardis.landingPad().landingCode().set(landingCode);
+                        tardis.landingPad().code().set(landingCode);
                     });
                 }));
 

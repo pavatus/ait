@@ -19,8 +19,8 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class LandingPadHandler extends KeyedTardisComponent {
-    public static final Property<String> LANDING_CODE = new Property<>(Property.Type.STR, "landing_code", "");
-    private final Value<String> landingCode = LandingPadHandler.LANDING_CODE.create(this);
+    public static final Property<String> CODE = new Property<>(Property.Type.STR, "code", "");
+    private final Value<String> code = LandingPadHandler.CODE.create(this);
     @Exclude
     private LandingPadSpot current;
 
@@ -61,11 +61,11 @@ public class LandingPadHandler extends KeyedTardisComponent {
     public void onLoaded() {
         super.onLoaded();
 
-        landingCode.of(this, LandingPadHandler.LANDING_CODE);
+        code.of(this, LandingPadHandler.CODE);
     }
 
-    public Value<String> landingCode() {
-        return landingCode;
+    public Value<String> code() {
+        return code;
     }
 
     private DirectedGlobalPos.Cached update(DirectedGlobalPos.Cached pos) {
