@@ -1,30 +1,27 @@
 package loqor.ait.core.data.datapack.exterior;
 
-import java.util.Map;
-import java.util.function.Function;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.util.EnumMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.util.EnumMap;
+import java.util.Map;
+import java.util.function.Function;
 
-public record BiomeOverrides(EnumMap<BiomeHandler.BiomeType, Identifier> lookup) {
+public record BiomeOverrides(EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> lookup) {
 
-    public static BiomeOverrides EMPTY = new BiomeOverrides(new EnumMap<>(
-            () -> new BiomeHandler.BiomeType[] {}, i -> null
-    ));
+    @Environment(EnvType.CLIENT)
+    public static BiomeOverrides EMPTY = new BiomeOverrides(createMap());
 
-    private static EnumMap<BiomeHandler.BiomeType, Identifier> createMap() {
-        return new EnumMap<>(() -> BiomeHandler.BiomeType.VALUES, Identifier[]::new);
+    private static EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> createMap() {
+        return new EnumMap.Compliant<>(() -> BiomeHandler.BiomeType.VALUES, Identifier[]::new);
     }
 
     private BiomeOverrides(Map<BiomeHandler.BiomeType, Identifier> map) {
@@ -40,16 +37,16 @@ public record BiomeOverrides(EnumMap<BiomeHandler.BiomeType, Identifier> lookup)
     public void validate() {
         ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
 
-        this.lookup.apply(identifier -> {
-            if (identifier == null)
+        this.lookup.map(id -> {
+            if (id == null)
                 return null;
 
-            return manager.getResource(identifier).isPresent() ? identifier : null;
+            return manager.getResource(id).isPresent() ? id : null;
         });
     }
 
     public static BiomeOverrides of(Function<BiomeHandler.BiomeType, Identifier> func) {
-        EnumMap<BiomeHandler.BiomeType, Identifier> map = createMap();
+        EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> map = createMap();
 
         for (BiomeHandler.BiomeType type : BiomeHandler.BiomeType.VALUES) {
             map.put(type, func.apply(type));
@@ -76,8 +73,7 @@ public record BiomeOverrides(EnumMap<BiomeHandler.BiomeType, Identifier> lookup)
 
     public static class Builder {
 
-        private final EnumMap<BiomeHandler.BiomeType, Identifier> map = new EnumMap<>(
-                () -> BiomeHandler.BiomeType.VALUES, Identifier[]::new);
+        private final EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> map = createMap();
 
         private Builder() { }
 

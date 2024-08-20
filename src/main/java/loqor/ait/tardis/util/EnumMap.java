@@ -1,16 +1,16 @@
 package loqor.ait.tardis.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Custom and lightweight map implementation for enums. I know
  * {@link java.util.EnumMap} exists, but it's different.
  */
-public class EnumMap<K extends Ordered, V> implements Map<K, V> {
+public class EnumMap<K extends Ordered, V> {
 
     private final V[] values;
 
@@ -18,12 +18,10 @@ public class EnumMap<K extends Ordered, V> implements Map<K, V> {
         this.values = supplier.apply(values.get().length);
     }
 
-    public void apply(Function<V, V> func) {
+    public void map(Function<V, V> func) {
         for (int i = 0; i < values.length; i++) {
             values[i] = func.apply(values[i]);
         }
-
-
     }
 
     /**
@@ -35,7 +33,6 @@ public class EnumMap<K extends Ordered, V> implements Map<K, V> {
         return this.values;
     }
 
-    @Override
     public V put(K k, V v) {
         V prev = values[k.index()];
         values[k.index()] = v;
@@ -62,68 +59,77 @@ public class EnumMap<K extends Ordered, V> implements Map<K, V> {
         return this.values[k.index()] != null;
     }
 
-    @Override
     public void clear() {
         Arrays.fill(this.values, null);
     }
 
-    //region Map compliant code
+    public static class Compliant<K extends Ordered, V> extends EnumMap<K, V> implements Map<K, V> {
 
-    @Override
-    public V remove(Object k) {
-        return this.remove((K) k);
-    }
+        private final K[] keys;
 
-    @Override
-    public V get(Object key) {
-        return this.get((K) key);
-    }
-
-    @Override
-    public void putAll(@NotNull Map<? extends K, ? extends V> m) {
-        m.forEach(this::put);
-    }
-
-    @Override
-    public int size() {
-        return this.values.length;
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return this.containsKey((K) key);
-    }
-
-    @NotNull @Override
-    public Set<Entry<K, V>> entrySet() {
-        HashSet<Entry<K, V>> set = new HashSet<>(values.length);
-        for (V value : values) {
-            if (value != null) {
-                set.add(Map.entry(value));
-            }
+        public Compliant(Supplier<K[]> values, Function<Integer, V[]> supplier) {
+            super(values, supplier);
+            this.keys = values.get();
         }
-        return set;
-    }
 
-    @NotNull @Override
-    public Set<K> keySet() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public V remove(Object k) {
+            return this.remove((K) k);
+        }
 
-    @NotNull @Override
-    public Collection<V> values() {
-        return List.of(this.values);
-    }
+        @Override
+        public V get(Object key) {
+            return this.get((K) key);
+        }
 
-    @Override
-    public boolean isEmpty() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public void putAll(@NotNull Map<? extends K, ? extends V> m) {
+            m.forEach(this::put);
+        }
 
-    @Override
-    public boolean containsValue(Object value) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public int size() {
+            return this.keys.length;
+        }
 
-    //endregion
+        @Override
+        public boolean containsKey(Object key) {
+            return this.containsKey((K) key);
+        }
+
+        @NotNull @Override
+        public Set<Entry<K, V>> entrySet() {
+            V[] values = this.getValues();
+            Set<Entry<K, V>> set = new HashSet<>(values.length);
+
+            for (int i = 0; i < this.size(); i++) {
+                V value = values[i];
+
+                if (value != null)
+                    set.add(Map.entry(this.keys[i], value));
+            }
+
+            return set;
+        }
+
+        @NotNull @Override
+        public Set<K> keySet() {
+            return Set.of(this.keys);
+        }
+
+        @NotNull @Override
+        public Collection<V> values() {
+            return List.of(this.getValues());
+        }
+
+        @Override
+        public boolean isEmpty() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean containsValue(Object value) throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
+    }
 }
