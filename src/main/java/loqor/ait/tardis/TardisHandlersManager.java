@@ -63,7 +63,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
             try {
                 tickable.tick(server);
             } catch (Exception e) {
-                AITMod.LOGGER.error("Ticking failed for " + component.getId().name(), e);
+                AITMod.LOGGER.error("Ticking failed for {}", component.getId().name(), e);
             }
         });
     }
@@ -121,7 +121,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
             TardisHandlersManager manager = new TardisHandlersManager();
             Map<String, JsonElement> map = json.getAsJsonObject().asMap();
 
-            boolean legacy = LegacyUtil.isHandlersLegacy(map);
             TardisComponentRegistry registry = TardisComponentRegistry.getInstance();
 
             for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
@@ -132,7 +131,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
                 if (LegacyUtil.isLegacyComponent(element))
                     continue;
 
-                IdLike id = legacy ? LegacyUtil.getLegacyId(key) : registry.get(key);
+                IdLike id = registry.get(key);
 
                 if (id == null) {
                     AITMod.LOGGER.error("Can't find a component id with name '{}'!", key);

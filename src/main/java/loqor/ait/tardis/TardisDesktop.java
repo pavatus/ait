@@ -2,11 +2,7 @@ package loqor.ait.tardis;
 
 import static loqor.ait.core.util.LegacyUtil.Consoles;
 
-import java.lang.reflect.Type;
-import java.util.HashSet;
 import java.util.Set;
-
-import com.google.gson.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
@@ -24,7 +20,6 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
-import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
@@ -45,16 +40,6 @@ public class TardisDesktop extends TardisComponent {
 
         this.corners = TardisUtil.findInteriorSpot();
         this.consolePos = new Consoles();
-    }
-
-    private TardisDesktop(TardisDesktopSchema schema, DirectedBlockPos doorPos, Corners corners, Consoles consolePos) {
-        super(Id.DESKTOP);
-
-        this.schema = schema;
-        this.doorPos = doorPos;
-
-        this.corners = corners;
-        this.consolePos = consolePos;
     }
 
     @Override
@@ -145,47 +130,5 @@ public class TardisDesktop extends TardisComponent {
 
     public Set<BlockPos> getConsolePos() {
         return consolePos;
-    }
-
-    public static Object updater() {
-        return new Updater();
-    }
-
-    private static class Updater implements JsonDeserializer<TardisDesktop>, JsonSerializer<TardisDesktop> {
-
-        @Override
-        public TardisDesktop deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
-            JsonObject obj = json.getAsJsonObject();
-
-            TardisDesktopSchema schema = context.deserialize(obj.get("schema"), TardisDesktopSchema.class);
-            DirectedBlockPos doorPos = context.deserialize(obj.get("doorPos"), DirectedBlockPos.class);
-            Corners corners = context.deserialize(obj.get("corners"), Corners.class);
-            Consoles consoles;
-
-            JsonArray jsonConsolePos = obj.getAsJsonArray("consolePos");
-
-            if (jsonConsolePos == null) {
-                JsonArray jsonConsoles = obj.getAsJsonArray("consoles");
-                consoles = LegacyUtil.flatConsoles(jsonConsoles, context);
-            } else {
-                consoles = context.deserialize(jsonConsolePos, Consoles.class);
-            }
-
-            return new TardisDesktop(schema, doorPos, corners, consoles);
-        }
-
-        @Override
-        public JsonElement serialize(TardisDesktop src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject object = new JsonObject();
-            object.add("schema", context.serialize(src.schema, TardisDesktopSchema.class));
-            object.add("doorPos", context.serialize(src.doorPos, DirectedBlockPos.class));
-            object.add("corners", context.serialize(src.corners, Corners.class));
-
-            JsonArray arr = context.serialize(src.consolePos, HashSet.class).getAsJsonArray();
-            object.add("consolePos", arr);
-
-            return object;
-        }
     }
 }

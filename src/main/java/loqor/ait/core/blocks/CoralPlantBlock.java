@@ -31,7 +31,7 @@ import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.RiftChunkManager;
 import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -122,7 +122,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             return;
 
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
-                || (!RiftChunkHandler.isRiftChunk(pos)
+                || (!RiftChunkManager.isRiftChunk(pos)
                         && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;

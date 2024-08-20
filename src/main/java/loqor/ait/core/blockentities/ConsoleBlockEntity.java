@@ -35,7 +35,7 @@ import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.control.ControlTypes;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.RiftChunkManager;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
@@ -246,7 +246,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         }
 
         ServerTardis tardis = (ServerTardis) this.tardis().get();
-        boolean isRiftChunk = RiftChunkHandler.isRiftChunk(tardis.travel().position().getPos());
+        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
 
         if (tardis.travel().isCrashing()) {
             serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,

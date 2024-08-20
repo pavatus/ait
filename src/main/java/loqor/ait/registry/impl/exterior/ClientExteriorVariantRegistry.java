@@ -1,5 +1,9 @@
 package loqor.ait.registry.impl.exterior;
 
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;
@@ -38,19 +42,17 @@ import loqor.ait.tardis.exterior.variant.renegade.client.ClientRenegadeTronVaria
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionDefaultVariant;
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionFireVariant;
 import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSoulVariant;
+import loqor.ait.tardis.exterior.variant.stallion.client.ClientStallionSteelVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.tardis.exterior.variant.tardim.client.ClientTardimSoulVariant;
 
-public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> {
-    private static ClientExteriorVariantRegistry INSTANCE;
+public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> implements
+        SimpleSynchronousResourceReloadListener {
+
+    private static final ClientExteriorVariantRegistry INSTANCE = new ClientExteriorVariantRegistry();
 
     public static DatapackRegistry<ClientExteriorVariantSchema> getInstance() {
-        if (INSTANCE == null) {
-            AITMod.LOGGER.info("ClientExteriorVariantRegistry was not initialized, Creating a new instance");
-            INSTANCE = new ClientExteriorVariantRegistry();
-        }
-
         return INSTANCE;
     }
 
@@ -80,8 +82,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
      * Do not call
      */
     @Override
-    public void syncToClient(ServerPlayerEntity player) {
-    }
+    public void syncToClient(ServerPlayerEntity player) { }
 
     @Override
     public void readFromServer(PacketByteBuf buf) {
@@ -180,6 +181,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_DEFAULT;
     public static ClientExteriorVariantSchema STALLION_FIRE;
     public static ClientExteriorVariantSchema STALLION_SOUL;
+    public static ClientExteriorVariantSchema STALLION_STEEL;
 
     @Override
     public void onClientInit() {
@@ -254,5 +256,29 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_DEFAULT = register(new ClientStallionDefaultVariant());
         STALLION_FIRE = register(new ClientStallionFireVariant());
         STALLION_SOUL = register(new ClientStallionSoulVariant());
+        STALLION_STEEL = register(new ClientStallionSteelVariant());
+    }
+
+    @Override
+    public Identifier getFabricId() {
+        return new Identifier(AITMod.MOD_ID, "client_exterior");
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
+    }
+
+    @Override
+    public void reload(ResourceManager manager) {
+        for (ClientExteriorVariantSchema schema : REGISTRY.values()) {
+            BiomeOverrides overrides = schema.overrides();
+
+            if (overrides == null)
+                continue;
+
+            overrides.validate();
+        }
     }
 }

@@ -352,10 +352,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        // this is called when the block is first placed, but we have a demat anim so
-        // nothing
-        // occurs.
-        this.tryFall(state, world, pos);
+        Tardis tardis = this.findTardis(world, pos);
+
+        if (tardis == null || tardis.travel().getState() == TravelHandlerBase.State.LANDED)
+            this.tryFall(state, world, pos);
     }
 
     @Override

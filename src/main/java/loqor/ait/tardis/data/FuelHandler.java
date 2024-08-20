@@ -1,6 +1,8 @@
 package loqor.ait.tardis.data;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import loqor.ait.api.tardis.ArtronHolder;
@@ -73,10 +75,11 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
         if (state == TravelHandlerBase.State.LANDED) {
             if (this.getRefueling().get() && this.getCurrentFuel() < FuelHandler.TARDIS_MAX_FUEL) {
-                RiftChunkHandler.RiftChunk chunk = RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos.getPos()).orElse(null);
+                RiftChunkManager manager = RiftChunkManager.getInstance((ServerWorld) this.world);
+                ChunkPos chunk = new ChunkPos(pos.getPos());
 
-                if (chunk != null && chunk.getCurrentFuel(world) > 0) {
-                    chunk.removeFuel(2, world);
+                if (manager.getArtron(chunk) > 0) {
+                    manager.removeFuel(chunk, 2);
 
                     addFuel(9);
                 } else {

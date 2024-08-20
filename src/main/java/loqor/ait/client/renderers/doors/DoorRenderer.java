@@ -118,7 +118,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         if (this.variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-            Identifier biomeTexture = biome.getBiomeKey().get(this.variant.overrides()).orElse(null);
+            Identifier biomeTexture = biome.getBiomeKey().get(this.variant.overrides());
 
             if (biomeTexture != null && !texture.equals(biomeTexture)) {
                 model.renderWithAnimations(entity, model.getPart(), matrices,

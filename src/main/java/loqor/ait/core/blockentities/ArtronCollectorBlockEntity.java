@@ -1,5 +1,7 @@
 package loqor.ait.core.blockentities;
 
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.ChunkPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -24,7 +26,7 @@ import loqor.ait.core.AITItems;
 import loqor.ait.core.item.ArtronCollectorItem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.tardis.data.RiftChunkHandler;
+import loqor.ait.tardis.data.RiftChunkManager;
 
 public class ArtronCollectorBlockEntity extends BlockEntity
         implements
@@ -110,18 +112,23 @@ public class ArtronCollectorBlockEntity extends BlockEntity
             return;
 
         // oh yes call this every tick good idea ( #notmyproblem )
-        RiftChunkHandler.RiftChunk chunk = RiftChunkHandler.getInstance(world).getMap(world).getChunk(pos).orElse(null);
 
-        if (shouldDrain(chunk)) {
-            chunk.removeFuel(3, world);
+        RiftChunkManager manager = RiftChunkManager.getInstance((ServerWorld) this.world);
+        ChunkPos chunk = new ChunkPos(pos);
+
+        if (shouldDrain(manager, chunk)) {
+            manager.removeFuel(chunk, 3);
             this.addFuel(3);
 
             this.updateListeners();
             DeltaTimeManager.createDelay(getDelay(), 500L);
         }
     }
-    private boolean shouldDrain(RiftChunkHandler.RiftChunk chunk) {
-        return chunk != null && chunk.getCurrentFuel(this.world) >= 3&& this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()));
+
+    private boolean shouldDrain(RiftChunkManager manager, ChunkPos pos) {
+        return this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL
+                && manager.getArtron(pos) >= 3
+                && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()));
     }
 
     private void updateListeners() {

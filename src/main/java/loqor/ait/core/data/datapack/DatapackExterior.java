@@ -27,6 +27,7 @@ import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class DatapackExterior extends ExteriorVariantSchema {
 
     public static final Identifier DEFAULT_TEXTURE = new Identifier(AITMod.MOD_ID,
@@ -45,7 +46,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
                     Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
                     Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
-                    BiomeOverrides.CODEC.optionalFieldOf("overrides", BiomeOverrides.EMPTY)
+                    BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack))
             .apply(instance, DatapackExterior::new));

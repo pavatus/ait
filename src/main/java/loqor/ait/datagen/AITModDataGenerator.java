@@ -647,6 +647,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.fire", "Fire");
         provider.addTranslation("exterior.ait.soul", "Soul");
         provider.addTranslation("exterior.ait.gilded", "Gilded");
+        provider.addTranslation("exterior.ait.steel", "Steel");
 
         // Police box specific
         provider.addTranslation("exterior.ait.tokamak", "Tokamak");
