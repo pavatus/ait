@@ -3,6 +3,7 @@ package loqor.ait.tardis.data;
 import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -43,6 +44,10 @@ public class RiftChunkManager {
 
     public void removeFuel(ChunkPos pos, double amount) {
         this.world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> d - amount);
+    }
+
+    public void setCurrentFuel(ChunkPos pos, double amount) {
+        this.world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> amount);
     }
 
     public double getMaxArtron(ChunkPos pos) {

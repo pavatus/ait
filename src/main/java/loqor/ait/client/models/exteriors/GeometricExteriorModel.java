@@ -65,7 +65,7 @@ public class GeometricExteriorModel extends ExteriorModel {
 
         DoorHandler door = exterior.tardis().get().door();
 
-        this.geometric.getChild("door").pivotZ += door.isOpen() ? -16f : 0f;
+        this.geometric.getChild("door").pivotZ = door.isOpen() ? -16f : 0f;
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();

@@ -37,7 +37,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     }
 
     private void forEach(Consumer<TardisComponent> consumer) {
-        for (TardisComponent component : this.handlers.values()) {
+        for (TardisComponent component : this.handlers.getValues()) {
             if (component == null)
                 continue;
 

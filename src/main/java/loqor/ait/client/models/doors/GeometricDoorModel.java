@@ -43,7 +43,7 @@ public class GeometricDoorModel extends DoorModel {
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         DoorHandler door = doorEntity.tardis().get().door();
 
-        this.geometric.getChild("door").pivotZ += door.isOpen() ? 1f : 0f;
+        this.geometric.getChild("door").pivotZ = door.isOpen() ? 1f : 0f;
 
         matrices.push();
         matrices.scale(1F, 1F, 1F);
