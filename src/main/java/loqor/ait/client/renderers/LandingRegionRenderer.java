@@ -2,6 +2,7 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -97,8 +98,11 @@ public class LandingRegionRenderer {
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableCull();
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+
         tessellator.draw();
 
+        RenderSystem.depthFunc(GL11.GL_LEQUAL);
         RenderSystem.enableCull();
     }
 
