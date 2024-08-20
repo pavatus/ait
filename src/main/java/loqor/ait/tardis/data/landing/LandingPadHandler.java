@@ -11,6 +11,8 @@ import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.data.properties.bool.BoolValue;
+import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
@@ -54,18 +56,28 @@ public class LandingPadHandler extends KeyedTardisComponent {
     }
 
     private DirectedGlobalPos.Cached update(DirectedGlobalPos.Cached pos) {
-        DirectedGlobalPos.Cached destination = this.tardis().travel().destination();
+        TravelHandler travel = this.tardis().travel();
+        DirectedGlobalPos.Cached destination = travel.destination();
         ServerWorld world = destination.getWorld();
 
         LandingPadSpot spot = findFreeSpot(world, destination.getPos());
         if (spot == null) return null;
+
+        BoolValue hSearch = this.tardis().travel().horizontalSearch();
+        boolean old = hSearch.get();
+        hSearch.set(false);
+
+        travel.destination(destination.pos(spot.getPos()));
+        destination = travel.destination();
+
+        hSearch.set(old);
 
         this.claim(spot);
 
         TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), this.current);
         TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("message.ait.landingpad.adjust"));
 
-        return destination.pos(this.current.getPos());
+        return destination;
     }
 
     private static @Nullable LandingPadSpot findFreeSpot(ServerWorld world, BlockPos pos) {

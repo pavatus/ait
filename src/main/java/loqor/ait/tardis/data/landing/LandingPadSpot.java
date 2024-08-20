@@ -25,7 +25,7 @@ public class LandingPadSpot {
             BlockPos.CODEC.fieldOf("pos").forGetter(LandingPadSpot::getPos)
     ).apply(instance, LandingPadSpot::create));
 
-    private final BlockPos pos;
+    private BlockPos pos;
     private TardisRef tardis;
 
     private static LandingPadSpot create(Optional<String> tardis, BlockPos pos) {
@@ -61,6 +61,7 @@ public class LandingPadSpot {
             throw new IllegalStateException("Spot already occupied");
 
         this.tardis = new TardisRef(tardis, uuid -> null);
+        this.pos = tardis.travel().destination().getPos();
     }
 
     public TardisRef release() {
