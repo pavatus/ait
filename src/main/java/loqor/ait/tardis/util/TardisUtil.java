@@ -77,6 +77,8 @@ public class TardisUtil {
     public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
     public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
 
+    public static final Identifier LANDING_CODE = new Identifier(AITMod.MOD_ID, "landing_code");
+
     @Deprecated
     private static final Random RANDOM = AITMod.RANDOM;
 

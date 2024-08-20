@@ -11,8 +11,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
@@ -31,6 +33,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     int left, top;
     int choicesCount = 0;
     private final Screen parent;
+    private TextFieldWidget landingCodeInput;
 
     public TardisSecurityScreen(ClientTardis tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.security.title"), tardis, console);
@@ -59,6 +62,24 @@ public class TardisSecurityScreen extends ConsoleScreen {
         createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
         createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
         createTextButton(Text.translatable("screen.ait.security.minimum_loyalty"), (button -> changeMinimumLoyalty()));
+
+        this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), this.top + 60, 120, this.textRenderer.fontHeight + 4,
+                Text.literal("Landing Code..."));
+        this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
+                this.textRenderer.getWidth("✓"), 20, Text.literal("✓").formatted(Formatting.BOLD), button -> {
+            updateLandingCode();
+        }, this.textRenderer));
+
+        this.landingCodeInput.setMaxLength(50);
+        this.landingCodeInput.setDrawsBackground(true);
+        this.landingCodeInput.setVisible(true);
+
+        if(this.tardis().stats().landingCode().get().isBlank())
+            this.landingCodeInput.setPlaceholder(Text.literal("Enter landing code..."));
+        else
+            this.landingCodeInput.setText(this.tardis().stats().landingCode().get());
+
+        this.addSelectableChild(this.landingCodeInput);
     }
 
     private void toggleLeaveBehind() {
@@ -86,6 +107,17 @@ public class TardisSecurityScreen extends ConsoleScreen {
         buf.writeBoolean(!tardis().alarm().hostilePresence().get());
 
         ClientPlayNetworking.send(TardisUtil.HOSTILEALARMS, buf);
+    }
+
+    private void updateLandingCode() {
+        if (!this.landingCodeInput.getText().isEmpty()) {
+
+            PacketByteBuf buf = PacketByteBufs.create();
+
+            buf.writeString(this.landingCodeInput.getText());
+
+            ClientPlayNetworking.send(TardisUtil.LANDING_CODE, buf);
+        }
     }
 
     private <T extends ClickableWidget> void addButton(T button) {
@@ -125,6 +157,8 @@ public class TardisSecurityScreen extends ConsoleScreen {
                 (int) (top + (bgHeight * (0.1f * 7))), 0xadcaf7, false);
         context.drawText(this.textRenderer, Text.literal(tardis.stats().getCreationString()),
                 (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8))), 0xadcaf7, false);
+        this.landingCodeInput.render(context, mouseX, mouseY, delta);
+        this.landingCodeInput.setEditableColor(this.landingCodeInput.isSelected() || !this.landingCodeInput.getText().isBlank() ? 0xffffff: 0x545454);
         super.render(context, mouseX, mouseY, delta);
     }
 
