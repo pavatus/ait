@@ -74,10 +74,10 @@ public class TardisSecurityScreen extends ConsoleScreen {
         this.landingCodeInput.setDrawsBackground(true);
         this.landingCodeInput.setVisible(true);
 
-        if(this.tardis().stats().landingCode().get().isBlank())
+        if(this.tardis().landingPad().landingCode().get().isBlank())
             this.landingCodeInput.setPlaceholder(Text.literal("Enter landing code..."));
         else
-            this.landingCodeInput.setText(this.tardis().stats().landingCode().get());
+            this.landingCodeInput.setText(this.tardis().landingPad().landingCode().get());
 
         this.addSelectableChild(this.landingCodeInput);
     }

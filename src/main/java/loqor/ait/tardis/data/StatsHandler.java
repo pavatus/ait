@@ -42,7 +42,6 @@ public class StatsHandler extends KeyedTardisComponent {
             AITDimensions.TARDIS_DIM_WORLD);
     private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks",
             new HashSet<>());
-    private static final Property<String> LANDING_CODE = new Property<>(Property.Type.STR, "landing_code", "");
     private static final BoolProperty SECURITY = new BoolProperty("security", false);
     private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
 
@@ -53,7 +52,7 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
     private final BoolValue security = SECURITY.create(this);
     private final BoolValue hailMary = HAIL_MARY.create(this);
-    private final Value<String> landingCode = LANDING_CODE.create(this);
+
 
     public StatsHandler() {
         super(Id.STATS);
@@ -74,7 +73,6 @@ public class StatsHandler extends KeyedTardisComponent {
         creationDate.of(this, DATE);
         security.of(this, SECURITY);
         hailMary.of(this, HAIL_MARY);
-        landingCode.of(this, LANDING_CODE);
 
         for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext();) {
             this.unlock(it.next(), false);
@@ -117,10 +115,6 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public BoolValue hailMary() {
         return hailMary;
-    }
-
-    public Value<String> landingCode() {
-        return landingCode;
     }
 
     public String getPlayerCreatorName() {
