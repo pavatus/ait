@@ -75,7 +75,6 @@ public class ClientLandingManager {
     }
 
     private void remove(ChunkPos pos) {
-        System.out.println("Removing: " + pos);
         this.regions.remove(pos);
     }
 

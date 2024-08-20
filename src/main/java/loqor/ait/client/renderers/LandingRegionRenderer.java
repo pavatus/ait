@@ -73,12 +73,16 @@ public class LandingRegionRenderer {
             renderSpot(spots.get(i), isLast);
         }
 
+        this.previous = null;
+
         profiler.pop();
     }
 
     private void renderSpot(LandingPadSpot spot, boolean forceRender) {
         Identifier text = getTexture(spot);
         renderSpinningTexture(spot.getPos(), text, forceRender ? null : this.previous);
+
+        forceRender = forceRender || !text.equals(this.previous);
 
         this.previous = forceRender ? null : text;
     }
@@ -124,7 +128,6 @@ public class LandingRegionRenderer {
             RenderSystem.setShaderTexture(0, texture);
             RenderSystem.disableCull();
             RenderSystem.depthFunc(GL11.GL_ALWAYS);
-
 
             Tessellator.getInstance().draw();
 
