@@ -110,14 +110,15 @@ public class TardisSecurityScreen extends ConsoleScreen {
     }
 
     private void updateLandingCode() {
-        if (!this.landingCodeInput.getText().isEmpty()) {
+        String input = this.landingCodeInput.getText();
+        if (input.isBlank()) return;
 
-            PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = PacketByteBufs.create();
 
-            buf.writeString(this.landingCodeInput.getText());
+        buf.writeUuid(this.tardis().getUuid());
+        buf.writeString(input);
 
-            ClientPlayNetworking.send(TardisUtil.LANDING_CODE, buf);
-        }
+        ClientPlayNetworking.send(TardisUtil.LANDING_CODE, buf);
     }
 
     private <T extends ClickableWidget> void addButton(T button) {
