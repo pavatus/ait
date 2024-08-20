@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.data.DirectedGlobalPos;
@@ -59,8 +60,11 @@ public class LandingPadHandler extends KeyedTardisComponent {
         LandingPadSpot spot = this.current;
         this.current = null;
 
-        if (spot != null)
+        if (spot != null) {
             spot.release();
+
+            this.syncSpot();
+        }
 
         return spot;
     }
@@ -68,5 +72,13 @@ public class LandingPadHandler extends KeyedTardisComponent {
     public void claim(LandingPadSpot spot) {
         this.current = spot;
         this.current.claim(this.tardis());
+
+        this.syncSpot();
+    }
+
+    private void syncSpot() {
+        DirectedGlobalPos.Cached cached = this.tardis().travel().position();
+
+        LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, cached.getWorld(), new ChunkPos(cached.getPos()));
     }
 }
