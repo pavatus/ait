@@ -240,10 +240,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             .input('S', Blocks.SEA_LANTERN)
                             .criterion(hasItem(Blocks.SEA_LANTERN), conditionsFromItem(Blocks.SEA_LANTERN)));
 
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.PEANUT)
+            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.PEANUT)
                     .pattern("BBB").pattern("BEB").pattern("BBB").input('B', Blocks.BEACON)
                     .criterion(hasItem(Blocks.BEACON), conditionsFromItem(Blocks.BEACON)).input('E', Blocks.DRAGON_EGG)
-                    .criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));
+                    .criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));*/
 
             generateSmithingRecipes(provider);
             return provider;
