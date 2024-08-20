@@ -11,6 +11,8 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -19,9 +21,22 @@ import net.minecraft.world.World;
 import loqor.ait.tardis.data.landing.LandingPadManager;
 
 public class LandingPadBlock extends Block {
+    private static final BooleanProperty ACTIVE = BooleanProperty.of("active"); // whether this block created a region
 
     public LandingPadBlock(FabricBlockSettings settings) {
         super(settings);
+
+        this.setDefaultState(
+                this.getStateManager().getDefaultState().with(ACTIVE, false)
+        );
+    }
+
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+
+        builder.add(ACTIVE);
     }
 
     @Override
@@ -47,6 +62,7 @@ public class LandingPadBlock extends Block {
             return;
         }
 
+        world.setBlockState(pos, state.with(ACTIVE, true));
         manager.claim(pos);
     }
 
@@ -56,6 +72,8 @@ public class LandingPadBlock extends Block {
 
         if (!(world instanceof ServerWorld serverWorld))
             return;
+
+        if (!state.get(ACTIVE)) return;
 
         LandingPadManager.getInstance(serverWorld).releaseAt(pos);
     }
