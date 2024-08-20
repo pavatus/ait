@@ -1,6 +1,9 @@
 package loqor.ait.client.renderers;
 
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -26,6 +29,7 @@ public class LandingRegionRenderer {
     private static final Identifier OCCUPIED = new Identifier(AITMod.MOD_ID, "textures/marker/occupied.png");
 
     private final MinecraftClient client;
+    private Identifier previous;
 
     public LandingRegionRenderer(MinecraftClient client) {
         this.client = client;
@@ -61,19 +65,25 @@ public class LandingRegionRenderer {
         if (region == null)
             return;
 
-        profiler.swap("render");
-        for (LandingPadSpot spot : region.getSpots()) {
-            renderSpot(spot);
+        profiler.swap("iterate");
+        List<LandingPadSpot> spots = region.getSpots();
+
+        for (int i = 0; i < spots.size(); i++) {
+            boolean isLast = i == spots.size() - 1;
+            renderSpot(spots.get(i), isLast);
         }
 
         profiler.pop();
     }
 
-    private void renderSpot(LandingPadSpot spot) {
-        renderSpinningTexture(spot.getPos(), getTexture(spot));
+    private void renderSpot(LandingPadSpot spot, boolean forceRender) {
+        Identifier text = getTexture(spot);
+        renderSpinningTexture(spot.getPos(), text, forceRender ? null : this.previous);
+
+        this.previous = forceRender ? null : text;
     }
 
-    public static void renderSpinningTexture(BlockPos pos, Identifier texture) {
+    public static void renderSpinningTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous) {
         Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
 
         profiler.push("get");
@@ -97,24 +107,30 @@ public class LandingRegionRenderer {
         matrices.translate(-0.5f, 0.5f, 0f);
 
         profiler.swap("vertexes");
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+
+        if (!buffer.isBuilding()) buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+
         buffer.vertex(positionMatrix, 0, 0, 0).color(1f, 1f, 1f, 1f).texture(0f, 0f).next();
         buffer.vertex(positionMatrix, 0, -1, 0).color(1f, 1f, 1f, 1f).texture(0f, 1f).next();
         buffer.vertex(positionMatrix, 1, -1, 0).color(1f, 1f, 1f, 1f).texture(1f, 1f).next();
         buffer.vertex(positionMatrix, 1, 0, 0).color(1f, 1f, 1f, 1f).texture(1f, 0f).next();
 
-        profiler.swap("render_system");
-        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableCull();
-        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+        boolean shouldRender = !texture.equals(previous);
 
-        profiler.swap("draw");
-        tessellator.draw();
+        if (shouldRender) {
+            profiler.swap("draw");
+            RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            RenderSystem.setShaderTexture(0, texture);
+            RenderSystem.disableCull();
+            RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
-        RenderSystem.depthFunc(GL11.GL_LEQUAL);
-        RenderSystem.enableCull();
+
+            Tessellator.getInstance().draw();
+
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
+            RenderSystem.enableCull();
+        }
 
         profiler.pop();
     }

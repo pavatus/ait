@@ -77,7 +77,7 @@ public class LandingPadRegion {
         return created;
     }
 
-    public Collection<LandingPadSpot> getSpots() {
+    public List<LandingPadSpot> getSpots() {
         return this.spots;
     }
 
