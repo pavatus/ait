@@ -35,7 +35,10 @@ public class LandingPadHandler extends KeyedTardisComponent {
         DirectedGlobalPos.Cached destination = this.tardis().travel().destination();
         ServerWorld world = destination.getWorld();
 
-        this.claim(findFreeSpot(world, destination.getPos()));
+        LandingPadSpot spot = findFreeSpot(world, destination.getPos());
+        if (spot == null) return null;
+
+        this.claim(spot);
 
         TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), this.current);
         TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("message.ait.landingpad.adjust"));
