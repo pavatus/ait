@@ -63,6 +63,10 @@ public class EnumMap<K extends Ordered, V> {
         Arrays.fill(this.values, null);
     }
 
+    public int size() {
+        return this.values.length;
+    }
+
     public static class Compliant<K extends Ordered, V> extends EnumMap<K, V> implements Map<K, V> {
 
         private final K[] keys;
@@ -85,11 +89,6 @@ public class EnumMap<K extends Ordered, V> {
         @Override
         public void putAll(@NotNull Map<? extends K, ? extends V> m) {
             m.forEach(this::put);
-        }
-
-        @Override
-        public int size() {
-            return this.keys.length;
         }
 
         @Override
