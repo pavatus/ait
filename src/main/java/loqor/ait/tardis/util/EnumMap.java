@@ -1,10 +1,10 @@
 package loqor.ait.tardis.util;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Custom and lightweight map implementation for enums. I know
@@ -94,20 +94,23 @@ public class EnumMap<K extends Ordered, V> implements Map<K, V> {
         return this.containsKey((K) key);
     }
 
-    @NotNull
-    @Override
-    public Set<Entry<K, V>> entrySet() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+    @NotNull @Override
+    public Set<Entry<K, V>> entrySet() {
+        HashSet<Entry<K, V>> set = new HashSet<>(values.length);
+        for (V value : values) {
+            if (value != null) {
+                set.add(Map.entry(value));
+            }
+        }
+        return set;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public Set<K> keySet() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public Collection<V> values() {
         return List.of(this.values);
     }

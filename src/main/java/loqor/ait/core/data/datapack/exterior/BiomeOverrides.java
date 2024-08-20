@@ -6,16 +6,16 @@ import java.util.function.Function;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
 
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.util.EnumMap;
-import net.minecraft.util.StringIdentifiable;
 
 public record BiomeOverrides(EnumMap<BiomeHandler.BiomeType, Identifier> lookup) {
 
