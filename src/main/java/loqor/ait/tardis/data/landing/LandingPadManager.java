@@ -27,6 +27,10 @@ public class LandingPadManager {
             new Identifier(AITMod.MOD_ID, "landing_pads"), LandingPadRegion.CODEC
     );
 
+    public static void init() {
+
+    }
+
     private final ServerWorld world;
 
     public LandingPadManager(ServerWorld world) {

@@ -56,6 +56,7 @@ import loqor.ait.tardis.TardisDesktopSchema;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
+import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
@@ -92,6 +93,7 @@ public class AITMod implements ModInitializer {
         CreakRegistry.init();
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();
+        LandingPadManager.init();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
