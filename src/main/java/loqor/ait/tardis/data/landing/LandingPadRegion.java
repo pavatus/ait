@@ -90,7 +90,7 @@ public class LandingPadRegion {
     }
 
     private boolean isFull() {
-        return this.spots.size() >= MAX_SPOTS;
+        return this.getFreeSpot() == null; // all spots must be occupied if none is found
     }
 
     private void createAllSpots() {
