@@ -50,7 +50,6 @@ public class LandingPadHandler extends KeyedTardisComponent {
         LandingPadSpot found = region.getSpotAt(pos.getPos()).orElse(null);
 
         if (found == null) return;
-        if (found.isOccupied()) return; // how..?
 
         this.claim(found);
     }
