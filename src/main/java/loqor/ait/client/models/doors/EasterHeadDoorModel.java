@@ -1,6 +1,5 @@
 package loqor.ait.client.models.doors;
 
-import org.joml.Vector3f;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -45,8 +44,7 @@ public class EasterHeadDoorModel extends DoorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        if (door.tardis().get().door().isOpen())
-            this.bottom.translate(new Vector3f(0, -30, 0));
+        this.bottom.pivotY = door.tardis().get().door().isOpen() ? 22 : 54;
 
         super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
