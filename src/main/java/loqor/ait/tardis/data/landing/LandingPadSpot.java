@@ -72,4 +72,12 @@ public class LandingPadSpot {
     public boolean isOccupied() {
         return this.tardis != null && this.tardis.getId() != null;
     }
+
+    @Override
+    public String toString() {
+        return "LandingPadSpot{" +
+                "pos=" + pos +
+                ", tardis=" + tardis +
+                '}';
+    }
 }
