@@ -221,6 +221,17 @@ public class AITMod implements ModInitializer {
                         tardis.alarm().hostilePresence().set(hostile);
                     });
                 }));
+        ServerPlayNetworking.registerGlobalReceiver(TardisUtil.LANDING_CODE,
+                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
+                    String landingCode = buf.readString();
+
+                    server.execute(() -> {
+                        if (tardis == null)
+                            return;
+
+                        tardis.stats().landingCode().set(landingCode);
+                    });
+                }));
 
         ServerPlayNetworking.registerGlobalReceiver(MachineItem.MACHINE_DISASSEMBLE,
                 (server, player, handler, buf, responseSender) -> {
