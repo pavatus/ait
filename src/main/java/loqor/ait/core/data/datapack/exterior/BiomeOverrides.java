@@ -1,19 +1,21 @@
 package loqor.ait.core.data.datapack.exterior;
 
+import java.util.Map;
+import java.util.function.Function;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.util.EnumMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 
-import java.util.Map;
-import java.util.function.Function;
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.util.EnumMap;
 
 public record BiomeOverrides(EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> lookup) {
 

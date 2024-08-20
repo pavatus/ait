@@ -1,10 +1,10 @@
 package loqor.ait.tardis.util;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Custom and lightweight map implementation for enums. I know
