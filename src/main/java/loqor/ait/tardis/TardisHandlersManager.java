@@ -1,12 +1,6 @@
 package loqor.ait.tardis;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 import com.google.gson.*;
-
-import net.minecraft.server.MinecraftServer;
-
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.util.LegacyUtil;
@@ -14,6 +8,10 @@ import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.EnumMap;
+import net.minecraft.server.MinecraftServer;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class TardisHandlersManager extends TardisComponent implements TardisTickable {
 
@@ -37,7 +35,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     }
 
     private void forEach(Consumer<TardisComponent> consumer) {
-        for (TardisComponent component : this.handlers.values()) {
+        for (TardisComponent component : this.handlers.getValues()) {
             if (component == null)
                 continue;
 
