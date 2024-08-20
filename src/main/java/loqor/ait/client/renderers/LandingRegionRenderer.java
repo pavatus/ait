@@ -42,26 +42,31 @@ public class LandingRegionRenderer {
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
         Profiler profiler = client.world.getProfiler();
 
-        profiler.push("landing_pad");
+        profiler.swap("landing_pad");
 
         profiler.push("region");
-        renderRegion(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        renderRegion();
         profiler.swap("chunk");
         renderChunk(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
 
         profiler.pop();
-        profiler.pop();
     }
 
-    private void renderRegion(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+    private void renderRegion() {
+        Profiler profiler = client.world.getProfiler();
+
+        profiler.push("get");
         LandingPadRegion region = ClientLandingManager.getInstance().getRegion(client.player.getChunkPos());
 
         if (region == null)
             return;
 
+        profiler.swap("render");
         for (LandingPadSpot spot : region.getSpots()) {
             renderSpot(spot);
         }
+
+        profiler.pop();
     }
 
     private void renderSpot(LandingPadSpot spot) {
@@ -69,16 +74,19 @@ public class LandingRegionRenderer {
     }
 
     public static void renderSpinningTexture(BlockPos pos, Identifier texture) {
+        Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
+
+        profiler.push("get");
         MinecraftClient client = MinecraftClient.getInstance();
         Camera camera = client.gameRenderer.getCamera();
-        Vec3d target = new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1f);
-        Vec3d transform = target.subtract(camera.getPos());
-
         MatrixStack matrices = new MatrixStack();
-
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
+
+        profiler.swap("transform");
+        Vec3d target = new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1f);
+        Vec3d transform = target.subtract(camera.getPos());
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180f));
@@ -88,22 +96,27 @@ public class LandingRegionRenderer {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(client.player.age / 200f * 360f));
         matrices.translate(-0.5f, 0.5f, 0f);
 
+        profiler.swap("vertexes");
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
         buffer.vertex(positionMatrix, 0, 0, 0).color(1f, 1f, 1f, 1f).texture(0f, 0f).next();
         buffer.vertex(positionMatrix, 0, -1, 0).color(1f, 1f, 1f, 1f).texture(0f, 1f).next();
         buffer.vertex(positionMatrix, 1, -1, 0).color(1f, 1f, 1f, 1f).texture(1f, 1f).next();
         buffer.vertex(positionMatrix, 1, 0, 0).color(1f, 1f, 1f, 1f).texture(1f, 0f).next();
 
+        profiler.swap("render_system");
         RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableCull();
         RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
+        profiler.swap("draw");
         tessellator.draw();
 
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
         RenderSystem.enableCull();
+
+        profiler.pop();
     }
 
     private void renderChunk(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
