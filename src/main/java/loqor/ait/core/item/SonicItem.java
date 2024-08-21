@@ -30,7 +30,6 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolderItem;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.AITBlocks;
@@ -39,7 +38,6 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.util.AITModTags;
-import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
@@ -233,28 +231,15 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     }
 
     public static SonicSchema findSchema(NbtCompound nbt) {
-        if (!nbt.contains(SONIC_TYPE))
+         String rawId = nbt.getString(SONIC_TYPE);
+
+        if (rawId == null)
             return SonicRegistry.DEFAULT;
 
-        if (LegacyUtil.shouldFixSonicType(nbt))
-            LegacyUtil.fixSonicType(nbt);
-
-        Identifier id = Identifier.tryParse(nbt.getString(SONIC_TYPE));
-
-        if (id == null) {
-            AITMod.LOGGER.warn("Couldn't parse sonic id: '" + nbt.getString(SONIC_TYPE) + "'");
-            return SonicRegistry.DEFAULT;
-        }
-
+        Identifier id = Identifier.tryParse(rawId);
         SonicSchema schema = SonicRegistry.getInstance().get(id);
 
-        if (schema == null) {
-            AITMod.LOGGER.warn("Couldn't find sonic with id: '" + id + "'! Allowed options: "
-                    + SonicRegistry.getInstance().toList());
-            return SonicRegistry.DEFAULT;
-        }
-
-        return schema;
+        return schema == null ? SonicRegistry.DEFAULT : schema;
     }
 
     public static SonicSchema findSchema(ItemStack stack) {
@@ -275,13 +260,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     }
 
     public static void setSchema(ItemStack stack, Identifier id) {
-        NbtCompound nbtCompound = stack.getOrCreateNbt();
-        nbtCompound.putString(SONIC_TYPE, id.toString());
+        stack.getOrCreateNbt().putString(SONIC_TYPE, id.toString());
     }
 
     private static void setPreviousMode(ItemStack stack) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putInt(PREV_MODE_KEY, findModeInt(stack));
+        stack.getOrCreateNbt().putInt(PREV_MODE_KEY, findModeInt(stack));
     }
 
     public static Mode findPreviousMode(ItemStack stack) {
