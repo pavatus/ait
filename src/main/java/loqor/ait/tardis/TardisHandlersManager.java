@@ -9,7 +9,6 @@ import net.minecraft.server.MinecraftServer;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
-import loqor.ait.core.util.LegacyUtil;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
@@ -127,10 +126,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
                 String key = entry.getKey();
                 JsonElement element = entry.getValue();
 
-                // Skip legacy entries like "tardisId".
-                if (LegacyUtil.isLegacyComponent(element))
-                    continue;
-
                 IdLike id = registry.get(key);
 
                 if (id == null) {
@@ -146,7 +141,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
                     continue;
 
                 IdLike id = registry.get(i);
-                AITMod.LOGGER.warn("Appending new component {}", id);
+                AITMod.LOGGER.debug("Appending new component {}", id);
 
                 manager.set(id, id.create());
             }

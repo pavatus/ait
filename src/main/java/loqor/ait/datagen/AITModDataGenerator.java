@@ -240,10 +240,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             .input('S', Blocks.SEA_LANTERN)
                             .criterion(hasItem(Blocks.SEA_LANTERN), conditionsFromItem(Blocks.SEA_LANTERN)));
 
-            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.PEANUT)
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.PEANUT)
                     .pattern("BBB").pattern("BEB").pattern("BBB").input('B', Blocks.BEACON)
                     .criterion(hasItem(Blocks.BEACON), conditionsFromItem(Blocks.BEACON)).input('E', Blocks.DRAGON_EGG)
-                    .criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));*/
+                    .criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));
 
             generateSmithingRecipes(provider);
             return provider;
@@ -528,7 +528,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
-        // provider.addTranslation(AITBlocks.PEANUT, "P E A N U T");
+        provider.addTranslation(AITBlocks.PEANUT, "P E A N U T");
+
+        provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
+        provider.addTranslation("painting.ait.crab_thrower.author", "???");
+
+        provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
+        provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 

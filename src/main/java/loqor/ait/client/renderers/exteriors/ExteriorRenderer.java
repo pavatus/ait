@@ -156,7 +156,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             matrices.translate(0, 1.25f, -0.7f);
         }
 
-        if (tardis.travel().antigravs().get()) {
+        if (tardis.travel().antigravs().get() && tardis.flight().falling().get()) {
             float sinFunc = (float) Math.sin((MinecraftClient.getInstance().player.age / 400f * 220f) * 0.2f + 0.2f);
             matrices.translate(0, sinFunc, 0);
         }
