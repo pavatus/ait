@@ -84,6 +84,11 @@ public class RedstoneControlBlock extends ControlBlock {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient()) return ActionResult.SUCCESS;
 
+        if (isHoldingScanningSonic(player)) {
+            sendSonicMessage((ServerPlayerEntity) player, (RedstoneControlBlockEntity) world.getBlockEntity(pos));
+            return ActionResult.SUCCESS;
+        }
+
         world.setBlockState(pos, Mode.set(state, Mode.get(state).next())); // set to next mode
         world.playSound(null, pos, AITSounds.SONIC_SWITCH, SoundCategory.BLOCKS, 1f, 0.8f);
 
