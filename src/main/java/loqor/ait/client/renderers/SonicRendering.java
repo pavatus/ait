@@ -57,6 +57,11 @@ public class SonicRendering {
         profiler.pop();
     }
     private void renderRedstone(DrawContext context, BlockState state, BlockPos pos) {
+        profiler.push("power");
+        renderPower(context, pos);
+        profiler.pop();
+    }
+    private void renderPower(DrawContext context, BlockPos pos) {
         int power = this.client.world.getReceivedRedstonePower(pos);
         if (power == 0) return;
 
