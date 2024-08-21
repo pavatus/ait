@@ -108,7 +108,8 @@ public class LandingPadRegion {
 
         // is in this region?
         for (LandingPadSpot spot : this.spots) {
-            if (spot.getPos().equals(pos))
+            BlockPos p = spot.getPos();
+            if (p.getX() == pos.getX() && p.getZ() == pos.getZ()) // ignore Y
                 return Optional.of(spot);
         }
 
