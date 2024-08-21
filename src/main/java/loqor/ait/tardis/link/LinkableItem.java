@@ -35,8 +35,7 @@ public abstract class LinkableItem extends Item {
     public void link(ItemStack stack, UUID uuid) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        // FIXME why the fuck is it a string?
-        nbt.putString("tardis", uuid.toString());
+        nbt.putUuid("tardis", uuid);
     }
 
     @Override
@@ -76,7 +75,7 @@ public abstract class LinkableItem extends Item {
     }
 
     public static Tardis getTardis(World world, ItemStack stack) {
-        return LinkableItem.getTardisFromString(world, stack, "tardis");
+        return LinkableItem.getTardisFromUuid(world, stack, "tardis");
     }
 
     public static UUID getTardisIdFromString(ItemStack stack, String path) {
@@ -93,6 +92,17 @@ public abstract class LinkableItem extends Item {
 
         if (!(nbt.contains(path)))
             return null;
+
+        // convert old string data
+        if (nbt.contains(path, NbtElement.STRING_TYPE)) {
+            String s = nbt.getString(path);
+            UUID converted = UUID.fromString(s);
+
+            nbt.remove(path);
+            nbt.putUuid(path, converted);
+
+            return converted;
+        }
 
         return nbt.getUuid(path);
     }
