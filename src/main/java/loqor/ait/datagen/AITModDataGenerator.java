@@ -245,13 +245,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Blocks.BEACON), conditionsFromItem(Blocks.BEACON)).input('E', Blocks.DRAGON_EGG)
                     .criterion(hasItem(Blocks.DRAGON_EGG), conditionsFromItem(Blocks.DRAGON_EGG)));*/
 
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.VORTEX_HOPPER)
-                    .pattern("ZZZ").pattern("ZEZ").pattern("ZZZ")
-                    .input('Z', AITItems.ZEITON_SHARD)
-                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
-                    .input('E', Items.ENDER_EYE)
-                    .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE)));
-
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -465,7 +458,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.ZEITON_DUST, "Zeiton Dust");
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
-        provider.addTranslation(AITItems.VORTEX_HOPPER, "Vortex Hopper");
+        provider.addTranslation(AITItems.HYPERCUBE, "Hypercube");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");

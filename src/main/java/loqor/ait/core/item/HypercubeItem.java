@@ -19,11 +19,11 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
 
-public class VortexHopperItem extends LinkableItem {
+public class HypercubeItem extends LinkableItem {
     private static final ParticleEffect PARTICLE_SUCCESS = ParticleTypes.GLOW;
     private static final ParticleEffect PARTICLE_FAIL = ParticleTypes.ELECTRIC_SPARK;
 
-    public VortexHopperItem(Settings settings) {
+    public HypercubeItem(Settings settings) {
         super(settings.maxCount(1).maxDamageIfAbsent(16), true);
     }
 
