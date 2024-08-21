@@ -2,10 +2,7 @@ package loqor.ait.client.renderers;
 
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -80,64 +77,11 @@ public class LandingRegionRenderer {
 
     private void renderSpot(LandingPadSpot spot, boolean forceRender) {
         Identifier text = getTexture(spot);
-        renderFloorTexture(spot.getPos(), text, forceRender ? null : this.previous, true);
+        SonicRendering.renderFloorTexture(spot.getPos(), text, forceRender ? null : this.previous, true);
 
         forceRender = forceRender || !text.equals(this.previous);
 
         this.previous = forceRender ? null : text;
-    }
-
-    public static void renderFloorTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous, boolean spinning) {
-        Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
-
-        profiler.push("get");
-        MinecraftClient client = MinecraftClient.getInstance();
-        Camera camera = client.gameRenderer.getCamera();
-        MatrixStack matrices = new MatrixStack();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
-
-        profiler.swap("transform");
-        Vec3d target = new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1f);
-        Vec3d transform = target.subtract(camera.getPos());
-
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180f));
-        matrices.translate(transform.x + 0.5f, transform.y + 0.05f, transform.z - 0.5f);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
-
-        if (spinning) {
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(client.player.age / 200f * 360f));
-        }
-        matrices.translate(-0.5f, 0.5f, 0f);
-
-        profiler.swap("vertexes");
-
-        if (!buffer.isBuilding()) buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
-
-        buffer.vertex(positionMatrix, 0, 0, 0).color(1f, 1f, 1f, 1f).texture(0f, 0f).next();
-        buffer.vertex(positionMatrix, 0, -1, 0).color(1f, 1f, 1f, 1f).texture(0f, 1f).next();
-        buffer.vertex(positionMatrix, 1, -1, 0).color(1f, 1f, 1f, 1f).texture(1f, 1f).next();
-        buffer.vertex(positionMatrix, 1, 0, 0).color(1f, 1f, 1f, 1f).texture(1f, 0f).next();
-
-        boolean shouldRender = !texture.equals(previous);
-
-        if (shouldRender) {
-            profiler.swap("draw");
-            RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            RenderSystem.setShaderTexture(0, texture);
-            RenderSystem.disableCull();
-            RenderSystem.depthFunc(GL11.GL_ALWAYS);
-
-            Tessellator.getInstance().draw();
-
-            RenderSystem.depthFunc(GL11.GL_LEQUAL);
-            RenderSystem.enableCull();
-        }
-
-        profiler.pop();
     }
 
     private void renderChunk(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
