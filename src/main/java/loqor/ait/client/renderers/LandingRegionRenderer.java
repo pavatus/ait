@@ -80,14 +80,14 @@ public class LandingRegionRenderer {
 
     private void renderSpot(LandingPadSpot spot, boolean forceRender) {
         Identifier text = getTexture(spot);
-        renderSpinningTexture(spot.getPos(), text, forceRender ? null : this.previous);
+        renderFloorTexture(spot.getPos(), text, forceRender ? null : this.previous, true);
 
         forceRender = forceRender || !text.equals(this.previous);
 
         this.previous = forceRender ? null : text;
     }
 
-    public static void renderSpinningTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous) {
+    public static void renderFloorTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous, boolean spinning) {
         Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
 
         profiler.push("get");
@@ -107,7 +107,9 @@ public class LandingRegionRenderer {
         matrices.translate(transform.x + 0.5f, transform.y + 0.05f, transform.z - 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
 
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(client.player.age / 200f * 360f));
+        if (spinning) {
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(client.player.age / 200f * 360f));
+        }
         matrices.translate(-0.5f, 0.5f, 0f);
 
         profiler.swap("vertexes");
