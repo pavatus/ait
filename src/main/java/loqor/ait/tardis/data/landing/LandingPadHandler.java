@@ -1,6 +1,5 @@
 package loqor.ait.tardis.data.landing;
 
-import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -36,17 +35,9 @@ public class LandingPadHandler extends KeyedTardisComponent {
         });
 
         TardisEvents.MAT.register(tardis -> {
-            ServerWorld world = tardis.travel().destination().getWorld();
-            BlockPos pos = tardis.travel().destination().getPos();
+            boolean success = tardis.landingPad().checkCode();
 
-            LandingPadRegion region = LandingPadManager.getInstance(world)
-                    .getRegionAt(pos);
-
-            if (region == null)
-                return TardisEvents.Interaction.FAIL;
-
-            if (!tardis.landingPad().code().get().equals(region.getLandingCode()) && !region.getLandingCode().isBlank())
-                return TardisEvents.Interaction.FAIL;
+            if (!success) return TardisEvents.Interaction.FAIL;
 
             return TardisEvents.Interaction.PASS;
         });
@@ -93,12 +84,6 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
         LandingPadSpot spot = findFreeSpot(world, destination.getPos());
         if (spot == null) return null;
-        LandingPadRegion region = LandingPadManager.getInstance(world).getRegionAt(pos.getPos());
-
-        if (region == null) return null;
-        if (!Objects.equals(this.code().get(), region.getLandingCode())
-                || !region.getLandingCode().isEmpty())
-            return null;
 
         BoolValue hSearch = this.tardis().travel().horizontalSearch();
         boolean old = hSearch.get();
@@ -115,6 +100,24 @@ public class LandingPadHandler extends KeyedTardisComponent {
         TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("message.ait.landingpad.adjust"));
 
         return destination;
+    }
+    private boolean checkCode() {
+        ServerWorld world = tardis.travel().destination().getWorld();
+        BlockPos pos = tardis.travel().destination().getPos();
+
+        LandingPadRegion region = LandingPadManager.getInstance(world)
+                .getRegionAt(pos);
+
+        if (region == null)
+            return true;
+
+        return hasMatchingCode(region);
+    }
+    private boolean hasMatchingCode(LandingPadRegion region) {
+        String tardisCode = tardis.landingPad().code().get();
+        String regionCode = region.getLandingCode();
+
+        return tardisCode.equalsIgnoreCase(regionCode) && !regionCode.isBlank();
     }
 
     private static @Nullable LandingPadSpot findFreeSpot(ServerWorld world, BlockPos pos) {

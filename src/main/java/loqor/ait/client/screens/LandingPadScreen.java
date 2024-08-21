@@ -46,6 +46,11 @@ public class LandingPadScreen extends Screen {
         this.landingCodeInput.setDrawsBackground(true);
         this.landingCodeInput.setVisible(true);
 
+        if (this.landingRegion == null) {
+            this.close();
+            return;
+        }
+
         if(this.landingRegion.getLandingCode().isBlank())
             this.landingCodeInput.setPlaceholder(Text.literal("Enter landing code..."));
         else
