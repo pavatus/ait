@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "ait:block/redstone_control"
+    "facing=north,powered=false,mode=0": {
+      "model": "ait:block/redstone_control/use_off"
+    },
+    "facing=north,powered=true,mode=0": {
+      "model": "ait:block/redstone_control/use_on"
+    },
+    "facing=north,powered=false,mode=1": {
+      "model": "ait:block/redstone_control/punch_off"
+    },
+    "facing=north,powered=true,mode=1": {
+      "model": "ait:block/redstone_control/punch_on"
     }
   }
 }

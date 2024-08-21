@@ -7,25 +7,34 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 
 public class RedstoneControlBlock extends ControlBlock {
     private static final BooleanProperty POWERED = Properties.POWERED;
+    private static final IntProperty MODE = IntProperty.of("mode", 0, Mode.values().length - 1);
 
     public RedstoneControlBlock(Settings settings) {
         super(settings);
 
         this.setDefaultState(
-                this.getStateManager().getDefaultState().with(POWERED, false)
+                this.getStateManager().getDefaultState().with(POWERED, false).with(MODE, 0)
         );
     }
 
@@ -51,9 +60,11 @@ public class RedstoneControlBlock extends ControlBlock {
         }
 
         state = state.with(POWERED, powered);
-        world.setBlockState(pos, state, Block.NO_REDRAW);
+        world.setBlockState(pos, state, Block.NOTIFY_ALL);
 
-        entity.run((ServerPlayerEntity) user, !powered);
+        if (!powered) return;
+
+        entity.run((ServerPlayerEntity) user, Mode.get(state));
     }
 
     @Override
@@ -66,6 +77,42 @@ public class RedstoneControlBlock extends ControlBlock {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
 
-        builder.add(POWERED);
+        builder.add(POWERED, MODE);
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient()) return ActionResult.SUCCESS;
+
+        world.setBlockState(pos, Mode.set(state, Mode.get(state).next())); // set to next mode
+        world.playSound(null, pos, AITSounds.SONIC_SWITCH, SoundCategory.BLOCKS, 1f, 1f);
+
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        // dont run control
+    }
+
+    @Override
+    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+        return super.getPlacementState(ctx).with(FACING, Direction.NORTH); // i cba
+    }
+
+    public enum Mode {
+        USE,
+        PUNCH;
+
+        Mode next() {
+            return Mode.values()[(this.ordinal() + 1) % Mode.values().length];
+        }
+
+        static Mode get(BlockState state) {
+            return Mode.values()[state.get(MODE)];
+        }
+        static BlockState set(BlockState state, Mode mode) {
+            return state.with(MODE, mode.ordinal());
+        }
     }
 }
