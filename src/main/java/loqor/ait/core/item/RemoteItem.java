@@ -57,7 +57,7 @@ public class RemoteItem extends LinkableItem {
             return ActionResult.FAIL;
 
         ServerTardisManager.getInstance().getTardis(context.getWorld().getServer(),
-                UUID.fromString(nbt.getString("tardis")), tardis -> {
+                getTardisIdFromUuid(itemStack, "tardis"), tardis -> {
                     if (tardis == null)
                         return;
 

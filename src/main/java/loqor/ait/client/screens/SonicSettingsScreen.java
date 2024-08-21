@@ -2,6 +2,7 @@ package loqor.ait.client.screens;
 
 import java.awt.*;
 import java.util.List;
+import java.util.UUID;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -27,6 +28,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.registry.impl.SonicRegistry;
+import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class SonicSettingsScreen extends ConsoleScreen {
@@ -176,10 +178,14 @@ public class SonicSettingsScreen extends ConsoleScreen {
             context.drawCenteredTextWithShadow(this.textRenderer, "Current AU", x + 140, y + 40, Color.WHITE.getRGB());
             context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem.FUEL_KEY) + " AU", x + 140,
                     y + 50, Color.CYAN.getRGB());
-            context.drawCenteredTextWithShadow(this.textRenderer, "Linked TARDIS", x + 140, y + 70,
-                    Color.WHITE.getRGB());
-            context.drawCenteredTextWithShadow(this.textRenderer, nbt.getString("tardis").substring(0, 8), x + 140,
-                    y + 80, Color.CYAN.getRGB());
+
+            UUID tardis = LinkableItem.getTardisIdFromUuid(sonicCopy, "tardis");
+            if (tardis != null) {
+                context.drawCenteredTextWithShadow(this.textRenderer, "Linked TARDIS", x + 140, y + 70,
+                        Color.WHITE.getRGB());
+                context.drawCenteredTextWithShadow(this.textRenderer, tardis.toString().substring(0, 8), x + 140,
+                        y + 80, Color.CYAN.getRGB());
+            }
 
             stack.pop();
         }
