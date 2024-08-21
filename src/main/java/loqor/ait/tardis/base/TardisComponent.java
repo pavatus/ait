@@ -33,6 +33,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
     @Exclude
     protected Tardis tardis;
 
+    @Exclude
     private final IdLike id;
 
     /**
