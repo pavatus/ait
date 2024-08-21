@@ -1,7 +1,6 @@
 package loqor.ait.tardis;
 
-import static loqor.ait.core.util.LegacyUtil.Consoles;
-
+import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -32,14 +31,14 @@ public class TardisDesktop extends TardisComponent {
     private DirectedBlockPos doorPos;
 
     private final Corners corners;
-    private final Consoles consolePos;
+    private final Set<BlockPos> consolePos;
 
     public TardisDesktop(TardisDesktopSchema schema) {
         super(Id.DESKTOP);
         this.schema = schema;
 
         this.corners = TardisUtil.findInteriorSpot();
-        this.consolePos = new Consoles();
+        this.consolePos = new HashSet<>();
     }
 
     @Override
