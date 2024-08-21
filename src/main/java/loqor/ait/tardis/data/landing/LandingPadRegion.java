@@ -2,12 +2,16 @@ package loqor.ait.tardis.data.landing;
 
 import java.util.*;
 
+import com.google.common.collect.ImmutableCollection;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+
+import loqor.ait.core.util.ServerLifecycleHooks;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class LandingPadRegion {
 
@@ -27,6 +31,10 @@ public class LandingPadRegion {
     private final int defaultY;
 
     private static LandingPadRegion create(long chunk, int y, List<LandingPadSpot> spots) {
+        if (spots instanceof ImmutableCollection<?>) {
+            spots = new ArrayList<>(spots);
+        }
+
         return new LandingPadRegion(new ChunkPos(chunk), y, spots);
     }
 
@@ -35,7 +43,9 @@ public class LandingPadRegion {
         this.spots = spots;
 
         this.defaultY = y;
-        this.createAllSpots();
+
+        if (spots.isEmpty())
+            this.createAllSpots();
     }
 
     public LandingPadRegion(ChunkPos pos, int y) {
@@ -116,6 +126,32 @@ public class LandingPadRegion {
         // not found
         return Optional.empty();
     }
+
+    public LandingPadSpot createSpotAt(BlockPos pos) {
+        LandingPadSpot existing = this.getSpotAt(pos).orElse(null);
+
+        if (existing != null) return existing;
+
+        LandingPadSpot created = new LandingPadSpot(pos);
+        this.spots.add(created);
+
+        return created;
+    }
+    public void removeSpotAt(BlockPos pos) {
+        LandingPadSpot existing = this.getSpotAt(pos).orElse(null);
+        if (existing == null) return;
+
+        this.removeSpot(existing);
+    }
+    private void removeSpot(LandingPadSpot spot) {
+        this.spots.remove(spot);
+
+        if (!spot.isOccupied()) return;
+
+        // should the tardis take off and find a new spot?
+        ServerTardisManager.getInstance().getTardis(ServerLifecycleHooks.get(), spot.getReference().getId(), tardis -> tardis.landingPad().release());
+    }
+
 
     @Override
     public String toString() {
