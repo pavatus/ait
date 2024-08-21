@@ -55,6 +55,8 @@ public abstract class TardisManager<T extends Tardis, C> {
     public static final Identifier SEND_BULK = new Identifier(AITMod.MOD_ID, "send_tardis_bulk");
     public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "remove_tardis");
 
+    public static final boolean DEMENTIA = false;
+
     protected final TardisMap<T> lookup = new TardisMap<>();
 
     protected final Gson networkGson;
