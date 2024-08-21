@@ -532,6 +532,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
 
+        provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
+        provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
+
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
