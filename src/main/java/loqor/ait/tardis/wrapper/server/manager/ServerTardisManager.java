@@ -39,14 +39,16 @@ public class ServerTardisManager extends CompliantServerTardisManager {
             this.sendTardisAll(player, tardisSet);
         }));
 
-        TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
-            for (ServerTardis tardis : tardisSet) {
-                if (tardis.isRemoved())
-                    continue;
+        if (DEMENTIA) {
+            TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
+                for (ServerTardis tardis : tardisSet) {
+                    if (tardis.isRemoved())
+                        continue;
 
-                this.sendTardisRemoval(player, tardis);
-            }
-        }));
+                    this.sendTardisRemoval(player, tardis);
+                }
+            }));
+        }
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             for (ServerTardis tardis : this.needsUpdate) {

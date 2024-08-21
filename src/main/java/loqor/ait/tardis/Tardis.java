@@ -3,7 +3,6 @@ package loqor.ait.tardis;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.core.data.base.Exclude;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
@@ -17,9 +16,6 @@ import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
-
-    @Exclude(strategy = Exclude.Strategy.NETWORK)
-    protected int version = 1;
 
     private UUID uuid;
     protected TardisDesktop desktop;

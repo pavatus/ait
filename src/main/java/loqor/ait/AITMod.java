@@ -26,14 +26,12 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 import loqor.ait.api.AITModInitializer;
-import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
@@ -112,6 +110,7 @@ public class AITMod implements ModInitializer {
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AITPaintings.class, MOD_ID, false);
 
         // important to init after items registration
         BlueprintRegistry.init();
@@ -152,15 +151,6 @@ public class AITMod implements ModInitializer {
             SafePosCommand.register(dispatcher);
             ListCommand.register(dispatcher);
         }));
-
-        TardisEvents.CRASH.register(tardis -> {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
-                TardisCriterions.CRASH.trigger(player);
-            }
-        });
-
-        TardisEvents.REGAIN_POWER.register(tardis -> tardis.getDesktop().playSoundAtEveryConsole(AITSounds.POWERUP,
-                SoundCategory.AMBIENT, 10f, 1f));
 
         ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,
                 ServerTardisManager.receiveTardis(((tardis, server, player, handler, buf, responseSender) -> {
@@ -272,15 +262,6 @@ public class AITMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             AIT_CONFIG.save();
             AsyncLocatorUtil.shutdownExecutorService();
-        });
-
-        // TODO move to either TardisCriterions or one of TravelHandlers'
-        TardisEvents.DEMAT.register(tardis -> {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
-                TardisCriterions.TAKEOFF.trigger(player);
-            }
-
-            return TardisEvents.Interaction.PASS;
         });
 
         AIT_ITEM_GROUP.initialize();

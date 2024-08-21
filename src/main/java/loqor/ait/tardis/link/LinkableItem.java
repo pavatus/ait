@@ -33,10 +33,7 @@ public abstract class LinkableItem extends Item {
     }
 
     public void link(ItemStack stack, UUID uuid) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        // FIXME why the fuck is it a string?
-        nbt.putString("tardis", uuid.toString());
+        stack.getOrCreateNbt().putUuid("tardis", uuid);
     }
 
     @Override
@@ -49,8 +46,7 @@ public abstract class LinkableItem extends Item {
         if (!showTooltip)
             return;
 
-        NbtCompound nbt = stack.getOrCreateNbt();
-        NbtElement id = nbt.get("tardis");
+        UUID id = LinkableItem.getTardisIdFromUuid(stack, "tardis");
 
         if (id == null)
             return;
@@ -61,7 +57,7 @@ public abstract class LinkableItem extends Item {
             return;
         }
 
-        ClientTardisManager.getInstance().getTardis(UUID.fromString(id.asString()), tardis -> {
+        ClientTardisManager.getInstance().getTardis(id, tardis -> {
             if (tardis != null) {
                 tooltip.add(Text.literal("TARDIS: ").formatted(Formatting.BLUE));
                 tooltip.add(Text.literal("> " + tardis.stats().getName()));
@@ -76,33 +72,26 @@ public abstract class LinkableItem extends Item {
     }
 
     public static Tardis getTardis(World world, ItemStack stack) {
-        return LinkableItem.getTardisFromString(world, stack, "tardis");
-    }
-
-    public static UUID getTardisIdFromString(ItemStack stack, String path) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        if (!(nbt.contains(path)))
-            return null;
-
-        return UUID.fromString(nbt.getString(path));
+        return LinkableItem.getTardisFromUuid(world, stack, "tardis");
     }
 
     public static UUID getTardisIdFromUuid(ItemStack stack, String path) {
         NbtCompound nbt = stack.getOrCreateNbt();
+        NbtElement element = nbt.get(path);
 
-        if (!(nbt.contains(path)))
+        if (element == null)
             return null;
 
+        // convert old string data
+        if (element.getType() == NbtElement.STRING_TYPE) {
+            nbt.remove(path);
+            UUID converted = UUID.fromString(element.asString());
+
+            nbt.putUuid(path, converted);
+            return converted;
+        }
+
         return nbt.getUuid(path);
-    }
-
-    public static Tardis getTardisFromString(World world, ItemStack stack, String path) {
-        return LinkableItem.getTardis(world, LinkableItem.getTardisIdFromString(stack, path));
-    }
-
-    public static <C> Tardis getTardisFromString(TardisManager<?, C> manager, C c, ItemStack stack, String path) {
-        return LinkableItem.getTardis(LinkableItem.getTardisIdFromString(stack, path), c, manager);
     }
 
     public static Tardis getTardisFromUuid(World world, ItemStack stack, String path) {

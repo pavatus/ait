@@ -100,17 +100,16 @@ public class RemoteItem extends LinkableItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        NbtCompound tag = stack.getOrCreateNbt();
+        UUID id = getTardisIdFromUuid(stack, "tardis");
+        if (id == null) return;
 
-        if (tag.contains("tardis")) {
-            Tardis tardis = ClientTardisManager.getInstance().demandTardis(UUID.fromString(tag.getString("tardis")));
+        Tardis tardis = ClientTardisManager.getInstance().demandTardis(id);
 
-            if (tardis == null)
-                return;
+        if (tardis == null)
+            return;
 
-            if (tardis.travel().getState() != LANDED)
-                tooltip.add(Text.literal("→ " + tardis.travel().getDurationAsPercentage() + "%")
-                        .formatted(Formatting.GOLD));
-        }
+        if (tardis.travel().getState() != LANDED)
+            tooltip.add(Text.literal("→ " + tardis.travel().getDurationAsPercentage() + "%")
+                    .formatted(Formatting.GOLD));
     }
 }

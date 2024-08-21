@@ -129,6 +129,7 @@ public class EngineHandler extends KeyedTardisComponent {
         this.power.set(true);
         this.updateExteriorState();
 
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
     }
 

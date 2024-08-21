@@ -35,6 +35,9 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class ServerTardis extends Tardis {
 
+    @Exclude(strategy = Exclude.Strategy.NETWORK)
+    protected int version = 1;
+
     @Exclude
     private boolean removed;
 
