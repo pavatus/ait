@@ -25,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 
 import loqor.ait.client.renderers.CustomItemRendering;
+import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
@@ -206,6 +207,13 @@ public class AITModClient implements ClientModInitializer {
         // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
                 responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
+        WorldRenderEvents.END.register((context) -> {
+            SonicRendering.getInstance().renderWorld(context);
+        });
+
+        HudRenderCallback.EVENT.register((context, delta) -> {
+            SonicRendering.getInstance().renderGui(context, delta);
+        });
     }
 
     /**
