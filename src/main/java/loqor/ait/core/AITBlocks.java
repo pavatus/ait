@@ -17,7 +17,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import loqor.ait.AITMod;
 import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
-import loqor.ait.core.blocks.control.ButtonControlBlock;
+import loqor.ait.core.blocks.control.RedstoneControlBlock;
 
 public class AITBlocks implements BlockRegistryContainer {
 
@@ -101,8 +101,7 @@ public class AITBlocks implements BlockRegistryContainer {
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
     // Control Blocks
-    @NoBlockItem
-    public static final Block BUTTON_CONTROL_BLOCK = new ButtonControlBlock(
+    public static final Block REDSTONE_CONTROL_BLOCK = new RedstoneControlBlock(
             FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());

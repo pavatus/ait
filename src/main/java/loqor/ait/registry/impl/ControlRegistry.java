@@ -23,7 +23,7 @@ public class ControlRegistry {
             .createSimple(RegistryKey.<Control>ofRegistry(new Identifier(AITMod.MOD_ID, "control"))).buildAndRegister();
 
     public static Control register(Control control) {
-        return Registry.register(REGISTRY, control.getId(), control);
+        return Registry.register(REGISTRY, new Identifier(AITMod.MOD_ID, control.getId()), control);
     }
 
     /**

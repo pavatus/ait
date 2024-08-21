@@ -89,6 +89,7 @@ public class AITMod implements ModInitializer {
         CreakRegistry.init();
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();
+        ControlRegistry.init();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
