@@ -52,8 +52,6 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 
     public void setControl(String id) {
         Optional<Control> found = ControlRegistry.fromId(id);
-        System.out.println(id);
-        System.out.println(found);
 
         if (found.isEmpty())
             return;

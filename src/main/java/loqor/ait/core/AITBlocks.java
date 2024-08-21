@@ -101,6 +101,7 @@ public class AITBlocks implements BlockRegistryContainer {
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
     // Control Blocks
+    @NoBlockItem
     public static final Block REDSTONE_CONTROL_BLOCK = new RedstoneControlBlock(
             FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 

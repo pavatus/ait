@@ -118,7 +118,7 @@ public class AITItems implements ItemRegistryContainer {
 
     // Block controls
 
-     public static final Item REDSTONE_CONTROLLER = new
+     public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }
