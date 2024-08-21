@@ -1,5 +1,7 @@
 package loqor.ait.tardis.data.landing;
 
+import java.util.Objects;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.server.world.ServerWorld;
@@ -25,11 +27,27 @@ public class LandingPadHandler extends KeyedTardisComponent {
     private LandingPadSpot current;
 
     static {
-        TardisEvents.BEFORE_LAND.register((tardis, destination)
-                -> new TardisEvents.Result<>(tardis.landingPad().update(destination)));
+        TardisEvents.BEFORE_LAND.register((tardis, destination) ->
+                new TardisEvents.Result<>(tardis.landingPad().update(destination)));
 
         TardisEvents.DEMAT.register(tardis -> {
             tardis.landingPad().release();
+            return TardisEvents.Interaction.PASS;
+        });
+
+        TardisEvents.MAT.register(tardis -> {
+            ServerWorld world = tardis.travel().destination().getWorld();
+            BlockPos pos = tardis.travel().destination().getPos();
+
+            LandingPadRegion region = LandingPadManager.getInstance(world)
+                    .getRegionAt(pos);
+
+            if (region == null)
+                return TardisEvents.Interaction.FAIL;
+
+            if (!tardis.landingPad().code().get().equals(region.getLandingCode()) && !region.getLandingCode().isBlank())
+                return TardisEvents.Interaction.FAIL;
+
             return TardisEvents.Interaction.PASS;
         });
     }
@@ -75,6 +93,12 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
         LandingPadSpot spot = findFreeSpot(world, destination.getPos());
         if (spot == null) return null;
+        LandingPadRegion region = LandingPadManager.getInstance(world).getRegionAt(pos.getPos());
+
+        if (region == null) return null;
+        if (!Objects.equals(this.code().get(), region.getLandingCode())
+                || !region.getLandingCode().isEmpty())
+            return null;
 
         BoolValue hSearch = this.tardis().travel().horizontalSearch();
         boolean old = hSearch.get();

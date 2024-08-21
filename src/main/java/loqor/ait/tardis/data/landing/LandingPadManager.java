@@ -55,7 +55,7 @@ public class LandingPadManager {
         if (chunk.hasAttached(PERSISTENT))
             throw new IllegalStateException("Region already occupied");
 
-        LandingPadRegion created = new LandingPadRegion(pos, y);
+        LandingPadRegion created = new LandingPadRegion(pos, y, "");
         chunk.setAttached(PERSISTENT, created);
 
         Network.syncTracked(Network.Action.ADD, this.world, pos);

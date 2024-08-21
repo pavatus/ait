@@ -76,7 +76,7 @@ public class TardisUtil {
     public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
     public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
     public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
-
+    public static final Identifier REGION_LANDING_CODE = new Identifier(AITMod.MOD_ID, "region_landing_code");
     public static final Identifier LANDING_CODE = new Identifier(AITMod.MOD_ID, "landing_code");
 
     @Deprecated

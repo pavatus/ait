@@ -65,7 +65,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
         this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), this.top + 60, 120, this.textRenderer.fontHeight + 4,
                 Text.literal("Landing Code..."));
-        this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
+        this.addButton(new PressableTextWidget((width / 2 + 40), (height / 2 + 2),
                 this.textRenderer.getWidth("✓"), 20, Text.literal("✓").formatted(Formatting.BOLD), button -> {
             updateLandingCode();
         }, this.textRenderer));
@@ -111,7 +111,6 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
     private void updateLandingCode() {
         String input = this.landingCodeInput.getText();
-        if (input.isBlank()) return;
 
         PacketByteBuf buf = PacketByteBufs.create();
 

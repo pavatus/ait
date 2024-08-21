@@ -18,7 +18,8 @@ public class LandingPadRegion {
     public static final Codec<LandingPadRegion> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.LONG.fieldOf("chunk").forGetter(o -> o.getChunk().toLong()),
             Codec.INT.fieldOf("y").forGetter(LandingPadRegion::getDefaultY),
-            Codec.list(LandingPadSpot.CODEC).fieldOf("spots").forGetter(o -> o.spots)
+            Codec.list(LandingPadSpot.CODEC).fieldOf("spots").forGetter(o -> o.spots),
+            Codec.STRING.fieldOf("code").forGetter(LandingPadRegion::getLandingCode)
     ).apply(instance, LandingPadRegion::create));
 
     private static final int CHUNK_LENGTH = 16;
@@ -29,18 +30,20 @@ public class LandingPadRegion {
     private final List<LandingPadSpot> spots;
 
     private final int defaultY;
+    private String landingCode;
 
-    private static LandingPadRegion create(long chunk, int y, List<LandingPadSpot> spots) {
+    private static LandingPadRegion create(long chunk, int y, List<LandingPadSpot> spots, String landingCode) {
         if (spots instanceof ImmutableCollection<?>) {
             spots = new ArrayList<>(spots);
         }
 
-        return new LandingPadRegion(new ChunkPos(chunk), y, spots);
+        return new LandingPadRegion(new ChunkPos(chunk), y, spots, landingCode);
     }
 
-    private LandingPadRegion(ChunkPos chunk, int y, List<LandingPadSpot> spots) {
+    private LandingPadRegion(ChunkPos chunk, int y, List<LandingPadSpot> spots, String landingCode) {
         this.chunk = chunk;
         this.spots = spots;
+        this.landingCode = landingCode;
 
         this.defaultY = y;
 
@@ -48,8 +51,8 @@ public class LandingPadRegion {
             this.createAllSpots();
     }
 
-    public LandingPadRegion(ChunkPos pos, int y) {
-        this(pos, y, new ArrayList<>());
+    public LandingPadRegion(ChunkPos pos, int y, String landingCode) {
+        this(pos, y, new ArrayList<>(), landingCode);
     }
 
     public @Nullable LandingPadSpot getFreeSpot() {
@@ -97,6 +100,16 @@ public class LandingPadRegion {
 
     public ChunkPos getChunk() {
         return chunk;
+    }
+
+    public String getLandingCode() {
+        return landingCode;
+    }
+
+    public void setLandingCode(String string) {
+        System.out.println(landingCode);
+        landingCode = string;
+        System.out.println(string);
     }
 
     private boolean isFull() {

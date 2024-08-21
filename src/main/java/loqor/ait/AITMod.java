@@ -26,8 +26,10 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
@@ -55,6 +57,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.ServerHumHandler;
 import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPadRegion;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.sound.HumSound;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
@@ -222,6 +225,23 @@ public class AITMod implements ModInitializer {
                         tardis.landingPad().code().set(landingCode);
                     });
                 }));
+
+        ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,
+                (server, player, handler, buf, responseSender) -> {
+                    BlockPos pos = buf.readBlockPos();
+                    String landingCode = buf.readString();
+
+                    server.execute(() -> {
+                        LandingPadRegion region = LandingPadManager.getInstance((ServerWorld) player.getWorld()).getRegionAt(pos);
+
+                        if (region == null)
+                            return;
+
+                        region.setLandingCode(landingCode);
+                        LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, player.getServerWorld(),
+                                new ChunkPos(player.getBlockPos()));
+                    });
+                });
 
         ServerPlayNetworking.registerGlobalReceiver(MachineItem.MACHINE_DISASSEMBLE,
                 (server, player, handler, buf, responseSender) -> {
