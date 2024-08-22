@@ -61,6 +61,10 @@ public class DistressCallItem extends Item { // todo needs rename
     }
     public static void setCall(ItemStack stack, DistressCall call) {
         stack.getOrCreateNbt().put("DistressCall", call.toNbt());
+
+        if (stack.hasCustomName()) {
+            stack.setCustomName(null);
+        }
     }
 
     public static ItemStack create(DistressCall call) {
