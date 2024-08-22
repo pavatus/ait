@@ -32,6 +32,7 @@ import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.EnumSet;
 import loqor.ait.tardis.util.Ordered;
@@ -152,8 +153,12 @@ public class KeyItem extends LinkableItem {
                 (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
         travel.dematerialize();
+
+        if (travel.getState() != TravelHandlerBase.State.DEMAT)
+            return;
+
         travel.forceDestination(globalPos);
-        travel.rematerialize();
+        travel.forceRemat();
 
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));
