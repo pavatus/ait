@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITItems;
@@ -45,7 +46,7 @@ public class DistressCallItem extends Item { // todo needs rename
         DistressCall call = getCall(stack, 0, world);
         if (call == null) return;
 
-        tooltip.add(Text.literal(call.message()));
+        tooltip.add(Text.literal(call.message()).formatted(Formatting.ITALIC, Formatting.RED));
     }
 
     public static DistressCall getCall(ItemStack stack, int ticks, World world) {

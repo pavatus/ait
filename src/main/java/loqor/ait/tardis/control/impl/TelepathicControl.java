@@ -93,7 +93,7 @@ public class TelepathicControl extends Control {
 
             if (call == null) {
                 // create new call
-                call = DistressCall.create(tardis, "TODO");
+                call = DistressCall.create(tardis, "TODO - custom messages");
                 DistressCallItem.setCall(held, call);
 
                 return true;
