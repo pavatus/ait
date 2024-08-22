@@ -95,8 +95,6 @@ public class TelepathicControl extends Control {
                 // create new call
                 call = DistressCall.create(tardis, held.hasCustomName() ? held.getName().getString() : "SOS", true);
                 DistressCallItem.setCall(held, call);
-
-                return true;
             }
 
             if (call.isSourceCall() && call.isSource(tardis)) {
