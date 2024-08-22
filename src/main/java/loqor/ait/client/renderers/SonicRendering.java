@@ -105,6 +105,7 @@ public class SonicRendering {
         worldProfiler.pop();
     }
     private void renderSelectedBlock(WorldRenderContext context) {
+        Profiler worldProfiler = context.profiler();
         worldProfiler.push("target");
 
         HitResult crosshair = client.crosshairTarget;
