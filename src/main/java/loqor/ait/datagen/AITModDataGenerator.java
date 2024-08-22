@@ -458,7 +458,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.ZEITON_DUST, "Zeiton Dust");
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
-        provider.addTranslation(AITItems.HYPERCUBE, "Hypercube");
+        provider.addTranslation(AITItems.HAZANDRA, "Hazandra");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");

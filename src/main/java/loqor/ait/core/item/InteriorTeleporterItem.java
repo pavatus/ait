@@ -20,11 +20,11 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
 
-public class HypercubeItem extends LinkableItem {
+public class InteriorTeleporterItem extends LinkableItem { // todo - new model + texture?
     private static final ParticleEffect PARTICLE_SUCCESS = ParticleTypes.GLOW;
     private static final ParticleEffect PARTICLE_FAIL = ParticleTypes.ELECTRIC_SPARK;
 
-    public HypercubeItem(Settings settings) {
+    public InteriorTeleporterItem(Settings settings) {
         super(settings.maxCount(1).maxDamageIfAbsent(16), true);
     }
 

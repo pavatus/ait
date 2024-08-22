@@ -1,0 +1,6 @@
+{
+	"parent": "ait:item/hypercube",
+	"textures": {
+		"0": "ait:item/hazandra"
+	}
+}
