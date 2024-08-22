@@ -28,8 +28,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.AITModTags;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
@@ -166,7 +164,7 @@ public class KeyItem extends LinkableItem {
         player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
         tardis.stats().hailMary().set(false);
-        tardis.<DoorHandler>handler(TardisComponent.Id.DOOR).previouslyLocked().set(false);
+        tardis.door().previouslyLocked().set(false);
 
         // like a sound to show its been called
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
