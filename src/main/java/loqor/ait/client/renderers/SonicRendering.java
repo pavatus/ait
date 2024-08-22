@@ -39,7 +39,7 @@ public class SonicRendering {
     public static void renderFloorTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous, boolean spinning) {
         renderFloorTexture(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), texture, previous, spinning);
     }
-    public static void renderFloorTexture(Vec3d pos, Identifier texture, @Nullable Identifier previous, boolean spinning) {
+    public static void renderFloorTexture(Vec3d target, Identifier texture, @Nullable Identifier previous, boolean spinning) {
         Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
 
         profiler.push("get");
@@ -51,7 +51,7 @@ public class SonicRendering {
         Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
 
         profiler.swap("transform");
-        Vec3d target = new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1f);
+        target = target.add(0, 0, 1);
         Vec3d transform = target.subtract(camera.getPos());
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
