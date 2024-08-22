@@ -38,9 +38,10 @@ public class DistressCallItem extends Item { // todo needs rename
         }
 
         DistressCall call = getCall(held, world.getServer().getTicks());
-        if (call == null) DistressCall.create(user, held.hasCustomName() ? held.getName().getString() : "SOS", true);
-
-        setCall(held, call);
+        if (call == null) {
+            call = DistressCall.create(user, held.hasCustomName() ? held.getName().getString() : "SOS", true);
+            setCall(held, call);
+        }
 
         boolean success = call.send(user.getUuid(), held);
 
