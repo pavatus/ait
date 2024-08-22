@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
@@ -33,7 +34,15 @@ public class HypercubeItem extends LinkableItem {
         Tardis tardis = getTardis(world, stack);
 
 
-        if (world.isClient()) return (tardis != null) ? TypedActionResult.success(stack, true) : TypedActionResult.fail(stack);
+        if (world.isClient()) {
+            boolean success = (tardis != null);
+
+            if (success) {
+                MinecraftClient.getInstance().gameRenderer.showFloatingItem(stack);
+            }
+
+            return success ? TypedActionResult.success(stack, true) : TypedActionResult.fail(stack);
+        }
         // server-side
 
         if (tardis == null) return TypedActionResult.fail(stack);
@@ -61,7 +70,7 @@ public class HypercubeItem extends LinkableItem {
 
         TardisUtil.teleportInside(tardis, user);
 
-        stack.damage(1, user.getRandom(), (ServerPlayerEntity) user);
+        stack.setCount(stack.getCount() - 1);
         user.getItemCooldownManager().set(this, 16 * 20);
 
         BlockPos door = tardis.getDesktop().doorPos().getPos();
