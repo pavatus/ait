@@ -16,13 +16,13 @@ public class LandTypeControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
             return false;
         }
 
-        if (player.isSneaking()) {
+        if (leftClick) {
             tardis.travel().horizontalSearch().flatMap(value -> {
                 value = !value;
                 messageXPlayer(player, value);

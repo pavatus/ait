@@ -21,9 +21,8 @@ public class ShieldsControl extends Control {
     public ShieldsControl() {
         super("shields");
     }
-
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
             return false;
@@ -31,7 +30,7 @@ public class ShieldsControl extends Control {
 
         ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
 
-        if (player.isSneaking()) {
+        if (leftClick) {
             if (shields.shielded().get())
                 shields.toggleVisuals();
         } else {
@@ -41,7 +40,7 @@ public class ShieldsControl extends Control {
                 shields.disableVisuals();
         }
 
-        this.soundEvent = player.isSneaking() ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
+        this.soundEvent = leftClick ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
 
         if (tardis.travel().position().getPos() != null)
             WorldOps.updateIfOnServer(world, tardis.travel().position().getPos());

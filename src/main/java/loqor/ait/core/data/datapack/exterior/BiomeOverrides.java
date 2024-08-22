@@ -19,7 +19,6 @@ import loqor.ait.tardis.util.EnumMap;
 
 public record BiomeOverrides(EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> lookup) {
 
-    @Environment(EnvType.CLIENT)
     public static BiomeOverrides EMPTY = new BiomeOverrides(createMap());
 
     private static EnumMap.Compliant<BiomeHandler.BiomeType, Identifier> createMap() {

@@ -19,9 +19,12 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 
 public class SonicRendering {
+    private static final Identifier SELECTED = new Identifier(AITMod.MOD_ID, "textures/marker/landing.png");
+
     private final MinecraftClient client;
     private final Profiler profiler;
 
@@ -34,6 +37,9 @@ public class SonicRendering {
     }
 
     public static void renderFloorTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous, boolean spinning) {
+        renderFloorTexture(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), texture, previous, spinning);
+    }
+    public static void renderFloorTexture(Vec3d target, Identifier texture, @Nullable Identifier previous, boolean spinning) {
         Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
 
         profiler.push("get");
@@ -45,7 +51,7 @@ public class SonicRendering {
         Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
 
         profiler.swap("transform");
-        Vec3d target = new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1f);
+        target = target.add(0, 0, 1);
         Vec3d transform = target.subtract(camera.getPos());
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
@@ -92,6 +98,31 @@ public class SonicRendering {
         Profiler worldProfiler = context.profiler();
         worldProfiler.push("sonic");
         worldProfiler.push("world");
+
+        renderSelectedBlock(context);
+
+        worldProfiler.pop();
+        worldProfiler.pop();
+    }
+    private void renderSelectedBlock(WorldRenderContext context) {
+        worldProfiler.push("target");
+
+        HitResult crosshair = client.crosshairTarget;
+        if (crosshair == null) {
+            profiler.pop();
+            profiler.pop();
+            return;
+        }
+        Vec3d targetVec = crosshair.getPos();
+        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
+        BlockState state = client.world.getBlockState(targetPos.down());
+        if (state.isAir()) {
+            profiler.pop();
+            return;
+        }
+
+        renderFloorTexture(targetPos, SELECTED, null, false);
+
 
 
         worldProfiler.pop();

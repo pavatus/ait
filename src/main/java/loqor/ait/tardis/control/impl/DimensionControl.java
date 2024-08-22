@@ -22,7 +22,7 @@ public class DimensionControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
             return false;
@@ -36,7 +36,7 @@ public class DimensionControl extends Control {
             int current = WorldUtil
                     .worldIndex(dest.getWorld() == null ? world.getServer().getOverworld() : dest.getWorld());
 
-            int next = DimensionControl.cycle(dims, current, !player.isSneaking());
+            int next = DimensionControl.cycle(dims, current, !leftClick);
             return dims.get(next);
         }).thenAccept(destWorld -> {
             travel.forceDestination(cached -> cached.world(destWorld));
