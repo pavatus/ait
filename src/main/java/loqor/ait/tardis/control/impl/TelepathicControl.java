@@ -1,5 +1,6 @@
 package loqor.ait.tardis.control.impl;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.NameTagItem;
@@ -20,11 +21,13 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.item.DistressCallItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.SiegeHandler;
+import loqor.ait.tardis.data.distress.DistressCall;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
 
@@ -48,37 +51,70 @@ public class TelepathicControl extends Control {
         if (!KeyItem.hasMatchingKeyInInventory(player, tardis) && security)
             return false;
 
-        if (player.getMainHandStack().getItem() == Items.BRICK) {
+        ItemStack held = player.getMainHandStack();
+        Item type = held.getItem();
+
+        if (type == Items.BRICK) {
             tardis.siege().texture().set(SiegeHandler.BRICK_TEXTURE);
             return false;
         }
 
-        if (player.getMainHandStack().getItem() == Items.STONE) {
+        if (type == Items.STONE) {
             tardis.siege().texture().set(SiegeHandler.TEXTURE);
             return false;
         }
 
-        if (player.getMainHandStack().getItem() instanceof LinkableItem linker) {
+        if (type instanceof LinkableItem linker) {
             if (linker instanceof SonicItem)
                 return false;
 
-            linker.link(player.getMainHandStack(), tardis);
+            linker.link(held, tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS,
                     1.0F, 1.0F);
             return true;
         }
 
-        if (player.getMainHandStack().getItem() instanceof NameTagItem) {
-            ItemStack hand = player.getMainHandStack();
-
-            if (!hand.hasCustomName())
+        if (type instanceof NameTagItem) {
+            if (!held.hasCustomName())
                 return false;
 
-            tardis.stats().setName(hand.getName().getString());
+            tardis.stats().setName(held.getName().getString());
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);
 
             if (!player.isCreative())
-                hand.decrement(1);
+                held.decrement(1);
+
+            return true;
+        }
+
+        if (type instanceof DistressCallItem) {
+            // todo - cleanup
+            DistressCall call = DistressCallItem.getCall(held, world.getServer().getTicks(), world);
+
+            if (call == null) {
+                // create new call
+                call = DistressCall.create(tardis, "TODO");
+                DistressCallItem.setCall(held, call);
+
+                return true;
+            }
+
+            if (call.isSource(tardis)) {
+                // send off call
+                call.send();
+                held.setCount(0);
+
+                return true;
+            }
+
+            // receive and process call
+            if (call.tardis().isEmpty()) return false;
+
+            Tardis source = call.tardis().get();
+
+            tardis.travel().destination(source.travel().position(), true);
+
+            held.setCount(0);
 
             return true;
         }
