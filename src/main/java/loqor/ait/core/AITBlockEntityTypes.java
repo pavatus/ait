@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.block.entity.BlockEntityType;
 
 import loqor.ait.core.blockentities.*;
-import loqor.ait.core.blockentities.control.ButtonControlBlockEntity;
+import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
 
 public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
 
@@ -28,8 +28,6 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(ArtronCollectorBlockEntity::new, AITBlocks.ARTRON_COLLECTOR_BLOCK).build();
     public static BlockEntityType<PlaqueBlockEntity> PLAQUE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(PlaqueBlockEntity::new, AITBlocks.PLAQUE_BLOCK).build();
-    public static BlockEntityType<ButtonControlBlockEntity> BUTTON_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
-            .create(ButtonControlBlockEntity::new, AITBlocks.BUTTON_CONTROL_BLOCK).build();
     public static BlockEntityType<EngineBlockEntity> ENGINE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(EngineBlockEntity::new, AITBlocks.ENGINE_BLOCK).build();
     public static BlockEntityType<WallMonitorBlockEntity> WALL_MONITOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
@@ -51,4 +49,6 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
 
     public static final BlockEntityType<AITRadioBlockEntity> AIT_RADIO_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(AITRadioBlockEntity::new, AITBlocks.RADIO).build();
+    public static BlockEntityType<RedstoneControlBlockEntity> REDSTONE_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
+            .create(RedstoneControlBlockEntity::new, AITBlocks.REDSTONE_CONTROL_BLOCK).build();
 }

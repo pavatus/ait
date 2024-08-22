@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.blocks.control.RedstoneControlBlock;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.registry.impl.ControlRegistry;
 import loqor.ait.tardis.Tardis;
@@ -52,6 +53,7 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 
     public void setControl(String id) {
         Optional<Control> found = ControlRegistry.fromId(id);
+
         if (found.isEmpty())
             return;
 
@@ -78,6 +80,10 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 
         this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
         return this.control.runServer(tardis, user, user.getServerWorld(), this.pos, isMine);
+    }
+    public boolean run(ServerPlayerEntity user, RedstoneControlBlock.Mode mode) {
+        boolean isMine = mode == RedstoneControlBlock.Mode.PUNCH;
+        return this.run(user, isMine);
     }
 
     public void createDelay(Tardis tardis, long millis) {
