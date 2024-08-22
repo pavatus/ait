@@ -17,4 +17,8 @@ public class ServerLifecycleHooks {
     public static MinecraftServer get() {
         return server;
     }
+
+    public static boolean isServer() {
+        return server != null; // since it will only be initialised on server (ish)
+    }
 }
