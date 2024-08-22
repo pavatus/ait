@@ -120,8 +120,9 @@ public class TelepathicControl extends Control {
             Tardis source = call.tardis().get();
 
             tardis.travel().destination(source.travel().position(), true);
-            world.playSound(null, player.getBlockPos(), AITSounds.BWEEP, SoundCategory.PLAYERS, 1.0F, 1F);
-            world.playSound(null, player.getBlockPos(), AITSounds.DING, SoundCategory.PLAYERS, 1.0F, 1F);
+
+            world.playSound(null, player.getBlockPos(), AITSounds.WAYPOINT_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1F);
+            source.getDesktop().playSoundAtEveryConsole(AITSounds.WAYPOINT_ACTIVATE);
 
             held.setCount(0);
 
