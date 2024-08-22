@@ -8,21 +8,30 @@
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import inputs.systems;
-      perSystem = { config, self', pkgs, lib, system, ... }: {
-      devShells.default = pkgs.mkShell {
-        buildInpts = with pkgs; [
-          zulu17
-        ];
-        LD_LIBRARY_PATH = with pkgs; lib.makeLibraryPath [
+      perSystem = { config, self', pkgs, lib, system, ... }: let
+        libs = with pkgs; [
           libGL
-          glfw
+          glfw-wayland-minecraft
           openal
-          flite
+          #flite
           libpulseaudio
-          udev
-          xorg.libXcursor
+          #udev
+          #xorg.libXcursor
         ];
+        jbr = pkgs.callPackage ./scripts/jbr.nix {};
+      in {
+        devShells.default = pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            jbr
+          ];
+
+          buildInputs = libs;
+          LD_LIBRARY_PATH = lib.makeLibraryPath libs;
+
+          env = {
+           JAVA_HOME = "${jbr}/lib/openjdk/";
+          };
+        };
       };
     };
-  };
 }

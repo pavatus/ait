@@ -15,7 +15,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.WorldWithTardis;
 
 public class VersionCommand {
 
@@ -40,14 +39,6 @@ public class VersionCommand {
         source.sendMessage(LOGO.copy().formatted(Formatting.GOLD));
         source.sendMessage(Text.translatable("message.ait.version").formatted(Formatting.GOLD)
                 .append(Text.literal(": ").append(VERSION).formatted(Formatting.WHITE)));
-
-        if (!source.isExecutedByPlayer())
-            return Command.SINGLE_SUCCESS;
-
-        ((WorldWithTardis) context.getSource().getWorld()).ait$withLookup(lookup -> {
-            source.sendMessage(Text.empty());
-            source.sendMessage(Text.literal("TARDIS in chunk: " + lookup.get(source.getPlayer().getChunkPos())));
-        });
 
         return Command.SINGLE_SUCCESS;
     }
