@@ -19,14 +19,14 @@ public class AutoPilotControl extends Control {
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
             return false;
         }
 
         // @TODO make a real world flight control.. later
-        if (player.isSneaking() && tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
+        if (leftClick && tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
             if (tardis.door().isOpen()) {
                 world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F,
                         1.0F);
