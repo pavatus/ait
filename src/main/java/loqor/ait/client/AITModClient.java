@@ -210,13 +210,9 @@ public class AITModClient implements ClientModInitializer {
         // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
                 responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
-        WorldRenderEvents.END.register((context) -> {
-            SonicRendering.getInstance().renderWorld(context);
-        });
 
-        HudRenderCallback.EVENT.register((context, delta) -> {
-            SonicRendering.getInstance().renderGui(context, delta);
-        });
+        WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
+        HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
     }
 
     /**

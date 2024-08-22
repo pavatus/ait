@@ -95,6 +95,7 @@ public class AITMod implements ModInitializer {
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();
         LandingPadManager.init();
+        ControlRegistry.init();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,

@@ -257,6 +257,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS))
                             );
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITItems.REDSTONE_CONTROL)
+                    .pattern("OEO").pattern("ZRZ").pattern("OOO")
+                    .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
+                    .input('E', Items.ENDER_EYE).criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .input('R', Items.REDSTONE).criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
+
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -470,6 +477,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.ZEITON_DUST, "Zeiton Dust");
         provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
         provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
+        provider.addTranslation(AITItems.HAZANDRA, "Hazandra");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");
@@ -540,6 +548,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
         provider.addTranslation(AITBlocks.PEANUT, "P E A N U T");
+        provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
 
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");

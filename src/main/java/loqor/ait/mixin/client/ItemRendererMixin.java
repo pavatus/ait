@@ -13,8 +13,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.core.AITItems;
+import loqor.ait.core.item.SonicItem;
 
-// todo @DrTheodor, finish this
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
 
@@ -31,8 +31,16 @@ public class ItemRendererMixin {
         model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
         matrices.translate(-0.5f, -0.5f, -0.5f);
 
+        matrices.push();
+        matrices.scale(1.0f, -1.0f, -1.0f);
+
         // render model here
 
+        SonicItem.findSchema(stack).models();
+        //VertexConsumer vertexConsumer2 = ItemRenderer.getDirectItemGlintConsumer(vertexConsumers, this.sonicModel.getLayer(TridentEntityModel.TEXTURE), false, stack.hasGlint());
+        //this.sonicModel.render(matrices, vertexConsumer2, light, overlay, 1.0f, 1.0f, 1.0f, 1.0f);
+
+        matrices.pop();
         matrices.pop();
     }
 }
