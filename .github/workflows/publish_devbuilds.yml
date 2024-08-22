@@ -9,7 +9,7 @@ name: Automated donator builds
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feat/hopper" ]
 
 jobs:
   build:
