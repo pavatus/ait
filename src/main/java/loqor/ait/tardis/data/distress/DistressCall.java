@@ -76,6 +76,7 @@ public record DistressCall(TardisRef tardis, String message, int lifetime, int c
     }
     private void send(ServerTardis target) {
         if (this.isSource(target)) return; // dont send to self
+        if (!target.stats().receiveCalls().get()) return; // ignore if doesnt want to receive
 
         // spawn distress item at door
         ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
