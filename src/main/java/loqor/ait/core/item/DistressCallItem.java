@@ -56,7 +56,7 @@ public class DistressCallItem extends Item { // todo needs rename
     }
 
     public static ItemStack create(DistressCall call) {
-        ItemStack stack = new ItemStack(AITItems.DISTRESS_CALL);
+        ItemStack stack = new ItemStack(AITItems.HYPERCUBE);
         setCall(stack, call);
         return stack;
     }
