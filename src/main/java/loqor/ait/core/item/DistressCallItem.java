@@ -14,6 +14,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITItems;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.tardis.data.distress.DistressCall;
 
 public class DistressCallItem extends Item { // todo needs rename
@@ -51,6 +52,8 @@ public class DistressCallItem extends Item { // todo needs rename
             tooltip.add(Text.translatable("tooltip.ait.distresscall.source").formatted(Formatting.BOLD, Formatting.GOLD));
         }
         tooltip.add(Text.literal(call.message()).formatted(Formatting.ITALIC, Formatting.RED));
+
+        tooltip.add(TextUtil.forTardis(call.tardis().getId()));
     }
 
     public static DistressCall getCall(ItemStack stack, int ticks, World world) {
