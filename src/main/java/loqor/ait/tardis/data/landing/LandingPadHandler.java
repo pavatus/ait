@@ -117,7 +117,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
         String tardisCode = tardis.landingPad().code().get();
         String regionCode = region.getLandingCode();
 
-        return tardisCode.equalsIgnoreCase(regionCode) && !regionCode.isBlank();
+        return tardisCode.equalsIgnoreCase(regionCode) || regionCode.isBlank();
     }
 
     private static @Nullable LandingPadSpot findFreeSpot(ServerWorld world, BlockPos pos) {
