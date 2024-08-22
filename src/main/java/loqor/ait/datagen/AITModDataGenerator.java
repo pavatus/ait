@@ -620,6 +620,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
         provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
+        provider.addTranslation("tooltip.ait.distresscall.source", "SOURCE");
 
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");

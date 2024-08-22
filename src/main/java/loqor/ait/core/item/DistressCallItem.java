@@ -29,6 +29,7 @@ public class DistressCallItem extends Item { // todo needs rename
 
         DistressCall call = getCall(stack, world.getServer().getTicks(), world);
         if (call == null) return;
+        if (call.isSourceCall()) return;
 
         stack.setDamage((int) ((1f - (((float) call.getTimeLeft() / (call.lifetime())))) * stack.getMaxDamage()));
 
@@ -46,6 +47,9 @@ public class DistressCallItem extends Item { // todo needs rename
         DistressCall call = getCall(stack, 0, world);
         if (call == null) return;
 
+        if (call.isSourceCall()) {
+            tooltip.add(Text.translatable("tooltip.ait.distresscall.source").formatted(Formatting.BOLD, Formatting.GOLD));
+        }
         tooltip.add(Text.literal(call.message()).formatted(Formatting.ITALIC, Formatting.RED));
     }
 

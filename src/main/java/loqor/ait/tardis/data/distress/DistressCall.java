@@ -19,27 +19,37 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
-public record DistressCall(TardisRef tardis, String message, int lifetime, int creationTime) {
-    private static final int DEFAULT_LIFETIME = 60 * 20; // 5 minute default lifetime
+public record DistressCall(TardisRef tardis, String message, int lifetime, int creationTime, boolean isSourceCall) {
+    private static final int DEFAULT_LIFETIME = 120 * 20; // 2 minute default lifetime
 
-    private static DistressCall create(UUID tardis, String message, MinecraftServer server, int lifetime) {
-        return new DistressCall(TardisRef.createAs(server.getOverworld(), tardis), message, lifetime, server.getTicks());
+    private static DistressCall create(UUID tardis, String message, MinecraftServer server, int lifetime, boolean isSourceCall) {
+        return new DistressCall(TardisRef.createAs(server.getOverworld(), tardis), message, lifetime, server.getTicks(), isSourceCall);
     }
-    private static DistressCall create(UUID tardis, String message, int lifetime) {
-        return create(tardis, message, ServerLifecycleHooks.get(), lifetime);
+    private static DistressCall create(UUID tardis, String message, int lifetime, boolean isSourceCall) {
+        return create(tardis, message, ServerLifecycleHooks.get(), lifetime, isSourceCall);
     }
-    private static DistressCall create(UUID tardis, String message) {
-        return create(tardis, message, DEFAULT_LIFETIME);
+    private static DistressCall create(UUID tardis, String message, boolean isSourceCall) {
+        return create(tardis, message, DEFAULT_LIFETIME, isSourceCall);
     }
-    public static DistressCall create(Tardis tardis, String message) {
-        return create(tardis.getUuid(), message);
+    public static DistressCall create(Tardis tardis, String message, boolean isSourceCall){
+        return create(tardis.getUuid(), message, isSourceCall);
     }
     public static DistressCall create(NbtCompound data, int ticks, World world) {
         return new DistressCall(
                 TardisRef.createAs(world, data.getUuid("Tardis")),
                 data.getString("Message"),
                 data.getInt("Lifetime"),
-                Math.min(ticks, data.getInt("CreationTime")) // todo blehh
+                Math.min(ticks, data.getInt("CreationTime")), // todo blehh
+                data.getBoolean("IsSourceCall")
+        );
+    }
+    public static DistressCall copyForSend(DistressCall call, int ticks) {
+        return new DistressCall(
+                call.tardis(),
+                call.message(),
+                call.lifetime(),
+                ticks,
+                false
         );
     }
 
@@ -53,6 +63,10 @@ public record DistressCall(TardisRef tardis, String message, int lifetime, int c
         return this.isValid(ServerLifecycleHooks.get());
     }
     public int getTimeLeft(int ticks) {
+        if (this.isSourceCall()) {
+            return this.lifetime;
+        }
+
         int time = (this.creationTime + this.lifetime) - ticks;
 
         return Math.max(time, 0);
@@ -82,7 +96,7 @@ public record DistressCall(TardisRef tardis, String message, int lifetime, int c
         ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
         Vec3d pos = TardisUtil.offsetInteriorDoorPosition(target);
 
-        ItemStack created = DistressCallItem.create(this);
+        ItemStack created = DistressCallItem.create(copyForSend(this, world.getServer().getTicks()));
         ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), created);
 
         world.spawnEntity(entity);
@@ -98,6 +112,7 @@ public record DistressCall(TardisRef tardis, String message, int lifetime, int c
         data.putString("Message", this.message);
         data.putInt("Lifetime", this.lifetime);
         data.putInt("CreationTime", this.creationTime);
+        data.putBoolean("IsSourceCall", this.isSourceCall);
 
         return data;
     }
