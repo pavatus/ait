@@ -13,6 +13,7 @@ import net.minecraft.util.Rarity;
 import loqor.ait.AITMod;
 import loqor.ait.core.item.*;
 import loqor.ait.core.item.blueprint.BlueprintItem;
+import loqor.ait.core.item.control.GenericControlBlockItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
@@ -42,6 +43,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item FACELESS_RESPIRATOR = new WearableArmorItem(AITArmorMaterials.IRON,
             WearableArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
             true);
+    public static final Item HAZANDRA = new InteriorTeleporterItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     // Keys/Key Templates
     public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item GOLD_KEY = new KeyItem(
@@ -117,7 +119,7 @@ public class AITItems implements ItemRegistryContainer {
 
     // Block controls
 
-    // public static final Item BUTTON_CONTROL = new
-    // GenericControlBlockItem(AITBlocks.BUTTON_CONTROL_BLOCK, new
-    // OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+     public static final Item REDSTONE_CONTROL = new
+             GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
+     OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 }

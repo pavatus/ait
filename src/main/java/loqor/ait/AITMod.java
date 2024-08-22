@@ -42,6 +42,7 @@ import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.util.AITConfig;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.Registries;
@@ -89,6 +90,7 @@ public class AITMod implements ModInitializer {
         CreakRegistry.init();
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();
+        ControlRegistry.init();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
@@ -98,6 +100,7 @@ public class AITMod implements ModInitializer {
         DoorRegistry.init();
 
         // ServerVortexDataHandler.init();
+        ServerLifecycleHooks.init();
 
         AITArgumentTypes.register();
 
