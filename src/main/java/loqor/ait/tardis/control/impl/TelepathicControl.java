@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.DistressCallItem;
 import loqor.ait.core.item.KeyItem;
@@ -98,9 +99,17 @@ public class TelepathicControl extends Control {
             }
 
             if (call.isSourceCall() && call.isSource(tardis)) {
+                if (!tardis.travel().isLanded()) {
+                    world.playSound(null, player.getBlockPos(), AITSounds.GROAN, SoundCategory.PLAYERS, 1.0F, 1.1F);
+
+                    return false;
+                }
+
                 // send off call
                 call.send();
                 held.setCount(0);
+
+                world.playSound(null, player.getBlockPos(), AITSounds.BWEEP, SoundCategory.PLAYERS, 1.0F, 0.75F);
 
                 return true;
             }
@@ -111,6 +120,8 @@ public class TelepathicControl extends Control {
             Tardis source = call.tardis().get();
 
             tardis.travel().destination(source.travel().position(), true);
+            world.playSound(null, player.getBlockPos(), AITSounds.BWEEP, SoundCategory.PLAYERS, 1.0F, 1F);
+            world.playSound(null, player.getBlockPos(), AITSounds.DING, SoundCategory.PLAYERS, 1.0F, 1F);
 
             held.setCount(0);
 

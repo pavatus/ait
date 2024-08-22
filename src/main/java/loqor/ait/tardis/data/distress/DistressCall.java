@@ -8,9 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.DistressCallItem;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.tardis.Tardis;
@@ -100,6 +103,8 @@ public record DistressCall(TardisRef tardis, String message, int lifetime, int c
         ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), created);
 
         world.spawnEntity(entity);
+
+        world.playSound(null, BlockPos.ofFloored(pos), AITSounds.DING, SoundCategory.PLAYERS, 1.0F, 1F);
     }
     public boolean isSource(Tardis tardis) {
         return tardis.getUuid().equals(this.tardis().getId());
