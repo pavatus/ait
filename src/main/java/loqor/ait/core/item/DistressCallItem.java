@@ -17,7 +17,7 @@ import loqor.ait.tardis.data.distress.DistressCall;
 
 public class DistressCallItem extends Item { // todo needs rename
     public DistressCallItem(Settings settings) {
-        super(settings);
+        super(settings.maxDamageIfAbsent(100));
     }
 
     @Override
@@ -28,6 +28,9 @@ public class DistressCallItem extends Item { // todo needs rename
 
         DistressCall call = getCall(stack, world.getServer().getTicks(), world);
         if (call == null) return;
+
+        stack.setDamage((int) ((1f - (((float) call.getTimeLeft() / (call.lifetime())))) * stack.getMaxDamage()));
+
         if (call.isValid()) return;
 
         stack.setCount(0);
