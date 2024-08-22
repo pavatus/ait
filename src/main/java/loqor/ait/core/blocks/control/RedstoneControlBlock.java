@@ -45,24 +45,34 @@ public class RedstoneControlBlock extends ControlBlock {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (!(world.getBlockEntity(pos) instanceof RedstoneControlBlockEntity entity)) return;
-        if (world.isClient()) return;
-        if (entity.tardis().isEmpty()) return;
+        if (!(world.getBlockEntity(pos) instanceof RedstoneControlBlockEntity entity))
+            return;
+
+        if (world.isClient())
+            return;
+
+        if (entity.tardis() == null)
+            return;
+
+        if (entity.tardis().isEmpty())
+            return;
 
         PlayerEntity user = TardisUtil.getPlayerInsideInterior(entity.tardis().get());
-        if (user == null) return;
+
+        if (user == null)
+            return;
 
         boolean wasPowered = state.get(POWERED);
         boolean powered = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());
 
-        if (wasPowered == powered) {
+        if (wasPowered == powered)
             return;
-        }
 
         state = state.with(POWERED, powered);
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
 
-        if (!powered) return;
+        if (!powered)
+            return;
 
         entity.run((ServerPlayerEntity) user, Mode.get(state));
     }
