@@ -12,6 +12,7 @@ import net.minecraft.registry.Registry;
 
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
 
 public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
     @AssignedName("control_entity")
@@ -23,6 +24,10 @@ public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
     public static final EntityType<FallingTardisEntity> FALLING_TARDIS_TYPE = FabricEntityTypeBuilder
             .create(SpawnGroup.MISC, FallingTardisEntity::new).dimensions(EntityDimensions.changing(0.98f, 0.98f))
             .build();
+
+    public static final EntityType<GallifreyFallsPaintingEntity> GALLIFREY_FALLS_PAINTING_TYPE = FabricEntityTypeBuilder
+            .create(SpawnGroup.MISC, GallifreyFallsPaintingEntity::new)
+            .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
 
     @Override
     public Registry<EntityType<?>> getRegistry() {
