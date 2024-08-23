@@ -2440,18 +2440,15 @@ public class CoralConsoleModel extends ConsoleModel {
 
         // Anti-gravs Lever
         controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll = tardis.travel()
-                .antigravs().get()
-                        ? controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll
-                        : controls.getChild("p_ctrl_1").getChild("bone29").getChild("lever").getChild("bone8").roll
-                                - 1.5f;
+                .antigravs().get() ? 0.829F : 0.829F - 1.5f;
 
         // Door Control
         ModelPart doorControl = controls.getChild("p_ctrl_1").getChild("bone29").getChild("crank").getChild("bone32");
 
         if (tardis.door().isLeftOpen()) {
-            doorControl.pitch = doorControl.pitch - 0.8f;
+            doorControl.pitch = -0.6981F - 0.8f;
         } else if (tardis.door().isRightOpen()) {
-            doorControl.pitch = doorControl.pitch - 1.5f;
+            doorControl.pitch = -0.6981F - 1.5f;
         }
 
         // Power Lever
@@ -2503,11 +2500,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
         // Handbrake
         controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2")
-                .getChild("bone102").yaw = !tardis.travel().handbrake()
-                        ? controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2")
-                                .getChild("bone102").yaw
-                        : controls.getChild("p_ctrl_6").getChild("bone62").getChild("handbrake2")
-                                .getChild("bone102").yaw + 0.75f;
+                .getChild("bone102").yaw = !tardis.travel().handbrake() ? 0.829F : 0.829F + 0.75f;
 
         // Siege Mode
         ModelPart siege = controls.getChild("p_ctrl_3").getChild("bone36").getChild("handbrake");
@@ -2528,9 +2521,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
         // Ground Searching
         ModelPart groundSearch = controls.getChild("p_ctrl_6").getChild("bone62").getChild("bow").getChild("bone68");
-        groundSearch.pitch = tardis.travel().horizontalSearch().get() ? groundSearch.pitch - 0.5f : groundSearch.pitch; // FIXME
-                                                                                                                        // use
-                                                                                                                        // TravelHandler#horizontalSearch/#verticalSearch
+        groundSearch.pitch = tardis.travel().horizontalSearch().get() ? 0.2182F - 0.5f : 0.2182F;
 
         super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
