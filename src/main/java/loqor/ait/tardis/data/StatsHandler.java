@@ -44,6 +44,7 @@ public class StatsHandler extends KeyedTardisComponent {
             new HashSet<>());
     private static final BoolProperty SECURITY = new BoolProperty("security", false);
     private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
+    private static final BoolProperty RECEIVE_CALLS = new BoolProperty("receive_calls", true);
 
     private final Value<String> tardisName = NAME.create(this);
     private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME.create(this);
@@ -52,6 +53,7 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
     private final BoolValue security = SECURITY.create(this);
     private final BoolValue hailMary = HAIL_MARY.create(this);
+    private final BoolValue receiveCalls = RECEIVE_CALLS.create(this); // todo - loqor add this to security screen
 
 
     public StatsHandler() {
@@ -73,6 +75,7 @@ public class StatsHandler extends KeyedTardisComponent {
         creationDate.of(this, DATE);
         security.of(this, SECURITY);
         hailMary.of(this, HAIL_MARY);
+        receiveCalls.of(this, RECEIVE_CALLS);
 
         for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext();) {
             this.unlock(it.next(), false);
@@ -115,6 +118,9 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public BoolValue hailMary() {
         return hailMary;
+    }
+    public BoolValue receiveCalls() {
+        return this.receiveCalls;
     }
 
     public String getPlayerCreatorName() {
