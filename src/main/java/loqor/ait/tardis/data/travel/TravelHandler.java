@@ -299,6 +299,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         DoorHandler.lockTardis(tardis.door().previouslyLocked().get(), this.tardis, null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
+
+        this.tryFly();
     }
 
     public void initPos(DirectedGlobalPos.Cached cached) {
