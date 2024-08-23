@@ -15,7 +15,6 @@ import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
-import loqor.ait.tardis.util.TardisUtil;
 
 public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 
@@ -185,18 +184,12 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
             this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
             this.resetFlight();
 
-            if (this.shouldRemat())
-                this.tardis().travel().rematerialize();
-
+            this.tardis().travel().rematerialize();
             return;
         }
 
         if (server.getTicks() % (this.maxSpeed.get() - this.speed() + 1) == 0)
             this.setFlightTicks(this.getFlightTicks() + AITMod.AIT_CONFIG.TRAVEL_PER_TICK());
-    }
-
-    private boolean shouldRemat() {
-        return this.tardis().travel().autopilot() || (!TardisUtil.isInteriorNotEmpty(this.tardis()) && !this.tardis.travel().leaveBehind().get());
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {

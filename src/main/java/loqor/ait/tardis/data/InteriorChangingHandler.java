@@ -20,6 +20,7 @@ import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
@@ -119,7 +120,10 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             travel.forceDemat();
         }
 
-        TardisUtil.sendMessageToLinked(tardis, Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
+        NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(
+                Text.translatable("tardis.message.interiorchange.success",
+                        tardis.stats().getName(), tardis.getDesktop().getSchema().name()), true)
+        );
     }
 
     private void warnPlayers() {

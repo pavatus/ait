@@ -21,12 +21,32 @@ import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.*;
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.TardisUtil;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
+
+    static {
+        TardisEvents.MAT.register(tardis -> {
+            if (!AITMod.AIT_CONFIG.GHOST_MONUMENT())
+                return TardisEvents.Interaction.PASS;
+
+            TravelHandler travel = tardis.travel();
+
+            return (!TardisUtil.isInteriorNotEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
+                    ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+        });
+
+        TardisEvents.LANDED.register(tardis -> {
+            if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
+                tardis.travel().tryFly();
+        });
+    }
 
     public TravelHandler() {
         super(Id.TRAVEL);
@@ -299,8 +319,6 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         DoorHandler.lockTardis(tardis.door().previouslyLocked().get(), this.tardis, null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
-
-        this.tryFly();
     }
 
     public void initPos(DirectedGlobalPos.Cached cached) {

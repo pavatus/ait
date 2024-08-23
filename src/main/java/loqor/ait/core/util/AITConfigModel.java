@@ -15,6 +15,8 @@ public class AITConfigModel {
     @SectionHeader("Server")
     public boolean MINIFY_JSON = false;
 
+    public boolean GHOST_MONUMENT = true;
+
     @Expanded @RestartRequired
     public List<String> WORLDS_BLACKLIST = List.of(
             AITDimensions.TIME_VORTEX_WORLD.getValue().toString(),
