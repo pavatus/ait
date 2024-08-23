@@ -1,6 +1,7 @@
 package loqor.ait.core.blockentities;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +11,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -38,6 +38,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
 
@@ -98,12 +99,9 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
         if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()) {
             ItemStack key = player.getMainHandStack();
-            NbtCompound tag = key.getOrCreateNbt();
+            UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
 
-            if (!tag.contains("tardis"))
-                return;
-
-            if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
+            if (Objects.equals(tardis.getUuid(), keyId)) {
                 DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);

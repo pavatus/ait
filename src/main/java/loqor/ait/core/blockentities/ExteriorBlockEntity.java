@@ -1,6 +1,7 @@
 package loqor.ait.core.blockentities;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,7 +12,6 @@ import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -37,6 +37,7 @@ import loqor.ait.tardis.data.InteriorChangingHandler;
 import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.tardis.util.TardisUtil;
@@ -65,6 +66,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (tardis.isGrowth())
             return;
 
+
         SonicHandler handler = tardis.sonic();
 
         boolean hasSonic = handler.getExteriorSonic() != null;
@@ -73,12 +75,9 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()
                 && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
             ItemStack key = player.getMainHandStack();
-            NbtCompound tag = key.getOrCreateNbt();
+            UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
 
-            if (!tag.contains("tardis"))
-                return;
-
-            if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
+            if (Objects.equals(tardis.getUuid(), keyId)) {
                 DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -108,11 +107,9 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
                 && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
             ItemStack sonic = player.getMainHandStack();
-            NbtCompound tag = sonic.getOrCreateNbt();
-            if (!tag.contains("tardis"))
-                return;
+            UUID sonicId = LinkableItem.getTardisIdFromUuid(sonic, "tardis");
 
-            if (Objects.equals(tardis.getUuid().toString(), tag.getString("tardis"))) {
+            if (Objects.equals(tardis.getUuid(), sonicId)) {
                 ItemStack stack = player.getMainHandStack();
 
                 if (!(stack.getItem() instanceof SonicItem))
