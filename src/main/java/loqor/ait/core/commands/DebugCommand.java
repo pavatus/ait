@@ -7,14 +7,17 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPadRegion;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class DebugCommand {
@@ -31,8 +34,13 @@ public class DebugCommand {
         if (!source.isExecutedByPlayer())
             return Command.SINGLE_SUCCESS;
 
-        source.sendMessage(Text.literal("Updating biome"));
-        BiomeHandler.testBiome(source.getWorld(), source.getPlayer().getBlockPos());
+        ServerWorld world = source.getWorld();
+        PlayerEntity player = source.getPlayer();
+
+        LandingPadRegion region = LandingPadManager.getInstance(world).getRegion(player.getChunkPos());
+
+        if (region != null)
+            source.sendMessage(Text.literal("LP in chunk: " + region));
 
         ((WorldWithTardis) context.getSource().getWorld()).ait$withLookup(lookup -> {
             source.sendMessage(Text.empty());
