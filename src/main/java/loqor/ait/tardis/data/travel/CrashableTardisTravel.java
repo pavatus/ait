@@ -110,7 +110,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         this.resetHammerUses();
 
         this.setCrashing(true);
-        this.destination(TravelUtil.jukePos(this.getProgress(), 10, 100, power));
+        this.destination(TravelUtil.jukePos(this.getProgress(), 10, 100, power).world(World.OVERWORLD));
 
         this.forceRemat();
 
