@@ -11,6 +11,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
@@ -20,7 +23,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.renderers.entities.ControlEntityRenderer;
+import loqor.ait.core.item.SonicItem;
 
 public class SonicRendering {
     private static final Identifier SELECTED = new Identifier(AITMod.MOD_ID, "textures/marker/landing.png");
@@ -51,7 +54,6 @@ public class SonicRendering {
         Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
 
         profiler.swap("transform");
-        target = target.add(0, 0, 1);
         Vec3d transform = target.subtract(camera.getPos());
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
@@ -93,13 +95,12 @@ public class SonicRendering {
     }
 
     public void renderWorld(WorldRenderContext context) {
-        if (!ControlEntityRenderer.isPlayerHoldingScanningSonic()) return;
-
         Profiler worldProfiler = context.profiler();
         worldProfiler.push("sonic");
         worldProfiler.push("world");
 
-        renderSelectedBlock(context);
+        if (isPlayerHoldingSonicOf(SonicItem.Mode.TARDIS))
+            renderSelectedBlock(context);
 
         worldProfiler.pop();
         worldProfiler.pop();
@@ -114,7 +115,7 @@ public class SonicRendering {
             profiler.pop();
             return;
         }
-        Vec3d targetVec = crosshair.getPos();
+        Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
         BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
@@ -124,14 +125,12 @@ public class SonicRendering {
 
         renderFloorTexture(targetPos, SELECTED, null, false);
 
-
-
         worldProfiler.pop();
         worldProfiler.pop();
     }
     public void renderGui(DrawContext context, float delta) {
         if (client.world == null) return;
-        if (!ControlEntityRenderer.isPlayerHoldingScanningSonic()) return;
+        if (!isPlayerHoldingScanningSonic()) return;
 
         profiler.swap("sonic");
         profiler.push("gui");
@@ -189,5 +188,40 @@ public class SonicRendering {
             INSTANCE = new SonicRendering();
 
         return INSTANCE;
+    }
+
+    public static boolean isScanningSonic(ItemStack sonic) {
+        return isSonicOf(SonicItem.Mode.SCANNING, sonic);
+    }
+    public static boolean isSonicOf(SonicItem.Mode mode, ItemStack sonic) {
+        NbtCompound nbt = sonic.getOrCreateNbt();
+        return nbt.getInt(SonicItem.MODE_KEY) == mode.ordinal() || nbt.getInt(SonicItem.PREV_MODE_KEY) == mode.ordinal();
+    }
+
+    public static boolean isPlayerHoldingScanningSonic() {
+        return isPlayerHoldingSonicOf(SonicItem.Mode.SCANNING);
+    }
+    public static boolean isPlayerHoldingSonicOf(SonicItem.Mode mode) {
+        PlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (player == null)
+            return false;
+
+        ItemStack sonic = getSonicStack(player);
+
+        if (sonic == null)
+            return false;
+
+        return isSonicOf(mode, sonic);
+    }
+
+    public static ItemStack getSonicStack(PlayerEntity player) {
+        if (player.getMainHandStack().getItem() instanceof SonicItem)
+            return player.getMainHandStack();
+
+        if (player.getOffHandStack().getItem() instanceof SonicItem)
+            return player.getOffHandStack();
+
+        return null;
     }
 }

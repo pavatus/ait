@@ -14,7 +14,6 @@ import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.data.ClientLandingManager;
-import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.tardis.data.landing.LandingPadRegion;
 import loqor.ait.tardis.data.landing.LandingPadSpot;
 
@@ -37,7 +36,7 @@ public class LandingRegionRenderer {
     }
 
     public boolean shouldRender() {
-        return ControlEntityRenderer.isPlayerHoldingScanningSonic() && ClientLandingManager.getInstance().getRegion(client.player.getChunkPos()) != null;
+        return SonicRendering.isPlayerHoldingScanningSonic() && ClientLandingManager.getInstance().getRegion(client.player.getChunkPos()) != null;
     }
 
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
@@ -77,7 +76,7 @@ public class LandingRegionRenderer {
 
     private void renderSpot(LandingPadSpot spot, boolean forceRender) {
         Identifier text = getTexture(spot);
-        SonicRendering.renderFloorTexture(spot.getPos(), text, forceRender ? null : this.previous, true);
+        SonicRendering.renderFloorTexture(spot.getPos().add(0, 0, 1), text, forceRender ? null : this.previous, true);
 
         forceRender = forceRender || !text.equals(this.previous);
 

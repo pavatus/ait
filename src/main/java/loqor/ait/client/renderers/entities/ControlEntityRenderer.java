@@ -14,7 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -25,8 +24,8 @@ import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ControlModel;
+import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
 
 @Environment(value = EnvType.CLIENT)
@@ -45,7 +44,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
             VertexConsumerProvider vertexConsumerProvider, int light) {
         super.render(livingEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
 
-        if (isPlayerHoldingScanningSonic()) {
+        if (SonicRendering.isPlayerHoldingScanningSonic()) {
             renderOutline(livingEntity, matrixStack, vertexConsumerProvider);
         }
     }
@@ -162,41 +161,12 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (hitEntity == null)
             return false;
 
-        ItemStack sonic = ControlEntityRenderer.getSonicStack(player);
+        ItemStack sonic = SonicRendering.getSonicStack(player);
 
         if (sonic == null)
             return false;
 
-        return hitEntity.equals(entity) && isScanningSonic(sonic);
-    }
-
-    private static ItemStack getSonicStack(PlayerEntity player) {
-        if (player.getMainHandStack().getItem() instanceof SonicItem)
-            return player.getMainHandStack();
-
-        if (player.getOffHandStack().getItem() instanceof SonicItem)
-            return player.getOffHandStack();
-
-        return null;
-    }
-
-    private static boolean isScanningSonic(ItemStack sonic) {
-        NbtCompound nbt = sonic.getOrCreateNbt();
-        return nbt.getInt(SonicItem.PREV_MODE_KEY) == 3 || nbt.getInt(SonicItem.MODE_KEY) == 3;
-    }
-
-    public static boolean isPlayerHoldingScanningSonic() {
-        PlayerEntity player = MinecraftClient.getInstance().player;
-
-        if (player == null)
-            return false;
-
-        ItemStack sonic = getSonicStack(player);
-
-        if (sonic == null)
-            return false;
-
-        return isScanningSonic(sonic);
+        return hitEntity.equals(entity) && SonicRendering.isScanningSonic(sonic);
     }
 
     private static boolean isScanningSonicInConsole(Tardis tardis) {
@@ -205,7 +175,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (sonic == null)
             return false;
 
-        return isScanningSonic(sonic);
+        return SonicRendering.isScanningSonic(sonic);
     }
 
     @Override
