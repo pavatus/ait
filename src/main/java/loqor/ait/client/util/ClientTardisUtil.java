@@ -48,7 +48,6 @@ public class ClientTardisUtil {
             boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
-        buf.writeIdentifier(exterior);
         buf.writeBoolean(variantchange);
         buf.writeIdentifier(variant);
         ClientPlayNetworking.send(TardisExterior.CHANGE_EXTERIOR, buf);

@@ -7,7 +7,10 @@ import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -44,30 +47,21 @@ public class TardisExterior extends TardisComponent {
     @Exclude
     private List<BlockData> disguiseCache;
 
+    @Exclude
+    private Gaslighter3000 gaslighter;
+
     static {
         ServerPlayNetworking.registerGlobalReceiver(CHANGE_EXTERIOR, ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-            Identifier exteriorValue = Identifier.tryParse(buf.readString());
-
             boolean variantChange = buf.readBoolean();
             Identifier variantValue = buf.readIdentifier();
 
             ExteriorVariantSchema schema = ExteriorVariantRegistry.getInstance()
                     .get(variantValue);
 
-            // no hax
-            if (!tardis.isUnlocked(schema))
+            if (!tardis.getExterior().update(schema, variantChange))
                 return;
 
             server.execute(() -> StackUtil.playBreak(player));
-            tardis.getExterior().setType(CategoryRegistry.getInstance().get(exteriorValue));
-
-            if (variantChange)
-                tardis.getExterior().setVariant(schema);
-
-            WorldOps.updateIfOnServer(server.getWorld(tardis.travel().position().getWorld().getRegistryKey()),
-                    tardis.travel().position().getPos());
-
-            TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
         }));
 
         TardisEvents.ENTER_FLIGHT.register(tardis -> {
@@ -77,13 +71,62 @@ public class TardisExterior extends TardisComponent {
 
         TardisEvents.LANDED.register(tardis -> {
             if (isDisguised(tardis))
-                tardis.getExterior().recalcDisguise(tardis);
+                tardis.getExterior().applyDisguise();
         });
 
         TardisEvents.SEND_TARDIS.register((tardis, player) -> {
-            if (isDisguised(tardis))
-                tardis.getExterior().recalcDisguise(tardis);
+            if (isDisguised(tardis) && !player.isInTeleportationState())
+                tardis.getExterior().applyDisguise(player);
         });
+
+        TardisEvents.EXTERIOR_CHANGE.register(tardis -> {
+            TardisExterior exterior = tardis.getExterior();
+
+            if (exterior.getVariant() instanceof AdaptiveVariant) {
+                exterior.applyDisguise();
+                return;
+            }
+
+            exterior.clearDisguise();
+        });
+
+        TardisEvents.USE_DOOR.register((tardis, player) -> {
+            if (player == null)
+                return;
+
+            TardisExterior exterior = tardis.getExterior();
+
+            if (tardis.door().isClosed()) {
+                exterior.applyDisguise(player);
+                return;
+            }
+
+            DirectedGlobalPos.Cached cached = tardis.travel().position();
+            Optional<ExteriorBlockEntity> blockEntity = exterior.findExteriorBlock();
+
+            if (blockEntity.isEmpty())
+                return;
+
+            player.networkHandler.sendPacket(new BlockUpdateS2CPacket(cached.getWorld(), cached.getPos()));
+            player.networkHandler.sendPacket(new BlockUpdateS2CPacket(cached.getWorld(), cached.getPos().up()));
+            player.networkHandler.sendPacket(BlockEntityUpdateS2CPacket.create(blockEntity.get()));
+        });
+    }
+
+    private boolean update(ExteriorVariantSchema variant, boolean variantChange) {
+        if (!tardis.isUnlocked(variant))
+            return false;
+
+        tardis.getExterior().setType(variant.category());
+
+        if (variantChange)
+            tardis.getExterior().setVariant(variant);
+
+        DirectedGlobalPos.Cached cached = tardis.travel().position();
+        WorldOps.updateIfOnServer(cached.getWorld(), cached.getPos());
+
+        TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
+        return true;
     }
 
     private static boolean isDisguised(Tardis tardis) {
@@ -91,26 +134,26 @@ public class TardisExterior extends TardisComponent {
     }
 
     public void clearDisguise() {
-        if (this.disguiseCache == null)
+        if (this.disguiseCache == null || this.gaslighter == null)
             return;
 
         DirectedGlobalPos.Cached cached = tardis.travel().position();
         ServerWorld world = cached.getWorld();
 
-        Gaslighter3000 gaslighter = new Gaslighter3000(world);
+        this.gaslighter = new Gaslighter3000(world);
 
         for (BlockData data : this.disguiseCache) {
-            BlockPos pos = data.pos();
-
-            shitParticles(world, pos);
-            gaslighter.spreadLies(pos, world.getBlockState(pos));
+            shitParticles(world, data.pos());
+            gaslighter.reset(data);
         }
 
         gaslighter.tweet();
+
+        this.gaslighter = null;
         this.disguiseCache = null;
     }
 
-    public void recalcDisguise(Tardis tardis) {
+    public boolean recalcDisguise() {
         long start = System.currentTimeMillis();
         DirectedGlobalPos.Cached cached = tardis.travel().position();
         ServerWorld world = cached.getWorld();
@@ -119,19 +162,31 @@ public class TardisExterior extends TardisComponent {
             this.disguiseCache = tardis.<BiomeHandler>handler(Id.BIOME).testBiome(world, cached.getPos());
 
         if (this.disguiseCache == null)
-            return;
+            return false;
 
-        Gaslighter3000 gaslighter = new Gaslighter3000(world);
+        this.gaslighter = new Gaslighter3000(world);
 
         for (BlockData data : this.disguiseCache) {
-            BlockPos pos = data.pos();
-
-            shitParticles(world, pos);
-            gaslighter.spreadLies(pos, data.state());
+            shitParticles(world, data.pos());
+            gaslighter.spreadLies(data);
         }
 
-        gaslighter.tweet();
         System.out.println("Recalculated exterior in " + (System.currentTimeMillis() - start) + "ms");
+        return true;
+    }
+
+    private void applyDisguise(ServerPlayerEntity player) {
+        if (this.gaslighter == null && !this.recalcDisguise())
+            return;
+
+        this.gaslighter.tweet(player);
+    }
+
+    private void applyDisguise() {
+        if (this.gaslighter == null && !this.recalcDisguise())
+            return;
+
+        this.gaslighter.tweet();
     }
 
     private static void shitParticles(ServerWorld world, BlockPos pos) {

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -120,6 +121,13 @@ public final class TardisEvents {
             callbacks -> (tardis, prev) -> {
                 for (MoveDoor callback : callbacks) {
                     callback.onMove(tardis, prev);
+                }
+            });
+
+    public static final Event<UseDoor> USE_DOOR = EventFactory.createArrayBacked(UseDoor.class,
+            callbacks -> (tardis, player) -> {
+                for (UseDoor callback : callbacks) {
+                    callback.onUseDoor(tardis, player);
                 }
             });
 
@@ -306,6 +314,11 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface CloseDoor {
         void onClose(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface UseDoor {
+        void onUseDoor(Tardis tardis, @Nullable ServerPlayerEntity player);
     }
 
     /**

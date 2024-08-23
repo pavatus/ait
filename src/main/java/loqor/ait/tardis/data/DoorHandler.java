@@ -335,6 +335,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             }
         }
 
+        TardisEvents.USE_DOOR.invoker().onUseDoor(tardis, player);
         return true;
     }
 
