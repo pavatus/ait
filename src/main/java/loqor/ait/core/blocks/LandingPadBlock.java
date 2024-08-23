@@ -1,5 +1,7 @@
 package loqor.ait.core.blocks;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,12 +59,17 @@ public class LandingPadBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            return ActionResult.CONSUME;
-        } else {
-            MinecraftClient.getInstance().setScreen(new LandingPadScreen(pos));
+        if (world.isClient) {
+            openScreen(pos);
+            return super.onUse(state, world, pos, player, hand, hit);
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+
+        return ActionResult.CONSUME;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static void openScreen(BlockPos pos) {
+        MinecraftClient.getInstance().setScreen(new LandingPadScreen(pos));
     }
 
     @Override
