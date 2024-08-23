@@ -1380,10 +1380,6 @@ public class HartnellConsoleModel extends ConsoleModel {
         bone.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
-    int xDestination = 0;
-    int yDestination = 0;
-    int zDestination = 0;
-
     @Override
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices,
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
@@ -1412,24 +1408,22 @@ public class HartnellConsoleModel extends ConsoleModel {
                 .getChild("bone69").getChild("ind_lamp_11").getChild("bone82");
         BlockPos destination = tardis.travel().destination().getPos();
 
-        /*
-         * if (destination.getX() != xDestination) { xControl.roll = xControl.roll +
-         * 1.575f; xControlLight.pivotY = xControlLight.pivotY + 1;
-         *
-         * xDestination = destination.getX(); }
-         */
+        if (destination.getX() < 0) {
+            xControl.roll = xControl.roll + 1.575f;
+            xControlLight.pivotY = xControlLight.pivotY + 1;
+        }
+
 
         // Y Control Movement
         ModelPart yControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68")
                 .getChild("bone69").getChild("s_lever_3").getChild("bone76");
         ModelPart yControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68")
                 .getChild("bone69").getChild("ind_lamp_12").getChild("bone83");
-        /*
-         * if (destination.getY() != yDestination) { yControl.roll = yControl.roll +
-         * 1.575f; yControlLight.pivotY = yControlLight.pivotY + 1;
-         *
-         * yDestination = destination.getY(); }
-         */
+
+        if (destination.getY() < 0) {
+            yControl.roll = yControl.roll + 1.575f;
+            yControlLight.pivotY = yControlLight.pivotY + 1;
+        }
 
         // Z Control Movement
         ModelPart zControl = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68")
@@ -1437,12 +1431,10 @@ public class HartnellConsoleModel extends ConsoleModel {
         ModelPart zControlLight = this.bone.getChild("panels").getChild("p_3").getChild("bone67").getChild("bone68")
                 .getChild("bone69").getChild("ind_lamp_13").getChild("bone84");
 
-        /*
-         * if (destination.getZ() != zDestination) { zControl.roll = zControl.roll +
-         * 1.575f; zControlLight.pivotY = zControlLight.pivotY + 1;
-         *
-         * zDestination = destination.getZ(); }
-         */
+        if (destination.getZ() < 0) {
+            zControl.roll = zControl.roll + 1.575f;
+            zControlLight.pivotY = zControlLight.pivotY + 1;
+        }
 
         // Fast Return Movements
         ModelPart fastReturn = this.bone.getChild("panels").getChild("p_1").getChild("bone38").getChild("bone36")
