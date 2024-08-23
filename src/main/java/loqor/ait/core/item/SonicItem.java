@@ -579,7 +579,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 boolean isNearTardis = ExteriorAnimation.isNearTardis(player, tardis, 256);
 
                 if (!isNearTardis || isPilot) {
-                    travel.forceDestination(target);
+                    travel.destination(target);
 
                     if (isPilot)
                         TravelUtil.travelTo(tardis, target);
