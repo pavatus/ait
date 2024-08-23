@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 
+import loqor.ait.core.data.BlockData;
 import loqor.ait.core.util.FakeChunkSection;
 
 public class Gaslighter3000 {
@@ -31,6 +32,10 @@ public class Gaslighter3000 {
     public void spreadLies(BlockPos pos, BlockState state) {
         this.lookup.computeIfAbsent(new ChunkPos(pos), chunkPos -> new ChunkHolder(world, new ChunkPos(pos)))
                 .spreadLies(pos, state);
+    }
+
+    public void spreadLies(BlockData data) {
+        this.spreadLies(data.pos(), data.state());
     }
 
     public void tweet() {

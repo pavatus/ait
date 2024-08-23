@@ -1,8 +1,7 @@
 package loqor.ait.core.util;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
@@ -45,17 +44,18 @@ import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.tick.QueryableTickScheduler;
 
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.data.BlockData;
 
 public class FakeStructureWorldAccess implements StructureWorldAccess {
 
     private final ServerWorld world;
-    private final Map<BlockPos, BlockState> positions = new HashMap<>();
+    private final List<BlockData> positions = new ArrayList<>();
 
     public FakeStructureWorldAccess(ServerWorld world) {
         this.world = world;
     }
 
-    public Map<BlockPos, BlockState> getPositions() {
+    public List<BlockData> getPositions() {
         return positions;
     }
 
@@ -143,12 +143,7 @@ public class FakeStructureWorldAccess implements StructureWorldAccess {
 
     @Override
     public BlockState getBlockState(BlockPos pos) {
-        BlockState result = this.positions.get(pos);
-
-        if (result != null)
-            return result;
-
-        result = world.getBlockState(pos);
+        BlockState result = world.getBlockState(pos);
 
         if (result.isOf(AITBlocks.EXTERIOR_BLOCK))
             result = Blocks.AIR.getDefaultState();
@@ -178,7 +173,7 @@ public class FakeStructureWorldAccess implements StructureWorldAccess {
 
     @Override
     public boolean setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth) {
-        this.positions.put(pos.toImmutable(), state);
+        this.positions.add(new BlockData(pos.toImmutable(), state));
         return true;
     }
 

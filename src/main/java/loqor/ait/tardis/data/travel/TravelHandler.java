@@ -21,7 +21,9 @@ import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.data.*;
+import loqor.ait.tardis.data.BiomeHandler;
+import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.util.NetworkUtil;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
@@ -228,6 +230,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.previousPosition.set(this.position);
         this.state.set(State.FLIGHT);
 
+        TardisEvents.ENTER_FLIGHT.invoker().onFlight(this.tardis);
         this.deleteExterior();
 
         if (tardis.stats().security().get())

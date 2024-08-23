@@ -51,6 +51,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema BOOKSHELF;
     public static ClientDoorSchema GEOMETRIC;
     public static ClientDoorSchema STALLION;
+    public static ClientDoorSchema ADAPTIVE;
 
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
@@ -68,5 +69,6 @@ public class ClientDoorRegistry {
         BOOKSHELF = register(new ClientBookshelfDoorVariant());
         GEOMETRIC = register(new ClientGeometricDoorVariant());
         STALLION = register(new ClientStallionDoorVariant());
+        ADAPTIVE = register(new ClientAdaptiveDoorVariant());
     }
 }

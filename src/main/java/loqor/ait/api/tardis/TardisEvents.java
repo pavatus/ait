@@ -30,6 +30,12 @@ public final class TardisEvents {
         return Interaction.SUCCESS;
     });
 
+    public static final Event<EnterFlight> ENTER_FLIGHT = EventFactory.createArrayBacked(EnterFlight.class, callbacks -> tardis -> {
+        for (EnterFlight callback : callbacks) {
+            callback.onFlight(tardis);
+        }
+    });
+
     public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> tardis -> {
         for (Mat callback : callbacks) {
             Interaction value = callback.onMat(tardis);
@@ -188,6 +194,19 @@ public final class TardisEvents {
          * @return event's result
          */
         Interaction onDemat(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface EnterFlight {
+        /**
+         * Called when a TARDIS successfully ( passed all checks ) starts to take off,
+         * before anything else is ran.
+         *
+         * @param tardis
+         *            the tardis taking off
+         * @return event's result
+         */
+        void onFlight(Tardis tardis);
     }
 
     /**

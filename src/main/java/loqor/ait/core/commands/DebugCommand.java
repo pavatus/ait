@@ -15,7 +15,6 @@ import net.minecraft.text.Text;
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.landing.LandingPadRegion;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
@@ -58,8 +57,7 @@ public class DebugCommand {
 
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-        context.getSource().getServer().executeSync(() -> TardisExterior.recalculate(tardis, source.getPlayer()));
-
+        context.getSource().getServer().executeSync(() -> tardis.getExterior().recalcDisguise(tardis));
         return Command.SINGLE_SUCCESS;
     }
 }
