@@ -1,6 +1,7 @@
 package loqor.ait.tardis.wrapper.server.manager;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -36,7 +37,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
                 return;
             }
 
-            this.sendTardisAll(player, tardisSet);
+            this.sendTardisAll(player, tardisSet, true);
         }));
 
         if (DEMENTIA) {
@@ -101,10 +102,13 @@ public class ServerTardisManager extends CompliantServerTardisManager {
         ServerPlayNetworking.send(player, SEND_BULK, data);
     }
 
-    protected void sendTardisAll(ServerPlayerEntity player, Set<ServerTardis> set) {
+    protected void sendTardisAll(ServerPlayerEntity player, Set<ServerTardis> set, boolean fireEvent) {
         for (ServerTardis tardis : set) {
             if (!canSend(tardis))
                 continue;
+
+            if (fireEvent)
+                TardisEvents.SEND_TARDIS.invoker().send(tardis, player);
 
             this.sendTardis(player, tardis);
         }

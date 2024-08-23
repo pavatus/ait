@@ -145,6 +145,13 @@ public final class TardisEvents {
                 }
             });
 
+    public static final Event<SendTardis> SEND_TARDIS = EventFactory.createArrayBacked(SendTardis.class,
+            callbacks -> (tardis, player) -> {
+                for (SendTardis callback : callbacks) {
+                    callback.send(tardis, player);
+                }
+            });
+
     public static final Event<UnloadTardis> UNLOAD_TARDIS = EventFactory.createArrayBacked(UnloadTardis.class,
             callbacks -> (tardis, chunk) -> {
                 for (UnloadTardis callback : callbacks) {
@@ -309,6 +316,11 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface SyncTardis {
         void sync(ServerPlayerEntity player, WorldChunk chunk);
+    }
+
+    @FunctionalInterface
+    public interface SendTardis {
+        void send(Tardis tardis, ServerPlayerEntity player);
     }
 
     @FunctionalInterface

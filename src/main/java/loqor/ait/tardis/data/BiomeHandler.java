@@ -1,18 +1,27 @@
 package loqor.ait.tardis.data;
 
+import java.util.Map;
+import java.util.Set;
+
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import org.apache.commons.lang3.StringUtils;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.gen.feature.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
+import loqor.ait.core.util.FakeStructureWorldAccess;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
@@ -49,6 +58,53 @@ public class BiomeHandler extends KeyedTardisComponent {
         BiomeType biome = getTagForBiome(entry);
 
         this.type.set(biome);
+    }
+
+    public static Map<BlockPos, BlockState> testBiome(ServerWorld world, BlockPos pos) {
+        long start = System.currentTimeMillis();
+
+        Biome biome = world.getBiome(pos).value();
+        ConfiguredFeature<?, ?> tree = findTrees(biome);
+        FakeStructureWorldAccess access = new FakeStructureWorldAccess(world);
+
+        boolean success = tree.generate(access, world.getChunkManager().getChunkGenerator(), world.random, pos);
+
+        System.out.println("Done in " + (System.currentTimeMillis() - start) + "ms; found structure: " + tree + "; success? " + success);
+        return access.getPositions();
+    }
+
+    private static final Set<Class<? extends Feature<?>>> TREES = Set.of(
+            TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class
+    );
+
+    private static ConfiguredFeature<?, ?> findTrees(Biome biome) {
+        for (RegistryEntryList<PlacedFeature> feature : biome.getGenerationSettings().getFeatures()) {
+            for (RegistryEntry<PlacedFeature> entry : feature) {
+                ConfiguredFeature<?, ?> configured = entry.value().feature().value();
+
+                if (isTree(configured)) {
+                    return configured;
+                } else {
+                    for (ConfiguredFeature<?, ?> configuredFeature : configured.config().getDecoratedFeatures().toList()) {
+                        if (isTree(configuredFeature))
+                            return configuredFeature;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean isTree(ConfiguredFeature<?, ?> configured) {
+        Feature<?> feature = configured.feature();
+
+        for (Class<?> clazz : TREES) {
+            if (clazz.isInstance(feature))
+                return true;
+        }
+
+        return false;
     }
 
     public BiomeType getBiomeKey() {
