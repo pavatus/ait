@@ -10,6 +10,7 @@ import loqor.ait.tardis.base.Initializable;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.control.sequences.SequenceHandler;
 import loqor.ait.tardis.data.*;
+import loqor.ait.tardis.data.landing.LandingPadHandler;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -212,5 +213,9 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
     public CloakHandler cloak() {
         return this.handler(TardisComponent.Id.CLOAK);
+    }
+
+    public LandingPadHandler landingPad() {
+        return this.handler(TardisComponent.Id.LANDING_PAD);
     }
 }

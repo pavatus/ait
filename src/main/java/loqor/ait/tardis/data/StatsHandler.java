@@ -55,6 +55,7 @@ public class StatsHandler extends KeyedTardisComponent {
     private final BoolValue hailMary = HAIL_MARY.create(this);
     private final BoolValue receiveCalls = RECEIVE_CALLS.create(this); // todo - loqor add this to security screen
 
+
     public StatsHandler() {
         super(Id.STATS);
     }

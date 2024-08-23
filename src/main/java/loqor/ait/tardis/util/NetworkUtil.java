@@ -4,24 +4,45 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableItem;
 
 public class NetworkUtil {
 
+    public static <T> void send(ServerPlayerEntity player, PacketByteBuf buf, Identifier id, Codec<T> codec, T t) {
+        DataResult<NbtElement> result = codec.encodeStart(NbtOps.INSTANCE, t);
+        NbtElement nbt = result.resultOrPartial(AITMod.LOGGER::error).orElseThrow();
+
+        buf.writeNbt((NbtCompound) nbt);
+        send(player, id, buf);
+    }
+
     public static void send(ServerPlayerEntity player, Identifier id, PacketByteBuf buf) {
         if (player == null)
             return;
+
         ServerPlayNetworking.send(player, id, buf);
+    }
+
+    public static <T> T receive(Codec<T> codec, PacketByteBuf buf) {
+        return codec.decode(NbtOps.INSTANCE, buf.readNbt())
+                .resultOrPartial(AITMod.LOGGER::error)
+                .orElseThrow().getFirst();
     }
 
     /**

@@ -42,11 +42,15 @@ import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.RiftChunkManager;
+import loqor.ait.tardis.data.landing.LandingPadManager;
+import loqor.ait.tardis.data.landing.LandingPadRegion;
+import loqor.ait.tardis.data.landing.LandingPadSpot;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.TardisUtil;
+
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
     public static final double MAX_FUEL = 1000;
@@ -436,32 +440,82 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             }
         },
         SCANNING(Formatting.AQUA) {
+            private static final Text RIFT_FOUND = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA)
+                    .formatted(Formatting.BOLD);
+            private static final Text RIFT_NOT_FOUND = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA)
+                    .formatted(Formatting.BOLD);
+
             @Override
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                LandingPadRegion region = LandingPadManager.getInstance(world).getRegionAt(pos);
+                if (region != null) {
+                    if (world.getBlockState(pos).isAir()) return;
+
+                    boolean wasSpotCreated = modifyRegion(tardis, world, pos.up(), player, stack, region);
+
+                    float pitch = wasSpotCreated ? 1.1f : 0.75f;
+                    world.playSound(null, pos, AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, pitch);
+
+                    return;
+                }
+
                 if ((world.getRegistryKey() == World.OVERWORLD)) {
-                    Text found = Text.translatable("message.ait.sonic.riftfound").formatted(Formatting.AQUA)
-                            .formatted(Formatting.BOLD);
-                    Text notfound = Text.translatable("message.ait.sonic.riftnotfound").formatted(Formatting.AQUA)
-                            .formatted(Formatting.BOLD);
-                    player.sendMessage((RiftChunkManager.isRiftChunk(pos) ? found : notfound), true);
-                    if (RiftChunkManager.isRiftChunk(pos))
-                        player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
-                                .formatted(Formatting.GOLD));
+                    sendRiftInfo(tardis, world, pos, player, stack);
                     return;
                 }
 
                 if (world == TardisUtil.getTardisDimension()) {
-                    if (tardis == null)
-                        return;
-
-                    if (tardis.crash().isUnstable() || tardis.crash().isToxic()) {
-                        player.sendMessage(Text.literal("Repair time: " + tardis.crash().getRepairTicks())
-                                .formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
-                    } else {
-                        player.sendMessage(
-                                Text.literal("AU: " + tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
-                    }
+                    sendTardisInfo(tardis, world, pos, player, stack);
                 }
+            }
+
+            private static boolean modifyRegion(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack, LandingPadRegion region) {
+                LandingPadSpot spot = region.getSpotAt(pos).orElse(null);
+
+                if (spot == null) {
+                    addSpot(region, pos);
+
+                    syncRegion(world, pos);
+                    return true;
+                }
+
+                removeSpot(region, pos);
+                syncRegion(world, pos);
+
+                return false;
+            }
+            private static void addSpot(LandingPadRegion region, BlockPos pos) {
+                region.createSpotAt(pos);
+            }
+            private static void removeSpot(LandingPadRegion region, BlockPos pos) {
+                region.removeSpotAt(pos);
+            }
+            private static void syncRegion(ServerWorld world, BlockPos pos) {
+                LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, world, new ChunkPos(pos));
+            }
+
+            private static void sendRiftInfo(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                boolean isRift = RiftChunkManager.isRiftChunk(pos);
+
+                player.sendMessage(isRift ? RIFT_FOUND : RIFT_NOT_FOUND, true);
+
+                if (!isRift) return;
+
+                player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
+                        .formatted(Formatting.GOLD));
+            }
+            private static void sendTardisInfo(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null)
+                    return;
+
+                if (tardis.crash().isUnstable() || tardis.crash().isToxic()) {
+                    player.sendMessage(Text.literal("Repair time: " + tardis.crash().getRepairTicks())
+                            .formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
+                    return;
+                }
+
+                player.sendMessage(
+                        Text.literal("AU: " + tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
             }
         },
         TARDIS(Formatting.BLUE) {

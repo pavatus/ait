@@ -76,6 +76,8 @@ public class TardisUtil {
     public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
     public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
     public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
+    public static final Identifier REGION_LANDING_CODE = new Identifier(AITMod.MOD_ID, "region_landing_code");
+    public static final Identifier LANDING_CODE = new Identifier(AITMod.MOD_ID, "landing_code");
 
     @Deprecated
     private static final Random RANDOM = AITMod.RANDOM;
@@ -575,6 +577,11 @@ public class TardisUtil {
             return; // Interior is probably empty
 
         player.sendMessage(text, true);
+    }
+    public static void sendMessageToInterior(Tardis tardis, Text text) {
+        for (ServerPlayerEntity player : getPlayersInsideInterior(tardis)) {
+            player.sendMessage(text, true);
+        }
     }
 
     public static ServerWorld findWorld(RegistryKey<World> key) {

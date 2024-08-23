@@ -105,7 +105,8 @@ public class SonicRendering {
         worldProfiler.pop();
     }
     private void renderSelectedBlock(WorldRenderContext context) {
-        profiler.push("target");
+        Profiler worldProfiler = context.profiler();
+        worldProfiler.push("target");
 
         HitResult crosshair = client.crosshairTarget;
         if (crosshair == null) {
@@ -123,7 +124,10 @@ public class SonicRendering {
 
         renderFloorTexture(targetPos, SELECTED, null, false);
 
-        profiler.pop();
+
+
+        worldProfiler.pop();
+        worldProfiler.pop();
     }
     public void renderGui(DrawContext context, float delta) {
         if (client.world == null) return;

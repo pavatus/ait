@@ -65,6 +65,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
     public static final IntProperty ROTATION = Properties.ROTATION;
     public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
+    // TODO add redstone power property that mimics the light level; 0-9, not 0-15
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_9);
     public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);

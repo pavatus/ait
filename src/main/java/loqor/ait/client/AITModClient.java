@@ -24,6 +24,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 
+import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.client.renderers.TardisStar;
@@ -89,6 +90,8 @@ public class AITModClient implements ClientModInitializer {
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
         HudRenderCallback.EVENT.register(new AITHudOverlay());
+
+        ClientLandingManager.init();
 
         /*
          * ClientVortexDataHandler.init(); WorldRenderEvents.END.register(context -> {

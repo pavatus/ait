@@ -1,6 +1,5 @@
 package loqor.ait.core.util;
 
-
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import net.minecraft.server.MinecraftServer;

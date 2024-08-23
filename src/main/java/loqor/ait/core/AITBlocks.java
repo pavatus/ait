@@ -36,7 +36,6 @@ public class AITBlocks implements BlockRegistryContainer {
             FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F)
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3));
 
-    @NoBlockItem
     public static final Block LANDING_PAD = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 

@@ -104,6 +104,10 @@ public class TardisRef implements Disposable {
         this.cached = null;
     }
 
+    public boolean contains(Tardis tardis) {
+        return this.get() == tardis;
+    }
+
     public interface LoadFunc extends Function<UUID, Tardis> {
     }
 }

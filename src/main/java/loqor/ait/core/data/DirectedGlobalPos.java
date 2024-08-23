@@ -193,7 +193,7 @@ public class DirectedGlobalPos {
                 this.world = server.getWorld(this.getDimension());
         }
 
-        public ServerWorld getWorld() {
+        public ServerWorld getWorld() { // TODO - this is often null
             return world;
         }
 
