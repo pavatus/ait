@@ -83,7 +83,7 @@ public class TardisExterior extends TardisComponent {
         DirectedGlobalPos.Cached cached = tardis.travel().position();
 
         if (exterior.disguiseCache == null || exterior.disguiseCache.isEmpty())
-            exterior.disguiseCache = BiomeHandler.testBiome(world, cached.getPos());
+            exterior.disguiseCache = tardis.<BiomeHandler>handler(Id.BIOME).testBiome(world, cached.getPos());
 
         if (exterior.disguiseCache == null || exterior.disguiseCache.isEmpty())
             return;
@@ -146,9 +146,9 @@ public class TardisExterior extends TardisComponent {
     public Optional<ExteriorBlockEntity> findExteriorBlock() {
         BlockEntity found = tardis.travel().position().getWorld().getBlockEntity(tardis.travel().position().getPos());
 
-        if (!(found instanceof ExteriorBlockEntity))
+        if (!(found instanceof ExteriorBlockEntity exterior))
             return Optional.empty();
 
-        return Optional.of((ExteriorBlockEntity) found);
+        return Optional.of(exterior);
     }
 }

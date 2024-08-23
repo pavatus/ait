@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.server.world.ServerWorld;
@@ -26,6 +27,7 @@ import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.util.Ordered;
+import loqor.ait.tardis.util.TardisUtil;
 
 /**
  * @author Loqor TODO reminder to work on this more, making it so you have to
@@ -60,11 +62,11 @@ public class BiomeHandler extends KeyedTardisComponent {
         this.type.set(biome);
     }
 
-    public static Map<BlockPos, BlockState> testBiome(ServerWorld world, BlockPos pos) {
+    public Map<BlockPos, BlockState> testBiome(ServerWorld world, BlockPos pos) {
         long start = System.currentTimeMillis();
 
-        Biome biome = world.getBiome(pos).value();
-        ConfiguredFeature<?, ?> tree = findTrees(biome);
+        RegistryEntry<Biome> biome = world.getBiome(pos);
+        ConfiguredFeature<?, ?> tree = this.findTrees(world, biome);
         FakeStructureWorldAccess access = new FakeStructureWorldAccess(world);
 
         boolean success = tree.generate(access, world.getChunkManager().getChunkGenerator(), world.random, pos);
@@ -77,16 +79,21 @@ public class BiomeHandler extends KeyedTardisComponent {
             TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class
     );
 
-    private static ConfiguredFeature<?, ?> findTrees(Biome biome) {
-        for (RegistryEntryList<PlacedFeature> feature : biome.getGenerationSettings().getFeatures()) {
+    private static final Identifier CACTUS = new Identifier(AITMod.MOD_ID, "cactus");
+
+    private ConfiguredFeature<?, ?> findTrees(ServerWorld world, RegistryEntry<Biome> biome) {
+        if (this.type.get() == BiomeType.SANDY && TardisUtil.random().nextInt(5) != 0)
+            return world.getRegistryManager().get(RegistryKeys.CONFIGURED_FEATURE).get(CACTUS);
+
+        for (RegistryEntryList<PlacedFeature> feature : biome.value().getGenerationSettings().getFeatures()) {
             for (RegistryEntry<PlacedFeature> entry : feature) {
                 ConfiguredFeature<?, ?> configured = entry.value().feature().value();
 
-                if (isTree(configured)) {
+                if (isTree(configured, biome)) {
                     return configured;
                 } else {
                     for (ConfiguredFeature<?, ?> configuredFeature : configured.config().getDecoratedFeatures().toList()) {
-                        if (isTree(configuredFeature))
+                        if (isTree(configuredFeature, biome))
                             return configuredFeature;
                     }
                 }
@@ -96,7 +103,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         return null;
     }
 
-    private static boolean isTree(ConfiguredFeature<?, ?> configured) {
+    private static boolean isTree(ConfiguredFeature<?, ?> configured, RegistryEntry<Biome> biome) {
         Feature<?> feature = configured.feature();
 
         for (Class<?> clazz : TREES) {
