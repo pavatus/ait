@@ -16,6 +16,7 @@ public class AITConfigModel {
     public boolean MINIFY_JSON = false;
 
     public boolean GHOST_MONUMENT = true;
+    public boolean REQUIRE_DRAGON_DEATH = true;
 
     @Expanded @RestartRequired
     public List<String> WORLDS_BLACKLIST = List.of(

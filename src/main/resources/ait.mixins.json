@@ -22,7 +22,8 @@
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
     "server.structure.StructureTemplateAccessor",
-    "server.structure.StructureTemplateMixin"
+    "server.structure.StructureTemplateMixin",
+    "server.EnderDragonFightAccessor"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerMixin",

@@ -9,6 +9,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
@@ -18,6 +19,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.control.impl.SecurityControl;
@@ -32,7 +34,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
     static {
-        TardisEvents.MAT.register(tardis -> {
+        TardisEvents.MAT.register(tardis -> { // ghost monument
             if (!AITMod.AIT_CONFIG.GHOST_MONUMENT())
                 return TardisEvents.Interaction.PASS;
 
@@ -40,6 +42,15 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
             return (!TardisUtil.isInteriorNotEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
                     ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+        });
+
+        TardisEvents.MAT.register(tardis -> { // end check
+            if (!AITMod.AIT_CONFIG.REQUIRE_DRAGON_DEATH()) return TardisEvents.Interaction.PASS;
+
+            boolean isEnd = tardis.travel().destination().getDimension().equals(World.END);
+            if (!isEnd) return TardisEvents.Interaction.PASS;
+
+            return (WorldUtil.isEndDragonDead()) ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
         TardisEvents.LANDED.register(tardis -> {

@@ -29,6 +29,7 @@ import net.minecraft.world.WorldEvents;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.mixin.server.EnderDragonFightAccessor;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 @SuppressWarnings("deprecation")
@@ -294,5 +295,11 @@ public class WorldUtil {
             world.setBlockState(blockPos, withFluid, 35);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
         }
+    }
+
+    public static boolean isEndDragonDead() {
+        ServerWorld end = ServerLifecycleHooks.get().getWorld(World.END);
+        if (end == null) return true;
+        return ((EnderDragonFightAccessor) end.getEnderDragonFight()).getDragonKilled();
     }
 }
