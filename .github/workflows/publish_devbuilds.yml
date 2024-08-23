@@ -9,7 +9,7 @@ name: Automated donator builds
 
 on:
   push:
-    branches: [ "main", "feat/land_pad" ]
+    branches: [ "main" ]
 
 jobs:
   build:
