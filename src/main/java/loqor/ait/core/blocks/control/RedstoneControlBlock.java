@@ -57,7 +57,7 @@ public class RedstoneControlBlock extends ControlBlock {
         if (entity.tardis().isEmpty())
             return;
 
-        PlayerEntity user = TardisUtil.getPlayerInsideInterior(entity.tardis().get());
+        PlayerEntity user = TardisUtil.getHighestLoyaltyPlayerInsideInterior(entity.tardis().get());
 
         if (user == null)
             return;

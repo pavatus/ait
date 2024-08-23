@@ -408,17 +408,40 @@ public class TardisUtil {
         }
     }
 
-    @Nullable public static PlayerEntity getPlayerInsideInterior(Tardis tardis) {
-        return getPlayerInsideInterior(tardis.getDesktop().getCorners());
+    @Nullable public static PlayerEntity getAnyPlayerInsideInterior(Tardis tardis) {
+        return getAnyPlayerInsideInterior(tardis.getDesktop().getCorners());
     }
 
-    @Nullable public static PlayerEntity getPlayerInsideInterior(Corners corners) {
+    @Nullable public static PlayerEntity getAnyPlayerInsideInterior(Corners corners) {
         for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
             if (TardisUtil.inBox(corners, player.getBlockPos()))
                 return player;
         }
 
         return null;
+    }
+    @Nullable public static PlayerEntity getHighestLoyaltyPlayerInsideInterior(Tardis tardis) {
+        Corners corners = tardis.getDesktop().getCorners();
+        PlayerEntity highest = null;
+        int highestLoyalty = 0;
+
+        for (PlayerEntity player : TardisUtil.getTardisDimension().getPlayers()) {
+            if (!TardisUtil.inBox(corners, player.getBlockPos())) continue;
+
+            if (highest == null) {
+                highest = player;
+                highestLoyalty = tardis.loyalty().get(highest).level();
+                continue;
+            }
+
+            int found = tardis.loyalty().get(player).level();
+            if (found > highestLoyalty) {
+                highest = player;
+                highestLoyalty = found;
+            }
+        }
+
+        return highest;
     }
 
     public static List<ServerPlayerEntity> getPlayersInsideInterior(Tardis tardis) {
@@ -562,7 +585,7 @@ public class TardisUtil {
     }
 
     public static boolean isInteriorNotEmpty(Tardis tardis) {
-        return TardisUtil.getPlayerInsideInterior(tardis) != null;
+        return TardisUtil.getAnyPlayerInsideInterior(tardis) != null;
     }
 
     public static void sendMessageToPilot(Tardis tardis, Text text) {
@@ -571,7 +594,7 @@ public class TardisUtil {
         // the
         // player with the
         // highest loyalty in future
-        ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getPlayerInsideInterior(tardis);
+        ServerPlayerEntity player = (ServerPlayerEntity) TardisUtil.getHighestLoyaltyPlayerInsideInterior(tardis);
 
         if (player == null)
             return; // Interior is probably empty
