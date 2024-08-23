@@ -106,7 +106,7 @@ public class AITBlocks implements BlockRegistryContainer {
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
 
-    public static final Block PEANUT = new PeanutBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN));
+    // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
     /*
      * public static final Block CONSOLE_ROOM_PORT_BLOCK = new
      * ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
