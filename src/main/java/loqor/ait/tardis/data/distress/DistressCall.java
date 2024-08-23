@@ -25,7 +25,7 @@ import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.item.DistressCallItem;
+import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
 import loqor.ait.tardis.Tardis;
@@ -71,7 +71,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.WAYPOINT_ACTIVATE);
         this.sender().playSoundAt(AITSounds.WAYPOINT_ACTIVATE);
 
-        if (held != null && (held.getItem() instanceof DistressCallItem)) {
+        if (held != null && (held.getItem() instanceof HypercubeItem)) {
             held.setCount(0);
         }
     }
@@ -116,7 +116,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         // send off call
         this.send();
 
-        if (held != null && (held.getItem() instanceof DistressCallItem)) {
+        if (held != null && (held.getItem() instanceof HypercubeItem)) {
             held.setCount(0);
         }
 
@@ -142,7 +142,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
         Vec3d pos = TardisUtil.offsetInteriorDoorPosition(target);
 
-        ItemStack created = DistressCallItem.create(copyForSend(this, world.getServer().getTicks()));
+        ItemStack created = HypercubeItem.create(copyForSend(this, world.getServer().getTicks()));
         ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), created);
 
         world.spawnEntity(entity);

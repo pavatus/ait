@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 import loqor.ait.core.AITItems;
 import loqor.ait.tardis.data.distress.DistressCall;
 
-public class DistressCallItem extends Item { // todo needs rename
-    public DistressCallItem(Settings settings) {
+public class HypercubeItem extends Item { // todo needs rename
+    public HypercubeItem(Settings settings) {
         super(settings.maxDamageIfAbsent(100));
     }
 

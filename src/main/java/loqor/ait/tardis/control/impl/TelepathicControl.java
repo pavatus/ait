@@ -21,7 +21,7 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.item.DistressCallItem;
+import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.tardis.Tardis;
@@ -87,14 +87,14 @@ public class TelepathicControl extends Control {
             return true;
         }
 
-        if (type instanceof DistressCallItem) {
+        if (type instanceof HypercubeItem) {
             // todo - cleanup
-            DistressCall call = DistressCallItem.getCall(held, world.getServer().getTicks());
+            DistressCall call = HypercubeItem.getCall(held, world.getServer().getTicks());
 
             if (call == null) {
                 // create new call
                 call = DistressCall.create(tardis, held.hasCustomName() ? held.getName().getString() : "SOS", true);
-                DistressCallItem.setCall(held, call);
+                HypercubeItem.setCall(held, call);
             }
 
             if (call.canSend(tardis.getUuid())) {
