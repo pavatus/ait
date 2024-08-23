@@ -649,4 +649,8 @@ public class TardisUtil {
     public static void sendMessageToLinked(Tardis tardis, Text message) {
         NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
     }
+
+    public static boolean isTardisDimension(World world) {
+        return world.getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey();
+    }
 }
