@@ -83,7 +83,9 @@ public class LandingPadHandler extends KeyedTardisComponent {
         ServerWorld world = destination.getWorld();
 
         LandingPadSpot spot = findFreeSpot(world, destination.getPos());
-        if (spot == null) return null;
+
+        if (spot == null)
+            return null;
 
         BoolValue hSearch = this.tardis().travel().horizontalSearch();
         boolean old = hSearch.get();
@@ -97,7 +99,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
         this.claim(spot);
 
         TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), this.current);
-        TardisUtil.sendMessageToInterior(this.tardis(), Text.translatable("message.ait.landingpad.adjust"));
+        TardisUtil.sendMessageToInterior(this.tardis().asServer(), Text.translatable("message.ait.landingpad.adjust"));
 
         return destination;
     }

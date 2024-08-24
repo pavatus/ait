@@ -134,8 +134,10 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
         }
 
-        if (tardis.travel().isLanded())
-            DoorHandler.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+        if (!tardis.travel().isLanded())
+            return;
+
+        DoorHandler.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
     }
 
     public void onEntityCollision(Entity entity) {

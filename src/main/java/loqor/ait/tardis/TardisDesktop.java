@@ -19,6 +19,7 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.data.Corners;
 import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.desktop.structures.DesktopGenerator;
@@ -52,7 +53,7 @@ public class TardisDesktop extends TardisComponent {
             return;
 
         for (BlockPos pos : this.consolePos) {
-            if (TardisUtil.getTardisDimension().getBlockEntity(pos) instanceof ConsoleBlockEntity console)
+            if (WorldUtil.getTardisDimension().getBlockEntity(pos) instanceof ConsoleBlockEntity console)
                 console.markNeedsControl();
         }
     }
@@ -82,18 +83,18 @@ public class TardisDesktop extends TardisComponent {
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
         DesktopGenerator generator = new DesktopGenerator(this.schema);
-        generator.place(this.tardis, (ServerWorld) TardisUtil.getTardisDimension(), this.corners);
+        generator.place(this.tardis, WorldUtil.getTardisDimension(), this.corners);
 
         AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
     }
 
     public void clearOldInterior(TardisDesktopSchema schema) {
         this.schema = schema;
-        DesktopGenerator.clearArea((ServerWorld) TardisUtil.getTardisDimension(), this.corners);
+        DesktopGenerator.clearArea(WorldUtil.getTardisDimension(), this.corners);
     }
 
     public void cacheConsole(BlockPos consolePos) {
-        World dim = TardisUtil.getTardisDimension();
+        World dim = WorldUtil.getTardisDimension();
         dim.playSound(null, consolePos, SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
         ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(consolePos,
@@ -111,7 +112,7 @@ public class TardisDesktop extends TardisComponent {
 
     public static void playSoundAtConsole(BlockPos console, SoundEvent sound, SoundCategory category, float volume,
             float pitch) {
-        ServerWorld dim = (ServerWorld) TardisUtil.getTardisDimension();
+        ServerWorld dim = WorldUtil.getTardisDimension();
         dim.playSound(null, console, sound, category, volume, pitch);
     }
 

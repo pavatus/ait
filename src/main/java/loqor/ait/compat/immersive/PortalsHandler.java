@@ -17,12 +17,12 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class PortalsHandler extends KeyedTardisComponent {
 
@@ -110,7 +110,7 @@ public class PortalsHandler extends KeyedTardisComponent {
         portal.setOriginPos(
                 new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
 
-        portal.setDestinationDimension(TardisUtil.getTardisDimension().getRegistryKey());
+        portal.setDestinationDimension(WorldUtil.getTardisDimension().getRegistryKey());
         portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
 
         portal.renderingMergable = true;
@@ -128,7 +128,7 @@ public class PortalsHandler extends KeyedTardisComponent {
         Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
         Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
-        TardisPortal portal = new TardisPortal(TardisUtil.getTardisDimension(), tardis);
+        TardisPortal portal = new TardisPortal(WorldUtil.getTardisDimension(), tardis);
 
         portal.setOrientationAndSize(new Vec3d(1, 0, 0), // axisW
                 new Vec3d(0, 1, 0), // axisH

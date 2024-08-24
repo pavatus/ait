@@ -94,7 +94,7 @@ public abstract class ExteriorAnimation {
         };
 
         this.tellClientsToSetup(state);
-        MatSound sound = tardis.getExterior().getVariant().getSound(state);
+        MatSound sound = state.effect();
 
         if (sound == null)
             return false;
@@ -114,10 +114,13 @@ public abstract class ExteriorAnimation {
         if (exterior.getWorld() == null)
             return; // happens when tardis spawns above world limit, so thats nice
 
-        if (exterior.getWorld().isClient() || exterior.tardis().isEmpty())
+        if (exterior.getWorld().isClient())
             return;
 
-        for (ServerPlayerEntity player : NetworkUtil.getNearbyTardisPlayers(exterior.tardis().get())) {
+        if (!exterior.isLinked())
+            return;
+
+        for (ServerPlayerEntity player : NetworkUtil.getLinkedPlayers(exterior.tardis().get().asServer())) {
             tellClientToSetup(state, player);
         }
     }

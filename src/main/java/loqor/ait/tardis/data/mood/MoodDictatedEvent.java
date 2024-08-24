@@ -7,7 +7,7 @@ import java.util.Set;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public interface MoodDictatedEvent {
 
@@ -15,7 +15,7 @@ public interface MoodDictatedEvent {
         return new Identifier(AITMod.MOD_ID, "mood_dictated_event");
     }
 
-    void execute(Tardis tardis);
+    void execute(ServerTardis tardis);
 
     int getCost();
 
@@ -55,7 +55,7 @@ public interface MoodDictatedEvent {
         }
 
         @Override
-        public void execute(Tardis tardis) {
+        public void execute(ServerTardis tardis) {
             this.execute.run(tardis);
         }
 
@@ -70,7 +70,7 @@ public interface MoodDictatedEvent {
         }
 
         public interface ExecuteMoodEvent {
-            void run(Tardis tardis);
+            void run(ServerTardis tardis);
         }
     }
 }

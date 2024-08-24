@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.Tardis;
 
 public class RedstoneControlBlock extends ControlBlock {
     private static final BooleanProperty POWERED = Properties.POWERED;
@@ -51,13 +51,11 @@ public class RedstoneControlBlock extends ControlBlock {
         if (world.isClient())
             return;
 
-        if (entity.tardis() == null)
+        if (!entity.isLinked())
             return;
 
-        if (entity.tardis().isEmpty())
-            return;
-
-        PlayerEntity user = TardisUtil.getHighestLoyaltyPlayerInsideInterior(entity.tardis().get());
+        Tardis tardis = entity.tardis().get();
+        PlayerEntity user = tardis.loyalty().getLoyalPlayerInside();
 
         if (user == null)
             return;

@@ -26,6 +26,7 @@ import net.minecraft.world.explosion.Explosion;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedBlockPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.control.impl.*;
 import loqor.ait.tardis.control.impl.pos.IncrementControl;
 import loqor.ait.tardis.control.impl.pos.XControl;
@@ -73,24 +74,24 @@ public class SequenceRegistry {
                     List<Explosion> explosions = new ArrayList<>();
 
                     missedTardis.getDesktop().getConsolePos().forEach(console -> {
-                        Explosion explosion = TardisUtil.getTardisDimension().createExplosion(null, null, null,
+                        Explosion explosion = WorldUtil.getTardisDimension().createExplosion(null, null, null,
                                 console.toCenterPos(), 3f * 2, false, World.ExplosionSourceType.BLOCK);
 
                         explosions.add(explosion);
                     });
 
-                    for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(missedTardis)) {
-                        float xVel = TardisUtil.random().nextFloat(-2f, 3f);
-                        float yVel = TardisUtil.random().nextFloat(-1f, 2f);
-                        float zVel = TardisUtil.random().nextFloat(-2f, 3f);
+                    for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(missedTardis.asServer())) {
+                        float xVel = AITMod.RANDOM.nextFloat(-2f, 3f);
+                        float yVel = AITMod.RANDOM.nextFloat(-1f, 2f);
+                        float zVel = AITMod.RANDOM.nextFloat(-2f, 3f);
 
                         player.setVelocity(xVel * 2, yVel * 2, zVel * 2);
 
                         if (!explosions.isEmpty()) {
                             player.damage(
-                                    TardisUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), 0);
+                                    WorldUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), 0);
                         } else {
-                            player.damage(TardisUtil.getTardisDimension().getDamageSources().generic(), 0);
+                            player.damage(WorldUtil.getTardisDimension().getDamageSources().generic(), 0);
                         }
                     }
                 }, 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
@@ -184,15 +185,15 @@ public class SequenceRegistry {
 
                     BlockPos doorPos = directedDoorPos.getPos();
 
-                    if (finishedTardis.door().isOpen() || TardisUtil.getTardisDimension().isClient())
+                    if (finishedTardis.door().isOpen() || WorldUtil.getTardisDimension().isClient())
                         return;
 
-                    ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, TardisUtil.getTardisDimension());
+                    ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, WorldUtil.getTardisDimension());
                     rewardForCloaking.setPosition(doorPos.toCenterPos());
 
                     rewardForCloaking.setStack(
                             random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
-                    TardisUtil.getTardisDimension().spawnEntity(rewardForCloaking);
+                            WorldUtil.getTardisDimension().spawnEntity(rewardForCloaking);
                 }), (missedTardis -> {
                     DirectedBlockPos directedDoorPos = missedTardis.getDesktop().doorPos();
 
@@ -202,23 +203,23 @@ public class SequenceRegistry {
                     BlockPos doorPos = directedDoorPos.getPos();
                     missedTardis.travel().increaseFlightTime(120);
 
-                    if (missedTardis.door().isOpen() || TardisUtil.getTardisDimension().isClient())
+                    if (missedTardis.door().isOpen() || WorldUtil.getTardisDimension().isClient())
                         return;
 
                     Vec3d centered = doorPos.toCenterPos();
 
-                    ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, TardisUtil.getTardisDimension());
+                    ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, WorldUtil.getTardisDimension());
                     zombieEntity.setPosition(centered);
 
                     DrownedEntity drownedEntity = new DrownedEntity(EntityType.DROWNED,
-                            TardisUtil.getTardisDimension());
+                            WorldUtil.getTardisDimension());
                     drownedEntity.setPosition(centered);
 
                     PhantomEntity phantomEntity = new PhantomEntity(EntityType.PHANTOM,
-                            TardisUtil.getTardisDimension());
+                            WorldUtil.getTardisDimension());
                     phantomEntity.setPosition(centered);
 
-                    TardisUtil.getTardisDimension().spawnEntity(
+                            WorldUtil.getTardisDimension().spawnEntity(
                             random.nextBoolean() ? random.nextBoolean() ? drownedEntity : zombieEntity : phantomEntity);
                 }), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new CloakControl(), new RandomiserControl()));

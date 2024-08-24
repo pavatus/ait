@@ -50,6 +50,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     public static ExteriorCategorySchema BOOKSHELF;
     public static ExteriorCategorySchema GEOMETRIC;
     public static ExteriorCategorySchema STALLION;
+    public static ExteriorCategorySchema ADAPTIVE;
 
     @Override
     protected void defaults() {
@@ -66,5 +67,6 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         BOOKSHELF = register(new BookshelfCategory());
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
+        ADAPTIVE = register(new AdaptiveCategory());
     }
 }

@@ -21,6 +21,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
@@ -38,7 +39,6 @@ import loqor.ait.tardis.data.FuelHandler;
 import loqor.ait.tardis.data.RiftChunkManager;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
@@ -246,7 +246,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         }
 
         ServerTardis tardis = (ServerTardis) this.tardis().get();
-        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
+        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position());
 
         if (tardis.travel().isCrashing()) {
             serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
@@ -274,8 +274,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
                     new DustColorTransitionParticleEffect(new Vector3f(0.75f, 0.85f, 0.75f),
                             new Vector3f(0.15f, 0.25f, 0.15f), 1),
                     pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 1,
-                    TardisUtil.random().nextBoolean() ? 0.5f : -0.5f, 3f,
-                    TardisUtil.random().nextBoolean() ? 0.5f : -0.5f, 0.025f);
+                    AITMod.RANDOM.nextBoolean() ? 0.5f : -0.5f, 3f,
+                    AITMod.RANDOM.nextBoolean() ? 0.5f : -0.5f, 0.025f);
         }
 
         if (tardis.isRefueling() && tardis.getFuel() < FuelHandler.TARDIS_MAX_FUEL) {

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,6 +15,7 @@ import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.landing.LandingPadSpot;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public final class TardisEvents {
 
@@ -28,6 +30,12 @@ public final class TardisEvents {
         }
 
         return Interaction.SUCCESS;
+    });
+
+    public static final Event<EnterFlight> ENTER_FLIGHT = EventFactory.createArrayBacked(EnterFlight.class, callbacks -> tardis -> {
+        for (EnterFlight callback : callbacks) {
+            callback.onFlight(tardis);
+        }
     });
 
     public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> tardis -> {
@@ -117,6 +125,13 @@ public final class TardisEvents {
                 }
             });
 
+    public static final Event<UseDoor> USE_DOOR = EventFactory.createArrayBacked(UseDoor.class,
+            callbacks -> (tardis, player) -> {
+                for (UseDoor callback : callbacks) {
+                    callback.onUseDoor(tardis, player);
+                }
+            });
+
     public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class,
             callbacks -> (tardis, entity) -> {
                 for (EnterTardis callback : callbacks) {
@@ -142,6 +157,13 @@ public final class TardisEvents {
             callbacks -> (tardis, chunk) -> {
                 for (SyncTardis callback : callbacks) {
                     callback.sync(tardis, chunk);
+                }
+            });
+
+    public static final Event<SendTardis> SEND_TARDIS = EventFactory.createArrayBacked(SendTardis.class,
+            callbacks -> (tardis, player) -> {
+                for (SendTardis callback : callbacks) {
+                    callback.send(tardis, player);
                 }
             });
 
@@ -183,6 +205,19 @@ public final class TardisEvents {
         Interaction onDemat(Tardis tardis);
     }
 
+    @FunctionalInterface
+    public interface EnterFlight {
+        /**
+         * Called when a TARDIS successfully ( passed all checks ) starts to take off,
+         * before anything else is ran.
+         *
+         * @param tardis
+         *            the tardis taking off
+         * @return event's result
+         */
+        void onFlight(Tardis tardis);
+    }
+
     /**
      * Called when a TARDIS successfully ( passed all checks ) starts to land,
      * before anything else is ran
@@ -197,7 +232,7 @@ public final class TardisEvents {
          *            the tardis landing
          * @return event's result
          */
-        Interaction onMat(Tardis tardis);
+        Interaction onMat(ServerTardis tardis);
     }
 
     /**
@@ -282,6 +317,11 @@ public final class TardisEvents {
         void onClose(Tardis tardis);
     }
 
+    @FunctionalInterface
+    public interface UseDoor {
+        void onUseDoor(Tardis tardis, @Nullable ServerPlayerEntity player);
+    }
+
     /**
      * Called when the interior door position is changed, meaning it was probably
      * moved
@@ -309,6 +349,11 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface SyncTardis {
         void sync(ServerPlayerEntity player, WorldChunk chunk);
+    }
+
+    @FunctionalInterface
+    public interface SendTardis {
+        void send(Tardis tardis, ServerPlayerEntity player);
     }
 
     @FunctionalInterface

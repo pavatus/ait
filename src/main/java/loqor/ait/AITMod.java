@@ -154,6 +154,7 @@ public class AITMod implements ModInitializer {
             VersionCommand.register(dispatcher);
             SafePosCommand.register(dispatcher);
             ListCommand.register(dispatcher);
+            DebugCommand.register(dispatcher);
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,

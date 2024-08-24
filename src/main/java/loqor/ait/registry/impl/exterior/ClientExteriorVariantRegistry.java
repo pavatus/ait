@@ -17,6 +17,7 @@ import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
+import loqor.ait.tardis.exterior.variant.adaptive.client.ClientAdaptiveVariant;
 import loqor.ait.tardis.exterior.variant.bookshelf.client.ClientBookshelfDefaultVariant;
 import loqor.ait.tardis.exterior.variant.booth.client.*;
 import loqor.ait.tardis.exterior.variant.box.client.*;
@@ -182,6 +183,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_FIRE;
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
+    public static ClientExteriorVariantSchema ADAPTIVE;
 
     @Override
     public void onClientInit() {
@@ -257,6 +259,8 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_FIRE = register(new ClientStallionFireVariant());
         STALLION_SOUL = register(new ClientStallionSoulVariant());
         STALLION_STEEL = register(new ClientStallionSteelVariant());
+
+        ADAPTIVE = register(new ClientAdaptiveVariant());
     }
 
     @Override

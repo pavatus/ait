@@ -17,6 +17,7 @@ import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
+import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;
 import loqor.ait.tardis.exterior.variant.bookshelf.BookshelfDefaultVariant;
 import loqor.ait.tardis.exterior.variant.booth.*;
 import loqor.ait.tardis.exterior.variant.box.*;
@@ -176,6 +177,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_FIRE;
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
+    public static ExteriorVariantSchema ADAPTIVE;
 
     @Override
     protected void defaults() {
@@ -251,5 +253,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         STALLION_FIRE = register(new StallionFireVariant());
         STALLION_SOUL = register(new StallionSoulVariant());
         STALLION_STEEL = register(new StallionSteelVariant());
+
+        // Adaptive
+        ADAPTIVE = register(new AdaptiveVariant());
     }
 }

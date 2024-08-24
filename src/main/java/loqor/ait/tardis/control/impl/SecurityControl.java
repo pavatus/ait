@@ -50,7 +50,7 @@ public class SecurityControl extends Control {
         List<ServerPlayerEntity> forRemoval = new ArrayList<>();
 
         if (leaveBehind) {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 if (!hasMatchingKey(player, tardis)) {
                     forRemoval.add(player);
                 }

@@ -27,7 +27,6 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisUtil;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -40,8 +39,9 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
             TravelHandler travel = tardis.travel();
 
-            return (!TardisUtil.isInteriorNotEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
-                    ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+            return TardisEvents.Interaction.PASS;
+            //return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
+            //        ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
         TardisEvents.MAT.register(tardis -> { // end check
@@ -54,8 +54,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.LANDED.register(tardis -> {
-            if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
-                tardis.travel().tryFly();
+            //if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
+            //    tardis.travel().tryFly();
         });
     }
 
@@ -211,7 +211,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         }
 
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL || tardis.door().isOpen()
-                || tardis.siege().isActive() || tardis.isSiegeBeingHeld() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis) || tardis.flight().falling().get()) {
+                || tardis.siege().isActive() || tardis.isRefueling() || tardis.flight().falling().get() ||TravelUtil.dematCooldown(this.tardis)) {
             this.failDemat();
             return;
         }
@@ -259,6 +259,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.previousPosition.set(this.position);
         this.state.set(State.FLIGHT);
 
+        TardisEvents.ENTER_FLIGHT.invoker().onFlight(this.tardis);
         this.deleteExterior();
 
         if (tardis.stats().security().get())
@@ -275,11 +276,11 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
                 SoundCategory.AMBIENT);
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
-        NetworkUtil.sendToInterior(this.tardis(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+        NetworkUtil.sendToInterior(this.tardis.asServer(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }
 
     public void rematerialize() {
-        if (TardisEvents.MAT.invoker().onMat(tardis) == TardisEvents.Interaction.FAIL
+        if (TardisEvents.MAT.invoker().onMat(tardis.asServer()) == TardisEvents.Interaction.FAIL
                 || TravelUtil.matCooldownn(tardis)) {
             this.failRemat();
             return;

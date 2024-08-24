@@ -11,10 +11,11 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.ChunkRandom;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.events.ServerChunkEvents;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RiftChunkManager {
+public record RiftChunkManager(ServerWorld world) {
 
     private static final AttachmentType<Double> ARTRON = AttachmentRegistry.createPersistent(
             new Identifier(AITMod.MOD_ID, "artron"), Codec.DOUBLE
@@ -25,42 +26,102 @@ public class RiftChunkManager {
     );
 
     public static void init() {
+        ServerChunkEvents.TICK.register((world, chunk) -> {
+            if (world.getServer().getTicks() % 20 != 0)
+                return;
 
+            RiftChunkManager manager = RiftChunkManager.getInstance(world);
+            ChunkPos pos = chunk.getPos();
+
+            if (!manager.isRiftChunk(pos))
+                return;
+
+            if (manager.getMaxArtron(pos) < manager.getArtron(pos))
+                manager.addFuel(chunk.getPos(), 1);
+        });
     }
-
-    private final ServerWorld world;
 
     public static RiftChunkManager getInstance(ServerWorld world) {
         return new RiftChunkManager(world);
     }
 
-    private RiftChunkManager(ServerWorld world) {
-        this.world = world;
-    }
-
     public double getArtron(ChunkPos pos) {
-        return this.world.getChunk(pos.x, pos.z).getAttached(ARTRON);
+        if (!this.isRiftChunk(pos))
+            return 0;
+
+        return this.world.getChunk(pos.x, pos.z).getAttachedOrCreate(ARTRON,
+                () -> (double) world.getRandom().nextBetween(100, 800));
     }
 
-    public void removeFuel(ChunkPos pos, double amount) {
-        this.world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> d - amount);
+    public double getMaxArtron(ChunkPos pos) {
+        if (!this.isRiftChunk(pos))
+            return 0;
+
+        return this.world.getChunk(pos.x, pos.z).getAttachedOrCreate(MAX_ARTRON,
+                () -> (double) world.getRandom().nextBetween(300, 1000));
+    }
+
+    public double removeFuel(ChunkPos pos, double amount) {
+        if (!this.isRiftChunk(pos))
+            return 0;
+
+        double artron = this.getArtron(pos);
+        artron -= artron < amount ? 0 : amount;
+
+        this.world.getChunk(pos.x, pos.z).setAttached(ARTRON, artron);
+        return artron - amount;
+    }
+
+    public void addFuel(ChunkPos pos, double amount) {
+        if (!this.isRiftChunk(pos))
+            return;
+
+        RiftChunkManager.addFuel(this.world, pos, amount);
     }
 
     public void setCurrentFuel(ChunkPos pos, double amount) {
         this.world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> amount);
     }
 
-    public double getMaxArtron(ChunkPos pos) {
-        return this.world.getChunk(pos.x, pos.z).getAttached(MAX_ARTRON);
+    public boolean isRiftChunk(ChunkPos chunkPos) {
+        return RiftChunkManager.isRiftChunk(this.world, chunkPos);
     }
 
-    public static boolean isRiftChunk(ChunkPos chunkPos) {
-        return ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
-                        TardisUtil.getOverworld().getSeed(), 987234910L
-                ).nextInt(8) == 0;
+    public boolean isRiftChunk(BlockPos pos) {
+        return RiftChunkManager.isRiftChunk(world, pos);
     }
 
-    public static boolean isRiftChunk(BlockPos pos) {
-        return isRiftChunk(new ChunkPos(pos));
+    public static boolean isRiftChunk(DirectedGlobalPos.Cached cached) {
+        return isRiftChunk(cached.getWorld(), cached.getPos());
+    }
+
+    public static boolean isRiftChunk(ServerWorld world, BlockPos pos) {
+        return isRiftChunk(world, new ChunkPos(pos));
+    }
+
+    public static boolean isRiftChunk(ServerWorld world, ChunkPos pos) {
+        return ChunkRandom.getSlimeRandom(pos.x, pos.z,
+                world.getSeed(), 987234910L
+        ).nextInt(8) == 0;
+    }
+
+    private static void addFuel(ServerWorld world, ChunkPos pos, double amount) {
+        world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> d + amount);
+    }
+
+    public static double getFuel(ServerWorld world, ChunkPos pos) {
+        if (!isRiftChunk(world, pos))
+            return 0;
+
+        return world.getChunk(pos.x, pos.z).getAttachedOrCreate(ARTRON,
+                () -> (double) world.getRandom().nextBetween(100, 800));
+    }
+
+    public static double getMaxFuel(ServerWorld world, ChunkPos pos) {
+        if (!isRiftChunk(world, pos))
+            return 0;
+
+        return world.getChunk(pos.x, pos.z).getAttachedOrCreate(MAX_ARTRON,
+                () -> (double) world.getRandom().nextBetween(300, 1000));
     }
 }

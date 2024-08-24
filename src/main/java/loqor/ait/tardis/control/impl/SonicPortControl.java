@@ -15,7 +15,6 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.control.Control;
 import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class SonicPortControl extends Control {
 
@@ -42,12 +41,10 @@ public class SonicPortControl extends Control {
 
             Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
-            if (TardisUtil.getTardisDimension() instanceof ServerWorld) {
-                world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F,
-                        5.0F);
-                world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F,
-                        1F, 0.4F, 5.0F);
-            }
+            world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F,
+                    5.0F);
+            world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F,
+                    1F, 0.4F, 5.0F);
         }
 
         ItemStack stack = player.getMainHandStack();

@@ -39,8 +39,8 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ShapeUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.TardisUtil;
 
 @SuppressWarnings("deprecation")
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, Waterloggable {
@@ -64,7 +64,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     }
 
     private static void setDoorLight(Tardis tardis, int level) {
-        World world = TardisUtil.getTardisDimension();
+        World world = WorldUtil.getTardisDimension();
         BlockPos pos = tardis.getDesktop().doorPos().getPos();
 
         BlockState state = world.getBlockState(pos);

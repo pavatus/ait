@@ -19,14 +19,12 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.BasicSchema;
 import loqor.ait.core.data.schema.door.DoorSchema;
-import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model,
@@ -82,14 +80,6 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     @Override
     public UnlockType unlockType() {
         return UnlockType.EXTERIOR;
-    }
-
-    /**
-     * @see TravelHandlerBase.State#effect()
-     */
-    @Deprecated
-    public MatSound getSound(TravelHandlerBase.State state) {
-        return state.effect();
     }
 
     public Identifier categoryId() {
