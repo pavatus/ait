@@ -159,7 +159,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
     private void syncComponent(ClientTardis tardis, PacketByteBuf buf) {
         String rawId = buf.readString();
-        //System.out.println("Raw id recieved: " + rawId);
+
         TardisComponent.IdLike id = TardisComponentRegistry.getInstance().get(rawId);
         TardisComponent component = this.networkGson.fromJson(buf.readString(), id.clazz());
 

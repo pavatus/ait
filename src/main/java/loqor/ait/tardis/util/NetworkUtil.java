@@ -1,8 +1,6 @@
 package loqor.ait.tardis.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
@@ -97,6 +95,22 @@ public class NetworkUtil {
         }
 
         return false;
+    }
+
+    public static Set<ServerTardis> findLinkedItems(ServerPlayerEntity player) {
+        Set<ServerTardis> ids = new HashSet<>();
+
+        for (ItemStack stack : player.getInventory().main) {
+            if (stack.isEmpty())
+                continue;
+
+            if (!(stack.getItem() instanceof LinkableItem))
+                continue;
+
+            ids.add(LinkableItem.getTardis(player.getWorld(), stack).asServer());
+        }
+
+        return ids;
     }
 
     public static Collection<ServerPlayerEntity> getTracking(DirectedGlobalPos.Cached globalPos) {

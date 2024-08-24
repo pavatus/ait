@@ -109,7 +109,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
             this.register(buf.decodeAsJson(this.codec));
         }
 
-        AITMod.LOGGER.info("Read {} " + this.name + " from server", size);
+        AITMod.LOGGER.info("Read {} {} from server", size, this.name);
     }
 
     protected abstract void defaults();

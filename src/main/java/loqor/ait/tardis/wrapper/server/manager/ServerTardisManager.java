@@ -6,6 +6,7 @@ import java.util.Set;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.network.PacketByteBuf;
@@ -46,6 +47,9 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
             this.sendTardisAll(player, tardisSet);
         }));
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server)
+                -> this.sendTardisAll(handler.getPlayer(), NetworkUtil.findLinkedItems(handler.getPlayer())));
 
         if (DEMENTIA) {
             TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
