@@ -25,10 +25,28 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.TardisUtil;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
+
+    static {
+        TardisEvents.MAT.register(tardis -> {
+            if (!AITMod.AIT_CONFIG.GHOST_MONUMENT())
+                return TardisEvents.Interaction.PASS;
+
+            TravelHandler travel = tardis.travel();
+
+            return (!TardisUtil.isInteriorNotEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
+                    ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+        });
+
+        TardisEvents.LANDED.register(tardis -> {
+            if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
+                tardis.travel().tryFly();
+        });
+    }
 
     public TravelHandler() {
         super(Id.TRAVEL);

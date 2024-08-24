@@ -184,9 +184,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
             this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
             this.resetFlight();
 
-            if (this.autopilot())
-                this.tardis().travel().rematerialize();
-
+            this.tardis().travel().rematerialize();
             return;
         }
 
