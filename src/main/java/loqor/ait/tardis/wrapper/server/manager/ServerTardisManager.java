@@ -1,18 +1,5 @@
 package loqor.ait.tardis.wrapper.server.manager;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.ChunkPos;
-
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
@@ -23,6 +10,17 @@ import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.DeprecatedServerTardisManager;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.ChunkPos;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ServerTardisManager extends DeprecatedServerTardisManager {
 
@@ -36,19 +34,16 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
     private ServerTardisManager() {
         TardisEvents.SYNC_TARDIS.register(WorldWithTardis.forSync((player, tardisSet) -> {
+            if (this.fileManager.isLocked())
+                return;
+
             if (AITMod.AIT_CONFIG.SEND_BULK() && tardisSet.size() >= 8) {
                 this.sendTardisBulk(player, tardisSet);
                 return;
             }
 
             this.sendTardisAll(player, tardisSet);
-            System.out.println("sent tardis data");
         }));
-
-        /*ServerChunkEvents.CHUNK_LOAD.register(WorldWithTardis.forLoad((world, chunk, tardisSet) -> {
-            this.sendTardisAll(tardisSet);
-            System.out.println("sent tardis data 2");
-        }));*/
 
         if (DEMENTIA) {
             TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
@@ -62,6 +57,9 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         }
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
+            if (this.fileManager.isLocked())
+                return;
+
             for (ServerTardis tardis : this.delta) {
                 if (isInvalid(tardis))
                     continue;

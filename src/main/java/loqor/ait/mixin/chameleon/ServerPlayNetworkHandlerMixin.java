@@ -1,13 +1,7 @@
 package loqor.ait.mixin.chameleon;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
+import loqor.ait.api.Twitter;
+import loqor.ait.core.events.FakeBlockEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
@@ -18,8 +12,13 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-
-import loqor.ait.api.Twitter;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
@@ -39,8 +38,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
         Direction direction = blockHitResult.getSide();
         BlockState state = serverWorld.getBlockState(blockPos);
 
-        if (serverWorld instanceof Twitter twitter && twitter.ait$isFake(blockPos))
+        if (serverWorld instanceof Twitter twitter && twitter.ait$isFake(blockPos)) {
+            FakeBlockEvents.CHECK.invoker().check(player, state, blockPos);
             return;
+        }
 
         this.ait$sendPacket(new BlockUpdateS2CPacket(blockPos, state));
         this.ait$sendPacket(new BlockUpdateS2CPacket(serverWorld, blockPos.offset(direction)));

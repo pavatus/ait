@@ -1,29 +1,17 @@
 package loqor.ait.tardis;
 
-import java.util.List;
-import java.util.Optional;
-
 import io.wispforest.owo.ops.WorldOps;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.BlockData;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.events.FakeBlockEvents;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -33,6 +21,18 @@ import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;
 import loqor.ait.tardis.util.Gaslighter3000;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
+import java.util.Optional;
 
 public class TardisExterior extends TardisComponent {
 
@@ -113,6 +113,13 @@ public class TardisExterior extends TardisComponent {
             player.networkHandler.sendPacket(new BlockUpdateS2CPacket(cached.getWorld(), cached.getPos()));
             player.networkHandler.sendPacket(new BlockUpdateS2CPacket(cached.getWorld(), cached.getPos().up()));
             player.networkHandler.sendPacket(BlockEntityUpdateS2CPacket.create(blockEntity.get()));
+        });
+
+        FakeBlockEvents.CHECK.register((player, state, pos) -> {
+            shitParticles(player.getServerWorld(), pos);
+
+            if (state.isOf(AITBlocks.EXTERIOR_BLOCK))
+                player.networkHandler.sendPacket(new BlockUpdateS2CPacket(player.getServerWorld(), pos));
         });
     }
 

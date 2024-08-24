@@ -15,6 +15,7 @@
     "lookup.SimpleEntityLookupAccessor",
     "lookup.WorldInvoker",
     "networking.ServerChunkManagerAccessor",
+    "networking.ServerPlayerEntityMixin",
     "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
     "server.BedInTardisMixin",
