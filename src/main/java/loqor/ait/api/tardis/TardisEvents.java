@@ -15,6 +15,7 @@ import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.landing.LandingPadSpot;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public final class TardisEvents {
 
@@ -231,7 +232,7 @@ public final class TardisEvents {
          *            the tardis landing
          * @return event's result
          */
-        Interaction onMat(Tardis tardis);
+        Interaction onMat(ServerTardis tardis);
     }
 
     /**

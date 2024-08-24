@@ -38,7 +38,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
             TravelHandler travel = tardis.travel();
 
-            return (!TardisUtil.isInteriorNotEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
+            return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
                     ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
@@ -269,7 +269,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     }
 
     public void rematerialize() {
-        if (TardisEvents.MAT.invoker().onMat(tardis) == TardisEvents.Interaction.FAIL
+        if (TardisEvents.MAT.invoker().onMat(tardis.asServer()) == TardisEvents.Interaction.FAIL
                 || TravelUtil.matCooldownn(tardis)) {
             this.failRemat();
             return;

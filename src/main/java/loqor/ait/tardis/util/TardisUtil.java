@@ -83,7 +83,7 @@ public class TardisUtil {
 
                 BlockPos exteriorPos = tardis.travel().position().getPos();
 
-                BlockPos pos = player.getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()
+                BlockPos pos = player.getWorld().getRegistryKey() == WorldUtil.getTardisDimension().getRegistryKey()
                         ? tardis.getDesktop().doorPos().getPos()
                         : exteriorPos;
 

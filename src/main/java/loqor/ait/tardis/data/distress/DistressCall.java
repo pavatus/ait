@@ -281,7 +281,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
 
         @Override
         public DirectedGlobalPos.Cached position() {
-            if (this.player().getWorld().getRegistryKey() == TardisUtil.getTardisDimension().getRegistryKey()) {
+            if (this.player().getWorld().getRegistryKey() == WorldUtil.getTardisDimension().getRegistryKey()) {
                 Tardis found = TardisUtil.findTardisByInterior(this.player().getBlockPos(), true);
                 if (found != null) return found.travel().position();
             }
