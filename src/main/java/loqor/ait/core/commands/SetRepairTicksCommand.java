@@ -1,18 +1,20 @@
 package loqor.ait.core.commands;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
 
 public class SetRepairTicksCommand {
 
