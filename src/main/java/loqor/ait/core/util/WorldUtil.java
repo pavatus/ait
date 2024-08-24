@@ -6,6 +6,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,6 +29,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
@@ -38,6 +40,10 @@ public class WorldUtil {
     private static List<ServerWorld> worlds;
     private static final int SAFE_RADIUS = 3;
 
+    private static ServerWorld OVERWORLD;
+    private static ServerWorld TARDIS_DIMENSION;
+    private static ServerWorld TIME_VORTEX;
+
     public static void init() {
         for (String id : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
             blacklisted.add(Identifier.tryParse(id));
@@ -45,6 +51,29 @@ public class WorldUtil {
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> worlds = getDimensions(server));
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> worlds = null);
+
+        ServerWorldEvents.UNLOAD.register((server, world) -> {
+            if (world.getRegistryKey() == World.OVERWORLD)
+                OVERWORLD = null;
+
+            if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+                TARDIS_DIMENSION = null;
+
+            if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
+                TIME_VORTEX = null;
+        });
+    }
+
+    public static ServerWorld getOverworld() {
+        return OVERWORLD;
+    }
+
+    public static ServerWorld getTardisDimension() {
+        return TARDIS_DIMENSION;
+    }
+
+    public static ServerWorld getTimeVortex() {
+        return TIME_VORTEX;
     }
 
     public static List<ServerWorld> getDimensions(MinecraftServer server) {

@@ -22,6 +22,8 @@ public class AITConfigModel {
 
     public int TRAVEL_PER_TICK = 2;
 
+    public boolean SEND_BULK = true;
+
     @SectionHeader("Client")
     public float INTERIOR_HUM_VOLUME = 0.2f;
 

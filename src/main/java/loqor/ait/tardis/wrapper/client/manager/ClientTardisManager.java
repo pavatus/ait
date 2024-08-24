@@ -1,6 +1,6 @@
 package loqor.ait.tardis.wrapper.client.manager;
 
-import java.util.*;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -21,10 +21,10 @@ import net.minecraft.util.math.GlobalPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
-import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
+import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
@@ -41,12 +41,14 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
     }
 
     private ClientTardisManager() {
-        ClientPlayNetworking.registerGlobalReceiver(SEND, (client, handler, buf, responseSender) -> this.sync(buf));
+        ClientPlayNetworking.registerGlobalReceiver(SEND, (client, handler, buf, responseSender) -> this.syncTardis(buf));
 
         ClientPlayNetworking.registerGlobalReceiver(SEND_BULK,
                 (client, handler, buf, responseSender) -> this.syncBulk(buf));
 
         ClientPlayNetworking.registerGlobalReceiver(REMOVE, (client, handler, buf, responseSender) -> this.remove(buf));
+
+        ClientPlayNetworking.registerGlobalReceiver(SEND_COMPONENT, (client, handler, buf, responseSender) -> this.syncDelta(buf));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.world == null)
@@ -108,6 +110,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
     /**
      * Asks the server for a tardis at an exterior position
      */
+    @Deprecated(forRemoval = true)
     public void askTardis(GlobalPos pos) {
         PacketByteBuf data = PacketByteBufs.create();
         data.writeGlobalPos(pos);
@@ -115,9 +118,11 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
         ClientPlayNetworking.send(ASK_POS, data);
     }
 
-    private void sync(UUID uuid, String json) {
+    private void syncTardis(UUID uuid, String json) {
         try {
-            ClientTardis tardis = this.readTardis(this.networkGson, json);
+            ClientTardis tardis = this.networkGson.fromJson(json, ClientTardis.class);
+            Tardis.init(tardis, TardisComponent.InitContext.deserialize());
+
             tardis.travel(); // get a random element. if its null it will complain
 
             synchronized (this) {
@@ -136,26 +141,42 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
         }
     }
 
-    private void sync(UUID uuid, PacketByteBuf buf) {
-        this.sync(uuid, buf.readString());
-    }
-
-    private void sync(PacketByteBuf buf) {
-        this.sync(buf.readUuid(), buf);
+    private void syncTardis(PacketByteBuf buf) {
+        this.syncTardis(buf.readUuid(), buf.readString());
     }
 
     private void syncBulk(PacketByteBuf buf) {
         int count = buf.readInt();
 
         for (int i = 0; i < count; i++) {
-            this.sync(buf);
+            this.syncTardis(buf);
+        }
+    }
+
+    private void syncComponent(ClientTardis tardis, PacketByteBuf buf) {
+        TardisComponent component = this.networkGson.fromJson(buf.readString(), TardisComponent.class);
+
+        component.getId().set(tardis, component);
+        TardisComponent.init(component, tardis, TardisComponent.InitContext.deserialize());
+    }
+
+    private void syncDelta(PacketByteBuf buf) {
+        UUID id = buf.readUuid();
+        int count = buf.readShort();
+
+        ClientTardis tardis = this.demandTardis(id);
+
+        if (tardis == null)
+            return; // wait 'till the server sends a full update
+
+        for (int i = 0; i < count; i++) {
+            this.syncComponent(tardis, buf);
         }
     }
 
     @Override
     protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
         return super.createGsonBuilder(strategy)
-                .registerTypeAdapter(SerialDimension.class, new SerialDimension.ClientSerializer())
                 .registerTypeAdapter(Tardis.class, ClientTardis.creator());
     }
 

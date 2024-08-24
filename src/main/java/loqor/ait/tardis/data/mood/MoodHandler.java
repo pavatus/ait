@@ -1,6 +1,8 @@
 package loqor.ait.tardis.data.mood;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -9,7 +11,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Exclude;
@@ -17,8 +18,11 @@ import loqor.ait.registry.impl.MoodEventPoolRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
+
+    @Exclude
     public TardisMood.Moods[] priorityMoods;
 
     @Exclude
@@ -91,7 +95,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
             return;
 
         this.moodEvent = moodEvent;
-        TardisUtil.getPlayersInsideInterior(this.tardis()).forEach(player -> player
+        TardisUtil.getPlayersInsideInterior(this.tardis().asServer()).forEach(player -> player
                 .sendMessage(Text.literal(this.moodEvent.id().getPath()).formatted(Formatting.BOLD), true));
 
         raceMoods();
@@ -113,23 +117,22 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         TardisMood.Moods key = moodWin.getKey();
 
         this.winningMood = new TardisMood(key, moodWin.getKey().alignment(), moodWin.getValue());
-
-        this.tardis().getDesktop().getConsolePos()
-                .forEach(console -> TardisUtil.getTardisDimension().playSound(null,
-                        BlockPos.ofFloored(console.toCenterPos()), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME,
-                        SoundCategory.MASTER, 1f, 1f));
+        this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
     }
 
     private void handleNegativeMood(TardisMood.Alignment alignment) {
+        if (!(this.tardis instanceof ServerTardis serverTardis))
+            return;
+
         System.out.print(alignment);
         if (alignment == TardisMood.Alignment.NEGATIVE) {
-            this.moodEvent.execute(this.tardis());
+            this.moodEvent.execute(serverTardis);
             this.updateEvent(null);
         } else if (alignment == TardisMood.Alignment.POSITIVE) {
             this.rollForMoodDictatedEvent();
         } else if (alignment == TardisMood.Alignment.NEUTRAL) {
             if (AITMod.RANDOM.nextInt(0, 10) < 5) {
-                this.moodEvent.execute(this.tardis());
+                this.moodEvent.execute(serverTardis);
                 this.updateEvent(null);
             } else {
                 this.rollForMoodDictatedEvent();
@@ -138,15 +141,18 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
     }
 
     private void handlePositiveMood(TardisMood.Moods mood, TardisMood.Alignment alignment) {
+        if (!(this.tardis instanceof ServerTardis serverTardis))
+            return;
+
         System.out.print(mood + " | " + alignment);
         if (alignment == TardisMood.Alignment.POSITIVE) {
-            this.moodEvent.execute(this.tardis());
+            this.moodEvent.execute(serverTardis);
             this.updateEvent(null);
         } else if (alignment == TardisMood.Alignment.NEGATIVE) {
             this.rollForMoodDictatedEvent();
         } else if (alignment == TardisMood.Alignment.NEUTRAL) {
             if (mood.swayWeight() == 0 || (mood.swayWeight() < 0 && AITMod.RANDOM.nextInt(0, 10) < 5)) {
-                this.moodEvent.execute(this.tardis());
+                this.moodEvent.execute(serverTardis);
                 this.updateEvent(null);
             } else {
                 this.rollForMoodDictatedEvent();
@@ -156,16 +162,19 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
     private void handleNeutralMood(MoodDictatedEvent mDE, TardisMood.Alignment alignment,
             TardisMood.Moods winningMood) {
+        if (!(this.tardis instanceof ServerTardis serverTardis))
+            return;
+
         System.out.println(mDE + " | " + alignment + " | " + winningMood);
         if (alignment == TardisMood.Alignment.NEUTRAL) {
             if (winningMood.weight() + winningMood.swayWeight() >= mDE.getCost()) {
-                this.moodEvent.execute(this.tardis());
+                this.moodEvent.execute(serverTardis);
                 this.updateEvent(null);
             } else {
                 this.rollForMoodDictatedEvent();
             }
         } else {
-            this.moodEvent.execute(this.tardis());
+            this.moodEvent.execute(serverTardis);
             this.updateEvent(null);
         }
     }

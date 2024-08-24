@@ -31,6 +31,7 @@ import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
+
     private static final BoolProperty IS_REGENERATING_PROPERTY = new BoolProperty("regenerating", false);
     private final BoolValue isRegenerating = IS_REGENERATING_PROPERTY.create(this);
     private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER,
@@ -87,7 +88,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             return;
 
         if (tardis.fuel().getCurrentFuel() < 5000) {
-            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 player.sendMessage(
                         Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED),
                         true);
@@ -127,18 +128,14 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             travel.forceDemat();
         }
 
-        TardisUtil.sendMessageToLinked(tardis, Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
+        TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
     }
 
     private void warnPlayers() {
-        for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis())) {
+        for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED),
                     true);
         }
-    }
-
-    private boolean isInteriorEmpty() {
-        return TardisUtil.getPlayersInsideInterior(this.tardis()).isEmpty();
     }
 
     private boolean clearedOldInterior = false;
@@ -179,25 +176,27 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             return;
         }
 
-        if (!isInteriorEmpty()) {
+        boolean isEmpty = TardisUtil.isInteriorEmpty(tardis.asServer());
+
+        if (!isEmpty) {
             warnPlayers();
             return;
         }
 
-        if (isInteriorEmpty() && !this.tardis().door().locked()) {
+        if (!this.tardis().door().locked())
             DoorHandler.lockTardis(true, this.tardis(), null, true);
-        }
-        if (isInteriorEmpty() && !clearedOldInterior) {
-            this.tardis().getDesktop().clearOldInterior(getQueuedInterior());
-            DeltaTimeManager.createDelay("interior_change-" + this.tardis().getUuid().toString(), 15000L);
-            clearedOldInterior = true;
+
+        if (clearedOldInterior) {
+            this.tardis().getDesktop().changeInterior(this.getQueuedInterior(), true);
+            onCompletion();
+
             return;
         }
 
-        if (isInteriorEmpty() && clearedOldInterior) {
-            this.tardis().getDesktop().changeInterior(this.getQueuedInterior(), true);
-            onCompletion();
-        }
+        this.tardis().getDesktop().clearOldInterior(this.getQueuedInterior());
+
+        DeltaTimeManager.createDelay("interior_change-" + this.tardis().getUuid().toString(), 15000L);
+        this.clearedOldInterior = true;
     }
 
     protected void generateInteriorWithItem() {

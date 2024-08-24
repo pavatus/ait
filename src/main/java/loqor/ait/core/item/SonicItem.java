@@ -38,6 +38,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.animation.ExteriorAnimation;
@@ -49,7 +50,6 @@ import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.TardisUtil;
 
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
@@ -459,14 +459,13 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if ((world.getRegistryKey() == World.OVERWORLD)) {
+                if (world == WorldUtil.getOverworld()) {
                     sendRiftInfo(tardis, world, pos, player, stack);
                     return;
                 }
 
-                if (world == TardisUtil.getTardisDimension()) {
+                if (world == WorldUtil.getTardisDimension())
                     sendTardisInfo(tardis, world, pos, player, stack);
-                }
             }
 
             private static boolean modifyRegion(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack, LandingPadRegion region) {
@@ -543,7 +542,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (world == TardisUtil.getTardisDimension()) {
+                if (world == WorldUtil.getTardisDimension()) {
                     if (player.getPitch() == -90 && !tardis.travel().handbrake()) {
                         player.sendMessage(Text.translatable("message.ait.remoteitem.success1"), true);
                         tardis.travel().dematerialize();

@@ -28,6 +28,7 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.DistressCallItem;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.v2.TardisRef;
 import loqor.ait.tardis.util.TardisUtil;
@@ -139,7 +140,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         if (!target.stats().receiveCalls().get()) return; // ignore if doesnt want to receive
 
         // spawn distress item at door
-        ServerWorld world = (ServerWorld) TardisUtil.getTardisDimension();
+        ServerWorld world = WorldUtil.getTardisDimension();
         Vec3d pos = TardisUtil.offsetInteriorDoorPosition(target);
 
         ItemStack created = DistressCallItem.create(copyForSend(this, world.getServer().getTicks()));

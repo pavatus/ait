@@ -19,7 +19,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.util.WorldUtil;
 
 public abstract class SimpleDatapackRegistry<T extends Identifiable> extends DatapackRegistry<T>
         implements
@@ -75,7 +75,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
 
     @Override
     public void syncToEveryone() {
-        if (!this.sync || TardisUtil.getOverworld() == null)
+        if (!this.sync || WorldUtil.getOverworld() == null)
             return;
 
         super.syncToEveryone();
@@ -139,9 +139,9 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
                 }
 
                 this.register(created);
-                AITMod.LOGGER.info("Loaded datapack " + this.name + " " + created.id().toString());
+                AITMod.LOGGER.info("Loaded datapack {} {}", this.name, created.id().toString());
             } catch (Exception e) {
-                AITMod.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
+                AITMod.LOGGER.error("Error occurred while loading resource json {}", id.toString(), e);
             }
         }
 

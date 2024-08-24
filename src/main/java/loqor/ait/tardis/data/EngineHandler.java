@@ -108,8 +108,7 @@ public class EngineHandler extends KeyedTardisComponent implements TardisTickabl
     }
 
     private void disableProtocols() {
-        if (TardisUtil.getTardisDimension() != null)
-            tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
 
         // disabling protocols
         tardis.travel().antigravs().set(false);
@@ -157,7 +156,7 @@ public class EngineHandler extends KeyedTardisComponent implements TardisTickabl
         // most of the logic is in the handlers, so we can just disable them if we're a
         // growth
         if (!this.hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis)) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
                 player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
             }
 

@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import loqor.ait.AITMod;
@@ -56,7 +57,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
         if (server.getTicks() % 20 != 0)
             return;
 
-        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior((ServerTardis) tardis)) {
             Loyalty loyalty = this.get(player);
 
             if (!loyalty.isOf(Loyalty.Type.NEUTRAL) || loyalty.isOf(Loyalty.Type.COMPANION))
@@ -104,5 +105,39 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
 
     public void subLevel(ServerPlayerEntity player, int level) {
         this.addLevel(player, -level);
+    }
+
+    public ServerPlayerEntity getLoyalPlayerInside() {
+        if (!(this.tardis instanceof ServerTardis serverTardis))
+            return null;
+
+        ServerPlayerEntity highest = null;
+        int highestLoyalty = 0;
+
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(serverTardis)) {
+            if (highest == null) {
+                highest = player;
+                highestLoyalty = this.get(highest).level();
+                continue;
+            }
+
+            int found = this.get(player).level();
+
+            if (found > highestLoyalty) {
+                highest = player;
+                highestLoyalty = found;
+            }
+        }
+
+        return highest;
+    }
+
+    public void sendMessageToPilot(Text text) {
+        ServerPlayerEntity player = this.getLoyalPlayerInside();
+
+        if (player == null)
+            return;
+
+        player.sendMessage(text, true);
     }
 }

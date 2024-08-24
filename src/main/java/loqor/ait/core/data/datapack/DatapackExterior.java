@@ -21,11 +21,9 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.core.data.schema.door.DoorSchema;
 import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
-import loqor.ait.core.sounds.MatSound;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.tardis.animation.ExteriorAnimation;
 import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class DatapackExterior extends ExteriorVariantSchema {
@@ -96,14 +94,6 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
     public BiomeOverrides overrides() {
         return overrides;
-    }
-
-    /**
-     * @see TravelHandlerBase.State#effect()
-     */
-    @Override
-    public MatSound getSound(TravelHandlerBase.State state) {
-        return this.getParent().getSound(state);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package loqor.ait.client.renderers.machines;
 
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -10,14 +12,14 @@ import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.EngineModel;
-import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.EngineBlockEntity;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityRenderer<T> {
+public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityRenderer<T>, ClientLightUtil.Renderable<EngineBlockEntity> {
 
     public static final Identifier ENGINE_TEXTURE = new Identifier(AITMod.MOD_ID,
             ("textures/blockentities/machines/engine.png"));
@@ -43,15 +45,16 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-        if (entity.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            if (entity.findTardis().get().engine().hasPower()) {
-                this.engineModel.render(matrices,
-                        vertexConsumers
-                                .getBuffer(AITRenderLayers.tardisRenderEmissionCull(EMISSIVE_ENGINE_TEXTURE, true)),
-                        0xF000F00, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-            }
+
+        if (entity.getWorld().getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD && entity.findTardis().get().engine().hasPower()) {
+            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
         }
 
         matrices.pop();
+    }
+
+    @Override
+    public void render(EngineBlockEntity entity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+        root.render(matrices, vertices, light, overlay);
     }
 }

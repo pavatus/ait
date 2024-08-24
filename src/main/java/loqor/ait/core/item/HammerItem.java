@@ -19,12 +19,12 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.PeanutBlock;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class HammerItem extends SwordItem {
 
@@ -124,7 +124,7 @@ public class HammerItem extends SwordItem {
             return false;
 
         for (int i = 0; i < annoyance; i++) {
-            if (TardisUtil.random().nextInt(0, 10) == 1)
+            if (AITMod.RANDOM.nextInt(0, 10) == 1)
                 return true;
         }
 

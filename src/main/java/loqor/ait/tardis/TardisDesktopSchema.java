@@ -5,16 +5,15 @@ import java.util.Optional;
 
 import com.google.gson.*;
 
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.core.data.BasicSchema;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
-import loqor.ait.tardis.util.TardisUtil;
 
 public abstract class TardisDesktopSchema extends BasicSchema implements Unlockable {
 
@@ -59,7 +58,7 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
     }
 
     public Optional<StructureTemplate> findTemplate() {
-        return ((ServerWorld) TardisUtil.getTardisDimension()).getStructureTemplateManager()
+        return WorldUtil.getTardisDimension().getStructureTemplateManager()
                 .getTemplate(this.getStructureLocation());
     }
 

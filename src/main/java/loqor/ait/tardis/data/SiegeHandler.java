@@ -113,7 +113,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
             sound = AITSounds.SIEGE_ENABLE;
             this.tardis.engine().disablePower();
 
-            TardisUtil.giveEffectToInteriorPlayers(this.tardis,
+            TardisUtil.giveEffectToInteriorPlayers(this.tardis.asServer(),
                     new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0, false, false));
         } else {
             sound = AITSounds.SIEGE_DISABLE;
@@ -161,7 +161,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
         // and
         // kill you and that
         if (this.getTimeInSiegeMode() > (60 * 20) && !this.isSiegeBeingHeld()) {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis)) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
                 if (!player.isAlive())
                     continue;
                 if (hasLeatherArmour(player)) {
@@ -174,7 +174,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
                 player.setFrozenTicks(player.getFrozenTicks() + 2);
             }
         } else {
-            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis)) {
+            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
                 if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
                     player.setFrozenTicks(0);
             }

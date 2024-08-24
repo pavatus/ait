@@ -14,13 +14,13 @@ public class TardisCriterions {
 
     public static void init() {
         TardisEvents.CRASH.register(tardis -> {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 TardisCriterions.CRASH.trigger(player);
             }
         });
 
         TardisEvents.DEMAT.register(tardis -> {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 TardisCriterions.TAKEOFF.trigger(player);
             }
 

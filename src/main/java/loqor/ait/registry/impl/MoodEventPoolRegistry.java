@@ -141,7 +141,7 @@ public class MoodEventPoolRegistry {
                     tardis.door().openDoors();
 
                     if (tardis.getDesktop().doorPos() != null)
-                        TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
+                        WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
                                 SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
 
                     if (tardis.travel().position() != null)
@@ -196,7 +196,7 @@ public class MoodEventPoolRegistry {
         LOCK_DOORS = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "lock_doors"), tardis -> {
             tardis.door().setLocked(true);
             if (tardis.getDesktop().doorPos() != null)
-                TardisUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
+                WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
                         SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.BLOCKS, 1f, 1f);
 
             DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();

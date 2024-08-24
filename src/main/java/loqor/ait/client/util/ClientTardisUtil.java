@@ -18,6 +18,7 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.data.SonicHandler;
 import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 
@@ -62,7 +63,7 @@ public class ClientTardisUtil {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
         buf.writeIdentifier(schema.id());
-        ClientPlayNetworking.send(TardisUtil.CHANGE_SONIC, buf);
+        ClientPlayNetworking.send(SonicHandler.CHANGE_SONIC, buf);
     }
 
     public static void snapToOpenDoors(Tardis tardis) {

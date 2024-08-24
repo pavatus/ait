@@ -8,11 +8,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.util.AsyncLocatorUtil;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class TravelUtil {
 
@@ -78,10 +78,11 @@ public class TravelUtil {
     }
 
     public static DirectedGlobalPos.Cached jukePos(DirectedGlobalPos.Cached pos, int min, int max, int multiplier) {
-        Random random = TardisUtil.random();
+        Random random = AITMod.RANDOM;
         multiplier *= random.nextInt(0, 2) == 0 ? 1 : -1;
 
-        return pos.offset(random.nextInt(min, max) * multiplier, 0, random.nextInt(min, max) * multiplier);
+        return pos.offset(random.nextInt(min, max) * multiplier, 0,
+                random.nextInt(min, max) * multiplier);
     }
 
     public static DirectedGlobalPos.Cached jukePos(DirectedGlobalPos.Cached pos, int min, int max) {

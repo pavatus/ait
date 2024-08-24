@@ -8,11 +8,11 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.item.WaypointItem;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class WaypointHandler extends KeyedTardisComponent {
     public static final BoolProperty HAS_CARTRIDGE = new BoolProperty("has_cartridge", false);
@@ -96,10 +96,10 @@ public class WaypointHandler extends KeyedTardisComponent {
         if (!this.hasCartridge())
             return;
 
-        ItemEntity entity = new ItemEntity(TardisUtil.getTardisDimension(), console.getX(), console.getY(),
+        ItemEntity entity = new ItemEntity(WorldUtil.getTardisDimension(), console.getX(), console.getY(),
                 console.getZ(), createWaypointItem(waypoint));
 
-        TardisUtil.getTardisDimension().spawnEntity(entity);
+        WorldUtil.getTardisDimension().spawnEntity(entity);
         this.clearCartridge();
     }
 
