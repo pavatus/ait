@@ -1,13 +1,13 @@
 package loqor.ait.core.util;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,13 +28,15 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
-import java.util.ArrayList;
-import java.util.List;
+import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 @SuppressWarnings("deprecation")
 public class WorldUtil {
 
-    private static List<Identifier> blacklisted = new ArrayList<>();
+    private static final List<Identifier> blacklisted = new ArrayList<>();
     private static List<ServerWorld> worlds;
     private static final int SAFE_RADIUS = 3;
 
@@ -70,6 +72,12 @@ public class WorldUtil {
 
             if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
                 TIME_VORTEX = world;
+        });
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            OVERWORLD = server.getOverworld();
+            TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
+            TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
         });
     }
 

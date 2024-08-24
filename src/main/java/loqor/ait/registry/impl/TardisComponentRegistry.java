@@ -55,7 +55,6 @@ public class TardisComponentRegistry implements Registry {
     }
 
     public TardisComponent.IdLike get(String name) {
-        // TODO fix this
         return switch (name) {
             case "EXTERIOR" -> TardisComponent.Id.EXTERIOR;
             case "DESKTOP" -> TardisComponent.Id.DESKTOP;
@@ -92,8 +91,7 @@ public class TardisComponentRegistry implements Registry {
         @Override
         public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            String id = json.getAsString();
-            return TardisComponentRegistry.getInstance().get(id);
+            return TardisComponentRegistry.getInstance().get(json.getAsString());
         }
 
         @Override

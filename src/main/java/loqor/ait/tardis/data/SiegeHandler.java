@@ -7,9 +7,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -34,20 +31,21 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class SiegeHandler extends KeyedTardisComponent implements TardisTickable {
 
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
+    public static final Identifier DEFAULT_TEXTURRE = new Identifier(AITMod.MOD_ID,
             "textures/blockentities/exteriors/siege_mode/siege_mode.png");
     public static final Identifier BRICK_TEXTURE = new Identifier(AITMod.MOD_ID,
             "textures/blockentities/exteriors/siege_mode/siege_mode_brick.png");
-    private static final Property<UUID> HELD_KEY = new Property<>(Property.Type.UUID, "siege_held_uuid",
-            new UUID(0, 0));
-    private final Value<UUID> heldKey = HELD_KEY.create(this);
-    private static final BoolProperty ACTIVE = new BoolProperty("siege_mode", false);
+
+    private static final Property<UUID> HELD_KEY = new Property<>(Property.Type.UUID, "siege_held_uuid", new UUID(0, 0));
+    private static final Property<Identifier> TEXTURE = new Property<>(Property.Type.IDENTIFIER, "texture", DEFAULT_TEXTURRE);
+
     private static final IntProperty SIEGE_TIME = new IntProperty("siege_time", 0);
+    private static final BoolProperty ACTIVE = new BoolProperty("siege_mode", false);
+
+    private final Value<UUID> heldKey = HELD_KEY.create(this);
     private final IntValue siegeTime = SIEGE_TIME.create(this);
     private final BoolValue active = ACTIVE.create(this);
-    private static final Property<Identifier> SIEGE_TEXTURE_PROPERTY = new Property<>(Property.Type.IDENTIFIER,
-            "siege_texture", TEXTURE);
-    private final Value<Identifier> texture = SIEGE_TEXTURE_PROPERTY.create(this);
+    private final Value<Identifier> texture = TEXTURE.create(this);
 
     public SiegeHandler() {
         super(Id.SIEGE);
@@ -74,7 +72,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
         active.of(this, ACTIVE);
         siegeTime.of(this, SIEGE_TIME);
         heldKey.of(this, HELD_KEY);
-        texture.of(this, SIEGE_TEXTURE_PROPERTY);
+        texture.of(this, TEXTURE);
     }
 
     public boolean isActive() {
@@ -86,7 +84,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
     }
 
     public UUID getHeldPlayerUUID() {
-        if (!isSiegeBeingHeld())
+        if (!this.isSiegeBeingHeld())
             return null;
 
         return heldKey.get();
@@ -96,7 +94,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
         if (playerId != null)
             this.tardis.alarm().enabled().set(true);
 
-        heldKey.set(playerId);
+        this.heldKey.set(playerId);
     }
 
     public int getTimeInSiegeMode() {
@@ -127,58 +125,50 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
             TardisDesktop.playSoundAtConsole(console, sound, SoundCategory.BLOCKS, 3f, 1f);
         }
 
-        this.tardis.removeFuel((0.01 * FuelHandler.TARDIS_MAX_FUEL) * (this.tardis.travel().getHammerUses() + 1));
-
+        this.tardis.removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL * this.tardis.travel().instability());
         this.active.set(siege);
-    }
-
-    private static boolean hasLeatherArmour(ServerPlayerEntity player) {
-        int count = 0;
-
-        for (ItemStack item : player.getArmorItems()) {
-            if (item.isOf(Items.LEATHER_HELMET) || item.isOf(Items.LEATHER_CHESTPLATE)
-                    || item.isOf(Items.LEATHER_LEGGINGS) || item.isOf(Items.LEATHER_BOOTS)) {
-                count++;
-            }
-        }
-
-        return count == 4;
     }
 
     @Override
     public void tick(MinecraftServer server) {
-        if (this.isSiegeBeingHeld() && tardis().getExterior().findExteriorBlock().isPresent())
-            this.setSiegeBeingHeld(null);
-
-        int siege_time = this.getTimeInSiegeMode() + 1;
-        this.siegeTime.set(this.active.get() ? siege_time : 0);
-
         if (!this.active.get())
             return;
 
-        // todo add more downsides the longer you are in siege mode as it is meant to
-        // fail systems
-        // and
-        // kill you and that
-        if (this.getTimeInSiegeMode() > (60 * 20) && !this.isSiegeBeingHeld()) {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
-                if (!player.isAlive())
-                    continue;
-                if (hasLeatherArmour(player)) {
-                    if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
-                        player.setFrozenTicks(0);
-                    continue;
-                }
-                if (player.getFrozenTicks() < player.getMinFreezeDamageTicks())
-                    player.setFrozenTicks(player.getMinFreezeDamageTicks());
-                player.setFrozenTicks(player.getFrozenTicks() + 2);
+        this.siegeTime.flatMap(i -> this.active.get() ? i + 1 : 0);
+
+        if (server.getTicks() % 20 != 0)
+            return;
+
+        boolean isHeld = this.isSiegeBeingHeld();
+
+        if (isHeld && this.tardis.getExterior().findExteriorBlock().isPresent())
+            this.setSiegeBeingHeld(null);
+
+        boolean freeze = !isHeld && this.getTimeInSiegeMode() > 60 * 20;
+
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
+            if (!player.isAlive())
+                continue;
+
+            if (!freeze || player.canFreeze()) {
+                this.unfreeze(player);
+                continue;
             }
-        } else {
-            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
-                if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
-                    player.setFrozenTicks(0);
-            }
+
+            this.freeze(player);
         }
+    }
+
+    private void freeze(ServerPlayerEntity player) {
+        if (player.getFrozenTicks() < player.getMinFreezeDamageTicks())
+            player.setFrozenTicks(player.getMinFreezeDamageTicks());
+
+        player.setFrozenTicks(player.getFrozenTicks() + 2);
+    }
+
+    private void unfreeze(ServerPlayerEntity player) {
+        if (player.getFrozenTicks() > player.getMinFreezeDamageTicks())
+            player.setFrozenTicks(0);
     }
 
     public Value<Identifier> texture() {

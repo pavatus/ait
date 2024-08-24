@@ -60,7 +60,7 @@ public class TelepathicControl extends Control {
         }
 
         if (type == Items.STONE) {
-            tardis.siege().texture().set(SiegeHandler.TEXTURE);
+            tardis.siege().texture().set(SiegeHandler.DEFAULT_TEXTURRE);
             return false;
         }
 

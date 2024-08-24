@@ -15,22 +15,21 @@ import loqor.ait.tardis.data.properties.doubl3.DoubleProperty;
 import loqor.ait.tardis.data.properties.doubl3.DoubleValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
 
     public static final double TARDIS_MAX_FUEL = 50000;
 
-    private static final DoubleProperty FUEL = new DoubleProperty("fuel_count", 1000d);
-    private static final BoolProperty IS_REFUELING = new BoolProperty("is_refueling", false);
+    private static final DoubleProperty FUEL = new DoubleProperty("fuel", 1000d);
+    private static final BoolProperty REFUELING = new BoolProperty("refueling", false);
 
-    private final DoubleValue fuelCount = FUEL.create(this);
-    private final BoolValue isRefueling = IS_REFUELING.create(this);
+    private final DoubleValue fuel = FUEL.create(this);
+    private final BoolValue refueling = REFUELING.create(this);
 
     @Override
     public void onLoaded() {
-        isRefueling.of(this, IS_REFUELING);
-        fuelCount.of(this, FUEL);
+        refueling.of(this, REFUELING);
+        fuel.of(this, FUEL);
     }
 
     public FuelHandler() {
@@ -38,19 +37,32 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
     }
 
     @Override
+    public void tick(MinecraftServer server) {
+        if (server.getTicks() % 20 != 0)
+            return;
+
+        TravelHandler travel = this.tardis().travel();
+        TravelHandlerBase.State state = travel.getState();
+
+        switch (state) {
+            case LANDED -> this.tickIdle();
+            case FLIGHT -> this.tickFlight();
+            case MAT, DEMAT -> this.tickMat();
+        }
+    }
+
+    @Override
     public double getCurrentFuel() {
-        return fuelCount.get();
+        return fuel.get();
     }
 
     @Override
     public void setCurrentFuel(double fuel) {
-        double prev = getCurrentFuel();
+        double prev = this.getCurrentFuel();
+        this.fuel.set(fuel);
 
-        fuelCount.set(fuel);
-
-        if (isOutOfFuel() && prev != 0) {
-            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(tardis());
-        }
+        if (this.isOutOfFuel() && prev != 0)
+            TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(this.tardis);
     }
 
     @Override
@@ -58,51 +70,41 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
         return TARDIS_MAX_FUEL;
     }
 
-    public BoolValue getRefueling() {
-        return isRefueling;
+    private void tickMat() {
+        this.removeFuel(20 * 5 * this.tardis.travel().instability());
     }
 
-    @Override
-    public void tick(MinecraftServer server) {
-        ServerTardis tardis = (ServerTardis) this.tardis();
-        TravelHandler travel = tardis.travel();
+    private void tickFlight() {
+        TravelHandler travel = this.tardis.travel();
+        this.removeFuel(20 * (4 ^ travel.speed()) * travel.instability());
 
-        DirectedGlobalPos.Cached pos = travel.position();
-        ServerWorld world = pos.getWorld();
+        if (!tardis.engine().hasPower())
+            travel.crash();
+    }
 
-        TravelHandlerBase.State state = travel.getState();
+    private void tickIdle() {
+        if (this.refueling().get() && this.getCurrentFuel() < FuelHandler.TARDIS_MAX_FUEL) {
+            TravelHandler travel = tardis.travel();
 
-        if (state == TravelHandlerBase.State.LANDED) {
-            if (this.getRefueling().get() && this.getCurrentFuel() < FuelHandler.TARDIS_MAX_FUEL) {
-                RiftChunkManager manager = RiftChunkManager.getInstance(world);
-                ChunkPos chunk = new ChunkPos(pos.getPos());
+            DirectedGlobalPos.Cached pos = travel.position();
+            ServerWorld world = pos.getWorld();
 
-                if (manager.getArtron(chunk) > 0) {
-                    manager.removeFuel(chunk, 2);
+            RiftChunkManager manager = RiftChunkManager.getInstance(world);
+            ChunkPos chunk = new ChunkPos(pos.getPos());
 
-                    addFuel(9);
-                } else {
-                    addFuel(7);
-                }
-            }
+            double toAdd = 7;
 
-            if (!getRefueling().get() && tardis.engine().hasPower()) {
-                removeFuel(0.25 * travel.instability());
-            }
+            if (manager.getArtron(chunk) > 0)
+                toAdd += (int) manager.removeFuel(chunk, 2);
+
+            this.addFuel(20 * toAdd);
         }
 
-        if (state == TravelHandlerBase.State.FLIGHT) {
-            removeFuel((4 ^ travel.speed()) * travel.instability());
+        if (!this.refueling().get() && tardis.engine().hasPower())
+            this.removeFuel(20 * 0.25 * tardis.travel().instability());
+    }
 
-            // TODO: make a crash method to avoid isGrowth checks outside of
-            // interiorchanginghandler
-            if (!tardis.engine().hasPower() && !tardis.isGrowth())
-                travel.crash(); // hehe force land if you don't have enough fuel
-        }
-
-        if ((state == TravelHandlerBase.State.DEMAT
-                || state == TravelHandlerBase.State.MAT) /* && !isDrainOnDelay(tardis) */) {
-            removeFuel(5 * travel.instability());
-        }
+    public BoolValue refueling() {
+        return refueling;
     }
 }

@@ -30,11 +30,9 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
  */
 public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> implements Disposable {
 
-    @Exclude
-    protected Tardis tardis;
+    @Exclude protected Tardis tardis;
 
-    @Exclude(strategy = Exclude.Strategy.FILE)
-    private final IdLike id;
+    @Exclude(strategy = Exclude.Strategy.NETWORK) private final IdLike id;
 
     /**
      * Do NOT under any circumstances run logic in this constructor. Default field

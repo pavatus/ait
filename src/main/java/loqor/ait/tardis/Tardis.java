@@ -140,11 +140,11 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     }
 
     public boolean isRefueling() {
-        return this.<FuelHandler>handler(TardisComponent.Id.FUEL).getRefueling().get();
+        return this.<FuelHandler>handler(TardisComponent.Id.FUEL).refueling().get();
     }
 
     public void setRefueling(boolean b) {
-        this.<FuelHandler>handler(TardisComponent.Id.FUEL).getRefueling().set(b);
+        this.<FuelHandler>handler(TardisComponent.Id.FUEL).refueling().set(b);
     }
 
     public boolean isInDanger() {

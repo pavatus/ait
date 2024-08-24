@@ -22,6 +22,7 @@ import net.minecraft.util.math.GlobalPos;
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.data.base.Exclude;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
@@ -71,6 +72,9 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
     @Override
     public void loadTardis(MinecraftClient client, UUID uuid, @Nullable Consumer<ClientTardis> consumer) {
+        if (client.player == null)
+            return;
+
         if (uuid == null)
             return;
 
@@ -78,7 +82,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
         data.writeUuid(uuid);
 
         if (consumer != null)
-            this.subscribers.put(uuid, consumer);;
+            this.subscribers.put(uuid, consumer);
 
         MinecraftClient.getInstance().executeTask(() -> ClientPlayNetworking.send(ASK, data));
     }
@@ -154,7 +158,8 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
     }
 
     private void syncComponent(ClientTardis tardis, PacketByteBuf buf) {
-        TardisComponent component = this.networkGson.fromJson(buf.readString(), TardisComponent.class);
+        TardisComponent.IdLike id = TardisComponentRegistry.getInstance().get(buf.readString());
+        TardisComponent component = this.networkGson.fromJson(buf.readString(), id.clazz());
 
         component.getId().set(tardis, component);
         TardisComponent.init(component, tardis, TardisComponent.InitContext.deserialize());

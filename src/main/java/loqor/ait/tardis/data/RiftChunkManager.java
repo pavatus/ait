@@ -30,10 +30,14 @@ public record RiftChunkManager(ServerWorld world) {
             if (world.getServer().getTicks() % 20 != 0)
                 return;
 
-            if (!RiftChunkManager.isRiftChunk(world, chunk.getPos()))
+            RiftChunkManager manager = RiftChunkManager.getInstance(world);
+            ChunkPos pos = chunk.getPos();
+
+            if (!manager.isRiftChunk(pos))
                 return;
 
-            RiftChunkManager.addFuel(world, chunk.getPos(), 1);
+            if (manager.getMaxArtron(pos) < manager.getArtron(pos))
+                manager.addFuel(chunk.getPos(), 1);
         });
     }
 
@@ -57,11 +61,15 @@ public record RiftChunkManager(ServerWorld world) {
                 () -> (double) world.getRandom().nextBetween(300, 1000));
     }
 
-    public void removeFuel(ChunkPos pos, double amount) {
+    public double removeFuel(ChunkPos pos, double amount) {
         if (!this.isRiftChunk(pos))
-            return;
+            return 0;
 
-        this.world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> d - amount);
+        double artron = this.getArtron(pos);
+        artron -= artron < amount ? 0 : amount;
+
+        this.world.getChunk(pos.x, pos.z).setAttached(ARTRON, artron);
+        return artron - amount;
     }
 
     public void addFuel(ChunkPos pos, double amount) {
@@ -99,5 +107,21 @@ public record RiftChunkManager(ServerWorld world) {
 
     private static void addFuel(ServerWorld world, ChunkPos pos, double amount) {
         world.getChunk(pos.x, pos.z).modifyAttached(ARTRON, d -> d + amount);
+    }
+
+    public static double getFuel(ServerWorld world, ChunkPos pos) {
+        if (!isRiftChunk(world, pos))
+            return 0;
+
+        return world.getChunk(pos.x, pos.z).getAttachedOrCreate(ARTRON,
+                () -> (double) world.getRandom().nextBetween(100, 800));
+    }
+
+    public static double getMaxFuel(ServerWorld world, ChunkPos pos) {
+        if (!isRiftChunk(world, pos))
+            return 0;
+
+        return world.getChunk(pos.x, pos.z).getAttachedOrCreate(MAX_ARTRON,
+                () -> (double) world.getRandom().nextBetween(300, 1000));
     }
 }

@@ -18,6 +18,7 @@ import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.Value;
+import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.DeprecatedServerTardisManager;
@@ -39,8 +40,14 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
                 return;
             }
 
-            this.sendTardisAll(player, tardisSet, true);
+            this.sendTardisAll(player, tardisSet);
+            System.out.println("sent tardis data");
         }));
+
+        /*ServerChunkEvents.CHUNK_LOAD.register(WorldWithTardis.forLoad((world, chunk, tardisSet) -> {
+            this.sendTardisAll(tardisSet);
+            System.out.println("sent tardis data 2");
+        }));*/
 
         if (DEMENTIA) {
             TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
@@ -76,6 +83,14 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         });
     }
 
+    @Override
+    public ServerTardis create(TardisBuilder builder) {
+        ServerTardis result = super.create(builder);
+        this.sendTardisAll(Set.of(result));
+
+        return result;
+    }
+
     private void sendTardis(ServerPlayerEntity player, PacketByteBuf data) {
         ServerPlayNetworking.send(player, SEND, data);
     }
@@ -84,11 +99,19 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         ServerPlayNetworking.send(player, SEND_COMPONENT, data);
     }
 
+    private void writeSend(ServerTardis tardis, PacketByteBuf buf) {
+        buf.writeUuid(tardis.getUuid());
+        buf.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
+    }
+
+    private void writeComponent(TardisComponent component, PacketByteBuf buf) {
+        buf.writeString(component.getId().name());
+        buf.writeString(this.networkGson.toJson(component));
+    }
+
     private PacketByteBuf prepareSend(ServerTardis tardis) {
         PacketByteBuf data = PacketByteBufs.create();
-
-        data.writeUuid(tardis.getUuid());
-        data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
+        this.writeSend(tardis, data);
 
         return data;
     }
@@ -100,7 +123,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         data.writeShort(delta.size());
 
         for (TardisComponent component : delta) {
-            data.writeString(this.networkGson.toJson(component, TardisComponent.class));
+            this.writeComponent(component, data);
         }
 
         return data;
@@ -114,22 +137,35 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
             if (isInvalid(tardis))
                 continue;
 
-            data.writeUuid(tardis.getUuid());
-            data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
+            this.writeSend(tardis, data);
         }
 
         ServerPlayNetworking.send(player, SEND_BULK, data);
     }
 
-    protected void sendTardisAll(ServerPlayerEntity player, Set<ServerTardis> set, boolean fireEvent) {
+    protected void sendTardisAll(ServerPlayerEntity player, Set<ServerTardis> set) {
         for (ServerTardis tardis : set) {
             if (isInvalid(tardis))
                 continue;
 
-            if (fireEvent)
-                TardisEvents.SEND_TARDIS.invoker().send(tardis, player);
-
+            TardisEvents.SEND_TARDIS.invoker().send(tardis, player);
             this.sendTardis(player, this.prepareSend(tardis));
+        }
+    }
+
+    protected void sendTardisAll(Set<ServerTardis> set) {
+        for (ServerTardis tardis : set) {
+            if (isInvalid(tardis))
+                continue;
+
+            PacketByteBuf buf = this.prepareSend(tardis);
+
+            NetworkUtil.getSubscribedPlayers(tardis).forEach(
+                    watching -> {
+                        TardisEvents.SEND_TARDIS.invoker().send(tardis, watching);
+                        this.sendTardis(watching, buf);
+                    }
+            );
         }
     }
 
@@ -146,10 +182,14 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         if (this.fileManager.isLocked())
             return;
 
-        if (isInvalid(component))
+        if (!(component.tardis() instanceof ServerTardis tardis))
             return;
 
-        ((ServerTardis) component.tardis()).markDirty(component);
+        if (isInvalid(tardis))
+            return;
+
+        tardis.markDirty(component);
+        this.delta.add(tardis);
     }
 
     @Override
@@ -159,10 +199,6 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
     private static boolean isInvalid(ServerTardis tardis) {
         return tardis == null || tardis.isRemoved();
-    }
-
-    private static boolean isInvalid(TardisComponent component) {
-        return !(component.tardis() instanceof ServerTardis serverTardis) || isInvalid(serverTardis);
     }
 
     public static ServerTardisManager getInstance() {
