@@ -3,6 +3,7 @@ package loqor.ait.tardis.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -16,11 +17,13 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class NetworkUtil {
 
@@ -112,5 +115,17 @@ public class NetworkUtil {
 
     public static Collection<ServerPlayerEntity> getTracking(DirectedGlobalPos.Cached globalPos) {
         return PlayerLookup.tracking(globalPos.getWorld(), globalPos.getPos());
+    }
+
+    public static Stream<ServerPlayerEntity> getSubscribedPlayers(ServerTardis tardis) {
+        Stream<ServerPlayerEntity> result = TardisUtil.getPlayersInsideInterior(tardis).parallelStream();
+
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+
+        if (exteriorPos == null)
+            return result;
+
+        ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
+        return Stream.concat(result, PlayerLookup.tracking(exteriorPos.getWorld(), chunkPos).parallelStream());
     }
 }

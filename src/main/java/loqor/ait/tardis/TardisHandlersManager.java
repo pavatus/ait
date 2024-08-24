@@ -68,21 +68,6 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     }
 
     /**
-     * Called on the START of a servers tick
-     *
-     * @param server
-     *            the current server
-     */
-    public void startTick(MinecraftServer server) {
-        this.forEach(component -> {
-            if (!(component instanceof TardisTickable tickable))
-                return;
-
-            tickable.startTick(server);
-        });
-    }
-
-    /**
      * @deprecated Use {@link Tardis#handler(IdLike)}
      */
     @SuppressWarnings("unchecked")

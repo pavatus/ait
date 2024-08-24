@@ -1,13 +1,21 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -137,7 +145,21 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     @Override
     public void tick(MinecraftServer server) {
-        if (!isGenerating())
+        boolean isGenerating = this.isGenerating();
+
+        if (server.getTicks() % 10 == 0 && this.tardis.isGrowth()) {
+            this.generateInteriorWithItem();
+
+            if (!isGenerating) {
+                if (this.tardis.door().isBothClosed()) {
+                    this.tardis.door().openDoors();
+                } else {
+                    this.tardis.door().setLocked(false);
+                }
+            }
+        }
+
+        if (!isGenerating)
             return;
 
         if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
@@ -176,6 +198,43 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             this.tardis().getDesktop().changeInterior(this.getQueuedInterior(), true);
             onCompletion();
         }
+    }
+
+    protected void generateInteriorWithItem() {
+        TardisUtil.getEntitiesInInterior(this.tardis, 50).stream()
+                .filter(entity -> entity instanceof ItemEntity item
+                        && (item.getStack().getItem() == Items.NETHER_STAR || isChargedCrystal(item.getStack()))
+                        && entity.isTouchingWater())
+                .forEach(entity -> {
+                    DirectedGlobalPos position = this.tardis.travel().position();
+
+                    if (position == null)
+                        return;
+
+                    this.tardis.setFuelCount(8000);
+
+                    entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT,
+                            SoundCategory.BLOCKS, 10.0F, 0.75F);
+                    entity.getWorld().playSound(null, position.getPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT,
+                            SoundCategory.BLOCKS, 10.0F, 0.75F);
+
+                    this.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this.tardis));
+
+                    if (this.isGenerating())
+                        entity.discard();
+                });
+    }
+
+    private boolean isChargedCrystal(ItemStack stack) {
+        if (!(stack.getItem() instanceof ChargedZeitonCrystalItem))
+            return false;
+
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY))
+            return false;
+
+        return nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY) >= ChargedZeitonCrystalItem.MAX_FUEL;
     }
 
     private boolean canQueue() {

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.network.PacketByteBuf;
@@ -15,8 +14,8 @@ import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.base.TardisComponent;
+import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.CompliantServerTardisManager;
 
@@ -25,6 +24,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
     private static ServerTardisManager instance;
 
     private final Set<ServerTardis> needsUpdate = new HashSet<>();
+    private final Set<TardisComponent> delta = new HashSet<>();
 
     public static void init() {
         instance = new ServerTardisManager();
@@ -43,7 +43,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
         if (DEMENTIA) {
             TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
                 for (ServerTardis tardis : tardisSet) {
-                    if (tardis.isRemoved())
+                    if (isInvalid(tardis))
                         continue;
 
                     this.sendTardisRemoval(player, tardis);
@@ -53,23 +53,12 @@ public class ServerTardisManager extends CompliantServerTardisManager {
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             for (ServerTardis tardis : this.needsUpdate) {
-                if (tardis.isRemoved())
+                if (isInvalid(tardis))
                     continue;
 
-                DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
-
-                if (exteriorPos == null)
-                    continue;
-
-                ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
-
-                for (ServerPlayerEntity watching : PlayerLookup.tracking(exteriorPos.getWorld(), chunkPos)) {
-                    this.sendTardis(watching, tardis);
-                }
-
-                for (ServerPlayerEntity inside : TardisUtil.getPlayersInsideInterior(tardis)) {
-                    this.sendTardis(inside, tardis);
-                }
+                NetworkUtil.getSubscribedPlayers(tardis).forEach(
+                        watching -> this.sendTardis(watching, tardis)
+                );
             }
 
             this.needsUpdate.clear();
@@ -78,7 +67,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
 
     @Override
     public void sendTardis(ServerTardis tardis) {
-        if (!canSend(tardis))
+        if (isInvalid(tardis))
             return;
 
         if (this.fileManager.isLocked())
@@ -87,12 +76,17 @@ public class ServerTardisManager extends CompliantServerTardisManager {
         this.needsUpdate.add(tardis);
     }
 
+    @Override
+    public void sendTardis(TardisComponent component) {
+        super.sendTardis(component);
+    }
+
     protected void sendTardisBulk(ServerPlayerEntity player, Set<ServerTardis> set) {
         PacketByteBuf data = PacketByteBufs.create();
         data.writeInt(set.size());
 
         for (ServerTardis tardis : set) {
-            if (!canSend(tardis))
+            if (isInvalid(tardis))
                 continue;
 
             data.writeUuid(tardis.getUuid());
@@ -104,7 +98,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
 
     protected void sendTardisAll(ServerPlayerEntity player, Set<ServerTardis> set, boolean fireEvent) {
         for (ServerTardis tardis : set) {
-            if (!canSend(tardis))
+            if (isInvalid(tardis))
                 continue;
 
             if (fireEvent)
@@ -122,7 +116,7 @@ public class ServerTardisManager extends CompliantServerTardisManager {
         ((WorldWithTardis) world).ait$withLookup(lookup -> lookup.remove(chunk, tardis));
     }
 
-    private static boolean canSend(ServerTardis tardis) {
+    private static boolean isInvalid(ServerTardis tardis) {
         return tardis != null && !tardis.isRemoved();
     }
 

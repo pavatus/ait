@@ -62,11 +62,14 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
     @Override
     public void tick(MinecraftServer server) {
-        if (shouldSucc())
+        if (this.shouldSucc())
             this.succ();
 
-        if (locked() && isOpen())
-            closeDoors();
+        if (this.locked() && this.isOpen())
+            this.closeDoors();
+
+        if (this.tardis.siege().isActive() && !this.locked())
+            this.setLocked(true);
     }
 
     /**
