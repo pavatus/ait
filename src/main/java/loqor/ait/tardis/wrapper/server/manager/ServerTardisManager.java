@@ -16,6 +16,7 @@ import net.minecraft.util.math.ChunkPos;
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.manager.TardisBuilder;
@@ -105,7 +106,11 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
     }
 
     private void writeComponent(TardisComponent component, PacketByteBuf buf) {
-        buf.writeString(component.getId().name());
+        String rawId = TardisComponentRegistry.getInstance().get(component);
+        AITMod.LOGGER.info("writing id from {}", component);
+        AITMod.LOGGER.info("\tfor {}", rawId);
+
+        buf.writeString(rawId);
         buf.writeString(this.networkGson.toJson(component));
     }
 
