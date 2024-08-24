@@ -1,15 +1,5 @@
 package loqor.ait.tardis.data.travel;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.core.AITBlocks;
@@ -25,7 +15,14 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisUtil;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -38,13 +35,14 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
             TravelHandler travel = tardis.travel();
 
-            return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
-                    ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+            return TardisEvents.Interaction.PASS;
+            //return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
+            //        ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
         TardisEvents.LANDED.register(tardis -> {
-            if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
-                tardis.travel().tryFly();
+            //if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
+            //    tardis.travel().tryFly();
         });
     }
 
@@ -200,7 +198,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         }
 
         if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL || tardis.door().isOpen()
-                || tardis.siege().isActive() || tardis.isSiegeBeingHeld() || tardis.isRefueling() || TravelUtil.dematCooldown(this.tardis) || tardis.flight().falling().get()) {
+                || tardis.siege().isActive() || tardis.isRefueling() || tardis.flight().falling().get() ||TravelUtil.dematCooldown(this.tardis)) {
             this.failDemat();
             return;
         }

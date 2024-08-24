@@ -1,18 +1,5 @@
 package loqor.ait.tardis.wrapper.server.manager;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.ChunkPos;
-
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.api.tardis.TardisEvents;
@@ -23,6 +10,17 @@ import loqor.ait.tardis.manager.TardisBuilder;
 import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.DeprecatedServerTardisManager;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.ChunkPos;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ServerTardisManager extends DeprecatedServerTardisManager {
 
@@ -107,8 +105,8 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
     private void writeComponent(TardisComponent component, PacketByteBuf buf) {
         String rawId = TardisComponentRegistry.getInstance().get(component);
-        AITMod.LOGGER.info("writing id from {}", component);
-        AITMod.LOGGER.info("\tfor {}", rawId);
+        //AITMod.LOGGER.info("writing id from {}", component);
+        //AITMod.LOGGER.info("\tfor {}", rawId);
 
         buf.writeString(rawId);
         buf.writeString(this.networkGson.toJson(component));

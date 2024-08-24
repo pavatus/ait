@@ -1,20 +1,6 @@
 package loqor.ait.tardis;
 
-import java.util.List;
-import java.util.Optional;
-
 import io.wispforest.owo.ops.WorldOps;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.util.ClientTardisUtil;
@@ -33,6 +19,18 @@ import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;
 import loqor.ait.tardis.util.Gaslighter3000;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
+import java.util.Optional;
 
 public class TardisExterior extends TardisComponent {
 
@@ -95,6 +93,9 @@ public class TardisExterior extends TardisComponent {
                 return;
 
             TardisExterior exterior = tardis.getExterior();
+
+            if (!(exterior.getVariant() instanceof AdaptiveVariant))
+                return;
 
             if (tardis.door().isClosed()) {
                 exterior.applyDisguise(player);
