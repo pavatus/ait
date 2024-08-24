@@ -495,7 +495,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             }
 
             private static void sendRiftInfo(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-                boolean isRift = RiftChunkManager.isRiftChunk(pos);
+                boolean isRift = RiftChunkManager.isRiftChunk(world, pos);
 
                 player.sendMessage(isRift ? RIFT_FOUND : RIFT_NOT_FOUND, true);
 

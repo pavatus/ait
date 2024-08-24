@@ -246,7 +246,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         }
 
         ServerTardis tardis = (ServerTardis) this.tardis().get();
-        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position().getPos());
+        boolean isRiftChunk = RiftChunkManager.isRiftChunk(tardis.travel().position());
 
         if (tardis.travel().isCrashing()) {
             serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5f, pos.getY() + 1.25,
