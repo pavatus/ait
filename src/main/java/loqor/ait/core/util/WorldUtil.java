@@ -1,13 +1,13 @@
 package loqor.ait.core.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,10 +28,8 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class WorldUtil {
@@ -61,6 +59,17 @@ public class WorldUtil {
 
             if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
                 TIME_VORTEX = null;
+        });
+
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (world.getRegistryKey() == World.OVERWORLD)
+                OVERWORLD = world;
+
+            if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+                TARDIS_DIMENSION = world;
+
+            if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
+                TIME_VORTEX = world;
         });
     }
 
