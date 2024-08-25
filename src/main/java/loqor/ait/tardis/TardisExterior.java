@@ -35,6 +35,7 @@ import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;
 import loqor.ait.tardis.util.Gaslighter3000;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import net.minecraft.util.math.Vec3d;
 
 public class TardisExterior extends TardisComponent {
 
@@ -118,10 +119,11 @@ public class TardisExterior extends TardisComponent {
         });
 
         FakeBlockEvents.CHECK.register((player, state, pos) -> {
-            shitParticles(player.getServerWorld(), pos);
-
             if (state.isOf(AITBlocks.EXTERIOR_BLOCK))
-                player.networkHandler.sendPacket(new BlockUpdateS2CPacket(player.getServerWorld(), pos));
+                return;
+
+            shitParticles(player.getServerWorld(), pos);
+            player.networkHandler.sendPacket(new BlockUpdateS2CPacket(player.getServerWorld(), pos));
         });
     }
 
@@ -202,7 +204,8 @@ public class TardisExterior extends TardisComponent {
     }
 
     private static void shitParticles(ServerWorld world, BlockPos pos) {
-        world.spawnParticles(ParticleTypes.END_ROD, pos.getX(), pos.getY(), pos.getZ(), 12, 0.5, 0.5, 0.5, 0);
+        Vec3d center = pos.toCenterPos();
+        world.spawnParticles(ParticleTypes.END_ROD, center.getX(), center.getY(), center.getZ(), 12, 0.3, 0.3, 0.3, 0);
     }
 
     public TardisExterior(ExteriorVariantSchema variant) {
