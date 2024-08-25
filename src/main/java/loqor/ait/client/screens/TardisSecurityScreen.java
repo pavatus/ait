@@ -78,7 +78,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     }
 
     private void toggleLeaveBehind() {
-        this.tardis().travel().leaveBehind().set(!this.tardis().travel().leaveBehind().get());
+        this.tardis().travel().leaveBehind().flatMap(value -> !value);
     }
 
     private void changeMinimumLoyalty() {
@@ -91,7 +91,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     }
 
     private void toggleHostileAlarms() {
-        this.tardis().alarm().hostilePresence().set(!this.tardis().alarm().hostilePresence().get());
+        this.tardis().alarm().hostilePresence().flatMap(value -> !value);
     }
 
     private void updateLandingCode() {
