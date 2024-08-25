@@ -22,17 +22,22 @@ public class Property<T> {
 
     private final Type<T> type;
     private final String name;
+    private int flag;
 
     protected final Function<KeyedTardisComponent, T> def;
 
-    public Property(Type<T> type, String name, Function<KeyedTardisComponent, T> def) {
+    public Property(Type<T> type, String name, Function<KeyedTardisComponent, T> def, int... flags) {
         this.type = type;
         this.name = name;
         this.def = def;
+
+        for (int f : flags) {
+            this.flag |= f;
+        }
     }
 
-    public Property(Type<T> type, String name, T def) {
-        this(type, name, o -> def);
+    public Property(Type<T> type, String name, T def, int... flags) {
+        this(type, name, o -> def, flags);
     }
 
     public Value<T> create(KeyedTardisComponent holder) {
@@ -54,17 +59,20 @@ public class Property<T> {
     public Type<T> getType() {
         return type;
     }
+    public int getFlag() {
+        return flag;
+    }
 
     public Property<T> copy(String name) {
-        return new Property<>(this.type, name, this.def);
+        return new Property<>(this.type, name, this.def, this.flag);
     }
 
     public Property<T> copy(String name, T def) {
-        return new Property<>(this.type, name, def);
+        return new Property<>(this.type, name, def, this.flag);
     }
 
-    public static <T extends Enum<T>> Property<T> forEnum(String name, Class<T> clazz, T def) {
-        return new Property<>(Type.forEnum(clazz), name, def);
+    public static <T extends Enum<T>> Property<T> forEnum(String name, Class<T> clazz, T def, int... flags) {
+        return new Property<>(Type.forEnum(clazz), name, def, flags);
     }
 
     public static class Type<T> {

@@ -19,7 +19,7 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.network.Network;
 
 public class ClientLandingManager {
 
@@ -63,7 +63,7 @@ public class ClientLandingManager {
         ChunkPos chunkPos = buf.readChunkPos();
 
         if (action == LandingPadManager.Network.Action.ADD) {
-            this.regions.put(chunkPos, NetworkUtil.receive(LandingPadRegion.CODEC, buf));
+            this.regions.put(chunkPos, Network.receive(LandingPadRegion.CODEC, buf));
             return;
         }
 

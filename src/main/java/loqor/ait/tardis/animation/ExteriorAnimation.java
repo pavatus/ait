@@ -17,7 +17,7 @@ import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.CloakHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.network.Network;
 
 public abstract class ExteriorAnimation {
 
@@ -120,7 +120,7 @@ public abstract class ExteriorAnimation {
         if (!exterior.isLinked())
             return;
 
-        for (ServerPlayerEntity player : NetworkUtil.getLinkedPlayers(exterior.tardis().get().asServer())) {
+        for (ServerPlayerEntity player : Network.getLinkedPlayers(exterior.tardis().get().asServer())) {
             tellClientToSetup(state, player);
         }
     }

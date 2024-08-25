@@ -1,4 +1,4 @@
-package loqor.ait.tardis.util;
+package loqor.ait.tardis.util.network;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -22,9 +22,16 @@ import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.tardis.util.network.c2s.SyncPropertyC2SPacket;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
-public class NetworkUtil {
+public class Network {
+
+
+    public static void init() {
+        ServerPlayNetworking.registerGlobalReceiver(SyncPropertyC2SPacket.TYPE, SyncPropertyC2SPacket::handle);
+    }
 
     public static <T> void send(ServerPlayerEntity player, PacketByteBuf buf, Identifier id, Codec<T> codec, T t) {
         DataResult<NbtElement> result = codec.encodeStart(NbtOps.INSTANCE, t);

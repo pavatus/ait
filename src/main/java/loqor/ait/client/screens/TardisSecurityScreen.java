@@ -2,9 +2,6 @@ package loqor.ait.client.screens;
 
 import java.awt.*;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,7 +9,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -22,7 +18,6 @@ import loqor.ait.AITMod;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class TardisSecurityScreen extends ConsoleScreen {
@@ -83,12 +78,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     }
 
     private void toggleLeaveBehind() {
-        PacketByteBuf buf = PacketByteBufs.create();
-
-        buf.writeUuid(tardis().getUuid());
-        buf.writeBoolean(!tardis().travel().leaveBehind().get());
-
-        ClientPlayNetworking.send(TardisUtil.LEAVEBEHIND, buf);
+        this.tardis().travel().leaveBehind().set(!this.tardis().travel().leaveBehind().get());
     }
 
     private void changeMinimumLoyalty() {
@@ -101,23 +91,13 @@ public class TardisSecurityScreen extends ConsoleScreen {
     }
 
     private void toggleHostileAlarms() {
-        PacketByteBuf buf = PacketByteBufs.create();
-
-        buf.writeUuid(tardis().getUuid());
-        buf.writeBoolean(!tardis().alarm().hostilePresence().get());
-
-        ClientPlayNetworking.send(TardisUtil.HOSTILEALARMS, buf);
+        this.tardis().alarm().hostilePresence().set(!this.tardis().alarm().hostilePresence().get());
     }
 
     private void updateLandingCode() {
         String input = this.landingCodeInput.getText();
 
-        PacketByteBuf buf = PacketByteBufs.create();
-
-        buf.writeUuid(this.tardis().getUuid());
-        buf.writeString(input);
-
-        ClientPlayNetworking.send(TardisUtil.LANDING_CODE, buf);
+        this.tardis().landingPad().code().set(input);
     }
 
     private <T extends ClickableWidget> void addButton(T button) {

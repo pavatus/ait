@@ -18,7 +18,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.util.NetworkUtil;
 
 @SuppressWarnings("UnstableApiUsage")
 public class LandingPadManager {
@@ -58,7 +57,7 @@ public class LandingPadManager {
         LandingPadRegion created = new LandingPadRegion(pos, y, "");
         chunk.setAttached(PERSISTENT, created);
 
-        Network.syncTracked(Network.Action.ADD, this.world, pos);
+        LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, this.world, pos);
         return created;
     }
 
@@ -69,7 +68,7 @@ public class LandingPadManager {
     private @Nullable LandingPadRegion release(ChunkPos pos) {
         LandingPadRegion result = this.world.getChunk(pos.x, pos.z).removeAttached(PERSISTENT);
 
-        Network.syncTracked(Network.Action.REMOVE, this.world, pos);
+        LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.REMOVE, this.world, pos);
         return result;
     }
 
@@ -103,11 +102,11 @@ public class LandingPadManager {
                 if (region == null)
                     return;
 
-                NetworkUtil.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
+                loqor.ait.tardis.util.network.Network.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
                 return;
             }
 
-            NetworkUtil.send(player, SYNC, buf);
+            loqor.ait.tardis.util.network.Network.send(player, SYNC, buf);
         }
 
         public static void syncTracked(Action action, ServerWorld world, ChunkPos pos) {
@@ -125,14 +124,14 @@ public class LandingPadManager {
                     return;
 
                 for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
-                    NetworkUtil.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
+                    loqor.ait.tardis.util.network.Network.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
                 }
 
                 return;
             }
 
             for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
-                NetworkUtil.send(player, SYNC, buf);
+                loqor.ait.tardis.util.network.Network.send(player, SYNC, buf);
             }
         }
 

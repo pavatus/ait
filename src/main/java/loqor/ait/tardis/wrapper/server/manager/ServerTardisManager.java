@@ -21,7 +21,7 @@ import loqor.ait.registry.impl.TardisComponentRegistry;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.network.Network;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.old.DeprecatedServerTardisManager;
 
@@ -49,7 +49,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         }));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server)
-                -> this.sendTardisAll(handler.getPlayer(), NetworkUtil.findLinkedItems(handler.getPlayer())));
+                -> this.sendTardisAll(handler.getPlayer(), Network.findLinkedItems(handler.getPlayer())));
 
         if (DEMENTIA) {
             TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
@@ -77,7 +77,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
                 PacketByteBuf buf = this.prepareSendDelta(tardis, delta);
 
-                NetworkUtil.getSubscribedPlayers(tardis).forEach(
+                Network.getSubscribedPlayers(tardis).forEach(
                         watching -> this.sendComponents(watching, buf)
                 );
 
@@ -169,7 +169,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
             PacketByteBuf buf = this.prepareSend(tardis);
 
-            NetworkUtil.getSubscribedPlayers(tardis).forEach(
+            Network.getSubscribedPlayers(tardis).forEach(
                     watching -> {
                         TardisEvents.SEND_TARDIS.invoker().send(tardis, watching);
                         this.sendTardis(watching, buf);

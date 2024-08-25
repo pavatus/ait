@@ -26,7 +26,7 @@ import loqor.ait.tardis.control.impl.SecurityControl;
 import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.TardisCrashHandler;
-import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.network.Network;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -276,7 +276,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
                 SoundCategory.AMBIENT);
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
 
-        NetworkUtil.sendToInterior(this.tardis.asServer(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
+        Network.sendToInterior(this.tardis.asServer(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }
 
     public void rematerialize() {
