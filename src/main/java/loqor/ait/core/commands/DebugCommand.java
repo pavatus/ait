@@ -20,7 +20,7 @@ import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.tardis.data.landing.LandingPadManager;
 import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.util.network.Network;
+import loqor.ait.tardis.util.network.NetworkUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class DebugCommand {
@@ -71,7 +71,7 @@ public class DebugCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
         long start = System.nanoTime();
-        Network.hasLinkedItem(tardis, player);
+        NetworkUtil.hasLinkedItem(tardis, player);
 
         context.getSource().sendFeedback(() -> Text.literal("Checked player in "
                 + (System.nanoTime() - start) + "ns"), false);

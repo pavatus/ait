@@ -18,6 +18,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.AITMod;
+import loqor.ait.tardis.util.network.NetworkUtil;
 
 @SuppressWarnings("UnstableApiUsage")
 public class LandingPadManager {
@@ -102,11 +103,11 @@ public class LandingPadManager {
                 if (region == null)
                     return;
 
-                loqor.ait.tardis.util.network.Network.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
+                NetworkUtil.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
                 return;
             }
 
-            loqor.ait.tardis.util.network.Network.send(player, SYNC, buf);
+            NetworkUtil.send(player, SYNC, buf);
         }
 
         public static void syncTracked(Action action, ServerWorld world, ChunkPos pos) {
@@ -124,14 +125,14 @@ public class LandingPadManager {
                     return;
 
                 for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
-                    loqor.ait.tardis.util.network.Network.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
+                    NetworkUtil.send(player, buf, SYNC, LandingPadRegion.CODEC, region);
                 }
 
                 return;
             }
 
             for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
-                loqor.ait.tardis.util.network.Network.send(player, SYNC, buf);
+                NetworkUtil.send(player, SYNC, buf);
             }
         }
 

@@ -52,7 +52,7 @@ import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.OvergrownHandler;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.util.network.Network;
+import loqor.ait.tardis.util.network.NetworkUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
@@ -420,6 +420,6 @@ public class TardisUtil {
     }
 
     public static void sendMessageToLinked(ServerTardis tardis, Text message) {
-        Network.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
+        NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
     }
 }

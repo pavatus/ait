@@ -26,7 +26,7 @@ import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.util.network.c2s.SyncPropertyC2SPacket;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
 
-public class Network {
+public class NetworkUtil {
 
 
     public static void init() {
