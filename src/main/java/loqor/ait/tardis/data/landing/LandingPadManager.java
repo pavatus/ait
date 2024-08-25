@@ -58,7 +58,7 @@ public class LandingPadManager {
         LandingPadRegion created = new LandingPadRegion(pos, y, "");
         chunk.setAttached(PERSISTENT, created);
 
-        LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, this.world, pos);
+        Network.syncTracked(Network.Action.ADD, this.world, pos);
         return created;
     }
 
@@ -69,7 +69,7 @@ public class LandingPadManager {
     private @Nullable LandingPadRegion release(ChunkPos pos) {
         LandingPadRegion result = this.world.getChunk(pos.x, pos.z).removeAttached(PERSISTENT);
 
-        LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.REMOVE, this.world, pos);
+        Network.syncTracked(Network.Action.REMOVE, this.world, pos);
         return result;
     }
 
@@ -146,7 +146,7 @@ public class LandingPadManager {
                 syncForPlayer(Action.ADD, player);
             });
 
-            ServerPlayNetworking.registerGlobalReceiver(LandingPadManager.Network.REQUEST, (server, player, handler, buf, responseSender) -> {
+            ServerPlayNetworking.registerGlobalReceiver(Network.REQUEST, (server, player, handler, buf, responseSender) -> {
                 syncForPlayer(Action.ADD, player);
             });
         }
