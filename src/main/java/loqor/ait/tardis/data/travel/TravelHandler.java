@@ -27,6 +27,7 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.TardisCrashHandler;
 import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.tardis.util.TardisUtil;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -39,23 +40,23 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
             TravelHandler travel = tardis.travel();
 
-            return TardisEvents.Interaction.PASS;
-            //return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
-            //        ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+            return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
+                    ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
         TardisEvents.MAT.register(tardis -> { // end check
-            if (!AITMod.AIT_CONFIG.REQUIRE_DRAGON_DEATH()) return TardisEvents.Interaction.PASS;
+            if (!AITMod.AIT_CONFIG.REQUIRE_DRAGON_DEATH())
+                return TardisEvents.Interaction.PASS;
 
             boolean isEnd = tardis.travel().destination().getDimension().equals(World.END);
             if (!isEnd) return TardisEvents.Interaction.PASS;
 
-            return (WorldUtil.isEndDragonDead()) ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+            return WorldUtil.isEndDragonDead() ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
         TardisEvents.LANDED.register(tardis -> {
-            //if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
-            //    tardis.travel().tryFly();
+            if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
+                tardis.travel().tryFly();
         });
     }
 

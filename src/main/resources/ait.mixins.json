@@ -19,6 +19,7 @@
     "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
     "server.BedInTardisMixin",
+    "server.EnderDragonFightAccessor",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
     "server.ServerPlayerInteractionManagerMixin",
@@ -26,12 +27,12 @@
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
     "server.structure.StructureTemplateAccessor",
-    "server.structure.StructureTemplateMixin",
-    "server.EnderDragonFightAccessor"
+    "server.structure.StructureTemplateMixin"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
+    "client.ItemRendererMixin",
     "client.TitleScreenMixin",
     "client.experimental_screen.CreateWorldScreenMixin",
     "client.experimental_screen.WorldOpenFlowsMixin",

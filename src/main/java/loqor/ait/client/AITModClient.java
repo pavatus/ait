@@ -22,7 +22,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.GlobalPos;
 
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.CustomItemRendering;
@@ -49,7 +48,6 @@ import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.RiftTarget;
 import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.item.*;
@@ -79,7 +77,6 @@ public class AITModClient implements ClientModInitializer {
         sonicModelPredicate();
         blockEntityRendererRegister();
         entityRenderRegister();
-        riftScannerPredicate();
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
@@ -234,12 +231,6 @@ public class AITModClient implements ClientModInitializer {
             // case 1 -> new EngineScreen(tardis);
             case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
         };
-    }
-
-    public void riftScannerPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.RIFT_SCANNER, new Identifier("scanner"),
-                new RiftTarget((world, stack, entity) -> GlobalPos.create(entity.getWorld().getRegistryKey(),
-                        RiftScannerItem.getTarget(stack).getCenterAtY(75))));
     }
 
     public void chargedZeitonCrystalPredicate() {
