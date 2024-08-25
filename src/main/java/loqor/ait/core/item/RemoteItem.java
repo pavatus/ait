@@ -23,11 +23,11 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.control.impl.DirectionControl;
 import loqor.ait.tardis.data.travel.TravelUtil;
 import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
@@ -74,7 +74,7 @@ public class RemoteItem extends LinkableItem {
                     if (currentPosition.getPos().equals(pos))
                         return;
 
-                    if (world != TardisUtil.getTardisDimension()) {
+                    if (world != WorldUtil.getTardisDimension()) {
                         world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
                         BlockPos temp = pos.up();

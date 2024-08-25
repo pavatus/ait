@@ -35,11 +35,11 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");
@@ -53,7 +53,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (world != TardisUtil.getTardisDimension())
+        if (world != WorldUtil.getTardisDimension())
             return;
 
         ItemStack stack = player.getMainHandStack();

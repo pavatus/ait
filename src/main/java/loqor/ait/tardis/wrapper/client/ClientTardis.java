@@ -43,14 +43,6 @@ public class ClientTardis extends Tardis implements Disposable {
         this.exterior = exterior;
     }
 
-    @SuppressWarnings("deprecation") // intended
-    public void set(TardisComponent component) {
-        component.setTardis(this);
-        component.onLoaded();
-
-        this.handlers.set(component.getId(), component);
-    }
-
     public void tick(MinecraftClient client) {
         // referencing client stuff where it COULD be server causes problems
         if (ClientShakeUtil.shouldShake(this)) {

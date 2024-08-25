@@ -75,7 +75,7 @@ public class Value<T> implements Disposable {
             return;
         }
 
-        ServerTardisManager.getInstance().sendPropertyV2ToSubscribers(tardis, this);
+        ServerTardisManager.getInstance().markPropertyDirty(tardis, this);
     }
 
     public void flatMap(Function<T, T> func) {

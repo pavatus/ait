@@ -1,8 +1,7 @@
 package loqor.ait.tardis.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -16,11 +15,14 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class NetworkUtil {
 
@@ -45,28 +47,13 @@ public class NetworkUtil {
                 .orElseThrow().getFirst();
     }
 
-    /**
-     * This method syncs to the players in the tardis' interior and in the tardis'
-     * exterior and if they have a linked tardis item
-     */
-    public static Collection<ServerPlayerEntity> getNearbyTardisPlayers(Tardis tardis) {
-        Collection<ServerPlayerEntity> found = getPlayersInInterior(tardis);
-        found.addAll(getPlayersNearExterior(tardis));
-        found.addAll(getLinkedPlayers(tardis)); // todo fix issues - remove if they come back
-        return found;
-    }
-
-    public static void sendToInterior(Tardis tardis, Identifier id, PacketByteBuf buf) {
-        for (ServerPlayerEntity player : NetworkUtil.getPlayersInInterior(tardis)) {
+    public static void sendToInterior(ServerTardis tardis, Identifier id, PacketByteBuf buf) {
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
             send(player, id, buf);
         }
     }
 
-    public static Collection<ServerPlayerEntity> getPlayersInInterior(Tardis tardis) {
-        return TardisUtil.getPlayersInsideInterior(tardis);
-    }
-
-    public static Collection<ServerPlayerEntity> getPlayersNearExterior(Tardis tardis) {
+    public static Collection<ServerPlayerEntity> getPlayersNearExterior(ServerTardis tardis) {
         if (tardis.travel().position() == null)
             return new ArrayList<>();
 
@@ -76,10 +63,10 @@ public class NetworkUtil {
     /**
      * Gets players who have a linked item in their inventory
      */
-    public static Collection<ServerPlayerEntity> getLinkedPlayers(Tardis tardis) {
+    public static Collection<ServerPlayerEntity> getLinkedPlayers(ServerTardis tardis) {
         List<ServerPlayerEntity> players = new ArrayList<>();
 
-        for (ServerPlayerEntity player : TardisUtil.getPlayerLookup(PlayerLookup::all)) {
+        for (ServerPlayerEntity player : ServerLifecycleHooks.get().getPlayerManager().getPlayerList()) {
             if (hasLinkedItem(tardis, player)) {
                 players.add(player);
             }
@@ -110,7 +97,35 @@ public class NetworkUtil {
         return false;
     }
 
+    public static Set<ServerTardis> findLinkedItems(ServerPlayerEntity player) {
+        Set<ServerTardis> ids = new HashSet<>();
+
+        for (ItemStack stack : player.getInventory().main) {
+            if (stack.isEmpty())
+                continue;
+
+            if (!(stack.getItem() instanceof LinkableItem))
+                continue;
+
+            ids.add(LinkableItem.getTardis(player.getWorld(), stack).asServer());
+        }
+
+        return ids;
+    }
+
     public static Collection<ServerPlayerEntity> getTracking(DirectedGlobalPos.Cached globalPos) {
         return PlayerLookup.tracking(globalPos.getWorld(), globalPos.getPos());
+    }
+
+    public static Stream<ServerPlayerEntity> getSubscribedPlayers(ServerTardis tardis) {
+        Stream<ServerPlayerEntity> result = TardisUtil.getPlayersInsideInterior(tardis).stream();
+
+        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+
+        if (exteriorPos == null || exteriorPos.getWorld() == null)
+            return result;
+
+        ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
+        return Stream.concat(result, PlayerLookup.tracking(exteriorPos.getWorld(), chunkPos).stream());
     }
 }

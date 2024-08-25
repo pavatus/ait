@@ -34,7 +34,7 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerCommandSource source = context.getSource();
 
-        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
+        boolean isARiftChunk = RiftChunkManager.isRiftChunk(source.getWorld(), targetBlockPos);
         Text isriftchunk = Text.translatable("message.ait.sonic.riftfound");
         Text notriftchunk = Text.translatable("message.ait.sonic.riftnotfound");
 
@@ -46,7 +46,7 @@ public class RiftChunkCommand {
         BlockPos targetBlockPos = BlockPosArgumentType.getBlockPos(context, "position");
         ServerCommandSource source = context.getSource();
 
-        boolean isARiftChunk = RiftChunkManager.isRiftChunk(targetBlockPos);
+        boolean isARiftChunk = RiftChunkManager.isRiftChunk(source.getWorld(), targetBlockPos);
 
         ServerWorld world = source.getWorld();
 
@@ -65,11 +65,8 @@ public class RiftChunkCommand {
 
         Text message;
 
-        if (!RiftChunkManager.isRiftChunk(targetBlockPos)) {
-            message = Text.translatable("command.ait.riftchunk.cannotsetlevel"); // This chunk is not a rift chunk, so
-            // you can't
-            // get the
-            // artron levels of it
+        if (!RiftChunkManager.isRiftChunk(source.getWorld(), targetBlockPos)) {
+            message = Text.translatable("command.ait.riftchunk.cannotsetlevel");
         } else {
             double artron = DoubleArgumentType.getDouble(context, "artron");
 

@@ -106,10 +106,13 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
                         new Vector3f(0.15f, 0.25f, 0.15f), 3),
                 exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 0.1f,
                 exteriorPosition.getPos().toCenterPos().z, 1, 0.05D, 0.75D, 0.05D, 0.01D);
+
         if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString()))
             return;
-        if (!TardisUtil.isInteriorNotEmpty(tardis))
+
+        if (TardisUtil.isInteriorEmpty(tardis))
             return;
+
         int loyaltySubAmount = AITMod.RANDOM.nextInt(10, 25);
         for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInsideInterior(tardis)) {
             ItemStack stack = serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD);
@@ -126,6 +129,7 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
 
             tardis.<LoyaltyHandler>handler(Id.LOYALTY).get(serverPlayerEntity).subtract(loyaltySubAmount);
         }
+
         DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(),
                 (long) TimeUtil.secondsToMilliseconds(2));
     }

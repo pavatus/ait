@@ -6,7 +6,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.google.gson.*;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -49,11 +52,16 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 public abstract class TardisManager<T extends Tardis, C> {
 
     public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
-    public static final Identifier ASK_POS = new Identifier("ait", "ask_pos_tardis");
 
-    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_tardis");
-    public static final Identifier SEND_BULK = new Identifier(AITMod.MOD_ID, "send_tardis_bulk");
-    public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "remove_tardis");
+    @Deprecated(forRemoval = true)
+    public static final Identifier ASK_POS = new Identifier(AITMod.MOD_ID, "ask_pos_tardis");
+
+    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "tardis/send");
+    public static final Identifier SEND_BULK = new Identifier(AITMod.MOD_ID, "tardis/send_bulk");
+
+    public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "tardis/remove");
+
+    public static final Identifier SEND_COMPONENT = new Identifier(AITMod.MOD_ID, "tardis/send_component");
 
     public static final boolean DEMENTIA = false;
 
@@ -174,22 +182,6 @@ public abstract class TardisManager<T extends Tardis, C> {
         }
 
         consumer.accept(result);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected T readTardis(Gson gson, String raw) {
-        T tardis = (T) gson.fromJson(raw, Tardis.class);
-        Tardis.init(tardis, TardisComponent.InitContext.deserialize());
-
-        return tardis;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected T readTardis(Gson gson, JsonObject json) {
-        T tardis = (T) gson.fromJson(json, Tardis.class);
-        Tardis.init(tardis, TardisComponent.InitContext.deserialize());
-
-        return tardis;
     }
 
     /**

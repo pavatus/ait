@@ -48,66 +48,43 @@ public class RiftScannerItem extends Item {
      *            The current chunk
      */
     private void createNewTarget(ServerWorld world, ChunkPos source, ItemStack stack) {
-        Direction dir = Direction.NORTH;
-        int steps = 1, b;
+        int steps = 1;
+        RiftChunkManager manager = RiftChunkManager.getInstance(world);
 
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             if (steps % 2 != 0) {
-                for (b = 0; b < steps; b++) {
-                    // going left
-                    dir = Direction.EAST;
+                if (trySearch(manager, steps, source, Direction.EAST, stack))
+                    return;
 
-                    source = getChunkInDirection(source, dir);
+                if (trySearch(manager, steps, source, Direction.SOUTH, stack))
+                    return;
+            } else {
+                if (trySearch(manager, steps, source, Direction.WEST, stack))
+                    return;
 
-                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
-                        setTarget(stack, source);
-                        return;
-                    }
-                }
-                for (b = 0; b < steps; b++) {
-                    // going down
-                    dir = Direction.SOUTH;
-
-                    source = getChunkInDirection(source, dir);
-
-                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
-                        setTarget(stack, source);
-                        return;
-                    }
-                }
-                steps++; // after "left, down" number of steps increasing by 1, making it even
-            } else { // if even
-                for (b = 0; b <= steps; b++) {
-                    dir = Direction.WEST; // right
-
-                    source = getChunkInDirection(source, dir);
-
-                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
-                        setTarget(stack, source);
-                        return;
-                    }
-                }
-                for (b = 0; b <= steps; b++) {
-                    dir = Direction.NORTH; // up
-
-                    source = getChunkInDirection(source, dir);
-
-                    if (isRiftChunk(source) && hasSufficientFuel(world, source)) {
-                        setTarget(stack, source);
-                        return;
-                    }
-                }
-                steps++; // after "right, up" number of steps increasing by 1, making it odd
+                if (trySearch(manager, steps, source, Direction.NORTH, stack))
+                    return;
             }
+
+            steps++;
         }
     }
 
-    private static boolean isRiftChunk(ChunkPos pos) {
-        return RiftChunkManager.isRiftChunk(pos);
+    private static boolean trySearch(RiftChunkManager manager, int limit, ChunkPos source, Direction direction, ItemStack stack) {
+        for (int b = 0; b <= limit; b++) {
+            source = getChunkInDirection(source, direction);
+
+            if (isConsumable(manager, source)) {
+                setTarget(stack, source);
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    private static boolean hasSufficientFuel(ServerWorld world, ChunkPos pos) {
-        return RiftChunkManager.getInstance(world).getArtron(pos) >= 250;
+    private static boolean isConsumable(RiftChunkManager manager, ChunkPos pos) {
+        return manager.isRiftChunk(pos) && manager.getArtron(pos) >= 250;
     }
 
     private static ChunkPos getChunkInDirection(ChunkPos pos, Direction dir) {
@@ -124,9 +101,8 @@ public class RiftScannerItem extends Item {
     public static ChunkPos getTarget(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        if (!(nbt.contains("X") && nbt.contains("Z"))) {
+        if (!(nbt.contains("X") && nbt.contains("Z")))
             return ChunkPos.ORIGIN;
-        }
 
         return new ChunkPos(nbt.getInt("X"), nbt.getInt("Z"));
     }

@@ -10,6 +10,9 @@ import com.google.gson.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.registry.Registry;
+import loqor.ait.tardis.TardisDesktop;
+import loqor.ait.tardis.TardisExterior;
+import loqor.ait.tardis.TardisHandlersManager;
 import loqor.ait.tardis.base.TardisComponent;
 
 public class TardisComponentRegistry implements Registry {
@@ -55,13 +58,25 @@ public class TardisComponentRegistry implements Registry {
     }
 
     public TardisComponent.IdLike get(String name) {
-        // TODO fix this
         return switch (name) {
             case "EXTERIOR" -> TardisComponent.Id.EXTERIOR;
             case "DESKTOP" -> TardisComponent.Id.DESKTOP;
             case "HANDLERS" -> TardisComponent.Id.HANDLERS;
             default -> REGISTRY.get(name);
         };
+    }
+
+    public String get(TardisComponent component) {
+        if (component instanceof TardisExterior)
+            return "EXTERIOR";
+
+        if (component instanceof TardisDesktop)
+            return "DESKTOP";
+
+        if (component instanceof TardisHandlersManager)
+            return "HANDLERS";
+
+        return component.getId().name();
     }
 
     public TardisComponent.IdLike get(int index) {
@@ -92,8 +107,7 @@ public class TardisComponentRegistry implements Registry {
         @Override
         public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            String id = json.getAsString();
-            return TardisComponentRegistry.getInstance().get(id);
+            return TardisComponentRegistry.getInstance().get(json.getAsString());
         }
 
         @Override

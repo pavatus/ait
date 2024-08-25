@@ -57,6 +57,7 @@ import loqor.ait.tardis.data.BiomeHandler;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;
 import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 
 @SuppressWarnings("deprecation")
@@ -65,7 +66,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
     public static final IntProperty ROTATION = Properties.ROTATION;
     public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
-    // TODO add redstone power property that mimics the light level; 0-9, not 0-15
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_9);
     public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
@@ -218,15 +218,11 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (tardis.getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
             return LEDGE_DOOM;
 
-        // todo this better because disabling collisions looks bad, should instead only
-        // disable if
-        // near
-        // to the portal or
-        // if walking into the block from the door direction
-        if (DependencyChecker.hasPortals())
-            if (!tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check
-                                                                                            // totally murders fps ??
-                return getLedgeShape(state);
+        if (DependencyChecker.hasPortals() && !tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals())
+            return getLedgeShape(state);
+
+        if (tardis.getExterior().getVariant() instanceof AdaptiveVariant)
+            return VoxelShapes.empty();
 
         TravelHandler travel = tardis.travel();
 
@@ -234,9 +230,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
                 || travel.getAnimTicks() >= 0.75 * travel.getMaxAnimTicks())
             return getNormalShape(state);
 
-        if (DependencyChecker.hasPortals()) {
+        if (DependencyChecker.hasPortals())
             return PORTALS_SHAPE;
-        }
 
         return VoxelShapes.empty();
     }

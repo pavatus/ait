@@ -27,6 +27,7 @@ import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.loyalty.Loyalty;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -34,7 +35,6 @@ import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.link.LinkableItem;
 import loqor.ait.tardis.util.EnumSet;
 import loqor.ait.tardis.util.Ordered;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class KeyItem extends LinkableItem {
 
@@ -141,7 +141,7 @@ public class KeyItem extends LinkableItem {
         if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
             return;
 
-        if (player.getHealth() > 4 || player.getWorld() == TardisUtil.getTardisDimension())
+        if (player.getHealth() > 4 || player.getWorld() == WorldUtil.getTardisDimension())
             return;
 
         World world = player.getWorld();

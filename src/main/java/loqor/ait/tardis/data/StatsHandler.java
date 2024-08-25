@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.tardis.Tardis;
@@ -27,7 +28,6 @@ import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class StatsHandler extends KeyedTardisComponent {
 
@@ -163,7 +163,7 @@ public class StatsHandler extends KeyedTardisComponent {
         NAME_CACHE.clear();
 
         try {
-            Optional<Resource> resource = TardisUtil.getServerResourceManager().getResource(NAME_PATH);
+            Optional<Resource> resource = ServerLifecycleHooks.get().getResourceManager().getResource(NAME_PATH);
 
             if (resource.isEmpty()) {
                 AITMod.LOGGER.error("ERROR in tardis_names.json:");

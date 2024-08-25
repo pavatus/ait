@@ -1,13 +1,21 @@
 package loqor.ait.tardis.data;
 
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -20,10 +28,10 @@ import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.util.NetworkUtil;
 import loqor.ait.tardis.util.TardisUtil;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
+
     private static final BoolProperty IS_REGENERATING_PROPERTY = new BoolProperty("regenerating", false);
     private final BoolValue isRegenerating = IS_REGENERATING_PROPERTY.create(this);
     private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER,
@@ -80,7 +88,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             return;
 
         if (tardis.fuel().getCurrentFuel() < 5000) {
-            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 player.sendMessage(
                         Text.translatable("tardis.message.interiorchange.not_enough_fuel").formatted(Formatting.RED),
                         true);
@@ -120,28 +128,35 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             travel.forceDemat();
         }
 
-        NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(
-                Text.translatable("tardis.message.interiorchange.success",
-                        tardis.stats().getName(), tardis.getDesktop().getSchema().name()), true)
-        );
+        TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
     }
 
     private void warnPlayers() {
-        for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis())) {
+        for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED),
                     true);
         }
-    }
-
-    private boolean isInteriorEmpty() {
-        return TardisUtil.getPlayersInsideInterior(this.tardis()).isEmpty();
     }
 
     private boolean clearedOldInterior = false;
 
     @Override
     public void tick(MinecraftServer server) {
-        if (!isGenerating())
+        boolean isGenerating = this.isGenerating();
+
+        if (server.getTicks() % 10 == 0 && this.tardis.isGrowth()) {
+            this.generateInteriorWithItem();
+
+            if (!isGenerating) {
+                if (this.tardis.door().isBothClosed()) {
+                    this.tardis.door().openDoors();
+                } else {
+                    this.tardis.door().setLocked(false);
+                }
+            }
+        }
+
+        if (!isGenerating)
             return;
 
         if (DeltaTimeManager.isStillWaitingOnDelay("interior_change-" + this.tardis().getUuid().toString()))
@@ -161,25 +176,64 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             return;
         }
 
-        if (!isInteriorEmpty()) {
+        boolean isEmpty = TardisUtil.isInteriorEmpty(tardis.asServer());
+
+        if (!isEmpty) {
             warnPlayers();
             return;
         }
 
-        if (isInteriorEmpty() && !this.tardis().door().locked()) {
+        if (!this.tardis().door().locked())
             DoorHandler.lockTardis(true, this.tardis(), null, true);
-        }
-        if (isInteriorEmpty() && !clearedOldInterior) {
-            this.tardis().getDesktop().clearOldInterior(getQueuedInterior());
-            DeltaTimeManager.createDelay("interior_change-" + this.tardis().getUuid().toString(), 15000L);
-            clearedOldInterior = true;
+
+        if (clearedOldInterior) {
+            this.tardis().getDesktop().changeInterior(this.getQueuedInterior(), true);
+            onCompletion();
+
             return;
         }
 
-        if (isInteriorEmpty() && clearedOldInterior) {
-            this.tardis().getDesktop().changeInterior(this.getQueuedInterior(), true);
-            onCompletion();
-        }
+        this.tardis().getDesktop().clearOldInterior(this.getQueuedInterior());
+
+        DeltaTimeManager.createDelay("interior_change-" + this.tardis().getUuid().toString(), 15000L);
+        this.clearedOldInterior = true;
+    }
+
+    protected void generateInteriorWithItem() {
+        TardisUtil.getEntitiesInInterior(this.tardis, 50).stream()
+                .filter(entity -> entity instanceof ItemEntity item
+                        && (item.getStack().getItem() == Items.NETHER_STAR || isChargedCrystal(item.getStack()))
+                        && entity.isTouchingWater())
+                .forEach(entity -> {
+                    DirectedGlobalPos position = this.tardis.travel().position();
+
+                    if (position == null)
+                        return;
+
+                    this.tardis.setFuelCount(8000);
+
+                    entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT,
+                            SoundCategory.BLOCKS, 10.0F, 0.75F);
+                    entity.getWorld().playSound(null, position.getPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT,
+                            SoundCategory.BLOCKS, 10.0F, 0.75F);
+
+                    this.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this.tardis));
+
+                    if (this.isGenerating())
+                        entity.discard();
+                });
+    }
+
+    private boolean isChargedCrystal(ItemStack stack) {
+        if (!(stack.getItem() instanceof ChargedZeitonCrystalItem))
+            return false;
+
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        if (!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY))
+            return false;
+
+        return nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY) >= ChargedZeitonCrystalItem.MAX_FUEL;
     }
 
     private boolean canQueue() {

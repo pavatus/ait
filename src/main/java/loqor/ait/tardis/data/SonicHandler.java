@@ -2,23 +2,30 @@ package loqor.ait.tardis.data;
 
 import java.util.function.Consumer;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.tardis.ArtronHolderItem;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
-import loqor.ait.tardis.util.TardisUtil;
 import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class SonicHandler extends KeyedTardisComponent implements ArtronHolderItem, TardisTickable {
+
+    public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
 
     private static final Property<ItemStack> CONSOLE_SONIC = new Property<>(Property.Type.ITEM_STACK, "console_sonic",
             (ItemStack) null);
@@ -28,6 +35,16 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
     private final Value<ItemStack> consoleSonic = CONSOLE_SONIC.create(this); // The current sonic in the console
     private final Value<ItemStack> exteriorSonic = EXTERIOR_SONIC.create(this); // The current sonic in the exterior's
                                                                                 // keyhole
+
+    static {
+        ServerPlayNetworking.registerGlobalReceiver(CHANGE_SONIC,
+                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
+                    Identifier id = buf.readIdentifier();
+                    SonicItem.setSchema(tardis.sonic().getConsoleSonic(), id);
+                }));
+
+
+    }
 
     public SonicHandler() {
         super(Id.SONIC);
@@ -49,7 +66,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 
     public void insertConsoleSonic(ItemStack sonic, BlockPos consolePos) {
         insertAnySonic(this.consoleSonic, sonic,
-                stack -> spawnItem(TardisUtil.getTardisDimension(), consolePos, stack));
+                stack -> spawnItem(WorldUtil.getTardisDimension(), consolePos, stack));
     }
 
     public void insertExteriorSonic(ItemStack sonic) {

@@ -5,6 +5,8 @@ import java.util.Random;
 import org.joml.Vector2i;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
@@ -18,6 +20,7 @@ import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.tardis.base.KeyedTardisComponent;
+import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.data.properties.Property;
 import loqor.ait.tardis.data.properties.Value;
 import loqor.ait.tardis.data.properties.bool.BoolProperty;
@@ -26,7 +29,7 @@ import loqor.ait.tardis.data.travel.TravelHandler;
 import loqor.ait.tardis.data.travel.TravelHandlerBase;
 import loqor.ait.tardis.util.TardisUtil;
 
-public class EngineHandler extends KeyedTardisComponent {
+public class EngineHandler extends KeyedTardisComponent implements TardisTickable {
 
     private static final Vector2i ZERO = new Vector2i();
 
@@ -105,8 +108,7 @@ public class EngineHandler extends KeyedTardisComponent {
     }
 
     private void disableProtocols() {
-        if (TardisUtil.getTardisDimension() != null)
-            tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
 
         // disabling protocols
         tardis.travel().antigravs().set(false);
@@ -147,5 +149,19 @@ public class EngineHandler extends KeyedTardisComponent {
 
         world.setBlockState(pos.getPos(),
                 world.getBlockState(pos.getPos()).with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        // most of the logic is in the handlers, so we can just disable them if we're a
+        // growth
+        if (!this.hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
+                player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
+            }
+
+            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay",
+                    (long) TimeUtil.minutesToMilliseconds(new Random().nextInt(7, 9)));
+        }
     }
 }

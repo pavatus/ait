@@ -3,7 +3,6 @@ package loqor.ait.api;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -25,7 +24,7 @@ public interface WorldWithTardis {
         consumer.accept(this.ait$lookup());
     }
 
-    static TardisEvents.SyncTardis forSync(BiConsumer<ServerPlayerEntity, Set<ServerTardis>> consumer) {
+    static TardisEvents.SyncTardis forSync(PlayerTardisConsumer consumer) {
         return (player, chunk) -> {
             if (!(player.getWorld() instanceof WorldWithTardis withTardis) || !withTardis.ait$hasLookup())
                 return;
@@ -39,7 +38,7 @@ public interface WorldWithTardis {
         };
     }
 
-    static TardisEvents.UnloadTardis forDesync(BiConsumer<ServerPlayerEntity, Set<ServerTardis>> consumer) {
+    static TardisEvents.UnloadTardis forDesync(PlayerTardisConsumer consumer) {
         return (player, chunk) -> {
             if (!(player.getWorld() instanceof WorldWithTardis withTardis) || !withTardis.ait$hasLookup())
                 return;
@@ -51,6 +50,11 @@ public interface WorldWithTardis {
 
             consumer.accept(player, tardisSet);
         };
+    }
+
+    @FunctionalInterface
+    interface PlayerTardisConsumer {
+        void accept(ServerPlayerEntity player, Set<ServerTardis> tardisSet);
     }
 
     final class Lookup extends HashMap<ChunkPos, Set<ServerTardis>> {

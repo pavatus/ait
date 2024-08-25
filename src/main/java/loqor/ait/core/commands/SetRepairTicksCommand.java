@@ -20,8 +20,8 @@ public class SetRepairTicksCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("repair").then(literal("set").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", TardisArgumentType.tardis()).then(
+                .then(literal("repair").requires(source -> source.hasPermissionLevel(2))
+                        .then(literal("set").then(argument("tardis", TardisArgumentType.tardis()).then(
                                 argument("ticks", IntegerArgumentType.integer(0, TardisCrashHandler.MAX_REPAIR_TICKS))
                                         .executes(SetRepairTicksCommand::runCommand))))));
     }

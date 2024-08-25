@@ -1,26 +1,24 @@
 package loqor.ait.tardis.data.loyalty;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.data.base.Nameable;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.base.TardisComponent;
 import loqor.ait.tardis.base.TardisTickable;
 import loqor.ait.tardis.util.TardisUtil;
@@ -55,21 +53,20 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     }
 
     @Override
-    public void tick(ServerWorld world) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+    public void tick(MinecraftServer server) {
+        if (server.getTicks() % 20 != 0)
             return;
 
-        if (world.getServer().getTicks() % 20 != 0)
-            return;
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior((ServerTardis) tardis)) {
+            Loyalty loyalty = this.get(player);
 
-        Tardis tardis = this.tardis();
-        List<ServerPlayerEntity> list = TardisUtil.getPlayersInsideInterior(tardis);
+            if (!loyalty.isOf(Loyalty.Type.NEUTRAL) || loyalty.isOf(Loyalty.Type.COMPANION))
+                continue;
 
-        for (ServerPlayerEntity player : list) {
-            this.addLevel(player,
-                    (this.get(player).level() >= Loyalty.Type.NEUTRAL.level
-                            && this.get(player).level() < Loyalty.Type.COMPANION.level
-                            && AITMod.RANDOM.nextInt(0, 20) == 14) ? 1 : 0);
+            if (AITMod.RANDOM.nextInt(0, 20) == 14)
+                continue;
+
+            this.addLevel(player, 1);
         }
     }
 
@@ -108,5 +105,39 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
 
     public void subLevel(ServerPlayerEntity player, int level) {
         this.addLevel(player, -level);
+    }
+
+    public ServerPlayerEntity getLoyalPlayerInside() {
+        if (!(this.tardis instanceof ServerTardis serverTardis))
+            return null;
+
+        ServerPlayerEntity highest = null;
+        int highestLoyalty = 0;
+
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(serverTardis)) {
+            if (highest == null) {
+                highest = player;
+                highestLoyalty = this.get(highest).level();
+                continue;
+            }
+
+            int found = this.get(player).level();
+
+            if (found > highestLoyalty) {
+                highest = player;
+                highestLoyalty = found;
+            }
+        }
+
+        return highest;
+    }
+
+    public void sendMessageToPilot(Text text) {
+        ServerPlayerEntity player = this.getLoyalPlayerInside();
+
+        if (player == null)
+            return;
+
+        player.sendMessage(text, true);
     }
 }

@@ -26,7 +26,6 @@ import loqor.ait.tardis.data.properties.bool.BoolProperty;
 import loqor.ait.tardis.data.properties.bool.BoolValue;
 import loqor.ait.tardis.data.properties.integer.IntProperty;
 import loqor.ait.tardis.data.properties.integer.IntValue;
-import loqor.ait.tardis.util.TardisUtil;
 
 public abstract class TravelHandlerBase extends KeyedTardisComponent implements TardisTickable {
 
@@ -236,7 +235,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     protected static MinecraftServer server() {
-        return TardisUtil.getOverworld().getServer();
+        return WorldUtil.getOverworld().getServer();
     }
 
     public enum State {

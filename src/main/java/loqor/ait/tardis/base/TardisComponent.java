@@ -1,6 +1,5 @@
 package loqor.ait.tardis.base;
 
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
@@ -31,11 +30,9 @@ import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
  */
 public abstract class TardisComponent extends Initializable<TardisComponent.InitContext> implements Disposable {
 
-    @Exclude
-    protected Tardis tardis;
+    @Exclude protected Tardis tardis;
 
-    @Exclude
-    private final IdLike id;
+    @Exclude(strategy = Exclude.Strategy.NETWORK) private final IdLike id;
 
     /**
      * Do NOT under any circumstances run logic in this constructor. Default field
@@ -54,18 +51,15 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
     /**
      * Syncs this object and all its properties to the client.
-     *
      * @implNote Server-side only.
-     * @deprecated Use properties v2.
      */
-    @Deprecated
     protected void sync() {
         if (this.isClient()) {
             AITMod.LOGGER.warn("Attempted to sync a component ON a client!", new IllegalAccessException());
             return;
         }
 
-        ServerTardisManager.getInstance().sendTardis(this);
+        ServerTardisManager.getInstance().markComponentDirty(this);
     }
 
     public Tardis tardis() {
@@ -104,8 +98,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
     public enum Id implements IdLike {
         // Base parts.
-        DESKTOP(TardisDesktop.class, null, ClientTardis::setDesktop),
-        EXTERIOR(TardisExterior.class, null, ClientTardis::setExterior),
+        DESKTOP(TardisDesktop.class, null),
+        EXTERIOR(TardisExterior.class, null),
         HANDLERS(TardisHandlersManager.class, null),
 
         // Modular componenet "handlers"
@@ -127,30 +121,24 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         ENVIRONMENT(ExteriorEnvironmentHandler.class, ExteriorEnvironmentHandler::new),
         INTERIOR(InteriorChangingHandler.class, InteriorChangingHandler::new),
         SEQUENCE(SequenceHandler.class, SequenceHandler::new),
-        MOOD(MoodHandler.class, MoodHandler::new, null),
+        MOOD(MoodHandler.class, MoodHandler::new),
         FUEL(FuelHandler.class, FuelHandler::new),
         HADS(HadsHandler.class, HadsHandler::new),
         SIEGE(SiegeHandler.class, SiegeHandler::new),
         CLOAK(CloakHandler.class, CloakHandler::new),
         INCREMENT(IncrementManager.class, IncrementManager::new),
-        LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new),;
+        LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new);
 
-        private final BiConsumer<ClientTardis, TardisComponent> setter;
         private final Supplier<TardisComponent> creator;
 
         private final Class<? extends TardisComponent> clazz;
 
         private Integer index = null;
 
-        <T extends TardisComponent> Id(Class<T> clazz, Supplier<T> creator) {
-            this(clazz, creator, ClientTardis::set);
-        }
-
         @SuppressWarnings("unchecked")
-        <T extends TardisComponent> Id(Class<T> clazz, Supplier<T> creator, BiConsumer<ClientTardis, T> setter) {
+        <T extends TardisComponent> Id(Class<T> clazz, Supplier<T> creator) {
             this.clazz = clazz;
             this.creator = (Supplier<TardisComponent>) creator;
-            this.setter = (BiConsumer<ClientTardis, TardisComponent>) setter;
         }
 
         @Override
@@ -160,7 +148,12 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
         @Override
         public void set(ClientTardis tardis, TardisComponent component) {
-            this.setter.accept(tardis, component);
+            switch (this) {
+                case DESKTOP -> tardis.setDesktop((TardisDesktop) component);
+                case EXTERIOR -> tardis.setExterior((TardisExterior) component);
+                case HANDLERS -> {}
+                default -> tardis.getHandlers().set(component);
+            }
         }
 
         @Override
@@ -184,11 +177,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         }
 
         @Override
-        public boolean mutable() {
-            return this.setter != null;
-        }
-
-        @Override
         public int index() {
             return index;
         }
@@ -207,7 +195,9 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
         Class<? extends TardisComponent> clazz();
 
-        void set(ClientTardis tardis, TardisComponent component);
+        default void set(ClientTardis tardis, TardisComponent component) {
+            tardis.getHandlers().set(component);
+        }
 
         default TardisComponent get(ClientTardis tardis) {
             return tardis.handler(this);
@@ -216,8 +206,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         TardisComponent create();
 
         boolean creatable();
-
-        boolean mutable();
 
         String name();
 
@@ -246,22 +234,12 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         }
 
         @Override
-        public void set(ClientTardis tardis, TardisComponent component) {
-            tardis.set(component);
-        }
-
-        @Override
         public TardisComponent create() {
             return this.creator.get();
         }
 
         @Override
         public boolean creatable() {
-            return true;
-        }
-
-        @Override
-        public boolean mutable() {
             return true;
         }
 

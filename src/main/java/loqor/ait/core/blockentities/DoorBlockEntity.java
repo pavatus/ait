@@ -34,6 +34,7 @@ import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.data.DoorHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
@@ -69,7 +70,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         if (blockState.getBlock() instanceof DoorBlock && !tardis.areShieldsActive()) {
             boolean waterlogged = blockState.get(Properties.WATERLOGGED);
             if (waterlogged && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
-                for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis)) {
+                for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                     tardis.loyalty().subLevel(player, 1);
                 }
             }
@@ -126,10 +127,10 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (this.getWorld() != TardisUtil.getTardisDimension())
+        if (this.getWorld() != WorldUtil.getTardisDimension())
             return;
 
-        if (this.tardis().isEmpty())
+        if (!this.isLinked())
             return;
 
         Tardis tardis = this.tardis().get();

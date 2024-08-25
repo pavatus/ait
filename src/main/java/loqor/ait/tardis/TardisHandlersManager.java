@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.gson.*;
+import org.jetbrains.annotations.ApiStatus;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -68,25 +69,10 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     }
 
     /**
-     * Called on the START of a servers tick
-     *
-     * @param server
-     *            the current server
-     */
-    public void startTick(MinecraftServer server) {
-        this.forEach(component -> {
-            if (!(component instanceof TardisTickable tickable))
-                return;
-
-            tickable.startTick(server);
-        });
-    }
-
-    /**
      * @deprecated Use {@link Tardis#handler(IdLike)}
      */
+    @ApiStatus.Internal
     @SuppressWarnings("unchecked")
-    @Deprecated
     public <T extends TardisComponent> T get(IdLike id) {
         return (T) this.handlers.get(id);
     }
@@ -99,13 +85,9 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
         this.handlers.clear();
     }
 
-    /**
-     * Do NOT use this setter if you don't know what you're doing. Use
-     * {@link loqor.ait.tardis.wrapper.client.ClientTardis#set(TardisComponent)}.
-     */
-    @Deprecated
-    public <T extends TardisComponent> void set(IdLike id, T t) {
-        this.handlers.put(id, t);
+    @ApiStatus.Internal
+    public <T extends TardisComponent> void set(T t) {
+        this.handlers.put(t.getId(), t);
     }
 
     public static Object serializer() {
@@ -133,7 +115,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
                     continue;
                 }
 
-                manager.set(id, context.deserialize(element, id.clazz()));
+                manager.set(context.deserialize(element, id.clazz()));
             }
 
             for (int i = 0; i < manager.handlers.size(); i++) {
@@ -143,7 +125,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
                 IdLike id = registry.get(i);
                 AITMod.LOGGER.debug("Appending new component {}", id);
 
-                manager.set(id, id.create());
+                manager.set(id.create());
             }
 
             return manager;

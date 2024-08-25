@@ -14,6 +14,8 @@ import loqor.ait.tardis.data.landing.LandingPadHandler;
 import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
 import loqor.ait.tardis.data.permissions.PermissionHandler;
 import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
 
@@ -45,6 +47,14 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public ServerTardis asServer() {
+        return (ServerTardis) this;
+    }
+
+    public ClientTardis asClient() {
+        return (ClientTardis) this;
     }
 
     public TardisDesktop getDesktop() {
@@ -130,11 +140,11 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     }
 
     public boolean isRefueling() {
-        return this.<FuelHandler>handler(TardisComponent.Id.FUEL).getRefueling().get();
+        return this.<FuelHandler>handler(TardisComponent.Id.FUEL).refueling().get();
     }
 
     public void setRefueling(boolean b) {
-        this.<FuelHandler>handler(TardisComponent.Id.FUEL).getRefueling().set(b);
+        this.<FuelHandler>handler(TardisComponent.Id.FUEL).refueling().set(b);
     }
 
     public boolean isInDanger() {

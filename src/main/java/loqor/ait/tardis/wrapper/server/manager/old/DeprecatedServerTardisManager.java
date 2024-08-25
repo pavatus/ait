@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -24,11 +26,11 @@ import net.minecraft.world.World;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.SerialDimension;
 import loqor.ait.core.data.base.Exclude;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.tardis.Tardis;
 import loqor.ait.tardis.TardisManager;
 import loqor.ait.tardis.base.TardisComponent;
@@ -65,7 +67,6 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     @Override
     protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
         return super.createGsonBuilder(strategy)
-                .registerTypeAdapter(SerialDimension.class, SerialDimension.serializer())
                 .registerTypeAdapter(Tardis.class, ServerTardis.creator());
     }
 
@@ -74,17 +75,6 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         this.lookup.put(tardis);
 
         return tardis;
-    }
-
-    protected void sendTardis(ServerPlayerEntity player, ServerTardis tardis) {
-        if (tardis == null)
-            return;
-
-        PacketByteBuf data = PacketByteBufs.create();
-        data.writeUuid(tardis.getUuid());
-        data.writeString(this.networkGson.toJson(tardis, ServerTardis.class));
-
-        ServerPlayNetworking.send(player, SEND, data);
     }
 
     protected void sendTardisRemoval(MinecraftServer server, ServerTardis tardis) {
@@ -110,13 +100,9 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         ServerPlayNetworking.send(player, REMOVE, data);
     }
 
-    public abstract void sendTardis(ServerTardis tardis);
+    public abstract void markComponentDirty(TardisComponent component);
 
-    public abstract void sendTardis(TardisComponent component);
-
-    public abstract void sendPropertyV2ToSubscribers(Tardis tardis, Value<?> value);
-
-    public abstract void sendToSubscribers(ServerTardis tardis);
+    public abstract void markPropertyDirty(ServerTardis tardis, Value<?> value);
 
     @Override
     public @Nullable ServerTardis demandTardis(MinecraftServer server, UUID uuid) {
@@ -144,7 +130,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     public void remove(MinecraftServer server, ServerTardis tardis) {
         tardis.setRemoved(true);
 
-        ServerWorld tardisWorld = (ServerWorld) TardisUtil.getTardisDimension();
+        ServerWorld tardisWorld = WorldUtil.getTardisDimension();
 
         // Remove the exterior if it exists
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
@@ -219,6 +205,16 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     private void saveAndReset(MinecraftServer server) {
         this.save(server, true);
         this.reset();
+    }
+
+    /**
+     * @return An initialized {@link ServerTardis} without attachments.
+     */
+    protected ServerTardis readTardis(Gson gson, JsonObject json) {
+        ServerTardis tardis = gson.fromJson(json, ServerTardis.class);
+        Tardis.init(tardis, TardisComponent.InitContext.deserialize());
+
+        return tardis;
     }
 
     public static ServerPlayNetworking.PlayChannelHandler receiveTardis(Receiver receiver) {
