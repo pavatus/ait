@@ -53,6 +53,7 @@ public class SyncPropertyC2SPacket implements FabricPacket {
         return TYPE;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> boolean handle(ServerPlayerEntity source, PacketSender response) {
         Tardis found = ServerTardisManager.getInstance().demandTardis(ServerLifecycleHooks.get(), tardisId);
         if (found == null) return false;
