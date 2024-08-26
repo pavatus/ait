@@ -17,7 +17,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
 import loqor.ait.core.blockentities.PlaqueBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityRenderer<T> {
 

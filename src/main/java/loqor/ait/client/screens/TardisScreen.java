@@ -3,9 +3,9 @@ package loqor.ait.client.screens;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-import loqor.ait.tardis.link.v2.TardisRef;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.tardis.manager.ClientTardisManager;
 
 public abstract class TardisScreen extends Screen {
 

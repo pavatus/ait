@@ -9,9 +9,9 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.AITModClient;
-import loqor.ait.core.data.datapack.DatapackSonic;
-import loqor.ait.core.data.schema.BuiltinSonic;
-import loqor.ait.core.data.schema.SonicSchema;
+import loqor.ait.data.datapack.DatapackSonic;
+import loqor.ait.data.schema.sonic.BuiltinSonic;
+import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class SonicRegistry extends UnlockableRegistry<SonicSchema> {

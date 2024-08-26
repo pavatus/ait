@@ -6,9 +6,9 @@ import java.util.Optional;
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.datapack.DatapackMachineRecipe;
-import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.util.StackUtil;
+import loqor.ait.data.datapack.DatapackMachineRecipe;
+import loqor.ait.data.schema.MachineRecipeSchema;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class MachineRecipeRegistry extends SimpleDatapackRegistry<MachineRecipeSchema> {

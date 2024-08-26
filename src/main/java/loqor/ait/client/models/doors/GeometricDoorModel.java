@@ -7,7 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class GeometricDoorModel extends DoorModel {
 

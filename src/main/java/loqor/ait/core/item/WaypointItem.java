@@ -18,10 +18,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.Waypoint;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.control.impl.DirectionControl;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Waypoint;
 
 public class WaypointItem extends Item implements DyeableItem {
 

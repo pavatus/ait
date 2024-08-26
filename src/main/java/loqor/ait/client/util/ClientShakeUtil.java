@@ -5,8 +5,8 @@ import java.util.Objects;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class ClientShakeUtil {
     private static final float SHAKE_CLAMP = 45.0f; // Adjust this value to set the maximum shake angle

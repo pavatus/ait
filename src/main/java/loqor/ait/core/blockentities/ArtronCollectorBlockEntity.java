@@ -19,14 +19,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
-import loqor.ait.api.tardis.ArtronHolder;
+import loqor.ait.api.ArtronHolder;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.ArtronCollectorItem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.core.tardis.handler.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.tardis.data.RiftChunkManager;
 
 public class ArtronCollectorBlockEntity extends BlockEntity
         implements

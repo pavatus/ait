@@ -13,7 +13,7 @@ import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.TardisStarModel;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class TardisStar {
 

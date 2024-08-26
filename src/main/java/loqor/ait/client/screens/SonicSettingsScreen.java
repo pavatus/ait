@@ -24,12 +24,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.LinkableItem;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.data.schema.SonicSchema;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class SonicSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,

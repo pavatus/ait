@@ -8,7 +8,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.tardis.door.*;
 
 public class DoorRegistry {

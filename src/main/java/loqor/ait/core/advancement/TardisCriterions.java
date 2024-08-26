@@ -3,8 +3,8 @@ package loqor.ait.core.advancement;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.api.TardisEvents;
+import loqor.ait.core.tardis.util.TardisUtil;
 
 public class TardisCriterions {
     public static TakeOffCriterion TAKEOFF = Criteria.register(new TakeOffCriterion());

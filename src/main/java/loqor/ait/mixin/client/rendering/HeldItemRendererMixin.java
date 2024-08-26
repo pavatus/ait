@@ -15,7 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.AITTags;
 
 // TODO not entirely sure why Theo removed this - it was necessary for a reason.
 //  It removes that weird bopping for the sonic screwdriver and just makes it *that* much better of
@@ -43,6 +43,6 @@ public class HeldItemRendererMixin {
     }
 
     @Unique private static boolean noBop(ItemStack stack) {
-        return stack.getRegistryEntry().isIn(AITModTags.Items.NO_BOP);
+        return stack.getRegistryEntry().isIn(AITTags.Items.NO_BOP);
     }
 }

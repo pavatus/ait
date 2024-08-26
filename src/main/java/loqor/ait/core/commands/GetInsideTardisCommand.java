@@ -11,9 +11,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.TextUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class GetInsideTardisCommand {
 

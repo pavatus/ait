@@ -5,9 +5,7 @@ import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.MusicDiscItem;
+import net.minecraft.item.*;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
@@ -19,7 +17,6 @@ import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
-import loqor.ait.core.util.AITArmorMaterials;
 
 public class AITItems implements ItemRegistryContainer {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
@@ -38,10 +35,10 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item HAMMER = new HammerItem(3, -2.4F,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(600));
-    public static final Item RESPIRATOR = new WearableArmorItem(AITArmorMaterials.IRON, WearableArmorItem.Type.HELMET,
+    public static final Item RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
-    public static final Item FACELESS_RESPIRATOR = new WearableArmorItem(AITArmorMaterials.IRON,
-            WearableArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
+    public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
+            ArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
             true);
     public static final Item HYPERCUBE = new HypercubeItem(new OwoItemSettings().maxCount(1).group(AITMod.AIT_ITEM_GROUP));
     public static final Item HAZANDRA = new InteriorTeleporterItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));

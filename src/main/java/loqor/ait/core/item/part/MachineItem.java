@@ -15,9 +15,9 @@ import net.minecraft.util.ClickType;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.schema.MachineRecipeSchema;
+import loqor.ait.core.AITTags;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.data.schema.MachineRecipeSchema;
 
 public class MachineItem extends Item {
 
@@ -35,7 +35,7 @@ public class MachineItem extends Item {
         ItemStack machine = slot.getStack();
 
         // Should this be in SonicItem.Mode.INTERACTION?
-        if (!stack.getRegistryEntry().isIn(AITModTags.Items.SONIC_ITEM))
+        if (!stack.getRegistryEntry().isIn(AITTags.Items.SONIC_ITEM))
             return false;
 
         if (SonicItem.findMode(stack) != SonicItem.Mode.INTERACTION)

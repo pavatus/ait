@@ -47,6 +47,8 @@ repositories {
         name "Modrinth"
         url "https://api.modrinth.com/maven"
     }
+
+    maven { url = 'https://maven.nucleoid.xyz/' }
 }
 
 loom {
@@ -88,6 +90,9 @@ dependencies {
     //include(implementation("org.apache.fury:fury-core:0.7.0"))
 
     include "io.wispforest:owo-sentinel:${project.owo_version}"
+
+    modImplementation "xyz.nucleoid:fantasy:${project.fantasy_version}"
+    include "xyz.nucleoid:fantasy:${project.fantasy_version}"
 
     // change to modImplementation to play with ip, modCompileOnlyApi to not play with ip
     modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {

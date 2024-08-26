@@ -14,12 +14,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.loyalty.Loyalty;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class InteriorTeleporterItem extends LinkableItem { // todo - new model + texture?
     private static final ParticleEffect PARTICLE_SUCCESS = ParticleTypes.GLOW;

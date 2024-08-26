@@ -21,8 +21,8 @@ import loqor.ait.client.models.consoles.ConsoleGeneratorModel;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
-import loqor.ait.tardis.Tardis;
 
 public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> implements BlockEntityRenderer<T> {
 

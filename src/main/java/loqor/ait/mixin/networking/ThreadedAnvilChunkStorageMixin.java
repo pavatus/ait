@@ -11,7 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.chunk.WorldChunk;
 
-import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.api.TardisEvents;
 
 @Mixin(value = ThreadedAnvilChunkStorage.class, priority = 1001)
 public abstract class ThreadedAnvilChunkStorageMixin {

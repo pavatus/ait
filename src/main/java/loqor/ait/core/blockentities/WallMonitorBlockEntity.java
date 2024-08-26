@@ -8,10 +8,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.SecurityControl;
 
 public class WallMonitorBlockEntity extends InteriorLinkableBlockEntity {
 

@@ -8,7 +8,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.tardis.console.type.*;
 
 public class ConsoleRegistry {

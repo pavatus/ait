@@ -43,23 +43,23 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.ICantBreak;
-import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.api.TardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.manager.ClientTardisManager;
+import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 
 @SuppressWarnings("deprecation")
 public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBreak, Waterloggable {

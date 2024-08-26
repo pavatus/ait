@@ -23,18 +23,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
+import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.AITTags;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.loyalty.Loyalty;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.util.EnumSet;
-import loqor.ait.tardis.util.Ordered;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.enummap.EnumSet;
+import loqor.ait.data.enummap.Ordered;
 
 public class KeyItem extends LinkableItem {
 
@@ -61,7 +61,7 @@ public class KeyItem extends LinkableItem {
     }
 
     public static boolean isKeyInInventory(PlayerEntity player) {
-        return player.getInventory().contains(AITModTags.Items.KEY);
+        return player.getInventory().contains(AITTags.Items.KEY);
     }
 
     public static Collection<ItemStack> getKeysInInventory(PlayerEntity player) {

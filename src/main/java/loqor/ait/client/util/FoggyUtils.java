@@ -8,8 +8,8 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
-import loqor.ait.core.util.AITModTags;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.AITTags;
+import loqor.ait.core.tardis.Tardis;
 
 public class FoggyUtils {
     public static void overrideFog() {
@@ -44,7 +44,7 @@ public class FoggyUtils {
             ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.HEAD);
 
             RenderSystem.setShaderFogColor(0.2f, 0.2f, 0.2f,
-                    stack.isIn(AITModTags.Items.FULL_RESPIRATORS) ? 0.015f : 0.35f);
+                    stack.isIn(AITTags.Items.FULL_RESPIRATORS) ? 0.015f : 0.35f);
         }
 
         /*

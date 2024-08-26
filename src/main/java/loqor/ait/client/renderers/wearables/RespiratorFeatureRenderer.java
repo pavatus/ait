@@ -20,7 +20,6 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.wearables.RespiratorModel;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.item.WearableArmorItem;
 
 @Environment(value = EnvType.CLIENT)
 public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerEntityModel<T>>

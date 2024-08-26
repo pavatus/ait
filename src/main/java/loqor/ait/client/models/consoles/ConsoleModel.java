@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 @SuppressWarnings("rawtypes")
 public abstract class ConsoleModel extends SinglePartEntityModel {

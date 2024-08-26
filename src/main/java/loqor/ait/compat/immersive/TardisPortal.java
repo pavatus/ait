@@ -10,8 +10,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 
 public class TardisPortal extends Portal {
     private UUID tardisId;

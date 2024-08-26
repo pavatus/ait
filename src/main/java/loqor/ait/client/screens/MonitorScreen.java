@@ -25,24 +25,24 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
+import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.category.ClassicCategory;
+import loqor.ait.data.schema.exterior.category.PoliceBoxCategory;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.exterior.category.ClassicCategory;
-import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class MonitorScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,

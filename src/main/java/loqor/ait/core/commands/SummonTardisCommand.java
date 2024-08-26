@@ -18,9 +18,9 @@ import net.minecraft.util.math.RotationPropertyHelper;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.travel.TravelUtil;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class SummonTardisCommand {
 

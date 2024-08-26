@@ -1,6 +1,6 @@
 package loqor.ait.core.item;
 
-import static loqor.ait.tardis.data.travel.TravelHandlerBase.State.LANDED;
+import static loqor.ait.core.tardis.handler.travel.TravelHandlerBase.State.LANDED;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,14 +22,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
+import loqor.ait.core.tardis.handler.travel.TravelUtil;
+import loqor.ait.core.tardis.manager.ClientTardisManager;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class RemoteItem extends LinkableItem {
 

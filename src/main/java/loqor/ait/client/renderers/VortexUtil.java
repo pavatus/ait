@@ -12,7 +12,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.util.vortex.VortexNode;
+import loqor.ait.data.vortex.VortexNode;
 
 /**
  * @author - ThePlaceHolder (someElseisHere), Loqor

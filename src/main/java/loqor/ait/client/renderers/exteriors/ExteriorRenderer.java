@@ -15,6 +15,8 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisComponent;
+import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
@@ -22,15 +24,13 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.core.tardis.handler.CloakHandler;
+import loqor.ait.core.tardis.handler.OvergrownHandler;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.CloakHandler;
-import loqor.ait.tardis.data.OvergrownHandler;
-import loqor.ait.tardis.link.v2.TardisRef;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 

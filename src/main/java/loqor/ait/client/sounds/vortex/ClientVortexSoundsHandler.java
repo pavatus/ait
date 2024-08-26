@@ -7,11 +7,11 @@ import net.minecraft.sound.SoundCategory;
 
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.SoundHandler;
 
 public class ClientVortexSoundsHandler extends SoundHandler {
     public static LoopingSound VORTEX_SOUND;

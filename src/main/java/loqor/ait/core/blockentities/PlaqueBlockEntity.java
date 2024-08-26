@@ -1,15 +1,15 @@
 package loqor.ait.core.blockentities;
 
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
+import static loqor.ait.core.tardis.util.TardisUtil.findTardisByInterior;
 
 import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.api.link.LinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.LinkableBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 
 public class PlaqueBlockEntity extends LinkableBlockEntity {
 

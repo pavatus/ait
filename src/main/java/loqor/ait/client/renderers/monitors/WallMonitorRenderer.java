@@ -18,13 +18,13 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.PlaqueModel;
 import loqor.ait.core.blockentities.WallMonitorBlockEntity;
 import loqor.ait.core.blocks.PlaqueBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
+import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements BlockEntityRenderer<T> {
 

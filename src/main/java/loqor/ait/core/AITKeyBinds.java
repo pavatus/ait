@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.bind.KeyBind;
 import loqor.ait.core.item.KeyItem;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class AITKeyBinds {
 

@@ -10,7 +10,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.api.Identifiable;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.registry.Registry;
 

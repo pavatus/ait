@@ -11,10 +11,10 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.datapack.DatapackExterior;
-import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.datapack.DatapackExterior;
+import loqor.ait.data.datapack.exterior.BiomeOverrides;
+import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.exterior.variant.adaptive.AdaptiveVariant;

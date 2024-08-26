@@ -15,8 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.client.data.ClientLandingManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
+import loqor.ait.core.tardis.util.TardisUtil;
 
 public class LandingPadScreen extends Screen {
     private final BlockPos pos;

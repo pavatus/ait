@@ -13,7 +13,7 @@ import net.minecraft.predicate.item.ItemPredicate;
 
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.AITTags;
 
 public class AITBlockLootTables extends FabricBlockLootTableProvider {
     public AITBlockLootTables(FabricDataOutput output) {
@@ -29,7 +29,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
                         .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(4.0F)))
                         .apply(ApplyBonusLootFunction.oreDrops(Enchantments.FORTUNE))
                         .conditionally(MatchToolLootCondition
-                                .builder(ItemPredicate.Builder.create().tag(AITModTags.Items.CLUSTER_MAX_HARVESTABLES)))
+                                .builder(ItemPredicate.Builder.create().tag(AITTags.Items.CLUSTER_MAX_HARVESTABLES)))
                         .alternatively(this.applyExplosionDecay(block, ItemEntry.builder(AITItems.ZEITON_SHARD)
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(2.0F)))))));
     }

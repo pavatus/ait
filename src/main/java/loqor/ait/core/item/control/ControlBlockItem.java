@@ -19,8 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.tardis.control.Control;
 import loqor.ait.registry.impl.ControlRegistry;
-import loqor.ait.tardis.control.Control;
 
 public abstract class ControlBlockItem extends BlockItem {
     public static final String CONTROL_ID_KEY = "controlId";

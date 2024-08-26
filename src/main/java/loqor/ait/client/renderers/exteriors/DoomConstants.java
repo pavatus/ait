@@ -3,7 +3,7 @@ package loqor.ait.client.renderers.exteriors;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class DoomConstants {
 

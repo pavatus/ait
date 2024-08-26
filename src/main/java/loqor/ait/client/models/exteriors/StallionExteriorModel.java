@@ -8,7 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class StallionExteriorModel extends ExteriorModel {
     private final ModelPart body;

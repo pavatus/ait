@@ -1,5 +1,6 @@
 package loqor.ait.mixin.chameleon;
 
+import dev.drtheo.gaslighter.api.Twitter;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,8 +8,6 @@ import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-
-import loqor.ait.api.Twitter;
 
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin implements Twitter {

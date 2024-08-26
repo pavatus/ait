@@ -9,8 +9,8 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
-import loqor.ait.tardis.link.v2.TardisRef;
-import loqor.ait.tardis.link.v2.entity.AbstractLinkableEntity;
+import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.api.link.v2.entity.AbstractLinkableEntity;
 
 public class LinkableDummyEntity extends DummyEntity implements AbstractLinkableEntity {
 

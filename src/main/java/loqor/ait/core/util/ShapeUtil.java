@@ -6,7 +6,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-import loqor.ait.core.data.ShapeMap;
+import loqor.ait.data.ShapeMap;
 
 public class ShapeUtil {
 

@@ -26,22 +26,21 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import loqor.ait.api.link.LinkableItem;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.data.DirectedBlockPos;
-import loqor.ait.core.data.DirectedGlobalPos;
 import loqor.ait.core.item.KeyItem;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.DirectedBlockPos;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 

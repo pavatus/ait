@@ -1,6 +1,6 @@
 package loqor.ait.client.models.exteriors;
 
-import static loqor.ait.tardis.animation.ExteriorAnimation.*;
+import static loqor.ait.core.tardis.animation.ExteriorAnimation.*;
 
 import java.util.function.Function;
 
@@ -17,9 +17,9 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.loyalty.Loyalty;
 
 @SuppressWarnings("rawtypes")
 public abstract class ExteriorModel extends SinglePartEntityModel {

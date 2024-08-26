@@ -11,18 +11,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.core.data.DirectedBlockPos;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.base.Exclude;
-import loqor.ait.core.data.schema.door.DoorSchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisEvents;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedBlockPos;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.TardisComponentRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class PortalsHandler extends KeyedTardisComponent {
 

@@ -18,8 +18,8 @@ import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.util.TardisUtil;
 
 public final class TeleportInteriorCommand {
 

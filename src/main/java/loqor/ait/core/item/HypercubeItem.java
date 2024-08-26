@@ -18,7 +18,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.tardis.data.distress.DistressCall;
+import loqor.ait.core.tardis.handler.distress.DistressCall;
 
 public class HypercubeItem extends Item { // todo needs rename
     public HypercubeItem(Settings settings) {

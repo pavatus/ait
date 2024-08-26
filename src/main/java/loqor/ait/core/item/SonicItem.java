@@ -30,26 +30,26 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import loqor.ait.api.tardis.ArtronHolderItem;
+import loqor.ait.api.ArtronHolderItem;
+import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.AITTags;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.SonicSchema;
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.handler.RiftChunkManager;
+import loqor.ait.core.tardis.handler.landing.LandingPadManager;
+import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
+import loqor.ait.core.tardis.handler.landing.LandingPadSpot;
+import loqor.ait.core.tardis.handler.loyalty.Loyalty;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.RiftChunkManager;
-import loqor.ait.tardis.data.landing.LandingPadManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.data.landing.LandingPadSpot;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelUtil;
-import loqor.ait.tardis.link.LinkableItem;
 
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {
@@ -218,7 +218,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
     }
 
     public static boolean isSonic(ItemStack stack) {
-        return stack.getRegistryEntry().isIn(AITModTags.Items.SONIC_ITEM);
+        return stack.getRegistryEntry().isIn(AITTags.Items.SONIC_ITEM);
     }
 
     public static int findModeInt(ItemStack stack) {
@@ -369,7 +369,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 BlockState blockState = world.getBlockState(pos);
 
-                if (!world.getBlockState(pos).isIn(AITModTags.Blocks.SONIC_INTERACTABLE))
+                if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
                     return;
 
                 if (blockState.getBlock() == Blocks.IRON_DOOR || blockState.getBlock() == Blocks.IRON_TRAPDOOR) {
@@ -401,7 +401,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 Block block = world.getBlockState(pos).getBlock();
 
-                if (!world.getBlockState(pos).isIn(AITModTags.Blocks.SONIC_INTERACTABLE))
+                if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
                     return;
 
                 if (block instanceof TntBlock) {

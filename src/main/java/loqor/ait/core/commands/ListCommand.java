@@ -12,9 +12,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.TextUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class ListCommand {
 

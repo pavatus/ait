@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
 import loqor.ait.core.blockentities.EnvironmentProjectorBlockEntity;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 @SuppressWarnings("deprecation")
 public class EnvironmentProjectorBlock extends Block implements BlockEntityProvider {

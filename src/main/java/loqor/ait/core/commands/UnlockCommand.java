@@ -13,17 +13,17 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.Identifiable;
+import loqor.ait.api.Nameable;
 import loqor.ait.core.commands.argument.IdentifierWildcardArgumentType;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.core.data.Wildcard;
-import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.core.data.base.Nameable;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.data.Wildcard;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class UnlockCommand {
 

@@ -28,9 +28,9 @@ import net.minecraft.world.event.GameEvent;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DetectorBlockEntity;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.TardisCrashHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.TardisCrashHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 @SuppressWarnings("deprecation")
 public class DetectorBlock extends WallMountedBlock implements BlockEntityProvider {

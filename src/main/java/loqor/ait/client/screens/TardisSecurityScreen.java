@@ -19,11 +19,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.api.TardisComponent;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.tardis.handler.loyalty.Loyalty;
+import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
+import loqor.ait.core.tardis.util.TardisUtil;
 
 public class TardisSecurityScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,

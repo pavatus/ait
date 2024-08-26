@@ -3,8 +3,8 @@ package loqor.ait.registry.impl;
 import java.util.Random;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.datapack.DatapackCategory;
-import loqor.ait.core.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.data.datapack.DatapackCategory;
+import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 import loqor.ait.tardis.exterior.category.*;
 

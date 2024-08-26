@@ -18,15 +18,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.Wildcard;
-import loqor.ait.core.data.base.Identifiable;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.api.Identifiable;
+import loqor.ait.data.Wildcard;
+import loqor.ait.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
+import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.TardisDesktopSchema;
 
 public class IdentifierWildcardArgumentType implements ArgumentType<Wildcard<Identifier>> {
 

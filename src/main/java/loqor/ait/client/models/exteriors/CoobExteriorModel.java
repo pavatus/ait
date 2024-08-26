@@ -7,7 +7,7 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class CoobExteriorModel extends ExteriorModel {
 

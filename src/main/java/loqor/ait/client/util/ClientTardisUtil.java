@@ -1,6 +1,6 @@
 package loqor.ait.client.util;
 
-import static loqor.ait.tardis.util.TardisUtil.SNAP;
+import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
 
 import java.util.UUID;
 
@@ -14,13 +14,13 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.schema.SonicSchema;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.data.SonicHandler;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.handler.SonicHandler;
+import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class ClientTardisUtil {
     public static final int MAX_POWER_DELTA_TICKS = 3 * 20;

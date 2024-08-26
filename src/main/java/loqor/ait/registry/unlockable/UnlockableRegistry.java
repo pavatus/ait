@@ -14,7 +14,7 @@ import loqor.ait.AITMod;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.loyalty.Loyalty;
+import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDatapackRegistry<T> {
 

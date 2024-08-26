@@ -12,8 +12,8 @@ import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 
 public class RemoveCommand {
 

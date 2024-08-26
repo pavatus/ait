@@ -7,14 +7,14 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.toyota.ToyotaAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.ShieldHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
+import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.ShieldHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class ToyotaConsoleModel extends ConsoleModel {
     private final ModelPart toyota;

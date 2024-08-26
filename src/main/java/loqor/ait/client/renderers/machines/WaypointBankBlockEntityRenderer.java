@@ -18,9 +18,9 @@ import loqor.ait.client.util.ClientItemUtil;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.WaypointBankBlockEntity;
 import loqor.ait.core.blocks.WaypointBankBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> implements BlockEntityRenderer<T> {
 

@@ -17,19 +17,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.tardis.TardisClientEvents;
-import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisClientEvents;
+import loqor.ait.api.TardisEvents;
+import loqor.ait.api.TardisTickable;
 import loqor.ait.client.screens.interior.InteriorSettingsScreen;
 import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
-import loqor.ait.core.data.base.Exclude;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.properties.Property;
+import loqor.ait.core.tardis.handler.properties.Value;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.data.bsp.Exclude;
 import loqor.ait.registry.impl.TardisComponentRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.base.TardisTickable;
-import loqor.ait.tardis.data.properties.Property;
-import loqor.ait.tardis.data.properties.Value;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class GravityHandler extends KeyedTardisComponent implements TardisTickable {
 

@@ -30,9 +30,9 @@ import net.minecraft.world.WorldEvents;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.mixin.server.EnderDragonFightAccessor;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.tardis.handler.travel.TravelHandlerBase;
 
 @SuppressWarnings("deprecation")
 public class WorldUtil {

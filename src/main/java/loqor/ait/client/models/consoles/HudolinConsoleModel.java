@@ -7,8 +7,8 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.client.animation.console.hudolin.HudolinAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class HudolinConsoleModel extends ConsoleModel {
     private final ModelPart console;

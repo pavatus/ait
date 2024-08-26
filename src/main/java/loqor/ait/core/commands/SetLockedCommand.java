@@ -13,8 +13,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class SetLockedCommand {
 
