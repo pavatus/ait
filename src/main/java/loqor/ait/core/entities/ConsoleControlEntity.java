@@ -2,6 +2,8 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
+import loqor.ait.core.util.Scheduler;
+import loqor.ait.data.TimeUnit;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -58,6 +60,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             TrackedDataHandlerRegistry.INTEGER); // <--->
     private static final TrackedData<Boolean> WAS_SEQUENCED = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> ON_DELAY = DataTracker.registerData(ConsoleControlEntity.class,
+            TrackedDataHandlerRegistry.BOOLEAN);
 
     private BlockPos consoleBlockPos;
     private Control control;
@@ -103,6 +107,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
         this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
         this.dataTracker.startTracking(WAS_SEQUENCED, false);
+        this.dataTracker.startTracking(ON_DELAY, false);
     }
 
     @Override
@@ -307,12 +312,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         return this.dataTracker.get(PART_OF_SEQUENCE);
     }
 
-    public void createDelay(long millis) {
-        Control.createDelay(this.getControl(), this.tardis().get(), millis);
-    }
-
     public boolean isOnDelay() {
-        return Control.isOnDelay(this.getControl(), this.tardis().get());
+        return this.dataTracker.get(ON_DELAY);
     }
 
     public boolean run(PlayerEntity player, World world, boolean leftClick) {
@@ -338,11 +339,16 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
         control.runAnimation(tardis, (ServerPlayerEntity) player, (ServerWorld) world);
 
+        if (this.isOnDelay())
+            return false;
+
         if (!this.control.canRun(tardis, (ServerPlayerEntity) player))
             return false;
 
         if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
-            this.createDelay(this.control.getDelayLength());
+            this.dataTracker.set(ON_DELAY, true);
+
+            Scheduler.runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
         }
 
         if (this.consoleBlockPos != null)

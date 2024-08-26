@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.AITMod;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
-import loqor.ait.core.util.DeltaTimeManager;
 
 public class Control {
 
@@ -81,27 +80,8 @@ public class Control {
         return false;
     }
 
-    public static String createDelayId(Control control, Tardis tardis) {
-        return "delay-" + control.id + "-" + tardis.getUuid();
-    }
-
-    public static void createDelay(Control control, Tardis tardis, long millis) {
-        DeltaTimeManager.createDelay(createDelayId(control, tardis), millis);
-    }
-
-    public static void createDelay(Control control, Tardis tardis) {
-        createDelay(control, tardis, control.getDelayLength());
-    }
-
-    public static boolean isOnDelay(Control control, Tardis tardis) {
-        return DeltaTimeManager.isStillWaitingOnDelay(createDelayId(control, tardis));
-    }
-
     public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
         if ((this.requiresPower() && !tardis.engine().hasPower()))
-            return false;
-
-        if (isOnDelay(this, tardis))
             return false;
 
         boolean security = tardis.stats().security().get();

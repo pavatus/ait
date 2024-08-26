@@ -73,7 +73,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         boolean shouldEject = player.isSneaking();
 
         if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()
-                && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()) {
+                && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isQueued()) {
             ItemStack key = player.getMainHandStack();
             UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
 
@@ -104,7 +104,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         }
 
         if (player.getMainHandStack().getItem() instanceof SonicItem && !tardis.siege().isActive()
-                && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isGenerating()
+                && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isQueued()
                 && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
             ItemStack sonic = player.getMainHandStack();
             UUID sonicId = LinkableItem.getTardisIdFromUuid(sonic, "tardis");

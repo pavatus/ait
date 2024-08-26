@@ -14,11 +14,11 @@ import loqor.ait.AITMod;
 
 public class SoundHandler {
 
-    private static final List<LoopingSound> EMPTY = List.of();
+    private static final List<SoundInstance> EMPTY = List.of();
 
-    protected List<LoopingSound> sounds; // shouldnt really be LoopingSound
+    protected List<SoundInstance> sounds; // shouldnt really be LoopingSound
 
-    protected void ofSounds(LoopingSound sound) {
+    protected void ofSounds(SoundInstance sound) {
         if (sound == null) {
             this.sounds = EMPTY;
             return;
@@ -27,7 +27,7 @@ public class SoundHandler {
         this.sounds = List.of(sound);
     }
 
-    public static SoundHandler create(LoopingSound... list) {
+    public static SoundHandler create(SoundInstance... list) {
         SoundHandler handler = new SoundHandler();
 
         handler.sounds = new ArrayList<>();
@@ -85,7 +85,7 @@ public class SoundHandler {
         if (this.sounds == null)
             return;
 
-        for (LoopingSound sound : this.sounds) {
+        for (SoundInstance sound : this.sounds) {
             this.stopSound(sound);
         }
     }

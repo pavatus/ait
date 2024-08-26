@@ -11,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 import loqor.ait.AITMod;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
-import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class TravelUtil {
@@ -95,21 +94,5 @@ public class TravelUtil {
 
     private static String getDematerialiseDelayId(Tardis tardis) {
         return tardis.getUuid().toString() + "_dematerialise_delay";
-    }
-
-    public static boolean matCooldownn(Tardis tardis) {
-        return DeltaTimeManager.isStillWaitingOnDelay(getMaterialiseDelayId(tardis));
-    }
-
-    public static boolean dematCooldown(Tardis tardis) {
-        return DeltaTimeManager.isStillWaitingOnDelay(getDematerialiseDelayId(tardis));
-    }
-
-    public static void runMatCooldown(Tardis tardis) {
-        DeltaTimeManager.createDelay(getMaterialiseDelayId(tardis), 5000L);
-    }
-
-    public static void runDematCooldown(Tardis tardis) {
-        DeltaTimeManager.createDelay(getDematerialiseDelayId(tardis), 5000L);
     }
 }

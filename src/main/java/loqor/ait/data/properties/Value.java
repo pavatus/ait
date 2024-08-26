@@ -59,6 +59,9 @@ public class Value<T> implements Disposable {
     }
 
     public void set(T value) {
+        if (this.value == value)
+            return;
+
         this.set(value, true);
     }
 

@@ -106,8 +106,7 @@ public class TardisDesktop extends TardisComponent {
         AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
     }
 
-    public void clearOldInterior(TardisDesktopSchema schema) {
-        this.schema = schema;
+    public void clearOldInterior() {
         DesktopGenerator.clearArea(WorldUtil.getTardisDimension(), this.corners);
     }
 

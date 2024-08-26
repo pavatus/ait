@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.handler;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.api.TardisEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -52,6 +53,8 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
     }
 
     static {
+        TardisEvents.DEMAT.register(tardis -> tardis.siege().isActive() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
+
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 

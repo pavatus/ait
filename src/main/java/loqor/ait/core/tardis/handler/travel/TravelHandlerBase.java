@@ -3,20 +3,19 @@ package loqor.ait.core.tardis.handler.travel;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import loqor.ait.core.util.Scheduler;
+import loqor.ait.data.TimeUnit;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.sounds.MatSound;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.core.util.TimeUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.bsp.Exclude;
@@ -101,19 +100,21 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     }
 
     @Override
+    protected void onInit(InitContext ctx) {
+        super.onInit(ctx);
+
+        Scheduler.runTaskTimer(() -> {
+            if (this.hammerUses > 0)
+                this.hammerUses--;
+        }, TimeUnit.TICKS, 200);
+    }
+
+    @Override
     public void tick(MinecraftServer server) {
         TardisCrashHandler crash = tardis.crash();
 
         if (crash.getState() != TardisCrashHandler.State.NORMAL)
             crash.addRepairTicks(2 * this.speed());
-
-        if (this.hammerUses > 0
-                && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay")) {
-            this.hammerUses--;
-
-            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-tardisHammerAnnoyanceDecay",
-                    (long) TimeUtil.secondsToMilliseconds(10));
-        }
     }
 
     public BoolValue leaveBehind() {

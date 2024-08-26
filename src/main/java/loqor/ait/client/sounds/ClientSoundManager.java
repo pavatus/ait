@@ -1,5 +1,6 @@
 package loqor.ait.client.sounds;
 
+import loqor.ait.client.sounds.drifting.ClientDriftingSoundHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -32,78 +33,83 @@ public class ClientSoundManager {
     private static ClientLavaSoundHandler lavaSound;
     private static SonicSoundHandler sonicSound;
     private static ClientFallSoundHandler fallSound;
+    private static ClientDriftingSoundHandler driftingSound;
 
     public static ClientHumHandler getHum() {
-        if (hum == null) {
+        if (hum == null)
             hum = ClientHumHandler.create();
-        }
 
         return hum;
     }
 
     public static ClientAlarmHandler getAlarm() {
-        if (alarm == null) {
+        if (alarm == null)
             alarm = ClientAlarmHandler.create();
-        }
 
         return alarm;
     }
 
     public static ClientFlightHandler getFlight() {
-        if (flight == null) {
+        if (flight == null)
             flight = ClientFlightHandler.create();
-        }
 
         return flight;
     }
 
     public static ClientCreakHandler getCreaks() {
-        if (creak == null) {
+        if (creak == null)
             creak = ClientCreakHandler.create();
-        }
+
         return creak;
     }
 
     public static ClientVortexSoundsHandler getVortexSounds() {
-        if (vortexSounds == null) {
+        if (vortexSounds == null)
             vortexSounds = ClientVortexSoundsHandler.create();
-        }
+
         return vortexSounds;
     }
 
     public static ClientRainSoundHandler getRainSound() {
-        if (rainSound == null) {
+        if (rainSound == null)
             rainSound = ClientRainSoundHandler.create();
-        }
+
         return rainSound;
     }
 
     public static ClientThunderSoundHandler getThunderSound() {
-        if (thunderSound == null) {
+        if (thunderSound == null)
             thunderSound = ClientThunderSoundHandler.create();
-        }
+
         return thunderSound;
     }
 
     public static ClientLavaSoundHandler getLavaSound() {
-        if (lavaSound == null) {
+        if (lavaSound == null)
             lavaSound = ClientLavaSoundHandler.create();
-        }
+
         return lavaSound;
     }
 
     public static SonicSoundHandler getSonicSound() {
-        if (sonicSound == null) {
+        if (sonicSound == null)
             sonicSound = new SonicSoundHandler();
-        }
+
         return sonicSound;
     }
 
     public static ClientFallSoundHandler getFallSound() {
-        if (fallSound == null) {
+        if (fallSound == null)
             fallSound = ClientFallSoundHandler.create();
-        }
+
         return fallSound;
+    }
+
+    public static ClientDriftingSoundHandler getDriftingSound() {
+        if (driftingSound == null)
+            driftingSound = ClientDriftingSoundHandler.create();
+
+        return driftingSound;
     }
 
     public static void tick(MinecraftClient client) {
@@ -133,5 +139,8 @@ public class ClientSoundManager {
 
         if (getFallSound() != null)
             getFallSound().tick(client);
+
+        if (getDriftingSound() != null)
+            getDriftingSound().tick(client);
     }
 }

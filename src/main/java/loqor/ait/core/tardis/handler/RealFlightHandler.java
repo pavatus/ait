@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler;
 
+import loqor.ait.api.TardisEvents;
 import net.minecraft.server.MinecraftServer;
 
 import loqor.ait.api.KeyedTardisComponent;
@@ -11,6 +12,12 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
 
     private static final BoolProperty IS_FALLING = new BoolProperty("falling", false);
     private final BoolValue falling = IS_FALLING.create(this);
+
+    static {
+        TardisEvents.DEMAT.register(tardis -> {
+            return tardis.flight().falling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS;
+        });
+    }
 
     public RealFlightHandler() {
         super(Id.FLIGHT);
