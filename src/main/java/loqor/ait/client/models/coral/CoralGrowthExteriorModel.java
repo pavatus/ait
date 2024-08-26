@@ -7,10 +7,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 
 import loqor.ait.client.models.exteriors.ExteriorModel;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class CoralGrowthExteriorModel extends ExteriorModel {
     public final ModelPart coral;

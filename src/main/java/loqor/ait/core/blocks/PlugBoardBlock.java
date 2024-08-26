@@ -31,8 +31,8 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
 import loqor.ait.core.blockentities.PlugBoardBlockEntity;
-import loqor.ait.core.data.ShapeMap;
 import loqor.ait.core.util.ShapeUtil;
+import loqor.ait.data.ShapeMap;
 
 @SuppressWarnings("deprecation")
 public class PlugBoardBlock extends Block implements BlockEntityProvider {

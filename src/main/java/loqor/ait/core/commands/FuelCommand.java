@@ -13,9 +13,9 @@ import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.util.TextUtil;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class FuelCommand {
 

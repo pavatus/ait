@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.sounds.MatSound;
-import loqor.ait.core.util.SoundRegistryContainer;
+import loqor.ait.registry.auto.SoundRegistryContainer;
 
 public class AITSounds implements SoundRegistryContainer {
     public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/secret_music"));

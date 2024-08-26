@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class DoomDoorModel extends DoorModel {
     private final ModelPart doom;

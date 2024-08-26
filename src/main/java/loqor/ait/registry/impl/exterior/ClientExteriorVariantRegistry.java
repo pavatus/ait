@@ -12,10 +12,10 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.core.data.datapack.DatapackExterior;
-import loqor.ait.core.data.datapack.exterior.BiomeOverrides;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.core.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.datapack.DatapackExterior;
+import loqor.ait.data.datapack.exterior.BiomeOverrides;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.tardis.exterior.variant.adaptive.client.ClientAdaptiveVariant;
 import loqor.ait.tardis.exterior.variant.bookshelf.client.ClientBookshelfDefaultVariant;

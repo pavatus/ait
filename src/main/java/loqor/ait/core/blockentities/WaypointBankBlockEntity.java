@@ -24,15 +24,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.WaypointBankBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.Waypoint;
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Waypoint;
 
 public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
 

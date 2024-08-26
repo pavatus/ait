@@ -7,7 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class CopperConsoleModel extends ConsoleModel {
     private final ModelPart copper;

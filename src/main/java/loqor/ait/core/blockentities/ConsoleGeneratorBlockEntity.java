@@ -2,7 +2,7 @@ package loqor.ait.core.blockentities;
 
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextConsole;
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
-import static loqor.ait.tardis.util.TardisUtil.findTardisByInterior;
+import static loqor.ait.core.tardis.util.TardisUtil.findTardisByInterior;
 
 import java.util.Optional;
 
@@ -30,16 +30,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.LinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.link.LinkableBlockEntity;
 
 public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");

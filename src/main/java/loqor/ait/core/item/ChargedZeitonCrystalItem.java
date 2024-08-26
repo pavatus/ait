@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
-import loqor.ait.api.tardis.ArtronHolderItem;
+import loqor.ait.api.ArtronHolderItem;
 
 public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
     public static final double MAX_FUEL = 5000;

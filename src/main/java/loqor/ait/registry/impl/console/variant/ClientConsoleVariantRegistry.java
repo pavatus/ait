@@ -8,9 +8,9 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
-import loqor.ait.core.data.datapack.DatapackConsole;
-import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.data.datapack.DatapackConsole;
+import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
+import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.tardis.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.tardis.console.variant.alnico.client.ClientBlueAlnicoVariant;

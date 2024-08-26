@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.sound.CreakSound;
+import loqor.ait.data.CreakSound;
 
 // do i really need a registry for this?? no, but also YES.
 // TODO replace this with sound tags perhaps?

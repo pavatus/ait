@@ -26,7 +26,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ControlModel;
 import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {

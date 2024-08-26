@@ -35,12 +35,12 @@ import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.entities.base.LinkableDummyLivingEntity;
 import loqor.ait.core.item.control.ControlBlockItem;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.control.ControlTypes;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.control.ControlTypes;
+import loqor.ait.data.schema.console.ConsoleTypeSchema;
 
 public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 

@@ -31,16 +31,16 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.ShapeUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.data.DirectedGlobalPos;
 
 @SuppressWarnings("deprecation")
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, Waterloggable {

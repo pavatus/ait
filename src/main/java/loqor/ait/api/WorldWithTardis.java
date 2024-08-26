@@ -8,8 +8,7 @@ import java.util.function.Consumer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.ChunkPos;
 
-import loqor.ait.api.tardis.TardisEvents;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
 
 public interface WorldWithTardis {
 

@@ -9,14 +9,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
 import loqor.ait.core.item.control.ControlBlockItem;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
 import loqor.ait.registry.impl.ControlRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.link.v2.TardisRef;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 

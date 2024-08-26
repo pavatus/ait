@@ -1,6 +1,6 @@
 package loqor.ait.client.screens.interior;
 
-import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
+import static loqor.ait.core.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,10 +23,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.manager.ClientTardisManager;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 
 public class OwOInteriorSelectScreen extends BaseOwoScreen<FlowLayout> {
     private static final Identifier MISSING_PREVIEW = new Identifier(AITMod.MOD_ID,

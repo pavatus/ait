@@ -12,9 +12,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.link.LinkableItem;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
 
 public class LinkCommand {
 

@@ -28,14 +28,14 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.RiftChunkManager;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.manager.TardisBuilder;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.data.RiftChunkManager;
-import loqor.ait.tardis.exterior.variant.growth.CoralGrowthVariant;
-import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 @SuppressWarnings("deprecation")
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {

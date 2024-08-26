@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 @SuppressWarnings("rawtypes")
 public abstract class DoorModel extends SinglePartEntityModel {

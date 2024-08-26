@@ -9,11 +9,11 @@ import java.util.function.Consumer;
 import com.google.gson.*;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisComponent;
 import loqor.ait.registry.Registry;
 import loqor.ait.tardis.TardisDesktop;
 import loqor.ait.tardis.TardisExterior;
 import loqor.ait.tardis.TardisHandlersManager;
-import loqor.ait.tardis.base.TardisComponent;
 
 public class TardisComponentRegistry implements Registry {
 

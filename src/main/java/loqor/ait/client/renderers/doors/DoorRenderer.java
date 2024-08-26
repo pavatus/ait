@@ -12,6 +12,7 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
+import loqor.ait.api.TardisComponent;
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
@@ -19,15 +20,14 @@ import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.DoorBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.OvergrownHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.OvergrownHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 

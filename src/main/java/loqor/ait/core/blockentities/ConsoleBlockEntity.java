@@ -22,25 +22,25 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.control.ControlTypes;
+import loqor.ait.core.tardis.control.sequences.SequenceHandler;
+import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.RiftChunkManager;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.control.ControlTypes;
-import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.RiftChunkManager;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
 
 public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements BlockEntityTicker<ConsoleBlockEntity> {
 

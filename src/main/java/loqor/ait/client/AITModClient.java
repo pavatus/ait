@@ -43,24 +43,24 @@ import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.data.schema.SonicSchema;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.core.item.*;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.manager.ClientTardisManager;
+import loqor.ait.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {

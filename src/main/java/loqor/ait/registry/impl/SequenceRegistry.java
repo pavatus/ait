@@ -25,8 +25,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.DirectedBlockPos;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.tardis.control.impl.*;
 import loqor.ait.tardis.control.impl.pos.IncrementControl;
 import loqor.ait.tardis.control.impl.pos.XControl;

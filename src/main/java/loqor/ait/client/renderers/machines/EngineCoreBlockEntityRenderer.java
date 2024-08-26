@@ -18,7 +18,7 @@ import loqor.ait.client.models.decoration.TardisStarModel;
 import loqor.ait.client.models.machines.EngineCoreModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 @Environment(EnvType.CLIENT)
 public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<EngineCoreBlockEntity> {

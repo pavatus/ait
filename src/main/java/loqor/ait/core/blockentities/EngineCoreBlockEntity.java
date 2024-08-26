@@ -22,9 +22,9 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 
 public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
 

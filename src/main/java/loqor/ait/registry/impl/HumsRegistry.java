@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.sound.HumSound;
+import loqor.ait.data.HumSound;
 
 public class HumsRegistry {
     public static final SimpleRegistry<HumSound> REGISTRY = FabricRegistryBuilder

@@ -19,8 +19,8 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.util.TardisUtil;
 
 public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 

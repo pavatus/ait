@@ -21,9 +21,9 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.GroundSearchArgumentType;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class SafePosCommand {
 

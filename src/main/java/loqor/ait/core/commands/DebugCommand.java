@@ -18,10 +18,10 @@ import net.minecraft.text.Text;
 import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.landing.LandingPadManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.landing.LandingPadManager;
+import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
+import loqor.ait.core.tardis.util.NetworkUtil;
 
 public class DebugCommand {
 

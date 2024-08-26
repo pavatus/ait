@@ -5,10 +5,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 
 import loqor.ait.client.sounds.LoopingSound;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.core.tardis.util.SoundHandler;
 
 public class ClientFlightHandler extends SoundHandler {
 

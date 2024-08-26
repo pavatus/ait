@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class RedstoneControlBlock extends ControlBlock {
     private static final BooleanProperty POWERED = Properties.POWERED;

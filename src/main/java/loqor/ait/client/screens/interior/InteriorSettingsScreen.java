@@ -1,6 +1,6 @@
 package loqor.ait.client.screens.interior;
 
-import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
+import static loqor.ait.core.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 import java.util.List;
 import java.util.function.Function;
@@ -26,22 +26,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.tardis.TardisClientEvents;
+import loqor.ait.api.TardisClientEvents;
+import loqor.ait.api.TardisComponent;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
 import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.compat.DependencyChecker;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.ServerHumHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.HumSound;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.HumsRegistry;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {

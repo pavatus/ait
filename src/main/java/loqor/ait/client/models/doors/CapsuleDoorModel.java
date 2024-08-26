@@ -10,7 +10,7 @@ import net.minecraft.util.math.RotationAxis;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
-import loqor.ait.tardis.data.DoorHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class CapsuleDoorModel extends DoorModel {
     private final ModelPart body;

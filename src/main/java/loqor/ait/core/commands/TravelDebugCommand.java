@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class TravelDebugCommand {
 

@@ -1,6 +1,6 @@
 package loqor.ait.client.screens.interior;
 
-import static loqor.ait.tardis.data.InteriorChangingHandler.CHANGE_DESKTOP;
+import static loqor.ait.core.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,9 +20,9 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.screens.TardisScreen;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class InteriorSelectScreen extends TardisScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,

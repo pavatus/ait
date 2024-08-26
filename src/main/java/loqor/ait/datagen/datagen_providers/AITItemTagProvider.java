@@ -12,7 +12,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.core.util.AITModTags;
+import loqor.ait.core.AITTags;
 
 public class AITItemTagProvider extends FabricTagProvider<Item> {
     public AITItemTagProvider(FabricDataOutput output,
@@ -23,20 +23,20 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         // Items
-        getOrCreateTagBuilder(AITModTags.Items.SONIC_ITEM).add(AITItems.SONIC_SCREWDRIVER);
+        getOrCreateTagBuilder(AITTags.Items.SONIC_ITEM).add(AITItems.SONIC_SCREWDRIVER);
 
         getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS).add(AITItems.DRIFTING_MUSIC_DISC)
                 .add(AITItems.MERCURY_MUSIC_DISC);
 
-        getOrCreateTagBuilder(AITModTags.Items.CLUSTER_MAX_HARVESTABLES).add(AITItems.ZEITON_SHARD);
+        getOrCreateTagBuilder(AITTags.Items.CLUSTER_MAX_HARVESTABLES).add(AITItems.ZEITON_SHARD);
 
-        getOrCreateTagBuilder(AITModTags.Items.NO_BOP).add(AITItems.SONIC_SCREWDRIVER);
+        getOrCreateTagBuilder(AITTags.Items.NO_BOP).add(AITItems.SONIC_SCREWDRIVER);
 
-        getOrCreateTagBuilder(AITModTags.Items.FULL_RESPIRATORS).add(AITItems.RESPIRATOR);
+        getOrCreateTagBuilder(AITTags.Items.FULL_RESPIRATORS).add(AITItems.RESPIRATOR);
 
-        getOrCreateTagBuilder(AITModTags.Items.HALF_RESPIRATORS).add(AITItems.FACELESS_RESPIRATOR);
+        getOrCreateTagBuilder(AITTags.Items.HALF_RESPIRATORS).add(AITItems.FACELESS_RESPIRATOR);
 
-        getOrCreateTagBuilder(AITModTags.Items.KEY).add(AITItems.IRON_KEY, AITItems.GOLD_KEY, AITItems.CLASSIC_KEY,
+        getOrCreateTagBuilder(AITTags.Items.KEY).add(AITItems.IRON_KEY, AITItems.GOLD_KEY, AITItems.CLASSIC_KEY,
                 AITItems.NETHERITE_KEY, AITItems.SKELETON_KEY);
     }
 }

@@ -1,5 +1,6 @@
 package loqor.ait.mixin.chameleon;
 
+import dev.drtheo.gaslighter.api.Twitter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,7 +20,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-import loqor.ait.api.Twitter;
 import loqor.ait.core.events.FakeBlockEvents;
 
 @Mixin(ServerPlayNetworkHandler.class)

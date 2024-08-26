@@ -14,15 +14,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.api.TardisComponent;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.CloakHandler;
-import loqor.ait.tardis.data.ShieldHandler;
-import loqor.ait.tardis.data.SiegeHandler;
-import loqor.ait.tardis.data.mood.MoodDictatedEvent;
-import loqor.ait.tardis.data.mood.TardisMood;
-import loqor.ait.tardis.data.travel.TravelHandler;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.tardis.handler.CloakHandler;
+import loqor.ait.tardis.handler.ShieldHandler;
+import loqor.ait.tardis.handler.SiegeHandler;
+import loqor.ait.tardis.handler.mood.MoodDictatedEvent;
+import loqor.ait.tardis.handler.mood.TardisMood;
+import loqor.ait.tardis.handler.travel.TravelHandler;
 import loqor.ait.tardis.util.TardisUtil;
 
 public class MoodEventPoolRegistry {

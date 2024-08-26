@@ -10,10 +10,10 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.datapack.DatapackConsole;
-import loqor.ait.core.data.datapack.DatapackExterior;
-import loqor.ait.core.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.core.data.schema.console.ConsoleVariantSchema;
+import loqor.ait.data.datapack.DatapackConsole;
+import loqor.ait.data.datapack.DatapackExterior;
+import loqor.ait.data.schema.console.ConsoleTypeSchema;
+import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
 import loqor.ait.tardis.console.variant.alnico.AlnicoVariant;
 import loqor.ait.tardis.console.variant.alnico.BlueAlnicoVariant;

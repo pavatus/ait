@@ -6,7 +6,7 @@ import net.minecraft.command.argument.EnumArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.StringIdentifiable;
 
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class GroundSearchArgumentType extends EnumArgumentType<TravelHandlerBase.GroundSearch> {
 

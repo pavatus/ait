@@ -15,15 +15,15 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.api.TardisComponent;
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.tardis.handler.ServerHumHandler;
+import loqor.ait.core.tardis.util.SoundHandler;
+import loqor.ait.data.HumSound;
 import loqor.ait.registry.impl.HumsRegistry;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class ClientHumHandler extends SoundHandler {
 

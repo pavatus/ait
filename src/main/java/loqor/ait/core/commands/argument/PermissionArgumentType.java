@@ -17,7 +17,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.data.permissions.Permission;
+import loqor.ait.core.tardis.handler.permissions.Permission;
 
 public class PermissionArgumentType implements ArgumentType<Permission> {
 

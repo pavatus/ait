@@ -14,13 +14,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 
-import loqor.ait.core.item.WearableArmorItem;
-import loqor.ait.core.item.WearableItem;
+import loqor.ait.core.item.RenderableArmorItem;
 
 @Mixin(HeadFeatureRenderer.class)
-public abstract class HeadFeatureRendererMixin<T extends LivingEntity, M extends EntityModel<T>>
-        extends
-            FeatureRenderer<T, M> {
+public abstract class HeadFeatureRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+
     public HeadFeatureRendererMixin(FeatureRendererContext<T, M> context) {
         super(context);
     }
@@ -28,11 +26,7 @@ public abstract class HeadFeatureRendererMixin<T extends LivingEntity, M extends
     @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", cancellable = true)
     public void ait$render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i,
             T livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
-        if ((livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof WearableItem wearable
-                && wearable.hasCustomRenderer())
-                || (livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof WearableArmorItem armor
-                        && armor.hasCustomRenderer())) {
+        if (livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof RenderableArmorItem armor && armor.hasCustomRendering())
             ci.cancel();
-        }
     }
 }

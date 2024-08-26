@@ -21,11 +21,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.SiegeHandler;
-import loqor.ait.tardis.link.LinkableItem;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.SiegeHandler;
+import loqor.ait.data.DirectedGlobalPos;
 
 // todo fix so many issues with having more than one of this item
 public class SiegeTardisItem extends Item {

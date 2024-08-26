@@ -18,8 +18,8 @@ import net.minecraft.util.hit.HitResult;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.AITTags;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.util.AITModTags;
 
 public class AITHudOverlay implements HudRenderCallback {
 
@@ -62,7 +62,7 @@ public class AITHudOverlay implements HudRenderCallback {
                             .getBlock();
                     return !(block instanceof AirBlock) && nbt.getDouble(SonicItem.FUEL_KEY) > 0
                             && player.getWorld().getBlockState(((BlockHitResult) crosshairTarget).getBlockPos())
-                                    .isIn(AITModTags.Blocks.SONIC_INTERACTABLE);
+                                    .isIn(AITTags.Blocks.SONIC_INTERACTABLE);
                 }
             } else if (player.getOffHandStack().getItem() instanceof SonicItem) {
                 ItemStack sonic = player.getOffHandStack();
@@ -76,7 +76,7 @@ public class AITHudOverlay implements HudRenderCallback {
                             .getBlock();
                     return !(block instanceof AirBlock) && nbt.getDouble(SonicItem.FUEL_KEY) > 0
                             && player.getWorld().getBlockState(((BlockHitResult) crosshairTarget).getBlockPos())
-                                    .isIn(AITModTags.Blocks.SONIC_INTERACTABLE);
+                                    .isIn(AITTags.Blocks.SONIC_INTERACTABLE);
                 }
             }
         }

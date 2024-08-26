@@ -14,8 +14,8 @@ import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.data.ClientLandingManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.data.landing.LandingPadSpot;
+import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
+import loqor.ait.core.tardis.handler.landing.LandingPadSpot;
 
 public class LandingRegionRenderer {
 

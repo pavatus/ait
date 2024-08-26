@@ -10,10 +10,10 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisComponent;
 import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.mood.MoodHandler;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.mood.MoodHandler;
 
 public class TriggerMoodRollCommand {
 

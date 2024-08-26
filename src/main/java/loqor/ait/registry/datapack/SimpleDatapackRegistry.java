@@ -18,7 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.data.base.Identifiable;
+import loqor.ait.api.Identifiable;
 import loqor.ait.core.util.WorldUtil;
 
 public abstract class SimpleDatapackRegistry<T extends Identifiable> extends DatapackRegistry<T>

@@ -22,9 +22,9 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.PeanutBlock;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class HammerItem extends SwordItem {
 

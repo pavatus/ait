@@ -16,8 +16,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 

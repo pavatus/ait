@@ -4,7 +4,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class ForcedChunkUtil {
 

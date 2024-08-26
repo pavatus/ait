@@ -18,13 +18,13 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.monitors.CRTMonitorModel;
 import loqor.ait.core.blockentities.MonitorBlockEntity;
-import loqor.ait.core.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
+import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.data.FuelHandler;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntityRenderer<T> {
 

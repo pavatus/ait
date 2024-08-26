@@ -34,35 +34,35 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 import loqor.ait.api.AITModInitializer;
+import loqor.ait.api.TardisComponent;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
-import loqor.ait.core.data.schema.MachineRecipeSchema;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.handler.InteriorChangingHandler;
+import loqor.ait.core.tardis.handler.ServerHumHandler;
+import loqor.ait.core.tardis.handler.landing.LandingPadManager;
+import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.util.AsyncLocatorUtil;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.HumSound;
+import loqor.ait.data.schema.MachineRecipeSchema;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.InteriorChangingHandler;
-import loqor.ait.tardis.data.ServerHumHandler;
-import loqor.ait.tardis.data.landing.LandingPadManager;
-import loqor.ait.tardis.data.landing.LandingPadRegion;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.sound.HumSound;
-import loqor.ait.tardis.util.AsyncLocatorUtil;
-import loqor.ait.tardis.util.TardisUtil;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class AITMod implements ModInitializer {
 

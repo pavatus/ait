@@ -7,8 +7,8 @@ import net.minecraft.sound.SoundEvent;
 
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
+import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.tardis.wrapper.client.ClientTardis;
 
 public class InteriorFlightSound extends PlayerFollowingLoopingSound {
     private static final Random rnd = new Random();

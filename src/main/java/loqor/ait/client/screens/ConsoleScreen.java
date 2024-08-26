@@ -3,7 +3,7 @@ package loqor.ait.client.screens;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import loqor.ait.tardis.wrapper.client.ClientTardis;
+import loqor.ait.client.tardis.ClientTardis;
 
 public abstract class ConsoleScreen extends TardisScreen {
 

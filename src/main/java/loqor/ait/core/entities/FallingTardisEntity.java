@@ -31,16 +31,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import loqor.ait.api.tardis.TardisEvents;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.entities.base.LinkableDummyEntity;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class FallingTardisEntity extends LinkableDummyEntity {
 

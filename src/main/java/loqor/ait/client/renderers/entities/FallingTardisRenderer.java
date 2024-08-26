@@ -12,17 +12,17 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 
+import loqor.ait.api.TardisComponent;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.BiomeHandler;
 
 public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
 

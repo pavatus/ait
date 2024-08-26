@@ -15,14 +15,14 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisComponent;
 import loqor.ait.core.commands.argument.JsonElementArgumentType;
 import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.properties.Value;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.registry.impl.TardisComponentRegistry;
-import loqor.ait.tardis.base.KeyedTardisComponent;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.properties.Value;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
 
 public class DataCommand {
 
