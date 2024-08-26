@@ -3,6 +3,7 @@ package loqor.ait.core.blocks;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
+import loqor.ait.api.tardis.TardisEvents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -436,15 +437,18 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
         world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+        tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
 
         world.scheduleBlockTick(pos, this, 2);
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
         tardis.flight().falling().set(false);
+
         DoorHandler.lockTardis(
                 tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isGenerating(), tardis, null,
                 false);
+
+        TardisEvents.LANDED.invoker().onLanded(tardis);
     }
 
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

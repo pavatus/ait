@@ -66,6 +66,9 @@ public class BiomeHandler extends KeyedTardisComponent {
         RegistryEntry<Biome> biome = world.getBiome(pos);
         List<ConfiguredFeature<?, ?>> trees = this.findTrees(world, biome);
 
+        if (trees.isEmpty())
+            return null;
+
         ConfiguredFeature<?, ?> tree = trees.get(world.random.nextInt(trees.size()));
         FakeStructureWorldAccess access = new FakeStructureWorldAccess(world);
 

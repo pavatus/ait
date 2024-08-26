@@ -78,7 +78,15 @@ public class TardisExterior extends TardisComponent {
         });
 
         TardisEvents.SEND_TARDIS.register((tardis, player) -> {
-            if (isDisguised(tardis) && !player.isInTeleportationState())
+            if (player.isInTeleportationState())
+                return;
+
+            DirectedGlobalPos.Cached pos = tardis.travel().position();
+
+            if (pos == null || pos.getWorld() != player.getServerWorld())
+                return;
+
+            if (isDisguised(tardis))
                 tardis.getExterior().applyDisguise(player);
         });
 
