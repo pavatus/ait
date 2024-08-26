@@ -3,7 +3,6 @@ package loqor.ait.core.blocks;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
-import loqor.ait.api.tardis.TardisEvents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +43,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.ICantBreak;
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
