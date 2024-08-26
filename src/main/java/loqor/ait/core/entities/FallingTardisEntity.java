@@ -2,7 +2,6 @@ package loqor.ait.core.entities;
 
 import java.util.function.Predicate;
 
-import loqor.ait.api.tardis.TardisEvents;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -32,6 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.api.tardis.TardisEvents;
 import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;

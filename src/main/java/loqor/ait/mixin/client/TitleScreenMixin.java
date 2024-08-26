@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 
-@Mixin(TitleScreen.class)
+@Mixin(value = TitleScreen.class, priority = 999)
 public abstract class TitleScreenMixin extends Screen {
 
     protected TitleScreenMixin(Text title) {
