@@ -77,7 +77,7 @@ public class BiomeHandler extends KeyedTardisComponent {
     }
 
     private static final Set<Class<? extends Feature<?>>> TREES = Set.of(
-            TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class
+            TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class, ChorusPlantFeature.class
     );
 
     private static final Identifier CACTUS = new Identifier(AITMod.MOD_ID, "cactus");
