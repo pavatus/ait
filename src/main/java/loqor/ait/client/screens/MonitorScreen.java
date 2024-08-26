@@ -340,8 +340,8 @@ public class MonitorScreen extends ConsoleScreen {
 
         List<ExteriorVariantSchema> list = ExteriorVariantRegistry.withParent(category);
 
-        context.drawCenteredTextWithShadow(this.textRenderer, (list.indexOf(variant.parent()) + 1) + "/" + list.size(),
-                (centerWidth + 109), (centerHeight + 53), 0x00ffb3);
+        context.drawCenteredTextWithShadow(this.textRenderer, Text.literal((list.indexOf(variant.parent()) + 1) + "/" + list.size()).formatted(Formatting.BOLD),
+                (centerWidth + 70), (centerHeight + 64), 0xffffff);
 
         context.drawCenteredTextWithShadow(this.textRenderer, variant.parent().text(), (centerWidth + 70),
                 (centerHeight + 44), 5636095);
