@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.function.Predicate;
 
+import loqor.ait.api.tardis.TardisEvents;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -71,14 +72,16 @@ public class FallingTardisEntity extends LinkableDummyEntity {
         if (!(world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior))
             return;
 
+        Tardis tardis = exterior.tardis().get();
+
         FallingTardisEntity fallingBlockEntity = new FallingTardisEntity(world, pos.toCenterPos(),
-                state.contains(Properties.WATERLOGGED) ? state.with(Properties.WATERLOGGED, false) : state,
-                exterior.tardis().get());
+                state.contains(Properties.WATERLOGGED) ? state.with(Properties.WATERLOGGED, false) : state, tardis);
 
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);
 
-        exterior.tardis().get().flight().falling().set(true);
+        tardis.flight().falling().set(true);
+        TardisEvents.START_FALLING.invoker().onStartFall(tardis);
     }
 
     @Override

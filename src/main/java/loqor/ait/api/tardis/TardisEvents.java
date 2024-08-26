@@ -49,6 +49,12 @@ public final class TardisEvents {
         return Interaction.SUCCESS;
     });
 
+    public static final Event<StartFalling> START_FALLING = EventFactory.createArrayBacked(StartFalling.class, callbacks -> tardis -> {
+        for (StartFalling callback : callbacks) {
+            callback.onStartFall(tardis);
+        }
+    });
+
     public static final Event<BeforeLand> BEFORE_LAND = EventFactory.createArrayBacked(BeforeLand.class, callbacks -> (tardis, pos) -> {
         for (BeforeLand callback : callbacks) {
             Result<DirectedGlobalPos.Cached> value = callback.onLanded(tardis, pos);
@@ -216,6 +222,11 @@ public final class TardisEvents {
          * @return event's result
          */
         void onFlight(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface StartFalling {
+        void onStartFall(Tardis tardis);
     }
 
     /**

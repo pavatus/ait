@@ -72,6 +72,11 @@ public class TardisExterior extends TardisComponent {
                 tardis.getExterior().clearDisguise();
         });
 
+        TardisEvents.START_FALLING.register(tardis -> {
+            if (isDisguised(tardis))
+                tardis.getExterior().clearDisguise();
+        });
+
         TardisEvents.LANDED.register(tardis -> {
             if (isDisguised(tardis))
                 tardis.getExterior().applyDisguise();
