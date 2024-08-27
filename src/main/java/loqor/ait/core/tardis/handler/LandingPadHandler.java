@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.landing;
+package loqor.ait.core.tardis.handler;
 
 
 import org.jetbrains.annotations.Nullable;
@@ -10,14 +10,17 @@ import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.bsp.Exclude;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.landing.LandingPadRegion;
+import loqor.ait.data.landing.LandingPadSpot;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
+import loqor.ait.data.properties.bool.BoolValue;
 
 public class LandingPadHandler extends KeyedTardisComponent {
     public static final Property<String> CODE = new Property<>(Property.Type.STR, "code", "");

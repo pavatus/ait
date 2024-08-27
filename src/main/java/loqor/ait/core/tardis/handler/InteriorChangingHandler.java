@@ -1,5 +1,7 @@
 package loqor.ait.core.tardis.handler;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -18,17 +20,18 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
 
@@ -65,6 +68,20 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             tardis.getExterior().setType(CategoryRegistry.CAPSULE);
             return TardisEvents.Interaction.SUCCESS; // force mat even if checks fail
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,
+                ServerTardisManager.receiveTardis(((tardis, server, player, handler, buf, responseSender) -> {
+                    TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
+
+                    if (tardis == null || desktop == null)
+                        return;
+
+                    // nuh uh no interior changing during flight
+                    if (tardis.travel().getState() != TravelHandler.State.LANDED)
+                        return;
+
+                    tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
+                })));
     }
 
     private void setGenerating(boolean var) {

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.travel;
+package loqor.ait.core.tardis.handler.travel;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
@@ -8,13 +8,13 @@ import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.sequences.SequenceHandler;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.sequences.SequenceHandler;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.properties.integer.IntProperty;
-import loqor.ait.tardis.handler.properties.integer.IntValue;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.integer.IntProperty;
+import loqor.ait.data.properties.integer.IntValue;
 
 public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 

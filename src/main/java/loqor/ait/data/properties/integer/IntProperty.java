@@ -1,11 +1,11 @@
-package loqor.ait.tardis.handler.properties.integer;
+package loqor.ait.data.properties.integer;
 
 import java.util.function.Function;
 
 import net.minecraft.network.PacketByteBuf;
 
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.tardis.handler.properties.Property;
+import loqor.ait.data.properties.Property;
 
 public class IntProperty extends Property<Integer> {
 

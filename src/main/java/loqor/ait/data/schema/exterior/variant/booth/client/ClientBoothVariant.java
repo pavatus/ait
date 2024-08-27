@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.booth.client;
+package loqor.ait.data.schema.exterior.variant.booth.client;
 
 import org.joml.Vector3f;
 

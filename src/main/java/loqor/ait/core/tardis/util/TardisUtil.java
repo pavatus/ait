@@ -37,19 +37,23 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.TardisManager;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.OvergrownHandler;
+import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Loyalty;
 import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
 import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;
 import loqor.ait.mixin.lookup.SimpleEntityLookupAccessor;
 import loqor.ait.mixin.lookup.WorldInvoker;
-import loqor.ait.tardis.handler.DoorHandler;
-import loqor.ait.tardis.handler.OvergrownHandler;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
-import loqor.ait.tardis.handler.permissions.PermissionHandler;
-import loqor.ait.tardis.manager.ServerTardisManager;
 
 @SuppressWarnings("unused")
 public class TardisUtil {

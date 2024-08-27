@@ -1,10 +1,10 @@
-package loqor.ait.tardis.control.impl.pos;
+package loqor.ait.core.tardis.control.impl.pos;
 
 import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.bsp.Exclude;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.handler.properties.integer.IntProperty;
-import loqor.ait.tardis.handler.properties.integer.IntValue;
+import loqor.ait.data.properties.integer.IntProperty;
+import loqor.ait.data.properties.integer.IntValue;
 
 public class IncrementManager extends KeyedTardisComponent {
     private static final IntProperty INCREMENT_PROPERTY = new IntProperty("increment", 1);

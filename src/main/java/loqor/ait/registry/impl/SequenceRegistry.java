@@ -25,16 +25,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.tardis.control.impl.*;
+import loqor.ait.core.tardis.control.impl.pos.IncrementControl;
+import loqor.ait.core.tardis.control.impl.pos.XControl;
+import loqor.ait.core.tardis.control.impl.pos.YControl;
+import loqor.ait.core.tardis.control.impl.pos.ZControl;
+import loqor.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
+import loqor.ait.core.tardis.control.sequences.Sequence;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.tardis.control.impl.*;
-import loqor.ait.tardis.control.impl.pos.IncrementControl;
-import loqor.ait.tardis.control.impl.pos.XControl;
-import loqor.ait.tardis.control.impl.pos.YControl;
-import loqor.ait.tardis.control.impl.pos.ZControl;
-import loqor.ait.tardis.control.impl.waypoint.SetWaypointControl;
-import loqor.ait.tardis.control.sequences.Sequence;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class SequenceRegistry {
     public static final SimpleRegistry<Sequence> REGISTRY = FabricRegistryBuilder

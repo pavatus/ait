@@ -23,10 +23,10 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
-import loqor.ait.core.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;

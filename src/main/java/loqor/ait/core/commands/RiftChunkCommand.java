@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.tardis.handler.RiftChunkManager;
+import loqor.ait.core.world.RiftChunkManager;
 
 public class RiftChunkCommand {
 

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.travel;
+package loqor.ait.core.tardis.handler.travel;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -9,10 +9,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.AsyncLocatorUtil;
 
 public class TravelUtil {
 

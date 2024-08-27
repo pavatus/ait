@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.bookshelf.client;
+package loqor.ait.data.schema.exterior.variant.bookshelf.client;
 
 public class ClientBookshelfDefaultVariant extends ClientBookshelfVariant {
     public ClientBookshelfDefaultVariant() {

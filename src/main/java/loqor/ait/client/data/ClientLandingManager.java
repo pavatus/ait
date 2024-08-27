@@ -17,9 +17,9 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
 
-import loqor.ait.core.tardis.handler.landing.LandingPadManager;
-import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
 import loqor.ait.core.tardis.util.NetworkUtil;
+import loqor.ait.core.world.LandingPadManager;
+import loqor.ait.data.landing.LandingPadRegion;
 
 public class ClientLandingManager {
 

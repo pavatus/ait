@@ -10,10 +10,10 @@ import com.google.gson.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.TardisHandlersManager;
 import loqor.ait.registry.Registry;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.TardisExterior;
-import loqor.ait.tardis.TardisHandlersManager;
 
 public class TardisComponentRegistry implements Registry {
 

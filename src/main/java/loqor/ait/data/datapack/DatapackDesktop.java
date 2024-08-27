@@ -14,9 +14,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
+import loqor.ait.data.Loyalty;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
+import loqor.ait.data.schema.desktop.textures.DesktopPreviewTexture;
 
 public class DatapackDesktop extends TardisDesktopSchema {
     public static final Codec<TardisDesktopSchema> CODEC = RecordCodecBuilder.create(instance -> instance

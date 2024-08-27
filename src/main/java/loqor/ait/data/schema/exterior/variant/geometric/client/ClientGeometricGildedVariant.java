@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.geometric.client;
+package loqor.ait.data.schema.exterior.variant.geometric.client;
 
 public class ClientGeometricGildedVariant extends ClientGeometricVariant {
     public ClientGeometricGildedVariant() {

@@ -15,11 +15,13 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.wearables.RespiratorModel;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.item.RenderableArmorItem;
 
 @Environment(value = EnvType.CLIENT)
 public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerEntityModel<T>>
@@ -40,7 +42,9 @@ public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerE
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T livingEntity,
             float f, float g, float h, float j, float k, float l) {
-        if (!(livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof WearableArmorItem))
+        Item item = livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem();
+
+        if (!(item instanceof RenderableArmorItem))
             return;
 
         if (!(livingEntity instanceof AbstractClientPlayerEntity))
@@ -52,9 +56,7 @@ public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerE
         this.model.setAngles(livingEntity, f, g, j, k, l);
 
         VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySmoothCutout(
-                livingEntity.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.RESPIRATOR
-                        ? RESPIRATOR
-                        : FACELESS_RESPIRATOR));
+                item == AITItems.RESPIRATOR ? RESPIRATOR : FACELESS_RESPIRATOR));
         this.model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
 
         matrixStack.pop();

@@ -18,11 +18,11 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.WorldWithTardis;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.manager.old.DeprecatedServerTardisManager;
+import loqor.ait.core.tardis.util.NetworkUtil;
+import loqor.ait.data.properties.Value;
 import loqor.ait.registry.impl.TardisComponentRegistry;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.manager.old.DeprecatedServerTardisManager;
-import loqor.ait.tardis.util.NetworkUtil;
 
 public class ServerTardisManager extends DeprecatedServerTardisManager {
 

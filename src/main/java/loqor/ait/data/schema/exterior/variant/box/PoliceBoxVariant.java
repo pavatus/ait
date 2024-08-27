@@ -1,18 +1,18 @@
-package loqor.ait.tardis.exterior.variant.box;
+package loqor.ait.data.schema.exterior.variant.box;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.animation.PulsatingAnimation;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.door.impl.PoliceBoxDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.category.PoliceBoxCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.door.PoliceBoxDoorVariant;
-import loqor.ait.tardis.exterior.category.PoliceBoxCategory;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class PoliceBoxVariant extends ExteriorVariantSchema {

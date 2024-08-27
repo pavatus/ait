@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.easter_head.client;
+package loqor.ait.data.schema.exterior.variant.easter_head.client;
 
 import org.joml.Vector3f;
 

@@ -1,11 +1,11 @@
-package loqor.ait.core.tardis.handler.properties.doubl3;
+package loqor.ait.data.properties.doubl3;
 
 import java.util.function.Function;
 
 import net.minecraft.network.PacketByteBuf;
 
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.tardis.handler.properties.Property;
+import loqor.ait.data.properties.Property;
 
 public class DoubleProperty extends Property<Double> {
 

@@ -3,7 +3,7 @@ package loqor.ait.data.schema.console.variant.alnico;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.tardis.handler.loyalty.Loyalty;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.AlnicoType;
 

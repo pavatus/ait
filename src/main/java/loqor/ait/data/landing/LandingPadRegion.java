@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.landing;
+package loqor.ait.data.landing;
 
 import java.util.*;
 
@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
-import loqor.ait.tardis.manager.ServerTardisManager;
 
 public class LandingPadRegion {
 
@@ -150,12 +150,14 @@ public class LandingPadRegion {
 
         return created;
     }
+
     public void removeSpotAt(BlockPos pos) {
         LandingPadSpot existing = this.getSpotAt(pos).orElse(null);
         if (existing == null) return;
 
         this.removeSpot(existing);
     }
+
     private void removeSpot(LandingPadSpot spot) {
         this.spots.remove(spot);
 
@@ -164,7 +166,6 @@ public class LandingPadRegion {
         // should the tardis take off and find a new spot?
         ServerTardisManager.getInstance().getTardis(ServerLifecycleHooks.get(), spot.getReference().getId(), tardis -> tardis.landingPad().release());
     }
-
 
     @Override
     public String toString() {

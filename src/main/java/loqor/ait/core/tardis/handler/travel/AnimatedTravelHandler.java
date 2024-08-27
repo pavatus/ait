@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.travel;
+package loqor.ait.core.tardis.handler.travel;
 
 import net.minecraft.server.MinecraftServer;
 

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl.waypoint;
+package loqor.ait.core.tardis.control.impl.waypoint;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -9,10 +9,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.item.WaypointItem;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.control.Control;
 import loqor.ait.data.Waypoint;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.control.Control;
 
 public class LoadWaypointControl extends Control {
     public LoadWaypointControl() {

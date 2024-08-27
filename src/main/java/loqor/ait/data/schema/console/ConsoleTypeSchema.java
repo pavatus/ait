@@ -9,10 +9,10 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
+import loqor.ait.core.tardis.control.ControlTypes;
+import loqor.ait.data.schema.exterior.category.CapsuleCategory;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.control.ControlTypes;
-import loqor.ait.tardis.exterior.category.CapsuleCategory;
 
 public abstract class ConsoleTypeSchema implements Identifiable, Nameable {
     private final Identifier id;

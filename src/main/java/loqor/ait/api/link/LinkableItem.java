@@ -15,9 +15,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
-import loqor.ait.core.tardis.manager.ClientTardisManager;
 
 public abstract class LinkableItem extends Item {
 

@@ -1,10 +1,10 @@
-package loqor.ait.tardis.control.sequences;
+package loqor.ait.core.tardis.control.sequences;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import loqor.ait.tardis.control.Control;
+import loqor.ait.core.tardis.control.Control;
 
 public class RecentControls extends ArrayList<Control> {
     private final UUID tardisId;

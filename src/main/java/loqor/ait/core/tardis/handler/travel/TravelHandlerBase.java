@@ -14,17 +14,18 @@ import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.bsp.Exclude;
-import loqor.ait.tardis.handler.TardisCrashHandler;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.properties.integer.IntProperty;
-import loqor.ait.tardis.handler.properties.integer.IntValue;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.integer.IntProperty;
+import loqor.ait.data.properties.integer.IntValue;
 
 public abstract class TravelHandlerBase extends KeyedTardisComponent implements TardisTickable {
 

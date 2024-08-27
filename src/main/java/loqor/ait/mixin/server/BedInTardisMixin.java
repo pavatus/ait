@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 @Mixin(BedBlock.class)
 public class BedInTardisMixin {

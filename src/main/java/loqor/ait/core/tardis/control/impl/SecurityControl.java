@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +13,10 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.KeyItem;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.data.Loyalty;
 
 public class SecurityControl extends Control {
 

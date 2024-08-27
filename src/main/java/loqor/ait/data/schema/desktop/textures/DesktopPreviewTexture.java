@@ -1,8 +1,8 @@
-package loqor.ait.tardis.desktops.textures;
+package loqor.ait.data.schema.desktop.textures;
 
 import net.minecraft.util.Identifier;
 
-import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class DesktopPreviewTexture {
     // public static final Codec<DesktopPreviewTexture> CODEC =

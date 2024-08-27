@@ -1,6 +1,6 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
-import loqor.ait.tardis.control.Control;
+import loqor.ait.core.tardis.control.Control;
 
 public class VisualiserControl extends Control {
 

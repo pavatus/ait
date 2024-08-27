@@ -1,8 +1,8 @@
 package loqor.ait.api;
 
-import loqor.ait.core.tardis.handler.properties.PropertyMap;
-import loqor.ait.core.tardis.handler.properties.Value;
 import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.properties.PropertyMap;
+import loqor.ait.data.properties.Value;
 
 public abstract class KeyedTardisComponent extends TardisComponent {
 

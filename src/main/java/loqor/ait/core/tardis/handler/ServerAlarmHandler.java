@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
@@ -9,12 +9,12 @@ import net.minecraft.sound.SoundCategory;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.bsp.Exclude;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
 
 // use this as reference for starting other looping sounds on the exterior
 public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTickable {

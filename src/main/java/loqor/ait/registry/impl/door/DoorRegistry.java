@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
-import loqor.ait.tardis.door.*;
+import loqor.ait.data.schema.door.impl.*;
 
 public class DoorRegistry {
     public static final SimpleRegistry<DoorSchema> REGISTRY = FabricRegistryBuilder

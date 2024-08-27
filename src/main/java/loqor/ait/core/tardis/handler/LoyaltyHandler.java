@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.loyalty;
+package loqor.ait.core.tardis.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +17,13 @@ import loqor.ait.AITMod;
 import loqor.ait.api.Nameable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.data.Loyalty;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     private final Map<UUID, Loyalty> data;

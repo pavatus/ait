@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.loyalty;
+package loqor.ait.data;
 
 import java.util.Optional;
 

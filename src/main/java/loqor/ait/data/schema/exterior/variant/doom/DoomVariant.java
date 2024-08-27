@@ -1,16 +1,16 @@
-package loqor.ait.tardis.exterior.variant.doom;
+package loqor.ait.data.schema.exterior.variant.doom;
 
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.animation.PulsatingAnimation;
 import loqor.ait.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.door.impl.DoomDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.category.DoomCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.door.DoomDoorVariant;
-import loqor.ait.tardis.exterior.category.DoomCategory;
 
 public class DoomVariant extends ExteriorVariantSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/doom");

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.landing;
+package loqor.ait.data.landing;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -9,7 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.link.v2.TardisRef;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class LandingPadSpot {
 

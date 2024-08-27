@@ -1,4 +1,4 @@
-package loqor.ait.tardis.manager;
+package loqor.ait.core.tardis.manager;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,9 +14,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisManager;
 
 public class TardisFileManager<T extends Tardis> {
 

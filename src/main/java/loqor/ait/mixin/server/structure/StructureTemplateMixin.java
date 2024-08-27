@@ -12,7 +12,7 @@ import net.minecraft.structure.StructureTemplate;
 import loqor.ait.AITMod;
 import loqor.ait.api.Structure;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 @Mixin(StructureTemplate.class)
 public class StructureTemplateMixin implements Structure {

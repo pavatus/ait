@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.travel;
+package loqor.ait.core.tardis.handler.travel;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -17,17 +17,17 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
+import loqor.ait.core.tardis.control.impl.SecurityControl;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.TardisCrashHandler;
+import loqor.ait.core.tardis.util.NetworkUtil;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.control.impl.DirectionControl;
-import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.handler.BiomeHandler;
-import loqor.ait.tardis.handler.DoorHandler;
-import loqor.ait.tardis.handler.TardisCrashHandler;
-import loqor.ait.tardis.util.NetworkUtil;
-import loqor.ait.tardis.util.TardisUtil;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 

@@ -5,8 +5,8 @@ import java.util.Random;
 import loqor.ait.AITMod;
 import loqor.ait.data.datapack.DatapackCategory;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.data.schema.exterior.category.*;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
-import loqor.ait.tardis.exterior.category.*;
 
 public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySchema> {
 

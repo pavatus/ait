@@ -8,9 +8,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import loqor.ait.data.schema.BasicSchema;
+import loqor.ait.data.schema.exterior.category.CapsuleCategory;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.exterior.category.CapsuleCategory;
 
 /**
  * @author duzo

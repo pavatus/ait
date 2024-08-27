@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -6,8 +6,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
 
 public class ShowSiegeModeLeverControl extends Control {
 

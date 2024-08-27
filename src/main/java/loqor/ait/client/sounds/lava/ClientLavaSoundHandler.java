@@ -7,11 +7,11 @@ import net.minecraft.sound.SoundEvents;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PositionedLoopingSound;
+import loqor.ait.client.sounds.SoundHandler;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.tardis.handler.ExteriorEnvironmentHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.tardis.util.SoundHandler;
 
 public class ClientLavaSoundHandler extends SoundHandler {
 

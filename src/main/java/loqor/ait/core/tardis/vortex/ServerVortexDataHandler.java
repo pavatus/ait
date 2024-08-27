@@ -14,10 +14,10 @@ import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.tardis.manager.TardisFileManager;
 import loqor.ait.data.bsp.BTreeGenerator;
 import loqor.ait.data.bsp.BinaryTree;
 import loqor.ait.data.vortex.VortexData;
-import loqor.ait.tardis.manager.TardisFileManager;
 
 public class ServerVortexDataHandler {
     /*

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -11,10 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.handler.SonicHandler;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.handler.SonicHandler;
 
 public class SonicPortControl extends Control {
 

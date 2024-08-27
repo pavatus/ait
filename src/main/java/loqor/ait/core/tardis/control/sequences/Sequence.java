@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.sequences;
+package loqor.ait.core.tardis.control.sequences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
 
 // should this be an interface? - No :)
 public class Sequence {

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.manager;
+package loqor.ait.core.tardis.manager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.LoyaltyHandler;
+import loqor.ait.core.tardis.handler.StatsHandler;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Loyalty;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.handler.StatsHandler;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
-import loqor.ait.tardis.handler.loyalty.LoyaltyHandler;
 
 public class TardisBuilder {
 

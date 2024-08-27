@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.geometric;
+package loqor.ait.data.schema.exterior.variant.geometric;
 
 public class GeometricGildedVariant extends GeometricVariant {
     public GeometricGildedVariant() {

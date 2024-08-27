@@ -13,9 +13,9 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.handler.landing.LandingPadSpot;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.landing.LandingPadSpot;
 
 public final class TardisEvents {
 

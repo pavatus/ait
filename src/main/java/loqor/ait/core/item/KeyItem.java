@@ -28,11 +28,11 @@ import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.handler.loyalty.Loyalty;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.enummap.EnumSet;
 import loqor.ait.data.enummap.Ordered;
 

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.manager;
+package loqor.ait.client.tardis.manager;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -22,11 +22,11 @@ import net.minecraft.util.math.GlobalPos;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisManager;
 import loqor.ait.data.bsp.Exclude;
 import loqor.ait.registry.impl.TardisComponentRegistry;
-import loqor.ait.tardis.ClientTardis;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
 
 public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
 

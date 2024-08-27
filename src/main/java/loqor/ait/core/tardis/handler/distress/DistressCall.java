@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.distress;
+package loqor.ait.core.tardis.handler.distress;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -26,14 +26,14 @@ import net.minecraft.util.math.Vec3d;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.manager.ServerTardisManager;
-import loqor.ait.tardis.util.TardisUtil;
 
 public record DistressCall(Sender sender, String message, int lifetime, int creationTime, boolean isSourceCall) {
     private static final int DEFAULT_LIFETIME = 120 * 20; // 2 minute default lifetime

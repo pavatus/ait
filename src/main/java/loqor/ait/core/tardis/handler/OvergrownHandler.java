@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import java.util.Random;
 
@@ -8,11 +8,11 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
 
 public class OvergrownHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty IS_OVERGROWN_PROPERTY = new BoolProperty("is_overgrown", false);

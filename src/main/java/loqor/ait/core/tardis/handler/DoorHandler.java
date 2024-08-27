@@ -24,11 +24,14 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.KeyItem;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
 import loqor.ait.data.schema.door.DoorSchema;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
 
 public class DoorHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty LOCKED_DOORS = new BoolProperty("locked", false);
@@ -213,7 +216,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     // server
     // to answer
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos,
-            @Nullable ServerPlayerEntity player) {
+                                  @Nullable ServerPlayerEntity player) {
         if (tardis.overgrown().isOvergrown()) {
             // Bro cant escape
             if (player == null)

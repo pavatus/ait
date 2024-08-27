@@ -8,9 +8,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.util.Identifier;
 
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 public abstract class SonicSchema extends BasicSchema implements Unlockable {
 

@@ -12,9 +12,9 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import loqor.ait.api.Identifiable;
 import loqor.ait.client.models.consoles.ConsoleModel;
+import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.tardis.console.variant.hartnell.HartnellVariant;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientConsoleVariantSchema implements Identifiable {

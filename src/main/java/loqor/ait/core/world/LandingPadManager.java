@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.landing;
+package loqor.ait.core.world;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
@@ -18,7 +18,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.util.NetworkUtil;
+import loqor.ait.core.tardis.util.NetworkUtil;
+import loqor.ait.data.landing.LandingPadRegion;
 
 @SuppressWarnings("UnstableApiUsage")
 public class LandingPadManager {

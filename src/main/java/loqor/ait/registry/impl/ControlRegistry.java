@@ -10,13 +10,13 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.control.impl.*;
-import loqor.ait.tardis.control.impl.pos.IncrementControl;
-import loqor.ait.tardis.control.impl.pos.XControl;
-import loqor.ait.tardis.control.impl.pos.YControl;
-import loqor.ait.tardis.control.impl.pos.ZControl;
-import loqor.ait.tardis.control.impl.waypoint.*;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.control.impl.*;
+import loqor.ait.core.tardis.control.impl.pos.IncrementControl;
+import loqor.ait.core.tardis.control.impl.pos.XControl;
+import loqor.ait.core.tardis.control.impl.pos.YControl;
+import loqor.ait.core.tardis.control.impl.pos.ZControl;
+import loqor.ait.core.tardis.control.impl.waypoint.*;
 
 public class ControlRegistry {
     public static final SimpleRegistry<Control> REGISTRY = FabricRegistryBuilder

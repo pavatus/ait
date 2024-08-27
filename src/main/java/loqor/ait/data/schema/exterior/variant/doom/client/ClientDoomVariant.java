@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.doom.client;
+package loqor.ait.data.schema.exterior.variant.doom.client;
 
 import org.joml.Vector3f;
 

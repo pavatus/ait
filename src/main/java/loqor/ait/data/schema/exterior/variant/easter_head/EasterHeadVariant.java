@@ -1,17 +1,17 @@
-package loqor.ait.tardis.exterior.variant.easter_head;
+package loqor.ait.data.schema.exterior.variant.easter_head;
 
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.animation.PulsatingAnimation;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.door.impl.EasterHeadDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.category.EasterHeadCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.door.EasterHeadDoorVariant;
-import loqor.ait.tardis.exterior.category.EasterHeadCategory;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 // a useful class for creating easter_head variants as they all have the same filepath you know
 public abstract class EasterHeadVariant extends ExteriorVariantSchema {

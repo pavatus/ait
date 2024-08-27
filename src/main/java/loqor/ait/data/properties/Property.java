@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.properties;
+package loqor.ait.data.properties;
 
 import java.util.HashSet;
 import java.util.UUID;

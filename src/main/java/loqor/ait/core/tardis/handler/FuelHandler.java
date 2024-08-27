@@ -8,13 +8,14 @@ import loqor.ait.api.ArtronHolder;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.properties.doubl3.DoubleProperty;
-import loqor.ait.tardis.handler.properties.doubl3.DoubleValue;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.doubl3.DoubleProperty;
+import loqor.ait.data.properties.doubl3.DoubleValue;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
 

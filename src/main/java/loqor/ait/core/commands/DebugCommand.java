@@ -19,9 +19,9 @@ import loqor.ait.AITMod;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.handler.landing.LandingPadManager;
-import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
 import loqor.ait.core.tardis.util.NetworkUtil;
+import loqor.ait.core.world.LandingPadManager;
+import loqor.ait.data.landing.LandingPadRegion;
 
 public class DebugCommand {
 

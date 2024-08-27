@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,8 @@ import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.enummap.Ordered;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
 
 /**
  * @author Loqor TODO reminder to work on this more, making it so you have to

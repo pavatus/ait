@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.booth;
+package loqor.ait.data.schema.exterior.variant.booth;
 
 public class BoothGildedVariant extends BoothVariant {
     public BoothGildedVariant() {

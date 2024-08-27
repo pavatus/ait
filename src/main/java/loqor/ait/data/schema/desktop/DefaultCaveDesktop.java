@@ -3,8 +3,7 @@ package loqor.ait.data.schema.desktop;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.desktops.textures.DesktopPreviewTexture;
+import loqor.ait.data.schema.desktop.textures.DesktopPreviewTexture;
 
 public class DefaultCaveDesktop extends TardisDesktopSchema {
 

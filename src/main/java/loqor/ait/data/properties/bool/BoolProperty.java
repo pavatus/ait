@@ -1,11 +1,11 @@
-package loqor.ait.core.tardis.handler.properties.bool;
+package loqor.ait.data.properties.bool;
 
 import java.util.function.Function;
 
 import net.minecraft.network.PacketByteBuf;
 
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.tardis.handler.properties.Property;
+import loqor.ait.data.properties.Property;
 
 public class BoolProperty extends Property<Boolean> {
 

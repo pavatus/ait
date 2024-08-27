@@ -1,4 +1,4 @@
-package loqor.ait.tardis.util;
+package loqor.ait.core.tardis.util;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -19,10 +19,10 @@ import net.minecraft.util.math.ChunkPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.Tardis;
 
 public class NetworkUtil {
 

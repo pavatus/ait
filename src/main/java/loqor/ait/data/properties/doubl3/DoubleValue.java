@@ -1,6 +1,6 @@
-package loqor.ait.tardis.handler.properties.doubl3;
+package loqor.ait.data.properties.doubl3;
 
-import loqor.ait.tardis.handler.properties.Value;
+import loqor.ait.data.properties.Value;
 
 public class DoubleValue extends Value<Double> {
 
