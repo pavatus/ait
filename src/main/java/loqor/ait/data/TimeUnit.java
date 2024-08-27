@@ -17,7 +17,7 @@ public enum TimeUnit {
     private static final long MINUTE_SCALE = 60L * SECOND_SCALE;
 
     private final long scale;
-    
+
     TimeUnit(long scale) {
         this.scale = scale;
     }

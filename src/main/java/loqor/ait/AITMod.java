@@ -7,6 +7,7 @@ import java.util.UUID;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import loqor.ait.core.util.Scheduler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -80,6 +81,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Scheduler.init();
         AsyncLocatorUtil.setupExecutorService();
 
         ConsoleRegistry.init();

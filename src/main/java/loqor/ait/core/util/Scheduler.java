@@ -1,12 +1,14 @@
 package loqor.ait.core.util;
 
-import loqor.ait.data.TimeUnit;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.util.Util;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+
+import net.minecraft.util.Util;
+
+import loqor.ait.data.TimeUnit;
 
 public class Scheduler {
 

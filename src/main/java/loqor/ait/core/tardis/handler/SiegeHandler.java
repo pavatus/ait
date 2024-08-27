@@ -3,7 +3,6 @@ package loqor.ait.core.tardis.handler;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.api.TardisEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -17,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SiegeTardisItem;

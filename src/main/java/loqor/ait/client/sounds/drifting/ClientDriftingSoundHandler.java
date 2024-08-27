@@ -1,13 +1,14 @@
 package loqor.ait.client.sounds.drifting;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.sound.SoundCategory;
+
 import loqor.ait.client.sounds.PlayerFollowingSound;
 import loqor.ait.client.sounds.SoundHandler;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.sound.SoundCategory;
 
 // Client only class. One of the last surviving remnants of Duzocode.
 public class ClientDriftingSoundHandler extends SoundHandler {

@@ -1,12 +1,12 @@
 package loqor.ait.client.sounds;
 
-import loqor.ait.client.sounds.drifting.ClientDriftingSoundHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.client.MinecraftClient;
 
 import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
+import loqor.ait.client.sounds.drifting.ClientDriftingSoundHandler;
 import loqor.ait.client.sounds.fall.ClientFallSoundHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
 import loqor.ait.client.sounds.hum.ClientCreakHandler;
