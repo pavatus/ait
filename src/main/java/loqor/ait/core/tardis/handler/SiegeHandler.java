@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.SiegeTardisItem;
@@ -52,6 +53,8 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
     }
 
     static {
+        TardisEvents.DEMAT.register(tardis -> tardis.siege().isActive() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
+
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 

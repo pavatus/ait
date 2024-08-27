@@ -8,6 +8,7 @@ import java.util.Random;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
@@ -42,8 +43,8 @@ public class ClientCreakHandler extends SoundHandler {
      *
      * @return A list of {@link LoopingSound} from the {@link CreakRegistry}
      */
-    private List<LoopingSound> registryToList() {
-        List<LoopingSound> list = new ArrayList<>();
+    private List<SoundInstance> registryToList() {
+        List<SoundInstance> list = new ArrayList<>();
 
         for (CreakSound sound : CreakRegistry.REGISTRY) {
             list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT,

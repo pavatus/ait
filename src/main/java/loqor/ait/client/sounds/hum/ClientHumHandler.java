@@ -85,8 +85,8 @@ public class ClientHumHandler extends SoundHandler {
      *
      * @return A list of {@link LoopingSound} from the {@link HumsRegistry}
      */
-    private List<LoopingSound> registryToList() {
-        List<LoopingSound> list = new ArrayList<>();
+    private List<SoundInstance> registryToList() {
+        List<SoundInstance> list = new ArrayList<>();
 
         for (HumSound sound : HumsRegistry.REGISTRY) {
             list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT,

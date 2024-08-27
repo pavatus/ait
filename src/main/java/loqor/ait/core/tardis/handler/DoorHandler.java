@@ -49,6 +49,10 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     // been changed so the animation can start. Set on server, used on client
     public DoorStateEnum tempInteriorState;
 
+    static {
+        TardisEvents.DEMAT.register(tardis -> tardis.door().isOpen() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
+    }
+
     public DoorHandler() {
         super(Id.DOOR);
     }

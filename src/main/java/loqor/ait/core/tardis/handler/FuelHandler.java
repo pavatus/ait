@@ -27,14 +27,18 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
     private final DoubleValue fuel = FUEL.create(this);
     private final BoolValue refueling = REFUELING.create(this);
 
-    @Override
-    public void onLoaded() {
-        refueling.of(this, REFUELING);
-        fuel.of(this, FUEL);
+    static {
+        TardisEvents.DEMAT.register(tardis -> tardis.fuel().refueling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
     }
 
     public FuelHandler() {
         super(Id.FUEL);
+    }
+
+    @Override
+    public void onLoaded() {
+        refueling.of(this, REFUELING);
+        fuel.of(this, FUEL);
     }
 
     @Override

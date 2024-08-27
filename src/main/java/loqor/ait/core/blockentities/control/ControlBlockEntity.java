@@ -14,13 +14,15 @@ import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.util.Scheduler;
+import loqor.ait.data.TimeUnit;
 import loqor.ait.registry.impl.ControlRegistry;
 
 public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 
     private Control control;
+    private boolean onDelay = false;
 
     protected ControlBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -75,8 +77,8 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         if (!this.control.canRun(tardis, user))
             return false;
 
-        if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay(tardis))
-            this.createDelay(tardis, this.control.getDelayLength());
+        if (this.control.shouldHaveDelay(tardis) && !this.onDelay)
+            this.createDelay(this.control.getDelayLength());
 
         this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
         return this.control.runServer(tardis, user, user.getServerWorld(), this.pos, isMine);
@@ -86,11 +88,9 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         return this.run(user, isMine);
     }
 
-    public void createDelay(Tardis tardis, long millis) {
-        Control.createDelay(this.getControl(), tardis, millis);
-    }
+    public void createDelay(long millis) {
+        this.onDelay = true;
 
-    public boolean isOnDelay(Tardis tardis) {
-        return Control.isOnDelay(this.getControl(), tardis);
+        Scheduler.runTaskLater(() -> this.onDelay = false, TimeUnit.MILLISECONDS, millis);
     }
 }

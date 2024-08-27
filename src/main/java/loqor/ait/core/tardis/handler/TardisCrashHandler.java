@@ -17,30 +17,22 @@ import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.DeltaTimeManager;
-import loqor.ait.core.util.TimeUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.bsp.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.integer.IntProperty;
 
 public class TardisCrashHandler extends KeyedTardisComponent implements TardisTickable {
-    private static final Property<State> STATE_PROPERTY = Property.forEnum("state", State.class, State.NORMAL);
-    private final Value<State> state = STATE_PROPERTY.create(this);
-    private static final IntProperty TARDIS_REPAIR_TICKS_PROPERTY = new IntProperty("repair_ticks", 0);
-    private final Value<Integer> tardisRepairTicks = TARDIS_REPAIR_TICKS_PROPERTY.create(this);
 
-    @Exclude
-    private static final String DELAY_ID_START = AITMod.MOD_ID + "-tardiscrashrecoverydelay-";
-
-    @Exclude
     public static final Integer UNSTABLE_TICK_START_THRESHOLD = 2_400;
-
-    @Exclude
     public static final Integer MAX_REPAIR_TICKS = 7_000;
+
+    private static final Property<State> STATE_PROPERTY = Property.forEnum("state", State.class, State.NORMAL);
+    private static final IntProperty TARDIS_REPAIR_TICKS_PROPERTY = new IntProperty("repair_ticks", 0);
+
+    private final Value<State> state = STATE_PROPERTY.create(this);
+    private final Value<Integer> repairTicks = TARDIS_REPAIR_TICKS_PROPERTY.create(this);
 
     public boolean isToxic() {
         return this.getState() == State.TOXIC;
@@ -57,63 +49,63 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
     @Override
     public void onLoaded() {
         state.of(this, STATE_PROPERTY);
-        tardisRepairTicks.of(this, TARDIS_REPAIR_TICKS_PROPERTY);
+        repairTicks.of(this, TARDIS_REPAIR_TICKS_PROPERTY);
     }
 
     @Override
     public void tick(MinecraftServer server) {
+        State state = this.state.get();
+        int repairTicks = this.repairTicks.get();
 
-        if (state.get() == null) {
-            state.set(State.NORMAL);
-        }
-
-        if (getRepairTicks() > 0) {
-            setRepairTicks(this.tardis().isRefueling() ? getRepairTicks() - 10 : getRepairTicks() - 1);
-        }
-        if (getRepairTicks() <= 0 && State.NORMAL == getState())
-            return;
-        ServerTardis tardis = (ServerTardis) this.tardis();
         ServerAlarmHandler alarms = tardis.handler(Id.ALARMS);
 
-        if (getRepairTicks() <= 0) {
-            setState(State.NORMAL);
+        if (repairTicks > 0) {
+            repairTicks = tardis.isRefueling() ? repairTicks - 10 : repairTicks - 1;
+            this.setRepairTicks(repairTicks);
+        } else {
+            if (state == State.NORMAL)
+                return;
+
+            this.state.set(State.NORMAL);
             alarms.enabled().set(false);
             return;
         }
 
-        if (getState() != State.NORMAL)
+        if (state == State.TOXIC)
             alarms.enabled().set(true);
 
-        if (getRepairTicks() < UNSTABLE_TICK_START_THRESHOLD && State.UNSTABLE != getState() && getRepairTicks() > 0) {
-            setState(State.UNSTABLE);
-            alarms.enabled().set(false);
+        if (repairTicks < UNSTABLE_TICK_START_THRESHOLD && state != State.UNSTABLE) {
+            state = State.UNSTABLE;
+            this.state.set(state);
         }
 
         DirectedGlobalPos.Cached exteriorPosition = tardis.travel().position();
         ServerWorld exteriorWorld = exteriorPosition.getWorld();
-        if (tardis.door().isOpen() && this.getState() != State.NORMAL) {
+
+        if (tardis.door().isOpen() && state != State.NORMAL) {
             exteriorWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, exteriorPosition.getPos().toCenterPos().x,
                     exteriorPosition.getPos().getY() + 2f, exteriorPosition.getPos().toCenterPos().z, 1, 0.05D, 0.05D,
                     0.05D, 0.01D);
         }
-        if (getState() != State.TOXIC)
+
+        if (state != State.TOXIC)
             return;
-        if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString()))
-            return;
+
         exteriorWorld.spawnParticles(
                 new DustColorTransitionParticleEffect(new Vector3f(0.75f, 0.85f, 0.75f),
                         new Vector3f(0.15f, 0.25f, 0.15f), 3),
                 exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 0.1f,
                 exteriorPosition.getPos().toCenterPos().z, 1, 0.05D, 0.75D, 0.05D, 0.01D);
 
-        if (DeltaTimeManager.isStillWaitingOnDelay(DELAY_ID_START + tardis.getUuid().toString()))
+        if (server.getTicks() % 40 == 0)
             return;
 
-        if (TardisUtil.isInteriorEmpty(tardis))
+        if (TardisUtil.isInteriorEmpty(tardis.asServer()))
             return;
 
         int loyaltySubAmount = AITMod.RANDOM.nextInt(10, 25);
-        for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInsideInterior(tardis)) {
+
+        for (ServerPlayerEntity serverPlayerEntity : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
             ItemStack stack = serverPlayerEntity.getEquippedStack(EquipmentSlot.HEAD);
 
             if (stack.isIn(AITTags.Items.FULL_RESPIRATORS) || stack.isIn(AITTags.Items.HALF_RESPIRATORS))
@@ -126,11 +118,8 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
             serverPlayerEntity
                     .addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 5, true, false, false));
 
-            tardis.<LoyaltyHandler>handler(Id.LOYALTY).get(serverPlayerEntity).subtract(loyaltySubAmount);
+            tardis.loyalty().get(serverPlayerEntity).subtract(loyaltySubAmount);
         }
-
-        DeltaTimeManager.createDelay(DELAY_ID_START + tardis.getUuid().toString(),
-                (long) TimeUtil.secondsToMilliseconds(2));
     }
 
     public TardisCrashHandler() {
@@ -148,23 +137,24 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
     }
 
     public Integer getRepairTicks() {
-        return tardisRepairTicks.get();
+        return repairTicks.get();
     }
 
     public int getRepairTicksAsSeconds() {
-        return (this.getRepairTicks() / 20) / 10;
+        return this.getRepairTicks() / 20;
     }
 
     public void setRepairTicks(Integer ticks) {
         if (ticks > MAX_REPAIR_TICKS) {
-            setRepairTicks(MAX_REPAIR_TICKS);
+            this.setRepairTicks(MAX_REPAIR_TICKS);
             return;
         }
-        tardisRepairTicks.set(ticks);
+
+        repairTicks.set(ticks);
     }
 
     public void addRepairTicks(Integer ticks) {
-        tardisRepairTicks.set(getRepairTicks() + ticks);
+        repairTicks.set(getRepairTicks() + ticks);
     }
 
     public enum State {

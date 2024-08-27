@@ -1,35 +1,25 @@
 package loqor.ait.core.tardis.handler;
 
-import java.util.Random;
-
 import org.joml.Vector2i;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
-import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.core.util.TimeUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
-public class EngineHandler extends KeyedTardisComponent implements TardisTickable {
+public class EngineHandler extends KeyedTardisComponent {
 
     private static final Vector2i ZERO = new Vector2i();
 
@@ -97,9 +87,6 @@ public class EngineHandler extends KeyedTardisComponent implements TardisTickabl
         if (!this.power.get())
             return;
 
-        DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay",
-                (long) TimeUtil.secondsToMilliseconds(new Random().nextInt(1, 360)));
-
         this.power.set(false);
         this.updateExteriorState();
 
@@ -138,7 +125,7 @@ public class EngineHandler extends KeyedTardisComponent implements TardisTickabl
     private void updateExteriorState() {
         TravelHandler travel = this.tardis.travel();
 
-        if (travel.getState() != TravelHandlerBase.State.LANDED)
+        if (travel.getState() != TravelHandler.State.LANDED)
             return;
 
         DirectedGlobalPos.Cached pos = travel.position();
@@ -149,19 +136,5 @@ public class EngineHandler extends KeyedTardisComponent implements TardisTickabl
 
         world.setBlockState(pos.getPos(),
                 world.getBlockState(pos.getPos()).with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
-    }
-
-    @Override
-    public void tick(MinecraftServer server) {
-        // most of the logic is in the handlers, so we can just disable them if we're a
-        // growth
-        if (!this.hasPower() && !DeltaTimeManager.isStillWaitingOnDelay(AITMod.MOD_ID + "-driftingmusicdelay")) {
-            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
-                player.playSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 1, 1);
-            }
-
-            DeltaTimeManager.createDelay(AITMod.MOD_ID + "-driftingmusicdelay",
-                    (long) TimeUtil.minutesToMilliseconds(new Random().nextInt(7, 9)));
-        }
     }
 }

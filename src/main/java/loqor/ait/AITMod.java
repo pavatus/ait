@@ -46,6 +46,7 @@ import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -80,6 +81,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Scheduler.init();
         AsyncLocatorUtil.setupExecutorService();
 
         ConsoleRegistry.init();

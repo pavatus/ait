@@ -26,10 +26,14 @@ import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.TimeUnit;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
+
+    private boolean travelCooldown;
 
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
@@ -195,6 +199,12 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.forcePosition(this.getProgress());
     }
 
+    private void createCooldown() {
+        this.travelCooldown = true;
+
+        Scheduler.runTaskLater(() -> this.travelCooldown = false, TimeUnit.SECONDS, 5);
+    }
+
     public void dematerialize() {
         if (this.getState() != State.LANDED)
             return;
@@ -211,8 +221,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
                 this.increaseSpeed();
         }
 
-        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL || tardis.door().isOpen()
-                || tardis.siege().isActive() || tardis.isRefueling() || tardis.flight().falling().get() ||TravelUtil.dematCooldown(this.tardis)) {
+        if (TardisEvents.DEMAT.invoker().onDemat(this.tardis) == TardisEvents.Interaction.FAIL || this.travelCooldown) {
             this.failDemat();
             return;
         }
@@ -226,7 +235,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
                 2f, 1f);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_DEMAT, SoundCategory.BLOCKS, 2f, 1f);
-        TravelUtil.runDematCooldown(this.tardis);
+        this.createCooldown();
     }
 
     private void failRemat() {
@@ -239,7 +248,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.FAIL_MAT, SoundCategory.BLOCKS, 2f, 1f);
 
         // Create materialization delay and return
-        TravelUtil.runMatCooldown(this.tardis);
+        this.createCooldown();
     }
 
     public void forceDemat() {
@@ -282,7 +291,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     public void rematerialize() {
         if (TardisEvents.MAT.invoker().onMat(tardis.asServer()) == TardisEvents.Interaction.FAIL
-                || TravelUtil.matCooldownn(tardis)) {
+                || this.travelCooldown) {
             this.failRemat();
             return;
         }

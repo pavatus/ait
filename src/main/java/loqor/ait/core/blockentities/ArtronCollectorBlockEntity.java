@@ -25,13 +25,10 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.ArtronCollectorItem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.world.RiftChunkManager;
 
-public class ArtronCollectorBlockEntity extends BlockEntity
-        implements
-            BlockEntityTicker<ArtronCollectorBlockEntity>,
-            ArtronHolder {
+public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEntityTicker<ArtronCollectorBlockEntity>, ArtronHolder {
+
     public double artronAmount = 0;
 
     public ArtronCollectorBlockEntity(BlockPos pos, BlockState state) {
@@ -79,9 +76,7 @@ public class ArtronCollectorBlockEntity extends BlockEntity
     @Override
     public void setCurrentFuel(double artronAmount) {
         this.artronAmount = artronAmount;
-        markDirty();
-        if (this.hasWorld())
-            this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        this.updateListeners(this.getCachedState());
     }
 
     @Override
@@ -111,7 +106,8 @@ public class ArtronCollectorBlockEntity extends BlockEntity
         if (world.isClient())
             return;
 
-        // oh yes call this every tick good idea ( #notmyproblem )
+        if (world.getServer().getTicks() % 10 == 0)
+            return;
 
         RiftChunkManager manager = RiftChunkManager.getInstance((ServerWorld) this.world);
         ChunkPos chunk = new ChunkPos(pos);
@@ -120,25 +116,21 @@ public class ArtronCollectorBlockEntity extends BlockEntity
             manager.removeFuel(chunk, 3);
             this.addFuel(3);
 
-            this.updateListeners();
-            DeltaTimeManager.createDelay(getDelay(), 500L);
+            this.updateListeners(state);
         }
     }
 
     private boolean shouldDrain(RiftChunkManager manager, ChunkPos pos) {
         return this.getCurrentFuel() < ArtronCollectorItem.COLLECTOR_MAX_FUEL
-                && manager.getArtron(pos) >= 3
-                && (!DeltaTimeManager.isStillWaitingOnDelay(getDelay()));
+                && manager.getArtron(pos) >= 3;
     }
 
-    private void updateListeners() {
+    private void updateListeners(BlockState state) {
         this.markDirty();
-        if (this.getWorld() != null)
-            this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(),
-                    Block.NOTIFY_ALL);
-    }
 
-    public String getDelay() {
-        return "collector-" + this.getPos() + "-collectdelay";
+        if (!this.hasWorld())
+            return;
+
+        this.world.updateListeners(this.getPos(), this.getCachedState(), state, Block.NOTIFY_ALL);
     }
 }

@@ -4,7 +4,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -13,7 +12,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.world.RiftChunkManager;
 
 public class RiftScannerItem extends Item {
@@ -25,17 +23,13 @@ public class RiftScannerItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient())
+        if (!(world instanceof ServerWorld serverWorld))
             return TypedActionResult.pass(user.getStackInHand(hand));
 
-        if (!isSearchOnDelay((ServerPlayerEntity) user)) {
-            createSearchDelay((ServerPlayerEntity) user);
-            createNewTarget((ServerWorld) world, new ChunkPos(user.getBlockPos()), user.getStackInHand(hand));
-            user.sendMessage(Text.translatable("riftchunk.ait.tracking"), true); // Tracking rift!
-        } else {
-            user.sendMessage(Text.translatable("riftchunk.ait.cooldown"), true); // Rift search is on cooldown
-        }
+        user.getItemCooldownManager().set(this, 100);
+        this.createNewTarget(serverWorld, new ChunkPos(user.getBlockPos()), user.getStackInHand(hand));
 
+        user.sendMessage(Text.translatable("riftchunk.ait.tracking"), true);
         return TypedActionResult.success(user.getStackInHand(hand));
     }
 
@@ -105,13 +99,5 @@ public class RiftScannerItem extends Item {
             return ChunkPos.ORIGIN;
 
         return new ChunkPos(nbt.getInt("X"), nbt.getInt("Z"));
-    }
-
-    private static void createSearchDelay(ServerPlayerEntity player) {
-        DeltaTimeManager.createDelay(player.getUuidAsString() + "-rift-search-delay", 20 * 1000L);
-    }
-
-    private static boolean isSearchOnDelay(ServerPlayerEntity player) {
-        return DeltaTimeManager.isStillWaitingOnDelay(player.getUuidAsString() + "-rift-search-delay");
     }
 }
