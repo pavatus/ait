@@ -3,6 +3,8 @@ package loqor.ait.core.tardis;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
 import net.minecraft.block.Block;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -18,6 +20,7 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -34,6 +37,20 @@ public class TardisDesktop extends TardisComponent {
 
     private final Corners corners;
     private final Set<BlockPos> consolePos;
+
+    static {
+        ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
+                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
+                    BlockPos console = buf.readBlockPos();
+
+                    server.execute(() -> {
+                        if (tardis == null)
+                            return;
+
+                        tardis.getDesktop().cacheConsole(console);
+                    });
+                }));
+    }
 
     public TardisDesktop(TardisDesktopSchema schema) {
         super(Id.DESKTOP);

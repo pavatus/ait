@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -16,12 +16,12 @@ import net.minecraft.world.World;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.Loyalty;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
 
 public class ShieldHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty IS_SHIELDED = new BoolProperty("is_shielded", false);

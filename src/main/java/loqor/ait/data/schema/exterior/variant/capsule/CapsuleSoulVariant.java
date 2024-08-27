@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.capsule;
+package loqor.ait.data.schema.exterior.variant.capsule;
 
 public class CapsuleSoulVariant extends CapsuleVariant {
     public CapsuleSoulVariant() {

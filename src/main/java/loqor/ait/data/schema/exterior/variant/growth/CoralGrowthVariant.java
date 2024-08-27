@@ -1,17 +1,17 @@
-package loqor.ait.tardis.exterior.variant.growth;
+package loqor.ait.data.schema.exterior.variant.growth;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.animation.PulsatingAnimation;
 import loqor.ait.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.door.impl.CoralGrowthDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.data.schema.exterior.category.GrowthCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.animation.PulsatingAnimation;
-import loqor.ait.tardis.door.CoralGrowthDoorVariant;
-import loqor.ait.tardis.exterior.category.GrowthCategory;
 
 public class CoralGrowthVariant extends ExteriorVariantSchema {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/coral_growth");

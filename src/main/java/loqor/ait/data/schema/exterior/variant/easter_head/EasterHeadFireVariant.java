@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.easter_head;
+package loqor.ait.data.schema.exterior.variant.easter_head;
 
 public class EasterHeadFireVariant extends EasterHeadVariant {
     public EasterHeadFireVariant() {

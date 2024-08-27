@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import java.util.Random;
 
@@ -17,17 +17,17 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
 
 public class EngineHandler extends KeyedTardisComponent implements TardisTickable {
 

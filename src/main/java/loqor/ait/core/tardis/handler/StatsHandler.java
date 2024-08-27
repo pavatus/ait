@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,15 +19,15 @@ import net.minecraft.world.World;
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.ServerLifecycleHooks;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktopSchema;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
 
 public class StatsHandler extends KeyedTardisComponent {
 

@@ -1,9 +1,9 @@
-package loqor.ait.tardis.exterior.variant.box.client;
+package loqor.ait.data.schema.exterior.variant.box.client;
 
 import org.joml.Vector3f;
 
+import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
-import loqor.ait.tardis.handler.BiomeHandler;
 
 public class ClientPoliceBoxTokamakVariant extends ClientPoliceBoxVariant {
 

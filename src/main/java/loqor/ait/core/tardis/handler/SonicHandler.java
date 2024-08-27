@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import java.util.function.Consumer;
 
@@ -16,12 +16,12 @@ import loqor.ait.api.ArtronHolderItem;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.manager.ServerTardisManager;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
 
 public class SonicHandler extends KeyedTardisComponent implements ArtronHolderItem, TardisTickable {
 

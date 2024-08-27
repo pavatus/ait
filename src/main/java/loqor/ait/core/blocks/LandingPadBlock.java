@@ -24,7 +24,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import loqor.ait.client.screens.LandingPadScreen;
-import loqor.ait.core.tardis.handler.landing.LandingPadManager;
+import loqor.ait.core.world.LandingPadManager;
 
 public class LandingPadBlock extends Block {
     private static final BooleanProperty ACTIVE = BooleanProperty.of("active"); // whether this block created a region

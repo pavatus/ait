@@ -1,4 +1,4 @@
-package loqor.ait.core.tardis.handler.properties;
+package loqor.ait.data.properties;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -13,6 +13,8 @@ import loqor.ait.AITMod;
 import loqor.ait.api.Disposable;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.data.bsp.Exclude;
 
 public class Value<T> implements Disposable {

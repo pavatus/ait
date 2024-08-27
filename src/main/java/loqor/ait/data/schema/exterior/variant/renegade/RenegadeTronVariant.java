@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.renegade;
+package loqor.ait.data.schema.exterior.variant.renegade;
 
 public class RenegadeTronVariant extends RenegadeVariant {
     public RenegadeTronVariant() {

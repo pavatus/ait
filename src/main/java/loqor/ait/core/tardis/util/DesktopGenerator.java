@@ -1,4 +1,4 @@
-package loqor.ait.tardis.util;
+package loqor.ait.core.tardis.util;
 
 import java.util.Optional;
 
@@ -12,9 +12,9 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.Structure;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.Corners;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktopSchema;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class DesktopGenerator {
 

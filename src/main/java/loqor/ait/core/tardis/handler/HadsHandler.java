@@ -12,11 +12,11 @@ import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.handler.properties.bool.BoolProperty;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.properties.bool.BoolProperty;
+import loqor.ait.data.properties.bool.BoolValue;
 
 public class HadsHandler extends KeyedTardisComponent implements TardisTickable {
 

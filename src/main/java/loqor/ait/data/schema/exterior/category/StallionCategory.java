@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.category;
+package loqor.ait.data.schema.exterior.category;
 
 import net.minecraft.util.Identifier;
 

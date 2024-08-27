@@ -11,10 +11,10 @@ import com.mojang.serialization.Codec;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.data.Loyalty;
 import loqor.ait.registry.datapack.DatapackRegistry;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDatapackRegistry<T> {
 

@@ -1,9 +1,9 @@
-package loqor.ait.tardis.exterior.variant.classic.client;
+package loqor.ait.data.schema.exterior.variant.classic.client;
 
 import org.joml.Vector3f;
 
+import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
-import loqor.ait.tardis.handler.BiomeHandler;
 
 public class ClientClassicBoxDefinitiveVariant extends ClientClassicBoxVariant {
     private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientClassicBoxVariant.OVERRIDES)

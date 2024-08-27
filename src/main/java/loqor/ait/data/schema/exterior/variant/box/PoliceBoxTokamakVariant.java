@@ -1,10 +1,10 @@
-package loqor.ait.tardis.exterior.variant.box;
+package loqor.ait.data.schema.exterior.variant.box;
 
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.data.schema.door.DoorSchema;
+import loqor.ait.data.schema.door.impl.PoliceBoxTokamakDoorVariant;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.door.PoliceBoxTokamakDoorVariant;
 
 public class PoliceBoxTokamakVariant extends PoliceBoxVariant {
     public PoliceBoxTokamakVariant() {

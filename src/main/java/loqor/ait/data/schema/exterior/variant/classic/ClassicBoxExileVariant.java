@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.classic;
+package loqor.ait.data.schema.exterior.variant.classic;
 
 public class ClassicBoxExileVariant extends ClassicBoxVariant {
     public ClassicBoxExileVariant() {

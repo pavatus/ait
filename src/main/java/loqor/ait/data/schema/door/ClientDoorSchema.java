@@ -10,9 +10,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import loqor.ait.client.models.doors.DoorModel;
+import loqor.ait.data.schema.door.impl.CapsuleDoorVariant;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.door.CapsuleDoorVariant;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientDoorSchema {

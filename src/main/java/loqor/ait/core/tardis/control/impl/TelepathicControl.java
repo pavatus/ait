@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,12 +24,12 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.handler.SiegeHandler;
+import loqor.ait.core.tardis.handler.distress.DistressCall;
+import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.handler.SiegeHandler;
-import loqor.ait.tardis.handler.distress.DistressCall;
-import loqor.ait.tardis.util.AsyncLocatorUtil;
 
 public class TelepathicControl extends Control {
 

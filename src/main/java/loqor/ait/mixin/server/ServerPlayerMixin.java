@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.core.AITDimensions;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.util.TardisUtil;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerMixin {

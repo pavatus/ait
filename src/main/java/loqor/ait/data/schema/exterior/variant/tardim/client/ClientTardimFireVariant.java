@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.tardim.client;
+package loqor.ait.data.schema.exterior.variant.tardim.client;
 
 public class ClientTardimFireVariant extends ClientTardimVariant {
     public ClientTardimFireVariant() {

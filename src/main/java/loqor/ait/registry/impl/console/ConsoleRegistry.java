@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.tardis.console.type.*;
+import loqor.ait.data.schema.console.type.*;
 
 public class ConsoleRegistry {
 

@@ -12,12 +12,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import loqor.ait.AITMod;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 /**
  * This class is for variants of a {@link ConsoleTypeSchema} and can be changed

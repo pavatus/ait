@@ -8,8 +8,8 @@ import com.google.gson.*;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.core.tardis.handler.loyalty.Loyalty;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.data.schema.desktop.textures.DesktopPreviewTexture;
 import loqor.ait.registry.impl.DesktopRegistry;

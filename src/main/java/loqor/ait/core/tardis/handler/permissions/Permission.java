@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.permissions;
+package loqor.ait.core.tardis.handler.permissions;
 
 import java.lang.reflect.Type;
 import java.util.*;

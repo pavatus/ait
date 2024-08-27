@@ -3,8 +3,8 @@ package loqor.ait.registry.impl;
 import loqor.ait.data.datapack.DatapackDesktop;
 import loqor.ait.data.schema.desktop.DefaultCaveDesktop;
 import loqor.ait.data.schema.desktop.DevDesktop;
+import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.unlockable.UnlockableRegistry;
-import loqor.ait.tardis.TardisDesktopSchema;
 
 public class DesktopRegistry extends UnlockableRegistry<TardisDesktopSchema> {
 

@@ -17,14 +17,14 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model,

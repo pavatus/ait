@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.plinth.client;
+package loqor.ait.data.schema.exterior.variant.plinth.client;
 
 import org.joml.Vector3f;
 

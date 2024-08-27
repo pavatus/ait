@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl.pos;
+package loqor.ait.core.tardis.control.impl.pos;
 
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;

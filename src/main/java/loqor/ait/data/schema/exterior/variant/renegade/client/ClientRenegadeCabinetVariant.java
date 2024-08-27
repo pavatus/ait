@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.renegade.client;
+package loqor.ait.data.schema.exterior.variant.renegade.client;
 
 public class ClientRenegadeCabinetVariant extends ClientRenegadeVariant {
     public ClientRenegadeCabinetVariant() {

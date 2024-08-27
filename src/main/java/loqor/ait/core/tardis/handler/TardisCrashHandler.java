@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler;
+package loqor.ait.core.tardis.handler;
 
 import org.joml.Vector3f;
 
@@ -17,16 +17,15 @@ import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.DeltaTimeManager;
 import loqor.ait.core.util.TimeUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.bsp.Exclude;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.handler.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.properties.integer.IntProperty;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
+import loqor.ait.data.properties.integer.IntProperty;
 
 public class TardisCrashHandler extends KeyedTardisComponent implements TardisTickable {
     private static final Property<State> STATE_PROPERTY = Property.forEnum("state", State.class, State.NORMAL);

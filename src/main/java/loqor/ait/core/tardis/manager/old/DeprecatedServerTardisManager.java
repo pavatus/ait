@@ -1,4 +1,4 @@
-package loqor.ait.tardis.manager.old;
+package loqor.ait.core.tardis.manager.old;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -27,21 +27,21 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.events.ServerCrashEvent;
 import loqor.ait.core.events.WorldSaveEvent;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisManager;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.manager.TardisBuilder;
+import loqor.ait.core.tardis.manager.TardisFileManager;
+import loqor.ait.core.tardis.util.DesktopGenerator;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.bsp.Exclude;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisManager;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.tardis.manager.ServerTardisManager;
-import loqor.ait.tardis.manager.TardisBuilder;
-import loqor.ait.tardis.manager.TardisFileManager;
-import loqor.ait.tardis.util.DesktopGenerator;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.properties.Value;
 
 public abstract class DeprecatedServerTardisManager extends TardisManager<ServerTardis, MinecraftServer> {
 

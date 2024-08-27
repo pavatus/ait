@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.classic.client;
+package loqor.ait.data.schema.exterior.variant.classic.client;
 
 import loqor.ait.client.models.exteriors.ClassicHudolinExteriorModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;

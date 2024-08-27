@@ -3,7 +3,7 @@ package loqor.ait.registry.unlockable;
 import java.util.Optional;
 
 import loqor.ait.api.Identifiable;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
+import loqor.ait.data.Loyalty;
 
 public interface Unlockable extends Identifiable {
     UnlockType unlockType();

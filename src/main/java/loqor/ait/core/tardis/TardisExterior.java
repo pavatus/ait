@@ -98,12 +98,11 @@ public class TardisExterior extends TardisComponent {
         TardisEvents.EXTERIOR_CHANGE.register(tardis -> {
             TardisExterior exterior = tardis.getExterior();
 
-            if (exterior.getVariant() instanceof AdaptiveVariant) {
+            if (isDisguised(tardis)) {
                 exterior.applyDisguise();
-                return;
+            } else {
+                exterior.clearDisguise();
             }
-
-            exterior.clearDisguise();
         });
 
         TardisEvents.USE_DOOR.register((tardis, player) -> {

@@ -1,6 +1,6 @@
-package loqor.ait.tardis.handler.properties.bool;
+package loqor.ait.data.properties.bool;
 
-import loqor.ait.tardis.handler.properties.Value;
+import loqor.ait.data.properties.Value;
 
 public class BoolValue extends Value<Boolean> {
 

@@ -1,16 +1,16 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.tardis.handler.travel.TravelHandler;
-import loqor.ait.tardis.handler.travel.TravelUtil;
 
 public class RandomiserControl extends Control {
 
@@ -20,7 +20,7 @@ public class RandomiserControl extends Control {
 
     /**
      * TODO rewrite the randomizer to follow the async stuff like this class
-     * {@link loqor.ait.tardis.util.AsyncLocatorUtil}
+     * {@link loqor.ait.core.tardis.util.AsyncLocatorUtil}
      */
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {

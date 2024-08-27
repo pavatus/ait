@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.impl;
+package loqor.ait.core.tardis.control.impl;
 
 import io.wispforest.owo.ops.WorldOps;
 
@@ -10,9 +10,9 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.handler.ShieldHandler;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.handler.ShieldHandler;
 
 public class ShieldsControl extends Control {
 

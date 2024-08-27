@@ -25,8 +25,8 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.ArtronCollectorItem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.tardis.handler.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.core.world.RiftChunkManager;
 
 public class ArtronCollectorBlockEntity extends BlockEntity
         implements

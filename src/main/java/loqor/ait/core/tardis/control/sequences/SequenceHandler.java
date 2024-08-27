@@ -1,4 +1,4 @@
-package loqor.ait.tardis.control.sequences;
+package loqor.ait.core.tardis.control.sequences;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -19,12 +19,12 @@ import net.minecraft.util.math.random.Random;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.bsp.Exclude;
 import loqor.ait.registry.impl.SequenceRegistry;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.control.Control;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class SequenceHandler extends TardisComponent implements TardisTickable {
     @Exclude

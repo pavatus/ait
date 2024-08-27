@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.mood;
+package loqor.ait.core.tardis.handler.mood;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,10 +15,10 @@ import net.minecraft.util.Formatting;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.bsp.Exclude;
 import loqor.ait.registry.impl.MoodEventPoolRegistry;
-import loqor.ait.tardis.ServerTardis;
-import loqor.ait.tardis.util.TardisUtil;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
 

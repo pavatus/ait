@@ -18,12 +18,12 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.animation.ExteriorAnimation;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class DatapackExterior extends ExteriorVariantSchema {

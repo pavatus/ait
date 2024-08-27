@@ -13,8 +13,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import loqor.ait.core.tardis.handler.RiftChunkManager;
 import loqor.ait.core.util.DeltaTimeManager;
+import loqor.ait.core.world.RiftChunkManager;
 
 public class RiftScannerItem extends Item {
     private static final int MAX_ITERATIONS = 32;

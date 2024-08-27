@@ -28,7 +28,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.handler.properties.Value;
+import loqor.ait.data.properties.Value;
 
 public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity {
 

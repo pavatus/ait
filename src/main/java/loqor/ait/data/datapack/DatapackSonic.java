@@ -14,8 +14,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.sonic.SonicSchema;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
 
 public class DatapackSonic extends SonicSchema {
 

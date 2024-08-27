@@ -19,7 +19,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import loqor.ait.core.tardis.handler.loyalty.Loyalty;
+import loqor.ait.data.Loyalty;
 
 @SuppressWarnings("rawtypes")
 public abstract class ExteriorModel extends SinglePartEntityModel {

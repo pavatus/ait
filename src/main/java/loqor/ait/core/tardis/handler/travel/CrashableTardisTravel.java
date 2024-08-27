@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.travel;
+package loqor.ait.core.tardis.handler.travel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +14,13 @@ import net.minecraft.world.explosion.Explosion;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.handler.TardisCrashHandler;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.TardisDesktop;
-import loqor.ait.tardis.handler.TardisCrashHandler;
-import loqor.ait.tardis.handler.properties.bool.BoolValue;
-import loqor.ait.tardis.util.TardisUtil;
+import loqor.ait.data.properties.bool.BoolValue;
 
 public sealed interface CrashableTardisTravel permits TravelHandler {
 

@@ -3,7 +3,7 @@ package loqor.ait.data;
 import java.util.HashMap;
 import java.util.UUID;
 
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 public class TardisMap<T extends Tardis> extends HashMap<UUID, T> {
 

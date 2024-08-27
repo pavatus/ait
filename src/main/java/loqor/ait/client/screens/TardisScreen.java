@@ -5,7 +5,7 @@ import net.minecraft.text.Text;
 
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.core.tardis.manager.ClientTardisManager;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 
 public abstract class TardisScreen extends Screen {
 

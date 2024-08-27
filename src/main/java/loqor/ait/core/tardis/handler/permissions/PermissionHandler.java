@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.permissions;
+package loqor.ait.core.tardis.handler.permissions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.tardis.ClientTardis;
-import loqor.ait.tardis.handler.loyalty.Loyalty;
-import loqor.ait.tardis.handler.properties.Property;
-import loqor.ait.tardis.handler.properties.Value;
-import loqor.ait.tardis.manager.ServerTardisManager;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.data.Loyalty;
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
 
 public class PermissionHandler extends KeyedTardisComponent {
 

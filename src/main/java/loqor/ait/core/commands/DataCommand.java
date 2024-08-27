@@ -20,8 +20,8 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.core.commands.argument.JsonElementArgumentType;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.handler.properties.Value;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.data.properties.Value;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public class DataCommand {

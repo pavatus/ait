@@ -36,6 +36,7 @@ import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -149,11 +150,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         TravelHandler travel = tardis.travel();
 
         if (travel.getState() == TravelHandlerBase.State.FLIGHT) {
-            TardisUtil.dropOutside(tardis, entity); // SHOULD properly drop someone out at the correct position instead
-                                                    // of
-            // the not
-            // correct
-            // position :)
+            TardisUtil.dropOutside(tardis, entity);
             return;
         }
 

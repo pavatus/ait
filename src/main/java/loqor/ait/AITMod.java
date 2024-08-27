@@ -34,31 +34,24 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 import loqor.ait.api.AITModInitializer;
-import loqor.ait.api.TardisComponent;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
+import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
-import loqor.ait.core.tardis.TardisDesktop;
-import loqor.ait.core.tardis.handler.InteriorChangingHandler;
-import loqor.ait.core.tardis.handler.ServerHumHandler;
-import loqor.ait.core.tardis.handler.landing.LandingPadManager;
-import loqor.ait.core.tardis.handler.landing.LandingPadRegion;
-import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.AITConfig;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.HumSound;
+import loqor.ait.core.world.LandingPadManager;
+import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
-import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -156,42 +149,6 @@ public class AITMod implements ModInitializer {
             ListCommand.register(dispatcher);
             DebugCommand.register(dispatcher);
         }));
-
-        ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,
-                ServerTardisManager.receiveTardis(((tardis, server, player, handler, buf, responseSender) -> {
-                    TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
-
-                    if (tardis == null || desktop == null)
-                        return;
-
-                    // nuh uh no interior changing during flight
-                    if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
-                        return;
-
-                    tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).queueInteriorChange(desktop);
-                })));
-
-        ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE,
-                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
-
-                    if (tardis == null || hum == null)
-                        return;
-
-                    tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
-                }));
-
-        ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
-                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    BlockPos console = buf.readBlockPos();
-
-                    server.execute(() -> {
-                        if (tardis == null)
-                            return;
-
-                        tardis.getDesktop().cacheConsole(console);
-                    });
-                }));
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.LEAVEBEHIND,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {

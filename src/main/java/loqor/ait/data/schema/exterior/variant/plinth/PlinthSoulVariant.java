@@ -1,4 +1,4 @@
-package loqor.ait.tardis.exterior.variant.plinth;
+package loqor.ait.data.schema.exterior.variant.plinth;
 
 public class PlinthSoulVariant extends PlinthVariant {
     public PlinthSoulVariant() {

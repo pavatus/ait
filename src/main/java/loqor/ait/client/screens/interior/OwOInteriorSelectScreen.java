@@ -23,8 +23,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.manager.ClientTardisManager;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 

@@ -32,7 +32,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.tardis.Tardis;
+import loqor.ait.core.tardis.Tardis;
 
 @Mixin(WorldRenderer.class)
 public abstract class SkyboxMixin {

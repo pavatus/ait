@@ -11,9 +11,9 @@ import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.data.schema.door.impl.CapsuleDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.tardis.door.CapsuleDoorVariant;
 
 /**
  * This class provides information about a door for an exterior <br>

@@ -1,4 +1,4 @@
-package loqor.ait.tardis.handler.mood;
+package loqor.ait.core.tardis.handler.mood;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Set;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.tardis.ServerTardis;
+import loqor.ait.core.tardis.ServerTardis;
 
 public interface MoodDictatedEvent {
 

@@ -14,10 +14,10 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingSound;
+import loqor.ait.client.sounds.SoundHandler;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.tardis.util.SoundHandler;
 import loqor.ait.data.CreakSound;
 import loqor.ait.registry.impl.CreakRegistry;
 
