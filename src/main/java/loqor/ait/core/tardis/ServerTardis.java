@@ -10,7 +10,7 @@ import com.google.gson.InstanceCreator;
 import net.minecraft.server.MinecraftServer;
 
 import loqor.ait.api.TardisComponent;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 

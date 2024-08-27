@@ -20,8 +20,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-import loqor.ait.data.bsp.Exclude;
-
 public class DirectedGlobalPos {
 
     public static final Codec<DirectedGlobalPos> CODEC = RecordCodecBuilder.create(instance -> instance

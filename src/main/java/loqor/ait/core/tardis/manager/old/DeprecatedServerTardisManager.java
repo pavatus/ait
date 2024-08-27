@@ -40,7 +40,7 @@ import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Value;
 
 public abstract class DeprecatedServerTardisManager extends TardisManager<ServerTardis, MinecraftServer> {

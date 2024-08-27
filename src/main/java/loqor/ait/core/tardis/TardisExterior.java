@@ -30,7 +30,7 @@ import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;

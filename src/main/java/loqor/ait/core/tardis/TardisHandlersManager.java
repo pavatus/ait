@@ -11,7 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.EnumMap;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 

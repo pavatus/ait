@@ -9,8 +9,6 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
-import loqor.ait.data.bsp.Exclude;
-
 public class Corners {
     @Exclude
     private final Box box;

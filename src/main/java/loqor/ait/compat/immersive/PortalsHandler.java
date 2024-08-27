@@ -19,7 +19,7 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.TardisComponentRegistry;

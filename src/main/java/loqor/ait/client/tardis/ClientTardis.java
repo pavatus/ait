@@ -15,7 +15,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.TardisExterior;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 
 public class ClientTardis extends Tardis implements Disposable {
 

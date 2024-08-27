@@ -25,7 +25,7 @@ import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {

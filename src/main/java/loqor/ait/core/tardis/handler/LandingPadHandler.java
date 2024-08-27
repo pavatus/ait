@@ -15,7 +15,7 @@ import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.landing.LandingPadSpot;
 import loqor.ait.data.properties.Property;

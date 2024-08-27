@@ -2,7 +2,7 @@ package loqor.ait.core.tardis.control.impl.pos;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.integer.IntProperty;
 import loqor.ait.data.properties.integer.IntValue;
 

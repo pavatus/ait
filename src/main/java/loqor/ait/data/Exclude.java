@@ -1,4 +1,4 @@
-package loqor.ait.data.bsp;
+package loqor.ait.data;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

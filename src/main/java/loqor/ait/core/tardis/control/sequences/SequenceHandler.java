@@ -23,7 +23,7 @@ import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.registry.impl.SequenceRegistry;
 
 public class SequenceHandler extends TardisComponent implements TardisTickable {

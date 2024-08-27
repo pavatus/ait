@@ -18,7 +18,7 @@ import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.Ordered;
 
 /**

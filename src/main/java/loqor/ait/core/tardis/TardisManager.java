@@ -34,7 +34,7 @@ import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TardisMap;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.gson.*;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolValue;

@@ -1,6 +1,6 @@
 package loqor.ait.api;
 
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.PropertyMap;
 import loqor.ait.data.properties.Value;
 

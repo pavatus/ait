@@ -26,7 +26,7 @@ import loqor.ait.client.screens.widget.DynamicPressableTextWidget;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.registry.impl.TardisComponentRegistry;

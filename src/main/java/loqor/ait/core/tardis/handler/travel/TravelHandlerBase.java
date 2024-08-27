@@ -18,7 +18,7 @@ import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TimeUnit;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;

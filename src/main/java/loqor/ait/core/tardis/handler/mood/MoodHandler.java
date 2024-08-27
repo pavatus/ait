@@ -17,7 +17,7 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.registry.impl.MoodEventPoolRegistry;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {

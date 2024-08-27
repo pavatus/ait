@@ -12,7 +12,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.Loyalty;
-import loqor.ait.data.bsp.Exclude;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
