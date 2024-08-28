@@ -104,6 +104,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         return this.handler(TardisComponent.Id.ENGINE);
     }
 
+    public ChameleonHandler chameleon() {
+        return this.handler(TardisComponent.Id.CHAMELEON);
+    }
+
     /**
      * Retrieves the TardisHandlersManager instance associated with the given UUID.
      *

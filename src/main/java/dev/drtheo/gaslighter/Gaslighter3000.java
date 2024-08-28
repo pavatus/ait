@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.drtheo.gaslighter.api.FakeBlockEvents;
 import dev.drtheo.gaslighter.api.Twitter;
-import dev.drtheo.gaslighter.data.BlockData;
 import dev.drtheo.gaslighter.impl.FakeChunkSection;
 import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
 import it.unimi.dsi.fastutil.shorts.ShortSet;
@@ -30,21 +30,32 @@ public class Gaslighter3000 {
     }
 
     public void spreadLies(BlockPos pos, BlockState state) {
+        FakeBlockEvents.PLACED.invoker().onPlace(this.world, state, pos);
+
         this.lookup.computeIfAbsent(new ChunkPos(pos), chunkPos
-                -> new ChunkHolder(world, new ChunkPos(pos))).spreadLies(pos, state);
+                -> new ChunkHolder(world, chunkPos)).spreadLies(pos, state);
     }
 
-    public void spreadLies(BlockData data) {
-        this.spreadLies(data.pos(), data.state());
+    public void touchGrass(BlockPos pos) {
+        ChunkHolder holder = this.lookup.get(new ChunkPos(pos));
+
+        if (holder == null)
+            return;
+
+        holder.touchGrass(pos);
     }
 
-    public void reset(BlockPos pos) {
-        this.lookup.computeIfAbsent(new ChunkPos(pos), chunkPos
-                -> new ChunkHolder(world, new ChunkPos(pos))).reset(pos);
+    public BlockState getAgenda(BlockPos pos) {
+        ChunkHolder holder = this.lookup.get(new ChunkPos(pos));
+
+        if (holder == null)
+            return this.world.getBlockState(pos);
+
+        return holder.getAgenda(pos);
     }
 
-    public void reset(BlockData data) {
-        this.reset(data.pos());
+    public void touchGrass() {
+        this.lookup.values().forEach(ChunkHolder::touchGrass);
     }
 
     public void tweet() {
@@ -78,24 +89,71 @@ public class Gaslighter3000 {
         public void spreadLies(BlockPos pos, BlockState state) {
             int i = this.world.getSectionIndex(pos.getY());
 
-            if (this.blockUpdatesBySection[i] == null)
-                this.blockUpdatesBySection[i] = new ShortOpenHashSet();
-
             if (this.sections[i] == null)
                 this.sections[i] = new FakeChunkSection(this.world);
 
-            this.blockUpdatesBySection[i].add(ChunkSectionPos.packLocal(pos));
             this.sections[i].setBlockState(pos.getX() & 0xF, pos.getY() & 0xF, pos.getZ() & 0xF, state);
 
             if (this.world instanceof Twitter twitter)
                 twitter.ait$setFake(pos, true);
+
+            this.markForBlockUpdate(pos, i);
         }
 
-        public void reset(BlockPos pos) {
-            this.spreadLies(pos, this.world.getBlockState(pos));
+        public void touchGrass(BlockPos pos) {
+            int i = this.world.getSectionIndex(pos.getY());
+
+            if (this.sections[i] == null)
+                return;
+
+            this.sections[i].setBlockState(pos.getX() & 0xF, pos.getY() & 0xF, pos.getZ() & 0xF,
+                    this.world.getBlockState(pos));
 
             if (this.world instanceof Twitter twitter)
                 twitter.ait$setFake(pos, false);
+
+            this.unmarkForBlockUpdate(pos, i);
+            FakeBlockEvents.REMOVED.invoker().onRemove(this.world, pos);
+        }
+
+        public void touchGrass() {
+            for (int i = 0; i < this.sections.length; i++) {
+                ShortSet updates = this.blockUpdatesBySection[i];
+
+                if (updates == null)
+                    continue;
+
+                for (short update : updates) {
+                    this.touchGrass(new BlockPos(
+                            ChunkSectionPos.unpackLocalX(update),
+                            ChunkSectionPos.unpackLocalY(update),
+                            ChunkSectionPos.unpackLocalZ(update)
+                    ));
+                }
+            }
+        }
+
+        public BlockState getAgenda(BlockPos pos) {
+            int i = this.world.getSectionIndex(pos.getY());
+
+            if (this.sections[i] == null)
+                return this.world.getBlockState(pos);
+
+            return this.sections[i].getBlockState(pos.getX() & 0xF, pos.getY() & 0xF, pos.getZ() & 0xF);
+        }
+
+        private void markForBlockUpdate(BlockPos pos, int i) {
+            if (this.blockUpdatesBySection[i] == null)
+                this.blockUpdatesBySection[i] = new ShortOpenHashSet();
+
+            this.blockUpdatesBySection[i].add(ChunkSectionPos.packLocal(pos));
+        }
+
+        private void unmarkForBlockUpdate(BlockPos pos, int i) {
+            if (this.blockUpdatesBySection[i] == null)
+                return;
+
+            this.blockUpdatesBySection[i].remove(ChunkSectionPos.packLocal(pos));
         }
 
         public void tweet() {

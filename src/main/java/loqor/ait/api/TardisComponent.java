@@ -126,7 +126,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         SIEGE(SiegeHandler.class, SiegeHandler::new),
         CLOAK(CloakHandler.class, CloakHandler::new),
         INCREMENT(IncrementManager.class, IncrementManager::new),
-        LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new);
+        LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new),
+        CHAMELEON(ChameleonHandler.class, ChameleonHandler::new);
 
         private final Supplier<TardisComponent> creator;
 

@@ -1,10 +1,9 @@
 package dev.drtheo.gaslighter.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import dev.drtheo.gaslighter.data.BlockData;
+import dev.drtheo.gaslighter.Gaslighter3000;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -47,14 +46,11 @@ import net.minecraft.world.tick.QueryableTickScheduler;
 public class FakeStructureWorldAccess implements StructureWorldAccess {
 
     private final ServerWorld world;
-    private final List<BlockData> positions = new ArrayList<>();
+    private final Gaslighter3000 gaslighter;
 
-    public FakeStructureWorldAccess(ServerWorld world) {
+    public FakeStructureWorldAccess(ServerWorld world, Gaslighter3000 gaslighter) {
         this.world = world;
-    }
-
-    public List<BlockData> getPositions() {
-        return positions;
+        this.gaslighter = gaslighter;
     }
 
     @Override
@@ -141,7 +137,7 @@ public class FakeStructureWorldAccess implements StructureWorldAccess {
 
     @Override
     public BlockState getBlockState(BlockPos pos) {
-        BlockState result = world.getBlockState(pos);
+        BlockState result = this.gaslighter.getAgenda(pos);
 
         if (result.hasBlockEntity())
             result = Blocks.AIR.getDefaultState();
@@ -171,17 +167,19 @@ public class FakeStructureWorldAccess implements StructureWorldAccess {
 
     @Override
     public boolean setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth) {
-        this.positions.add(new BlockData(pos.toImmutable(), state));
+        this.gaslighter.spreadLies(pos.toImmutable(), state);
         return true;
     }
 
     @Override
     public boolean removeBlock(BlockPos pos, boolean move) {
+        this.gaslighter.touchGrass(pos);
         return true;
     }
 
     @Override
     public boolean breakBlock(BlockPos pos, boolean drop, @Nullable Entity breakingEntity, int maxUpdateDepth) {
+        this.removeBlock(pos, false);
         return true;
     }
 

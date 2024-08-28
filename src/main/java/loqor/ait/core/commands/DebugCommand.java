@@ -62,7 +62,7 @@ public class DebugCommand {
 
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-        context.getSource().getServer().executeSync(() -> tardis.getExterior().recalcDisguise());
+        context.getSource().getServer().executeSync(() -> tardis.chameleon().recalcDisguise());
         return Command.SINGLE_SUCCESS;
     }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import dev.drtheo.gaslighter.data.BlockData;
+import dev.drtheo.gaslighter.Gaslighter3000;
 import dev.drtheo.gaslighter.impl.FakeStructureWorldAccess;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import org.apache.commons.lang3.StringUtils;
@@ -62,18 +62,20 @@ public class BiomeHandler extends KeyedTardisComponent {
         this.type.set(biome);
     }
 
-    public List<BlockData> testBiome(ServerWorld world, BlockPos pos) {
+    public Gaslighter3000 testBiome(ServerWorld world, BlockPos pos) {
         RegistryEntry<Biome> biome = world.getBiome(pos);
         List<ConfiguredFeature<?, ?>> trees = this.findTrees(world, biome);
 
         if (trees.isEmpty())
             return null;
 
+        Gaslighter3000 gaslighter = new Gaslighter3000(world);
+
         ConfiguredFeature<?, ?> tree = trees.get(world.random.nextInt(trees.size()));
-        FakeStructureWorldAccess access = new FakeStructureWorldAccess(world);
+        FakeStructureWorldAccess access = new FakeStructureWorldAccess(world, gaslighter);
 
         tree.generate(access, world.getChunkManager().getChunkGenerator(), world.random, pos);
-        return access.getPositions().isEmpty() ? null : access.getPositions();
+        return gaslighter;
     }
 
     private static final Set<Class<? extends Feature<?>>> TREES = Set.of(
