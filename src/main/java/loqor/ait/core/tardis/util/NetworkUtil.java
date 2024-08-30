@@ -21,10 +21,14 @@ import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.util.network.c2s.SyncPropertyC2SPacket;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class NetworkUtil {
+    public static void init() {
+        ServerPlayNetworking.registerGlobalReceiver(SyncPropertyC2SPacket.TYPE, SyncPropertyC2SPacket::handle);
+    }
 
     public static <T> void send(ServerPlayerEntity player, PacketByteBuf buf, Identifier id, Codec<T> codec, T t) {
         DataResult<NbtElement> result = codec.encodeStart(NbtOps.INSTANCE, t);
