@@ -58,13 +58,8 @@ import loqor.ait.mixin.lookup.WorldInvoker;
 @SuppressWarnings("unused")
 public class TardisUtil {
 
-    public static final Identifier LEAVEBEHIND = new Identifier(AITMod.MOD_ID, "leavebehind");
-    public static final Identifier HOSTILEALARMS = new Identifier(AITMod.MOD_ID, "hostilealarms");
     public static final Identifier REGION_LANDING_CODE = new Identifier(AITMod.MOD_ID, "region_landing_code");
-    public static final Identifier LANDING_CODE = new Identifier(AITMod.MOD_ID, "landing_code");
-
     public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
-
     public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
 
     public static void init() {

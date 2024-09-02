@@ -45,6 +45,7 @@ import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
+import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.ServerLifecycleHooks;
@@ -81,6 +82,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        NetworkUtil.init();
         Scheduler.init();
         AsyncLocatorUtil.setupExecutorService();
 
@@ -152,40 +154,6 @@ public class AITMod implements ModInitializer {
             DebugCommand.register(dispatcher);
         }));
 
-        ServerPlayNetworking.registerGlobalReceiver(TardisUtil.LEAVEBEHIND,
-                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    boolean behind = buf.readBoolean();
-
-                    server.execute(() -> {
-                        if (tardis == null)
-                            return;
-
-                        tardis.travel().leaveBehind().set(behind);
-                    });
-                }));
-
-        ServerPlayNetworking.registerGlobalReceiver(TardisUtil.HOSTILEALARMS,
-                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    boolean hostile = buf.readBoolean();
-
-                    server.execute(() -> {
-                        if (tardis == null)
-                            return;
-
-                        tardis.alarm().hostilePresence().set(hostile);
-                    });
-                }));
-        ServerPlayNetworking.registerGlobalReceiver(TardisUtil.LANDING_CODE,
-                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    String landingCode = buf.readString();
-
-                    server.execute(() -> {
-                        if (tardis == null)
-                            return;
-
-                        tardis.landingPad().code().set(landingCode);
-                    });
-                }));
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,
                 (server, player, handler, buf, responseSender) -> {

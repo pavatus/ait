@@ -6,15 +6,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.gson.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import net.minecraft.network.PacketByteBuf;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.Disposable;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.tardis.util.network.c2s.SyncPropertyC2SPacket;
 import loqor.ait.data.Exclude;
 
 public class Value<T> implements Disposable {
@@ -74,11 +77,15 @@ public class Value<T> implements Disposable {
 
     protected void sync() {
         if (this.holder == null || !(this.holder.tardis() instanceof ServerTardis tardis)) {
-            AITMod.LOGGER.warn("Can't sync on a client world!", new IllegalAccessException());
+            this.syncToServer();
             return;
         }
 
         ServerTardisManager.getInstance().markPropertyDirty(tardis, this);
+    }
+    @Environment(EnvType.CLIENT)
+    protected void syncToServer() { // todo - flags
+        ClientPlayNetworking.send(new SyncPropertyC2SPacket(this.holder.tardis().getUuid(), this));
     }
 
     public void flatMap(Function<T, T> func) {
