@@ -109,17 +109,13 @@ public class RiftScannerModel extends Model {
 
         clientWorld = this.getClientWorld(entity, clientWorld);
 
-        if (clientWorld != null && clientWorld.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
-            return 0;
-        }
-
         return clientWorld == null ? 0.0F : this.getAngle(RiftScannerItem.getTarget(stack)
                 .getCenterAtY(75), clientWorld, i, entity);
     }
 
     private float getAngle(BlockPos target, ClientWorld world, int seed, Entity entity) {
         long l = world.getTime();
-        return !this.canPointTo(entity, target)
+        return !this.canPointTo(entity, target, world)
                 ? this.getAimlessAngle(seed, l)
                 : this.getAngleTo(entity, l, target);
     }
@@ -136,8 +132,9 @@ public class RiftScannerModel extends Model {
         return seed * 1327217883;
     }
 
-    private boolean canPointTo(Entity entity, @Nullable BlockPos pos) {
-        return pos != null && !(pos.getSquaredDistance(entity.getPos()) < 9.999999747378752E-6);
+    private boolean canPointTo(Entity entity, @Nullable BlockPos pos, @Nullable ClientWorld world) {
+        return world != null && world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD &&
+                pos != null && !(pos.getSquaredDistance(entity.getPos()) < 9.999999747378752E-6);
     }
 
     private @Nullable ClientWorld getClientWorld(Entity entity, @Nullable ClientWorld world) {
