@@ -8,6 +8,7 @@ import loqor.ait.api.ArtronHolder;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.world.RiftChunkManager;
@@ -99,7 +100,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
             double toAdd = 7;
 
-            if (manager.getArtron(chunk) > 0)
+            if (manager.getArtron(chunk) > 0 && world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
                 toAdd += (int) manager.removeFuel(chunk, 2);
 
             this.addFuel(20 * toAdd);
