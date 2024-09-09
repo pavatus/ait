@@ -18,6 +18,7 @@ import net.minecraft.util.math.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.util.AngleInterpolator;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.item.RiftScannerItem;
 
 public class RiftScannerModel extends Model {
@@ -107,6 +108,10 @@ public class RiftScannerModel extends Model {
             return 0;
 
         clientWorld = this.getClientWorld(entity, clientWorld);
+
+        if (clientWorld != null && clientWorld.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+            return 0;
+        }
 
         return clientWorld == null ? 0.0F : this.getAngle(RiftScannerItem.getTarget(stack)
                 .getCenterAtY(75), clientWorld, i, entity);
