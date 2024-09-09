@@ -34,6 +34,7 @@ import loqor.ait.api.ArtronHolderItem;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -459,7 +460,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (world == WorldUtil.getOverworld()) {
+                if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
                     sendRiftInfo(tardis, world, pos, player, stack);
                     return;
                 }
