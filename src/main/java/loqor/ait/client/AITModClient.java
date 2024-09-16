@@ -50,6 +50,7 @@ import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.dimension.sky.MarsSkyProperties;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
@@ -83,6 +84,8 @@ public class AITModClient implements ClientModInitializer {
         siegeItemPredicate();
 
         DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky);
+        // TODO make skybox renderer for mars so we dont have to render the moon
+        DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
 
         AITKeyBinds.init();
 

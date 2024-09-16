@@ -1,0 +1,11 @@
+{
+  "type": "ait:mars_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "ait:mars",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "ait:mars_biome"
+    }
+  }
+}
