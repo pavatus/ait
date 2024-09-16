@@ -14,6 +14,7 @@
   "spawn_costs": {},
   "carvers": {
     "air": [
+      "ait:mars_cave",
       "minecraft:canyon"
     ]
   },
