@@ -26,6 +26,9 @@
     "server.ServerPlayerMixin",
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
+    "server.gravity.AssortedEntityMixin",
+    "server.gravity.BoatEntityMixin",
+    "server.gravity.LivingEntityMixin",
     "server.structure.StructureTemplateAccessor",
     "server.structure.StructureTemplateMixin"
   ],

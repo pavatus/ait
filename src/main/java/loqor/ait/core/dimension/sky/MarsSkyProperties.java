@@ -5,12 +5,15 @@ import blue.endless.jankson.annotation.Nullable;
 import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
-public class MarsSkyProperties extends DimensionEffects {
+import loqor.ait.core.util.PlanetInformation;
+
+public class MarsSkyProperties extends DimensionEffects implements PlanetInformation {
     public static final float[] SUNSET_COLORS = {0,0  , 1, 1};
 
     public MarsSkyProperties() {
-        super(Overworld.CLOUDS_HEIGHT, true, SkyType.NORMAL, false, false);
+        super(Overworld.CLOUDS_HEIGHT, true, SkyType.NORMAL, true, false);
 //            this.
     }
 
@@ -45,5 +48,15 @@ public class MarsSkyProperties extends DimensionEffects {
             return SUNSET_COLORS;
         }
         return null;
+    }
+
+    @Override
+    public boolean ait$hasOxygen(World world) {
+        return false;
+    }
+
+    @Override
+    public float ait$getGravity() {
+        return 0.05f;
     }
 }

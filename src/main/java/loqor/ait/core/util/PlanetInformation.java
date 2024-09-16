@@ -1,4 +1,4 @@
-package loqor.ait.core.world.planets;
+package loqor.ait.core.util;
 
 import net.minecraft.world.World;
 
