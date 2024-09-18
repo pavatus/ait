@@ -1,14 +1,12 @@
 package loqor.ait.mixin.server.gravity;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -16,8 +14,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.item.SpacesuitItem;
+import loqor.ait.core.planet.Planet;
+import loqor.ait.core.planet.PlanetRegistry;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -28,10 +26,16 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "tickMovement", at = @At("TAIL"))
     public void ait$tickMovement(CallbackInfo ci) {
-        if (this.getWorld().getRegistryKey().equals(AITDimensions.MARS)) {
-            Vec3d movement = this.getVelocity();
-            this.setVelocity(movement.x, movement.y + 0.05f, movement.z);
-        }
+        Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
+        if (planet == null) return;
+        if (planet.gravity() < 0) return;
+
+        LivingEntity entity = (LivingEntity) (Object) this;
+        if (entity.isSwimming() || entity.hasNoGravity()) return;
+
+
+        Vec3d movement = this.getVelocity();
+        this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -43,28 +47,22 @@ public abstract class LivingEntityMixin extends Entity {
             if (player.isCreative()) return;
         }
 
-        if (this.getWorld().getRegistryKey().equals(AITDimensions.MARS) && !this.hasAllSpaceSuitBits(entity)) {
+        Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
+        if (planet == null) return;
 
+        if (planet.celcius() < 0 && !Planet.hasFullSuit(entity)) {
+            // freeze effect on cold planets
             if (entity.getFrozenTicks() < entity.getMinFreezeDamageTicks()) {
-                entity.setFrozenTicks(entity.getMinFreezeDamageTicks());
+                entity.setFrozenTicks(entity.getMinFreezeDamageTicks() + 20);
+
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA,
+                        200, 1, false, false));
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
+                        200, false, false));
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
+                        200, 1, false, false));
             }
-
-            entity.setFrozenTicks(entity.getFrozenTicks() + 2);
-
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA,
-                    200, 1, false, false));
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
-                    200, false, false));
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
-                    200, 1, false, false));
         }
-    }
-
-    @Unique private boolean hasAllSpaceSuitBits(LivingEntity entity) {
-        return entity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SpacesuitItem
-                && entity.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof SpacesuitItem
-                && entity.getEquippedStack(EquipmentSlot.LEGS).getItem() instanceof SpacesuitItem
-                && entity.getEquippedStack(EquipmentSlot.FEET).getItem() instanceof SpacesuitItem;
     }
 
 }

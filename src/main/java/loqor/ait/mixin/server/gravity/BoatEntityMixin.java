@@ -11,7 +11,9 @@ import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import loqor.ait.core.AITDimensions;
+import loqor.ait.core.planet.Planet;
+import loqor.ait.core.planet.PlanetRegistry;
+
 
 @Mixin({BoatEntity.class})
 public abstract class BoatEntityMixin extends Entity {
@@ -22,9 +24,11 @@ public abstract class BoatEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void ait$tick(CallbackInfo ci) {
-        if (this.getWorld().getRegistryKey().equals(AITDimensions.MARS)) {
-            Vec3d movement = this.getVelocity();
-            this.setVelocity(movement.x, movement.y + 0.03f, movement.z);
-        }
+        Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
+        if (planet == null) return;
+        if (planet.gravity() < 0) return;
+
+        Vec3d movement = this.getVelocity();
+        this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
     }
 }
