@@ -21,7 +21,12 @@ import loqor.ait.api.Identifiable;
 import loqor.ait.core.item.SpacesuitItem;
 
 public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int temperature) implements Identifiable {
-    public static final Codec<Planet> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(Identifier.CODEC.fieldOf("dimension").forGetter(Planet::dimension), Codec.FLOAT.fieldOf("gravity").forGetter(Planet::gravity), Codec.BOOL.fieldOf("has_oxygen").forGetter(Planet::hasOxygen), Codec.INT.optionalFieldOf("temperature").forGetter(planet -> Optional.of(planet.temperature()))).apply(instance, Planet::new)));
+    public static final Codec<Planet> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(
+            Identifier.CODEC.fieldOf("dimension").forGetter(Planet::dimension),
+            Codec.FLOAT.fieldOf("gravity").forGetter(Planet::gravity),
+            Codec.BOOL.fieldOf("has_oxygen").forGetter(Planet::hasOxygen),
+            Codec.INT.optionalFieldOf("temperature")
+                    .forGetter(planet -> Optional.of(planet.temperature()))).apply(instance, Planet::new)));
 
     @Override
     public Identifier id() {

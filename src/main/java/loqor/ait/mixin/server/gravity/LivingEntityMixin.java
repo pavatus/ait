@@ -31,7 +31,10 @@ public abstract class LivingEntityMixin extends Entity {
         if (planet.gravity() < 0) return;
 
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity.isSwimming() || entity.hasNoGravity()) return;
+        if (entity.isSwimming() || entity.hasNoGravity() || entity.isFallFlying() || entity.isSpectator()) return;
+        if (entity instanceof PlayerEntity player) {
+            if (player.getAbilities().flying) return;
+        }
 
 
         Vec3d movement = this.getVelocity();

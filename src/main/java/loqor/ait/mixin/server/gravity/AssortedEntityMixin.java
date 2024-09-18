@@ -31,6 +31,6 @@ public abstract class AssortedEntityMixin extends Entity {
         if (planet.gravity() < 0) return;
 
         Vec3d movement = this.getVelocity();
-        this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z); // todo - gravity broken on this
+        this.setVelocity(movement.x, movement.y + (planet.gravity() - 0.02f), movement.z); // todo - gravity broken on this
     }
 }
