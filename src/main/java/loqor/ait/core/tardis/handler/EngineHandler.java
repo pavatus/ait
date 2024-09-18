@@ -109,8 +109,7 @@ public class EngineHandler extends KeyedTardisComponent {
 
         if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
             return; // cant enable power if not enough fuel
-
-        this.tardis.siege().setActive(false);
+        if (this.tardis.siege().isActive()) return;
 
         if (!this.hasEngineCore())
             return;
