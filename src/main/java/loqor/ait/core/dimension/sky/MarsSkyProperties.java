@@ -7,19 +7,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import loqor.ait.core.util.PlanetInformation;
-
-public class MarsSkyProperties extends DimensionEffects implements PlanetInformation {
+public class MarsSkyProperties extends DimensionEffects {
     public static final float[] SUNSET_COLORS = {0,0  , 1, 1};
 
     public MarsSkyProperties() {
         super(Overworld.CLOUDS_HEIGHT, true, SkyType.NORMAL, true, false);
-//            this.
-    }
-
-    public MarsSkyProperties(float cloudLevel, boolean hasGround, SkyType skyType, boolean forceBrightLightmap,
-                             boolean constantAmbientLight) {
-        super(cloudLevel, hasGround, skyType, forceBrightLightmap, constantAmbientLight);
     }
 
     //adjustSkyColor
@@ -48,15 +40,5 @@ public class MarsSkyProperties extends DimensionEffects implements PlanetInforma
             return SUNSET_COLORS;
         }
         return null;
-    }
-
-    @Override
-    public boolean ait$hasOxygen(World world) {
-        return false;
-    }
-
-    @Override
-    public float ait$getGravity() {
-        return 0.05f;
     }
 }

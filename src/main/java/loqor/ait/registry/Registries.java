@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import loqor.ait.core.planet.PlanetRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -34,6 +35,7 @@ public class Registries {
         registries.add(ExteriorVariantRegistry.getInstance());
         registries.add(CategoryRegistry.getInstance());
         registries.add(TardisComponentRegistry.getInstance());
+        registries.add(PlanetRegistry.getInstance());
     }
 
     private void onClientInit() {
