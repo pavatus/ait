@@ -57,14 +57,17 @@ public abstract class LivingEntityMixin extends Entity {
             // freeze effect on cold planets
             if (entity.getFrozenTicks() < entity.getMinFreezeDamageTicks()) {
                 entity.setFrozenTicks(entity.getMinFreezeDamageTicks() + 20);
-
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA,
-                        200, 1, false, false));
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
-                        200, false, false));
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
-                        200, 1, false, false));
             }
+            return;
+        }
+
+        if (!planet.hasOxygen() && !Planet.hasOxygenInTank(entity)) {
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA,
+                    200, 1, false, false));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
+                    200, false, false));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
+                    200, 1, false, false));
         }
     }
 
