@@ -5,7 +5,6 @@ import blue.endless.jankson.annotation.Nullable;
 import net.minecraft.client.render.DimensionEffects;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 public class MarsSkyProperties extends DimensionEffects {
     public static final float[] SUNSET_COLORS = {0,0  , 1, 1};

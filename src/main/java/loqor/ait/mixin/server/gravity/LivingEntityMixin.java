@@ -1,7 +1,5 @@
 package loqor.ait.mixin.server.gravity;
 
-import loqor.ait.core.planet.Planet;
-import loqor.ait.core.planet.PlanetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +13,9 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import loqor.ait.core.planet.Planet;
+import loqor.ait.core.planet.PlanetRegistry;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
