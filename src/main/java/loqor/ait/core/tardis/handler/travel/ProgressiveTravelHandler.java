@@ -7,6 +7,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.sequences.SequenceHandler;
@@ -184,7 +185,11 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
             this.tardis.getDesktop().playSoundAtEveryConsole(SoundEvents.BLOCK_BELL_RESONATE);
             this.resetFlight();
 
-            this.tardis().travel().rematerialize();
+            boolean shouldRemat = TardisEvents.FINISH_FLIGHT.invoker().onFinish(tardis.asServer()) == TardisEvents.Interaction.SUCCESS;
+
+            if (shouldRemat)
+                this.tardis().travel().rematerialize();
+
             return;
         }
 

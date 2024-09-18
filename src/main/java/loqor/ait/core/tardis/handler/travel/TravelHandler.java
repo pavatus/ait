@@ -38,14 +38,14 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
 
     static {
-        TardisEvents.MAT.register(tardis -> { // ghost monument
+        TardisEvents.FINISH_FLIGHT.register(tardis -> { // ghost monument
             if (!AITMod.AIT_CONFIG.GHOST_MONUMENT())
                 return TardisEvents.Interaction.PASS;
 
             TravelHandler travel = tardis.travel();
 
             return (TardisUtil.isInteriorEmpty(tardis) && !travel.leaveBehind().get()) || travel.autopilot()
-                    ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
+                    ? TardisEvents.Interaction.SUCCESS : TardisEvents.Interaction.PASS;
         });
 
         TardisEvents.MAT.register(tardis -> { // end check

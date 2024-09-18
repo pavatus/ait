@@ -38,6 +38,17 @@ public final class TardisEvents {
         }
     });
 
+    public static final Event<FinishFlight> FINISH_FLIGHT = EventFactory.createArrayBacked(FinishFlight.class, callbacks -> tardis -> {
+        for (FinishFlight callback : callbacks) {
+            Interaction value = callback.onFinish(tardis);
+
+            if (value != Interaction.PASS)
+                return value;
+        }
+
+        return Interaction.PASS;
+    });
+
     public static final Event<Mat> MAT = EventFactory.createArrayBacked(Mat.class, callbacks -> tardis -> {
         for (Mat callback : callbacks) {
             Interaction value = callback.onMat(tardis);
@@ -222,6 +233,19 @@ public final class TardisEvents {
          * @return event's result
          */
         void onFlight(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface FinishFlight {
+        /**
+         * Called when a TARDIS has finished flight,
+         * If result is success, the TARDIS will remat
+         *
+         * @param tardis
+         *            the tardis taking off
+         * @return event's result
+         */
+        Interaction onFinish(ServerTardis tardis);
     }
 
     @FunctionalInterface
