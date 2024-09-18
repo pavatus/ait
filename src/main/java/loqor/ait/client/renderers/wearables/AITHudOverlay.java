@@ -7,11 +7,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -19,7 +22,11 @@ import net.minecraft.util.hit.HitResult;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
+import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.SpacesuitItem;
+import loqor.ait.core.planet.Planet;
+import loqor.ait.core.planet.PlanetRegistry;
 
 public class AITHudOverlay implements HudRenderCallback {
 
@@ -27,16 +34,29 @@ public class AITHudOverlay implements HudRenderCallback {
     public void onHudRender(DrawContext drawContext, float v) {
 
         MinecraftClient mc = MinecraftClient.getInstance();
+        TextRenderer textRenderer = mc.textRenderer;
 
         // @TODO think about removing this - Loqor
-        /*
-         * if(MinecraftClient.getInstance().player == null) return; MinecraftClient mc =
-         * MinecraftClient.getInstance();
-         * if(mc.player.getEquippedStack(EquipmentSlot.HEAD).getItem() ==
-         * AITItems.RESPIRATOR && mc.options.getPerspective().isFirstPerson()) {
-         * this.renderOverlay(drawContext, new Identifier(AITMod.MOD_ID,
-         * "textures/gui/overlay/maskblur.png"), 1.0F); }
-         */
+
+        Planet planet = PlanetRegistry.getInstance().get(mc.player.getWorld());
+
+        if(mc.player == null) return;
+        if(mc.player.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.SPACESUIT_HELMET && mc.options.getPerspective().isFirstPerson()) {
+            MatrixStack stack = drawContext.getMatrices();
+            stack.push();
+            stack.scale(1.5f, 1.5f, 1.5f);
+            drawContext.drawTextWithShadow(textRenderer,
+                    Text.literal(this.getTemperatureType(AITMod.AIT_CONFIG, planet)),
+                    0, 0, 0xFFFFFF);
+            stack.pop();
+            stack.push();
+            stack.scale(1.5f, 1.5f, 1.5f);
+            String oxygen = "" + Planet.getOxygenInTank(mc.player);
+            drawContext.drawTextWithShadow(textRenderer, Text.literal(
+                    oxygen.substring(0, 3) + "L / " + SpacesuitItem.MAX_OXYGEN + "L"), 0, 50, 0xFFFFFF);
+            stack.pop();
+        }
+
         if (mc.player == null)
             return;
         if ((mc.player.getEquippedStack(EquipmentSlot.MAINHAND).getItem() == AITItems.SONIC_SCREWDRIVER
@@ -96,5 +116,15 @@ public class AITHudOverlay implements HudRenderCallback {
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
         context.setShaderColor(0.9F, 0.9F, 0.9F, 1.0F);
+    }
+
+    public String getTemperatureType(AITConfig config, Planet planet) {
+        String c = "" + planet.celcius();
+        String f = "" + planet.fahrenheit();
+        return switch(config.TEMPERATURE_TYPE()) {
+            default -> c.substring(0, 5) + "°C";
+            case FAHRENHEIT -> f.substring(0, 5) + "°F";
+            case KELVIN -> planet.kelvin() + "K";
+        };
     }
 }

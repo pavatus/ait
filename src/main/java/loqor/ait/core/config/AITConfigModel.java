@@ -35,4 +35,11 @@ public class AITConfigModel {
     public boolean ENVIRONMENT_PROJECTOR = true;
     public boolean DISABLE_CONSOLE_ANIMATIONS = false;
     public boolean DISABLE_LOYALTY_FOG = false;
+
+    public TemperatureType TEMPERATURE_TYPE = TemperatureType.CELCIUS;
+    public enum TemperatureType {
+        CELCIUS,
+        FAHRENHEIT,
+        KELVIN;
+    }
 }

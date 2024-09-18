@@ -38,8 +38,19 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
         this(dimension, gravity, hasOxygen, temperature.orElse(288));
     }
 
+    // Use Celcius since it's more accurate in terms of water temperature
     public float celcius() {
         return this.temperature() - 273.15f;
+    }
+
+    // Temperature is in Kelvin because SCIENCE BITCH
+    public float kelvin() {
+        return this.temperature();
+    }
+
+    // Celcius -> Fahrenheit conversion isn't always the most accurate but oh well cope harder I guess
+    public float fahrenheit() {
+        return celcius() * 1.8f + 32f;
     }
 
     public Planet with(Identifier dimension) {
@@ -52,12 +63,16 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
                 && entity.getEquippedStack(EquipmentSlot.FEET).getItem() instanceof SpacesuitItem;
     }
 
-    public static boolean hasOxygenInTank(LivingEntity entity) {
+    public static double getOxygenInTank(LivingEntity entity) {
         ItemStack chestplate = entity.getEquippedStack(EquipmentSlot.CHEST);
         if (chestplate.getItem() instanceof SpacesuitItem) {
-            return chestplate.getOrCreateNbt().getDouble(SpacesuitItem.OXYGEN_KEY) > 0.0D;
+            return chestplate.getOrCreateNbt().getDouble(SpacesuitItem.OXYGEN_KEY);
         }
-        return false;
+        return 0.0D;
+    }
+
+    public static boolean hasOxygenInTank(LivingEntity entity) {
+        return Planet.getOxygenInTank(entity) > 0.0D;
     }
 
     public static Planet fromInputStream(InputStream stream) {

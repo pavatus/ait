@@ -40,7 +40,7 @@ public class SpacesuitItem extends RenderableArmorItem {
 
         if (!compound.contains(OXYGEN_KEY)) return;
 
-        if (world.getServer() == null) return;
+        if (world == null || world.getServer() == null) return;
 
         if (world.getServer().getTicks() % 20 != 0) {
             return;
