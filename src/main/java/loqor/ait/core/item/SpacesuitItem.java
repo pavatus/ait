@@ -1,9 +1,66 @@
 package loqor.ait.core.item;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.world.World;
+
+import loqor.ait.core.planet.PlanetRegistry;
 
 public class SpacesuitItem extends RenderableArmorItem {
+    public static final String OXYGEN_KEY = "oxygen";
     public SpacesuitItem(ArmorMaterial material, Type type, Settings settings, boolean hasCustomRendering) {
         super(material, type, settings, hasCustomRendering);
+    }
+
+    @Override
+    public ItemStack getDefaultStack() {
+        if (this.type != Type.CHESTPLATE) {
+            return super.getDefaultStack();
+        }
+        ItemStack stack = new ItemStack(this);
+        NbtCompound compound = stack.getOrCreateNbt();
+        compound.putDouble(OXYGEN_KEY, 4.2D);
+        return stack;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (this.type != Type.CHESTPLATE) return;
+        NbtCompound compound = stack.getOrCreateNbt();
+
+        if (!compound.contains(OXYGEN_KEY)) return;
+
+        if (world.getServer() == null) return;
+
+        if (world.getServer().getTicks() % 20 != 0) {
+            return;
+        }
+
+        if (PlanetRegistry.getInstance().get(world).hasOxygen() && compound.getDouble(OXYGEN_KEY) < 4.2D) {
+            // This math is loosely calculated to net you about 20 minutes worth of oxygen.
+            // compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.0035D));
+            compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.2D));
+        } else if (compound.getDouble(OXYGEN_KEY) > 0.0D) {
+            compound.putDouble(OXYGEN_KEY, Math.max(0.0D, compound.getDouble(OXYGEN_KEY) - 0.0035D));
+        }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        if (this.type != Type.CHESTPLATE) return;
+
+        String oxygen = "" + stack.getOrCreateNbt().getDouble(OXYGEN_KEY);
+
+        tooltip.add(Text.literal("Oxygen: " + oxygen.substring(0, 3) + "L").formatted(Formatting.BOLD, Formatting.BLUE));
     }
 }

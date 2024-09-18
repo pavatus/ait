@@ -13,6 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
 
@@ -49,6 +50,11 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
                 && entity.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof SpacesuitItem
                 && entity.getEquippedStack(EquipmentSlot.LEGS).getItem() instanceof SpacesuitItem
                 && entity.getEquippedStack(EquipmentSlot.FEET).getItem() instanceof SpacesuitItem;
+    }
+
+    public static boolean hasOxygenInTank(LivingEntity entity) {
+        ItemStack chestplate = entity.getEquippedStack(EquipmentSlot.CHEST);
+        return chestplate.getOrCreateNbt().getDouble(SpacesuitItem.OXYGEN_KEY) > 0.0D;
     }
 
     public static Planet fromInputStream(InputStream stream) {
