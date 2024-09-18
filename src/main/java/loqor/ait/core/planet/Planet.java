@@ -54,7 +54,10 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
 
     public static boolean hasOxygenInTank(LivingEntity entity) {
         ItemStack chestplate = entity.getEquippedStack(EquipmentSlot.CHEST);
-        return chestplate.getOrCreateNbt().getDouble(SpacesuitItem.OXYGEN_KEY) > 0.0D;
+        if (chestplate.getItem() instanceof SpacesuitItem) {
+            return chestplate.getOrCreateNbt().getDouble(SpacesuitItem.OXYGEN_KEY) > 0.0D;
+        }
+        return false;
     }
 
     public static Planet fromInputStream(InputStream stream) {

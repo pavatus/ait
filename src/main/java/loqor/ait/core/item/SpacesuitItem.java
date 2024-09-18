@@ -17,6 +17,7 @@ import loqor.ait.core.planet.PlanetRegistry;
 
 public class SpacesuitItem extends RenderableArmorItem {
     public static final String OXYGEN_KEY = "oxygen";
+    public static final double MAX_OXYGEN = 4.2D; // 20 minutes worth of oxygen in LITERS.
     public SpacesuitItem(ArmorMaterial material, Type type, Settings settings, boolean hasCustomRendering) {
         super(material, type, settings, hasCustomRendering);
     }
@@ -28,7 +29,7 @@ public class SpacesuitItem extends RenderableArmorItem {
         }
         ItemStack stack = new ItemStack(this);
         NbtCompound compound = stack.getOrCreateNbt();
-        compound.putDouble(OXYGEN_KEY, 4.2D);
+        compound.putDouble(OXYGEN_KEY, 0.0D);
         return stack;
     }
 
@@ -45,10 +46,10 @@ public class SpacesuitItem extends RenderableArmorItem {
             return;
         }
 
-        if (PlanetRegistry.getInstance().get(world).hasOxygen() && compound.getDouble(OXYGEN_KEY) < 4.2D) {
-            // This math is loosely calculated to net you about 20 minutes worth of oxygen.
+        if (PlanetRegistry.getInstance().get(world).hasOxygen() && compound.getDouble(OXYGEN_KEY) < MAX_OXYGEN) {
+            // This math is loosely calculated to net you about 20 minutes worth of oxygen in liters. Fuck the imperial system.
             // compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.0035D));
-            compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.2D));
+            compound.putDouble(OXYGEN_KEY, Math.min(MAX_OXYGEN, compound.getDouble(OXYGEN_KEY) + 0.2D));
         } else if (compound.getDouble(OXYGEN_KEY) > 0.0D) {
             compound.putDouble(OXYGEN_KEY, Math.max(0.0D, compound.getDouble(OXYGEN_KEY) - 0.0035D));
         }
@@ -61,6 +62,6 @@ public class SpacesuitItem extends RenderableArmorItem {
 
         String oxygen = "" + stack.getOrCreateNbt().getDouble(OXYGEN_KEY);
 
-        tooltip.add(Text.literal("Oxygen: " + oxygen.substring(0, 3) + "L").formatted(Formatting.BOLD, Formatting.BLUE));
+        tooltip.add(Text.literal("Oxygen: " + oxygen.substring(0, 3) + "L / " + MAX_OXYGEN + "L").formatted(Formatting.BOLD, Formatting.BLUE));
     }
 }
