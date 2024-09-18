@@ -1,6 +1,5 @@
 package loqor.ait.client.screens;
 
-import loqor.ait.AITMod;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -16,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.landing.LandingPadRegion;
