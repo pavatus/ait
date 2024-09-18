@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "ait:block/martian_stone"
+      },
+      {
+        "model": "ait:block/martian_stone_mirrored"
+      },
+      {
+        "model": "ait:block/martian_stone",
+        "y": 180
+      },
+      {
+        "model": "ait:block/martian_stone_mirrored",
+        "y": 180
+      }
+    ]
+  }
+}

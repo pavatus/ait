@@ -36,8 +36,6 @@ public class AITHudOverlay implements HudRenderCallback {
         MinecraftClient mc = MinecraftClient.getInstance();
         TextRenderer textRenderer = mc.textRenderer;
 
-        // @TODO think about removing this - Loqor
-
         Planet planet = PlanetRegistry.getInstance().get(mc.player.getWorld());
 
         if(mc.player == null) return;

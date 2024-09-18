@@ -83,6 +83,12 @@ public class AITBlocks implements BlockRegistryContainer {
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
                     .luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
 
+    // Planetary Blocks
+
+    // Mars
+    public static final Block MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE));
+    public static final Block MARTIAN_COBBLESTONE = new Block(AbstractBlock.Settings.copy(Blocks.COBBLESTONE));
+
     @NoBlockItem
     public static final Block PLUGBOARD = new PlugBoardBlock(
             FabricBlockSettings.create().solid().noCollision().strength(1.0f));
