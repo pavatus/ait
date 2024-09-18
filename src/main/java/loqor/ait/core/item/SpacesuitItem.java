@@ -47,10 +47,11 @@ public class SpacesuitItem extends RenderableArmorItem {
         }
 
         if (PlanetRegistry.getInstance().get(world).hasOxygen() && compound.getDouble(OXYGEN_KEY) < MAX_OXYGEN) {
-            // This math is loosely calculated to net you about 20 minutes worth of oxygen in liters. Fuck the imperial system.
             // compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.0035D));
             compound.putDouble(OXYGEN_KEY, Math.min(MAX_OXYGEN, compound.getDouble(OXYGEN_KEY) + 0.2D));
         } else if (compound.getDouble(OXYGEN_KEY) > 0.0D) {
+            // This is based on some probably-not-super-accurate math about how many liters of oxygen a human uses.
+            // humans usually use about 0.21 liters of air per minute, so I did the math for per second - since the getTicks() % 20 != 0 is every second.
             compound.putDouble(OXYGEN_KEY, Math.max(0.0D, compound.getDouble(OXYGEN_KEY) - 0.0035D));
         }
     }
