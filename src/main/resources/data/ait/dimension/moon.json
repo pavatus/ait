@@ -1,0 +1,11 @@
+{
+  "type": "ait:moon_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "ait:moon",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "ait:moon_biome"
+    }
+  }
+}

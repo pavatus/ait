@@ -15,10 +15,10 @@ public class AITDimensions {
 
     public static final RegistryKey<World> MARS = RegistryKey.of(RegistryKeys.WORLD,
             new Identifier(AITMod.MOD_ID, "mars"));
-    /*public static final RegistryKey<World> SPACE = RegistryKey.of(RegistryKeys.WORLD,
-            new Identifier(AITMod.MOD_ID, "space"));
     public static final RegistryKey<World> MOON = RegistryKey.of(RegistryKeys.WORLD,
             new Identifier(AITMod.MOD_ID, "moon"));
+    /*public static final RegistryKey<World> SPACE = RegistryKey.of(RegistryKeys.WORLD,
+            new Identifier(AITMod.MOD_ID, "space"));
 
     public static final RegistryKey<World> MERCURY = RegistryKey.of(RegistryKeys.WORLD,
             new Identifier(AITMod.MOD_ID, "mercury"));
