@@ -111,7 +111,12 @@ public class NetworkUtil {
             if (!(stack.getItem() instanceof LinkableItem))
                 continue;
 
-            ids.add(LinkableItem.getTardis(player.getWorld(), stack).asServer());
+            Tardis tardis = LinkableItem.getTardis(player.getWorld(), stack);
+
+            if (tardis == null)
+                continue;
+
+            ids.add(tardis.asServer());
         }
 
         return ids;
