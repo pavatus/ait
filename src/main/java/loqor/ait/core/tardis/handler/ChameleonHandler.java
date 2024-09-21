@@ -13,12 +13,12 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisExterior;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
@@ -71,9 +71,7 @@ public class ChameleonHandler extends TardisComponent {
             if (player == null)
                 return;
 
-            TardisExterior exterior = tardis.getExterior();
-
-            if (!(exterior.getVariant() instanceof AdaptiveVariant))
+            if (!isDisguised(tardis))
                 return;
 
             if (tardis.door().isClosed()) {
@@ -82,7 +80,7 @@ public class ChameleonHandler extends TardisComponent {
             }
 
             DirectedGlobalPos.Cached cached = tardis.travel().position();
-            Optional<ExteriorBlockEntity> blockEntity = exterior.findExteriorBlock();
+            Optional<ExteriorBlockEntity> blockEntity = tardis.getExterior().findExteriorBlock();
 
             if (blockEntity.isEmpty())
                 return;
@@ -133,7 +131,7 @@ public class ChameleonHandler extends TardisComponent {
         if (this.gaslighter == null)
             return false;
 
-        System.out.println("Recalculated exterior in " + (System.currentTimeMillis() - start) + "ms");
+        AITMod.LOGGER.info("Recalculated exterior in {}ms", System.currentTimeMillis() - start);
         return true;
     }
 

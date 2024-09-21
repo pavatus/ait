@@ -221,6 +221,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     // to answer
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos,
                                   @Nullable ServerPlayerEntity player) {
+        TardisEvents.USE_DOOR.invoker().onUseDoor(tardis, player);
+
         if (tardis.overgrown().isOvergrown()) {
             // Bro cant escape
             if (player == null)
@@ -343,7 +345,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             }
         }
 
-        TardisEvents.USE_DOOR.invoker().onUseDoor(tardis, player);
         return true;
     }
 

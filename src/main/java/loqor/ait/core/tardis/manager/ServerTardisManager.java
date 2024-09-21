@@ -71,7 +71,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
                 if (!tardis.hasDelta())
                     continue;
 
-                PacketByteBuf buf = this.prepareSendDelta(tardis, tardis.getDeltaSize());
+                PacketByteBuf buf = this.prepareSendDelta(tardis);
                 tardis.consumeDelta(component -> this.writeComponent(component, buf));
 
                 NetworkUtil.getSubscribedPlayers(tardis).forEach(
@@ -118,11 +118,11 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         return data;
     }
 
-    private PacketByteBuf prepareSendDelta(ServerTardis tardis, short deltaSize) {
+    private PacketByteBuf prepareSendDelta(ServerTardis tardis) {
         PacketByteBuf data = PacketByteBufs.create();
 
         data.writeUuid(tardis.getUuid());
-        data.writeShort(deltaSize);
+        data.writeShort(tardis.getDeltaSize());
 
         return data;
     }
