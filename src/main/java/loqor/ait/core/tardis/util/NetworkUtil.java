@@ -57,13 +57,6 @@ public class NetworkUtil {
         }
     }
 
-    public static Collection<ServerPlayerEntity> getPlayersNearExterior(ServerTardis tardis) {
-        if (tardis.travel().position() == null)
-            return new ArrayList<>();
-
-        return getTracking(tardis.travel().position());
-    }
-
     /**
      * Gets players who have a linked item in their inventory
      */
@@ -122,13 +115,8 @@ public class NetworkUtil {
         return ids;
     }
 
-    public static Collection<ServerPlayerEntity> getTracking(DirectedGlobalPos.Cached globalPos) {
-        return PlayerLookup.tracking(globalPos.getWorld(), globalPos.getPos());
-    }
-
     public static Stream<ServerPlayerEntity> getSubscribedPlayers(ServerTardis tardis) {
         Stream<ServerPlayerEntity> result = TardisUtil.getPlayersInsideInterior(tardis).stream();
-
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
         if (exteriorPos == null || exteriorPos.getWorld() == null)

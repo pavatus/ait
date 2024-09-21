@@ -1,6 +1,5 @@
 package loqor.ait.core.tardis.manager;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,18 +68,15 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
                 if (isInvalid(tardis))
                     continue;
 
-                Collection<TardisComponent> delta = tardis.getDelta();
+                if (!tardis.hasDelta())
+                    continue;
 
-                if (delta.isEmpty())
-                    return;
-
-                PacketByteBuf buf = this.prepareSendDelta(tardis, delta);
+                PacketByteBuf buf = this.prepareSendDelta(tardis, tardis.getDeltaSize());
+                tardis.consumeDelta(component -> this.writeComponent(component, buf));
 
                 NetworkUtil.getSubscribedPlayers(tardis).forEach(
                         watching -> this.sendComponents(watching, buf)
                 );
-
-                tardis.clearDelta();
             }
 
             this.delta.clear();
@@ -110,8 +106,6 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
     private void writeComponent(TardisComponent component, PacketByteBuf buf) {
         String rawId = TardisComponentRegistry.getInstance().get(component);
-        //AITMod.LOGGER.info("writing id from {}", component);
-        //AITMod.LOGGER.info("\tfor {}", rawId);
 
         buf.writeString(rawId);
         buf.writeString(this.networkGson.toJson(component));
@@ -124,15 +118,11 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
         return data;
     }
 
-    private PacketByteBuf prepareSendDelta(ServerTardis tardis, Collection<TardisComponent> delta) {
+    private PacketByteBuf prepareSendDelta(ServerTardis tardis, short deltaSize) {
         PacketByteBuf data = PacketByteBufs.create();
 
         data.writeUuid(tardis.getUuid());
-        data.writeShort(delta.size());
-
-        for (TardisComponent component : delta) {
-            this.writeComponent(component, data);
-        }
+        data.writeShort(deltaSize);
 
         return data;
     }

@@ -1,9 +1,8 @@
 package loqor.ait.core.tardis;
 
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import com.google.gson.InstanceCreator;
 
@@ -11,8 +10,10 @@ import net.minecraft.server.MinecraftServer;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.data.Exclude;
+import loqor.ait.data.enummap.EnumMap;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
+import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public class ServerTardis extends Tardis {
 
@@ -23,7 +24,12 @@ public class ServerTardis extends Tardis {
     private boolean removed;
 
     @Exclude
-    private final Set<TardisComponent> delta = new HashSet<>();
+    private final EnumMap<TardisComponent.IdLike, TardisComponent> delta = new EnumMap<>(TardisComponentRegistry::values,
+            TardisComponent[]::new);
+
+    // since enummap doesn't track this sort of info
+    @Exclude
+    private short deltaSize = 0;
 
     public ServerTardis(UUID uuid, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
         super(uuid, new TardisDesktop(schema), new TardisExterior(variantType));
@@ -46,18 +52,37 @@ public class ServerTardis extends Tardis {
     }
 
     public void markDirty(TardisComponent component) {
+        if (component == null)
+            return;
+
         if (component.tardis() != this)
             return;
 
-        this.delta.add(component);
+        if (this.delta.put(component.getId(), component) == null)
+            this.deltaSize++;
     }
 
-    public Set<TardisComponent> getDelta() {
-        return delta;
-    }
+    public void consumeDelta(Consumer<TardisComponent> consumer) {
+        if (!this.hasDelta())
+            return;
 
-    public void clearDelta() {
+        for (TardisComponent component : this.delta.getValues()) {
+            if (component == null)
+                continue;
+
+            consumer.accept(component);
+        }
+
         this.delta.clear();
+        this.deltaSize = 0;
+    }
+
+    public short getDeltaSize() {
+        return deltaSize;
+    }
+
+    public boolean hasDelta() {
+        return this.deltaSize != 0;
     }
 
     public static Object creator() {
