@@ -112,7 +112,7 @@ public class Gaslighter3000 {
             if (this.world instanceof Twitter twitter)
                 twitter.ait$setFake(pos, false);
 
-            this.unmarkForBlockUpdate(pos, i);
+            this.markForBlockUpdate(pos, i);
             FakeBlockEvents.REMOVED.invoker().onRemove(this.world, pos);
         }
 
