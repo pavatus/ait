@@ -68,7 +68,7 @@ public class ServerTardis extends Tardis {
     }
 
     public boolean hasDelta() {
-        return this.delta.isEmpty();
+        return !this.delta.isEmpty();
     }
 
     public int getDeltaSize() {
