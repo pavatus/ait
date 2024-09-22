@@ -21,11 +21,10 @@ import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
 import loqor.ait.core.item.SpacesuitItem;
 
-public record Planet(Identifier dimension, float gravity, boolean zeroGravity, boolean hasOxygen, int temperature) implements Identifiable {
+public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int temperature) implements Identifiable {
     public static final Codec<Planet> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("dimension").forGetter(Planet::dimension),
             Codec.FLOAT.optionalFieldOf("gravity").forGetter(planet -> Optional.of(planet.gravity())),
-            Codec.BOOL.optionalFieldOf("zero_gravity").forGetter(planet -> Optional.of(false)),
             Codec.BOOL.fieldOf("has_oxygen").forGetter(Planet::hasOxygen),
             Codec.INT.optionalFieldOf("temperature")
                     .forGetter(planet -> Optional.of(planet.temperature()))).apply(instance, Planet::new)));
@@ -35,8 +34,8 @@ public record Planet(Identifier dimension, float gravity, boolean zeroGravity, b
         return this.dimension();
     }
 
-    public Planet(Identifier dimension, Optional<Float> gravity, Optional<Boolean> zeroGravity, boolean hasOxygen, Optional<Integer> temperature) {
-        this(dimension, gravity.orElse(-1f), zeroGravity.orElse(false), hasOxygen, temperature.orElse(288));
+    public Planet(Identifier dimension, Optional<Float> gravity, boolean hasOxygen, Optional<Integer> temperature) {
+        this(dimension, gravity.orElse(-1f), hasOxygen, temperature.orElse(288));
     }
 
     // Use Celcius since it's more accurate in terms of water temperature
@@ -53,9 +52,13 @@ public record Planet(Identifier dimension, float gravity, boolean zeroGravity, b
     public float fahrenheit() {
         return celcius() * 1.8f + 32f;
     }
+    public boolean zeroGravity() {
+        return this.gravity() == 0; // exploding head emoji
+    }
+
 
     public Planet with(Identifier dimension) {
-        return new Planet(dimension, this.gravity, this.zeroGravity, this.hasOxygen, this.temperature);
+        return new Planet(dimension, this.gravity, this.hasOxygen, this.temperature);
     }
     public static boolean hasFullSuit(LivingEntity entity) {
         return entity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SpacesuitItem
