@@ -3,8 +3,6 @@ package loqor.ait.core.tardis.control.impl;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import loqor.ait.core.lock.LockedDimension;
-import loqor.ait.core.lock.LockedDimensionRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;

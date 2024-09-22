@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import loqor.ait.core.lock.LockedDimension;
-import loqor.ait.core.lock.LockedDimensionRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.planet.PlanetRegistry;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;

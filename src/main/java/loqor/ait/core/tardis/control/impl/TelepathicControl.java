@@ -1,9 +1,7 @@
 package loqor.ait.core.tardis.control.impl;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.lock.LockedDimension;
-import loqor.ait.core.lock.LockedDimensionRegistry;
-import loqor.ait.core.tardis.ServerTardis;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -25,18 +23,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
+import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.distress.DistressCall;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.data.DirectedGlobalPos;
-
-import java.util.List;
 
 public class TelepathicControl extends Control {
 
