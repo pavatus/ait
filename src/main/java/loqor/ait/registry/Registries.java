@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -36,6 +38,7 @@ public class Registries {
         registries.add(CategoryRegistry.getInstance());
         registries.add(TardisComponentRegistry.getInstance());
         registries.add(PlanetRegistry.getInstance());
+        registries.add(LockedDimensionRegistry.getInstance());
     }
 
     private void onClientInit() {

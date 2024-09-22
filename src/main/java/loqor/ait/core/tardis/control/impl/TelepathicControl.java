@@ -1,5 +1,9 @@
 package loqor.ait.core.tardis.control.impl;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
+import loqor.ait.core.tardis.ServerTardis;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -15,6 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.Structure;
@@ -30,6 +35,8 @@ import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.distress.DistressCall;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.data.DirectedGlobalPos;
+
+import java.util.List;
 
 public class TelepathicControl extends Control {
 
@@ -108,6 +115,8 @@ public class TelepathicControl extends Control {
             return true;
         }
 
+        if (tryUnlockDimension(player, held, tardis.asServer())) return true;
+
         Text text = Text.translatable("tardis.message.control.telepathic.choosing");
         player.sendMessage(text, true);
 
@@ -177,5 +186,27 @@ public class TelepathicControl extends Control {
                 player.sendMessage(Text.translatable("tardis.message.control.telepathic.failed"), true);
             }
         });
+    }
+
+    private static boolean tryUnlockDimension(ServerPlayerEntity player, ItemStack held, ServerTardis tardis) {
+        if (held.isEmpty()) return false;
+        if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return false;
+
+        List<LockedDimension> dims = LockedDimensionRegistry.getInstance().forStack(held);
+
+        if (dims.isEmpty()) return false;
+
+        dims.forEach(dim -> {
+            tardis.stats().unlock(dim);
+
+            player.sendMessage(dim.text().copy().append(" unlocked!").formatted(Formatting.BOLD, Formatting.ITALIC,
+                    Formatting.GOLD), false);
+        });
+        player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+                SoundCategory.PLAYERS, 0.2F, 1.0F);
+
+        held.decrement(1);
+
+        return true;
     }
 }

@@ -49,7 +49,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.MAT.register(tardis -> { // end check
-            if (!AITMod.AIT_CONFIG.REQUIRE_DRAGON_DEATH())
+            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS())
                 return TardisEvents.Interaction.PASS;
 
             boolean isEnd = tardis.travel().destination().getDimension().equals(World.END);

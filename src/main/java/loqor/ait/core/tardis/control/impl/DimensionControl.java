@@ -3,6 +3,8 @@ package loqor.ait.core.tardis.control.impl;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -31,8 +33,10 @@ public class DimensionControl extends Control {
         TravelHandler travel = tardis.travel();
         DirectedGlobalPos.Cached dest = travel.destination();
 
+        // todo - dont show locked dimensions
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             List<ServerWorld> dims = WorldUtil.getOpenWorlds();
+
             int current = WorldUtil
                     .worldIndex(dest.getWorld() == null ? world.getServer().getOverworld() : dest.getWorld());
 
