@@ -1,7 +1,5 @@
 package loqor.ait.core.tardis.handler.travel;
 
-import loqor.ait.core.lock.LockedDimension;
-import loqor.ait.core.lock.LockedDimensionRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
 import net.minecraft.block.BlockState;
@@ -19,6 +17,8 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
