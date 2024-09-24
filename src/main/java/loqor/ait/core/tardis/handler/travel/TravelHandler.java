@@ -17,6 +17,8 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
@@ -49,7 +51,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.MAT.register(tardis -> { // end check
-            if (!AITMod.AIT_CONFIG.REQUIRE_DRAGON_DEATH())
+            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS())
                 return TardisEvents.Interaction.PASS;
 
             boolean isEnd = tardis.travel().destination().getDimension().equals(World.END);
@@ -57,6 +59,17 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
             return WorldUtil.isEndDragonDead() ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
+
+        TardisEvents.MAT.register((tardis -> {
+            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return TardisEvents.Interaction.PASS;
+
+            LockedDimension dim = LockedDimensionRegistry.getInstance().get(tardis.travel().destination().getWorld());
+            boolean success = dim == null || tardis.isUnlocked(dim);
+
+            if (!success) return TardisEvents.Interaction.FAIL;
+
+            return TardisEvents.Interaction.PASS;
+        }));
 
         TardisEvents.LANDED.register(tardis -> {
             if (AITMod.AIT_CONFIG.GHOST_MONUMENT())

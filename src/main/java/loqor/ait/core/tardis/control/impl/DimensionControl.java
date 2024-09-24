@@ -6,8 +6,12 @@ import java.util.concurrent.CompletableFuture;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.lock.LockedDimension;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -33,6 +37,7 @@ public class DimensionControl extends Control {
 
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             List<ServerWorld> dims = WorldUtil.getOpenWorlds();
+
             int current = WorldUtil
                     .worldIndex(dest.getWorld() == null ? world.getServer().getOverworld() : dest.getWorld());
 
@@ -40,16 +45,20 @@ public class DimensionControl extends Control {
             return dims.get(next);
         }).thenAccept(destWorld -> {
             travel.forceDestination(cached -> cached.world(destWorld));
-            messagePlayer(player, destWorld);
+
+            LockedDimension dim = LockedDimensionRegistry.getInstance().get(destWorld);
+            boolean isUnlocked = dim == null || (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS() && (tardis.isUnlocked(dim) || (destWorld.getRegistryKey().equals(ServerWorld.END) && WorldUtil.isEndDragonDead())));
+
+            messagePlayer(player, destWorld, isUnlocked);
         });
 
         AsyncLocatorUtil.LOCATING_EXECUTOR_SERVICE.submit(() -> future);
         return true;
     }
 
-    private void messagePlayer(ServerPlayerEntity player, ServerWorld world) {
+    private void messagePlayer(ServerPlayerEntity player, ServerWorld world, boolean unlocked) {
         Text message = Text.translatable("message.ait.tardis.control.dimension.info")
-                .append(WorldUtil.worldText(world.getRegistryKey()));
+                .append(WorldUtil.worldText(world.getRegistryKey())).formatted(unlocked ? Formatting.WHITE : Formatting.GRAY);
 
         player.sendMessage(message, true);
     }

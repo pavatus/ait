@@ -24,6 +24,7 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.SiegeHandler;
@@ -108,6 +109,8 @@ public class TelepathicControl extends Control {
             return true;
         }
 
+        if (LockedDimensionRegistry.tryUnlockDimension(player, held, tardis.asServer())) return true;
+
         Text text = Text.translatable("tardis.message.control.telepathic.choosing");
         player.sendMessage(text, true);
 
@@ -178,4 +181,5 @@ public class TelepathicControl extends Control {
             }
         });
     }
+
 }
