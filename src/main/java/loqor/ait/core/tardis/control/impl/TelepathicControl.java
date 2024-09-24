@@ -1,7 +1,5 @@
 package loqor.ait.core.tardis.control.impl;
 
-import java.util.List;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,20 +15,16 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.lock.LockedDimension;
 import loqor.ait.core.lock.LockedDimensionRegistry;
-import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.SiegeHandler;
@@ -115,7 +109,7 @@ public class TelepathicControl extends Control {
             return true;
         }
 
-        if (tryUnlockDimension(player, held, tardis.asServer())) return true;
+        if (LockedDimensionRegistry.tryUnlockDimension(player, held, tardis.asServer())) return true;
 
         Text text = Text.translatable("tardis.message.control.telepathic.choosing");
         player.sendMessage(text, true);
@@ -188,25 +182,4 @@ public class TelepathicControl extends Control {
         });
     }
 
-    private static boolean tryUnlockDimension(ServerPlayerEntity player, ItemStack held, ServerTardis tardis) {
-        if (held.isEmpty()) return false;
-        if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return false;
-
-        List<LockedDimension> dims = LockedDimensionRegistry.getInstance().forStack(held);
-
-        if (dims.isEmpty()) return false;
-
-        dims.forEach(dim -> {
-            tardis.stats().unlock(dim);
-
-            player.sendMessage(dim.text().copy().append(" unlocked!").formatted(Formatting.BOLD, Formatting.ITALIC,
-                    Formatting.GOLD), false);
-        });
-        player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
-                SoundCategory.PLAYERS, 0.2F, 1.0F);
-
-        held.decrement(1);
-
-        return true;
-    }
 }

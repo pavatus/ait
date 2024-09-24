@@ -3,8 +3,13 @@ package loqor.ait.core.lock;
 import java.util.ArrayList;
 import java.util.List;
 
+import loqor.ait.core.tardis.ServerTardis;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionTypes;
 
@@ -15,25 +20,13 @@ import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimension> {
     private static final LockedDimensionRegistry instance = new LockedDimensionRegistry();
 
-    // it can go here idc
-    static {
-        TardisEvents.MAT.register((tardis -> {
-            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return TardisEvents.Interaction.PASS;
-
-            LockedDimension dim = getInstance().get(tardis.travel().destination().getWorld());
-            boolean success = dim == null || tardis.isUnlocked(dim);
-
-            if (!success) return TardisEvents.Interaction.FAIL;
-
-            return TardisEvents.Interaction.PASS;
-        }));
-    }
 
     public LockedDimensionRegistry() {
         super(LockedDimension::fromInputStream, LockedDimension.CODEC, "locked_dimension", true);
     }
 
     public static LockedDimension NETHER;
+
     @Override
     protected void defaults() {
         NETHER = register(new LockedDimension(DimensionTypes.THE_NETHER_ID, new ItemStack(Items.NETHERITE_SCRAP)));
@@ -59,5 +52,27 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
 
     public static LockedDimensionRegistry getInstance() {
         return instance;
+    }
+
+    public static boolean tryUnlockDimension(ServerPlayerEntity player, ItemStack held, ServerTardis tardis) {
+        if (held.isEmpty()) return false;
+        if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return false;
+
+        List<LockedDimension> dims = getInstance().forStack(held);
+
+        if (dims.isEmpty()) return false;
+
+        dims.forEach(dim -> {
+            tardis.stats().unlock(dim);
+
+            player.sendMessage(dim.text().copy().append(" unlocked!").formatted(Formatting.BOLD, Formatting.ITALIC,
+                    Formatting.GOLD), false);
+        });
+        player.getServerWorld().playSound(null, player.getBlockPos(), SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,
+                SoundCategory.PLAYERS, 0.2F, 1.0F);
+
+        held.decrement(1);
+
+        return true;
     }
 }
