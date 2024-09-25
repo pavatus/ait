@@ -17,8 +17,6 @@ public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
     @Override
     protected void defaults() {
         OVERWORLD = register(new Planet(DimensionTypes.OVERWORLD_ID, -1, true, 288)); // -1f means dont change gravity btw
-
-       // register(new Planet(AITDimensions.MARS.getValue(), 0.05f, false, 210)); // todo - move mars to datapack
     }
 
     @Override
