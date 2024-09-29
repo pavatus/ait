@@ -41,7 +41,8 @@
 	"entrypoints": {
 		"main": [
 			"loqor.ait.AITMod",
-			"loqor.ait.datagen.datagen_providers.loot.LootTableModification"
+			"loqor.ait.datagen.datagen_providers.loot.LootTableModification",
+			"dev.pavatus.multidim.MultiDim"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
@@ -55,7 +56,9 @@
 		]
 	},
 	"mixins": [
-		"ait.mixins.json"
+		"ait.mixins.json",
+		"gaslighter.mixins.json",
+		"multidim.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",
