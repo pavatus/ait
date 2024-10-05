@@ -50,7 +50,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
                     ? TardisEvents.Interaction.SUCCESS : TardisEvents.Interaction.PASS;
         });
 
-        TardisEvents.MAT.register(tardis -> { // end check
+        TardisEvents.MAT.register(tardis -> { // end check - wait, shouldn't this be done in the other locked method? this confuses me
             if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS())
                 return TardisEvents.Interaction.PASS;
 
