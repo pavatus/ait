@@ -118,12 +118,26 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
             @Override
             public float[] sonicItemRotations() {
-                return parentVariant.sonicItemRotations();
+                if (variant.sonicRotation() == null) {
+                    return parentVariant.sonicItemRotations();
+                }
+
+                float[] result = new float[2];
+
+                for (int i = 0; i < 2; i++) {
+                    result[i] = variant.sonicRotation().get(i);
+                }
+
+                return result;
             }
 
             @Override
             public Vector3f sonicItemTranslations() {
-                return parentVariant.sonicItemTranslations();
+                if (variant.sonicTranslation() == null) {
+                    return parentVariant.sonicItemTranslations();
+                }
+
+                return variant.sonicTranslation();
             }
         };
     }
