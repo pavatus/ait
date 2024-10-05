@@ -5,6 +5,7 @@ import java.util.function.Function;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 @SuppressWarnings("rawtypes")
@@ -49,4 +51,9 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
     }
 
     public abstract Animation getAnimationForState(TravelHandlerBase.State state);
+
+    public void renderMonitorText(Tardis tardis, ConsoleBlockEntity entity, MatrixStack matrices,
+                                  VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        // do nothing !! (i fucking hate programming) todo - @Loqor you added this feature ur implementing it for the rest
+    }
 }
