@@ -3,7 +3,6 @@ package loqor.ait.data.datapack;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.gson.JsonObject;
@@ -11,13 +10,13 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.joml.Vector3f;
 
-import loqor.ait.data.codec.MoreCodec;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.data.codec.MoreCodec;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
-import org.joml.Vector3f;
 
 // Example usage
 /*
