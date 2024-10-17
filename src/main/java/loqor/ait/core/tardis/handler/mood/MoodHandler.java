@@ -54,36 +54,30 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
 
     @Override
     public void tick(MinecraftServer world) {
-        if (this.moodEvent == null)
+        if (this.moodEvent == null || this.winningMood == null)
             return;
 
-        if (this.winningMood == null)
-            return;
+        TardisMood.Alignment moodAlignment = this.moodEvent.getMoodTypeCompatibility();
 
-        TardisMood.Alignment alignment = this.moodEvent.getMoodTypeCompatibility();
-
-        // System.out.println(this.winningMood.alignment() + " | " + alignment);
-
-        if (this.winningMood.alignment() == TardisMood.Alignment.NEUTRAL || (this.winningMood.alignment() == alignment
-        /*
-         * && (this.moodEvent.getMoodsList().isEmpty() ||
-         * this.moodEvent.getMoodsList().contains(this.winningMood))
-         */ )) {
-            System.out.println(this.winningMood.weight() + " | " + this.moodEvent.getCost());
+        if (matchesMood(this.winningMood.alignment(), moodAlignment)) {
             if (this.winningMood.weight() >= this.moodEvent.getCost()) {
-                if (this.getEvent() == null) {
-                    this.winningMood = null;
-                    return;
-                }
-
-                switch (this.winningMood.alignment()) {
-                    case NEGATIVE -> handleNegativeMood(alignment);
-                    case POSITIVE -> handlePositiveMood(this.winningMood.moods(), alignment);
-                    case NEUTRAL -> handleNeutralMood(this.moodEvent, alignment, this.winningMood.moods());
-                }
+                handleMoodDictatedEvent(this.winningMood.alignment(), moodAlignment, this.moodEvent);
             }
         } else {
             this.winningMood = null;
+        }
+    }
+
+    private boolean matchesMood(TardisMood.Alignment winningMoodAlignment, TardisMood.Alignment moodAlignment) {
+        return winningMoodAlignment == TardisMood.Alignment.NEUTRAL || winningMoodAlignment == moodAlignment;
+    }
+
+    private void handleMoodDictatedEvent(TardisMood.Alignment winningMoodAlignment, TardisMood.Alignment moodAlignment,
+            MoodDictatedEvent moodEvent) {
+        switch (winningMoodAlignment) {
+            case NEGATIVE -> handleNegativeMood(moodAlignment);
+            case POSITIVE -> handlePositiveMood(this.winningMood.moods(), moodAlignment);
+            case NEUTRAL -> handleNeutralMood(moodEvent, moodAlignment, this.winningMood.moods());
         }
     }
 
