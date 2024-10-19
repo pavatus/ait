@@ -9,6 +9,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -16,11 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -38,10 +38,10 @@ public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements
             ItemStack itemStack) {
         if (world.isClient())
             return;
-        Tardis tardis = TardisUtil.findTardisByInterior(pos, true);
+        Tardis tardis = TardisDimension.get(world).orElse(null);
         if (tardis == null)
             return;
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD && tardis.isGrowth()) {
+        if (!TardisDimension.isTardisDimension((ServerWorld) world) && tardis.isGrowth()) {
             // dont place yo
             world.breakBlock(pos, true);
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,

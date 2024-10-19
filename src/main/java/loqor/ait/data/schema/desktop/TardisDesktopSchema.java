@@ -58,7 +58,7 @@ public abstract class TardisDesktopSchema extends BasicSchema implements Unlocka
     }
 
     public Optional<StructureTemplate> findTemplate() {
-        return WorldUtil.getTardisDimension().getStructureTemplateManager()
+        return WorldUtil.getOverworld().getStructureTemplateManager()
                 .getTemplate(this.getStructureLocation());
     }
 

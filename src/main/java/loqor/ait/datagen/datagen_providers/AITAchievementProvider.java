@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -15,12 +14,8 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.advancement.BreakVegetationCriterion;
-import loqor.ait.core.advancement.CrashCriterion;
-import loqor.ait.core.advancement.PlaceCoralCriterion;
-import loqor.ait.core.advancement.TakeOffCriterion;
+import loqor.ait.core.advancement.*;
 
 public class AITAchievementProvider extends FabricAdvancementProvider {
     public AITAchievementProvider(FabricDataOutput output) {
@@ -43,7 +38,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .display(AITItems.TARDIS_ITEM, Text.literal("How Does It Fit?"),
                         Text.literal("Enter the TARDIS for the first time"), null, AdvancementFrame.CHALLENGE, true,
                         true, false)
-                .criterion("enter_tardis", ChangedDimensionCriterion.Conditions.to(AITDimensions.TARDIS_DIM_WORLD))
+                .criterion("enter_tardis", new EnterTardisCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/enter_tardis"); // for now this is the root advancement, meaning
         // its the first
         // one

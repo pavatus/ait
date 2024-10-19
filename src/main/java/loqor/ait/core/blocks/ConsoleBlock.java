@@ -35,11 +35,11 @@ import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.ICantBreak;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
@@ -103,7 +103,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+        if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
             // dont place yo
             world.breakBlock(pos, true);
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,

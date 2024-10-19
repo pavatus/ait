@@ -30,7 +30,6 @@ import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.enummap.EnumSet;
@@ -141,7 +140,7 @@ public class KeyItem extends LinkableItem {
         if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
             return;
 
-        if (player.getHealth() > 4 || player.getWorld() == WorldUtil.getTardisDimension())
+        if (player.getHealth() > 4 || player.getWorld() == tardis.asServer().getInteriorWorld())
             return;
 
         World world = player.getWorld();

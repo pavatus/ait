@@ -15,11 +15,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.SonicHandler;
-import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class ClientTardisUtil {
@@ -39,7 +38,7 @@ public class ClientTardisUtil {
             ClientTardis newTardis = null;
 
             if (isPlayerInATardis(client))
-                newTardis = (ClientTardis) TardisUtil.findTardisByInterior(client.player.getBlockPos(), false);
+                newTardis = (ClientTardis) TardisDimension.get(client.world).orElse(null);
 
             currentTardis = newTardis;
         });
@@ -82,7 +81,7 @@ public class ClientTardisUtil {
     }
 
     private static boolean isPlayerInATardis(MinecraftClient client) {
-        return client.world != null && client.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD;
+        return client.world != null && TardisDimension.isTardisDimension(client.world);
     }
 
     /**

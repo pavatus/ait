@@ -24,11 +24,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.world.RiftChunkManager;
@@ -88,7 +88,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!this.isMature(state))
             return;
 
-        if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+        if (TardisDimension.isTardisDimension(world)) {
             this.createConsole(world, pos);
             return;
         }
@@ -123,7 +123,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
                 || (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos)
-                        && !(world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD))) {
+                        && !TardisDimension.isTardisDimension((ServerWorld) world))) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
         }

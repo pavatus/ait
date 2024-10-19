@@ -18,7 +18,6 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
@@ -66,7 +65,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
 
     public void insertConsoleSonic(ItemStack sonic, BlockPos consolePos) {
         insertAnySonic(this.consoleSonic, sonic,
-                stack -> spawnItem(WorldUtil.getTardisDimension(), consolePos, stack));
+                stack -> spawnItem(tardis.asServer().getInteriorWorld(), consolePos, stack));
     }
 
     public void insertExteriorSonic(ItemStack sonic) {

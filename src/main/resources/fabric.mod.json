@@ -41,8 +41,7 @@
 	"entrypoints": {
 		"main": [
 			"loqor.ait.AITMod",
-			"loqor.ait.datagen.datagen_providers.loot.LootTableModification",
-			"dev.pavatus.multidim.MultiDim"
+			"loqor.ait.datagen.datagen_providers.loot.LootTableModification"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",

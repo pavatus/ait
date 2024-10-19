@@ -37,7 +37,6 @@ import loqor.ait.core.tardis.manager.TardisFileManager;
 import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
@@ -130,7 +129,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     public void remove(MinecraftServer server, ServerTardis tardis) {
         tardis.setRemoved(true);
 
-        ServerWorld tardisWorld = WorldUtil.getTardisDimension();
+        ServerWorld tardisWorld = tardis.getInteriorWorld();
 
         // Remove the exterior if it exists
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();

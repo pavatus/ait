@@ -1,6 +1,5 @@
 package loqor.ait.core.blockentities;
 
-import static loqor.ait.core.tardis.util.TardisUtil.findTardisByInterior;
 
 import java.util.Optional;
 
@@ -29,6 +28,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 public class EngineBlockEntity extends LinkableBlockEntity
         implements
@@ -63,10 +63,7 @@ public class EngineBlockEntity extends LinkableBlockEntity
     @Override
     public Optional<Tardis> findTardis() {
         if (this.tardisId == null && this.hasWorld()) {
-            assert this.getWorld() != null;
-            Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-            if (found != null)
-                this.setTardis(found);
+            TardisDimension.get(this.world).ifPresent(this::setTardis);
         }
         return super.findTardis();
     }

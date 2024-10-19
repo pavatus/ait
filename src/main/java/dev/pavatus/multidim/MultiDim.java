@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.storage.LevelStorage;
 
-public class MultiDim  {
+public class MultiDim {
 
     private static MultiDim instance;
     private static final Logger LOGGER = LoggerFactory.getLogger("ait-multidim");
