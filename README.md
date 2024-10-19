@@ -76,7 +76,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 
 
 ## Links
-[Wiki](https://loqor.dev/ait/)
+[Wiki](https://pavatus.github.io/ait-wiki/)
 
 [Github](https://github.com/loqor/ait/)
 

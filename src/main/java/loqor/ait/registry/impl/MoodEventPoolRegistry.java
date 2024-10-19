@@ -99,7 +99,6 @@ public class MoodEventPoolRegistry {
 
         FAST_RETURN_AND_TAKEOFF = register(
                 MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_return_and_takeoff"), tardis -> {
-                    System.out.println("IM A RACIST METHOD AAA");
                     TravelHandler travel = tardis.travel();
 
                     if (tardis.door().isOpen())

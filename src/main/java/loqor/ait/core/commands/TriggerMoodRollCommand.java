@@ -27,7 +27,7 @@ public class TriggerMoodRollCommand {
 
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
-        tardis.getHandlers().<MoodHandler>get(TardisComponent.Id.MOOD).rollForMoodDictatedEvent();
+        tardis.<MoodHandler>handler(TardisComponent.Id.MOOD).rollForMoodDictatedEvent();
 
         return Command.SINGLE_SUCCESS;
     }
