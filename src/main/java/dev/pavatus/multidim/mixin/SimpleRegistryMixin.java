@@ -36,6 +36,10 @@ public abstract class SimpleRegistryMixin<T> implements MutableRegistry<T> {
 
     @Shadow private boolean frozen;
 
+    @Shadow public abstract RegistryEntry.Reference<T> add(RegistryKey<T> key, T entry, Lifecycle lifecycle);
+
+    @Shadow public abstract boolean contains(RegistryKey<T> key);
+
     @Override
     public boolean multidim$remove(T entry) {
         RegistryEntry.Reference<T> registryEntry = this.valueToEntry.get(entry);
@@ -83,5 +87,15 @@ public abstract class SimpleRegistryMixin<T> implements MutableRegistry<T> {
     @Override
     public boolean multidim$isFrozen() {
         return this.frozen;
+    }
+
+    @Override
+    public boolean multidim$contains(RegistryKey<T> key) {
+        return this.contains(key);
+    }
+
+    @Override
+    public RegistryEntry.Reference<T> multidim$add(RegistryKey<T> key, T entry, Lifecycle lifecycle) {
+        return this.add(key, entry, lifecycle);
     }
 }

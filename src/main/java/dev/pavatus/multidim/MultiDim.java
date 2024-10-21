@@ -90,8 +90,8 @@ public class MultiDim {
         RegistryKey<DimensionOptions> key = RegistryKey.of(RegistryKeys.DIMENSION, options.dimensionTypeEntry()
                 .getKey().map(RegistryKey::getValue).orElse(builder.id()));
 
-        if (!dimensionsRegistry.contains(key))
-            dimensionsRegistry.add(key, options, Lifecycle.stable());
+        if (!dimensionsRegistry.multidim$contains(key))
+            dimensionsRegistry.multidim$add(key, options, Lifecycle.stable());
 
         if (wasFrozen)
             dimensionsRegistry.multidim$freeze();

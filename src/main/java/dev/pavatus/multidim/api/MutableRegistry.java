@@ -14,6 +14,6 @@ public interface MutableRegistry<T> {
     void multidim$unfreeze();
     boolean multidim$isFrozen();
 
-    boolean contains(RegistryKey<T> key);
-    RegistryEntry.Reference<T> add(RegistryKey<T> key, T entry, Lifecycle lifecycle);
+    boolean multidim$contains(RegistryKey<T> key);
+    RegistryEntry.Reference<T> multidim$add(RegistryKey<T> key, T entry, Lifecycle lifecycle);
 }
