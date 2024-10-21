@@ -15,6 +15,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -74,7 +75,7 @@ public class SequenceRegistry {
                     List<Explosion> explosions = new ArrayList<>();
 
                     missedTardis.getDesktop().getConsolePos().forEach(console -> {
-                        Explosion explosion = WorldUtil.getTardisDimension().createExplosion(null, null, null,
+                        Explosion explosion = missedTardis.asServer().getInteriorWorld().createExplosion(null, null, null,
                                 console.toCenterPos(), 3f * 2, false, World.ExplosionSourceType.BLOCK);
 
                         explosions.add(explosion);
@@ -89,9 +90,9 @@ public class SequenceRegistry {
 
                         if (!explosions.isEmpty()) {
                             player.damage(
-                                    WorldUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), 0);
+                                    missedTardis.asServer().getInteriorWorld().getDamageSources().explosion(explosions.get(0)), 0);
                         } else {
-                            player.damage(WorldUtil.getTardisDimension().getDamageSources().generic(), 0);
+                            player.damage(WorldUtil.getOverworld().getDamageSources().generic(), 0);
                         }
                     }
                 }, 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
@@ -185,15 +186,17 @@ public class SequenceRegistry {
 
                     BlockPos doorPos = directedDoorPos.getPos();
 
-                    if (finishedTardis.door().isOpen() || WorldUtil.getTardisDimension().isClient())
+                    if (finishedTardis.door().isOpen() || WorldUtil.getOverworld().isClient())
                         return;
 
-                    ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, WorldUtil.getTardisDimension());
+                    ServerWorld interior = finishedTardis.asServer().getInteriorWorld();
+
+                    ItemEntity rewardForCloaking = new ItemEntity(EntityType.ITEM, interior);
                     rewardForCloaking.setPosition(doorPos.toCenterPos());
 
                     rewardForCloaking.setStack(
                             random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
-                            WorldUtil.getTardisDimension().spawnEntity(rewardForCloaking);
+                            interior.spawnEntity(rewardForCloaking);
                 }), (missedTardis -> {
                     DirectedBlockPos directedDoorPos = missedTardis.getDesktop().doorPos();
 
@@ -203,23 +206,25 @@ public class SequenceRegistry {
                     BlockPos doorPos = directedDoorPos.getPos();
                     missedTardis.travel().increaseFlightTime(120);
 
-                    if (missedTardis.door().isOpen() || WorldUtil.getTardisDimension().isClient())
+                    if (missedTardis.door().isOpen() || WorldUtil.getOverworld().isClient())
                         return;
+
+                    ServerWorld interior = missedTardis.asServer().getInteriorWorld();
 
                     Vec3d centered = doorPos.toCenterPos();
 
-                    ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, WorldUtil.getTardisDimension());
+                    ZombieEntity zombieEntity = new ZombieEntity(EntityType.ZOMBIE, interior);
                     zombieEntity.setPosition(centered);
 
                     DrownedEntity drownedEntity = new DrownedEntity(EntityType.DROWNED,
-                            WorldUtil.getTardisDimension());
+                            interior);
                     drownedEntity.setPosition(centered);
 
                     PhantomEntity phantomEntity = new PhantomEntity(EntityType.PHANTOM,
-                            WorldUtil.getTardisDimension());
+                            interior);
                     phantomEntity.setPosition(centered);
 
-                            WorldUtil.getTardisDimension().spawnEntity(
+                            interior.spawnEntity(
                             random.nextBoolean() ? random.nextBoolean() ? drownedEntity : zombieEntity : phantomEntity);
                 }), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new CloakControl(), new RandomiserControl()));

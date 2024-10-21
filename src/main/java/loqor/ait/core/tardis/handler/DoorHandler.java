@@ -27,7 +27,6 @@ import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
@@ -110,7 +109,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
         return tardis.travel().getState() != TravelHandlerBase.State.LANDED && this.isOpen()
                 && tardis.travel().getState() != TravelHandlerBase.State.MAT && !tardis.areShieldsActive()
-                && WorldUtil.getTardisDimension().getBlockEntity(directed.getPos()) instanceof DoorBlockEntity;
+                && tardis.asServer().getInteriorWorld().getBlockEntity(directed.getPos()) instanceof DoorBlockEntity;
     }
 
     public void setLeftRot(boolean var) {
@@ -222,6 +221,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos,
                                   @Nullable ServerPlayerEntity player) {
         TardisEvents.USE_DOOR.invoker().onUseDoor(tardis, player);
+        ServerWorld interior = tardis.asServer().getInteriorWorld();
 
         if (tardis.overgrown().isOvergrown()) {
             // Bro cant escape
@@ -239,7 +239,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                     world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f,
                             1f);
 
-                WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
+                interior.playSound(null, tardis.getDesktop().doorPos().getPos(),
                         SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
                 TardisCriterions.VEGETATION.trigger(player);
@@ -250,7 +250,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f,
                         world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
-            WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
+            interior.playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
                     SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
             return false;
@@ -284,7 +284,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                     world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f,
                             1f);
 
-                WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
+                interior.playSound(null, tardis.getDesktop().doorPos().getPos(),
                         SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
 
                 lockTardis(false, tardis, player, true); // forcefully unlock the tardis
@@ -297,7 +297,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f,
                         world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
-            WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
+            interior.playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
                     SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
 
             return false;
@@ -308,7 +308,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f,
                         world.getRandom().nextBoolean() ? 0.5f : 0.3f);
-                WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
+                interior.playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
                         SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
             }
 
@@ -325,7 +325,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), sound,
                 SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
-        WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(), sound,
+        interior.playSound(null, tardis.getDesktop().doorPos().getPos(), sound,
                 SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
         if (!doorSchema.isDouble()) {
@@ -385,7 +385,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
                 SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
-        WorldUtil.getTardisDimension().playSound(null, tardis.getDesktop().doorPos().getPos(),
+        tardis.asServer().getInteriorWorld().playSound(null, tardis.getDesktop().doorPos().getPos(),
                 SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
 
         return true;

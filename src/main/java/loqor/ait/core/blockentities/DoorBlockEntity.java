@@ -35,11 +35,11 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 
@@ -127,7 +127,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void onEntityCollision(Entity entity) {
-        if (this.getWorld() != WorldUtil.getTardisDimension())
+        if (!TardisDimension.isTardisDimension((ServerWorld) this.getWorld()))
             return;
 
         if (!this.isLinked())

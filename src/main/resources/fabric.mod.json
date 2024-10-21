@@ -55,7 +55,9 @@
 		]
 	},
 	"mixins": [
-		"ait.mixins.json"
+		"ait.mixins.json",
+		"gaslighter.mixins.json",
+		"multidim.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",

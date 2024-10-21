@@ -33,6 +33,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 @Mixin(WorldRenderer.class)
 public abstract class SkyboxMixin {
@@ -82,7 +83,7 @@ public abstract class SkyboxMixin {
         if (this.world == null)
             return;
 
-        if (this.world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD) {
+        if (TardisDimension.isTardisDimension(this.world)) {
             this.renderSkyDynamically(matrices, projectionMatrix, tickDelta, camera, fogCallback, ci);
             this.world.getProfiler().swap("projector");
         }

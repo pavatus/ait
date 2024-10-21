@@ -55,6 +55,7 @@ import loqor.ait.core.dimension.sky.MoonSkyProperties;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
@@ -84,7 +85,7 @@ public class AITModClient implements ClientModInitializer {
         hammerPredicate();
         siegeItemPredicate();
 
-        DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky);
+        DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky); // todo
         // TODO make skybox renderer for mars so we dont have to render the moon
         DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
         DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MOON.getValue(), new MoonSkyProperties());
@@ -161,7 +162,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
                         return;
 
                     String id = buf.readString();
@@ -174,7 +175,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || client.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
                         return;
 
                     Identifier id = Identifier.tryParse(buf.readString());

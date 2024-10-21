@@ -18,7 +18,6 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.Loyalty;
 
 public class InteriorTeleporterItem extends LinkableItem { // todo - new model + texture?
@@ -75,7 +74,7 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         user.getItemCooldownManager().set(this, 16 * 20);
 
         BlockPos door = tardis.getDesktop().doorPos().getPos();
-        createTeleportEffect(WorldUtil.getTardisDimension(), door.toCenterPos().subtract(0, 0.5, 0), PARTICLE_SUCCESS);
+        createTeleportEffect(tardis.asServer().getInteriorWorld(), door.toCenterPos().subtract(0, 0.5, 0), PARTICLE_SUCCESS);
         world.playSound(null, door, AITSounds.DING, SoundCategory.PLAYERS, 1f, 1f);
         world.playSound(null, door, AITSounds.LAND_THUD, SoundCategory.PLAYERS, 1f, 1f);
 

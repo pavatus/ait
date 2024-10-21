@@ -5,12 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -24,7 +26,7 @@ import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITDimensions;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
 
@@ -45,7 +47,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || !blockEntity.isLinked())
+        if (!TardisDimension.isTardisDimension((ClientWorld) world) || !blockEntity.isLinked())
             return;
 
         blockEntity.ticks++;
@@ -63,7 +65,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD || !blockEntity.isLinked())
+        if (!TardisDimension.isTardisDimension((ServerWorld) world) || !blockEntity.isLinked())
             return;
 
         blockEntity.ticks++;

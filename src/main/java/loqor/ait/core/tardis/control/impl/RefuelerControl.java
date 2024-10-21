@@ -32,7 +32,7 @@ public class RefuelerControl extends Control {
             tardis.setRefueling(!tardis.isRefueling());
 
             if (tardis.isRefueling())
-                TardisDesktop.playSoundAtConsole(console, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10,
+                TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10,
                         1);
 
             return true;

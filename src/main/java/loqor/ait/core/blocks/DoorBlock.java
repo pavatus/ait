@@ -14,6 +14,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -34,12 +35,11 @@ import net.minecraft.world.WorldAccess;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.util.ShapeUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 @SuppressWarnings("deprecation")
@@ -64,7 +64,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     }
 
     private static void setDoorLight(Tardis tardis, int level) {
-        World world = WorldUtil.getTardisDimension();
+        World world = tardis.asServer().getInteriorWorld();
         BlockPos pos = tardis.getDesktop().doorPos().getPos();
 
         BlockState state = world.getBlockState(pos);
@@ -100,7 +100,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+        if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
             // dont place yo
             world.breakBlock(pos, true);
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,

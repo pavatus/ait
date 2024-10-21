@@ -9,8 +9,10 @@ import java.util.function.Consumer;
 import com.google.gson.InstanceCreator;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
@@ -73,6 +75,10 @@ public class ServerTardis extends Tardis {
 
     public int getDeltaSize() {
         return this.delta.size();
+    }
+
+    public ServerWorld getInteriorWorld() {
+        return TardisDimension.getOrCreate(this);
     }
 
     public static Object creator() {

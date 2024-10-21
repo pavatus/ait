@@ -20,8 +20,7 @@ public class AITConfigModel {
 
     @Expanded @RestartRequired
     public List<String> WORLDS_BLACKLIST = List.of(
-            AITDimensions.TIME_VORTEX_WORLD.getValue().toString(),
-            AITDimensions.TARDIS_DIM_WORLD.getValue().toString());
+            AITDimensions.TIME_VORTEX_WORLD.getValue().toString());
 
     public int TRAVEL_PER_TICK = 2;
 

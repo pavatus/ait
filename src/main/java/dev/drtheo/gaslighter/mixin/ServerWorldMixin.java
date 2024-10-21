@@ -1,4 +1,4 @@
-package loqor.ait.mixin.chameleon;
+package dev.drtheo.gaslighter.mixin;
 
 import dev.drtheo.gaslighter.api.Twitter;
 import it.unimi.dsi.fastutil.longs.LongArraySet;

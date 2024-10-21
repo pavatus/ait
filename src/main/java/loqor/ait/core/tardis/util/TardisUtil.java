@@ -41,11 +41,11 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.TardisManager;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
@@ -78,7 +78,7 @@ public class TardisUtil {
 
                 BlockPos exteriorPos = tardis.travel().position().getPos();
 
-                BlockPos pos = player.getWorld().getRegistryKey() == WorldUtil.getTardisDimension().getRegistryKey()
+                BlockPos pos = TardisDimension.isTardisDimension(player.getServerWorld())
                         ? tardis.getDesktop().doorPos().getPos()
                         : exteriorPos;
 
@@ -200,14 +200,14 @@ public class TardisUtil {
 
     public static void teleportInside(Tardis tardis, Entity entity) {
         TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-        TardisUtil.teleportWithDoorOffset(WorldUtil.getTardisDimension(), entity, tardis.getDesktop().doorPos());
+        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().doorPos());
     }
 
     public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
         if (entity instanceof ServerPlayerEntity player) {
             TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
 
-            WorldOps.teleportToWorld(player, WorldUtil.getTardisDimension(),
+            WorldOps.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
                     new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
             player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
         }
@@ -260,6 +260,7 @@ public class TardisUtil {
                 vec.z + value * (double) vec3i.getZ());
     }
 
+    @Deprecated(forRemoval = true, since = "1.0.6") // see TardisDimension#get
     public static Tardis findTardisByInterior(BlockPos pos, boolean isServer) {
         return TardisManager.getInstance(isServer)
                 .find(tardis -> TardisUtil.inBox(tardis.getDesktop().getCorners(), pos));
@@ -272,11 +273,11 @@ public class TardisUtil {
     }
 
     public static @Nullable PlayerEntity getAnyPlayerInsideInterior(Tardis tardis) {
-        return getAnyPlayerInsideInterior(tardis.getDesktop().getCorners());
+        return getAnyPlayerInsideInterior(tardis.asServer().getInteriorWorld(), tardis.getDesktop().getCorners());
     }
 
-    public static @Nullable PlayerEntity getAnyPlayerInsideInterior(Corners corners) {
-        for (PlayerEntity player : WorldUtil.getTardisDimension().getPlayers()) {
+    public static @Nullable PlayerEntity getAnyPlayerInsideInterior(ServerWorld world, Corners corners) {
+        for (PlayerEntity player : world.getPlayers()) {
             if (TardisUtil.inBox(corners, player.getBlockPos()))
                 return player;
         }
@@ -287,7 +288,7 @@ public class TardisUtil {
     public static List<ServerPlayerEntity> getPlayersInsideInterior(ServerTardis tardis) {
         List<ServerPlayerEntity> list = new ArrayList<>();
 
-        for (ServerPlayerEntity player : WorldUtil.getTardisDimension().getPlayers()) {
+        for (ServerPlayerEntity player : tardis.getInteriorWorld().getPlayers()) {
             if (TardisUtil.inBox(tardis.getDesktop().getCorners(), player.getBlockPos()))
                 list.add(player);
         }
@@ -296,7 +297,7 @@ public class TardisUtil {
     }
 
     public static List<LivingEntity> getLivingInInterior(Tardis tardis, Predicate<LivingEntity> predicate) {
-        return getEntitiesInBox(LivingEntity.class, WorldUtil.getTardisDimension(),
+        return getEntitiesInBox(LivingEntity.class, tardis.asServer().getInteriorWorld(),
                 tardis.getDesktop().getCorners().getBox(), predicate);
     }
 
@@ -383,7 +384,7 @@ public class TardisUtil {
     public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis, int area) {
         BlockPos pos = tardis.getDesktop().doorPos().getPos();
 
-        return WorldUtil.getTardisDimension().getEntitiesByClass(LivingEntity.class,
+        return tardis.asServer().getInteriorWorld().getEntitiesByClass(LivingEntity.class,
                 new Box(pos.north(area).east(area).up(area), pos.south(area).west(area).down(area)), (e) -> true);
     }
 
@@ -395,7 +396,7 @@ public class TardisUtil {
 
         BlockPos pos = directedPos.getPos();
 
-        return WorldUtil.getTardisDimension().getEntitiesByClass(Entity.class,
+        return tardis.asServer().getInteriorWorld().getEntitiesByClass(Entity.class,
                 new Box(pos.north(area).east(area).up(area), pos.south(area).west(area).down(area)), (e) -> true);
     }
 
