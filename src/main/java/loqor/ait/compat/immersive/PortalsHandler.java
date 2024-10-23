@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.pavatus.multidim.api.WorldBuilder;
+import net.minecraft.world.World;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.q_misc_util.api.DimensionAPI;
@@ -175,8 +176,10 @@ public class PortalsHandler extends KeyedTardisComponent {
 
     public static ServerWorld addWorld(WorldBuilder builder) {
         DimensionAPI.addDimensionDynamically(builder.id(), builder.buildOptions(ServerLifecycleHooks.get()));
-        DimensionAPI.saveDimensionConfiguration(RegistryKey.of(RegistryKeys.WORLD, builder.id()));
 
-        return ServerLifecycleHooks.get().getWorld(RegistryKey.of(RegistryKeys.WORLD, builder.id()));
+        RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, builder.id());
+        DimensionAPI.saveDimensionConfiguration(key);
+
+        return ServerLifecycleHooks.get().getWorld(key);
     }
 }
