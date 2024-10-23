@@ -6,6 +6,9 @@ import java.util.UUID;
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.VoidChunkGenerator;
 import dev.pavatus.multidim.api.WorldBuilder;
+import loqor.ait.compat.Compat;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.compat.immersive.PortalsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -31,12 +34,20 @@ public class TardisDimension {
                 .withSeed(WorldUtil.getOverworld().getSeed())
                 .withGenerator(new VoidChunkGenerator(WorldUtil.getOverworld().getRegistryManager().get(RegistryKeys.BIOME), RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"))));
     }
+
+    private static ServerWorld create(WorldBuilder builder) {
+        if (DependencyChecker.hasPortals()) {
+            AITMod.LOGGER.info("Immersive Portals Detected! Using their API instead..");
+            return PortalsHandler.addWorld(builder);
+        }
+
+        return MultiDim.get(ServerLifecycleHooks.get()).add(builder);
+    }
     private static ServerWorld create(ServerTardis tardis) {
         AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
 
         WorldBuilder builder = builder(tardis);
-
-        ServerWorld created = MultiDim.get(ServerLifecycleHooks.get()).add(builder);
+        ServerWorld created = create(builder);
 
         WorldUtil.blacklist(created);
 

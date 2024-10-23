@@ -3,8 +3,15 @@ package loqor.ait.compat.immersive;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.multidim.api.WorldBuilder;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.util.ServerLifecycleHooks;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
+import qouteall.q_misc_util.api.DimensionAPI;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
 import net.minecraft.util.math.BlockPos;
@@ -165,5 +172,12 @@ public class PortalsHandler extends KeyedTardisComponent {
         BlockPos pos = directed.getPos();
         return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
                 RotationPropertyHelper.toDirection(directed.getRotation()).get());
+    }
+
+    public static ServerWorld addWorld(WorldBuilder builder) {
+        DimensionAPI.addDimensionDynamically(builder.id(), builder.buildOptions(ServerLifecycleHooks.get()));
+        DimensionAPI.saveDimensionConfiguration(RegistryKey.of(RegistryKeys.WORLD, builder.id()));
+
+        return ServerLifecycleHooks.get().getWorld(RegistryKey.of(RegistryKeys.WORLD, builder.id()));
     }
 }

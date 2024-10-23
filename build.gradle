@@ -91,15 +91,16 @@ dependencies {
 
     include "io.wispforest:owo-sentinel:${project.owo_version}"
 
+    // todo - can fantasy be removed?
     modImplementation "xyz.nucleoid:fantasy:${project.fantasy_version}"
     include "xyz.nucleoid:fantasy:${project.fantasy_version}"
 
     // change to modImplementation to play with ip, modCompileOnlyApi to not play with ip
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
+    modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.ip_version}") {
+    modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.ip_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
