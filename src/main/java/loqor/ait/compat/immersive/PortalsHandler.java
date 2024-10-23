@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.pavatus.multidim.api.WorldBuilder;
-import net.minecraft.world.World;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.q_misc_util.api.DimensionAPI;
@@ -16,6 +15,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
