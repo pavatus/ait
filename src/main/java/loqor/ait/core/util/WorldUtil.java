@@ -3,6 +3,7 @@ package loqor.ait.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.multidim.api.VoidChunkGenerator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -15,6 +16,8 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -79,6 +82,8 @@ public class WorldUtil {
                 if (TardisDimension.isTardisDimension(world)) blacklist(world);
             }
         });
+
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(AITMod.MOD_ID, "void"), VoidChunkGenerator.CODEC);
     }
 
     public static ServerWorld getOverworld() {
