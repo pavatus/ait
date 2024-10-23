@@ -20,7 +20,6 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -53,7 +52,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (!TardisDimension.isTardisDimension((ServerWorld) world))
+        if (!TardisDimension.isTardisDimension(world))
             return;
 
         ItemStack stack = player.getMainHandStack();
