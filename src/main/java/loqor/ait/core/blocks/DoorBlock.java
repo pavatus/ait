@@ -39,6 +39,7 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.ShapeUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
@@ -64,6 +65,8 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     }
 
     private static void setDoorLight(Tardis tardis, int level) {
+        if (ServerLifecycleHooks.get() == null) return; // beautiful jank
+
         World world = tardis.asServer().getInteriorWorld();
         BlockPos pos = tardis.getDesktop().doorPos().getPos();
 

@@ -14,7 +14,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -83,7 +82,7 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
+        if (!(world.isClient()) && !TardisDimension.isTardisDimension(world)) {
             world.breakBlock(pos, !((PlayerEntity) placer).isCreative());
             return;
         }

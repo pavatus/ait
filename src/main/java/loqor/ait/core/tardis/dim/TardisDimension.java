@@ -60,12 +60,16 @@ public class TardisDimension {
 
         return Optional.ofNullable(TardisManager.with(world, ((o, manager) -> manager.demandTardis(o, uuid))));
     }
-    public static boolean isTardisDimension(ServerWorld world) {
+    public static boolean isTardisDimension(World world) {
+        return (!world.isClient()) ? isTardisDimension((ServerWorld) world) : isTardisDimension((ClientWorld) world);
+    }
+
+    private static boolean isTardisDimension(ServerWorld world) {
         return get(world).isPresent();
     }
 
     @Environment(EnvType.CLIENT)
-    public static boolean isTardisDimension(ClientWorld world) {
+    private static boolean isTardisDimension(ClientWorld world) {
         return world.getBiome(MinecraftClient.getInstance().player.getBlockPos()).matchesId(new Identifier(AITMod.MOD_ID, "tardis"));
     }
 }

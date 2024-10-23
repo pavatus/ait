@@ -38,7 +38,7 @@ import net.minecraft.world.gen.structure.Structure;
 public class VoidChunkGenerator extends AbstractChunkGenerator {
 
     public static final Codec<VoidChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Biome.REGISTRY_CODEC.stable().fieldOf("biome").forGetter(g -> g.biome)
+            Biome.REGISTRY_CODEC.stable().fieldOf("biome_source").forGetter(g -> g.biome)
     ).apply(instance, instance.stable(VoidChunkGenerator::new)));
 
     private static final VerticalBlockSample EMPTY_SAMPLE = new VerticalBlockSample(0, new BlockState[0]);
