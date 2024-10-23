@@ -6,9 +6,6 @@ import java.util.UUID;
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.VoidChunkGenerator;
 import dev.pavatus.multidim.api.WorldBuilder;
-import loqor.ait.compat.Compat;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.compat.immersive.PortalsHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -21,6 +18,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
