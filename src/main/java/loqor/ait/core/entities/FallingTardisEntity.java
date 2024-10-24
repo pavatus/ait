@@ -38,6 +38,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.entities.base.LinkableDummyEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
@@ -150,7 +151,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
         if (this.getWorld().isClient()) {
             if (MinecraftClient.getInstance().world != null
-                    && MinecraftClient.getInstance().world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
+                    && TardisDimension.isTardisDimension(MinecraftClient.getInstance().world))
                 ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
 
             return;

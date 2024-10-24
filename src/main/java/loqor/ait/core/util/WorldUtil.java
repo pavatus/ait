@@ -3,6 +3,7 @@ package loqor.ait.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.multidim.api.VoidChunkGenerator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -15,6 +16,8 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -30,6 +33,7 @@ import net.minecraft.world.WorldEvents;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.mixin.server.EnderDragonFightAccessor;
@@ -57,9 +61,6 @@ public class WorldUtil {
             if (world.getRegistryKey() == World.OVERWORLD)
                 OVERWORLD = null;
 
-            if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
-                TARDIS_DIMENSION = null;
-
             if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
                 TIME_VORTEX = null;
         });
@@ -68,24 +69,28 @@ public class WorldUtil {
             if (world.getRegistryKey() == World.OVERWORLD)
                 OVERWORLD = world;
 
-            if (world.getRegistryKey() == AITDimensions.TARDIS_DIM_WORLD)
-                TARDIS_DIMENSION = world;
-
             if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
                 TIME_VORTEX = world;
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             OVERWORLD = server.getOverworld();
-            TARDIS_DIMENSION = server.getWorld(AITDimensions.TARDIS_DIM_WORLD);
             TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
+
+            // blacklist all tardises
+            for (ServerWorld world : getDimensions(server)) {
+                if (TardisDimension.isTardisDimension(world)) blacklist(world);
+            }
         });
+
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(AITMod.MOD_ID, "void"), VoidChunkGenerator.CODEC);
     }
 
     public static ServerWorld getOverworld() {
         return OVERWORLD;
     }
 
+    @Deprecated(forRemoval = true, since = "1.0.6")
     public static ServerWorld getTardisDimension() {
         return TARDIS_DIMENSION;
     }
@@ -112,6 +117,12 @@ public class WorldUtil {
         }
 
         return true;
+    }
+    public static void blacklist(RegistryKey<World> world) {
+        blacklisted.add(world.getValue());
+    }
+    public static void blacklist(World world) {
+        blacklist(world.getRegistryKey());
     }
 
     public static int worldIndex(ServerWorld world) {

@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
@@ -18,7 +19,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolValue;
 
@@ -63,10 +63,11 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         int power = this.speed() + this.getHammerUses() + 1;
         List<Explosion> explosions = new ArrayList<>();
 
+        ServerWorld world = tardis.asServer().getInteriorWorld();
         tardis.getDesktop().getConsolePos().forEach(console -> {
-            TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+            TardisDesktop.playSoundAtConsole(world, console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
 
-            Explosion explosion = WorldUtil.getTardisDimension().createExplosion(null, null, null,
+            Explosion explosion = world.createExplosion(null, null, null,
                     console.toCenterPos(), 3f * power, false, World.ExplosionSourceType.MOB);
 
             explosions.add(explosion);
@@ -96,9 +97,9 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
             int damage = (int) Math.round(0.5 * power);
 
             if (!explosions.isEmpty()) {
-                player.damage(WorldUtil.getTardisDimension().getDamageSources().explosion(explosions.get(0)), damage);
+                player.damage(world.getDamageSources().explosion(explosions.get(0)), damage);
             } else {
-                player.damage(WorldUtil.getTardisDimension().getDamageSources().generic(), damage);
+                player.damage(world.getDamageSources().generic(), damage);
             }
         }
 

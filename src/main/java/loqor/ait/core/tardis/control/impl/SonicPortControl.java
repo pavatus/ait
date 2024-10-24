@@ -55,7 +55,7 @@ public class SonicPortControl extends Control {
         handler.insertConsoleSonic(stack, console);
         player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-        TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f,
+        TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f,
                 1);
         return true;
     }

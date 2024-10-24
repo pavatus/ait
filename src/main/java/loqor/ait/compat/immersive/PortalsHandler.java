@@ -3,20 +3,26 @@ package loqor.ait.compat.immersive;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.multidim.api.WorldBuilder;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
+import qouteall.q_misc_util.api.DimensionAPI;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
@@ -110,7 +116,7 @@ public class PortalsHandler extends KeyedTardisComponent {
         portal.setOriginPos(
                 new Vec3d(exteriorAdjust.getX() + 0.5, exteriorAdjust.getY() + 1, exteriorAdjust.getZ() + 0.5));
 
-        portal.setDestinationDimension(WorldUtil.getTardisDimension().getRegistryKey());
+        portal.setDestinationDimension(tardis.asServer().getInteriorWorld().getRegistryKey());
         portal.setDestination(new Vec3d(doorAdjust.getX() + 0.5, doorAdjust.getY() + 1, doorAdjust.getZ() + 0.5));
 
         portal.renderingMergable = true;
@@ -128,7 +134,7 @@ public class PortalsHandler extends KeyedTardisComponent {
         Vec3d doorAdjust = adjustInteriorPos(tardis.getExterior().getVariant().door(), doorPos);
         Vec3d exteriorAdjust = adjustExteriorPos(tardis.getExterior().getVariant(), exteriorPos);
 
-        TardisPortal portal = new TardisPortal(WorldUtil.getTardisDimension(), tardis);
+        TardisPortal portal = new TardisPortal(tardis.asServer().getInteriorWorld(), tardis);
 
         portal.setOrientationAndSize(new Vec3d(1, 0, 0), // axisW
                 new Vec3d(0, 1, 0), // axisH
@@ -166,5 +172,14 @@ public class PortalsHandler extends KeyedTardisComponent {
         BlockPos pos = directed.getPos();
         return door.adjustPortalPos(new Vec3d(pos.getX(), pos.getY(), pos.getZ()),
                 RotationPropertyHelper.toDirection(directed.getRotation()).get());
+    }
+
+    public static ServerWorld addWorld(WorldBuilder builder) {
+        DimensionAPI.addDimensionDynamically(builder.id(), builder.buildOptions(ServerLifecycleHooks.get()));
+
+        RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, builder.id());
+        DimensionAPI.saveDimensionConfiguration(key);
+
+        return ServerLifecycleHooks.get().getWorld(key);
     }
 }

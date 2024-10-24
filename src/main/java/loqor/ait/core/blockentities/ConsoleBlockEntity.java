@@ -26,7 +26,6 @@ import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.tardis.ServerTardis;
@@ -34,6 +33,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
 import loqor.ait.core.tardis.control.sequences.SequenceHandler;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.world.RiftChunkManager;
@@ -173,7 +173,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         if (!(this.world instanceof ServerWorld serverWorld))
             return;
 
-        if (this.world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
+        if (!TardisDimension.isTardisDimension((ServerWorld) this.getWorld()))
             return;
 
         this.killControls();
@@ -207,15 +207,15 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         if (this.needsControls)
             this.spawnControls();
 
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-            this.markRemoved();
-
         if (!(world instanceof ServerWorld serverWorld)) {
             this.age++;
 
             ANIM_STATE.startIfNotRunning(this.age);
             return;
         }
+
+        if (!TardisDimension.isTardisDimension((ServerWorld) this.getWorld()))
+            this.markRemoved();
 
         if (this.tardis().isEmpty())
             return;

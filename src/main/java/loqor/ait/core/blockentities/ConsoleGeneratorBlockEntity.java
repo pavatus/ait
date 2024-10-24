@@ -2,7 +2,6 @@ package loqor.ait.core.blockentities;
 
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextConsole;
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
-import static loqor.ait.core.tardis.util.TardisUtil.findTardisByInterior;
 
 import java.util.Optional;
 
@@ -35,7 +34,7 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -53,7 +52,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (world != WorldUtil.getTardisDimension())
+        if (!TardisDimension.isTardisDimension(world))
             return;
 
         ItemStack stack = player.getMainHandStack();
@@ -115,9 +114,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     @Override
     public Optional<Tardis> findTardis() {
         if (this.tardisId == null) {
-            Tardis found = findTardisByInterior(pos, !this.getWorld().isClient());
-            if (found != null)
-                this.setTardis(found);
+            TardisDimension.get(this.world).ifPresent(this::setTardis);
         }
         return super.findTardis();
     }

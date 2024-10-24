@@ -121,6 +121,7 @@ public class EngineHandler extends KeyedTardisComponent {
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
     }
 
+    // why is this in the engine handler? - Loqor
     private void updateExteriorState() {
         TravelHandler travel = this.tardis.travel();
 

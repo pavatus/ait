@@ -25,8 +25,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 @SuppressWarnings("deprecation")
 public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
@@ -82,7 +82,7 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+        if (!(world.isClient()) && !TardisDimension.isTardisDimension(world)) {
             world.breakBlock(pos, !((PlayerEntity) placer).isCreative());
             return;
         }

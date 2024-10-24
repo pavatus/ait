@@ -10,7 +10,7 @@ public class ServerLifecycleHooks {
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> ServerLifecycleHooks.server = server);
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> ServerLifecycleHooks.server = null);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> ServerLifecycleHooks.server = null);
     }
 
     public static MinecraftServer get() {

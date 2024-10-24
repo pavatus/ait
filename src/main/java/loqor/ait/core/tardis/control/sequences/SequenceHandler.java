@@ -8,21 +8,24 @@ import org.joml.Vector3f;
 
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 import loqor.ait.registry.impl.SequenceRegistry;
 
@@ -56,7 +59,7 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
         if (this.playerUUID == null)
             return null;
 
-        return (ServerPlayerEntity) WorldUtil.getTardisDimension().getPlayerByUuid(this.playerUUID);
+        return (ServerPlayerEntity) this.tardis.asServer().getInteriorWorld().getPlayerByUuid(this.playerUUID);
     }
 
     public void add(Control control, ServerPlayerEntity player, BlockPos console) {
@@ -144,20 +147,22 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
     }
 
     private void doMissedControlEffects(@Nullable BlockPos console) {
-        Consumer<BlockPos> effects = SequenceHandler::missedControlEffects;
+        Consumer<GlobalPos> effects = SequenceHandler::missedControlEffects;
+        RegistryKey<World> dimension = this.tardis.asServer().getInteriorWorld().getRegistryKey();
 
         if (console == null) {
-            this.tardis.getDesktop().getConsolePos().forEach(effects);
+            this.tardis.getDesktop().getConsolePos().forEach(pos -> effects.accept(GlobalPos.create(dimension, pos)));
             return;
         }
 
-        effects.accept(console);
+        effects.accept(GlobalPos.create(dimension, console));
     }
 
-    public static void missedControlEffects(BlockPos console) {
-        ServerWorld world = WorldUtil.getTardisDimension();
+    public static void missedControlEffects(GlobalPos pos) {
+        ServerWorld world = ServerLifecycleHooks.get().getWorld(pos.getDimension());
+        BlockPos console = pos.getPos();
 
-        TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
+        TardisDesktop.playSoundAtConsole(world, console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
         Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
         world.spawnParticles(ParticleTypes.SMALL_FLAME, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 20, 0.4F, 1F, 0.4F,
@@ -170,20 +175,22 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
     }
 
     private void doCompletedControlEffects(@Nullable BlockPos console) {
-        Consumer<BlockPos> effects = SequenceHandler::completedControlEffects;
+        Consumer<GlobalPos> effects = SequenceHandler::completedControlEffects;
+        RegistryKey<World> dimension = this.tardis.asServer().getInteriorWorld().getRegistryKey();
 
         if (console == null) {
-            this.tardis.getDesktop().getConsolePos().forEach(effects);
+            this.tardis.getDesktop().getConsolePos().forEach(pos -> effects.accept(GlobalPos.create(dimension, pos)));
             return;
         }
 
-        effects.accept(console);
+        effects.accept(GlobalPos.create(dimension, console));
     }
 
-    public static void completedControlEffects(BlockPos console) {
-        ServerWorld world = WorldUtil.getTardisDimension();
+    public static void completedControlEffects(GlobalPos pos) {
+        ServerWorld world = ServerLifecycleHooks.get().getWorld(pos.getDimension());
+        BlockPos console = pos.getPos();
 
-        TardisDesktop.playSoundAtConsole(console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f, 1f);
+        TardisDesktop.playSoundAtConsole(world, console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 3f, 1f);
         Vec3d vec3d = Vec3d.ofBottomCenter(console).add(0.0, 1.2f, 0.0);
 
         world.spawnParticles(ParticleTypes.GLOW, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F, 1F, 0.4F, 5.0F);

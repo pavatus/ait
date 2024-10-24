@@ -28,11 +28,11 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 public record DistressCall(Sender sender, String message, int lifetime, int creationTime, boolean isSourceCall) {
@@ -140,7 +140,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         if (!target.stats().receiveCalls().get()) return; // ignore if doesnt want to receive
 
         // spawn distress item at door
-        ServerWorld world = WorldUtil.getTardisDimension();
+        ServerWorld world = target.getInteriorWorld();
         Vec3d pos = TardisUtil.offsetInteriorDoorPosition(target);
 
         ItemStack created = HypercubeItem.create(copyForSend(this, world.getServer().getTicks()));
@@ -281,8 +281,8 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
 
         @Override
         public DirectedGlobalPos.Cached position() {
-            if (this.player().getWorld().getRegistryKey() == WorldUtil.getTardisDimension().getRegistryKey()) {
-                Tardis found = TardisUtil.findTardisByInterior(this.player().getBlockPos(), true);
+            if (TardisDimension.isTardisDimension((ServerWorld) this.player().getWorld())) {
+                Tardis found = TardisDimension.get(this.player().getWorld()).orElse(null);
                 if (found != null) return found.travel().position();
             }
 
