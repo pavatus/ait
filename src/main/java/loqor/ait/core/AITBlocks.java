@@ -88,6 +88,12 @@ public class AITBlocks implements BlockRegistryContainer {
     // Mars
     public static final Block MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE));
     public static final Block MARTIAN_COBBLESTONE = new Block(AbstractBlock.Settings.copy(Blocks.COBBLESTONE));
+    public static final Block MARTIAN_PILLAR = new PillarBlock(AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR));
+    public static final Block CHISELED_MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.CHISELED_STONE_BRICKS));
+    public static final Block CRACKED_MARTIAN_BRICKS = new Block(AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
+    public static final Block MARTIAN_BRICKS = new Block(AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
+    public static final Block POLISHED_MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
+    public static final Block SMOOTH_MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
 
     @NoBlockItem
     public static final Block PLUGBOARD = new PlugBoardBlock(
