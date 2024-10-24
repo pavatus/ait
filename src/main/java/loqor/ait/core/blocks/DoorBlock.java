@@ -14,7 +14,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -103,7 +102,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
+        if (!TardisDimension.isTardisDimension(world)) {
             // dont place yo
             world.breakBlock(pos, true);
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
