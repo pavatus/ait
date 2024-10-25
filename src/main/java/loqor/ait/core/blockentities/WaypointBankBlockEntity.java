@@ -73,9 +73,9 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
             return this.insert(state, stack, slot);
 
         if (player.isSneaking())
-            return this.select(state, slot);
+            return this.take(state, player, slot);
 
-        return this.take(state, player, slot);
+        return this.select(state, slot);
     }
 
     private ActionResult take(BlockState state, PlayerEntity player, int slot) {
