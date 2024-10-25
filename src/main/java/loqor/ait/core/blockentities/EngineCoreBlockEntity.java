@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -47,7 +46,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
-        if (!TardisDimension.isTardisDimension((ClientWorld) world) || !blockEntity.isLinked())
+        if (!TardisDimension.isTardisDimension(world) || !blockEntity.isLinked())
             return;
 
         blockEntity.ticks++;
