@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -32,13 +31,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import loqor.ait.api.TardisEvents;
-import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.entities.base.LinkableDummyEntity;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
@@ -148,14 +145,6 @@ public class FallingTardisEntity extends LinkableDummyEntity {
         BlockPos blockPos = this.getBlockPos();
 
         boolean isCrashing = travel.isCrashing();
-
-        if (this.getWorld().isClient()) {
-            if (MinecraftClient.getInstance().world != null
-                    && TardisDimension.isTardisDimension(MinecraftClient.getInstance().world))
-                ClientShakeUtil.shake(isCrashing ? 3.0f : 0.5f);
-
-            return;
-        }
 
         TardisUtil.getPlayersInsideInterior(tardis.asServer()).forEach(player -> {
             SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
