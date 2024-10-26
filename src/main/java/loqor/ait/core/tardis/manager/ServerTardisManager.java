@@ -64,7 +64,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
             if (this.fileManager.isLocked())
                 return;
 
-            for (ServerTardis tardis : this.delta) {
+            for (ServerTardis tardis : new HashSet<>(this.delta)) {
                 if (isInvalid(tardis))
                     continue;
 

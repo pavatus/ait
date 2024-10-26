@@ -103,7 +103,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
+        if (!TardisDimension.isTardisDimension(world)) {
             // dont place yo
             world.breakBlock(pos, true);
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
