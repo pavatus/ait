@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import dev.pavatus.multidim.MultiDim;
 import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -148,6 +149,8 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
                 WorldOps.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos());
             });
         }
+
+        MultiDim.get(server).remove(tardisWorld.getRegistryKey());
 
         this.sendTardisRemoval(server, tardis);
 

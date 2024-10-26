@@ -724,6 +724,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.security.leave_behind", "> Leave Behind");
         provider.addTranslation("screen.ait.security.hostile_alarms", "> Hostile Alarms");
         provider.addTranslation("screen.ait.security.minimum_loyalty", "> Isomorphic LVL");
+        provider.addTranslation("screen.ait.security.receive_distress_calls", "> Receive Distress Calls");
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",

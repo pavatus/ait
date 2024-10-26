@@ -17,8 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.tardis.handler.StatsHandler;
 import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.data.Loyalty;
+import loqor.ait.data.properties.Value;
 
 public class TardisSecurityScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
@@ -57,6 +59,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
         createTextButton(Text.translatable("screen.ait.security.leave_behind"), (button -> toggleLeaveBehind()));
         createTextButton(Text.translatable("screen.ait.security.hostile_alarms"), (button -> toggleHostileAlarms()));
         createTextButton(Text.translatable("screen.ait.security.minimum_loyalty"), (button -> changeMinimumLoyalty()));
+        createTextButton(Text.translatable("screen.ait.security.receive_distress_calls"), (button -> receiveDistressCalls()));
 
         this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), this.top + 60, 120, this.textRenderer.fontHeight + 4,
                 Text.literal("Landing Code..."));
@@ -75,6 +78,11 @@ public class TardisSecurityScreen extends ConsoleScreen {
             this.landingCodeInput.setText(this.tardis().landingPad().code().get());
 
         this.addSelectableChild(this.landingCodeInput);
+    }
+
+    private void receiveDistressCalls() {
+        Value<Boolean> receiveCalls = this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls();
+        receiveCalls.set(!receiveCalls.get());
     }
 
     private void toggleLeaveBehind() {
