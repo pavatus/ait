@@ -38,7 +38,7 @@ public class AITHudOverlay implements HudRenderCallback {
 
         Planet planet = PlanetRegistry.getInstance().get(mc.player.getWorld());
 
-        if(mc.player == null) return;
+        if(mc.player == null || planet == null) return;
         if(mc.player.getEquippedStack(EquipmentSlot.HEAD).getItem() == AITItems.SPACESUIT_HELMET && mc.options.getPerspective().isFirstPerson()) {
             MatrixStack stack = drawContext.getMatrices();
             stack.push();
