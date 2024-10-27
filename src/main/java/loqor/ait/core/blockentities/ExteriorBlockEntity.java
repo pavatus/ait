@@ -35,7 +35,6 @@ import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.InteriorChangingHandler;
@@ -136,9 +135,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         }
 
         if (!tardis.travel().isLanded())
-            return;
-
-        if (tardis.<TardisDesktop>handler(TardisComponent.Id.DESKTOP).doorPos() == null)
             return;
 
         DoorHandler.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);

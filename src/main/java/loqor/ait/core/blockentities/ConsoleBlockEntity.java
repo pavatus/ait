@@ -1,9 +1,6 @@
 package loqor.ait.core.blockentities;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.joml.Vector3f;
 
@@ -91,7 +88,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        this.markNeedsControl();
+        if (TardisDimension.isTardisDimension(Objects.requireNonNull(this.getWorld())))
+            this.markNeedsControl();
         return super.toInitialChunkDataNbt();
     }
 
@@ -126,6 +124,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (world.isClient())
             return;
+
+        if (!TardisDimension.isTardisDimension(world)) return;
 
         if (this.tardis().isEmpty())
             return;
@@ -204,6 +204,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
+        if (!TardisDimension.isTardisDimension(world)) return;
         if (this.needsControls)
             this.spawnControls();
 
