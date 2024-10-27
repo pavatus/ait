@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.function.Predicate;
 
+import loqor.ait.client.tardis.ClientTardis;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -137,6 +138,9 @@ public class FallingTardisEntity extends LinkableDummyEntity {
     public void stopFalling(boolean antigravs) {
         Tardis tardis = this.tardis().get();
         TravelHandler travel = tardis.travel();
+
+        if (tardis instanceof ClientTardis)
+            return;
 
         if (antigravs)
             travel.antigravs().set(true);
