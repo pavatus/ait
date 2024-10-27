@@ -143,8 +143,12 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     public void onEntityCollision(Entity entity) {
         TardisRef ref = this.tardis();
 
+        if (ref == null)
+            return;
+
         if (ref.isEmpty())
             return;
+
 
         Tardis tardis = ref.get();
         TravelHandler travel = tardis.travel();

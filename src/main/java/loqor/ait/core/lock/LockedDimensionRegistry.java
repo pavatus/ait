@@ -28,7 +28,7 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
 
     @Override
     protected void defaults() {
-        NETHER = register(new LockedDimension(DimensionTypes.THE_NETHER_ID, new ItemStack(Items.NETHERITE_SCRAP)));
+        NETHER = register(new LockedDimension(DimensionTypes.THE_NETHER_ID, new ItemStack(Items.BLAZE_ROD)));
         // all others should be in datapack
     }
 
