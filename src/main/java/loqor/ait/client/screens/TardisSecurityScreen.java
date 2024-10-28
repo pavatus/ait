@@ -116,7 +116,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     // this might be useful, so remember this exists and use it later on
     private void createTextButton(Text text, ButtonWidget.PressAction onPress) {
         this.addButton(new PressableTextWidget((int) (left + (bgWidth * 0.06f)),
-                (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))), this.textRenderer.getWidth(text), 20, text,
+                (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))), this.textRenderer.getWidth(text), 10, text,
                 onPress, this.textRenderer));
 
         choicesCount++;
@@ -140,7 +140,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
                 (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
         context.drawText(this.textRenderer, Text.literal(": " + getMinimumLoyalty(tardis)),
-                (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
+                (int) (left + (bgWidth * 0.51f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
 
 
         context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)),
@@ -150,7 +150,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
         context.drawText(this.textRenderer,
                 Text.literal(": " + (this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? "ON" : "OFF")),
-                (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 9.5))), Color.ORANGE.getRGB(), false);
+                (int) (left + (bgWidth * 0.7f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
 
         this.landingCodeInput.render(context, mouseX, mouseY, delta);
         this.landingCodeInput.setEditableColor(this.landingCodeInput.isSelected() || !this.landingCodeInput.getText().isBlank() ? 0xffffff: 0x545454);
