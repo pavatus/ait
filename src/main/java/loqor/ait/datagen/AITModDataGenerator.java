@@ -737,6 +737,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
+        provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");
 
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
         provider.addTranslation("command.ait.riftchunk.cannotsetlevel",
