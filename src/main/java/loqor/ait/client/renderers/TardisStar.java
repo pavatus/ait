@@ -31,8 +31,8 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = camera.getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), tardis.engine().getCorePos().y());
+        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x() == 0 ? camera.getPos().getX() : tardis.engine().getCorePos().x(),
+                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), tardis.engine().getCorePos().y() == 0 ? camera.getPos().getZ() : tardis.engine().getCorePos().y());
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
