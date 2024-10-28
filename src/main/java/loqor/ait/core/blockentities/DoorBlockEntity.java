@@ -50,9 +50,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
-
-        if (!TardisDimension.isTardisDimension(world)) return;
-
         DoorBlockEntity door = (DoorBlockEntity) tDoor;
 
         if (!door.isLinked())
@@ -93,8 +90,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (!TardisDimension.isTardisDimension(world)) return;
-
         if (player == null || this.tardis().isEmpty())
             return;
 
@@ -167,8 +162,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
     @Override
     public void onLinked() {
-        if (world == null) return;
-        if (!TardisDimension.isTardisDimension(world)) return;
         if (this.tardis().isEmpty())
             return;
 
@@ -177,8 +170,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void onBreak() {
-        if (world == null) return;
-        if (!TardisDimension.isTardisDimension(world)) return;
         if (this.tardis().isEmpty()) return;
 
         this.tardis().get().door().closeDoors();

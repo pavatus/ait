@@ -12,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.ICantBreak;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -58,7 +60,6 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
             BlockHitResult hit) {
-        if (!TardisDimension.isTardisDimension(world)) return ActionResult.FAIL;
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
             consoleBlockEntity.useOn(world, player.isSneaking(), player);
@@ -103,12 +104,16 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
         if (!TardisDimension.isTardisDimension(world)) {
+            // dont place yo
+            world.breakBlock(pos, true);
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                    new ItemStack(AITBlocks.CONSOLE)));
+            return;
         }
 
         super.onPlaced(world, pos, state, placer, itemStack);
 
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
-            if (!TardisDimension.isTardisDimension(world)) return;
             consoleBlockEntity.markNeedsControl();
         }
     }
@@ -162,10 +167,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
         super.onBroken(world, pos, state);
 
-
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity console) {
-            if (console.getWorld() == null) return;
-            if (!TardisDimension.isTardisDimension(console.getWorld())) return;
             console.onBroken();
         }
     }

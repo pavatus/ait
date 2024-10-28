@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers.consoles;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -17,11 +16,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
-import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -34,25 +30,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
             int light, int overlay) {
-
-        if (!TardisDimension.isTardisDimension(entity.getWorld())) {
-            this.model = ClientConsoleVariantRegistry.HARTNELL.model();
-
-            BlockState blockState = entity.getCachedState();
-            float k = blockState.get(DoorBlock.FACING).asRotation();
-
-            matrices.push();
-            matrices.translate(0.5, 1.5, 0.5);
-            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k + 180f));
-
-            this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ClientConsoleVariantRegistry.HARTNELL.texture())), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-            ClientLightUtil.renderEmissive(model::renderWithAnimations, ClientConsoleVariantRegistry.HARTNELL.emission(), entity, model.getPart(),
-                    matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
-            matrices.pop();
-            return;
-        }
-
         if (!entity.isLinked())
             return;
 

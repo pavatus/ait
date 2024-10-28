@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -32,6 +33,7 @@ import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.Tardis;
@@ -101,6 +103,11 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
         if (!TardisDimension.isTardisDimension(world)) {
+            // dont place yo
+            world.breakBlock(pos, true);
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                    new ItemStack(AITBlocks.DOOR_BLOCK)));
+            return;
         }
 
         super.onPlaced(world, pos, state, placer, itemStack);
@@ -136,8 +143,6 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
         if (!(world.getBlockEntity(pos) instanceof DoorBlockEntity door))
             return;
-
-        if (!TardisDimension.isTardisDimension(world)) return;
 
         if (door.tardis().get().siege().isActive())
             return;

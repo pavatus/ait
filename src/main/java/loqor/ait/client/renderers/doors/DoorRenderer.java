@@ -1,7 +1,6 @@
 package loqor.ait.client.renderers.doors;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -22,14 +21,12 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
@@ -46,32 +43,11 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         Profiler profiler = entity.getWorld().getProfiler();
         profiler.push("door");
 
-
-        profiler.push("render");
-
-        if (!TardisDimension.isTardisDimension(entity.getWorld())) {
-            this.model = ClientDoorRegistry.CAPSULE.model();
-
-            BlockState blockState = entity.getCachedState();
-            float k = blockState.get(DoorBlock.FACING).asRotation();
-
-            matrices.push();
-            matrices.translate(0.5, 1.5, 0.5);
-            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k + 180f));
-
-            this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ClientExteriorVariantRegistry.CAPSULE_DEFAULT.texture())), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
-            matrices.pop();
-            profiler.pop();
+        if (!entity.isLinked())
             return;
-        }
-
-        if (!entity.isLinked()) {
-            profiler.pop();
-            return;
-        }
 
         Tardis tardis = entity.tardis().get();
+        profiler.push("render");
 
         this.renderDoor(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
         profiler.pop();
@@ -84,7 +60,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         if (tardis.siege().isActive())
             return;
 
-        this.updateModel(entity.getWorld(), tardis);
+        this.updateModel(tardis);
 
         BlockState blockState = entity.getCachedState();
         float k = blockState.get(DoorBlock.FACING).asRotation();
@@ -155,8 +131,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         profiler.pop();
     }
 
-    private void updateModel(World world, Tardis tardis) {
-
+    private void updateModel(Tardis tardis) {
         ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
 
         if (this.variant != variant) {
