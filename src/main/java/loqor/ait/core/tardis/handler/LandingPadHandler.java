@@ -58,6 +58,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
         // find old spot and claim
         DirectedGlobalPos.Cached pos = this.tardis().travel().position();
+        if (pos.getWorld() == null) return; // nice
 
         LandingPadRegion region = LandingPadManager.getInstance(pos.getWorld()).getRegionAt(pos.getPos());
         if (region == null) return;
