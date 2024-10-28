@@ -5,8 +5,19 @@ import java.util.UUID;
 
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
+import loqor.ait.api.ClientWorldEvents;
+import loqor.ait.client.sounds.ClientSoundManager;
+
 public class SonicSoundHandler {
     private final HashMap<UUID, SonicSound> sounds;
+
+    static {
+        ClientWorldEvents.CHANGE_WORLD.register(() -> {
+            SonicSoundHandler handler = ClientSoundManager.getSonicSound();
+            handler.sounds.values().forEach(SonicSound::stop);
+            handler.sounds.clear();
+        });
+    }
 
     public SonicSoundHandler() {
         this.sounds = new HashMap<>();
