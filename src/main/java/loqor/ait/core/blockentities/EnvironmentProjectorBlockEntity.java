@@ -4,7 +4,6 @@ import static loqor.ait.core.blocks.EnvironmentProjectorBlock.*;
 
 import java.util.Iterator;
 
-import loqor.ait.core.tardis.dim.TardisDimension;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,6 +27,7 @@ import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.data.properties.Value;
 
 public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity {
