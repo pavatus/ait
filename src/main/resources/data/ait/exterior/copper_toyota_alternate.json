@@ -1,5 +1,5 @@
 {
-    "id": "ait:eleven_toyota_alternate",
+    "id": "frooploof:eleven_toyota_alternate",
     "category": "ait:exterior/police_box",
     "parent": "ait:exterior/police_box/default",
     "texture": "ait:textures/blockentities/exteriors/police_box/frooploof/police_box_copper_toyota_alternate.png",

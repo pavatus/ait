@@ -680,6 +680,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // Exterior translations
 
         // All
+        provider.addTranslation("exterior.ait.adaptive", "Adaptive");
         provider.addTranslation("exterior.ait.default", "Default");
         provider.addTranslation("exterior.ait.fire", "Fire");
         provider.addTranslation("exterior.ait.soul", "Soul");
