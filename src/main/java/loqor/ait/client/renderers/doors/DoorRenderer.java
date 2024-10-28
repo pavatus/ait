@@ -1,6 +1,7 @@
 package loqor.ait.client.renderers.doors;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -46,7 +47,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         profiler.push("render");
 
-        if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
+        if (MinecraftClient.getInstance().player.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
             this.model = ClientDoorRegistry.CAPSULE.model();
             BlockState blockState = entity.getCachedState();
             float k = blockState.get(DoorBlock.FACING).asRotation();
