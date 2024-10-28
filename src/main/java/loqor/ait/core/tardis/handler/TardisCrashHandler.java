@@ -111,7 +111,7 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
             if (stack.isIn(AITTags.Items.FULL_RESPIRATORS) || stack.isIn(AITTags.Items.HALF_RESPIRATORS))
                 continue;
 
-            serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
+            // serverPlayerEntity.playSound(AITSounds.CLOISTER, 1f, 1f);
             serverPlayerEntity.damage(exteriorWorld.getDamageSources().magic(), 3f);
             serverPlayerEntity
                     .addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 100, 3, true, false, false));
