@@ -147,6 +147,11 @@ public class TardisSecurityScreen extends ConsoleScreen {
                 (int) (top + (bgHeight * (0.1f * 7.5))), 0xadcaf7, false);
         context.drawText(this.textRenderer, Text.literal(tardis.stats().getCreationString()),
                 (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8.5))), 0xadcaf7, false);
+
+        context.drawText(this.textRenderer,
+                Text.literal(": " + (this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? "ON" : "OFF")),
+                (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 9.5))), Color.ORANGE.getRGB(), false);
+
         this.landingCodeInput.render(context, mouseX, mouseY, delta);
         this.landingCodeInput.setEditableColor(this.landingCodeInput.isSelected() || !this.landingCodeInput.getText().isBlank() ? 0xffffff: 0x545454);
         super.render(context, mouseX, mouseY, delta);
