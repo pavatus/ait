@@ -67,6 +67,8 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         BlockPos pos = tardis.getDesktop().doorPos().getPos();
 
         BlockState state = world.getBlockState(pos);
+        if (!(state.getBlock() instanceof DoorBlock))
+            return;
         world.setBlockState(pos, state.with(LEVEL_9, level));
     }
 
