@@ -21,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.item.SonicItem;
@@ -117,7 +116,7 @@ public class SonicRendering {
             return;
         }
         Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
-        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z + (client.world.getRegistryKey().equals(World.OVERWORLD) ? 1 : 0));
+        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
             profiler.pop();
