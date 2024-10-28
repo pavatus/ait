@@ -39,7 +39,6 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
@@ -183,7 +182,6 @@ public class AITMod implements ModInitializer {
 
                     // this should ALWAYS be executed on the main thread
                     server.execute(() -> {
-                        SonicItem.playSonicSounds(player);
                         MachineItem.disassemble(player, machine, schema.get());
 
                         StackUtil.playBreak(player);
@@ -201,7 +199,6 @@ public class AITMod implements ModInitializer {
 
                     // this should ALWAYS be executed on the main thread
                     server.execute(() -> {
-                        SonicItem.playSonicSounds(player);
                         AbstractTardisPart.disassemble(player, machine, schema.get());
 
                         StackUtil.playBreak(player);

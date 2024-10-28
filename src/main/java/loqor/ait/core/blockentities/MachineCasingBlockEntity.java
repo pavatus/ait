@@ -48,7 +48,6 @@ public class MachineCasingBlockEntity extends BlockEntity {
         // Should this be in SonicItem.Mode.INTERACTION? nah, it's fineeeee
         if (SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
             MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
-                SonicItem.playSonicSounds(player);
                 StackUtil.spawn(world, this.pos, schema.output());
 
                 world.removeBlock(this.pos, false);

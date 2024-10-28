@@ -198,11 +198,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         return stack;
     }
 
-    @Deprecated
-    public static void playSonicSounds(PlayerEntity player) {
-        // womp womp
-    }
-
     public static void cycleMode(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
