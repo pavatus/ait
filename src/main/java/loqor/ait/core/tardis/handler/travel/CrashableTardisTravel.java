@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
@@ -67,7 +71,12 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         tardis.getDesktop().getConsolePos().forEach(console -> {
             TardisDesktop.playSoundAtConsole(world, console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
 
-            Explosion explosion = world.createExplosion(null, null, null,
+            Explosion explosion = world.createExplosion(null, null, new ExplosionBehavior() {
+                        @Override
+                        public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
+                            return false; // no destroying blocks guys
+                        }
+                    },
                     console.toCenterPos(), 3f * power, false, World.ExplosionSourceType.MOB);
 
             explosions.add(explosion);
