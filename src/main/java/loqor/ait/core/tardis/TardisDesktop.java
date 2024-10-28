@@ -88,6 +88,8 @@ public class TardisDesktop extends TardisComponent {
         this.doorPos = pos;
     }
 
+    // TODO this is strictly for clearing the interior now
+    //@Deprecated(forRemoval = true, since = "1.1.0")
     public Corners getCorners() {
         return corners;
     }

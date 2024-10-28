@@ -50,6 +50,9 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
+        if (Objects.equals(world.getRegistryKey(), World.OVERWORLD))
+            return;
+
         DoorBlockEntity door = (DoorBlockEntity) tDoor;
 
         if (!door.isLinked())
@@ -162,6 +165,10 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
     @Override
     public void onLinked() {
+
+        if (Objects.equals(this.getWorld().getRegistryKey(), World.OVERWORLD))
+            return;
+
         if (this.tardis().isEmpty())
             return;
 
@@ -170,7 +177,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void onBreak() {
-        if (this.tardis().isEmpty()) return;
+        if (!this.isLinked() || this.tardis().isEmpty()) return;
 
         this.tardis().get().door().closeDoors();
     }

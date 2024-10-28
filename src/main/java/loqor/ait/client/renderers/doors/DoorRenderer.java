@@ -27,6 +27,7 @@ import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
+import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
@@ -43,11 +44,26 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         Profiler profiler = entity.getWorld().getProfiler();
         profiler.push("door");
 
+        profiler.push("render");
+
+        if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
+            this.model = ClientDoorRegistry.CAPSULE.model();
+            BlockState blockState = entity.getCachedState();
+            float k = blockState.get(DoorBlock.FACING).asRotation();
+            matrices.push();
+            matrices.translate(0.5, 1.5, 0.5);
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k + 180f));
+            this.model.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucent(ClientExteriorVariantRegistry.CAPSULE_DEFAULT.texture())), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            matrices.pop();
+            profiler.pop();
+            return;
+        }
+
         if (!entity.isLinked())
             return;
 
         Tardis tardis = entity.tardis().get();
-        profiler.push("render");
 
         this.renderDoor(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
         profiler.pop();
