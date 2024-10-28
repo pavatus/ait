@@ -3,8 +3,6 @@ package loqor.ait.core.lock;
 import java.util.ArrayList;
 import java.util.List;
 
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.WorldUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,6 +14,8 @@ import net.minecraft.world.dimension.DimensionTypes;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimension> {
