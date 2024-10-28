@@ -19,12 +19,17 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 import loqor.ait.client.screens.LandingPadScreen;
 import loqor.ait.core.world.LandingPadManager;
+import loqor.ait.data.landing.LandingPadRegion;
+import loqor.ait.data.landing.LandingPadSpot;
 
 public class LandingPadBlock extends Block {
     private static final BooleanProperty ACTIVE = BooleanProperty.of("active"); // whether this block created a region
@@ -86,6 +91,16 @@ public class LandingPadBlock extends Block {
 
         world.setBlockState(pos, state.with(ACTIVE, true));
         manager.claim(pos);
+
+        LandingPadRegion region = LandingPadManager.getInstance((ServerWorld) world).getRegionAt(pos);
+        if (region != null) {
+            for(LandingPadSpot spot : region.getSpots()) {
+                spot.setPos(new BlockPos(spot.getPos().getX(), world.getChunk(ChunkSectionPos.getSectionCoord(spot.getPos().getX()), ChunkSectionPos.getSectionCoord(spot.getPos().getZ()))
+                        .sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spot.getPos().getX() & 15, spot.getPos().getZ() & 15) + 1, spot.getPos().getZ()));
+                System.out.println(spot.getPos().getY());
+                LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, (ServerWorld) world, new ChunkPos(pos));
+            }
+        }
     }
 
     @Override

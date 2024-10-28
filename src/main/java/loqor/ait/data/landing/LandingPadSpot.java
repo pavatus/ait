@@ -52,6 +52,10 @@ public class LandingPadSpot {
         return this.pos;
     }
 
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
+    }
+
     public TardisRef getReference() {
         return this.tardis;
     }
