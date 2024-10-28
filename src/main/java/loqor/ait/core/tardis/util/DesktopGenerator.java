@@ -43,6 +43,7 @@ public class DesktopGenerator {
 
     public static void clearArea(ServerWorld level, Corners corners) {
         for (BlockPos pos : BlockPos.iterate(corners.getFirst().add(0, -64, 0), corners.getSecond().add(0, 256, 0))) {
+            if (level.getBlockState(pos).isAir()) continue;
             level.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
         }
 
