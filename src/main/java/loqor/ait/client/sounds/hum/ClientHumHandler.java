@@ -15,7 +15,9 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.api.ClientWorldEvents;
 import loqor.ait.api.TardisComponent;
+import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.sounds.LoopingSound;
 import loqor.ait.client.sounds.PlayerFollowingLoopingSound;
 import loqor.ait.client.sounds.SoundHandler;
@@ -28,6 +30,19 @@ import loqor.ait.registry.impl.HumsRegistry;
 public class ClientHumHandler extends SoundHandler {
 
     private LoopingSound current;
+
+    static {
+        ClientWorldEvents.CHANGE_WORLD.register(() -> {
+            ClientHumHandler handler = ClientSoundManager.getHum();
+            handler.stopSounds();
+            handler.current = null;
+
+            ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
+            if ((tardis == null)) return;
+
+            handler.getHum(tardis);
+        });
+    }
 
     protected ClientHumHandler() {
         ClientPlayNetworking.registerGlobalReceiver(ServerHumHandler.SEND, (client, handler, buf, responseSender) -> {
