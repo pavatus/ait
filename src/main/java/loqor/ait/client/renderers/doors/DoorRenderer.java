@@ -1,7 +1,6 @@
 package loqor.ait.client.renderers.doors;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -47,15 +46,14 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         profiler.push("render");
 
-        if (MinecraftClient.getInstance().player.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
-            this.model = ClientDoorRegistry.CAPSULE.model();
+        if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
             BlockState blockState = entity.getCachedState();
             float k = blockState.get(DoorBlock.FACING).asRotation();
             matrices.push();
             matrices.translate(0.5, 1.5, 0.5);
             matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k + 180f));
-            this.model.render(matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucent(ClientExteriorVariantRegistry.CAPSULE_DEFAULT.texture())), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+            ClientDoorRegistry.CAPSULE.model().render(matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucent(ClientExteriorVariantRegistry.CAPSULE_DEFAULT.texture())), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
             matrices.pop();
             profiler.pop();
             return;

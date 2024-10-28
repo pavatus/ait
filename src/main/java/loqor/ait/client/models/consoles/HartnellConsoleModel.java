@@ -1383,6 +1383,8 @@ public class HartnellConsoleModel extends ConsoleModel {
     @Override
     public void renderWithAnimations(ConsoleBlockEntity console, ModelPart root, MatrixStack matrices,
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        if (!console.isLinked()) return;
+
         Tardis tardis = console.tardis().get();
 
         if (tardis == null)

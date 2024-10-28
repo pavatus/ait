@@ -60,6 +60,8 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public void onLinked() {
+        if (this.getWorld().getRegistryKey().equals(World.OVERWORLD)) return;
+
         if (this.tardis().isEmpty())
             return;
 
@@ -91,6 +93,9 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
+        if (world.getRegistryKey().equals(World.OVERWORLD)) {
+            return super.toInitialChunkDataNbt();
+        }
         this.markNeedsControl();
         return super.toInitialChunkDataNbt();
     }
@@ -204,6 +209,10 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
+        if (world.getRegistryKey().equals(World.OVERWORLD)) {
+            return;
+        }
+
         if (this.needsControls)
             this.spawnControls();
 

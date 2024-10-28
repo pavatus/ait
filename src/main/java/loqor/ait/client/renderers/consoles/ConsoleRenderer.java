@@ -11,13 +11,16 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
+import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -30,6 +33,22 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
             int light, int overlay) {
+
+        if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
+            matrices.push();
+            matrices.translate(0.5, 1.5, 0.5);
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+            ClientConsoleVariantRegistry.HARTNELL.model().render(matrices,
+                    vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucent(
+                            ClientConsoleVariantRegistry.HARTNELL.texture())),
+                    light, overlay, 1, 1, 1, 1);
+            ClientLightUtil.renderEmissive(ClientConsoleVariantRegistry.HARTNELL.model()::renderWithAnimations, ClientConsoleVariantRegistry.HARTNELL.emission(),
+                    entity, ClientConsoleVariantRegistry.HARTNELL.model().getPart(),
+                    matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+            matrices.pop();
+            return;
+        }
+
         if (!entity.isLinked())
             return;
 

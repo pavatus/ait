@@ -12,7 +12,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -34,12 +33,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.ICantBreak;
-import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
-import loqor.ait.core.tardis.dim.TardisDimension;
 
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
@@ -62,6 +59,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
+            if (world.getRegistryKey().equals(World.OVERWORLD)) return ActionResult.FAIL;
             consoleBlockEntity.useOn(world, player.isSneaking(), player);
             ItemStack itemStack = player.getStackInHand(hand);
             if (itemStack.getItem() instanceof HammerItem) {
@@ -103,17 +101,12 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (!TardisDimension.isTardisDimension(world)) {
-            // dont place yo
-            world.breakBlock(pos, true);
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(AITBlocks.CONSOLE)));
-            return;
-        }
-
         super.onPlaced(world, pos, state, placer, itemStack);
 
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            if (world.getRegistryKey().equals(World.OVERWORLD)) {
+                return;
+            }
             consoleBlockEntity.markNeedsControl();
         }
     }
