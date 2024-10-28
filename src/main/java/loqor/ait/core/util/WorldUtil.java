@@ -46,7 +46,6 @@ public class WorldUtil {
     private static final int SAFE_RADIUS = 3;
 
     private static ServerWorld OVERWORLD;
-    private static ServerWorld TARDIS_DIMENSION;
     private static ServerWorld TIME_VORTEX;
 
     public static void init() {
@@ -88,11 +87,6 @@ public class WorldUtil {
 
     public static ServerWorld getOverworld() {
         return OVERWORLD;
-    }
-
-    @Deprecated(forRemoval = true, since = "1.0.6")
-    public static ServerWorld getTardisDimension() {
-        return TARDIS_DIMENSION;
     }
 
     public static ServerWorld getTimeVortex() {

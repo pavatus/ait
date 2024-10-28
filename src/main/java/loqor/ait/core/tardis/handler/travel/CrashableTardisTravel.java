@@ -114,6 +114,7 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
 
         this.setCrashing(true);
         this.destination(TravelUtil.jukePos(this.getProgress(), 10, 100, power).world(World.OVERWORLD));
+        tardis.travel().forcePosition(this.position().world(World.OVERWORLD)); // im sorry theo
 
         this.forceRemat();
 
