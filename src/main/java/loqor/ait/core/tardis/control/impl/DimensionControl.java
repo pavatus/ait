@@ -47,7 +47,7 @@ public class DimensionControl extends Control {
             travel.forceDestination(cached -> cached.world(destWorld));
 
             LockedDimension dim = LockedDimensionRegistry.getInstance().get(destWorld);
-            boolean isUnlocked = dim == null || (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS() && (tardis.isUnlocked(dim) || (destWorld.getRegistryKey().equals(ServerWorld.END) && WorldUtil.isEndDragonDead())));
+            boolean isUnlocked = dim == null || (AITMod.AIT_CONFIG.LOCK_DIMENSIONS() && (tardis.isUnlocked(dim) || (destWorld.getRegistryKey().equals(ServerWorld.END) && WorldUtil.isEndDragonDead())));
 
             messagePlayer(player, destWorld, isUnlocked);
         });
