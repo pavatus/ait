@@ -25,7 +25,7 @@ import loqor.ait.data.properties.Value;
 public class TardisSecurityScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
             "textures/gui/tardis/consoles/monitors/security_menu.png");
-    int bgHeight = 117;
+    int bgHeight = 137;
     int bgWidth = 191;
     int left, top;
     int choicesCount = 0;
@@ -61,9 +61,9 @@ public class TardisSecurityScreen extends ConsoleScreen {
         createTextButton(Text.translatable("screen.ait.security.minimum_loyalty"), (button -> changeMinimumLoyalty()));
         createTextButton(Text.translatable("screen.ait.security.receive_distress_calls"), (button -> receiveDistressCalls()));
 
-        this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), this.top + 60, 120, this.textRenderer.fontHeight + 4,
+        this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), this.top + 85, 120, this.textRenderer.fontHeight + 4,
                 Text.literal("Landing Code..."));
-        this.addButton(new PressableTextWidget((width / 2 + 40), (height / 2 + 2),
+        this.addButton(new PressableTextWidget((width / 2 + 40), (height / 2 + 18),
                 this.textRenderer.getWidth("✓"), 20, Text.literal("✓").formatted(Formatting.BOLD), button -> {
             updateLandingCode();
         }, this.textRenderer));
@@ -116,7 +116,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
     // this might be useful, so remember this exists and use it later on
     private void createTextButton(Text text, ButtonWidget.PressAction onPress) {
         this.addButton(new PressableTextWidget((int) (left + (bgWidth * 0.06f)),
-                (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))), this.textRenderer.getWidth(text), 10, text,
+                (int) (top + (bgHeight * (0.1f * (choicesCount + 1)))), this.textRenderer.getWidth(text), 20, text,
                 onPress, this.textRenderer));
 
         choicesCount++;
@@ -132,6 +132,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
         ClientTardis tardis = this.tardis();
 
+
         context.drawText(this.textRenderer, Text.literal(": " + (tardis.travel().leaveBehind().get() ? "ON" : "OFF")),
                 (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
         context.drawText(this.textRenderer,
@@ -141,10 +142,11 @@ public class TardisSecurityScreen extends ConsoleScreen {
         context.drawText(this.textRenderer, Text.literal(": " + getMinimumLoyalty(tardis)),
                 (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
 
+
         context.drawText(this.textRenderer, Text.literal("Date created:"), (int) (left + (bgWidth * 0.06f)),
-                (int) (top + (bgHeight * (0.1f * 7))), 0xadcaf7, false);
+                (int) (top + (bgHeight * (0.1f * 7.5))), 0xadcaf7, false);
         context.drawText(this.textRenderer, Text.literal(tardis.stats().getCreationString()),
-                (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8))), 0xadcaf7, false);
+                (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8.5))), 0xadcaf7, false);
         this.landingCodeInput.render(context, mouseX, mouseY, delta);
         this.landingCodeInput.setEditableColor(this.landingCodeInput.isSelected() || !this.landingCodeInput.getText().isBlank() ? 0xffffff: 0x545454);
         super.render(context, mouseX, mouseY, delta);
