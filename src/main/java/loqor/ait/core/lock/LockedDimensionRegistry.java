@@ -3,6 +3,8 @@ package loqor.ait.core.lock;
 import java.util.ArrayList;
 import java.util.List;
 
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.util.WorldUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -73,5 +75,19 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
         held.decrement(1);
 
         return true;
+    }
+
+    public boolean isUnlocked(Tardis tardis, World world) {
+        if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return true;
+
+        if (isEnd(world)) {
+            return WorldUtil.isEndDragonDead();
+        }
+
+        LockedDimension dim = this.get(world);
+        return dim == null || tardis.isUnlocked(dim);
+    }
+    private boolean isEnd(World world) {
+        return world.getRegistryKey().getValue().equals(World.END.getValue());
     }
 }
