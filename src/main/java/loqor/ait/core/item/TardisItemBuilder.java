@@ -33,7 +33,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "alnico");
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "coral");
     public static final Identifier DEFAULT_EXTERIOR = CapsuleCategory.REFERENCE;
 
     private final Identifier exterior;
