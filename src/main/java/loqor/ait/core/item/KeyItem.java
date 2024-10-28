@@ -197,7 +197,7 @@ public class KeyItem extends LinkableItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (stack.getItem() == AITItems.SKELETON_KEY)
-            tooltip.add(Text.literal("CREATIVE ONLY SKELETON KEY").formatted(Formatting.DARK_PURPLE));
+            tooltip.add(Text.literal("CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.").formatted(Formatting.DARK_PURPLE));
         super.appendTooltip(stack, world, tooltip, context);
     }
 }
