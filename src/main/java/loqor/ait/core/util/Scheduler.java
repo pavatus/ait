@@ -1,7 +1,9 @@
 package loqor.ait.core.util;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -14,7 +16,7 @@ import loqor.ait.data.TimeUnit;
 public class Scheduler {
 
     private static Scheduler self;
-    private final List<Task> tasks = new LinkedList<>();
+    private final Deque<Task> tasks = new ConcurrentLinkedDeque<>();
     private final ExecutorService service = Util.getMainWorkerExecutor();
 
     private Scheduler() {
