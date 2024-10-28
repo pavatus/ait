@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.properties.Property;
@@ -39,7 +38,7 @@ public class StatsHandler extends KeyedTardisComponent {
             "");
     private static final Property<String> DATE = new Property<>(Property.Type.STR, "date", "");
     private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox",
-            AITDimensions.TARDIS_DIM_WORLD);
+            World.END);
     private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks",
             new HashSet<>());
     private static final BoolProperty SECURITY = new BoolProperty("security", false);

@@ -25,14 +25,13 @@ import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITDimensions;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.properties.Value;
 
 public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity {
 
-    private static final RegistryKey<World> DEFAULT = AITDimensions.TARDIS_DIM_WORLD;
+    private static final RegistryKey<World> DEFAULT = World.END;
     private RegistryKey<World> current = DEFAULT;
 
     public EnvironmentProjectorBlockEntity(BlockPos pos, BlockState state) {

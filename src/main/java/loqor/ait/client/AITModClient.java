@@ -46,12 +46,9 @@ import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.dimension.sky.MarsSkyProperties;
-import loqor.ait.core.dimension.sky.MoonSkyProperties;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
@@ -85,10 +82,9 @@ public class AITModClient implements ClientModInitializer {
         hammerPredicate();
         siegeItemPredicate();
 
-        DimensionRenderingRegistry.registerSkyRenderer(AITDimensions.TARDIS_DIM_WORLD, SkyboxUtil::renderTardisSky); // todo
         // TODO make skybox renderer for mars so we dont have to render the moon
-        DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
-        DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MOON.getValue(), new MoonSkyProperties());
+        // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
+        // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MOON.getValue(), new MoonSkyProperties());
 
         AITKeyBinds.init();
 
