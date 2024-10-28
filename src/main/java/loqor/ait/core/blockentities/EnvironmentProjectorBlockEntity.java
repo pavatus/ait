@@ -4,6 +4,7 @@ import static loqor.ait.core.blocks.EnvironmentProjectorBlock.*;
 
 import java.util.Iterator;
 
+import loqor.ait.core.tardis.dim.TardisDimension;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -97,6 +98,10 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
 
     public void switchSkybox(Tardis tardis, BlockState state, PlayerEntity player) {
         RegistryKey<World> next = findNext(world.getServer(), this.current);
+
+        while (TardisDimension.isTardisDimension(next)) {
+            next = findNext(world.getServer(), next);
+        }
 
         player.sendMessage(Text.translatable("message.ait.projector.skybox", next.getValue().toString()));
         AITMod.LOGGER.debug("Last: {}, next: {}", this.current, next);

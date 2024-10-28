@@ -70,6 +70,17 @@ public class TardisDimension {
 
         return Optional.ofNullable(TardisManager.with(world, ((o, manager) -> manager.demandTardis(o, uuid))));
     }
+    public static boolean isTardisDimension(RegistryKey<World> world) {
+        Identifier value = world.getValue();
+
+        try {
+            UUID.fromString(value.getPath());
+        } catch (Exception e) {
+            return false;
+        }
+
+        return value.getNamespace().equals(AITMod.MOD_ID);
+    }
     public static boolean isTardisDimension(World world) {
         return (!world.isClient()) ? isTardisDimension((ServerWorld) world) : isTardisDimension((ClientWorld) world);
     }
