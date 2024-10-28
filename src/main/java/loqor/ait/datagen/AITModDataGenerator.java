@@ -714,11 +714,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // frooploof
         provider.addTranslation("exterior.frooploof.copper", "Copper");
         provider.addTranslation("exterior.frooploof.eleven_toyota", "Toyota (1)");
-        provider.addTranslation("exterior.ait.eleven_toyota_alternate", "Toyota (2)");
+        provider.addTranslation("exterior.frooploof.eleven_toyota_alternate", "Toyota (2)");
         provider.addTranslation("exterior.frooploof.toyota_alternate", "Toyota (3)");
         provider.addTranslation("exterior.frooploof.toyota_memorial", "Toyota (Memorial)");
-        provider.addTranslation("exterior.frooploof.coral_alternate", "Coral (alt)");
-        provider.addTranslation("exterior.frooploof.coral_bad_wolf", "Coral (bad wolf)");
+        provider.addTranslation("exterior.frooploof.coral_alternate", "Coral (Alt)");
+        provider.addTranslation("exterior.frooploof.coral_bad_wolf", "Coral (Bad Wolf)");
         provider.addTranslation("exterior.frooploof.coral_war", "War");
         provider.addTranslation("exterior.frooploof.tokamak_eotd", "Tokamak (EOTD)");
 
