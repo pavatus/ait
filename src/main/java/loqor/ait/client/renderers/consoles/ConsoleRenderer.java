@@ -83,13 +83,15 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
             ClientLightUtil.renderEmissive(model::renderWithAnimations, variant.emission(), entity, model.getPart(),
                     matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
-        }
+
 
         matrices.pop();
 
         profiler.swap("monitor");
 
         model.renderMonitorText(tardis, entity, matrices, vertexConsumers, light, overlay);
+
+        }
 
         profiler.swap("sonic"); // } emission / sonic {
 
