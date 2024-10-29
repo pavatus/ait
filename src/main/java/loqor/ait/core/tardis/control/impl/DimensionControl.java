@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -52,8 +53,10 @@ public class DimensionControl extends Control {
     }
 
     private void messagePlayer(ServerPlayerEntity player, ServerWorld world, boolean unlocked) {
-        Text message = Text.translatable("message.ait.tardis.control.dimension.info")
+        MutableText message = Text.translatable("message.ait.tardis.control.dimension.info")
                 .append(WorldUtil.worldText(world.getRegistryKey())).formatted(unlocked ? Formatting.WHITE : Formatting.GRAY);
+
+        if (!(unlocked)) message.append(Text.literal(" \uD83D\uDD12"));
 
         player.sendMessage(message, true);
     }
