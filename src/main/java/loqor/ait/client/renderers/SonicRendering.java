@@ -2,6 +2,7 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -116,7 +117,8 @@ public class SonicRendering {
             return;
         }
         Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
-        BlockPos targetPos = new BlockPos((int) targetVec.x -1, (int) targetVec.y, (int) targetVec.z);
+        boolean isOverworld = client.world.getRegistryKey().equals(World.OVERWORLD);
+        BlockPos targetPos = new BlockPos((int) targetVec.x + ((isOverworld) ? 0 : -1), (int) targetVec.y, (int) targetVec.z + (isOverworld ? 1 : 0));
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
             profiler.pop();
