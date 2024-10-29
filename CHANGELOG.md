@@ -14,6 +14,7 @@
 - [Text Rendering on Toyota](https://github.com/pavatus/ait/commit/80bf18d8f8d9c2d74284fa397ed3ffd622623712)
 - [Planet API](https://github.com/pavatus/ait/pull/380) ( backend for future update )
 - New TARDIS Exteriors (ty Frooploof)
+- New TARDIS Interiors
 - Fix crashes, bugs, performance (ty theo)
 - Removed Peanut
 
