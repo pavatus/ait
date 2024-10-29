@@ -140,7 +140,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         matrices.multiply(
                 RotationAxis.NEGATIVE_Y.rotationDegrees(!this.variant.equals(ClientExteriorVariantRegistry.DOOM)
                         ? h + 180f
-                        : MinecraftClient.getInstance().player.getHeadYaw()
+                        : MinecraftClient.getInstance().player.getHeadYaw() + 180f
                                 + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
