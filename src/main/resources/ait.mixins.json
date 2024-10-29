@@ -36,6 +36,7 @@
     "client.TitleScreenMixin",
     "client.experimental_screen.CreateWorldScreenMixin",
     "client.experimental_screen.WorldOpenFlowsMixin",
+    "client.rendering.ArmorFeatureRendererMixin",
     "client.rendering.BakedModelManagerMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.DebugRendererMixin",
