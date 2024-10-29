@@ -116,7 +116,7 @@ public class SonicRendering {
             return;
         }
         Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
-        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
+        BlockPos targetPos = new BlockPos((int) targetVec.x -1, (int) targetVec.y, (int) targetVec.z);
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
             profiler.pop();
