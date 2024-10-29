@@ -25,7 +25,7 @@ public class LandingPadScreen extends Screen {
             "textures/gui/tardis/consoles/monitors/security_menu.png");
     private final BlockPos pos;
     private final LandingPadRegion landingRegion;
-    int bgHeight = 117;
+    int bgHeight = 137;
     int bgWidth = 191;
     int left, top;
     private TextFieldWidget landingCodeInput;
@@ -40,9 +40,9 @@ public class LandingPadScreen extends Screen {
     protected void init() {
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
-        this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), (this.height / 2) - 10, 120, this.textRenderer.fontHeight + 4,
+        this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), (this.height / 2) - 20, 120, this.textRenderer.fontHeight + 4,
                 Text.literal("Landing Code..."));
-        this.addButton(new PressableTextWidget((width / 2 + 40), (height / 2) - 10,
+        this.addButton(new PressableTextWidget((width / 2 + 40), (height / 2) - 20,
                 this.textRenderer.getWidth("✓"), 20, Text.literal("✓").formatted(Formatting.BOLD), button -> {
             updateLandingCode();
         }, this.textRenderer));

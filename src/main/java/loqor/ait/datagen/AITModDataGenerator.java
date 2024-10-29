@@ -763,6 +763,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         provider.addTranslation("ait.blueprint.tooltip", "Blueprint: ");
 
+        // directions
+        provider.addTranslation("direction.north", "North");
+        provider.addTranslation("direction.north_east", "North East");
+        provider.addTranslation("direction.north_west", "North West");
+        provider.addTranslation("direction.south", "South");
+        provider.addTranslation("direction.south_east", "South East");
+        provider.addTranslation("direction.south_west", "South West");
+        provider.addTranslation("direction.east", "East");
+        provider.addTranslation("direction.west", "West");
+
+
         return provider;
     }
 
