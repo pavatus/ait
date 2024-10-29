@@ -9,22 +9,22 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 
 public class ConsoleRoomPortBlock extends Block {
-	public static final DirectionProperty FACING;
+    public static final DirectionProperty FACING;
 
-	public ConsoleRoomPortBlock(Settings settings) {
-		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
-	}
+    public ConsoleRoomPortBlock(Settings settings) {
+        super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+    }
 
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
-	}
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
 
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
-	}
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
+    }
 
-	static {
-		FACING = Properties.FACING;
-	}
+    static {
+        FACING = Properties.FACING;
+    }
 }

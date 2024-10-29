@@ -1,13 +1,10 @@
 package loqor.ait.core.item.part;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.util.AITModTags;
-import loqor.ait.core.data.schema.MachineRecipeSchema;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,6 +13,11 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
+import loqor.ait.core.AITTags;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.data.schema.MachineRecipeSchema;
 
 public class MachineItem extends Item {
 
@@ -33,7 +35,7 @@ public class MachineItem extends Item {
         ItemStack machine = slot.getStack();
 
         // Should this be in SonicItem.Mode.INTERACTION?
-        if (!stack.getRegistryEntry().isIn(AITModTags.Items.SONIC_ITEM))
+        if (!stack.getRegistryEntry().isIn(AITTags.Items.SONIC_ITEM))
             return false;
 
         if (SonicItem.findMode(stack) != SonicItem.Mode.INTERACTION)

@@ -1,7 +1,7 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.EnvironmentProjectorBlockEntity;
-import loqor.ait.tardis.Tardis;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
@@ -21,7 +21,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.blockentities.EnvironmentProjectorBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 
 @SuppressWarnings("deprecation")
 public class EnvironmentProjectorBlock extends Block implements BlockEntityProvider {
@@ -31,19 +33,17 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
     public static final BooleanProperty SILENT = BooleanProperty.of("silent");
 
     public EnvironmentProjectorBlock(Settings settings) {
-        super(settings.emissiveLighting((state, world, pos) -> state.get(EnvironmentProjectorBlock.ENABLED))
-                .nonOpaque().luminance(value -> value.get(EnvironmentProjectorBlock.ENABLED) ? 9 : 3));
+        super(settings.emissiveLighting((state, world, pos) -> state.get(EnvironmentProjectorBlock.ENABLED)).nonOpaque()
+                .luminance(value -> value.get(EnvironmentProjectorBlock.ENABLED) ? 9 : 3));
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState();
         boolean powered = ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos());
 
-        return blockState.with(ENABLED, powered).with(POWERED, powered)
-                .with(SILENT, ctx.getWorld().getBlockState(ctx.getBlockPos().down())
-                        .isIn(BlockTags.WOOL));
+        return blockState.with(ENABLED, powered).with(POWERED, powered).with(SILENT,
+                ctx.getWorld().getBlockState(ctx.getBlockPos().down()).isIn(BlockTags.WOOL));
     }
 
     @Override
@@ -52,7 +52,8 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos,
+            boolean notify) {
         if (world.isClient())
             return;
 
@@ -61,7 +62,8 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
         if (world.isClient())
             return ActionResult.PASS;
 
@@ -84,7 +86,8 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
         return BlockRenderType.MODEL;
     }
 
-    public static void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, BlockState state, boolean active) {
+    public static void toggle(Tardis tardis, @Nullable PlayerEntity player, World world, BlockPos pos, BlockState state,
+            boolean active) {
         if (world.getBlockEntity(pos) instanceof EnvironmentProjectorBlockEntity projector)
             projector.toggle(tardis, active);
 
@@ -92,14 +95,12 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
             return;
 
         world.playSound(player, pos, active ? SoundEvents.BLOCK_BEACON_ACTIVATE : SoundEvents.BLOCK_BEACON_DEACTIVATE,
-                SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.1f + 0.9f
-        );
+                SoundCategory.BLOCKS, 1.0f, world.getRandom().nextFloat() * 0.1f + 0.9f);
 
         world.emitGameEvent(player, active ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EnvironmentProjectorBlockEntity(pos, state);
     }

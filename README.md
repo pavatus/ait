@@ -1,4 +1,4 @@
-![Title](https://github.com/M-D-Team/ait-fabric-1.20.1/blob/main/src/main/resources/assets/ait/textures/gui/title/aitlogo.png?raw=true)
+![Title](https://github.com/M-D-Team/ait-fabric-1.20.1/blob/main/src/main/resources/assets/ait/textures/gui/title/main_ait_logo.png?raw=true)
 
 ![GitHub Release](https://img.shields.io/github/v/release/M-D-Team/ait-fabric-1.20.1?include_prereleases)
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/ait?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait%2Fversions)
@@ -9,7 +9,7 @@
 ![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Floqor.dev%2Fait%2F)
 
 
-**by [Loqor](https://github.com/loqor/ait)**
+**by [pavatus](https://pavatus.github.io)**
 
 **Requires [OwoLib](https://modrinth.com/mod/owo-lib)**
 
@@ -19,7 +19,7 @@
 ## What does this mod do?
 Adventures In Time add the TARDIS from Doctor Who that you can interact with in a new plethora of ways, these include flying to different dimensions, hiding from friends using the cloak mode and a variety of other fun features for you to explore! 
 
-Recently updated for Fabric 1.20.1. 
+Recently updated for Fabric & Forge 1.20.1. 
 
 Recommended to play with 8GB of RAM **minimum** singleplayer.
 
@@ -32,7 +32,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - When you open the doors from the exterior you will be able to see the interior and vice versa
 
 ### If you have [Gravity Changer (qouteall fork)](https://modrinth.com/mod/gravity-api-fork/versions)
-- Your TARDIS will be able to control the interior gravity from the [TARDIS Monitor](https://loqor.dev/ait/Monitor/)
+- You will be able to control your TARDIS interior gravity from the [TARDIS Monitor](https://loqor.dev/ait/Monitor/)
   
 ## AIT Compatibility Addons
 
@@ -45,9 +45,9 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ## Credits
 
 ### Developers:
-- Loqor
-- Duzo
-- Dr. Theo
+- [Loqor](https://loqor.dev/)
+- [duzo](https://duzo.is-a.dev/)
+- [Dr. Theo](https://theo.is-a.dev/)
 - Nitrogenesis
 
 ---
@@ -67,16 +67,16 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ## Thank You's:
-- MagicMan(?) (Help with modeling)
+- [MagicMan(?)](https://magicmaan.github.io/) (Help with modeling)
 - Bug1312 (Help with code)
 - DocArcane (Credit for the Steampunk console design)
 - Creativious (Help with code)
-- Jeryn (Suff) (Help with code)
+- [Jeryn](https://craig.software) (Suff) (Help with code)
 - Maggie (Help with texturing)
 
 
 ## Links
-[Wiki](https://loqor.dev/ait/)
+[Wiki](https://pavatus.github.io/ait-wiki/)
 
 [Github](https://github.com/loqor/ait/)
 

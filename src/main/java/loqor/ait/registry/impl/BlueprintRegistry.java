@@ -1,11 +1,9 @@
 package loqor.ait.registry.impl;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.item.blueprint.BlueprintType;
-import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
+import java.util.Random;
+
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.registry.Registries;
@@ -14,7 +12,11 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
-import java.util.Random;
+import loqor.ait.AITMod;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.item.blueprint.BlueprintType;
+import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 
 public class BlueprintRegistry {
 
@@ -22,9 +24,9 @@ public class BlueprintRegistry {
             new Identifier(AITMod.MOD_ID, "set_blueprint"),
             new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
 
-    public static final SimpleRegistry<BlueprintType> REGISTRY = FabricRegistryBuilder.createSimple(
-            RegistryKey.<BlueprintType>ofRegistry(new Identifier(AITMod.MOD_ID, "blueprint_type"))
-    ).buildAndRegister();
+    public static final SimpleRegistry<BlueprintType> REGISTRY = FabricRegistryBuilder
+            .createSimple(RegistryKey.<BlueprintType>ofRegistry(new Identifier(AITMod.MOD_ID, "blueprint_type")))
+            .buildAndRegister();
 
     private static final Random random = AITMod.RANDOM;
 

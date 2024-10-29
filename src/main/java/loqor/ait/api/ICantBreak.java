@@ -8,8 +8,9 @@ import net.minecraft.world.World;
  * An interface which stops a block from being broken
  */
 public interface ICantBreak {
-	/**
-	 * Called when the block was attempted to be broken
-	 */
-	default void onTryBreak(World world, BlockPos pos, BlockState state) { }
+    /**
+     * Called when the block was attempted to be broken
+     */
+    default void onTryBreak(World world, BlockPos pos, BlockState state) {
+    }
 }

@@ -1,12 +1,13 @@
 package loqor.ait.client.screens;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
+import loqor.ait.core.screen_handlers.EngineScreenHandler;
 
 public class EngineScreen extends HandledScreen<EngineScreenHandler> {
 

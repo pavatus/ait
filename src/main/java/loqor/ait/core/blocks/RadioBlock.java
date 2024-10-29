@@ -1,7 +1,7 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.blockentities.AITRadioBlockEntity;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -21,7 +21,9 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.blockentities.AITRadioBlockEntity;
 
 public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -31,7 +33,7 @@ public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntit
     public static final VoxelShape NX_AXIS_TUNER = Block.createCuboidShape(12.5, 2.5, 2.5, 14.5, 4.5, 4.5);
     public static final VoxelShape NX_AXIS_VOLUME = Block.createCuboidShape(12.5, 2.5, 11.5, 14.5, 4.5, 13.5);
 
-    //-------------------------------------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------------------------------------------
     public static final VoxelShape Z_AXIS_RADIO = Block.createCuboidShape(0.0, 0.0, 2.5, 16, 12.0, 13.5);
     public static final VoxelShape PZ_AXIS_TUNER = Block.createCuboidShape(2.5, 2.5, 1.5, 4.5, 4.5, 3.5);
     public static final VoxelShape PZ_AXIS_VOLUME = Block.createCuboidShape(11.5, 2.5, 1.5, 13.5, 4.5, 3.5);
@@ -76,7 +78,8 @@ public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntit
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
@@ -87,25 +90,26 @@ public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntit
         return ActionResult.CONSUME;
     }
 
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+    @Nullable protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(
+            BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
         return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE, (world1, pos, state1, be) -> AITRadioBlockEntity.tick(world1, pos, state1, be));
+    @Nullable @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state,
+            BlockEntityType<T> type) {
+        return checkType(type, AITBlockEntityTypes.AIT_RADIO_BLOCK_ENTITY_TYPE,
+                (world1, pos, state1, be) -> AITRadioBlockEntity.tick(world1, pos, state1, be));
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new AITRadioBlockEntity(pos, state);
     }
 
     @Override
-    public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side, @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
+    public BlockState getAppearance(BlockState state, BlockRenderView renderView, BlockPos pos, Direction side,
+            @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
         return super.getAppearance(state, renderView, pos, side, sourceState, sourcePos);
     }
 }

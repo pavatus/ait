@@ -1,7 +1,7 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.WallMonitorBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -18,13 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.blockentities.WallMonitorBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 
 public class WallMonitorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(-0.25 * 16, 0.125 * 16, 0.875 * 16, 1.25 * 16, 0.875 * 16, 16);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(-0.25 * 16, 0.125 * 16, 0.875 * 16, 1.25 * 16,
+            0.875 * 16, 16);
 
     public WallMonitorBlock(Settings settings) {
         super(settings);
@@ -42,7 +44,8 @@ public class WallMonitorBlock extends HorizontalDirectionalBlock implements Bloc
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof WallMonitorBlockEntity wallMonitorBlockEntity)
             wallMonitorBlockEntity.useOn(world, player.isSneaking(), player);
@@ -55,8 +58,7 @@ public class WallMonitorBlock extends HorizontalDirectionalBlock implements Bloc
         return false;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new WallMonitorBlockEntity(pos, state);
     }
@@ -72,11 +74,12 @@ public class WallMonitorBlock extends HorizontalDirectionalBlock implements Bloc
     }
 
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
         int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX), BooleanBiFunction.OR));
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1],
+                    VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
             buffer[0] = buffer[1];
             buffer[1] = VoxelShapes.empty();
         }

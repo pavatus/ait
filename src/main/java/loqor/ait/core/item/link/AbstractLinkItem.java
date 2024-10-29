@@ -18,8 +18,6 @@ public abstract class AbstractLinkItem extends Item {
     public abstract float unitsPerTick(Type type);
 
     public enum Type {
-        ARTRON,
-        DATA,
-        VORTEX
+        ARTRON, DATA, VORTEX
     }
 }

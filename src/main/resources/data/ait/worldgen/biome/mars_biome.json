@@ -1,0 +1,38 @@
+{
+  "temperature": 1,
+  "downfall": 0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 15379555,
+    "fog_color": 15379555,
+    "water_color": 14001260,
+    "water_fog_color": 13670488,
+    "grass_color": 15379555,
+    "foliage_color": 15379555
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "ait:mars_cave",
+      "minecraft:canyon"
+    ]
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:ore_gold_extra",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_diamond_large"
+    ],
+    [],
+    [],
+    [],
+    []
+  ]
+}

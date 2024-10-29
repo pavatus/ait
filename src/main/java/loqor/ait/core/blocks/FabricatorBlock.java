@@ -1,15 +1,13 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.blockentities.FabricatorBlockEntity;
-import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -18,14 +16,18 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.blockentities.FabricatorBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 
 public class FabricatorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
     public static final VoxelShape DEFAULT_SHAPE = VoxelShapes.cuboid(0, 0, 0, 1, (double) 2 / 16, 1);
 
-
-    // @TODO MAKE THIS GO ON TOP OF A MACHINE CASING WHICH ENCASES A BLOCK LIKE A SMITHING TABLE OR SOME OTHER CRAFTING TABLE THING
+    // @TODO MAKE THIS GO ON TOP OF A MACHINE CASING WHICH ENCASES A BLOCK LIKE A
+    // SMITHING TABLE OR
+    // SOME OTHER CRAFTING
+    // TABLE THING
     public FabricatorBlock(Settings settings) {
         super(settings);
 
@@ -33,7 +35,8 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+            ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         this.setDefaultState(state.with(FACING, placer.getHorizontalFacing().getOpposite()));
     }
@@ -63,11 +66,13 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         Direction direction = state.get(FACING);
-        double d = (double)pos.getX() + 0.55 - (double)(random.nextFloat() * 0.1f);
-        double e = (double)pos.getY() + 0.55 - (double)(random.nextFloat() * 0.1f);
-        double f = (double)pos.getZ() + 0.55 - (double)(random.nextFloat() * 0.1f);
+        double d = (double) pos.getX() + 0.55 - (double) (random.nextFloat() * 0.1f);
+        double e = (double) pos.getY() + 0.55 - (double) (random.nextFloat() * 0.1f);
+        double f = (double) pos.getZ() + 0.55 - (double) (random.nextFloat() * 0.1f);
         double g = 0.4f - (random.nextFloat() + random.nextFloat()) * 0.4f;
-        world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d + (double)direction.getOffsetX() * g, e + (double)direction.getOffsetY() * g, f + (double)direction.getOffsetZ() * g, random.nextGaussian() * 0.005, random.nextGaussian() * 0.005, random.nextGaussian() * 0.005);
+        world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d + (double) direction.getOffsetX() * g,
+                e + (double) direction.getOffsetY() * g, f + (double) direction.getOffsetZ() * g,
+                random.nextGaussian() * 0.005, random.nextGaussian() * 0.005, random.nextGaussian() * 0.005);
     }
 
     @Override
@@ -80,8 +85,7 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
         return DEFAULT_SHAPE;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new FabricatorBlockEntity(pos, state);
     }

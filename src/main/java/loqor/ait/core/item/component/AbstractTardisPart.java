@@ -1,15 +1,10 @@
 package loqor.ait.core.item.component;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.data.schema.MachineRecipeSchema;
-import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.item.link.AbstractLinkItem;
-import loqor.ait.core.util.AITModTags;
-import loqor.ait.core.util.StackUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -20,6 +15,13 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Identifier;
+
+import loqor.ait.AITMod;
+import loqor.ait.core.AITTags;
+import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.link.AbstractLinkItem;
+import loqor.ait.core.util.StackUtil;
+import loqor.ait.data.schema.MachineRecipeSchema;
 
 public class AbstractTardisPart extends Item {
 
@@ -84,14 +86,18 @@ public class AbstractTardisPart extends Item {
     }
 
     @Override
-    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) { // slot is the machine, stack is the cursor
+    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) { // slot is the
+                                                                                                            // machine,
+                                                                                                            // stack is
+                                                                                                            // the
+                                                                                                            // cursor
         ItemStack machine = slot.getStack();
 
         if (clickType != ClickType.RIGHT)
             return false;
 
         // Should this be in SonicItem.Mode.INTERACTION?
-        if (!stack.getRegistryEntry().isIn(AITModTags.Items.SONIC_ITEM))
+        if (!stack.getRegistryEntry().isIn(AITTags.Items.SONIC_ITEM))
             return false;
 
         if (SonicItem.findMode(stack) != SonicItem.Mode.INTERACTION)
@@ -102,7 +108,8 @@ public class AbstractTardisPart extends Item {
     }
 
     @Override
-    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursor) {
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player,
+            StackReference cursor) {
         if (player.getWorld().isClient())
             return false;
 

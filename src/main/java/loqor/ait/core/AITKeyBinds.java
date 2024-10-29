@@ -1,19 +1,20 @@
 package loqor.ait.core;
 
-import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.bind.KeyBind;
-import loqor.ait.core.entities.RealTardisEntity;
-import loqor.ait.core.item.KeyItem;
-import loqor.ait.tardis.Tardis;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import org.lwjgl.glfw.GLFW;
+
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
+
+import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.bind.KeyBind;
+import loqor.ait.core.item.KeyItem;
+import loqor.ait.core.tardis.Tardis;
 
 public class AITKeyBinds {
 
@@ -30,11 +31,6 @@ public class AITKeyBinds {
 
             if (player == null)
                 return;
-
-            if (player.getVehicle() instanceof RealTardisEntity entity) {
-                ClientTardisUtil.snapToOpenDoors(entity.tardis().getId());
-                return;
-            }
 
             Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
 

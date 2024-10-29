@@ -1,15 +1,19 @@
 package loqor.ait.registry.impl;
 
-import com.google.gson.*;
-import loqor.ait.AITMod;
-import loqor.ait.registry.Registry;
-import loqor.ait.tardis.base.TardisComponent;
-
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import com.google.gson.*;
+
+import loqor.ait.AITMod;
+import loqor.ait.api.TardisComponent;
+import loqor.ait.core.tardis.TardisDesktop;
+import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.TardisHandlersManager;
+import loqor.ait.registry.Registry;
 
 public class TardisComponentRegistry implements Registry {
 
@@ -54,13 +58,25 @@ public class TardisComponentRegistry implements Registry {
     }
 
     public TardisComponent.IdLike get(String name) {
-        // TODO fix this
         return switch (name) {
             case "EXTERIOR" -> TardisComponent.Id.EXTERIOR;
             case "DESKTOP" -> TardisComponent.Id.DESKTOP;
             case "HANDLERS" -> TardisComponent.Id.HANDLERS;
             default -> REGISTRY.get(name);
         };
+    }
+
+    public String get(TardisComponent component) {
+        if (component instanceof TardisExterior)
+            return "EXTERIOR";
+
+        if (component instanceof TardisDesktop)
+            return "DESKTOP";
+
+        if (component instanceof TardisHandlersManager)
+            return "HANDLERS";
+
+        return component.getId().name();
     }
 
     public TardisComponent.IdLike get(int index) {
@@ -83,12 +99,15 @@ public class TardisComponentRegistry implements Registry {
         return new Serializer();
     }
 
-    private static class Serializer implements JsonSerializer<TardisComponent.IdLike>, JsonDeserializer<TardisComponent.IdLike> {
+    private static class Serializer
+            implements
+                JsonSerializer<TardisComponent.IdLike>,
+                JsonDeserializer<TardisComponent.IdLike> {
 
         @Override
-        public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            String id = json.getAsString();
-            return TardisComponentRegistry.getInstance().get(id);
+        public TardisComponent.IdLike deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return TardisComponentRegistry.getInstance().get(json.getAsString());
         }
 
         @Override

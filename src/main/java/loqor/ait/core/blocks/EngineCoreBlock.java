@@ -1,8 +1,7 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -24,7 +23,10 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.blockentities.EngineCoreBlockEntity;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 @SuppressWarnings("deprecation")
 public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
@@ -47,14 +49,15 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
         return new EngineCoreBlockEntity(pos, state);
     }
 
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE, world.isClient ? EngineCoreBlockEntity::clientTick : EngineCoreBlockEntity::serverTick);
+    @Nullable public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state,
+            BlockEntityType<T> type) {
+        return checkType(type, AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE,
+                world.isClient ? EngineCoreBlockEntity::clientTick : EngineCoreBlockEntity::serverTick);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -63,7 +66,8 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
+            WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED))
             world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 
@@ -76,8 +80,9 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD) {
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+            ItemStack itemStack) {
+        if (!(world.isClient()) && !TardisDimension.isTardisDimension(world)) {
             world.breakBlock(pos, !((PlayerEntity) placer).isCreative());
             return;
         }
@@ -93,8 +98,7 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
         super.onBreak(world, pos, state, player);
     }
 
-    @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+    @Nullable public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return this.getDefaultState().with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
@@ -106,6 +110,6 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
 
     static {
         WATERLOGGED = Properties.WATERLOGGED;
-        SHAPE = Block.createCuboidShape(5.0, 5.0, 5.0, 11.0, 11.0, 11.0);
+        SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
     }
 }

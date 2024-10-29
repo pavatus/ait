@@ -1,5 +1,9 @@
 package loqor.ait.core.util;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Supplier;
+
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -15,10 +19,6 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class StackUtil {
 
@@ -110,7 +110,7 @@ public class StackUtil {
                 continue;
 
             NbtCompound nbtCompound = new NbtCompound();
-            nbtCompound.putByte("Slot", (byte)i);
+            nbtCompound.putByte("Slot", (byte) i);
 
             stack.writeNbt(nbtCompound);
             nbtList.add(nbtCompound);
@@ -150,7 +150,7 @@ public class StackUtil {
     public static void read(NbtCompound nbt, List<ItemStack> stacks) {
         NbtList nbtList = nbt.getList("Items", 10);
 
-        for(int i = 0; i < nbtList.size(); i++) {
+        for (int i = 0; i < nbtList.size(); i++) {
             NbtCompound nbtCompound = nbtList.getCompound(i);
             int j = nbtCompound.getByte("Slot") & 255;
 
@@ -164,7 +164,7 @@ public class StackUtil {
         NbtList nbtList = nbt.getList("Items", 10);
         ItemStack[] stacks = new ItemStack[nbtList.size()];
 
-        for(int i = 0; i < nbtList.size(); i++) {
+        for (int i = 0; i < nbtList.size(); i++) {
             NbtCompound nbtCompound = nbtList.getCompound(i);
             int j = nbtCompound.getByte("Slot") & 255;
 
@@ -179,7 +179,7 @@ public class StackUtil {
     public static void readUnordered(NbtCompound nbt, Collection<ItemStack> stacks) {
         NbtList nbtList = nbt.getList("Items", 10);
 
-        for(int i = 0; i < nbtList.size(); i++) {
+        for (int i = 0; i < nbtList.size(); i++) {
             stacks.add(ItemStack.fromNbt(nbtList.getCompound(i)));
         }
     }

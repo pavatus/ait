@@ -1,13 +1,9 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.blocks.EnvironmentProjectorBlock;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.properties.Value;
-import loqor.ait.tardis.link.v2.TardisRef;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
+import static loqor.ait.core.blocks.EnvironmentProjectorBlock.*;
+
+import java.util.Iterator;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,20 +21,26 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
-
-import static loqor.ait.core.blocks.EnvironmentProjectorBlock.*;
+import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.blocks.EnvironmentProjectorBlock;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.data.properties.Value;
 
 public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity {
 
-    private static final RegistryKey<World> DEFAULT = AITDimensions.TARDIS_DIM_WORLD;
+    private static final RegistryKey<World> DEFAULT = World.END;
     private RegistryKey<World> current = DEFAULT;
 
     public EnvironmentProjectorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENVIRONMENT_PROJECTOR_BLOCK_ENTITY_TYPE, pos, state);
     }
 
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos,
+            boolean notify) {
         boolean powered = world.isReceivingRedstonePower(pos);
 
         if (powered != state.get(POWERED)) {
@@ -51,12 +53,12 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
             state = state.with(POWERED, powered);
         }
 
-        world.setBlockState(pos, state.with(SILENT, world.getBlockState(
-                pos.down()).isIn(BlockTags.WOOL)
-        ), Block.NOTIFY_LISTENERS);
+        world.setBlockState(pos, state.with(SILENT, world.getBlockState(pos.down()).isIn(BlockTags.WOOL)),
+                Block.NOTIFY_LISTENERS);
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
 
         if (this.tardis() == null)
             return ActionResult.FAIL;
@@ -96,6 +98,10 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
 
     public void switchSkybox(Tardis tardis, BlockState state, PlayerEntity player) {
         RegistryKey<World> next = findNext(world.getServer(), this.current);
+
+        while (TardisDimension.isTardisDimension(next)) {
+            next = findNext(world.getServer(), next);
+        }
 
         player.sendMessage(Text.translatable("message.ait.projector.skybox", next.getValue().toString()));
         AITMod.LOGGER.debug("Last: {}, next: {}", this.current, next);

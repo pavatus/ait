@@ -1,12 +1,14 @@
 package loqor.ait.mixin.compat.gravity;
 
 import gravity_changer.EntityTags;
-import loqor.ait.core.entities.ConsoleControlEntity;
-import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import net.minecraft.entity.Entity;
+
+import loqor.ait.core.entities.ConsoleControlEntity;
 
 @Mixin(EntityTags.class)
 public class EntityTagsMixin {

@@ -1,13 +1,5 @@
 package loqor.ait.client.renderers.machines;
 
-import loqor.ait.AITMod;
-import loqor.ait.client.util.ClientItemUtil;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.blockentities.WaypointBankBlockEntity;
-import loqor.ait.core.blocks.WaypointBankBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.util.WorldUtil;
-import loqor.ait.tardis.Tardis;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -21,17 +13,29 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
+import loqor.ait.client.util.ClientItemUtil;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.blockentities.WaypointBankBlockEntity;
+import loqor.ait.core.blocks.WaypointBankBlock;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedGlobalPos;
+
 public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> implements BlockEntityRenderer<T> {
 
     private static final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
     private static final String SEPARATOR = "------------";
 
-    private static final ModelIdentifier WAYPOINT = new ModelIdentifier(AITMod.MOD_ID, Registries.ITEM.getId(AITItems.WAYPOINT_CARTRIDGE).getPath(), "inventory");
+    private static final ModelIdentifier WAYPOINT = new ModelIdentifier(AITMod.MOD_ID,
+            Registries.ITEM.getId(AITItems.WAYPOINT_CARTRIDGE).getPath(), "inventory");
 
-    public WaypointBankBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) { }
+    public WaypointBankBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    }
 
     @Override
-    public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
+    public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light,
+            int overlay) {
         if (!entity.isLinked())
             return;
 
@@ -60,8 +64,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
 
         matrices.push();
         for (; i < WaypointBankBlock.MAX_COUNT / 2; i++) {
-            renderCartridge(matrices, vertices, light, overlay,
-                    cartridgeModel, waypoints, selectedIndex, i);
+            renderCartridge(matrices, vertices, light, overlay, cartridgeModel, waypoints, selectedIndex, i);
         }
         matrices.pop();
 
@@ -69,8 +72,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
         matrices.translate(0.0625f * 7, 0, 0);
 
         for (; i < WaypointBankBlock.MAX_COUNT; i++) {
-            renderCartridge(matrices, vertices, light, overlay,
-                    cartridgeModel, waypoints, selectedIndex, i);
+            renderCartridge(matrices, vertices, light, overlay, cartridgeModel, waypoints, selectedIndex, i);
         }
 
         matrices.pop();
@@ -79,14 +81,20 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
     }
 
     private static void renderLabel(MatrixStack matrices, VertexConsumerProvider vertexConsumers, String text, int y) {
-        textRenderer.draw(text, 0 - ((float) textRenderer.getWidth(text) / 2), y, 0x00F0FF, false, matrices.peek().getPositionMatrix(), vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0xF000F0, 0xF000F0);
+        textRenderer.draw(text, 0 - ((float) textRenderer.getWidth(text) / 2), y, 0x00F0FF, false,
+                matrices.peek().getPositionMatrix(), vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0xF000F0,
+                0xF000F0);
     }
 
-    private static void renderLabel(MatrixStack matrices, VertexConsumerProvider vertexConsumers, OrderedText text, int y) {
-        textRenderer.draw(text, 0 - ((float) textRenderer.getWidth(text) / 2), y, 0x00F0FF, false, matrices.peek().getPositionMatrix(), vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0xF000F0, 0xF000F0);
+    private static void renderLabel(MatrixStack matrices, VertexConsumerProvider vertexConsumers, OrderedText text,
+            int y) {
+        textRenderer.draw(text, 0 - ((float) textRenderer.getWidth(text) / 2), y, 0x00F0FF, false,
+                matrices.peek().getPositionMatrix(), vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0xF000F0,
+                0xF000F0);
     }
 
-    private static void renderMonitor(MatrixStack matrices, VertexConsumerProvider vertices, float facing, WaypointBankBlockEntity.WaypointData[] data, int selectedIndex) {
+    private static void renderMonitor(MatrixStack matrices, VertexConsumerProvider vertices, float facing,
+            WaypointBankBlockEntity.WaypointData[] data, int selectedIndex) {
         WaypointBankBlockEntity.WaypointData selected = data[selectedIndex];
 
         if (selected == null)
@@ -121,7 +129,8 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
         matrices.pop();
     }
 
-    private static void renderCartridge(MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay, BakedModel model, WaypointBankBlockEntity.WaypointData[] data, int selected, int current) {
+    private static void renderCartridge(MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay,
+            BakedModel model, WaypointBankBlockEntity.WaypointData[] data, int selected, int current) {
         matrices.translate(0, 0, 0.0625f * 2);
         WaypointBankBlockEntity.WaypointData waypoint = data[current];
 

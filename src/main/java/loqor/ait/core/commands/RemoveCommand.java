@@ -1,26 +1,26 @@
 package loqor.ait.core.commands;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import loqor.ait.AITMod;
-import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
-import loqor.ait.tardis.wrapper.server.manager.ServerTardisManager;
+
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import loqor.ait.AITMod;
+import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 
 public class RemoveCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("remove").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", TardisArgumentType.tardis())
-                                .executes(RemoveCommand::removeCommand)))
-        );
+        dispatcher
+                .register(literal(AITMod.MOD_ID).then(literal("remove").requires(source -> source.hasPermissionLevel(2))
+                        .then(argument("tardis", TardisArgumentType.tardis()).executes(RemoveCommand::removeCommand))));
     }
 
     private static int removeCommand(CommandContext<ServerCommandSource> context) {
@@ -28,15 +28,14 @@ public class RemoveCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
         source.sendFeedback(() -> Text.translatableWithFallback("tardis.remove.progress",
-                "Removing TARDIS with id [%s]...", tardis.getUuid()), true
-        );
+                "Removing TARDIS with id [%s]...", tardis.getUuid()), true);
 
         // Delete the file. File system operations are costly!
         ServerTardisManager.getInstance().remove(context.getSource().getServer(), tardis);
 
-        source.sendFeedback(() -> Text.translatableWithFallback("tardis.remove.done",
-                "TARDIS [%s] removed", tardis.getUuid()), true
-        );
+        source.sendFeedback(
+                () -> Text.translatableWithFallback("tardis.remove.done", "TARDIS [%s] removed", tardis.getUuid()),
+                true);
 
         return Command.SINGLE_SUCCESS;
     }

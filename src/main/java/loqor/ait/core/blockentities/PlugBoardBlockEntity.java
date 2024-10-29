@@ -1,8 +1,10 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.item.link.AbstractLinkItem;
-import loqor.ait.core.util.StackUtil;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,10 +18,10 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.item.link.AbstractLinkItem;
+import loqor.ait.core.util.StackUtil;
 
 public class PlugBoardBlockEntity extends BlockEntity {
 
@@ -62,7 +64,6 @@ public class PlugBoardBlockEntity extends BlockEntity {
     }
 
     public void onUse(World world, ItemStack stack, PlayerEntity player) {
-
     }
 
     public List<ItemStack> getLinks() {
@@ -98,8 +99,7 @@ public class PlugBoardBlockEntity extends BlockEntity {
         StackUtil.write(nbt, this.links);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }

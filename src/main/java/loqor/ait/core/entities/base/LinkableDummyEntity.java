@@ -1,19 +1,21 @@
 package loqor.ait.core.entities.base;
 
-import loqor.ait.tardis.link.v2.TardisRef;
-import loqor.ait.tardis.link.v2.entity.AbstractLinkableEntity;
+import java.util.Optional;
+import java.util.UUID;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-import java.util.UUID;
+import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.api.link.v2.entity.AbstractLinkableEntity;
 
 public class LinkableDummyEntity extends DummyEntity implements AbstractLinkableEntity {
 
-    private static final TrackedData<Optional<UUID>> TARDIS = AbstractLinkableEntity.register(LinkableDummyLivingEntity.class);
+    private static final TrackedData<Optional<UUID>> TARDIS = AbstractLinkableEntity
+            .register(LinkableDummyLivingEntity.class);
 
     private TardisRef tardis;
 
@@ -30,7 +32,6 @@ public class LinkableDummyEntity extends DummyEntity implements AbstractLinkable
     public DataTracker getDataTracker() {
         return super.getDataTracker();
     }
-
 
     @Override
     public TrackedData<Optional<UUID>> getTracked() {

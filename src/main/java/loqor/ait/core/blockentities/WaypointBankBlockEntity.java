@@ -1,14 +1,10 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blocks.WaypointBankBlock;
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.core.data.Waypoint;
-import loqor.ait.core.item.WaypointItem;
-import loqor.ait.core.util.StackUtil;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -27,10 +23,16 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blocks.WaypointBankBlock;
+import loqor.ait.core.item.WaypointItem;
+import loqor.ait.core.util.StackUtil;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Waypoint;
 
 public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
 
@@ -59,6 +61,9 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public ActionResult onUse(World world, BlockState state, PlayerEntity player, Hand hand, int slot) {
+        if (!this.isLinked())
+            return ActionResult.FAIL;
+
         ItemStack stack = player.getStackInHand(hand);
 
         if (world.isClient())
@@ -68,9 +73,9 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
             return this.insert(state, stack, slot);
 
         if (player.isSneaking())
-            return this.select(state, slot);
+            return this.take(state, player, slot);
 
-        return this.take(state, player, slot);
+        return this.select(state, slot);
     }
 
     private ActionResult take(BlockState state, PlayerEntity player, int slot) {
@@ -166,8 +171,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         nbt.putShort("selected", (short) selected);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
@@ -217,7 +221,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
             nbt.putString("name", this.name);
 
             if (this.pos != null)
-                nbt.put("pos",this.pos.toNbt());
+                nbt.put("pos", this.pos.toNbt());
         }
 
         public static WaypointData fromNbt(NbtCompound nbt) {
@@ -227,9 +231,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
             int color = nbt.getInt("color");
             String name = nbt.getString("name");
 
-            DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.fromNbt(
-                    nbt.getCompound("pos")
-            );
+            DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.fromNbt(nbt.getCompound("pos"));
 
             return new WaypointData(color, name, pos);
         }

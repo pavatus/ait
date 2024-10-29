@@ -1,39 +1,35 @@
 package loqor.ait.core.commands;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
+import java.util.function.Function;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import loqor.ait.AITMod;
-import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.loyalty.Loyalty;
-import loqor.ait.tardis.data.loyalty.LoyaltyHandler;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.function.Function;
-
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import loqor.ait.AITMod;
+import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.LoyaltyHandler;
+import loqor.ait.data.Loyalty;
 
 public class LoyaltyCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("loyalty").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", TardisArgumentType.tardis())
-                                .then(argument("player", EntityArgumentType.player())
-                                        .executes(LoyaltyCommand::get)
-                                        .then(argument("value", IntegerArgumentType.integer())
-                                                .executes(LoyaltyCommand::set))
-                                )
-                        )
-                )
-        );
+        dispatcher.register(literal(AITMod.MOD_ID).then(literal("loyalty")
+                .requires(source -> source.hasPermissionLevel(2))
+                .then(argument("tardis", TardisArgumentType.tardis())
+                        .then(argument("player", EntityArgumentType.player()).executes(LoyaltyCommand::get).then(
+                                argument("value", IntegerArgumentType.integer()).executes(LoyaltyCommand::set))))));
     }
 
     private static int set(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -65,9 +61,8 @@ public class LoyaltyCommand {
         public Loyalty run(String key, String fallback, Function<LoyaltyHandler, Loyalty> func) {
             Loyalty result = func.apply(this.tardis.loyalty());
 
-            this.source.sendFeedback(() -> Text.translatableWithFallback(
-                    key, fallback, this.player.getName(), result.type(), result.level()
-            ), false);
+            this.source.sendFeedback(() -> Text.translatableWithFallback(key, fallback, this.player.getName(),
+                    result.type(), result.level()), false);
 
             return result;
         }

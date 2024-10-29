@@ -1,108 +1,75 @@
 package loqor.ait.client.sounds.flight;
 
-import loqor.ait.client.sounds.LoopingSound;
-import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.AITDimensions;
-import loqor.ait.core.AITSounds;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.util.SoundHandler;
-import loqor.ait.tardis.util.TardisUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 
-import java.util.ArrayList;
+import loqor.ait.client.sounds.LoopingSound;
+import loqor.ait.client.sounds.SoundHandler;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.AITSounds;
 
-// All this is CLIENT ONLY!!
-// Loqor, if you dont understand DONT TOUCH or ask me! - doozoo
-
-// todo this is not positioned at the console anymore, as checking to see if an individual sound is playing at each console doesnt appear to be possible (?)
-// todo or just make it play from the closest console ( do this one )
 public class ClientFlightHandler extends SoundHandler {
-	public static double MAX_DISTANCE = 16; // distance from console before the sound stops
-	public static LoopingSound FLIGHT;
 
-	protected ClientFlightHandler() {
-	}
+    public static double MAX_DISTANCE = 16; // distance from console before the sound stops
+    public static LoopingSound FLIGHT;
 
-	public LoopingSound getFlightLoop() {
-		if (FLIGHT == null)
-			FLIGHT = createFlightSound();
+    public LoopingSound getFlightLoop(ClientTardis tardis) {
+        if (FLIGHT == null)
+            FLIGHT = createFlightSound(tardis);
 
-		return FLIGHT;
-	}
+        return FLIGHT;
+    }
 
-	private LoopingSound createFlightSound() {
-		if (tardis().crash().isToxic() || tardis().crash().isUnstable()) {
-			return new InteriorFlightSound(AITSounds.UNSTABLE_FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
-		}
-		return new InteriorFlightSound(AITSounds.FLIGHT_LOOP, SoundCategory.BLOCKS, 1f);
-	}
+    private LoopingSound createFlightSound(ClientTardis tardis) {
+        SoundEvent sound = AITSounds.FLIGHT_LOOP;
 
-	public static ClientFlightHandler create() {
-		if (MinecraftClient.getInstance().player == null) return null;
+        if (tardis != null && !tardis.crash().isNormal())
+            sound = AITSounds.UNSTABLE_FLIGHT_LOOP;
 
-		ClientFlightHandler handler = new ClientFlightHandler();
-		handler.generate();
-		return handler;
-	}
+        return new InteriorFlightSound(sound, SoundCategory.BLOCKS, 1f);
+    }
 
-	private void generate() {
-		if (tardis() == null) return;
+    public static ClientFlightHandler create() {
+        ClientFlightHandler handler = new ClientFlightHandler();
 
-		if (FLIGHT == null) FLIGHT = createFlightSound();
+        handler.generate(ClientTardisUtil.getCurrentTardis());
+        return handler;
+    }
 
-		this.sounds = new ArrayList<>();
-		this.sounds.add(
-				FLIGHT
-		);
-	}
+    private void generate(ClientTardis tardis) {
+        if (FLIGHT == null)
+            FLIGHT = createFlightSound(tardis);
 
-	public boolean isPlayerInATardis() {
-		if (MinecraftClient.getInstance().world == null || MinecraftClient.getInstance().world.getRegistryKey() != AITDimensions.TARDIS_DIM_WORLD)
-			return false;
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		Tardis found = TardisUtil.findTardisByInterior(player.getBlockPos(), false);
+        this.ofSounds(FLIGHT);
+    }
 
-		return found != null;
-	}
+    private void playFlightSound(ClientTardis tardis) {
+        this.startIfNotPlaying(this.getFlightLoop(tardis));
+        this.getFlightLoop(tardis).tick();
+    }
 
-	public Tardis tardis() {
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
+    private boolean shouldPlaySounds(ClientTardis tardis) {
+        return tardis != null && tardis.engine().hasPower()
+                && (tardis.travel().inFlight() || hasThrottleAndHandbrakeDown(tardis))
+                && ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE;
+    }
 
-		if (player == null)
-			return null;
+    public boolean hasThrottleAndHandbrakeDown(ClientTardis tardis) {
+        return tardis != null && tardis.travel().speed() > 0 && tardis.travel().handbrake();
+    }
 
-		return TardisUtil.findTardisByInterior(player.getBlockPos(), false);
-	}
+    public void tick(MinecraftClient client) {
+        ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
-	private void playFlightSound() {
-		this.startIfNotPlaying(this.getFlightLoop());
-		this.getFlightLoop().tick();
-	}
+        if (this.sounds == null)
+            this.generate(tardis);
 
-	private boolean shouldPlaySounds() {
-		return (ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE) && (inFlight() || hasThrottleAndHandbrakeDown()) && this.tardis().engine().hasPower();
-	}
-
-	private boolean inFlight() {
-		Tardis tardis = this.tardis();
-		return (tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT);
-	}
-
-	public boolean hasThrottleAndHandbrakeDown() {
-		Tardis tardis = this.tardis();
-		return (tardis != null && tardis.travel().speed() > 0 && tardis.travel().handbrake());
-	}
-
-	public void tick(MinecraftClient client) {
-		if (this.sounds == null) this.generate();
-
-		if (shouldPlaySounds()) {
-			this.playFlightSound();
-		} else {
-			this.stopSounds();
-		}
-	}
+        if (this.shouldPlaySounds(tardis)) {
+            this.playFlightSound(tardis);
+        } else {
+            this.stopSounds();
+        }
+    }
 }

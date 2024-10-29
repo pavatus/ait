@@ -1,5 +1,9 @@
 package loqor.ait.core.entities.base;
 
+import java.util.Collections;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -12,9 +16,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
 
 public abstract class DummyLivingEntity extends LivingEntity {
 
@@ -40,7 +41,8 @@ public abstract class DummyLivingEntity extends LivingEntity {
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) { }
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+    }
 
     @Override
     public Arm getMainArm() {
@@ -77,8 +79,7 @@ public abstract class DummyLivingEntity extends LivingEntity {
         return false;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.INTENTIONALLY_EMPTY;
     }
@@ -88,19 +89,17 @@ public abstract class DummyLivingEntity extends LivingEntity {
         return new FallSounds(SoundEvents.INTENTIONALLY_EMPTY, SoundEvents.INTENTIONALLY_EMPTY);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     @Override
-    protected void playBlockFallSound() { }
+    protected void playBlockFallSound() {
+    }
 
     public static DefaultAttributeContainer.Builder createDummyAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0);
     }
 }

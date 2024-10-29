@@ -1,16 +1,17 @@
 package loqor.ait.core.blockentities;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.control.impl.SecurityControl;
-import loqor.ait.tardis.link.v2.block.InteriorLinkableBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.SecurityControl;
 
 public class WallMonitorBlockEntity extends InteriorLinkableBlockEntity {
 
@@ -36,6 +37,7 @@ public class WallMonitorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
-        AITMod.openScreen((ServerPlayerEntity) player, 0, tardis.getUuid()); // we can cast because we know its on server :p
+        AITMod.openScreen((ServerPlayerEntity) player, 0, tardis.getUuid()); // we can cast because we know its on
+                                                                                // server :p
     }
 }

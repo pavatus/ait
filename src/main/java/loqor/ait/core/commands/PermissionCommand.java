@@ -1,42 +1,38 @@
 package loqor.ait.core.commands;
 
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
+
+import java.util.function.Predicate;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import loqor.ait.AITMod;
-import loqor.ait.core.commands.argument.PermissionArgumentType;
-import loqor.ait.core.commands.argument.TardisArgumentType;
-import loqor.ait.tardis.data.permissions.Permission;
-import loqor.ait.tardis.data.permissions.PermissionHandler;
-import loqor.ait.tardis.wrapper.server.ServerTardis;
+
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.function.Predicate;
-
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import loqor.ait.AITMod;
+import loqor.ait.core.commands.argument.PermissionArgumentType;
+import loqor.ait.core.commands.argument.TardisArgumentType;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.handler.permissions.Permission;
+import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 
 public class PermissionCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID)
-                .then(literal("permission").requires(source -> source.hasPermissionLevel(2))
-                        .then(argument("tardis", TardisArgumentType.tardis())
-                                .then(argument("player", EntityArgumentType.player())
-                                        .then(argument("permission", PermissionArgumentType.permission())
-                                                .executes(PermissionCommand::get)
-                                                .then(argument("value", BoolArgumentType.bool())
-                                                        .executes(PermissionCommand::set))
-                                        )
-                                )
-                        )
-                )
-        );
+        dispatcher.register(literal(AITMod.MOD_ID).then(literal("permission")
+                .requires(source -> source.hasPermissionLevel(2))
+                .then(argument("tardis", TardisArgumentType.tardis()).then(argument("player",
+                        EntityArgumentType.player())
+                        .then(argument("permission", PermissionArgumentType.permission())
+                                .executes(PermissionCommand::get)
+                                .then(argument("value", BoolArgumentType.bool()).executes(PermissionCommand::set)))))));
     }
 
     private static int set(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -55,7 +51,8 @@ public class PermissionCommand {
                 handler -> handler.check(args.player, args.permission)) ? 1 : 0;
     }
 
-    record CommonArgs(ServerCommandSource source, ServerTardis tardis, ServerPlayerEntity player, Permission permission) {
+    record CommonArgs(ServerCommandSource source, ServerTardis tardis, ServerPlayerEntity player,
+            Permission permission) {
 
         public static CommonArgs create(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
             ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
@@ -68,9 +65,9 @@ public class PermissionCommand {
         public boolean run(String key, String fallback, Predicate<PermissionHandler> func) {
             boolean result = func.test(this.tardis.permissions());
 
-            this.source.sendFeedback(() -> Text.translatableWithFallback(
-                    key, fallback, this.permission, this.player.getName(), result
-            ), false);
+            this.source.sendFeedback(
+                    () -> Text.translatableWithFallback(key, fallback, this.permission, this.player.getName(), result),
+                    false);
 
             return result;
         }

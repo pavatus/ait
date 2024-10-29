@@ -1,5 +1,7 @@
 package loqor.ait.core.commands.argument.json;
 
+import java.util.regex.Pattern;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,14 +9,16 @@ import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+
 import net.minecraft.text.Text;
 
-import java.util.regex.Pattern;
-
 public class StringJsonReader {
-    public static final SimpleCommandExceptionType TRAILING = new SimpleCommandExceptionType(Text.translatable("argument.nbt.trailing"));
-    public static final SimpleCommandExceptionType EXPECTED_KEY = new SimpleCommandExceptionType(Text.translatable("argument.nbt.expected.key"));
-    public static final SimpleCommandExceptionType EXPECTED_VALUE = new SimpleCommandExceptionType(Text.translatable("argument.nbt.expected.value"));
+    public static final SimpleCommandExceptionType TRAILING = new SimpleCommandExceptionType(
+            Text.translatable("argument.nbt.trailing"));
+    public static final SimpleCommandExceptionType EXPECTED_KEY = new SimpleCommandExceptionType(
+            Text.translatable("argument.nbt.expected.key"));
+    public static final SimpleCommandExceptionType EXPECTED_VALUE = new SimpleCommandExceptionType(
+            Text.translatable("argument.nbt.expected.value"));
     public static final char COMMA = ',';
     public static final char COLON = ':';
     public static final char SEMICOLON = ';';
@@ -22,15 +26,17 @@ public class StringJsonReader {
     private static final char SQUARE_CLOSE_BRACKET = ']';
     private static final char RIGHT_CURLY_BRACKET = '}';
     private static final char LEFT_CURLY_BRACKET = '{';
-    private static final Pattern FLOAT_PATTERN = Pattern.compile("[-+]?(?:[0-9]+[.]?|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?", 2);
+    private static final Pattern FLOAT_PATTERN = Pattern.compile("[-+]?(?:[0-9]+[.]?|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?",
+            2);
     private static final Pattern INT_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)");
     private final StringReader reader;
 
     /**
      * {@return the NBT compound parsed from the {@code string}}
-     * 
-     * @throws CommandSyntaxException if the reader detects a syntax error (including
-     * {@linkplain #TRAILING trailing strings})
+     *
+     * @throws CommandSyntaxException
+     *             if the reader detects a syntax error (including
+     *             {@linkplain #TRAILING trailing strings})
      */
     public static JsonObject parse(String string) throws CommandSyntaxException {
         return new StringJsonReader(new StringReader(string)).readCompound();
@@ -98,8 +104,9 @@ public class StringJsonReader {
 
     /**
      * {@return the parsed NBT element}
-     * 
-     * @throws CommandSyntaxException if the reader detects a syntax error
+     *
+     * @throws CommandSyntaxException
+     *             if the reader detects a syntax error
      */
     public JsonElement parseElement() throws CommandSyntaxException {
         this.reader.skipWhitespace();
@@ -128,8 +135,9 @@ public class StringJsonReader {
 
     /**
      * {@return the parsed NBT compound}
-     * 
-     * @throws CommandSyntaxException if the reader detects a syntax error
+     *
+     * @throws CommandSyntaxException
+     *             if the reader detects a syntax error
      */
     public JsonObject parseObject() throws CommandSyntaxException {
         this.expect(LEFT_CURLY_BRACKET);

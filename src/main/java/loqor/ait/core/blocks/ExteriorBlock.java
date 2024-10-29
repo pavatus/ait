@@ -1,22 +1,11 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.api.ICantBreak;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.registry.impl.CategoryRegistry;
-import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.tardis.Tardis;
-import loqor.ait.tardis.base.TardisComponent;
-import loqor.ait.tardis.data.BiomeHandler;
-import loqor.ait.tardis.data.DoorHandler;
-import loqor.ait.tardis.data.RealFlightHandler;
-import loqor.ait.tardis.data.travel.TravelHandler;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
-import loqor.ait.tardis.wrapper.client.manager.ClientTardisManager;
+import java.util.Optional;
+import java.util.function.ToIntFunction;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -52,218 +41,249 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.function.ToIntFunction;
+import loqor.ait.api.ICantBreak;
+import loqor.ait.api.TardisComponent;
+import loqor.ait.api.TardisEvents;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
+import loqor.ait.compat.DependencyChecker;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
+import loqor.ait.registry.impl.CategoryRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 @SuppressWarnings("deprecation")
 public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBreak, Waterloggable {
-	public static final byte MAX_ROTATION_INDEX = (byte) RotationPropertyHelper.getMax();
-	private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
-	public static final IntProperty ROTATION = Properties.ROTATION;
-	public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
-	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-	public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_9);
-	public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
-	public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0),
-			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
-	public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 0.0, 11.0, 16.0, 32.0, 16.0),
-			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
+    public static final byte MAX_ROTATION_INDEX = (byte) RotationPropertyHelper.getMax();
+    private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
+    public static final IntProperty ROTATION = Properties.ROTATION;
+    public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_9);
+    public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
+    public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0), Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
+    public static final VoxelShape PORTALS_SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(0.0, 0.0, 11.0, 16.0, 32.0, 16.0), Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
 
-	public static final VoxelShape PORTALS_SHAPE_DIAGONAL = VoxelShapes.union(Block.createCuboidShape(11.0, 0.0, 11.0, 16.0, 32.0, 16.0),
-			Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
-	public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
+    public static final VoxelShape PORTALS_SHAPE_DIAGONAL = VoxelShapes.union(
+            Block.createCuboidShape(11.0, 0.0, 11.0, 16.0, 32.0, 16.0), Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
+    public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
 
-	public ExteriorBlock(Settings settings) {
-		super(settings.nonOpaque());
+    public ExteriorBlock(Settings settings) {
+        super(settings.nonOpaque());
 
-		this.setDefaultState(this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false).with(LEVEL_9, 9));
-	}
+        this.setDefaultState(
+                this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false).with(LEVEL_9, 9));
+    }
 
-	public VoxelShape diagonalShape() {
-		VoxelShape shape = VoxelShapes.empty();
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0, -0.125, 0.875, 0.0625, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.875, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.3125, 0.0625, 0.1875, 0.875, 2, 0.25), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0.0625, 0.3125, 0.25, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0.0625, 0.375, 0.1875, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.4375, 0.0625, 0.0625, 0.875, 2, 0.125), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.375, 0.0625, 0.125, 0.875, 2, 0.1875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5625, 0.0625, -0.0625, 0.875, 2, 0), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5, 0.0625, 0, 0.875, 2, 0.0625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.625, 0.0625, -0.125, 0.875, 2, -0.0625), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.0625, 0.0625, 0.4375, 0.125, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0, 0.0625, 0.5, 0.0625, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.0625, 0.0625, 0.5625, 0, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0.0625, 0.625, -0.0625, 2, 0.875), BooleanBiFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.3125, 0, -0.3125, 0.625, 0.0625, 0.625), BooleanBiFunction.OR);
+    public VoxelShape diagonalShape() {
+        VoxelShape shape = VoxelShapes.empty();
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0, -0.125, 0.875, 0.0625, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.25, 0.0625, 0.25, 0.875, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.3125, 0.0625, 0.1875, 0.875, 2, 0.25),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.1875, 0.0625, 0.3125, 0.25, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.125, 0.0625, 0.375, 0.1875, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.4375, 0.0625, 0.0625, 0.875, 2, 0.125),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.375, 0.0625, 0.125, 0.875, 2, 0.1875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5625, 0.0625, -0.0625, 0.875, 2, 0),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.5, 0.0625, 0, 0.875, 2, 0.0625),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.625, 0.0625, -0.125, 0.875, 2, -0.0625),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0.0625, 0.0625, 0.4375, 0.125, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(0, 0.0625, 0.5, 0.0625, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.0625, 0.0625, 0.5625, 0, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0.0625, 0.625, -0.0625, 2, 0.875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.3125, 0, -0.3125, 0.625, 0.0625, 0.625),
+                BooleanBiFunction.OR);
 
-		return shape;
-	}
-	@Override
-	public boolean emitsRedstonePower(BlockState state) {
-		return true;
-	}
+        return shape;
+    }
 
-	@Override
-	public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-		return 15;
-	}
+    @Override
+    public boolean emitsRedstonePower(BlockState state) {
+        return true;
+    }
 
-	@Override
-	public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-		return false;
-	}
+    @Override
+    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+        return 15;
+    }
 
-	@Nullable
-	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-		return this.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(LEVEL_9, 9);
-	}
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
 
-	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(ROTATION, WATERLOGGED, LEVEL_9);
-	}
+    @Nullable @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        return this.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER)
+                .with(LEVEL_9, 9);
+    }
 
-	@Override
-	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-		return AITItems.TARDIS_ITEM.getDefaultStack();
-	}
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(ROTATION, WATERLOGGED, LEVEL_9);
+    }
 
-	public FluidState getFluidState(BlockState state) {
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-	}
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        return AITItems.TARDIS_ITEM.getDefaultStack();
+    }
 
-	public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
-		return !(Boolean) state.get(WATERLOGGED);
-	}
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
 
-	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		BlockEntity blockEntity = world.getBlockEntity(pos);
-		VoxelShape normal = this.getNormalShape(state);
+    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
+        return !(Boolean) state.get(WATERLOGGED);
+    }
 
-		if (!(blockEntity instanceof ExteriorBlockEntity exterior))
-			return normal;
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        VoxelShape normal = this.getNormalShape(state);
 
-		Tardis tardis = exterior.tardis() != null
-				? exterior.tardis().get() : null;
+        if (!(blockEntity instanceof ExteriorBlockEntity exterior))
+            return normal;
 
-		if (tardis == null)
-			return normal;
+        Tardis tardis = exterior.tardis() != null ? exterior.tardis().get() : null;
 
-		if (tardis.siege().isActive())
-			return SIEGE_SHAPE;
+        if (tardis == null)
+            return normal;
+
+        if (tardis.siege().isActive())
+            return SIEGE_SHAPE;
 
         TravelHandlerBase.State travelState = tardis.travel().getState();
 
         if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
             return normal;
 
-		if (DependencyChecker.hasPortals())
-			return PORTALS_SHAPE;
+        if (DependencyChecker.hasPortals())
+            return PORTALS_SHAPE;
 
-		return VoxelShapes.empty();
-	}
+        return VoxelShapes.empty();
+    }
 
-	@Override
-	public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-		return VoxelShapes.empty();
-	}
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+        return VoxelShapes.empty();
+    }
 
-	@Override
-	public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
-		return VoxelShapes.empty();
-	}
+    @Override
+    public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+        return VoxelShapes.empty();
+    }
 
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		// todo move these to a reusable method
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        // todo move these to a reusable method
 
-		BlockEntity blockEntity = world.getBlockEntity(pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
-		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis() == null)
-			return getNormalShape(state);
-
-		Tardis tardis = exterior.tardis().get();
-
-		if (tardis == null)
-			return getNormalShape(state);
-
-		if (tardis.siege().isActive())
-			return SIEGE_SHAPE;
-
-		if (tardis.getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
-			return LEDGE_DOOM;
-
-		// todo this better because disabling collisions looks bad, should instead only disable if near to the portal or if walking into the block from the door direction
-		if (DependencyChecker.hasPortals())
-			if (!tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals()) // for some reason this check totally murders fps ??
-				return getLedgeShape(state);
-
-		TravelHandler travel = tardis.travel();
-
-        if (travel.getState() == TravelHandlerBase.State.LANDED
-				|| travel.getAnimTicks() >= 0.75 * travel.getMaxAnimTicks())
+        if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis() == null)
             return getNormalShape(state);
 
-		if (DependencyChecker.hasPortals()) {
-			return PORTALS_SHAPE;
-		}
+        Tardis tardis = exterior.tardis().get();
 
-		return VoxelShapes.empty();
-	}
+        if (tardis == null)
+            return getNormalShape(state);
 
-	public VoxelShape getNormalShape(BlockState state) {
-		Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+        if (tardis.siege().isActive())
+            return SIEGE_SHAPE;
 
-		if(direction.isEmpty()) {
-			if (DependencyChecker.hasPortals()) {
-				return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), PORTALS_SHAPE_DIAGONAL);
-			}
-			return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
-		} else {
-			if (DependencyChecker.hasPortals()) {
-				return rotateShape(Direction.NORTH, direction.get(), PORTALS_SHAPE);
-			}
-			return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
-		}
-	}
+        if (tardis.getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
+            return LEDGE_DOOM;
 
-	public Direction approximateDirection(int rotation) {
-		return switch(rotation) {
-			default -> Direction.NORTH;
-			case 1, 2, 3 -> Direction.EAST;
-			case 5, 6, 7 -> Direction.SOUTH;
-			case 9, 10, 11 -> Direction.WEST;
-		};
-	}
+        if (DependencyChecker.hasPortals() && !tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals())
+            return getLedgeShape(state);
 
-	public VoxelShape getLedgeShape(BlockState state) {
-		// fixme these wont have ledges probably
-		Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+        if (tardis.getExterior().getVariant() instanceof AdaptiveVariant)
+            return VoxelShapes.empty();
 
-		if(direction.isEmpty()) {
-			return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
-		} else {
-			return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
-		}
-	}
+        TravelHandler travel = tardis.travel();
 
-	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.INVISIBLE;
-	}
+        if (travel.getState() == TravelHandlerBase.State.LANDED
+                || travel.getAnimTicks() >= 0.75 * travel.getMaxAnimTicks())
+            return getNormalShape(state);
 
-	@Override
-	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis().isEmpty())
-			return getNormalShape(state);
+        if (DependencyChecker.hasPortals())
+            return PORTALS_SHAPE;
+
+        return VoxelShapes.empty();
+    }
+
+    public VoxelShape getNormalShape(BlockState state) {
+        Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+
+        if (direction.isEmpty()) {
+            if (DependencyChecker.hasPortals()) {
+                return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), PORTALS_SHAPE_DIAGONAL);
+            }
+            return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
+        } else {
+            if (DependencyChecker.hasPortals()) {
+                return rotateShape(Direction.NORTH, direction.get(), PORTALS_SHAPE);
+            }
+            return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
+        }
+    }
+
+    public Direction approximateDirection(int rotation) {
+        return switch (rotation) {
+            default -> Direction.NORTH;
+            case 1, 2, 3 -> Direction.EAST;
+            case 5, 6, 7 -> Direction.SOUTH;
+            case 9, 10, 11 -> Direction.WEST;
+        };
+    }
+
+    public VoxelShape getLedgeShape(BlockState state) {
+        // fixme these wont have ledges probably
+        Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+
+        if (direction.isEmpty()) {
+            return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
+        } else {
+            return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
+        }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.INVISIBLE;
+    }
+
+    @Override
+    public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+
+        if (!(blockEntity instanceof ExteriorBlockEntity exterior) || !exterior.isLinked())
+            return getNormalShape(state);
 
         TravelHandlerBase.State travelState = exterior.tardis().get().travel().getState();
 
@@ -276,93 +296,97 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (DependencyChecker.hasPortals())
             return PORTALS_SHAPE;
 
-		return VoxelShapes.empty();
-	}
+        return VoxelShapes.empty();
+    }
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		BlockEntity blockEntity = world.getBlockEntity(pos);
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+            BlockHitResult hit) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
-		if (blockEntity instanceof ExteriorBlockEntity exterior) {
-			if (world.isClient()) {
-				if (exterior.tardis() == null || exterior.tardis().isEmpty()) {
-					ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
-					return ActionResult.FAIL;
-				}
+        if (blockEntity instanceof ExteriorBlockEntity exterior) {
+            if (world.isClient()) {
+                if (exterior.tardis() == null || exterior.tardis().isEmpty()) {
+                    ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
+                    return ActionResult.FAIL;
+                }
 
-				return ActionResult.SUCCESS;
-			}
+                return ActionResult.SUCCESS;
+            }
 
-			if (exterior.tardis().isEmpty())
-				return ActionResult.FAIL;
+            if (exterior.tardis().isEmpty())
+                return ActionResult.FAIL;
 
-			exterior.useOn((ServerWorld) world, player.isSneaking(), player);
-		}
+            exterior.useOn((ServerWorld) world, player.isSneaking(), player);
+        }
 
-		return ActionResult.CONSUME;
-	}
+        return ActionResult.CONSUME;
+    }
 
-	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		if (world.isClient())
-			return;
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (world.isClient())
+            return;
 
-		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior)
-			exterior.onEntityCollision(entity);
-	}
+        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior)
+            exterior.onEntityCollision(entity);
+    }
 
-	@Nullable
-	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		return new ExteriorBlockEntity(pos, state);
-	}
+    @Nullable @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new ExteriorBlockEntity(pos, state);
+    }
 
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-		return (world1, blockPos, blockState, ticker) -> {
-			if (ticker instanceof ExteriorBlockEntity exterior) {
-				exterior.tick(world, blockPos, blockState, exterior);
-			}
-		};
-	}
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state,
+            @NotNull BlockEntityType<T> type) {
+        return (world1, blockPos, blockState, ticker) -> {
+            if (ticker instanceof ExteriorBlockEntity exterior) {
+                exterior.tick(world, blockPos, blockState, exterior);
+            }
+        };
+    }
 
-	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		// this is called when the block is first placed, but we have a demat anim so nothing occurs.
-		this.tryFall(state, world, pos);
-	}
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        Tardis tardis = this.findTardis(world, pos);
 
-	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-		world.scheduleBlockTick(pos, this, 2);
-	}
+        if (tardis == null || tardis.travel().getState() == TravelHandlerBase.State.LANDED)
+            this.tryFall(state, world, pos);
+    }
 
-	public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
-		if (!canFallThrough(world, pos.down()))
-			return;
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        world.scheduleBlockTick(pos, this, 2);
+    }
 
-		Tardis tardis = this.findTardis(world, pos);
+    public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
+        if (!canFallThrough(world, pos.down()))
+            return;
 
-		if (tardis == null || tardis.travel().antigravs().get())
-			return;
+        Tardis tardis = this.findTardis(world, pos);
 
-		if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
-			return;
+        if (tardis == null || tardis.travel().antigravs().get())
+            return;
 
-		if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
-			return;
+        if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+            return;
+
+        if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
+            return;
 
         FallingTardisEntity.spawnFromBlock(world, pos, state);
 
         if (state.get(WATERLOGGED))
-			state.with(WATERLOGGED, false);
-	}
+            state.with(WATERLOGGED, false);
+    }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos,
+            boolean notify) {
         super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
 
-        if(world.isClient())
+        if (world.isClient())
             return;
 
         Tardis tardis = this.findTardis(((ServerWorld) world), pos);
@@ -373,83 +397,90 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
     }
 
-	private static boolean canFallThrough(World world, BlockPos pos) {
-		BlockState state = world.getBlockState(pos);
+    private static boolean canFallThrough(World world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
 
-		if (world.getBlockState(pos.down()).getBlock() == AITBlocks.EXTERIOR_BLOCK)
-			return false;
+        if (world.getBlockState(pos.down()).getBlock() == AITBlocks.EXTERIOR_BLOCK)
+            return false;
 
-		return canFallThrough(state);
-	}
+        return canFallThrough(state);
+    }
 
-	private static boolean canFallThrough(BlockState state) {
-		return state.isAir() || state.isIn(BlockTags.FIRE) || state.isLiquid() || state.isReplaceable();
-	}
+    private static boolean canFallThrough(BlockState state) {
+        return state.isAir() || state.isIn(BlockTags.FIRE) || state.isLiquid() || state.isReplaceable();
+    }
 
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if (state.get(WATERLOGGED))
-			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
+            WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED))
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 
-		world.scheduleBlockTick(pos, this, 2);
-		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-	}
+        world.scheduleBlockTick(pos, this, 2);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
 
-	private Tardis findTardis(ServerWorld world, BlockPos pos) {
-		if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
-			if (exterior.tardis() == null || exterior.tardis().isEmpty())
-				return null;
+    private Tardis findTardis(ServerWorld world, BlockPos pos) {
+        if (world.getBlockEntity(pos) instanceof ExteriorBlockEntity exterior) {
+            if (exterior.tardis() == null || exterior.tardis().isEmpty())
+                return null;
 
-			return exterior.tardis().get();
-		}
+            return exterior.tardis().get();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void onLanding(Tardis tardis, World world, BlockPos pos) {
-		if (tardis == null)
-			return;
+    public void onLanding(Tardis tardis, World world, BlockPos pos) {
+        if (tardis == null)
+            return;
 
         tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
         world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-        ((BiomeHandler) tardis.getHandlers().get(TardisComponent.Id.BIOME)).update();
+        tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
 
         world.scheduleBlockTick(pos, this, 2);
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
 
-		tardis.<RealFlightHandler>handler(TardisComponent.Id.FLIGHT).falling().set(false);
-		DoorHandler.lockTardis(tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isGenerating(), tardis, null, false);
-	}
+        tardis.flight().falling().set(false);
 
-	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-		if (random.nextInt(16) == 0) {
-			BlockPos blockPos = pos.down();
-			if (canFallThrough(world.getBlockState(blockPos))) {
-				ParticleUtil.spawnParticle(world, pos, random, ParticleTypes.TOTEM_OF_UNDYING);
-			}
-		}
-	}
+        DoorHandler.lockTardis(
+                tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isQueued(), tardis, null,
+                false);
 
-	public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-		VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+        TardisEvents.LANDED.invoker().onLanded(tardis);
+    }
 
-		int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
-		for (int i = 0; i < times; i++) {
-			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
-			buffer[0] = buffer[1];
-			buffer[1] = VoxelShapes.empty();
-		}
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        if (random.nextInt(16) == 0) {
+            BlockPos blockPos = pos.down();
+            if (canFallThrough(world.getBlockState(blockPos))) {
+                ParticleUtil.spawnParticle(world, pos, random, ParticleTypes.TOTEM_OF_UNDYING);
+            }
+        }
+    }
 
-		return buffer[0];
-	}
+    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
-	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation) {
-		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), MAX_ROTATIONS));
-	}
+        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        for (int i = 0; i < times; i++) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1],
+                    VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
+        }
 
-	@Override
-	public BlockState mirror(BlockState state, BlockMirror mirror) {
-		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), MAX_ROTATIONS));
-	}
+        return buffer[0];
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(ROTATION, rotation.rotate(state.get(ROTATION), MAX_ROTATIONS));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.with(ROTATION, mirror.mirror(state.get(ROTATION), MAX_ROTATIONS));
+    }
 }

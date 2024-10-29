@@ -1,16 +1,19 @@
 package loqor.ait.registry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+
+import loqor.ait.core.lock.LockedDimensionRegistry;
+import loqor.ait.core.planet.PlanetRegistry;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 // TODO: move all registries over to here
 public class Registries {
@@ -33,6 +36,8 @@ public class Registries {
         registries.add(ExteriorVariantRegistry.getInstance());
         registries.add(CategoryRegistry.getInstance());
         registries.add(TardisComponentRegistry.getInstance());
+        registries.add(PlanetRegistry.getInstance());
+        registries.add(LockedDimensionRegistry.getInstance());
     }
 
     private void onClientInit() {
@@ -57,9 +62,7 @@ public class Registries {
     }
 
     public enum InitType {
-        CLIENT(Registry::onClientInit),
-        SERVER(Registry::onServerInit),
-        COMMON(Registry::onCommonInit);
+        CLIENT(Registry::onClientInit), SERVER(Registry::onServerInit), COMMON(Registry::onCommonInit);
 
         private final Consumer<Registry> consumer;
 

@@ -71,5 +71,6 @@ public class HudolinAnimations {
                             new Keyframe(3.5834335f, AnimationHelper.createTranslationalVector(0f, 5f, 0f),
                                     Transformation.Interpolations.CUBIC),
                             new Keyframe(4.343333f, AnimationHelper.createTranslationalVector(0f, 3f, 0f),
-                                    Transformation.Interpolations.LINEAR))).build();
+                                    Transformation.Interpolations.LINEAR)))
+            .build();
 }

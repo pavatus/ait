@@ -1,126 +1,146 @@
 package loqor.ait.client.sounds;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import net.minecraft.client.MinecraftClient;
+
 import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
+import loqor.ait.client.sounds.drifting.ClientDriftingSoundHandler;
+import loqor.ait.client.sounds.fall.ClientFallSoundHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
 import loqor.ait.client.sounds.hum.ClientCreakHandler;
 import loqor.ait.client.sounds.hum.ClientHumHandler;
 import loqor.ait.client.sounds.lava.ClientLavaSoundHandler;
 import loqor.ait.client.sounds.rain.ClientRainSoundHandler;
-import loqor.ait.client.sounds.rwf.ClientRWFSoundsHandler;
-import loqor.ait.client.sounds.sonic.ClientSonicSoundHandler;
+import loqor.ait.client.sounds.rain.ClientThunderSoundHandler;
+import loqor.ait.client.sounds.sonic.SonicSoundHandler;
 import loqor.ait.client.sounds.vortex.ClientVortexSoundsHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 
-@Environment(EnvType.CLIENT)
 /**
- * A class for playing + managing our custom sounds on the client, right now just a place to store the hum/alarm handlers
+ * A class for playing + managing our custom sounds on the client, right now
+ * TODO - refactor SoundHandler etc
  */
+@Environment(EnvType.CLIENT)
 public class ClientSoundManager {
-	private static ClientHumHandler hum;
-	private static ClientAlarmHandler alarm;
-	private static ClientFlightHandler flight;
-	private static ClientCreakHandler creak;
-	private static ClientVortexSoundsHandler vortexSounds;
-	private static ClientRWFSoundsHandler rwfsounds;
-	private static ClientRainSoundHandler rainSound;
-	private static ClientLavaSoundHandler lavaSound;
-	private static ClientSonicSoundHandler sonicSound;
+    private static ClientHumHandler hum;
+    private static ClientAlarmHandler alarm;
+    private static ClientFlightHandler flight;
+    private static ClientCreakHandler creak;
+    private static ClientVortexSoundsHandler vortexSounds;
+    private static ClientRainSoundHandler rainSound;
+    private static ClientThunderSoundHandler thunderSound;
+    private static ClientLavaSoundHandler lavaSound;
+    private static SonicSoundHandler sonicSound;
+    private static ClientFallSoundHandler fallSound;
+    private static ClientDriftingSoundHandler driftingSound;
 
-	public static ClientHumHandler getHum() {
-		if (hum == null) {
-			hum = ClientHumHandler.create();
-		}
+    public static ClientHumHandler getHum() {
+        if (hum == null)
+            hum = ClientHumHandler.create();
 
-		return hum;
-	}
+        return hum;
+    }
 
-	public static ClientAlarmHandler getAlarm() {
-		if (alarm == null) {
-			alarm = ClientAlarmHandler.create();
-		}
+    public static ClientAlarmHandler getAlarm() {
+        if (alarm == null)
+            alarm = ClientAlarmHandler.create();
 
-		return alarm;
-	}
+        return alarm;
+    }
 
-	public static ClientFlightHandler getFlight() {
-		if (flight == null) {
-			flight = ClientFlightHandler.create();
-		}
+    public static ClientFlightHandler getFlight() {
+        if (flight == null)
+            flight = ClientFlightHandler.create();
 
-		return flight;
-	}
+        return flight;
+    }
 
-	public static ClientRWFSoundsHandler getRWFSounds() {
-		if (rwfsounds == null) {
-			rwfsounds = ClientRWFSoundsHandler.create();
-		}
-		return rwfsounds;
-	}
+    public static ClientCreakHandler getCreaks() {
+        if (creak == null)
+            creak = ClientCreakHandler.create();
 
-	public static ClientCreakHandler getCreaks() {
-		if (creak == null) {
-			creak = ClientCreakHandler.create();
-		}
-		return creak;
-	}
+        return creak;
+    }
 
-	public static ClientVortexSoundsHandler getVortexSounds() {
-		if (vortexSounds == null) {
-			vortexSounds = ClientVortexSoundsHandler.create();
-		}
-		return vortexSounds;
-	}
+    public static ClientVortexSoundsHandler getVortexSounds() {
+        if (vortexSounds == null)
+            vortexSounds = ClientVortexSoundsHandler.create();
 
-	public static ClientRainSoundHandler getRainSound() {
-		if (rainSound == null) {
-			rainSound = ClientRainSoundHandler.create();
-		}
-		return rainSound;
-	}
+        return vortexSounds;
+    }
 
-	public static ClientLavaSoundHandler getLavaSound() {
-		if (lavaSound == null) {
-			lavaSound = ClientLavaSoundHandler.create();
-		}
-		return lavaSound;
-	}
+    public static ClientRainSoundHandler getRainSound() {
+        if (rainSound == null)
+            rainSound = ClientRainSoundHandler.create();
 
-	public static ClientSonicSoundHandler getSonicSound() {
-		if (sonicSound == null) {
-			sonicSound = ClientSonicSoundHandler.create();
-		}
-		return sonicSound;
-	}
+        return rainSound;
+    }
 
+    public static ClientThunderSoundHandler getThunderSound() {
+        if (thunderSound == null)
+            thunderSound = ClientThunderSoundHandler.create();
 
-	public static void tick(MinecraftClient client) {
-		if (getAlarm() != null)
-			getAlarm().tick(client);
+        return thunderSound;
+    }
 
-		if (getHum() != null)
-			getHum().tick(client);
+    public static ClientLavaSoundHandler getLavaSound() {
+        if (lavaSound == null)
+            lavaSound = ClientLavaSoundHandler.create();
 
-		if (getFlight() != null)
-			getFlight().tick(client);
+        return lavaSound;
+    }
 
-		if (getCreaks() != null)
-			getCreaks().tick(client);
+    public static SonicSoundHandler getSonicSound() {
+        if (sonicSound == null)
+            sonicSound = new SonicSoundHandler();
 
-		if (getVortexSounds() != null)
-			getVortexSounds().tick(client);
+        return sonicSound;
+    }
 
-		if (getRWFSounds() != null)
-			getRWFSounds().tick(client);
+    public static ClientFallSoundHandler getFallSound() {
+        if (fallSound == null)
+            fallSound = ClientFallSoundHandler.create();
 
-		if (getRainSound() != null)
-			getRainSound().tick(client);
+        return fallSound;
+    }
 
-		if (getLavaSound() != null)
-			getLavaSound().tick(client);
+    public static ClientDriftingSoundHandler getDriftingSound() {
+        if (driftingSound == null)
+            driftingSound = ClientDriftingSoundHandler.create();
 
-		if (getSonicSound() != null)
-			getSonicSound().tick(client);
-	}
+        return driftingSound;
+    }
+
+    public static void tick(MinecraftClient client) {
+        if (getAlarm() != null)
+            getAlarm().tick(client);
+
+        if (getHum() != null)
+            getHum().tick(client);
+
+        if (getFlight() != null)
+            getFlight().tick(client);
+
+        if (getCreaks() != null)
+            getCreaks().tick(client);
+
+        if (getVortexSounds() != null)
+            getVortexSounds().tick(client);
+
+        if (getRainSound() != null)
+            getRainSound().tick(client);
+
+        if (getThunderSound() != null)
+            getThunderSound().tick(client);
+
+        if (getLavaSound() != null)
+            getLavaSound().tick(client);
+
+        if (getFallSound() != null)
+            getFallSound().tick(client);
+
+        if (getDriftingSound() != null)
+            getDriftingSound().tick(client);
+    }
 }

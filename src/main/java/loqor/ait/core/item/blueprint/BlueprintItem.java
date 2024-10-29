@@ -1,7 +1,9 @@
 package loqor.ait.core.item.blueprint;
 
-import loqor.ait.AITMod;
-import loqor.ait.registry.impl.BlueprintRegistry;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,9 +13,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import loqor.ait.AITMod;
+import loqor.ait.registry.impl.BlueprintRegistry;
 
 public class BlueprintItem extends Item {
 

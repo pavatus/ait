@@ -1,9 +1,14 @@
 package loqor.ait.core.util;
 
-import loqor.ait.core.data.DirectedGlobalPos;
-import loqor.ait.tardis.data.travel.TravelHandlerBase;
+import java.util.ArrayList;
+import java.util.List;
+
+import dev.pavatus.multidim.api.VoidChunkGenerator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,7 +16,10 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -23,12 +31,109 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
+import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.mixin.server.EnderDragonFightAccessor;
+
 @SuppressWarnings("deprecation")
 public class WorldUtil {
 
+    private static final List<Identifier> blacklisted = new ArrayList<>();
+    private static List<ServerWorld> worlds;
     private static final int SAFE_RADIUS = 3;
 
-    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached, TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
+    private static ServerWorld OVERWORLD;
+    private static ServerWorld TIME_VORTEX;
+
+    public static void init() {
+        for (String id : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
+            blacklisted.add(Identifier.tryParse(id));
+        }
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> worlds = getDimensions(server));
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> worlds = null);
+
+        ServerWorldEvents.UNLOAD.register((server, world) -> {
+            if (world.getRegistryKey() == World.OVERWORLD)
+                OVERWORLD = null;
+
+            if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
+                TIME_VORTEX = null;
+        });
+
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (world.getRegistryKey() == World.OVERWORLD)
+                OVERWORLD = world;
+
+            if (world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD)
+                TIME_VORTEX = world;
+        });
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            OVERWORLD = server.getOverworld();
+            TIME_VORTEX = server.getWorld(AITDimensions.TIME_VORTEX_WORLD);
+
+            // blacklist all tardises
+            for (ServerWorld world : getDimensions(server)) {
+                if (TardisDimension.isTardisDimension(world)) blacklist(world);
+            }
+        });
+
+        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(AITMod.MOD_ID, "void"), VoidChunkGenerator.CODEC);
+    }
+
+    public static ServerWorld getOverworld() {
+        return OVERWORLD;
+    }
+
+    public static ServerWorld getTimeVortex() {
+        return TIME_VORTEX;
+    }
+
+    public static List<ServerWorld> getDimensions(MinecraftServer server) {
+        List<ServerWorld> worlds = new ArrayList<>();
+
+        for (ServerWorld world : server.getWorlds()) {
+            if (isOpen(world.getRegistryKey()))
+                worlds.add(world);
+        }
+
+        return worlds;
+    }
+
+    public static boolean isOpen(RegistryKey<World> world) {
+        for (Identifier blacklisted : blacklisted) {
+            if (world.getValue().equals(blacklisted))
+                return false;
+        }
+
+        return true;
+    }
+    public static void blacklist(RegistryKey<World> world) {
+        blacklisted.add(world.getValue());
+    }
+    public static void blacklist(World world) {
+        blacklist(world.getRegistryKey());
+    }
+
+    public static int worldIndex(ServerWorld world) {
+        for (int i = 0; i < worlds.size(); i++) {
+            if (world == worlds.get(i))
+                return i;
+        }
+
+        return -1;
+    }
+
+    public static List<ServerWorld> getOpenWorlds() {
+        return worlds;
+    }
+
+    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached,
+            TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
@@ -88,22 +193,33 @@ public class WorldUtil {
         BlockState aboveDown = world.getBlockState(downCursor.up());
 
         while (true) {
-            if (upCursor.getY() < world.getTopY() && isSafe(floorUp, curUp, aboveUp))
-                return upCursor.getY() - 1;
+            boolean canGoUp = upCursor.getY() < world.getTopY();
+            boolean canGoDown = downCursor.getY() > world.getBottomY();
 
-            if (downCursor.getY() > world.getBottomY() && isSafe(floorDown, curDown, aboveDown))
-                return downCursor.getY() + 1;
+            if (!canGoUp && !canGoDown)
+                return pos.getY();
 
-            upCursor = upCursor.up();
-            downCursor = downCursor.down();
+            if (canGoUp) {
+                if (isSafe(floorUp, curUp, aboveUp))
+                    return upCursor.getY() - 1;
 
-            floorUp = curUp;
-            curUp = aboveUp;
-            aboveUp = world.getBlockState(upCursor);
+                upCursor = upCursor.up();
 
-            curDown = aboveDown;
-            aboveDown = floorDown;
-            floorDown = world.getBlockState(downCursor);
+                floorUp = curUp;
+                curUp = aboveUp;
+                aboveUp = world.getBlockState(upCursor);
+            }
+
+            if (canGoDown) {
+                if (isSafe(floorDown, curDown, aboveDown))
+                    return downCursor.getY() + 1;
+
+                downCursor = downCursor.down();
+
+                curDown = aboveDown;
+                aboveDown = floorDown;
+                floorDown = world.getBlockState(downCursor);
+            }
         }
     }
 
@@ -115,6 +231,9 @@ public class WorldUtil {
         BlockState above = world.getBlockState(cursor.up());
 
         while (true) {
+            if (cursor.getY() > world.getTopY())
+                return pos.getY();
+
             if (isSafe(floor, current, above))
                 return cursor.getY() - 1;
 
@@ -130,13 +249,8 @@ public class WorldUtil {
         int x = pos.getX();
         int z = pos.getZ();
 
-        return world.getChunk(
-                ChunkSectionPos.getSectionCoord(x),
-                ChunkSectionPos.getSectionCoord(z)
-        ).sampleHeightmap(
-                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                x & 15, z & 15
-        ) + 1;
+        return world.getChunk(ChunkSectionPos.getSectionCoord(x), ChunkSectionPos.getSectionCoord(z))
+                .sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x & 15, z & 15) + 1;
     }
 
     private static boolean isSafe(BlockState floor, BlockState block1, BlockState block2) {
@@ -223,11 +337,20 @@ public class WorldUtil {
         BlockPos blockPos = pos.down();
         BlockState blockState = world.getBlockState(blockPos);
 
-        if (blockState.isOf(state.getBlock()) && blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) {
-            BlockState withFluid = blockState.getFluidState().isOf(Fluids.WATER) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+        if (blockState.isOf(state.getBlock())
+                && blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) {
+            BlockState withFluid = blockState.getFluidState().isOf(Fluids.WATER)
+                    ? Blocks.WATER.getDefaultState()
+                    : Blocks.AIR.getDefaultState();
 
             world.setBlockState(blockPos, withFluid, 35);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
         }
+    }
+
+    public static boolean isEndDragonDead() {
+        ServerWorld end = ServerLifecycleHooks.get().getWorld(World.END);
+        if (end == null) return true;
+        return ((EnderDragonFightAccessor) end.getEnderDragonFight()).getDragonKilled();
     }
 }
