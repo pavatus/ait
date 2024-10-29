@@ -97,7 +97,6 @@ public class LandingPadBlock extends Block {
             for(LandingPadSpot spot : region.getSpots()) {
                 spot.setPos(new BlockPos(spot.getPos().getX(), world.getChunk(ChunkSectionPos.getSectionCoord(spot.getPos().getX()), ChunkSectionPos.getSectionCoord(spot.getPos().getZ()))
                         .sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spot.getPos().getX() & 15, spot.getPos().getZ() & 15) + 1, spot.getPos().getZ()));
-                System.out.println(spot.getPos().getY());
                 LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, (ServerWorld) world, new ChunkPos(pos));
             }
         }

@@ -107,9 +107,7 @@ public class LandingPadRegion {
     }
 
     public void setLandingCode(String string) {
-        System.out.println(landingCode);
         landingCode = string;
-        System.out.println(string);
     }
 
     private boolean isFull() {
