@@ -48,7 +48,7 @@ public class DefaultLogoMixin {
             return;
         int screenWidth = this.client.currentScreen.width;
         int i = screenWidth / 2 - 128;
-        instance.drawTexture(AIT_LOGO, i, y, 0.0f, 0.0f, 256, 64, 256, 64);
+        instance.drawTexture(AIT_LOGO, i, y - 18, 0.0f, 0.0f, 256, 64, 256, 64);
     }
 
     // This is setting the edition to be invisible since it's not necessary, as it's
@@ -64,7 +64,7 @@ public class DefaultLogoMixin {
         if (this.client.currentScreen == null)
             return;
         int screenWidth = this.client.currentScreen.width;
-        int i = screenWidth / 2 - 128;
-        instance.drawTexture(AIT_EDITION, i, y, 0.0f, 0.0f, 256, 44, 256, 64);
+        int i = screenWidth / 2 - 80;
+        instance.drawTexture(AIT_EDITION, i, y, 0.0f, 0.0f, 160, 30, 160, 30);
     }
 }
