@@ -75,9 +75,9 @@ public class TelepathicControl extends Control {
             return true;
         }
 
-        if (type instanceof NameTagItem) {
+        if (type instanceof NameTagItem && player.isSneaking()) {
             if (!held.hasCustomName())
-                return false;
+                return true;
 
             tardis.stats().setName(held.getName().getString());
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1F, 1.0F);

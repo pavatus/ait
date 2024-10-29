@@ -407,4 +407,13 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
                         + "f, " + centered.getZ() + "f)),"));
         }
     }
+
+    @Override
+    public void setCustomName(@Nullable Text name) {
+        if (name == null) return;
+        Text text = Text.translatable(this.control.id);
+        if (name.equals(text)) {
+            super.setCustomName(name);
+        }
+    }
 }
