@@ -9,7 +9,7 @@
 ![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Floqor.dev%2Fait%2F)
 
 
-**by [Loqor](https://github.com/loqor/ait)**
+**by [pavatus](https://pavatus.github.io)**
 
 **Requires [OwoLib](https://modrinth.com/mod/owo-lib)**
 
@@ -45,9 +45,9 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ## Credits
 
 ### Developers:
-- Loqor
-- Duzo
-- Dr. Theo
+- [Loqor](https://loqor.dev/)
+- [duzo](https://duzo.is-a.dev/)
+- [Dr. Theo](https://theo.is-a.dev/)
 - Nitrogenesis
 
 ---
@@ -67,11 +67,11 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ---
 
 ## Thank You's:
-- MagicMan(?) (Help with modeling)
+- [MagicMan(?)](https://magicmaan.github.io/) (Help with modeling)
 - Bug1312 (Help with code)
 - DocArcane (Credit for the Steampunk console design)
 - Creativious (Help with code)
-- Jeryn (Suff) (Help with code)
+- [Jeryn](https://craig.software) (Suff) (Help with code)
 - Maggie (Help with texturing)
 
 
