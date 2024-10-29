@@ -411,6 +411,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public void setCustomName(@Nullable Text name) {
         if (name == null) return;
+        if (this.getControl() == null) return;
         Text text = Text.translatable(this.control.id);
         if (name.equals(text)) {
             super.setCustomName(name);
