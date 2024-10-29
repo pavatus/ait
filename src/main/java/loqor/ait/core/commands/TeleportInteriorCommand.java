@@ -28,7 +28,7 @@ public final class TeleportInteriorCommand {
                 .then(argument("tardis", TardisArgumentType.tardis())
                                 .then(literal("interior").executes(TeleportInteriorCommand::tpSelfInterior)
                                         .then(argument("entities", EntityArgumentType.players())
-                                                .executes(TeleportInteriorCommand::tpToExterior)))
+                                                .executes(TeleportInteriorCommand::tpToInterior)))
                                 .then(literal("exterior").executes(TeleportInteriorCommand::tpSelfExterior)
                                         .then(argument("entities", EntityArgumentType.players())
                                                 .executes(TeleportInteriorCommand::tpToExterior)))
