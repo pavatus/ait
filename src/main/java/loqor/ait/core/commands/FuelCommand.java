@@ -85,7 +85,7 @@ public class FuelCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
 
         double fuel = tardis.fuel().getCurrentFuel();
-        source.sendMessage(Text.translatable("tardis.fuel.get", TextUtil.forTardis(tardis), fuel));
+        source.sendMessage(Text.translatable("message.ait.fuel.get", TextUtil.forTardis(tardis), fuel));
 
         return (int) fuel;
     }
