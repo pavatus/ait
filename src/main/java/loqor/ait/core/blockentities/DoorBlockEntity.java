@@ -3,7 +3,6 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.core.AITItems;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -31,6 +30,7 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;

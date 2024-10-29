@@ -3,7 +3,6 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.core.AITItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -30,6 +29,7 @@ import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SiegeTardisItem;
