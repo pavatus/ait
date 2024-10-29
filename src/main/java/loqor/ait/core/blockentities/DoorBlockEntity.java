@@ -3,6 +3,7 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.core.AITItems;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -105,7 +106,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             ItemStack key = player.getMainHandStack();
             UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
 
-            if (Objects.equals(tardis.getUuid(), keyId)) {
+            if (key.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
                 DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);

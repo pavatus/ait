@@ -3,6 +3,7 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.core.AITItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -77,7 +78,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             ItemStack key = player.getMainHandStack();
             UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
 
-            if (Objects.equals(tardis.getUuid(), keyId)) {
+            if (key.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
                 DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
