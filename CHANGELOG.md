@@ -18,4 +18,4 @@
 - Fix crashes, bugs, performance (ty theo)
 - Removed Peanut
 
-[full changelog](https://github.com/pavatus/ait/compare/4ecbc8e94db34af029bf0b2226a5aa1e19a32761...main)
+[full changelog](https://github.com/pavatus/ait/compare/4ecbc8e94db34af029bf0b2226a5aa1e19a32761...d8ee2b3d91b11624fcfc587f0759eda6803dabaf)
