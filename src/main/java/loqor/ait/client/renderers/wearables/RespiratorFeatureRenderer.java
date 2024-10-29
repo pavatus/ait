@@ -15,14 +15,12 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.wearables.RespiratorModel;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.item.RenderableArmorItem;
 
 @Environment(value = EnvType.CLIENT)
 public class RespiratorFeatureRenderer<T extends LivingEntity, M extends PlayerEntityModel<T>>
