@@ -582,7 +582,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
 
-        // Martian
+        // Martian Blocks (Planet)
         provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
         provider.addTranslation(AITBlocks.MARTIAN_BRICKS, "Martian Bricks");
         provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE, "Martian Cobblestone");
@@ -592,7 +592,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE, "Polished Martian Stone");
         provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE, "Smooth Martian Stone");
 
-
+        // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
 
@@ -601,7 +601,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
-        // TARDIS Actionbar Titles
+        // TARDIS Control Actionbar Title
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.engaged", "Protocol 813: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.disengaged", "Protocol 813: DISENGAGED");
@@ -640,15 +640,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
 
+
+        // Commands
+        // Fuel
         provider.addTranslation("message.ait.fuel.add", "Added %s fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.remove", "Removed %s fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.set", "Set fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.get", "Fuel of %s is: [%sau]");
         provider.addTranslation("message.ait.fuel.max", "TARDIS fuel is at max!");
-
+        // Get TARDIS ID
         provider.addTranslation("message.ait.id", "TARDIS id: ");
         provider.addTranslation("message.ait.click_to_copy", "Click to copy");
 
+        // Sonic (TARDIS Mode)
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         provider.addTranslation("message.ait.sonic.handbrakedisengaged",
@@ -659,6 +663,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.sonic.currenttype", "Current Casing: ");
         provider.addTranslation("message.ait.remoteitem.warning4",
                 "Target has been reset and updated, the device is now pointing towards your new target");
+
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
