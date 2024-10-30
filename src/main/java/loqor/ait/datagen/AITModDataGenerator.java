@@ -642,6 +642,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
         provider.addTranslation("message.ait.enter_landing_code", "Enter Landing Code...");
         provider.addTranslation("message.ait.date_created", "Date Created:");
+        provider.addTranslation("message.ait.unlocked", "unlocked");
+        provider.addTranslation("screen.ait.sonic_casing", "Sonic Casing");
+        provider.addTranslation("screen.ait.current_au", "Current AU");
+        provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
 

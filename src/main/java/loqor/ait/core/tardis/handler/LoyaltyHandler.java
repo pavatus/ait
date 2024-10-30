@@ -96,7 +96,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
-        player.sendMessage(nameable.text().copy().append(" unlocked!").formatted(Formatting.BOLD, Formatting.ITALIC,
+        player.sendMessage(nameable.text().copy().append(" " + Text.translatable("message.ait.unlocked") + "!").formatted(Formatting.BOLD, Formatting.ITALIC,
                 Formatting.GOLD), false);
     }
 
