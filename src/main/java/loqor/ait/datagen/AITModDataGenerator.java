@@ -752,6 +752,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Stallion
         provider.addTranslation("exterior.ait.bt", "BT");
+        provider.addTranslation("exterior.ait.stallion_pristine", "Pristine");
+        provider.addTranslation("exterior.ait.stallion_green", "Green");
 
         // frooploof
         provider.addTranslation("exterior.frooploof.copper", "Copper");
