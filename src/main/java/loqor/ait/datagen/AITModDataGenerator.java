@@ -729,7 +729,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.coral", "Coral");
         provider.addTranslation("exterior.ait.futuristic", "Futuristic");
         provider.addTranslation("exterior.ait.cherrywood", "Cherrywood");
-        provider.addTranslation("exterior.ait.yard", "73 Yard");
+        provider.addTranslation("exterior.ait.yard", "73 Yards");
 
         // Classic specific
         provider.addTranslation("exterior.ait.definitive", "Definitive");
