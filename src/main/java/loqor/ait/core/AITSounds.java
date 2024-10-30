@@ -94,7 +94,7 @@ public class AITSounds implements SoundRegistryContainer {
     public static final SoundEvent SONIC_USE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "sonic/use"));
     public static final SoundEvent SONIC_SWITCH = SoundEvent.of(new Identifier(AITMod.MOD_ID, "sonic/switch"));
 
-    // todo MatSoundRegistry
+    // todo MatSoundRegistry a
     public static final MatSound DEMAT_ANIM = new MatSound(new Identifier(AITMod.MOD_ID, "demat"), DEMAT, 240, 240, 240, 210, 0.2f, 0.4f);
     public static final MatSound MAT_ANIM = new MatSound(new Identifier(AITMod.MOD_ID, "mat"), MAT, 460, 240, 240, 400, 0.2f, 0.4f);
 
