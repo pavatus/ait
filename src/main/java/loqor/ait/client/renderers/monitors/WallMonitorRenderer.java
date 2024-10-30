@@ -70,9 +70,9 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         matrices.translate(xVal, -35f, 35f);
 
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
-                ? travel.getProgress()
-                : travel.position();
+        DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() == TravelHandlerBase.State.MAT
+                ? travel.position()
+                : travel.getProgress();
 
         BlockPos abppPos = abpp.getPos();
 
