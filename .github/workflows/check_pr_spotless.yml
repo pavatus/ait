@@ -1,0 +1,37 @@
+name: "Is PR Spotless?"
+
+on: [pull_request]
+
+env:
+  JAVA_VERSION: 17
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Run Datagen
+        run: ./gradlew runDatagen
+
+      - name: Build
+        run: ./gradlew clean build
