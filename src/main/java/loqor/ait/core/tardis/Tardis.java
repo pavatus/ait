@@ -231,4 +231,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public LandingPadHandler landingPad() {
         return this.handler(TardisComponent.Id.LANDING_PAD);
     }
+
+    public SelfDestructHandler selfDestruct() {
+        return this.handler(TardisComponent.Id.SELF_DESTRUCT);
+    }
 }

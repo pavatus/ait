@@ -31,6 +31,7 @@ import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.distress.DistressCall;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Loyalty;
 
 public class TelepathicControl extends Control {
 
@@ -106,6 +107,15 @@ public class TelepathicControl extends Control {
 
             call.summon(tardis, held);
 
+            return true;
+        }
+
+        if (held.isOf(Items.NETHER_STAR) && tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)) {
+            tardis.selfDestruct().boom();
+            if (!(tardis.selfDestruct().isQueued())) return false;
+
+            if (!player.isCreative())
+                held.decrement(1);
             return true;
         }
 
