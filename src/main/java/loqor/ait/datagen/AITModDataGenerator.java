@@ -596,6 +596,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
 
+        // Galifrayan Falls Painting
         provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
@@ -664,10 +665,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.warning4",
                 "Target has been reset and updated, the device is now pointing towards your new target");
 
+        // Key tooltips
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+
+        //Environment Projector
         provider.addTranslation("message.ait.projector.skybox", "Now projecting: %s");
+
+        // Rift Scanner
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
         provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
