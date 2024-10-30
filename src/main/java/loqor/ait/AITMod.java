@@ -87,7 +87,6 @@ public class AITMod implements ModInitializer {
         AsyncLocatorUtil.setupExecutorService();
 
         ConsoleRegistry.init();
-        HumsRegistry.init();
         CreakRegistry.init();
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();

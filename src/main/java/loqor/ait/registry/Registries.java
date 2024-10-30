@@ -38,6 +38,7 @@ public class Registries {
         registries.add(TardisComponentRegistry.getInstance());
         registries.add(PlanetRegistry.getInstance());
         registries.add(LockedDimensionRegistry.getInstance());
+        registries.add(HumRegistry.getInstance());
     }
 
     private void onClientInit() {

@@ -38,10 +38,10 @@ import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.ServerHumHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.HumSound;
+import loqor.ait.data.hum.Hum;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.impl.HumsRegistry;
+import loqor.ait.registry.impl.HumRegistry;
 
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
@@ -57,7 +57,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     int left, top;
     private int tickForSpin = 0;
     public int choicesCount = 0;
-    private HumSound hum;
+    private Hum hum;
     private final Screen parent;
     private TardisDesktopSchema selectedDesktop;
 
@@ -303,7 +303,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         context.getMatrices().pop();
     }
 
-    private HumSound getHumSound() {
+    private Hum getHumSound() {
         return tardis().<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum();
     }
 
@@ -316,8 +316,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         this.hum = nextHum(this.hum);
     }
 
-    private static HumSound nextHum(HumSound current) {
-        List<HumSound> list = HumsRegistry.REGISTRY.stream().toList();
+    private static Hum nextHum(Hum current) {
+        List<Hum> list = HumRegistry.getInstance().toList();
 
         int idx = list.indexOf(current);
         if (idx < 0 || idx + 1 == list.size())
@@ -329,8 +329,8 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         this.hum = previousHum(this.hum);
     }
 
-    private static HumSound previousHum(HumSound current) {
-        List<HumSound> list = HumsRegistry.REGISTRY.stream().toList();
+    private static Hum previousHum(Hum current) {
+        List<Hum> list = HumRegistry.getInstance().toList();
 
         int idx = list.indexOf(current);
         if (idx <= 0)

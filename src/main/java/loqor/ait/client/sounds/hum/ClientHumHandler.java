@@ -24,8 +24,8 @@ import loqor.ait.client.sounds.SoundHandler;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.tardis.handler.ServerHumHandler;
-import loqor.ait.data.HumSound;
-import loqor.ait.registry.impl.HumsRegistry;
+import loqor.ait.data.hum.Hum;
+import loqor.ait.registry.impl.HumRegistry;
 
 public class ClientHumHandler extends SoundHandler {
 
@@ -59,6 +59,10 @@ public class ClientHumHandler extends SoundHandler {
         });
     }
 
+    public void onSynced() {
+        this.sounds = registryToList();
+    }
+
     public LoopingSound getHum(ClientTardis tardis) {
         if (this.current == null)
             this.current = (LoopingSound) findSoundByEvent(
@@ -74,11 +78,10 @@ public class ClientHumHandler extends SoundHandler {
         this.stopSound(previous);
     }
 
-    public void setServersHum(ClientTardis tardis, HumSound hum) {
+    public void setServersHum(ClientTardis tardis, Hum hum) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(tardis.getUuid());
-        buf.writeString(hum.id().getNamespace());
-        buf.writeString(hum.name());
+        buf.writeIdentifier(hum.id());
 
         ClientPlayNetworking.send(ServerHumHandler.RECEIVE, buf);
     }
@@ -94,16 +97,10 @@ public class ClientHumHandler extends SoundHandler {
         this.sounds = registryToList();
     }
 
-    /**
-     * Converts all the {@link HumSound}'s in the {@link HumsRegistry} to
-     * {@link LoopingSound} so they are usable
-     *
-     * @return A list of {@link LoopingSound} from the {@link HumsRegistry}
-     */
     private List<SoundInstance> registryToList() {
         List<SoundInstance> list = new ArrayList<>();
 
-        for (HumSound sound : HumsRegistry.REGISTRY) {
+        for (Hum sound : HumRegistry.getInstance().toList()) {
             list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT,
                     AIT_CONFIG.INTERIOR_HUM_VOLUME()));
         }
@@ -126,5 +123,12 @@ public class ClientHumHandler extends SoundHandler {
         } else {
             this.stopSounds();
         }
+    }
+
+    @Override
+    public SoundInstance findSoundById(Identifier id) {
+        if (this.sounds == null) sounds = registryToList();
+
+        return super.findSoundById(id);
     }
 }
