@@ -19,6 +19,7 @@ import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.TimeUnit;
+import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -239,8 +240,8 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return WorldUtil.getOverworld().getServer();
     }
 
-    public enum State {
-        LANDED, DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat), FLIGHT(AITSounds.FLIGHT_ANIM), MAT(
+    public enum State implements Ordered {
+        LANDED, DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat), FLIGHT(), MAT(
                 AITSounds.MAT_ANIM, TravelHandler::finishRemat);
 
         private final MatSound sound;
@@ -277,6 +278,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         public void finish(TravelHandler handler) {
             this.finish.accept(handler);
+        }
+
+        @Override
+        public int index() {
+            return ordinal();
         }
     }
 
