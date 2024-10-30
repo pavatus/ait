@@ -38,13 +38,13 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
     public static final Item SPACESUIT_HELMET = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().maxDamage(240), false);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxDamage(240), false);
     public static final Item SPACESUIT_CHESTPLATE = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.CHESTPLATE,
-            new OwoItemSettings().maxDamage(240), false);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxDamage(240), false);
     public static final Item SPACESUIT_LEGGINGS = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.LEGGINGS,
-            new OwoItemSettings().maxDamage(240), false);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxDamage(240), false);
     public static final Item SPACESUIT_BOOTS = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.BOOTS,
-            new OwoItemSettings().maxDamage(240), false);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxDamage(240), false);
     public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
             ArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
             true);
