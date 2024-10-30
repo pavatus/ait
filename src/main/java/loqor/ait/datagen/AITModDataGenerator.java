@@ -774,6 +774,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("direction.east", "East");
         provider.addTranslation("direction.west", "West");
 
+        // keybinds
+        provider.addTranslation("category.ait.main", "Adventures in Time");
+        provider.addTranslation("key.ait.snap", "Snap");
 
         return provider;
     }
