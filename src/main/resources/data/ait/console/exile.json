@@ -1,6 +1,5 @@
 {
   "id": "ait:exile",
   "parent": "ait:console/hartnell",
-  "texture": "ait:textures/blockentities/consoles/exile.png",
-  "emission": "ait:intentionally_empty"
+  "texture": "ait:textures/blockentities/consoles/exile.png"
 }
