@@ -3,8 +3,6 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.api.TardisEvents;
-import loqor.ait.core.tardis.TardisDesktop;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -28,6 +26,7 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import loqor.ait.api.TardisEvents;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
@@ -38,6 +37,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
