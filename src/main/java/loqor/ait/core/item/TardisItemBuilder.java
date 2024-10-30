@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -15,6 +16,7 @@ import net.minecraft.world.World;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.EngineHandler;
@@ -98,7 +100,7 @@ public class TardisItemBuilder extends Item {
 
         ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
 
-        ServerTardisManager.getInstance()
+        ServerTardis created = ServerTardisManager.getInstance()
                 .create(new TardisBuilder().at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop))
                         .owner(serverPlayer)
                         .exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
@@ -108,6 +110,11 @@ public class TardisItemBuilder extends Item {
                             engine.enablePower();
                         }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
                                 loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER))));
+
+        if (created == null) {
+            player.sendMessage(Text.translatable("message.ait.max_tardises"), true);
+            return ActionResult.FAIL;
+        }
 
         context.getStack().decrement(1);
         player.getItemCooldownManager().set(this, 20);

@@ -659,6 +659,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.success2", "Activated refueler and handbrake");
         provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
         provider.addTranslation("message.ait.version", "ᴠᴇʀꜱɪᴏɴ");
+        provider.addTranslation("message.ait.max_tardises", "SERVER has reached the maximum amount of TARDISes");
 
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
