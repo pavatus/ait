@@ -459,8 +459,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
+        // Tabs
         provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
+        provider.addTranslation("itemGroup.ait.planets_item_group", "Adventures In Time: Planets");
 
+        // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
         provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
@@ -555,6 +558,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.mechanical", "Mechanical");
         provider.addTranslation("sonic.ait.song", "Song");
 
+        // Blocks
         provider.addTranslation(AITBlocks.WAYPOINT_BANK, "Waypoint Bank");
         provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
@@ -578,6 +582,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
 
+        // Martian
+        provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICKS, "Martian Bricks");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE, "Martian Cobblestone");
+        provider.addTranslation(AITBlocks.MARTIAN_PILLAR, "Martian Pillar");
+        provider.addTranslation(AITBlocks.CHISELED_MARTIAN_STONE, "Chiseled Martian Stone");
+        provider.addTranslation(AITBlocks.CRACKED_MARTIAN_BRICKS, "Cracked Martian Bricks");
+        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE, "Polished Martian Stone");
+        provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE, "Smooth Martian Stone");
+
+
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
 
@@ -586,6 +601,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
 
+        // TARDIS Actionbar Titles
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.engaged", "Protocol 813: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.disengaged", "Protocol 813: DISENGAGED");
@@ -665,6 +681,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.distresscall.source", "SOURCE");
 
+        //Monitor
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");

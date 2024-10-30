@@ -128,4 +128,41 @@ public class AITItems implements ItemRegistryContainer {
      public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+     // Mars
+
+    public static final Item MARTIAN_STONE = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_STONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_BRICKS = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_BRICKS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_COBBLESTONE = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_PILLAR = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_PILLAR, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item CHISELED_MARTIAN_STONE = new
+            GenericControlBlockItem(AITBlocks.CHISELED_MARTIAN_STONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item CRACKED_MARTIAN_BRICKS = new
+            GenericControlBlockItem(AITBlocks.CRACKED_MARTIAN_BRICKS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item POLISHED_MARTIAN_STONE = new
+            GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item SMOOTH_MARTIAN_STONE = new
+            GenericControlBlockItem(AITBlocks.SMOOTH_MARTIAN_STONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+
+
 }
