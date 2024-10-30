@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.tardis.Tardis;
@@ -38,7 +37,7 @@ public abstract class ItemEntityMixin {
         }
 
         // if entity is in tardis and y is less than -100 save them
-        if (entity.getY() <= -100 && TardisDimension.isTardisDimension((ServerWorld) entity.getWorld())) {
+        if (entity.getY() <= -100 && TardisDimension.isTardisDimension(entity.getWorld())) {
             Tardis found = TardisDimension.get(entity.getWorld()).orElse(null);
 
             if (found == null)
