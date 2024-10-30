@@ -743,6 +743,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // Renegade specific
         provider.addTranslation("exterior.ait.cabinet", "Cabinet");
         provider.addTranslation("exterior.ait.tron", "Tron");
+        provider.addTranslation("exterior.ait.rotestor", "Rotestor");
 
         // Booth specific
         provider.addTranslation("exterior.ait.blue", "Blue");
