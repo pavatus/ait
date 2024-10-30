@@ -66,8 +66,15 @@ public class AITMod implements ModInitializer {
     public static final Random RANDOM = new Random();
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+
+    //Creative Inventory Tabs
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
             .builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.TARDIS_ITEM))
+            .disableDynamicTitle().build();
+
+
+    public static final OwoItemGroup AIT_PLANETS_ITEM_GROUP = OwoItemGroup
+            .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(AITItems.MARTIAN_STONE))
             .disableDynamicTitle().build();
 
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
@@ -213,6 +220,7 @@ public class AITMod implements ModInitializer {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
         AIT_ITEM_GROUP.initialize();
+        AIT_PLANETS_ITEM_GROUP.initialize();
     }
 
     public void entityAttributeRegister() {
