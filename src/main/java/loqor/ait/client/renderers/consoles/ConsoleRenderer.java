@@ -19,6 +19,7 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 
@@ -42,9 +43,12 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
                     vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucent(
                             ClientConsoleVariantRegistry.HARTNELL.texture())),
                     light, overlay, 1, 1, 1, 1);
-            ClientLightUtil.renderEmissive(ClientConsoleVariantRegistry.HARTNELL.model()::renderWithAnimations, ClientConsoleVariantRegistry.HARTNELL.emission(),
-                    entity, ClientConsoleVariantRegistry.HARTNELL.model().getPart(),
-                    matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+
+            if (!(variant.emission().equals(DatapackConsole.EMPTY))) {
+                ClientLightUtil.renderEmissive(ClientConsoleVariantRegistry.HARTNELL.model()::renderWithAnimations, ClientConsoleVariantRegistry.HARTNELL.emission(),
+                        entity, ClientConsoleVariantRegistry.HARTNELL.model().getPart(),
+                        matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+            }
             matrices.pop();
             return;
         }
@@ -81,8 +85,10 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         if (hasPower) {
             profiler.swap("emission"); // emission {
 
-            ClientLightUtil.renderEmissive(model::renderWithAnimations, variant.emission(), entity, model.getPart(),
-                    matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+            if (!(variant.emission().equals(DatapackConsole.EMPTY))) {
+                ClientLightUtil.renderEmissive(model::renderWithAnimations, variant.emission(), entity, model.getPart(),
+                        matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+            }
         }
 
         matrices.pop();
