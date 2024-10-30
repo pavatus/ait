@@ -13,7 +13,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.api.KeyedTardisComponent;
@@ -91,7 +90,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                     BlockPos pos = directed.getPos();
 
                     Vec3d motion = pos
-                            .offset(RotationPropertyHelper.toDirection(directed.getRotation()).get().getOpposite())
                             .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.075);
 
                     // Apply the motion to the entity
