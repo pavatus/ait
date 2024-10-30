@@ -73,6 +73,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             return TardisEvents.Interaction.SUCCESS; // force mat even if checks fail
         });
 
+        TardisEvents.LOSE_POWER.register(tardis -> tardis.interiorChangingHandler().queued.set(false));
+
         ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,
                 ServerTardisManager.receiveTardis(((tardis, server, player, handler, buf, responseSender) -> {
                     TardisDesktopSchema desktop = DesktopRegistry.getInstance().get(buf.readIdentifier());
