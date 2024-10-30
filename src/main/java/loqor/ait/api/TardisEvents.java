@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
@@ -160,6 +161,12 @@ public final class TardisEvents {
             callbacks -> (tardis, entity) -> {
                 for (LeaveTardis callback : callbacks) {
                     callback.onLeave(tardis, entity);
+                }
+            });
+    public static final Event<BreakDoor> BREAK_DOOR = EventFactory.createArrayBacked(BreakDoor.class,
+            callbacks -> (tardis, pos) -> {
+                for (BreakDoor callback : callbacks) {
+                    callback.onBreak(tardis, pos);
                 }
             });
 
@@ -374,6 +381,11 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface LeaveTardis {
         void onLeave(Tardis tardis, Entity entity);
+    }
+
+    @FunctionalInterface
+    public interface BreakDoor {
+        void onBreak(Tardis tardis, BlockPos pos);
     }
 
     @FunctionalInterface

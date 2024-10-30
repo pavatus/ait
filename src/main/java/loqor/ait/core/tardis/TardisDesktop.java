@@ -12,6 +12,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
@@ -80,7 +82,14 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public DirectedBlockPos doorPos() {
+        if (!this.hasDoorPosition() && !this.consolePos.isEmpty()) {
+            return DirectedBlockPos.create(this.consolePos.stream().findAny().orElseThrow().up(), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+        }
+
         return doorPos;
+    }
+    public boolean hasDoorPosition() {
+        return doorPos != null;
     }
 
     public void setInteriorDoorPos(DirectedBlockPos pos) {

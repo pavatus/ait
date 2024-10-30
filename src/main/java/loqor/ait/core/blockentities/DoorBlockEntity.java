@@ -3,6 +3,8 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.api.TardisEvents;
+import loqor.ait.core.tardis.TardisDesktop;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -102,6 +104,8 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         if (tardis.isGrowth() && tardis.hasGrowthExterior())
             return;
 
+        this.checkDesktopDoor(tardis.getDesktop());
+
         if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()) {
             ItemStack key = player.getMainHandStack();
             UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
@@ -162,7 +166,15 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         TardisUtil.teleportOutside(tardis, entity);
+
+        this.checkDesktopDoor(tardis.getDesktop());
     }
+
+    private void checkDesktopDoor(TardisDesktop desktop) {
+        if (desktop.hasDoorPosition()) return;
+        desktop.setInteriorDoorPos(DirectedBlockPos.create(this.pos, (byte) RotationPropertyHelper.fromDirection(this.getFacing())));
+    }
+
 
     @Override
     public void onLinked() {
@@ -180,6 +192,15 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     public void onBreak() {
         if (!this.isLinked() || this.tardis().isEmpty()) return;
 
-        this.tardis().get().door().closeDoors();
+        Tardis tardis = this.tardis().get();
+        tardis.door().closeDoors();
+
+        TardisEvents.BREAK_DOOR.invoker().onBreak(tardis, this.getPos());
+
+        // if main door set to null so another door can set it
+        TardisDesktop desktop = tardis.getDesktop();
+        if (desktop.doorPos().getPos().equals(this.getPos())) {
+            desktop.setInteriorDoorPos(null);
+        }
     }
 }
