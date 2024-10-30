@@ -41,7 +41,7 @@ public class LandingPadScreen extends Screen {
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.landingCodeInput = new TextFieldWidget(this.textRenderer, (int) (left + (bgWidth * 0.06f)), (this.height / 2) - 20, 120, this.textRenderer.fontHeight + 4,
-                Text.literal("Landing Code..."));
+                Text.translatable("message.ait.landing_code"));
         this.addButton(new PressableTextWidget((width / 2 + 40), (height / 2) - 20,
                 this.textRenderer.getWidth("✓"), 20, Text.literal("✓").formatted(Formatting.BOLD), button -> {
             updateLandingCode();
@@ -57,7 +57,7 @@ public class LandingPadScreen extends Screen {
         }
 
         if(this.landingRegion.getLandingCode().isBlank())
-            this.landingCodeInput.setPlaceholder(Text.literal("Enter landing code..."));
+            this.landingCodeInput.setPlaceholder(Text.translatable("message.ait.enter_landing_code"));
         else
             this.landingCodeInput.setText(this.landingRegion.getLandingCode());
 
