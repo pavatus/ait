@@ -692,7 +692,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.distresscall.source", "SOURCE");
 
-        //Monitor
+        // Monitor
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
@@ -702,6 +702,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
 
+        // Hums
         provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");

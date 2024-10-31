@@ -23,7 +23,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisClientEvents;
@@ -46,9 +45,9 @@ import loqor.ait.registry.impl.HumsRegistry;
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/interior_settings.png");
+            "textures/gui/tardis/new_interior_settings.png");
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/consoles/monitors/monitor_gui.png");
+            "textures/gui/tardis/new_interior_settings.png");
     private static final Identifier MISSING_PREVIEW = new Identifier(AITMod.MOD_ID,
             "textures/gui/tardis/desktop/missing_preview.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
@@ -133,10 +132,10 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 Text.literal(""), button -> {
                     nextDesktop();
                 }, this.textRenderer));
-        Text applyInteriorText = Text.literal("Apply");
+        Text applyInteriorText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget(
                 (int) (left + (bgWidth * 0.77f)) - (this.textRenderer.getWidth(applyInteriorText) / 2),
-                (int) (top + (bgHeight * 0.58f)), this.textRenderer.getWidth(applyInteriorText), 10, Text.literal(""),
+                (int) (top + (bgHeight * 0.108f)), this.textRenderer.getWidth(applyInteriorText), 5, Text.literal(""),
                 button -> applyDesktop(), this.textRenderer));
     }
 
@@ -205,74 +204,94 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         return (rangeProgress / 5) * UV_INCREMENT;
     }
 
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        tickForSpin++;
         this.renderDesktop(context);
         this.drawBackground(context); // the grey backdrop
         context.getMatrices().push();
         int x = (left + 79);
         int y = (top + 59);
-        context.getMatrices().translate(0, 0, 0f);
-        context.getMatrices().multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(((float) tickForSpin / 1400L) * 360.0f),
-                x, y, 0);
+        int i = (this.width - this.bgWidth) / 2;
+        int j = ((this.height) - this.bgHeight) / 2;
         context.drawTexture(BACKGROUND, x - 41, y - 41, 173, 173, 83, 83);
         context.getMatrices().pop();
 
         // FIXME @Loqor, this is dumb.
         int startIndex = DependencyChecker.hasGravity() ? 5 : 4;
 
+        // Hum Selector
         if (!this.buttons.get(startIndex).isHovered())
-            context.drawTexture(BACKGROUND, left + 149, top + 142, 0, 166, 12, 12);
-        if (!this.buttons.get(startIndex + 1).isHovered())
-            context.drawTexture(BACKGROUND, left + 232, top + 142, 12, 166, 12, 12);
+            context.drawTexture(BACKGROUND, left + 151, top + 145, 93, 166, 20, 12);
+        else
+            context.drawTexture(TEXTURE, left + 151, top + 145, 93, 178, 20,
+                    12);
+
         if (!this.buttons.get(startIndex + 2).isHovered())
-            context.drawTexture(BACKGROUND, left + 228, top + 111, 0, 178, 16, 16);
+            context.drawTexture(BACKGROUND, left + 226, top + 145, 113, 166, 20, 12);
+        else
+            context.drawTexture(TEXTURE, left + 226, top + 145, 133, 178, 11,
+                    12);
 
-        // big triangles
+        // Apply Button
+        if (!this.buttons.get(startIndex + 1).isHovered())
+            context.drawTexture(BACKGROUND, left + 172, top + 145, 133, 166, 53, 12);
+        else
+            context.drawTexture(TEXTURE, left + 172, top + 145, 133, 176, 53,
+                    12);
+
+
+        // Interior Selector
         if (!this.buttons.get(startIndex + 3).isHovered())
-            context.drawTexture(TEXTURE, left + 149, top + 76, 0, 197, 15, 30);
+            context.drawTexture(TEXTURE, left + 151, top + 86, 0, 166, 20,
+                    20);
+        else
+            context.drawTexture(TEXTURE, left + 151, top + 86, 0, 186, 20,
+                    20);
         if (!this.buttons.get(startIndex + 4).isHovered())
-            context.drawTexture(TEXTURE, left + 229, top + 76, 30, 197, 15, 30);
+            context.drawTexture(TEXTURE, left + 226, top + 86, 20, 166, 20,
+                    20);
+        else
+            context.drawTexture(TEXTURE, left + 226, top + 86, 20, 186, 20,
+                    20);
 
-        // big apply button
+        // Interior Apply
         if (!this.buttons.get(startIndex + 5).isHovered())
-            context.drawTexture(TEXTURE, left + 168, top + 94, 0, 227, 57, 12);
+            context.drawTexture(TEXTURE, left + 172, top + 86, 40, 166, 53,
+                    20);
+        else
+            context.drawTexture(TEXTURE, left + 172, top + 86, 40, 186, 53,
+                    20);
 
         if (tardis() == null)
             return;
 
-        // battery
-        context.drawTexture(TEXTURE, left + 27, top + 133, 0, tardis().getFuel() > 250 ? 150 : 165, 99, 15);
+        // Fuel
+        context.drawTexture(TEXTURE, i + 30, j + 144, 0,
+                this.tardis().getFuel() > (FuelHandler.TARDIS_MAX_FUEL / 4) ? 225 : 234,
+                (int) (85 * this.tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL), 9);
 
-        // fuel markers @TODO come back and actually do the rest of it with the halves
-        // and the red
-        // parts
-        // too
-        for (int p = 0; p < Math.round((tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 12); ++p) {
-            context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
-        }
-
-        int progress = tardis().travel().getDurationAsPercentage();
+        // Progress Bar
+        int progress = this.tardis().travel().getDurationAsPercentage();
 
         for (int index = 0; index < 5; index++) {
-            int rangeStart = index * 20;
-            int rangeEnd = (index + 1) * 20;
+            int rangeStart = index * 19;
+            int rangeEnd = (index + 1) * 19;
 
             int uvOffset;
             if (progress >= rangeStart && progress <= rangeEnd) {
                 uvOffset = calculateUvOffsetForRange(progress);
             } else if (progress >= rangeEnd) {
-                uvOffset = 68;
+                uvOffset = 76;
             } else {
                 uvOffset = UV_BASE;
             }
 
-            context.drawTexture(TEXTURE, left + 32 + (index * 18), top + 114,
-                    tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
-                            ? progress >= 100 ? 68 : uvOffset
+            context.drawTexture(TEXTURE, i + 25 + (index * 19), j + 113,
+                    this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
+                            ? progress >= 100 ? 76 : uvOffset
                             : UV_BASE,
-                    180, 17, 17);
+                    206, 19, 19);
         }
 
         this.renderHums(context);
