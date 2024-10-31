@@ -5,6 +5,9 @@ import net.minecraft.world.dimension.DimensionTypes;
 
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
+import static net.minecraft.world.dimension.DimensionTypes.THE_END;
+import static net.minecraft.world.dimension.DimensionTypes.THE_NETHER;
+
 public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
     private static final PlanetRegistry instance = new PlanetRegistry();
 
@@ -14,9 +17,12 @@ public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
     }
 
     public static Planet OVERWORLD;
+    public static Planet THE_NETHER;
+
     @Override
     protected void defaults() {
-        OVERWORLD = register(new Planet(DimensionTypes.OVERWORLD_ID, -1, true, 288)); // -1f means dont change gravity btw
+        OVERWORLD = register(new Planet(DimensionTypes.OVERWORLD_ID, -1, true, 288));
+        THE_NETHER = register(new Planet(DimensionTypes.THE_NETHER_ID, -1, true, 548)); // -1f means dont change gravity btw
     }
 
     @Override
