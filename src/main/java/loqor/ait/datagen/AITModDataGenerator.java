@@ -584,13 +584,27 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Martian Blocks (Planet)
         provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_SLAB, "Martian Stone Slab");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_STAIRS, "Martian Stone Stairs");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_WALL, "Martian Stone Wall");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_BUTTON, "Martian Stone Button");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, "Martian Stone Pressure Plate");
         provider.addTranslation(AITBlocks.MARTIAN_BRICKS, "Martian Bricks");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICK_SLAB, "Martian Brick Slab");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICK_STAIRS, "Martian Brick Stairs");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICK_WALL, "Martian Brick Wall");
         provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE, "Martian Cobblestone");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_SLAB, "Martian Cobblestone Slab");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, "Martian Cobblestone Stairs");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_WALL, "Martian Cobblestone Wall");
         provider.addTranslation(AITBlocks.MARTIAN_PILLAR, "Martian Pillar");
         provider.addTranslation(AITBlocks.CHISELED_MARTIAN_STONE, "Chiseled Martian Stone");
         provider.addTranslation(AITBlocks.CRACKED_MARTIAN_BRICKS, "Cracked Martian Bricks");
         provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE, "Polished Martian Stone");
+        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, "Polished Martian Stone Slab");
+        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, "Polished Martian Stone Stairs");
         provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE, "Smooth Martian Stone");
+        provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, "Smooth Martian Stone Slab");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");

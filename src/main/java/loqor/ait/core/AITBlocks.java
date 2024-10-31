@@ -86,13 +86,50 @@ public class AITBlocks implements BlockRegistryContainer {
     // Planetary Blocks
 
     // Mars
+
+    // Martian Stone
+
     @NoBlockItem
     public static final Block MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
     @NoBlockItem
+    public static final Block MARTIAN_STONE_WALL = new WallBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block MARTIAN_STONE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block MARTIAN_STONE_STAIRS = new StairsBlock(
+            AITBlocks.MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block MARTIAN_STONE_BUTTON = new ButtonBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE_BUTTON), BlockSetType.STONE, 10, false);
+
+    @NoBlockItem
+    public static final Block MARTIAN_STONE_PRESSURE_PLATE  = new PressurePlateBlock(
+            PressurePlateBlock.ActivationRule.EVERYTHING, AbstractBlock.Settings.copy(Blocks.STONE_PRESSURE_PLATE),BlockSetType.STONE);
+
+    // Martian Cobblestone
+
+    @NoBlockItem
     public static final Block MARTIAN_COBBLESTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE));
+
+    @NoBlockItem
+    public static final Block MARTIAN_COBBLESTONE_WALL = new WallBlock(
+            AbstractBlock.Settings.copy(Blocks.COBBLESTONE_WALL));
+
+    @NoBlockItem
+    public static final Block MARTIAN_COBBLESTONE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.COBBLESTONE_SLAB));
+
+    @NoBlockItem
+    public static final Block MARTIAN_COBBLESTONE_STAIRS = new StairsBlock(
+            AITBlocks.MARTIAN_COBBLESTONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.COBBLESTONE_STAIRS));
 
     @NoBlockItem
     public static final Block MARTIAN_PILLAR = new PillarBlock(
@@ -106,17 +143,48 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block CRACKED_MARTIAN_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
 
+    // Martian Bricks
+
     @NoBlockItem
     public static final Block MARTIAN_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
+
+    @NoBlockItem
+    public static final Block MARTIAN_BRICK_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE_BRICK_SLAB));
+
+    @NoBlockItem
+    public static final Block MARTIAN_BRICK_STAIRS = new StairsBlock(
+            AITBlocks.MARTIAN_BRICKS.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE_BRICK_STAIRS));
+
+    @NoBlockItem
+    public static final Block MARTIAN_BRICK_WALL = new WallBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE_BRICK_WALL));
+
+    // Polished Martian Stone
 
     @NoBlockItem
     public static final Block POLISHED_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
 
     @NoBlockItem
+    public static final Block POLISHED_MARTIAN_STONE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_SLAB));
+
+    @NoBlockItem
+    public static final Block POLISHED_MARTIAN_STONE_STAIRS = new StairsBlock(
+            AITBlocks.POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_STAIRS));
+
+
+    // Smooth Martian Stone
+
+    @NoBlockItem
     public static final Block SMOOTH_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
+
+    @NoBlockItem
+    public static final Block SMOOTH_MARTIAN_STONE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
 
     @NoBlockItem
     public static final Block PLUGBOARD = new PlugBoardBlock(

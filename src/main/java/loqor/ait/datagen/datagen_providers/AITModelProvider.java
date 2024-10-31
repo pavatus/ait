@@ -11,6 +11,8 @@ import net.minecraft.data.client.*;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 
+import loqor.ait.core.AITBlocks;
+
 public class AITModelProvider extends FabricModelProvider {
     private final List<Block> directionalBlocksToRegister = new ArrayList<>();
     private final List<Block> simpleBlocksToRegister = new ArrayList<>();
@@ -31,6 +33,32 @@ public class AITModelProvider extends FabricModelProvider {
         for (Block block : simpleBlocksToRegister) {
             blockStateModelGenerator.registerSimpleCubeAll(block);
         }
+
+        //Martian Stone (Slabs, Walls, etc.)
+
+        BlockStateModelGenerator.BlockTexturePool martian_stone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.MARTIAN_STONE);
+        martian_stone_pool.stairs(AITBlocks.MARTIAN_STONE_STAIRS);
+        martian_stone_pool.wall(AITBlocks.MARTIAN_STONE_WALL);
+        martian_stone_pool.slab(AITBlocks.MARTIAN_STONE_SLAB);
+        martian_stone_pool.button(AITBlocks.MARTIAN_STONE_BUTTON);
+        martian_stone_pool.pressurePlate(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE);
+
+        BlockStateModelGenerator.BlockTexturePool martian_bricks_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.MARTIAN_BRICKS);
+        martian_bricks_pool.stairs(AITBlocks.MARTIAN_BRICK_STAIRS);
+        martian_bricks_pool.wall(AITBlocks.MARTIAN_BRICK_WALL);
+        martian_bricks_pool.slab(AITBlocks.MARTIAN_BRICK_SLAB);
+
+        BlockStateModelGenerator.BlockTexturePool martian_cobblestone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.MARTIAN_COBBLESTONE);
+        martian_cobblestone_pool.stairs(AITBlocks.MARTIAN_COBBLESTONE_STAIRS);
+        martian_cobblestone_pool.wall(AITBlocks.MARTIAN_COBBLESTONE_WALL);
+        martian_cobblestone_pool.slab(AITBlocks.MARTIAN_COBBLESTONE_SLAB);
+
+        BlockStateModelGenerator.BlockTexturePool smooth_martian_stone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.SMOOTH_MARTIAN_STONE);
+        smooth_martian_stone_pool.slab(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB);
+
+        BlockStateModelGenerator.BlockTexturePool polished_martian_stone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.POLISHED_MARTIAN_STONE);
+        polished_martian_stone_pool.stairs(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS);
+        polished_martian_stone_pool.slab(AITBlocks.POLISHED_MARTIAN_STONE_SLAB);
     }
 
     @Override
