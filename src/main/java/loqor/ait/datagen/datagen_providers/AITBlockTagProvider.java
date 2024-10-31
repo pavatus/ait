@@ -57,5 +57,8 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.WALLS)
                 .add(AITBlocks.MARTIAN_COBBLESTONE_WALL);
 
+        getOrCreateTagBuilder(BlockTags.WALLS)
+                .add(AITBlocks.MARTIAN_STONE_WALL);
+
     }
 }
