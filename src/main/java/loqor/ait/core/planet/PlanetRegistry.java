@@ -1,12 +1,11 @@
 package loqor.ait.core.planet;
 
+import static net.minecraft.world.dimension.DimensionTypes.THE_NETHER;
+
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionTypes;
 
 import loqor.ait.registry.datapack.SimpleDatapackRegistry;
-
-import static net.minecraft.world.dimension.DimensionTypes.THE_END;
-import static net.minecraft.world.dimension.DimensionTypes.THE_NETHER;
 
 public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
     private static final PlanetRegistry instance = new PlanetRegistry();
