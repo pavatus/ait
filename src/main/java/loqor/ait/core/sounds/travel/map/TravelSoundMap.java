@@ -35,6 +35,9 @@ public class TravelSoundMap extends EnumMap.Compliant<TravelHandlerBase.State, T
 
     public TravelSoundMap() {
         super(TravelHandlerBase.State::values, TravelSoundMap::createArray);
+
+		this.put(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.DEFAULT_DEMAT);
+		this.put(TravelHandlerBase.State.MAT, TravelSoundRegistry.DEFAULT_MAT);
     }
     private static TravelSound[] createArray(int length) {
         TravelSound[] array = new TravelSound[length];
