@@ -17,6 +17,7 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -320,79 +321,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider((((output, registriesFuture) -> {
             AITSoundProvider provider = new AITSoundProvider(output);
 
-            // MUSIC
-            provider.addSound("music/secret_music", AITSounds.SECRET_MUSIC);
-            provider.addSound("music/even_more_secret_music", AITSounds.EVEN_MORE_SECRET_MUSIC);
-            provider.addSound("music/drifting_by_radio", AITSounds.DRIFTING_MUSIC);
-            provider.addSound("music/mercury_by_nitrogenesis", AITSounds.MERCURY_MUSIC);
-
-            // TARDIS
-            provider.addSound("tardis/demat", AITSounds.DEMAT);
-            provider.addSound("tardis/mat", AITSounds.MAT);
-            provider.addSound("tardis/hop_demat", AITSounds.HOP_DEMAT);
-            provider.addSound("tardis/hop_land", AITSounds.HOP_MAT);
-            provider.addSound("tardis/land_thud", AITSounds.LAND_THUD);
-            provider.addSound("tardis/fail_takeoff", AITSounds.FAIL_DEMAT);
-            provider.addSound("tardis/fail_land", AITSounds.FAIL_MAT);
-            provider.addSound("tardis/emergency_mat", AITSounds.EMERG_MAT);
-            provider.addSound("tardis/flight_loop", AITSounds.FLIGHT_LOOP);
-            provider.addSound("tardis/unstable_flight_loop", AITSounds.UNSTABLE_FLIGHT_LOOP);
-            provider.addSound("tardis/console_shutdown", AITSounds.SHUTDOWN);
-            provider.addSound("tardis/console_powerup", AITSounds.POWERUP);
-            provider.addSound("tardis/siege_enable", AITSounds.SIEGE_ENABLE);
-            provider.addSound("tardis/siege_disable", AITSounds.SIEGE_DISABLE);
-            provider.addSound("tardis/eighth_demat", AITSounds.EIGHT_DEMAT);
-            provider.addSound("tardis/eighth_mat", AITSounds.EIGHT_MAT);
-            provider.addSound("tardis/ghost_mat", AITSounds.GHOST_MAT);
-            provider.addSound("tardis/waypoint_activate", AITSounds.WAYPOINT_ACTIVATE);
-
-            // Controls
-            provider.addSound("controls/demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
-            provider.addSound("controls/handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
-            provider.addSound("controls/handbrake_up", AITSounds.HANDBRAKE_UP);
-            provider.addSound("controls/handbrake_down", AITSounds.HANDBRAKE_DOWN);
-            provider.addSound("controls/crank", AITSounds.CRANK);
-            provider.addSound("controls/knock", AITSounds.KNOCK);
-            provider.addSound("controls/snap", AITSounds.SNAP);
-            provider.addSound("controls/bweep", AITSounds.BWEEP);
-
-            // Tools
-            provider.addSound("tools/goes_ding", AITSounds.DING);
-
-            // Hums
-            provider.addSound("tardis/hums/toyota_hum", AITSounds.TOYOTA_HUM);
-            provider.addSound("tardis/hums/coral_hum", AITSounds.CORAL_HUM);
-            provider.addSound("tardis/hums/eight_hum", AITSounds.EIGHT_HUM);
-            provider.addSound("tardis/hums/copper_hum", AITSounds.COPPER_HUM);
-            provider.addSound("tardis/hums/exile_hum", AITSounds.EXILE_HUM);
-            provider.addSound("tardis/hums/prime_hum", AITSounds.PRIME_HUM);
-            provider.addSound("tardis/hums/tokamak_hum", AITSounds.TOKAMAK_HUM);
-
-            // Creaks
-            provider.addSound("tardis/creaks/creak_one", AITSounds.CREAK_ONE);
-            provider.addSound("tardis/creaks/creak_two", AITSounds.CREAK_TWO);
-            provider.addSound("tardis/creaks/creak_three", AITSounds.CREAK_THREE);
-            provider.addSound("tardis/creaks/creak_four", AITSounds.CREAK_FOUR);
-            provider.addSound("tardis/creaks/creak_five", AITSounds.CREAK_FIVE);
-            provider.addSound("tardis/creaks/creak_six", AITSounds.CREAK_SIX);
-            provider.addSound("tardis/creaks/creak_seven", AITSounds.CREAK_SEVEN);
-            provider.addSound("tardis/creaks/whisper", AITSounds.WHISPER);
-
-            // Secret
-            provider.addSound("tardis/secret/doom_door_open", AITSounds.DOOM_DOOR_OPEN);
-            provider.addSound("tardis/secret/doom_door_close", AITSounds.DOOM_DOOR_CLOSE);
-
-            // Sonic
-            provider.addSound("sonic/use", AITSounds.SONIC_USE);
-            provider.addSound("sonic/switch", AITSounds.SONIC_SWITCH);
-
-            // Other
-            provider.addSound("tardis/vortex_sound", AITSounds.VORTEX_SOUND);
-            provider.addSound("tardis/exterior/rain", AITSounds.RAIN);
-            provider.addSound("tardis/exterior/thunder", AITSounds.THUNDER);
-
-            provider.addSound("tardis/cloister", AITSounds.CLOISTER);
-            provider.addSound("tardis/groan", AITSounds.GROAN);
+            for (SoundEvent sound : AITSounds.getSounds(AITMod.MOD_ID)) {
+                provider.addSound(sound.getId().getPath(), sound);
+            }
 
             return provider;
         })));

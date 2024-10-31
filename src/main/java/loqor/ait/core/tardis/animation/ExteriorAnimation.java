@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -94,7 +94,7 @@ public abstract class ExteriorAnimation {
         };
 
         this.tellClientsToSetup(state);
-        MatSound sound = state.effect();
+        TravelSound sound = tardis.getExterior().getVariant().effects().get(state);
 
         if (sound == null)
             return false;

@@ -1,7 +1,7 @@
 package loqor.ait.core.tardis.animation;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -61,7 +61,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
         if (!super.setupAnimation(state))
             return false;
 
-        MatSound sound = state.effect();
+        TravelSound sound = exterior.tardis().get().getExterior().getVariant().effects().get(state);
 
         this.frequency = sound.frequency();
         this.intensity = sound.intensity();

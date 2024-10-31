@@ -17,6 +17,8 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
+import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
@@ -47,24 +49,30 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     private final Identifier category;
     private final Identifier id;
     private final Loyalty loyalty;
+    private final TravelSoundMap effects;
 
     @Environment(EnvType.CLIENT)
     private ClientExteriorVariantSchema cachedSchema;
 
-    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty) {
+    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty, TravelSoundMap effects) {
         super("exterior");
         this.category = category;
 
         this.id = id;
         this.loyalty = loyalty.orElse(null);
+        this.effects = effects;
+    }
+
+    protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty, TravelSoundMap effects) {
+        this(category, id, Optional.of(loyalty), effects);
     }
 
     protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
-        this(category, id, Optional.of(loyalty));
+        this(category, id, Optional.of(loyalty), TravelSoundRegistry.DEFAULT);
     }
 
     protected ExteriorVariantSchema(Identifier category, Identifier id) {
-        this(category, id, Optional.empty());
+        this(category, id, Optional.empty(), TravelSoundRegistry.DEFAULT);
     }
 
     @Override
@@ -124,6 +132,10 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 
     public double portalHeight() {
         return 2d;
+    }
+
+    public TravelSoundMap effects() {
+        return this.effects;
     }
 
     @Override
