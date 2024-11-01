@@ -11,6 +11,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
@@ -74,7 +75,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
             buf.encodeAsJson(DatapackExterior.CODEC,
                     new DatapackExterior(schema.id(), schema.categoryId(), schema.id(),
                             DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, schema.requirement(),
-                            BiomeOverrides.EMPTY, false));
+                            BiomeOverrides.EMPTY, TravelSoundRegistry.DEFAULT, false));
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);

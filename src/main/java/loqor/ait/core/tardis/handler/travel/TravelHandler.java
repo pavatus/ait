@@ -266,7 +266,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     public void forceDemat() {
         this.state.set(State.DEMAT);
-        SoundEvent sound = this.getState().effect().sound();
+
+        SoundEvent sound = this.tardis.getExterior().getVariant().effects().get(this.getState()).sound();
 
         // Play dematerialize sound at the position
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
@@ -330,7 +331,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         pos = result.result().orElse(pos);
 
         this.state.set(State.MAT);
-        SoundEvent sound = this.getState().effect().sound();
+        SoundEvent sound = this.tardis.getExterior().getVariant().effects().get(this.getState()).sound();
 
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
