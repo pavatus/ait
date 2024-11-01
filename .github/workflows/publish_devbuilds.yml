@@ -9,7 +9,7 @@ name: Automated donator builds
 
 on:
   push:
-    branches: [ "main", "api/mat_sfx" ]
+    branches: [ "main" ]
 
 jobs:
   build:
