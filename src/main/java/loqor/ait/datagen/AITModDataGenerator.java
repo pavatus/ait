@@ -729,6 +729,27 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
 
+        //TARDIS Flight Sequences
+        provider.addTranslation("sequence.ait.avoid_debris", "Debris incoming!");
+        provider.addTranslation("sequence.ait.dimensional_breach", "DIMENSION BREACH: SECURE DOORS");
+        provider.addTranslation("sequence.ait.energy_drain", "Artron drain detected!");
+        provider.addTranslation("sequence.ait.power_drain_imminent", "Power drain imminent!");
+        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship computer offline! Crash imminent!");
+        provider.addTranslation("sequence.ait.anti_gravity_error", "Gravity miscalculation!");
+        provider.addTranslation("sequence.ait.dimensional_drift_x", "Drifting off course X!");
+        provider.addTranslation("sequence.ait.dimensional_drift_y", "Drifting off course Y!");
+        provider.addTranslation("sequence.ait.dimensional_drift_z", "Drifting off course Z!");
+        provider.addTranslation("sequence.ait.cloak_to_avoid_vortex_trapped_mobs", "Immediate cloaking necessary!");
+        provider.addTranslation("sequence.ait.directional_error", "Directional error!");
+        provider.addTranslation("sequence.ait.speed_up_to_avoid_drifting_out_of_vortex", "Vortex drift: acceleration necessary!");
+        provider.addTranslation("sequence.ait.course_correct", "TARDIS off course!");
+        provider.addTranslation("sequence.ait.ground_unstable", "Unstable landing position!");
+        provider.addTranslation("sequence.ait.increment_scale_recalculation_necessary", "Increment scale error! Recalculation necessary!");
+        provider.addTranslation("sequence.ait.small_debris_field", "Small debris field!");
+
+
+
+        // Hums
         provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
