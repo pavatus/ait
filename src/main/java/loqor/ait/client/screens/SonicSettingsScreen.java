@@ -69,7 +69,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         choicesCount = 0;
         this.buttons.clear();
 
-        Text applyText = Text.literal("Apply");
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.21f)), (int) (top + (bgHeight * 0.878f)),
                 this.textRenderer.getWidth(applyText), 10, Text.literal("     "), button -> {
                     sendSonicChangePacket();

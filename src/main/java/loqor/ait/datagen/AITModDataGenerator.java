@@ -619,6 +619,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
+        provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 
         // TARDIS Control Actionbar Title
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
@@ -695,8 +696,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
 
-        //Environment Projector
+        // Item tooltips
+        provider.addTranslation("message.ait.artron_units", "AU: ");
+        provider.addTranslation("tooltip.ait.position", "Position: ");
+        provider.addTranslation("message.ait.artron_units2", " AU");
+
+
+        // Environment Projector
         provider.addTranslation("message.ait.projector.skybox", "Now projecting: %s");
 
         // Rift Scanner
@@ -720,7 +728,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.distresscall.source", "SOURCE");
 
         //Monitor
+        provider.addTranslation("screen.ait.monitor.on", "ON");
+        provider.addTranslation("screen.ait.monitor.off", "OFF");
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
+        provider.addTranslation("screen.ait.monitor.gear_icon", "⚙");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");

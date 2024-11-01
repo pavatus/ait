@@ -133,10 +133,10 @@ public class TardisSecurityScreen extends ConsoleScreen {
         ClientTardis tardis = this.tardis();
 
 
-        context.drawText(this.textRenderer, Text.literal(": " + (tardis.travel().leaveBehind().get() ? "ON" : "OFF")),
+        context.drawText(this.textRenderer, Text.literal(": " + (tardis.travel().leaveBehind().get() ? Text.translatable("screen.ait.monitor.on") : Text.translatable("screen.ait.monitor.off"))),
                 (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
         context.drawText(this.textRenderer,
-                Text.literal(": " + (tardis.alarm().hostilePresence().get() ? "ON" : "OFF")),
+                Text.literal(": " + (tardis.alarm().hostilePresence().get() ? Text.translatable("screen.ait.monitor.on") : Text.translatable("screen.ait.monitor.off"))),
                 (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
         context.drawText(this.textRenderer, Text.literal(": " + getMinimumLoyalty(tardis)),
@@ -149,7 +149,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
                 (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8.5))), 0xadcaf7, false);
 
         context.drawText(this.textRenderer,
-                Text.literal(": " + (this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? "ON" : "OFF")),
+                Text.literal(": " + (this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? Text.translatable("screen.ait.monitor.on") : Text.translatable("screen.ait.monitor.off"))),
                 (int) (left + (bgWidth * 0.7f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
 
         this.landingCodeInput.render(context, mouseX, mouseY, delta);

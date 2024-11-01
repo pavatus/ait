@@ -112,9 +112,9 @@ public class MonitorScreen extends ConsoleScreen {
     private void createButtons() {
         this.buttons.clear();
         // exterior change text button
-        Text applyText = Text.literal("Apply");
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
-                this.textRenderer.getWidth(applyText), 20, Text.literal("Apply").formatted(Formatting.BOLD), button -> {
+                this.textRenderer.getWidth(applyText), 20, Text.translatable("screen.ait.monitor.apply").formatted(Formatting.BOLD), button -> {
                     sendExteriorPacket(this.tardis(), this.getCategory(), this.getCurrentVariant());
                 }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 8), this.textRenderer.getWidth("<#>"),
@@ -133,7 +133,7 @@ public class MonitorScreen extends ConsoleScreen {
                 15, Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.LIGHT_PURPLE), button -> {
                     whichDirectionVariant(true);
                 }, this.textRenderer));
-        Text desktopSettingsText = Text.literal("⚙");
+        Text desktopSettingsText = Text.translatable("screen.ait.monitor.gear_icon");
         this.addButton(new PressableTextWidget((width / 2 - 6), (height / 2 + 57),
                 this.textRenderer.getWidth(desktopSettingsText), 10,
                 Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.WHITE),
