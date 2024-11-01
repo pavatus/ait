@@ -132,24 +132,39 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
         ClientTardis tardis = this.tardis();
 
+        Text onText = Text.translatable("screen.ait.monitor.on");
+        Text offText = Text.translatable("screen.ait.monitor.off");
 
-        context.drawText(this.textRenderer, Text.literal(": " + (tardis.travel().leaveBehind().get() ? Text.translatable("screen.ait.monitor.on") : Text.translatable("screen.ait.monitor.off"))),
-                (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
+
         context.drawText(this.textRenderer,
-                Text.literal(": " + (tardis.alarm().hostilePresence().get() ? Text.translatable("screen.ait.monitor.on") : Text.translatable("screen.ait.monitor.off"))),
+                Text.empty().append(": ").append(tardis.travel().leaveBehind().get() ? onText : offText),
+                (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
+
+
+        context.drawText(this.textRenderer,
+                Text.empty().append(": ").append(tardis.alarm().hostilePresence().get() ? onText : offText),
                 (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
 
-        context.drawText(this.textRenderer, Text.literal(": " + getMinimumLoyalty(tardis)),
+
+        context.drawText(this.textRenderer,
+                Text.literal(": " + getMinimumLoyalty(tardis)),
                 (int) (left + (bgWidth * 0.51f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
 
 
-        context.drawText(this.textRenderer, Text.translatable("message.ait.date_created"), (int) (left + (bgWidth * 0.06f)),
+        context.drawText(this.textRenderer,
+                Text.translatable("message.ait.date_created"),
+                (int) (left + (bgWidth * 0.06f)),
                 (int) (top + (bgHeight * (0.1f * 7.5))), 0xadcaf7, false);
-        context.drawText(this.textRenderer, Text.literal(tardis.stats().getCreationString()),
-                (int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * (0.1f * 8.5))), 0xadcaf7, false);
+
 
         context.drawText(this.textRenderer,
-                Text.literal(": " + (this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? Text.translatable("screen.ait.monitor.on") : Text.translatable("screen.ait.monitor.off"))),
+                Text.literal(tardis.stats().getCreationString()),
+                (int) (left + (bgWidth * 0.06f)),
+                (int) (top + (bgHeight * (0.1f * 8.5))), 0xadcaf7, false);
+
+
+        context.drawText(this.textRenderer,
+                Text.empty().append(": ").append(this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? onText : offText),
                 (int) (left + (bgWidth * 0.7f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
 
         this.landingCodeInput.render(context, mouseX, mouseY, delta);
