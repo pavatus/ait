@@ -824,6 +824,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.frooploof.coral_war", "War");
         provider.addTranslation("exterior.frooploof.tokamak_eotd", "Tokamak (EOTD)");
 
+        // Security Settings Menu
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
         provider.addTranslation("screen.ait.gravity", "> Gravity: %s");
@@ -836,8 +837,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
+
+        // Landing Pad
         provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");
 
+        // Commands
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
         provider.addTranslation("command.ait.riftchunk.cannotsetlevel",
                 "This chunk is not a rift chunk, so you can't set the artron levels of it");
@@ -850,12 +854,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("command.ait.data.fail",
                 "Can't get value of a property named %s, because component %s is not keyed!");
 
+        // Rift Chunk Tracking
         provider.addTranslation("riftchunk.ait.tracking", "Rift Tracking");
         provider.addTranslation("riftchunk.ait.cooldown", "Rift tracking is on cooldown");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
         provider.addTranslation("waypoint.direction.tooltip", "Direction");
 
+        // Blueprint Item
         provider.addTranslation("ait.blueprint.tooltip", "Blueprint: ");
 
         // directions
