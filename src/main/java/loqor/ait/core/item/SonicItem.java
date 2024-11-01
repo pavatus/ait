@@ -331,7 +331,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         Mode mode = findPreviousMode(stack);
         tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
-        tooltip.add(Text.literal("AU: ").formatted(Formatting.BLUE).append(
+        tooltip.add(Text.translatable("message.ait.artron_units").formatted(Formatting.BLUE).append(
                 Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(Formatting.GREEN))); // todo
                                                                                                                     // translatable
                                                                                                                     // +

@@ -676,6 +676,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.fuel.set", "Set fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.get", "Fuel of %s is: [%sau]");
         provider.addTranslation("message.ait.fuel.max", "TARDIS fuel is at max!");
+
         // Get TARDIS ID
         provider.addTranslation("message.ait.id", "TARDIS id: ");
         provider.addTranslation("message.ait.click_to_copy", "Click to copy");
@@ -700,6 +701,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "AU: ");
+        provider.addTranslation("message.ait.oxygen", "Oxygen: ");
         provider.addTranslation("tooltip.ait.position", "Position: ");
         provider.addTranslation("message.ait.artron_units2", " AU");
 
