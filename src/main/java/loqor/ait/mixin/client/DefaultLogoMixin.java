@@ -65,6 +65,6 @@ public class DefaultLogoMixin {
             return;
         int screenWidth = this.client.currentScreen.width;
         int i = screenWidth / 2 - 80;
-        instance.drawTexture(AIT_EDITION, i, y, 0.0f, 0.0f, 160, 30, 160, 30);
+        instance.drawTexture(AIT_EDITION, i, y, 0.0f, 0.0f, 160, 40, 160, 40);
     }
 }

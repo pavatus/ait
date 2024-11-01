@@ -69,7 +69,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         choicesCount = 0;
         this.buttons.clear();
 
-        Text applyText = Text.literal("Apply");
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.21f)), (int) (top + (bgHeight * 0.878f)),
                 this.textRenderer.getWidth(applyText), 10, Text.literal("     "), button -> {
                     sendSonicChangePacket();
@@ -171,17 +171,17 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
             stack.push();
             stack.translate(0, 0, 500f);
-            context.drawCenteredTextWithShadow(this.textRenderer, "Sonic Casing", x + 140, y + 10,
+            context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.sonic_casing"), x + 140, y + 10,
                     Color.WHITE.getRGB());
             context.drawCenteredTextWithShadow(this.textRenderer, SonicItem.findSchema(sonicCopy).name(), x + 140,
                     y + 20, Color.CYAN.getRGB());
-            context.drawCenteredTextWithShadow(this.textRenderer, "Current AU", x + 140, y + 40, Color.WHITE.getRGB());
+            context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.current_au"), x + 140, y + 40, Color.WHITE.getRGB());
             context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem.FUEL_KEY) + " AU", x + 140,
                     y + 50, Color.CYAN.getRGB());
 
             UUID tardis = LinkableItem.getTardisIdFromUuid(sonicCopy, "tardis");
             if (tardis != null) {
-                context.drawCenteredTextWithShadow(this.textRenderer, "Linked TARDIS", x + 140, y + 70,
+                context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.linked_tardis"), x + 140, y + 70,
                         Color.WHITE.getRGB());
                 context.drawCenteredTextWithShadow(this.textRenderer, tardis.toString().substring(0, 8), x + 140,
                         y + 80, Color.CYAN.getRGB());

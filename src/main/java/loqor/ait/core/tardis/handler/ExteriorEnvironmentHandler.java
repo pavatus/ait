@@ -42,6 +42,8 @@ public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements 
         TravelHandler travel = this.tardis.travel();
         World exterior = travel.position().getWorld();
 
+        if (exterior.isClient()) return;
+
         boolean snowy = tardis.<BiomeHandler>handler(Id.BIOME).getBiomeKey() == BiomeHandler.BiomeType.SNOWY;
 
         boolean isRaining = exterior.isRaining() && !snowy;

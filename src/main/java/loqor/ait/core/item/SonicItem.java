@@ -331,7 +331,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         Mode mode = findPreviousMode(stack);
         tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
-        tooltip.add(Text.literal("AU: ").formatted(Formatting.BLUE).append(
+        tooltip.add(Text.translatable("message.ait.artron_units").formatted(Formatting.BLUE).append(
                 Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(Formatting.GREEN))); // todo
                                                                                                                     // translatable
                                                                                                                     // +
@@ -344,7 +344,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         super.appendTooltip(stack, world, tooltip, context);
 
         if (tag.contains("tardis")) { // Adding the sonics mode
-            tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
+            tooltip.add(Text.translatable("tooltip.ait.position").formatted(Formatting.BLUE));
             tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
         }
 
@@ -495,7 +495,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                 if (!isRift) return;
 
-                player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
+                player.sendMessage(Text.translatable("message.ait.artron_units" + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
                         .formatted(Formatting.GOLD));
             }
             private static void sendTardisInfo(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -509,7 +509,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 }
 
                 player.sendMessage(
-                        Text.literal("AU: " + tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
+                        Text.translatable("message.ait.artron_units" + tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
             }
         },
         TARDIS(Formatting.BLUE) {

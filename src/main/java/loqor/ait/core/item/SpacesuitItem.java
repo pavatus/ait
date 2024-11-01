@@ -68,6 +68,6 @@ public class SpacesuitItem extends RenderableArmorItem {
 
         String oxygen = "" + stack.getOrCreateNbt().getDouble(OXYGEN_KEY);
 
-        tooltip.add(Text.literal("Oxygen: " + oxygen.substring(0, 3) + "L / " + MAX_OXYGEN + "L").formatted(Formatting.BOLD, Formatting.BLUE));
+        tooltip.add(Text.translatable("message.ait.oxygen" + oxygen.substring(0, 3) + "L / " + MAX_OXYGEN + "L").formatted(Formatting.BOLD, Formatting.BLUE));
     }
 }

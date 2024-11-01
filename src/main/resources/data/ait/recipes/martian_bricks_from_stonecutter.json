@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "group": "martian",
+  "count": 1,
+  "ingredient": {
+    "item": "ait:martian_stone"
+  },
+  "result": "ait:martian_bricks"
+}

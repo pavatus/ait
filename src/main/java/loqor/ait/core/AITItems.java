@@ -22,10 +22,12 @@ public class AITItems implements ItemRegistryContainer {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 500, 1), 0.5F).build();
+
     // TARDIS
     public static final Item TARDIS_ITEM = new TardisItemBuilder(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
     public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
+
     // Functional Items
     public static final Item REMOTE_ITEM = new RemoteItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
@@ -50,6 +52,7 @@ public class AITItems implements ItemRegistryContainer {
             true);
     public static final Item HYPERCUBE = new HypercubeItem(new OwoItemSettings().maxCount(1).group(AITMod.AIT_ITEM_GROUP));
     public static final Item HAZANDRA = new InteriorTeleporterItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
     // Keys/Key Templates
     public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item GOLD_KEY = new KeyItem(
@@ -131,16 +134,64 @@ public class AITItems implements ItemRegistryContainer {
 
      // Mars
 
+    // Martian Stone
+
     public static final Item MARTIAN_STONE = new
             GenericControlBlockItem(AITBlocks.MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
+    public static final Item MARTIAN_STONE_SLAB = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_STONE_WALL = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_WALL, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_STONE_STAIRS = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_STONE_BUTTON = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_BUTTON, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_STONE_PRESSURE_PLATE = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    // Martian Bricks
     public static final Item MARTIAN_BRICKS = new
             GenericControlBlockItem(AITBlocks.MARTIAN_BRICKS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
+    public static final Item MARTIAN_BRICK_SLAB = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_BRICK_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_BRICK_WALL = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_BRICK_WALL, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_BRICK_STAIRS = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_BRICK_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    // Martian Cobblestone
     public static final Item MARTIAN_COBBLESTONE = new
             GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_COBBLESTONE_WALL = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE_WALL, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_COBBLESTONE_STAIRS = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item MARTIAN_COBBLESTONE_SLAB = new
+            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_PILLAR = new
@@ -155,12 +206,28 @@ public class AITItems implements ItemRegistryContainer {
             GenericControlBlockItem(AITBlocks.CRACKED_MARTIAN_BRICKS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
+    // Polished Martian Stone
+
     public static final Item POLISHED_MARTIAN_STONE = new
             GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
+    public static final Item POLISHED_MARTIAN_STONE_STAIRS = new
+            GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item POLISHED_MARTIAN_STONE_SLAB = new
+            GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    // Smooth Martian Stone
+
     public static final Item SMOOTH_MARTIAN_STONE = new
             GenericControlBlockItem(AITBlocks.SMOOTH_MARTIAN_STONE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item SMOOTH_MARTIAN_STONE_SLAB = new
+            GenericControlBlockItem(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
 

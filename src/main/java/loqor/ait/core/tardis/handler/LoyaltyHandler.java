@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -96,8 +97,17 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
-        player.sendMessage(nameable.text().copy().append(" unlocked!").formatted(Formatting.BOLD, Formatting.ITALIC,
-                Formatting.GOLD), false);
+
+        Text nameText = nameable.text().copy();
+        Text unlockedMessage = Text.translatable("message.ait.unlocked");
+
+        Text finalMessage = ((MutableText) nameText)
+                .append(Text.literal(" "))
+                .append(unlockedMessage)
+                .append(Text.literal("!"))
+                .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD);
+
+        player.sendMessage(finalMessage, false);
     }
 
     public void addLevel(ServerPlayerEntity player, int level) {

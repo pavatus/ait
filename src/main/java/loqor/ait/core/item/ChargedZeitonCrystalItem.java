@@ -46,7 +46,7 @@ public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.literal("AU: ").formatted(Formatting.BLUE)
+        tooltip.add(Text.translatable("message.ait.artron_units").formatted(Formatting.BLUE)
                 .append(Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(Formatting.GREEN)
                         .append(Text.literal("/" + MAX_FUEL).formatted(Formatting.GRAY)))); // todo
         // translatable +

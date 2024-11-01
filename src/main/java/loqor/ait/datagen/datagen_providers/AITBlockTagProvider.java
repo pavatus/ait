@@ -49,5 +49,16 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
         getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
+
+        // Martian Blocks
+        getOrCreateTagBuilder(BlockTags.WALLS)
+                .add(AITBlocks.MARTIAN_BRICK_WALL);
+
+        getOrCreateTagBuilder(BlockTags.WALLS)
+                .add(AITBlocks.MARTIAN_COBBLESTONE_WALL);
+
+        getOrCreateTagBuilder(BlockTags.WALLS)
+                .add(AITBlocks.MARTIAN_STONE_WALL);
+
     }
 }

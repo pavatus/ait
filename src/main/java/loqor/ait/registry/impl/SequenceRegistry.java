@@ -95,7 +95,7 @@ public class SequenceRegistry {
                             player.damage(WorldUtil.getOverworld().getDamageSources().generic(), 0);
                         }
                     }
-                }, 100L, Text.literal("Debris incoming!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }, 100L, Text.translatable("sequence.ait.avoid_debris").formatted(Formatting.ITALIC, Formatting.YELLOW),
                 new DirectionControl(), new RandomiserControl()));
 
         DIMENSIONAL_BREACH = register(
@@ -103,7 +103,7 @@ public class SequenceRegistry {
                     finishedTardis.travel().decreaseFlightTime(60);
                 }), (missedTardis -> {
                     missedTardis.door().openDoors();
-                }), 80L, Text.literal("DIMENSION BREACH: SECURE DOORS").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 80L, Text.translatable("sequence.ait.dimensional_breach").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new DimensionControl(), new DoorControl()));
 
         ENERGY_DRAIN = register(
@@ -111,7 +111,7 @@ public class SequenceRegistry {
                     finishedTardis.travel().decreaseFlightTime(140);
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> missedTardis.removeFuel(random.nextBetween(45, 125))), 80L,
-                        Text.literal("Artron drain detected!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                        Text.translatable("sequence.ait.energy_drain").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new RefuelerControl()));
 
         POWER_DRAIN_IMMINENT = register(
@@ -121,7 +121,7 @@ public class SequenceRegistry {
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
                     missedTardis.engine().disablePower();
-                }), 110L, Text.literal("Power drain imminent!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 110L, Text.translatable("sequence.ait.power_drain_imminent").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new PowerControl(), new RefuelerControl(), new RandomiserControl()));
 
         SHIP_COMPUTER_OFFLINE = register(
@@ -131,7 +131,7 @@ public class SequenceRegistry {
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
                     missedTardis.engine().disablePower();
-                }), 110L, Text.literal("Ship computer offline! Crash imminent!").formatted(Formatting.ITALIC,
+                }), 110L, Text.translatable("sequence.ait.ship_computer_offline").formatted(Formatting.ITALIC,
                         Formatting.YELLOW), new AutoPilotControl()));
 
         ANTI_GRAVITY_ERROR = register(
@@ -140,7 +140,7 @@ public class SequenceRegistry {
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
                     missedTardis.travel().antigravs().set(false);
-                }), 80L, Text.literal("Gravity miscalculation!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 80L, Text.translatable("sequence.ait.anti_gravity_error").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new AntiGravsControl()));
 
         DIMENSIONAL_DRIFT_X = register(
@@ -151,7 +151,7 @@ public class SequenceRegistry {
 
                     return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
                             random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
-                })), 100L, Text.literal("Drifting off course X!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                })), 100L, Text.translatable("sequence.ait.dimensional_drift_x").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new DimensionControl(), new XControl()));
 
         DIMENSIONAL_DRIFT_Y = register(
@@ -162,7 +162,7 @@ public class SequenceRegistry {
 
                     return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
                             random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
-                })), 100L, Text.literal("Drifting off course Y!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                })), 100L, Text.translatable("sequence.ait.dimensional_drift_y").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new DimensionControl(), new YControl()));
 
         DIMENSIONAL_DRIFT_Z = register(
@@ -173,7 +173,7 @@ public class SequenceRegistry {
 
                     return cached.pos(random.nextBetween(pos.getX() - 8, pos.getX() + 8), pos.getY(),
                             random.nextBetween(pos.getZ() - 8, pos.getZ() + 8));
-                })), 100L, Text.literal("Drifting off course Z!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                })), 100L, Text.translatable("sequence.ait.dimensional_drift_z").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new DimensionControl(), new ZControl()));
 
         CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder
@@ -226,7 +226,7 @@ public class SequenceRegistry {
 
                             interior.spawnEntity(
                             random.nextBoolean() ? random.nextBoolean() ? drownedEntity : zombieEntity : phantomEntity);
-                }), 80L, Text.literal("Immediate cloaking necessary!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 80L, Text.translatable("sequence.ait.cloak_to_avoid_vortex_trapped_mobs").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new CloakControl(), new RandomiserControl()));
 
         DIRECTIONAL_ERROR = register(
@@ -234,7 +234,7 @@ public class SequenceRegistry {
                     finishedTardis.travel().decreaseFlightTime(80);
                 }), (missedTardis -> {
                     missedTardis.travel().increaseFlightTime(120);
-                }), 80L, Text.literal("Directional error!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 80L, Text.translatable("sequence.ait.directional_error").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new DirectionControl()));
 
         SPEED_UP_TO_AVOID_DRIFTING_OUT_OF_VORTEX = register(Sequence.Builder
@@ -242,7 +242,7 @@ public class SequenceRegistry {
                     finishedTardis.travel().decreaseFlightTime(180);
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                }), 80L, Text.literal("Vortex drift: acceleration necessary!").formatted(Formatting.ITALIC,
+                }), 80L, Text.translatable("sequence.ait.speed_up_to_avoid_drifting_out_of_vortex").formatted(Formatting.ITALIC,
                         Formatting.YELLOW), new IncrementControl(), new ThrottleControl()));
 
         COURSE_CORRECT = register(
@@ -257,7 +257,7 @@ public class SequenceRegistry {
                         return cached.pos(random.nextBetween(pos.getX() - 24, pos.getX() + 24), pos.getY(),
                                 random.nextBetween(pos.getZ() - 24, pos.getZ() + 24));
                     });
-                }), 110L, Text.literal("TARDIS off course!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 110L, Text.translatable("sequence.ait.course_correct").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new HandBrakeControl(), new ThrottleControl(), new RandomiserControl()));
 
         GROUND_UNSTABLE = register(
@@ -266,7 +266,7 @@ public class SequenceRegistry {
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                }), 110L, Text.literal("Unstable landing position!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 110L, Text.translatable("sequence.ait.ground_unstable").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new LandTypeControl(), new YControl(), new SetWaypointControl()));
 
         INCREMENT_SCALE_RECALCULATION_NECESSARY = register(Sequence.Builder
@@ -275,7 +275,7 @@ public class SequenceRegistry {
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                }), 80L, Text.literal("Increment scale error! Recalculation necessary!").formatted(Formatting.ITALIC,
+                }), 80L, Text.translatable("sequence.ait.increment_scale_recalculation_necessary").formatted(Formatting.ITALIC,
                         Formatting.YELLOW), new IncrementControl()));
 
         SMALL_DEBRIS_FIELD = register(
@@ -284,7 +284,7 @@ public class SequenceRegistry {
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                }), 80L, Text.literal("Small debris field!").formatted(Formatting.ITALIC, Formatting.YELLOW),
+                }), 80L, Text.translatable("sequence.ait.small_debris_field").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new IncrementControl(), new ShieldsControl()));
     }
 }

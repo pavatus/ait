@@ -515,13 +515,31 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Martian Blocks (Planet)
         provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
+        // Stone
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_SLAB, "Martian Stone Slab");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_STAIRS, "Martian Stone Stairs");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_WALL, "Martian Stone Wall");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_BUTTON, "Martian Stone Button");
+        provider.addTranslation(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, "Martian Stone Pressure Plate");
+        // Bricks
         provider.addTranslation(AITBlocks.MARTIAN_BRICKS, "Martian Bricks");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICK_SLAB, "Martian Brick Slab");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICK_STAIRS, "Martian Brick Stairs");
+        provider.addTranslation(AITBlocks.MARTIAN_BRICK_WALL, "Martian Brick Wall");
+        // Cobblestone
         provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE, "Martian Cobblestone");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_SLAB, "Martian Cobblestone Slab");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, "Martian Cobblestone Stairs");
+        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_WALL, "Martian Cobblestone Wall");
         provider.addTranslation(AITBlocks.MARTIAN_PILLAR, "Martian Pillar");
         provider.addTranslation(AITBlocks.CHISELED_MARTIAN_STONE, "Chiseled Martian Stone");
         provider.addTranslation(AITBlocks.CRACKED_MARTIAN_BRICKS, "Cracked Martian Bricks");
         provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE, "Polished Martian Stone");
+        // Polished Stone
+        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, "Polished Martian Stone Slab");
+        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, "Polished Martian Stone Stairs");
         provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE, "Smooth Martian Stone");
+        provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, "Smooth Martian Stone Slab");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -532,6 +550,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
+        provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 
         // TARDIS Control Actionbar Title
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
@@ -570,6 +589,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
+        provider.addTranslation("message.ait.landing_code", "Landing Code...");
+        provider.addTranslation("message.ait.enter_landing_code", "Enter Landing Code...");
+        provider.addTranslation("message.ait.date_created", "Date Created:");
+        provider.addTranslation("message.ait.unlocked", "unlocked");
+        provider.addTranslation("screen.ait.sonic_casing", "Sonic Casing");
+        provider.addTranslation("screen.ait.current_au", "Current AU");
+        provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
 
@@ -581,6 +607,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.fuel.set", "Set fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.get", "Fuel of %s is: [%sau]");
         provider.addTranslation("message.ait.fuel.max", "TARDIS fuel is at max!");
+
         // Get TARDIS ID
         provider.addTranslation("message.ait.id", "TARDIS id: ");
         provider.addTranslation("message.ait.click_to_copy", "Click to copy");
@@ -601,8 +628,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
 
-        //Environment Projector
+        // Item tooltips
+        provider.addTranslation("message.ait.artron_units", "AU: ");
+        provider.addTranslation("message.ait.oxygen", "Oxygen: ");
+        provider.addTranslation("tooltip.ait.position", "Position: ");
+        provider.addTranslation("message.ait.artron_units2", " AU");
+
+
+        // Environment Projector
         provider.addTranslation("message.ait.projector.skybox", "Now projecting: %s");
 
         // Rift Scanner
@@ -626,7 +661,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.distresscall.source", "SOURCE");
 
         //Monitor
+        provider.addTranslation("screen.ait.monitor.on", "ON");
+        provider.addTranslation("screen.ait.monitor.off", "OFF");
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
+        provider.addTranslation("screen.ait.monitor.gear_icon", "⚙");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
@@ -635,6 +673,27 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
 
+        //TARDIS Flight Sequences
+        provider.addTranslation("sequence.ait.avoid_debris", "Debris incoming!");
+        provider.addTranslation("sequence.ait.dimensional_breach", "DIMENSION BREACH: SECURE DOORS");
+        provider.addTranslation("sequence.ait.energy_drain", "Artron drain detected!");
+        provider.addTranslation("sequence.ait.power_drain_imminent", "Power drain imminent!");
+        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship computer offline! Crash imminent!");
+        provider.addTranslation("sequence.ait.anti_gravity_error", "Gravity miscalculation!");
+        provider.addTranslation("sequence.ait.dimensional_drift_x", "Drifting off course X!");
+        provider.addTranslation("sequence.ait.dimensional_drift_y", "Drifting off course Y!");
+        provider.addTranslation("sequence.ait.dimensional_drift_z", "Drifting off course Z!");
+        provider.addTranslation("sequence.ait.cloak_to_avoid_vortex_trapped_mobs", "Immediate cloaking necessary!");
+        provider.addTranslation("sequence.ait.directional_error", "Directional error!");
+        provider.addTranslation("sequence.ait.speed_up_to_avoid_drifting_out_of_vortex", "Vortex drift: acceleration necessary!");
+        provider.addTranslation("sequence.ait.course_correct", "TARDIS off course!");
+        provider.addTranslation("sequence.ait.ground_unstable", "Unstable landing position!");
+        provider.addTranslation("sequence.ait.increment_scale_recalculation_necessary", "Increment scale error! Recalculation necessary!");
+        provider.addTranslation("sequence.ait.small_debris_field", "Small debris field!");
+
+
+
+        // Hums
         provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
@@ -698,6 +757,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.frooploof.coral_war", "War");
         provider.addTranslation("exterior.frooploof.tokamak_eotd", "Tokamak (EOTD)");
 
+        // Security Settings Menu
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
         provider.addTranslation("screen.ait.gravity", "> Gravity: %s");
@@ -710,8 +770,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
+
+        // Landing Pad
         provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");
 
+        // Commands
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
         provider.addTranslation("command.ait.riftchunk.cannotsetlevel",
                 "This chunk is not a rift chunk, so you can't set the artron levels of it");
@@ -724,12 +787,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("command.ait.data.fail",
                 "Can't get value of a property named %s, because component %s is not keyed!");
 
+        // Rift Chunk Tracking
         provider.addTranslation("riftchunk.ait.tracking", "Rift Tracking");
         provider.addTranslation("riftchunk.ait.cooldown", "Rift tracking is on cooldown");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
         provider.addTranslation("waypoint.direction.tooltip", "Direction");
 
+        // Blueprint Item
         provider.addTranslation("ait.blueprint.tooltip", "Blueprint: ");
 
         // directions
