@@ -1,6 +1,5 @@
 package loqor.ait.client.screens.interior;
 
-import static java.util.function.Predicate.not;
 import static loqor.ait.core.tardis.handler.InteriorChangingHandler.CHANGE_DESKTOP;
 
 import java.util.List;
@@ -24,7 +23,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisClientEvents;
@@ -218,7 +216,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         int startIndex = DependencyChecker.hasGravity() ? 5 : 4;
 
 
-        // Top Apply Button
+        // Top Apply Button (INTERIOR)
         if (!this.buttons.get(startIndex + 5).isHovered())
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 11, this.buttons.get(startIndex + 5).getY() - 5, 40, 166, 53,
                     20);
@@ -226,7 +224,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 11, this.buttons.get(startIndex + 5).getY() - 5, 40, 186, 53,
                     20);
 
-        // Top Arrow Buttons
+        // Top Arrow Buttons (INTERIOR)
         if (!this.buttons.get(startIndex + 3).isHovered())
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 7, this.buttons.get(startIndex + 3).getY() - 5, 0, 166, 20,
                     20);
@@ -241,7 +239,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 7, this.buttons.get(startIndex + 4).getY() - 5, 20, 186, 20,
                     20);
 
-        // Bottom Arrow Buttons
+        // Bottom Arrow Buttons (HUM)
         if (!this.buttons.get(startIndex + 0).isHovered())
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 2, 93, 166, 20,
                     12);
@@ -256,7 +254,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 7, this.buttons.get(startIndex + 1).getY() - 2, 113, 178, 20,
                     12);
 
-        // Bottom Apply Button
+        // Bottom Apply Button (HUM)
 
         if (!this.buttons.get(startIndex + 2).isHovered())
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 2, 133, 166, 53,
