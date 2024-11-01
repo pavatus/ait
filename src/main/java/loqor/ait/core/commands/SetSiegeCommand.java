@@ -25,7 +25,7 @@ public class SetSiegeCommand {
     // TODO: improve feedback
     private static int runCommand(CommandContext<ServerCommandSource> context) {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
-        boolean sieged = BoolArgumentType.getBool(context, "sieged");
+        boolean sieged = BoolArgumentType.getBool(context, "siege");
 
         tardis.siege().setActive(sieged);
         return Command.SINGLE_SUCCESS;
