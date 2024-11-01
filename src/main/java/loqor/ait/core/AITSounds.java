@@ -84,7 +84,7 @@ public class AITSounds {
     // Secret
     public static final SoundEvent DOOM_DOOR_OPEN = register("tardis/secret/doom_door_open");
     public static final SoundEvent DOOM_DOOR_CLOSE = register("tardis/secret/doom_door_close");
-
+    public static final SoundEvent ERROR = register("error");
 
     public static void init() {
 

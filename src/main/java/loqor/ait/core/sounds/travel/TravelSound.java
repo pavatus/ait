@@ -16,6 +16,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 // @TODO better variable names
@@ -40,7 +41,14 @@ public record TravelSound(TravelHandlerBase.State target, Identifier id, Identif
     }
 
     public SoundEvent sound() {
-        return Registries.SOUND_EVENT.get(this.soundId());
+        SoundEvent sfx = Registries.SOUND_EVENT.get(this.soundId());
+
+        if (sfx == null) {
+            AITMod.LOGGER.error("Unknown sound event: {} in travel sfx {}", this.soundId(), this.id());
+            sfx = AITSounds.ERROR;
+        }
+
+        return sfx;
     }
 
     public static TravelSound fromInputStream(InputStream stream) {
