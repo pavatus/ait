@@ -40,6 +40,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
@@ -118,6 +119,16 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
                                                                                             // with key
             }
 
+            return;
+        }
+
+        if (tardis.sonic().getExteriorSonic() != null) {
+            SonicHandler handler = tardis.sonic();
+            if (pos != null) {
+                player.giveItemStack(handler.takeExteriorSonic());
+                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
+                        0.2F);
+            }
             return;
         }
 
