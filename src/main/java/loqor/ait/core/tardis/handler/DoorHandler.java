@@ -301,7 +301,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
         }
 
-        if (tardis.getLockedTardis() || tardis.sonic().getExteriorSonic() != null) {
+        if (tardis.getLockedTardis()) {
             if (player != null && pos != null) {
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f,
@@ -309,7 +309,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 interior.playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
                         SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
             }
-
             return false;
         }
 
