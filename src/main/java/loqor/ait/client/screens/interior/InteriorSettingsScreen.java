@@ -314,11 +314,14 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         if (this.selectedDesktop == null)
             return;
 
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, 15f);
         context.drawCenteredTextWithShadow(this.textRenderer, this.selectedDesktop.name(),
                 (int) (left + (bgWidth * 0.77f)), (int) (top + (bgHeight * 0.080f)), 0xffffff);
+        context.getMatrices().pop();
 
         context.getMatrices().push();
-        context.getMatrices().translate(0, 0, 30f);
+        context.getMatrices().translate(0, 0, 10f);
         context.drawTexture(
                 doesTextureExist(this.selectedDesktop.previewTexture().texture())
                         ? this.selectedDesktop.previewTexture().texture()
