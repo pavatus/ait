@@ -122,7 +122,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         Text applyHumText = Text.literal("AP");
         Text applyInteriorText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 64),
-                this.textRenderer.getWidth(applyInteriorText), 10, Text.translatable("screen.ait.monitor.apply"), button -> applyHum(), this.textRenderer));
+                this.textRenderer.getWidth(applyInteriorText), 10, Text.translatable(""), button -> applyHum(), this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 8), this.textRenderer.getWidth("<"), 10,
                 Text.literal(""), button -> {
                     previousDesktop();
@@ -272,13 +272,11 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 this.tardis().getFuel() > (FuelHandler.TARDIS_MAX_FUEL / 4) ? 225 : 234,
                 (int) (85 * this.tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL), 9);
 
+
         // fuel markers @TODO come back and actually do the rest of it with the halves
         // and the red
         // parts
         // too
-        for (int p = 0; p < Math.round((tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 12); ++p) {
-            context.drawTexture(TEXTURE, left + 29 + (8 * p), top + 135, 99, 150, 7, 11);
-        }
 
         // Flight Progress
         int progress = this.tardis().travel().getDurationAsPercentage();
@@ -291,7 +289,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             if (progress >= rangeStart && progress <= rangeEnd) {
                 uvOffset = calculateUvOffsetForRange(progress);
             } else if (progress >= rangeEnd) {
-                uvOffset = 56;
+                uvOffset = 57;
             } else {
                 uvOffset = UV_BASE;
             }
@@ -320,12 +318,12 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 (int) (left + (bgWidth * 0.77f)), (int) (top + (bgHeight * 0.080f)), 0xffffff);
 
         context.getMatrices().push();
-        context.getMatrices().translate(0, 0, -50f);
+        context.getMatrices().translate(0, 0, 30f);
         context.drawTexture(
                 doesTextureExist(this.selectedDesktop.previewTexture().texture())
                         ? this.selectedDesktop.previewTexture().texture()
                         : MISSING_PREVIEW,
-                left + 151, top + 10, 91, 91, 0, 0, this.selectedDesktop.previewTexture().width * 2,
+                left + 151, top + 10, 95, 75, 0, 0, this.selectedDesktop.previewTexture().width * 2,
                 this.selectedDesktop.previewTexture().height * 2, this.selectedDesktop.previewTexture().width * 2,
                 this.selectedDesktop.previewTexture().height * 2);
 
@@ -375,7 +373,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 (int) (left + (bgWidth * 0.65f)) - this.textRenderer.getWidth(humsText) / 2,
                 (int) (top + (bgHeight * 0.7f)), 0xffffff, true);
         Text hum = Text.translatable("screen.ait.interior.settings." + this.hum.name());
-        context.drawText(this.textRenderer, hum, (int) (left + (bgWidth * 0.76f)) - this.textRenderer.getWidth(hum) / 2,
+        context.drawText(this.textRenderer, hum, (int) (left + (bgWidth * 0.77f)) - this.textRenderer.getWidth(hum) / 2,
                 (int) (top + (bgHeight * 0.792f)), 0xffffff, true);
     }
 
