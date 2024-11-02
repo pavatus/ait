@@ -631,7 +631,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
 
         // Item tooltips
-        provider.addTranslation("message.ait.artron_units", "AU: ");
+        provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
         provider.addTranslation("message.ait.oxygen", "Oxygen: ");
         provider.addTranslation("tooltip.ait.position", "Position: ");
         provider.addTranslation("message.ait.artron_units2", " AU");

@@ -495,8 +495,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                 if (!isRift) return;
 
-                player.sendMessage(Text.translatable("message.ait.artron_units" + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
-                        .formatted(Formatting.GOLD));
+                int artronValue = (int) RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos));
+                player.sendMessage(
+                        Text.translatable("message.ait.artron_units", artronValue)
+                                .formatted(Formatting.GOLD)
+                );
             }
             private static void sendTardisInfo(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null)
