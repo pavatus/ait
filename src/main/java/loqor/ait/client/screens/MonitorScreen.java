@@ -34,6 +34,7 @@ import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
@@ -378,7 +379,7 @@ public class MonitorScreen extends ConsoleScreen {
         model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
                 LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f);
 
-        if (hasPower && emissive != null) {
+        if (hasPower && emissive != null && !(emissive.equals(DatapackConsole.EMPTY))) {
             ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(model::render), emissive, null,
                     model.getPart(), stack, context.getVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE,
                     OverlayTexture.DEFAULT_UV, base, tinted, tinted, 1f);
