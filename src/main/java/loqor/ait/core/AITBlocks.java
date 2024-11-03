@@ -18,24 +18,31 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
+import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
+import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 public class AITBlocks implements BlockRegistryContainer {
 
     @NoBlockItem
+    @NoBlockDrop
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(ExteriorBlock.STATE_TO_LUMINANCE));
 
+    @PickaxeMineable
     public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision()
             .instrument(Instrument.BASEDRUM).requiresTool().strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+    @NoBlockDrop
     public static final Block CONSOLE = new ConsoleBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
                     .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
+    @NoBlockDrop
     public static final Block WAYPOINT_BANK = new WaypointBankBlock(
             FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F)
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3));
 
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block LANDING_PAD = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
@@ -46,14 +53,17 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block ENGINE_CORE_BLOCK = new EngineCoreBlock(
             AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
                     .strength(3.0F).luminance((state) -> 15).nonOpaque());
+    @PickaxeMineable
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable
     public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(Instrument.BANJO).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque()
             .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block PLAQUE_BLOCK = new PlaqueBlock(
@@ -64,21 +74,28 @@ public class AITBlocks implements BlockRegistryContainer {
                     .strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
     public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.NORMAL));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA)
             .strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block BUDDING_ZEITON = new BuddingZeitonBlock(
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F)
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY));
+    @NoBlockDrop
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block ZEITON_CLUSTER = new AmethystClusterBlock(7, 3,
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly()
                     .sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F).luminance((state) -> 5)
                     .pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block LARGE_ZEITON_BUD = new AmethystClusterBlock(5, 3,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid()
                     .luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid()
                     .luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
                     .luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
@@ -124,6 +141,7 @@ public class AITBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE_WALL));
 
     @NoBlockItem
+    @NoBlockDrop
     public static final Block MARTIAN_COBBLESTONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE_SLAB));
 
@@ -150,6 +168,7 @@ public class AITBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
 
     @NoBlockItem
+    @NoBlockDrop
     public static final Block MARTIAN_BRICK_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICK_SLAB));
 
@@ -183,6 +202,7 @@ public class AITBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
 
     @NoBlockItem
+    @NoBlockDrop
     public static final Block SMOOTH_MARTIAN_STONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
 
