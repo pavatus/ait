@@ -22,7 +22,7 @@ import loqor.ait.data.landing.LandingPadRegion;
 
 public class LandingPadScreen extends Screen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/consoles/monitors/security_menu.png");
+            "textures/gui/tardis/consoles/monitors/landing_marker_gui.png");
     private final BlockPos pos;
     private final LandingPadRegion landingRegion;
     int bgHeight = 137;
