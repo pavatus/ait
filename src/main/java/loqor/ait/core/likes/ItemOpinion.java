@@ -23,15 +23,19 @@ public record ItemOpinion(Identifier id, ItemStack stack, int cost, int loyalty)
     public static final Codec<ItemOpinion> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(ItemOpinion::id),
                     ItemStack.CODEC.fieldOf("stack").forGetter(ItemOpinion::stack),
-                    Codec.INT.fieldOf("cost").forGetter(ItemOpinion::cost),
+                    Codec.INT.optionalFieldOf("cost", -1).forGetter(ItemOpinion::cost),
                     Codec.INT.fieldOf("loyalty").forGetter(ItemOpinion::loyalty))
             .apply(instance, ItemOpinion::new)));
 
 
     public ItemOpinion {
         if (cost < 0) {
-            throw new IllegalArgumentException("Cost cannot be negative");
+            cost = loyalty * 10;
         }
+    }
+
+    public ItemOpinion(Identifier id, ItemStack stack, int loyalty) {
+        this(id, stack, loyalty * 10, loyalty);
     }
 
     @Override

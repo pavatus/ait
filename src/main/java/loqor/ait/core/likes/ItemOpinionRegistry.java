@@ -22,7 +22,7 @@ public class ItemOpinionRegistry extends SimpleDatapackRegistry<ItemOpinion> {
 
     @Override
     protected void defaults() {
-        LIKES_ENDER_EYE = register(new ItemOpinion(new Identifier(AITMod.MOD_ID, "likes_ender_eye"), Items.ENDER_EYE.getDefaultStack(), 50, 10));
+        LIKES_ENDER_EYE = register(new ItemOpinion(new Identifier(AITMod.MOD_ID, "likes_ender_eye"), Items.ENDER_EYE.getDefaultStack(), 10));
     }
 
     @Override
