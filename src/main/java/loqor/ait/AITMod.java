@@ -247,4 +247,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
     }
+    public static Identifier id(String path) {
+        return new Identifier(MOD_ID, path);
+    }
 }
