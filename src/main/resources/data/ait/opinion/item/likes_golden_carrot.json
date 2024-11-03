@@ -1,0 +1,9 @@
+{
+  "id": "ait:likes_golden_carrot",
+  "stack": {
+    "id": "minecraft:golden_carrot",
+    "Count": 1
+  },
+  "cost": 5,
+  "loyalty": 5
+}
