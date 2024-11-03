@@ -6,6 +6,7 @@ import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
@@ -137,97 +138,97 @@ public class AITItems implements ItemRegistryContainer {
     // Martian Stone
 
     public static final Item MARTIAN_STONE = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_STONE, new
+            BlockItem(AITBlocks.MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_STONE_SLAB = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_SLAB, new
+            BlockItem(AITBlocks.MARTIAN_STONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_STONE_WALL = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_WALL, new
+            BlockItem(AITBlocks.MARTIAN_STONE_WALL, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_STONE_STAIRS = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_STAIRS, new
+            BlockItem(AITBlocks.MARTIAN_STONE_STAIRS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_STONE_BUTTON = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_BUTTON, new
+            BlockItem(AITBlocks.MARTIAN_STONE_BUTTON, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_STONE_PRESSURE_PLATE = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, new
+            BlockItem(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     // Martian Bricks
     public static final Item MARTIAN_BRICKS = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_BRICKS, new
+            BlockItem(AITBlocks.MARTIAN_BRICKS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_BRICK_SLAB = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_BRICK_SLAB, new
+            BlockItem(AITBlocks.MARTIAN_BRICK_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_BRICK_WALL = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_BRICK_WALL, new
+            BlockItem(AITBlocks.MARTIAN_BRICK_WALL, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_BRICK_STAIRS = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_BRICK_STAIRS, new
+            BlockItem(AITBlocks.MARTIAN_BRICK_STAIRS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     // Martian Cobblestone
     public static final Item MARTIAN_COBBLESTONE = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE, new
+            BlockItem(AITBlocks.MARTIAN_COBBLESTONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_COBBLESTONE_WALL = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE_WALL, new
+            BlockItem(AITBlocks.MARTIAN_COBBLESTONE_WALL, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_COBBLESTONE_STAIRS = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, new
+            BlockItem(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_COBBLESTONE_SLAB = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_COBBLESTONE_SLAB, new
+            BlockItem(AITBlocks.MARTIAN_COBBLESTONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item MARTIAN_PILLAR = new
-            GenericControlBlockItem(AITBlocks.MARTIAN_PILLAR, new
+            BlockItem(AITBlocks.MARTIAN_PILLAR, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item CHISELED_MARTIAN_STONE = new
-            GenericControlBlockItem(AITBlocks.CHISELED_MARTIAN_STONE, new
+            BlockItem(AITBlocks.CHISELED_MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item CRACKED_MARTIAN_BRICKS = new
-            GenericControlBlockItem(AITBlocks.CRACKED_MARTIAN_BRICKS, new
+            BlockItem(AITBlocks.CRACKED_MARTIAN_BRICKS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     // Polished Martian Stone
 
     public static final Item POLISHED_MARTIAN_STONE = new
-            GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE, new
+            BlockItem(AITBlocks.POLISHED_MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item POLISHED_MARTIAN_STONE_STAIRS = new
-            GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, new
+            BlockItem(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item POLISHED_MARTIAN_STONE_SLAB = new
-            GenericControlBlockItem(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, new
+            BlockItem(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     // Smooth Martian Stone
 
     public static final Item SMOOTH_MARTIAN_STONE = new
-            GenericControlBlockItem(AITBlocks.SMOOTH_MARTIAN_STONE, new
+            BlockItem(AITBlocks.SMOOTH_MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item SMOOTH_MARTIAN_STONE_SLAB = new
-            GenericControlBlockItem(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, new
+            BlockItem(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
 

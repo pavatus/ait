@@ -22,6 +22,7 @@ import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.EngineHandler;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.LoyaltyHandler;
+import loqor.ait.core.tardis.handler.ServerHumHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
@@ -31,11 +32,12 @@ import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.category.CapsuleCategory;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
+import loqor.ait.registry.impl.HumRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class TardisItemBuilder extends Item {
 
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "coral");
+    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "accursed");
     public static final Identifier DEFAULT_EXTERIOR = CapsuleCategory.REFERENCE;
 
     private final Identifier exterior;
@@ -109,7 +111,8 @@ public class TardisItemBuilder extends Item {
                             engine.linkEngine(0, 0);
                             engine.enablePower();
                         }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
-                                loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER))));
+                                loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER)))
+                        .<ServerHumHandler>with(TardisComponent.Id.HUM, hum -> hum.setHum(HumRegistry.getInstance().get(new Identifier(AITMod.MOD_ID, "prime")))));
 
         if (created == null) {
             player.sendMessage(Text.translatable("message.ait.max_tardises"), true);

@@ -339,7 +339,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
     private void applyHum() {
         ClientSoundManager.getHum().setServersHum(this.tardis(), this.hum);
-        MinecraftClient.getInstance().setScreen(null);
     }
 
     private void nextHum() {
