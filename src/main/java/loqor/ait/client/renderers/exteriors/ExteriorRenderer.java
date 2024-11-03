@@ -29,6 +29,7 @@ import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
@@ -175,7 +176,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         profiler.push("emission");
         boolean alarms = tardis.alarm().enabled().get();
 
-        if (alpha > 0.105f)
+        if (alpha > 0.105f && !(emission.equals(DatapackConsole.EMPTY)))
             ClientLightUtil.renderEmissivable(tardis.engine().hasPower(), model::renderWithAnimations, emission, entity,
                     this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1,
                     alarms ? 0.3f : 1, alpha);
