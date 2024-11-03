@@ -32,9 +32,6 @@ public record ItemOpinion(Identifier id, ItemStack stack, int cost, int loyalty)
         if (cost < 0) {
             throw new IllegalArgumentException("Cost cannot be negative");
         }
-        if (loyalty < 0) {
-            throw new IllegalArgumentException("Loyalty cannot be negative");
-        }
     }
 
     @Override
