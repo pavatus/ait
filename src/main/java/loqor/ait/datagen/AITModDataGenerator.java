@@ -394,6 +394,25 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
         provider.addTranslation("itemGroup.ait.planets_item_group", "Adventures In Time: Planets");
 
+        // Config
+        provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
+        provider.addTranslation("text.config.aitconfig.option.GHOST_MONUMENT", "Allow Ghost Monument");
+        provider.addTranslation("text.config.aitconfig.option.LOCK_DIMENSIONS", "Lock Dimensions");
+        provider.addTranslation("text.config.aitconfig.option.WORLDS_BLACKLIST", "Blacklist Dimensions");
+        provider.addTranslation("text.config.aitconfig.option.TRAVEL_PER_TICK", "TARDIS travel per tick");
+        provider.addTranslation("text.config.aitconfig.option.SEND_BULK", "Send Bulk");
+        provider.addTranslation("text.config.aitconfig.option.MAX_TARDISES", "Max TARDISES (-1 = Infinite)");
+
+        provider.addTranslation("text.config.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
+        provider.addTranslation("text.config.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
+        provider.addTranslation("text.config.aitconfig.option.DISABLE_CONSOLE_ANIMATIONS", "Disable Console Animations");
+        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
+        provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
+
+        provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
+        provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
+        provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
+
         // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
