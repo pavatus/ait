@@ -141,8 +141,12 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
             World world = exteriorPos.getWorld();
             BlockPos pos = exteriorPos.getPos();
 
+            ForcedChunkUtil.keepChunkLoaded(exteriorPos);
+
             world.removeBlock(pos, false);
             world.removeBlockEntity(pos);
+
+            ForcedChunkUtil.stopForceLoading(exteriorPos);
         } else {
             TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
                 DirectedGlobalPos.Cached cached = tardis.travel().destination();
