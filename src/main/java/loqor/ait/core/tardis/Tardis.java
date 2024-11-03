@@ -235,4 +235,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public SelfDestructHandler selfDestruct() {
         return this.handler(TardisComponent.Id.SELF_DESTRUCT);
     }
+
+    public OpinionHandler opinions() {
+        return this.handler(TardisComponent.Id.OPINION);
+    }
 }

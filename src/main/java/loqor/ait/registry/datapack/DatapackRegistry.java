@@ -1,9 +1,6 @@
 package loqor.ait.registry.datapack;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 import net.minecraft.network.PacketByteBuf;
@@ -48,6 +45,16 @@ public abstract class DatapackRegistry<T extends Identifiable> implements Regist
 
     public T getRandom() {
         return this.getRandom(RANDOM);
+    }
+
+    public List<T> getRandom(int count) {
+        List<T> list = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            list.add(this.getRandom());
+        }
+
+        return list;
     }
 
     public T get(Identifier id) {

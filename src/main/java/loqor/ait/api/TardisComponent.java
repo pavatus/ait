@@ -128,7 +128,8 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         INCREMENT(IncrementManager.class, IncrementManager::new),
         LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new),
         CHAMELEON(ChameleonHandler.class, ChameleonHandler::new),
-        SELF_DESTRUCT(SelfDestructHandler.class, SelfDestructHandler::new),;
+        SELF_DESTRUCT(SelfDestructHandler.class, SelfDestructHandler::new),
+        OPINION(OpinionHandler.class, OpinionHandler::new),;
 
         private final Supplier<TardisComponent> creator;
 
