@@ -643,6 +643,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.warning4",
                 "Target has been reset and updated, the device is now pointing towards your new target");
 
+        // Sonic Modes
+        provider.addTranslation("sonic.ait.mode.inactive", "INACTIVE");
+        provider.addTranslation("sonic.ait.mode.tardis", "TARDIS");
+        provider.addTranslation("sonic.ait.mode.interaction", "INTERACTION");
+        provider.addTranslation("sonic.ait.mode.overload", "OVERLOAD");
+        provider.addTranslation("sonic.ait.mode.scanning", "SCANNING");
+
+
         // Key tooltips
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
@@ -651,6 +659,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
+        provider.addTranslation("message.ait.tooltips.artron_units", "Artron Units: ");
         provider.addTranslation("message.ait.oxygen", "Oxygen: ");
         provider.addTranslation("tooltip.ait.position", "Position: ");
         provider.addTranslation("message.ait.artron_units2", " AU");
