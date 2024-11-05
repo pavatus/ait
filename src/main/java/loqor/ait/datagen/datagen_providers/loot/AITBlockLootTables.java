@@ -47,6 +47,9 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
         addDrop(AITBlocks.MARTIAN_BRICK_SLAB, slabDrops(AITBlocks.MARTIAN_BRICK_SLAB));
         addDrop(AITBlocks.MARTIAN_COBBLESTONE_SLAB, slabDrops(AITBlocks.MARTIAN_COBBLESTONE_SLAB));
         addDrop(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, slabDrops(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB));
+        addDrop(AITBlocks.ANORTHOSITE_BRICK_SLAB, slabDrops(AITBlocks.ANORTHOSITE_BRICK_SLAB));
+        addDrop(AITBlocks.ANORTHOSITE_SLAB, slabDrops(AITBlocks.ANORTHOSITE_SLAB));
+        addDrop(AITBlocks.POLISHED_ANORTHOSITE_SLAB, slabDrops(AITBlocks.POLISHED_ANORTHOSITE_SLAB));
     }
 
     public static List<Block> filterBlocksWithAnnotation(List<Block> blocks, Class<?> parent, Class<? extends Annotation> annotationClass, boolean inverse) {

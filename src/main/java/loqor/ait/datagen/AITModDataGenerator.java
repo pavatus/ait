@@ -533,8 +533,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
 
         // Martian Blocks (Planet)
-        provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
         // Stone
+        provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
         provider.addTranslation(AITBlocks.MARTIAN_STONE_SLAB, "Martian Stone Slab");
         provider.addTranslation(AITBlocks.MARTIAN_STONE_STAIRS, "Martian Stone Stairs");
         provider.addTranslation(AITBlocks.MARTIAN_STONE_WALL, "Martian Stone Wall");
@@ -559,6 +559,30 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, "Polished Martian Stone Stairs");
         provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE, "Smooth Martian Stone");
         provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, "Smooth Martian Stone Slab");
+
+        // Moon Blocks (Planet)
+        // Stone
+        provider.addTranslation(AITBlocks.ANORTHOSITE, "Anorthosite");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_SLAB, "Anorthosite Slab");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_STAIRS, "Anorthosite Stairs");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_WALL, "Anorthosite Wall");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_BUTTON, "Anorthosite Button");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_PRESSURE_PLATE, "Anorthosite Pressure Plate");
+        // Bricks
+        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICKS, "Anorthosite Bricks");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_SLAB, "Anorthosite Brick Slab");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_STAIRS, "Anorthosite Brick Stairs");
+        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_WALL, "Anorthosite Brick Wall");
+        // Other
+        provider.addTranslation(AITBlocks.ANORTHOSITE_PILLAR, "Anorthosite Pillar");
+        provider.addTranslation(AITBlocks.CHISELED_ANORTHOSITE, "Chiseled Anorthosite");
+        provider.addTranslation(AITBlocks.CRACKED_ANORTHOSITE_BRICKS, "Cracked Anorthosite Bricks");
+        provider.addTranslation(AITBlocks.POLISHED_ANORTHOSITE, "Polished Anorthosite");
+        // Polished Stone
+        provider.addTranslation(AITBlocks.POLISHED_ANORTHOSITE_SLAB, "Polished Anorthosite Slab");
+        provider.addTranslation(AITBlocks.POLISHED_ANORTHOSITE_STAIRS, "Polished Anorthosite Stairs");
+        provider.addTranslation(AITBlocks.SMOOTH_ANORTHOSITE, "Smooth Anorthosite");
+        provider.addTranslation(AITBlocks.SMOOTH_ANORTHOSITE_SLAB, "Smooth Anorthosite Slab");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");

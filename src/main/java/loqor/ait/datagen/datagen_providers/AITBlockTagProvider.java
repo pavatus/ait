@@ -57,5 +57,8 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // Martian Blocks
         getOrCreateTagBuilder(BlockTags.WALLS)
                 .add(AITBlocks.MARTIAN_BRICK_WALL).add(AITBlocks.MARTIAN_COBBLESTONE_WALL).add(AITBlocks.MARTIAN_STONE_WALL);
+        // Anorthosite Blocks
+        getOrCreateTagBuilder(BlockTags.WALLS)
+                .add(AITBlocks.ANORTHOSITE_BRICK_WALL).add(AITBlocks.ANORTHOSITE_WALL);
     }
 }
