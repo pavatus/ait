@@ -101,8 +101,6 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         choicesCount = 0;
         this.buttons.clear();
 
-        createTextButton(Text.translatable("screen.ait.interiorsettings.back"),
-                (button -> backToExteriorChangeScreen()));
         createTextButton(Text.translatable("screen.ait.interiorsettings.cacheconsole")
                 .formatted(this.console != null ? Formatting.WHITE : Formatting.GRAY), button -> sendCachePacket());
         createTextButton(Text.translatable("screen.ait.security.button"), (button -> toSecurityScreen()));
@@ -133,6 +131,11 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
                 this.textRenderer.getWidth(applyInteriorText), 20, Text.translatable("screen.ait.monitor.apply").formatted(Formatting.BOLD), button -> applyDesktop(), this.textRenderer));
+        Text exteriorSettingsText = Text.translatable("screen.ait.monitor.gear_icon");
+        this.addButton(new PressableTextWidget((width / 2 - 6), (height / 2 + 57),
+                this.textRenderer.getWidth(exteriorSettingsText), 10,
+                Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.WHITE),
+                button -> backToExteriorChangeScreen(), this.textRenderer));
     }
 
     private void toSonicScreen() {
@@ -262,13 +265,20 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         else
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 2, 133, 178, 53,
                     12);
+        // should be the exterior settings button but we'll see
+        if (!this.buttons.get(7).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(5).getX() - 7, this.buttons.get(5).getY() - 5, 186, 166, 20,
+                    20);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(5).getX() - 7, this.buttons.get(5).getY() - 5, 186, 186, 20,
+                    20);
 
 
         if (tardis() == null)
             return;
 
         // Fuel
-        context.drawTexture(TEXTURE, i + 30, j + 144, 0,
+        context.drawTexture(TEXTURE, i + 16, j + 144, 0,
                 this.tardis().getFuel() > (FuelHandler.TARDIS_MAX_FUEL / 4) ? 225 : 234,
                 (int) (85 * this.tardis().getFuel() / FuelHandler.TARDIS_MAX_FUEL), 9);
 
@@ -294,7 +304,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 uvOffset = UV_BASE;
             }
 
-            context.drawTexture(TEXTURE, i + 25 + (index * 19), j + 113,
+            context.drawTexture(TEXTURE, i + 11 + (index * 19), j + 113,
                     this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
                             ? progress >= 100 ? 76 : uvOffset
                             : UV_BASE,
@@ -321,12 +331,11 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         context.getMatrices().pop();
 
         context.getMatrices().push();
-        context.getMatrices().translate(0, 0, 10f);
         context.drawTexture(
                 doesTextureExist(this.selectedDesktop.previewTexture().texture())
                         ? this.selectedDesktop.previewTexture().texture()
                         : MISSING_PREVIEW,
-                left + 151, top + 10, 95, 75, 0, 0, this.selectedDesktop.previewTexture().width * 2,
+                left + 151, top + 10, 95, 95, 0, 0, this.selectedDesktop.previewTexture().width * 2,
                 this.selectedDesktop.previewTexture().height * 2, this.selectedDesktop.previewTexture().width * 2,
                 this.selectedDesktop.previewTexture().height * 2);
 
