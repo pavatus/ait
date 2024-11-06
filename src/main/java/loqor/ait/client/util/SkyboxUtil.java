@@ -15,7 +15,8 @@ import loqor.ait.AITMod;
 public class SkyboxUtil {
 
     private static final Identifier TARDIS_SKY = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_sky.png");
-    private static final Identifier MOON_SKY = new Identifier(AITMod.MOD_ID, "textures/environment/moon_sky.png");
+    private static final Identifier MOON_SKY = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_sky.png");
+    private static final Identifier EARTH = new Identifier(AITMod.MOD_ID, "textures/environment/earth.png");
 
     private static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
             RotationAxis.POSITIVE_X.rotationDegrees(-90.0f), RotationAxis.POSITIVE_X.rotationDegrees(180.0f),
@@ -77,6 +78,8 @@ public class SkyboxUtil {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
+
+
         for (int i = 0; i < 6; i++) {
             matrices.push();
 
@@ -100,6 +103,20 @@ public class SkyboxUtil {
             tessellator.draw();
             matrices.pop();
         }
+
+        float k = 30.0f;
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShaderTexture(0, EARTH);
+
+        Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
+        //make smaller moon size
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
+        bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();
+        bufferBuilder.vertex(matrix4f2, k, 100.0f, k).texture(1.0f, 1.0f).next();
+        bufferBuilder.vertex(matrix4f2, -k, 100.0f, k).texture(0.0f, 1.0f).next();
+
+        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
