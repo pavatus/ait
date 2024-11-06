@@ -32,7 +32,7 @@ public class ConsoleRegistry {
     public static void init() {
         HARTNELL = register(new HartnellType());
         CORAL = register(new CoralType());
-        // COPPER = register(new CopperType());
+        COPPER = register(new CopperType());
         TOYOTA = register(new ToyotaType());
         ALNICO = register(new AlnicoType());
         STEAM = register(new SteamType());

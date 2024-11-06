@@ -79,7 +79,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
         profiler.swap("render");
         model.renderWithAnimations(entity, model.getPart(), matrices,
-                vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1,
+                vertexConsumers.getBuffer(variant.equals(ClientConsoleVariantRegistry.COPPER) ? RenderLayer.getArmorCutoutNoCull(variant.texture()) : RenderLayer.getEntityTranslucentCull(variant.texture())), light, overlay, 1,
                 1, 1, 1);
 
         if (hasPower) {

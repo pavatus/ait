@@ -17,6 +17,7 @@ import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.alnico.AlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.BlueAlnicoVariant;
+import loqor.ait.data.schema.console.variant.copper.CopperVariant;
 import loqor.ait.data.schema.console.variant.coral.BlueCoralVariant;
 import loqor.ait.data.schema.console.variant.coral.CoralVariant;
 import loqor.ait.data.schema.console.variant.coral.WhiteCoralVariant;
@@ -161,7 +162,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         // HUDOLIN = registerStatic(new HudolinVariant());
 
         // Copper variants
-        // COPPER = registerStatic(new CopperVariant());
+        COPPER = registerStatic(new CopperVariant());
 
         // Borealis variants
         // BOREALIS = registerStatic(new BorealisVariant());

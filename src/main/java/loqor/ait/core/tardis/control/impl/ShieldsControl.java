@@ -30,7 +30,7 @@ public class ShieldsControl extends Control {
 
         ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
 
-        if (leftClick) {
+        if (leftClick || player.isSneaking()) {
             if (shields.shielded().get())
                 shields.toggleVisuals();
         } else {
@@ -40,7 +40,7 @@ public class ShieldsControl extends Control {
                 shields.disableVisuals();
         }
 
-        this.soundEvent = leftClick ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
+        this.soundEvent = leftClick || player.isSneaking() ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
 
         if (tardis.travel().position().getPos() != null)
             WorldOps.updateIfOnServer(world, tardis.travel().position().getPos());
