@@ -226,14 +226,6 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block ANORTHOSITE_STAIRS = new StairsBlock(
             AITBlocks.ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE));
 
-    @NoBlockItem
-    public static final Block ANORTHOSITE_BUTTON = new ButtonBlock(
-            AbstractBlock.Settings.copy(Blocks.STONE_BUTTON), BlockSetType.STONE, 10, false);
-
-    @NoBlockItem
-    public static final Block ANORTHOSITE_PRESSURE_PLATE  = new PressurePlateBlock(
-            PressurePlateBlock.ActivationRule.EVERYTHING, AbstractBlock.Settings.copy(Blocks.STONE_PRESSURE_PLATE),BlockSetType.STONE);
-
 
     @NoBlockItem
     public static final Block ANORTHOSITE_PILLAR = new PillarBlock(

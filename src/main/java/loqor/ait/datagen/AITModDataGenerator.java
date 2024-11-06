@@ -566,8 +566,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.ANORTHOSITE_SLAB, "Anorthosite Slab");
         provider.addTranslation(AITBlocks.ANORTHOSITE_STAIRS, "Anorthosite Stairs");
         provider.addTranslation(AITBlocks.ANORTHOSITE_WALL, "Anorthosite Wall");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_BUTTON, "Anorthosite Button");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_PRESSURE_PLATE, "Anorthosite Pressure Plate");
         // Bricks
         provider.addTranslation(AITBlocks.ANORTHOSITE_BRICKS, "Anorthosite Bricks");
         provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_SLAB, "Anorthosite Brick Slab");

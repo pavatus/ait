@@ -266,7 +266,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 2, 133, 178, 53,
                     12);
         // should be the exterior settings button but we'll see
-        if (!this.buttons.get(7).isHovered())
+        if (!this.buttons.get(2).isHovered())
             context.drawTexture(TEXTURE, this.buttons.get(5).getX() - 7, this.buttons.get(5).getY() - 5, 186, 166, 20,
                     20);
         else

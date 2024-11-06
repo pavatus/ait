@@ -22,8 +22,11 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 public enum DefaultThemes {
     CORAL("coral", "exterior/police_box/coral", "coral", "console/coral"),
     PRIME("accursed", "exterior/capsule/default", "prime", "console/hartnell"),
-    TOYOTA("toyota", "exterior/police_box/default", "toyota", "todo"),
-    COPPER(AITMod.id("copper"), new Identifier("frooploof", "copper"), AITMod.id("copper"), AITMod.id("todo"));
+    TOYOTA("toyota", "exterior/police_box/default", "toyota", "console/toyota"),
+    TOKAMAK("tokamak", "exterior/police_box/tokamak", "tokamak", "todo"),
+    WAR(AITMod.id("war"), new Identifier("frooploof", "war"), AITMod.id("coral"), AITMod.id("console/copper")),
+    CRYSTALLINE("crystalline", "exterior/police_box/tokamak", "coral", "todo"),
+    COPPER(AITMod.id("copper"), new Identifier("frooploof", "copper"), AITMod.id("copper"), AITMod.id("console/copper"));
     private final Identifier desktop;
     private final Identifier exterior;
     private final Identifier hum;

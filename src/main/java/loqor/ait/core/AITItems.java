@@ -251,13 +251,6 @@ public class AITItems implements ItemRegistryContainer {
             BlockItem(AITBlocks.ANORTHOSITE_STAIRS, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
-    public static final Item ANORTHOSITE_BUTTON = new
-            BlockItem(AITBlocks.ANORTHOSITE_BUTTON, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_PRESSURE_PLATE = new
-            BlockItem(AITBlocks.ANORTHOSITE_PRESSURE_PLATE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     // Anorthosite Bricks
     public static final Item ANORTHOSITE_BRICKS = new
