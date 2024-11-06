@@ -185,6 +185,7 @@ public class MultiDim {
         ((MultiDimServer) this.server).multidim$addWorld(world);
 
         ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
+        // dont uncomment this it fucks interior placement
         world.tick(() -> true);
     }
     public Optional<ServerWorld> findLoading(Identifier world) {

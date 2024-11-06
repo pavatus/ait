@@ -1696,7 +1696,7 @@ public class CopperConsoleModel extends ConsoleModel {
 
         ModelPartData bigplant = screenplanets.addChild("bigplant", ModelPartBuilder.create().uv(241, 133).cuboid(-2.0F, -2.0F, 0.0F, 4.0F, 4.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.5F, 1.9F));
 
-        ModelPartData rack2 = scanner.addChild("rack2", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 2.0F, 0.75F));
+        ModelPartData rack2 = scanner.addChild("rack2", ModelPartBuilder.create().uv(220, 209).cuboid(-8.0F, -40.0F, 20.0F, 16.0F, 14.0F, 0.0F, new Dilation(0.01F)), ModelTransform.pivot(0.0F, 2.0F, 0.75F));
 
         ModelPartData cube_r321 = rack2.addChild("cube_r321", ModelPartBuilder.create().uv(220, 231).cuboid(-8.0F, -0.5F, 0.0F, 9.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -46.25F, 19.9F, 0.0F, 0.0F, -0.2182F));
 
@@ -1746,7 +1746,7 @@ public class CopperConsoleModel extends ConsoleModel {
         this.copper.getChild("pillars").getChild("pillars2").getChild("pillars3").getChild("pillars4").getChild("bone121").getChild("fuel_gauge").yaw = (float) (((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 3));
 
         // direction
-        this.copper.getChild("pillars").getChild("pillars2").getChild("pillars3").getChild("pillars4").getChild("pillars5").getChild("bone126").pitch += (float) (tardis.travel().destination().getRotation() * (1.5708f / 4f));
+        this.copper.getChild("pillars").getChild("pillars2").getChild("pillars3").getChild("pillars4").getChild("pillars5").getChild("bone126").pitch -= (float) (tardis.travel().destination().getRotation() * (1.5708f / 4f));
 
         // handbrake
         this.copper.getChild("pillars").getChild("pillars2").getChild("pillars3").getChild("complicated").getChild("handbrake").pitch += tardis.travel().handbrake() ? -1.0f : 0;
