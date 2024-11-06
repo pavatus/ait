@@ -185,7 +185,7 @@ public class MultiDim {
         ((MultiDimServer) this.server).multidim$addWorld(world);
 
         ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
-        world.tick(() -> true);
+        // world.tick(() -> true);
     }
     public Optional<ServerWorld> findLoading(Identifier world) {
         return this.toLoad.stream().filter(w -> w.getRegistryKey().getValue().equals(world)).findFirst();
