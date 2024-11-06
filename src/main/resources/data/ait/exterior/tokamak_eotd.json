@@ -13,5 +13,6 @@
         "chorus": "ait:textures/blockentities/exteriors/police_box/police_box_tokamak_chorus.png",
         "cherry": "ait:textures/blockentities/exteriors/police_box/police_box_cherry.png"
     },
-    "effects": ["ait:ghost_mat", "ait:eight_demat"]
+    "effects": ["ait:ghost_mat", "ait:eight_demat"],
+    "flight": "ait:unstable"
 }

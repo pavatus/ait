@@ -20,6 +20,7 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
 import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
@@ -52,12 +53,13 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),
                     TravelSoundMap.CODEC.optionalFieldOf("effects", new TravelSoundMap().of(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.DEFAULT_DEMAT).of(TravelHandlerBase.State.MAT, TravelSoundRegistry.DEFAULT_MAT)).forGetter(ExteriorVariantSchema::effects),
+                    Identifier.CODEC.optionalFieldOf("flight", FlightSoundRegistry.DEFAULT.id()).forGetter(DatapackExterior::flightId),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack))
             .apply(instance, DatapackExterior::new));
 
     public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture,
-            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, TravelSoundMap effects, boolean isDatapack) {
-        super(category, id, loyalty, effects);
+            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, TravelSoundMap effects, Identifier flightId, boolean isDatapack) {
+        super(category, id, loyalty, effects, FlightSoundRegistry.getInstance().get(flightId));
         this.parent = parent;
         this.texture = texture;
         this.emission = emission;
@@ -137,5 +139,8 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
     public Identifier emission() {
         return this.emission;
+    }
+    public Identifier flightId() {
+        return this.flight().id();
     }
 }

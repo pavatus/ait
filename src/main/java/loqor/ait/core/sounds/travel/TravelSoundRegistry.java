@@ -12,7 +12,7 @@ public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
     private static final TravelSoundRegistry instance = new TravelSoundRegistry();
 
     public TravelSoundRegistry() {
-        super(TravelSound::fromInputStream, TravelSound.CODEC, "sfx", true);
+        super(TravelSound::fromInputStream, TravelSound.CODEC, "sfx/travel", true);
     }
 
     public static TravelSoundRegistry getInstance() {

@@ -10,6 +10,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import loqor.ait.core.likes.ItemOpinionRegistry;
 import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.planet.PlanetRegistry;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
 import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
@@ -36,6 +37,7 @@ public class Registries {
         registries.add(ConsoleVariantRegistry.getInstance());
         registries.add(MachineRecipeRegistry.getInstance());
         registries.add(TravelSoundRegistry.getInstance());
+        registries.add(FlightSoundRegistry.getInstance());
         registries.add(ExteriorVariantRegistry.getInstance());
         registries.add(CategoryRegistry.getInstance());
         registries.add(TardisComponentRegistry.getInstance());
