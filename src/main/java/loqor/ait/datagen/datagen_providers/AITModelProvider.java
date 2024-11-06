@@ -59,6 +59,27 @@ public class AITModelProvider extends FabricModelProvider {
         BlockStateModelGenerator.BlockTexturePool polished_martian_stone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.POLISHED_MARTIAN_STONE);
         polished_martian_stone_pool.stairs(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS);
         polished_martian_stone_pool.slab(AITBlocks.POLISHED_MARTIAN_STONE_SLAB);
+
+        //Martian Stone (Slabs, Walls, etc.)
+
+        BlockStateModelGenerator.BlockTexturePool anorthosite_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.ANORTHOSITE);
+        anorthosite_pool.stairs(AITBlocks.ANORTHOSITE_STAIRS);
+        anorthosite_pool.wall(AITBlocks.ANORTHOSITE_WALL);
+        anorthosite_pool.slab(AITBlocks.ANORTHOSITE_SLAB);
+        anorthosite_pool.button(AITBlocks.ANORTHOSITE_BUTTON);
+        anorthosite_pool.pressurePlate(AITBlocks.ANORTHOSITE_PRESSURE_PLATE);
+
+        BlockStateModelGenerator.BlockTexturePool anorthosite_bricks_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.ANORTHOSITE_BRICKS);
+        anorthosite_bricks_pool.stairs(AITBlocks.ANORTHOSITE_BRICK_STAIRS);
+        anorthosite_bricks_pool.wall(AITBlocks.ANORTHOSITE_BRICK_WALL);
+        anorthosite_bricks_pool.slab(AITBlocks.ANORTHOSITE_BRICK_SLAB);
+
+        BlockStateModelGenerator.BlockTexturePool smooth_anorthosite_stone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.SMOOTH_ANORTHOSITE);
+        smooth_anorthosite_stone_pool.slab(AITBlocks.SMOOTH_ANORTHOSITE_SLAB);
+
+        BlockStateModelGenerator.BlockTexturePool polished_anorthosite_stone_pool = blockStateModelGenerator.registerCubeAllModelTexturePool(AITBlocks.POLISHED_ANORTHOSITE);
+        polished_anorthosite_stone_pool.stairs(AITBlocks.POLISHED_ANORTHOSITE_STAIRS);
+        polished_anorthosite_stone_pool.slab(AITBlocks.POLISHED_ANORTHOSITE_SLAB);
     }
 
     @Override

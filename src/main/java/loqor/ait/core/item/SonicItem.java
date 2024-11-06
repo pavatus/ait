@@ -1,6 +1,7 @@
 package loqor.ait.core.item;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -149,9 +150,22 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
             cycleMode(stack);
             Mode previousMode = findPreviousMode(stack);
-            user.sendMessage(
-                    Text.literal(previousMode.asString()).formatted(previousMode.format).formatted(Formatting.BOLD),
-                    true);
+            Text message = null;
+
+            if (Objects.equals(previousMode.asString(), "INACTIVE")) {
+                message = Text.translatable("sonic.ait.mode.inactive").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "INTERACTION")) {
+                message = Text.translatable("sonic.ait.mode.interaction").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "OVERLOAD")) {
+                message = Text.translatable("sonic.ait.mode.overload").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "SCANNING")) {
+                message = Text.translatable("sonic.ait.mode.scanning").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "TARDIS")) {
+                message = Text.translatable("sonic.ait.mode.tardis").formatted(previousMode.format, Formatting.BOLD);
+            }
+
+
+            user.sendMessage(message, true);
             return;
         }
 
@@ -329,14 +343,23 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
         Mode mode = findPreviousMode(stack);
-        tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
-        tooltip.add(Text.translatable("message.ait.artron_units").formatted(Formatting.BLUE).append(
-                Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(Formatting.GREEN))); // todo
-                                                                                                                    // translatable
-                                                                                                                    // +
-                                                                                                                    // changing
-        // of colour based off fuel
+        if (Objects.equals(mode.asString(), "INACTIVE")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.inactive").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "INTERACTION")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.interaction").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "OVERLOAD")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.overload").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "SCANNING")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.scanning").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "TARDIS")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.tardis").formatted(mode.format, Formatting.BOLD));
+        }
+
+
+        tooltip.add(Text.translatable("message.ait.tooltips.artron_units").formatted(Formatting.BLUE).append(
+                Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(this.getCurrentFuel(stack) > (this.getMaxFuel(stack) / 4) ? Formatting.GREEN : Formatting.RED)));
+
 
         if (tag.contains("tardis"))
             tooltip.add(ScreenTexts.EMPTY);
@@ -512,7 +535,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 }
 
                 player.sendMessage(
-                        Text.translatable("message.ait.artron_units" + tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
+                        Text.translatable("message.ait.artron_units", tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
             }
         },
         TARDIS(Formatting.BLUE) {

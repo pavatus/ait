@@ -206,6 +206,92 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block SMOOTH_MARTIAN_STONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
 
+    // Moon
+
+    // Anorthosite
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE = new Block(
+            AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_WALL = new WallBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_STAIRS = new StairsBlock(
+            AITBlocks.ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE));
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_BUTTON = new ButtonBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE_BUTTON), BlockSetType.STONE, 10, false);
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_PRESSURE_PLATE  = new PressurePlateBlock(
+            PressurePlateBlock.ActivationRule.EVERYTHING, AbstractBlock.Settings.copy(Blocks.STONE_PRESSURE_PLATE),BlockSetType.STONE);
+
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_PILLAR = new PillarBlock(
+            AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR));
+
+    @NoBlockItem
+    public static final Block CHISELED_ANORTHOSITE = new Block(
+            AbstractBlock.Settings.copy(Blocks.CHISELED_STONE_BRICKS));
+
+    @NoBlockItem
+    public static final Block CRACKED_ANORTHOSITE_BRICKS = new Block(
+            AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
+
+    // Anorthosite Bricks
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_BRICKS = new Block(
+            AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
+
+    @NoBlockItem
+    @NoBlockDrop
+    public static final Block ANORTHOSITE_BRICK_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE_BRICK_SLAB));
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_BRICK_STAIRS = new StairsBlock(
+            AITBlocks.ANORTHOSITE_BRICKS.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE_BRICK_STAIRS));
+
+    @NoBlockItem
+    public static final Block ANORTHOSITE_BRICK_WALL = new WallBlock(
+            AbstractBlock.Settings.copy(Blocks.STONE_BRICK_WALL));
+
+    // Polished Anorthosite Stone
+
+    @NoBlockItem
+    public static final Block POLISHED_ANORTHOSITE = new Block(
+            AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
+
+    @NoBlockItem
+    public static final Block POLISHED_ANORTHOSITE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_SLAB));
+
+    @NoBlockItem
+    public static final Block POLISHED_ANORTHOSITE_STAIRS = new StairsBlock(
+            AITBlocks.POLISHED_ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_STAIRS));
+
+
+    // Smooth Anorthosite Stone
+
+    @NoBlockItem
+    public static final Block SMOOTH_ANORTHOSITE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
+
+    @NoBlockItem
+    @NoBlockDrop
+    public static final Block SMOOTH_ANORTHOSITE_SLAB = new SlabBlock(
+            AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
+
     @NoBlockItem
     public static final Block PLUGBOARD = new PlugBoardBlock(
             FabricBlockSettings.create().solid().noCollision().strength(1.0f));

@@ -231,6 +231,85 @@ public class AITItems implements ItemRegistryContainer {
             BlockItem(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
+    // Mars
 
+    // Anorthosite Stone
+
+    public static final Item ANORTHOSITE = new
+            BlockItem(AITBlocks.ANORTHOSITE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_SLAB = new
+            BlockItem(AITBlocks.ANORTHOSITE_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_WALL = new
+            BlockItem(AITBlocks.ANORTHOSITE_WALL, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_STAIRS = new
+            BlockItem(AITBlocks.ANORTHOSITE_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_BUTTON = new
+            BlockItem(AITBlocks.ANORTHOSITE_BUTTON, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_PRESSURE_PLATE = new
+            BlockItem(AITBlocks.ANORTHOSITE_PRESSURE_PLATE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    // Anorthosite Bricks
+    public static final Item ANORTHOSITE_BRICKS = new
+            BlockItem(AITBlocks.ANORTHOSITE_BRICKS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_BRICK_SLAB = new
+            BlockItem(AITBlocks.ANORTHOSITE_BRICK_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_BRICK_WALL = new
+            BlockItem(AITBlocks.ANORTHOSITE_BRICK_WALL, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_BRICK_STAIRS = new
+            BlockItem(AITBlocks.ANORTHOSITE_BRICK_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item ANORTHOSITE_PILLAR = new
+            BlockItem(AITBlocks.ANORTHOSITE_PILLAR, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item CHISELED_ANORTHOSITE_STONE = new
+            BlockItem(AITBlocks.CHISELED_ANORTHOSITE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item CRACKED_ANORTHOSITE_BRICKS = new
+            BlockItem(AITBlocks.CRACKED_ANORTHOSITE_BRICKS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    // Polished Anorthosite Stone
+
+    public static final Item POLISHED_ANORTHOSITE_STONE = new
+            BlockItem(AITBlocks.POLISHED_ANORTHOSITE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item POLISHED_ANORTHOSITE_STONE_STAIRS = new
+            BlockItem(AITBlocks.POLISHED_ANORTHOSITE_STAIRS, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item POLISHED_ANORTHOSITE_STONE_SLAB = new
+            BlockItem(AITBlocks.POLISHED_ANORTHOSITE_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    // Smooth Anorthosite Stone
+
+    public static final Item SMOOTH_ANORTHOSITE_STONE = new
+            BlockItem(AITBlocks.SMOOTH_ANORTHOSITE, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
+    public static final Item SMOOTH_ANORTHOSITE_STONE_SLAB = new
+            BlockItem(AITBlocks.SMOOTH_ANORTHOSITE_SLAB, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
 }
