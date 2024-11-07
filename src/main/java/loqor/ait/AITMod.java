@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -68,7 +69,7 @@ public class AITMod implements ModInitializer {
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
     public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRules.register("tardisGriefing",
-            GameRules.Category.MISC, GameRules.BooleanRule.create(true));
+            GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
     //Creative Inventory Tabs
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
