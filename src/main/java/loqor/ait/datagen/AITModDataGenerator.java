@@ -405,13 +405,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         provider.addTranslation("text.config.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
         provider.addTranslation("text.config.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
-        provider.addTranslation("text.config.aitconfig.option.DISABLE_CONSOLE_ANIMATIONS", "Disable Console Animations");
         provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
         provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
 
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
+
+        provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
 
         // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");

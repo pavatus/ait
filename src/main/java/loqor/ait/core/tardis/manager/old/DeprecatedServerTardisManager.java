@@ -127,6 +127,12 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
     }
 
+    public void loadAll(MinecraftServer server, @Nullable Consumer<ServerTardis> consumer) {
+        for (UUID id : this.fileManager.getTardisList(server)) {
+            this.getTardis(server, id, consumer);
+        }
+    }
+
     public void remove(MinecraftServer server, ServerTardis tardis) {
         tardis.setRemoved(true);
 

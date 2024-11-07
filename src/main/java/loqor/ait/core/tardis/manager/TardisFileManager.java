@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.manager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -110,6 +111,19 @@ public class TardisFileManager<T extends Tardis> {
 
     public boolean isLocked() {
         return locked;
+    }
+
+    public List<UUID> getTardisList(MinecraftServer server) {
+        try {
+            return Files.list(TardisFileManager.getRootSavePath(server)).map(path -> {
+                String name = path.getFileName().toString();
+                return UUID.fromString(name.substring(0, name.indexOf('.')));
+            }).toList();
+        } catch (IOException e) {
+            AITMod.LOGGER.error("Failed to list TARDIS files", e);
+        }
+
+        return List.of();
     }
 
     @FunctionalInterface
