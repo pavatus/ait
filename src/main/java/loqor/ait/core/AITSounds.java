@@ -34,6 +34,7 @@ public class AITSounds {
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
 
     public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
+    public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
     public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
     public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
 

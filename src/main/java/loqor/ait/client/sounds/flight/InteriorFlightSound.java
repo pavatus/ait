@@ -28,11 +28,15 @@ public class InteriorFlightSound extends PositionedLoopingSound {
         this.ticks++;
 
         if (this.ticks >= (this.getData().length() / this.pitch)) {
-            this.pitch = getRandomPitch();
-            this.setPosition(ClientTardisUtil.getNearestConsole());
-            this.ticks = 0;
-            this.dirty = true;
+            this.refresh();
         }
+    }
+
+    public void refresh() {
+        this.pitch = getRandomPitch();
+        this.setPosition(ClientTardisUtil.getNearestConsole());
+        this.ticks = 0;
+        this.dirty = true;
     }
     public FlightSound getData() {
         if (this.data == null && ClientTardisUtil.getCurrentTardis() != null)

@@ -14,7 +14,7 @@ public class ClientFlightHandler extends SoundHandler {
 
     public InteriorFlightSound getFlightLoop(ClientTardis tardis) {
         if (FLIGHT == null)
-            FLIGHT = createFlightSound(tardis);
+            this.generate(tardis);
 
         return FLIGHT;
     }
@@ -31,6 +31,8 @@ public class ClientFlightHandler extends SoundHandler {
     private void generate(ClientTardis tardis) {
         if (FLIGHT == null)
             FLIGHT = createFlightSound(tardis);
+
+        FLIGHT.refresh();
 
         this.ofSounds(FLIGHT);
     }
