@@ -33,7 +33,6 @@ public class AITConfigModel {
     public boolean CUSTOM_MENU = true;
     public boolean SHOW_EXPERIMENTAL_WARNING = false;
     public boolean ENVIRONMENT_PROJECTOR = true;
-    public boolean DISABLE_CONSOLE_ANIMATIONS = false;
     public boolean DISABLE_LOYALTY_FOG = false;
 
 

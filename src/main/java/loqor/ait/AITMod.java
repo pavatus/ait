@@ -31,6 +31,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
@@ -66,6 +67,8 @@ public class AITMod implements ModInitializer {
     public static final Random RANDOM = new Random();
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+    public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRules.register("tardisGriefing",
+            GameRules.Category.MISC, GameRules.BooleanRule.create(true));
 
     //Creative Inventory Tabs
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
