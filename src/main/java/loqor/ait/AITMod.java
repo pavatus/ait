@@ -160,6 +160,7 @@ public class AITMod implements ModInitializer {
             VersionCommand.register(dispatcher);
             SafePosCommand.register(dispatcher);
             ListCommand.register(dispatcher);
+            LoadCommand.register(dispatcher);
             DebugCommand.register(dispatcher);
         }));
 
