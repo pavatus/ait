@@ -26,7 +26,7 @@ public abstract class BoatEntityMixin extends Entity {
     public void ait$tick(CallbackInfo ci) {
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
         if (planet == null) return;
-        if (planet.gravity() < 0) return;
+        if (!planet.hasGravityModifier()) return;
 
         Vec3d movement = this.getVelocity();
         this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);

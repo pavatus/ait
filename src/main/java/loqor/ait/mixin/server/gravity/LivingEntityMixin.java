@@ -28,7 +28,7 @@ public abstract class LivingEntityMixin extends Entity {
     public void ait$tickMovement(CallbackInfo ci) {
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
         if (planet == null) return;
-        if (planet.gravity() < 0) return;
+        if (!planet.hasGravityModifier()) return;
 
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.isSwimming() || entity.hasNoGravity() || entity.isFallFlying() || entity.isSpectator()) return;
@@ -53,7 +53,7 @@ public abstract class LivingEntityMixin extends Entity {
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
         if (planet == null) return;
 
-        if (planet.celcius() < 0 && !Planet.hasFullSuit(entity)) {
+        if (planet.isFreezing() &&  !Planet.hasFullSuit(entity)) {
             // freeze effect on cold planets
             if (entity.getFrozenTicks() < entity.getMinFreezeDamageTicks()) {
                 entity.setFrozenTicks(entity.getMinFreezeDamageTicks() + 20);
