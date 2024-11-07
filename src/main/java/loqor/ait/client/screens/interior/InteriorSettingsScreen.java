@@ -228,7 +228,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 113, 178, 20,
                     12);
 
-        // apply
+        // apply (HUM)
         if (!this.buttons.get(startIndex + 1).isHovered())
             context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 11, this.buttons.get(startIndex + 1).getY() - 3, 133, 166, 53,
                     12);
