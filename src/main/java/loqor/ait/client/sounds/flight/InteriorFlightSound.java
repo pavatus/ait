@@ -2,9 +2,11 @@ package loqor.ait.client.sounds.flight;
 
 import java.util.Random;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.sounds.PositionedLoopingSound;
 import loqor.ait.client.tardis.ClientTardis;
@@ -36,6 +38,12 @@ public class InteriorFlightSound extends PositionedLoopingSound {
         this.pitch = getRandomPitch();
         this.setPosition(ClientTardisUtil.getNearestConsole());
         this.ticks = 0;
+
+        if (this.dirty) {
+            AITMod.LOGGER.warn("Interior Flight Sound is still dirty, stopping.."); // this must mean its not being tracked by the flight handler
+            MinecraftClient.getInstance().getSoundManager().stop(this);
+        }
+
         this.dirty = true;
     }
     public FlightSound getData() {

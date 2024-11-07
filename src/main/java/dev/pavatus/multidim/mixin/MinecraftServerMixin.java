@@ -22,7 +22,15 @@ public abstract class MinecraftServerMixin implements MultiDimServer {
 
     @Override
     public void multidim$addWorld(ServerWorld world) {
+        if (this.multidim$hasWorld(world.getRegistryKey()))
+            return;
+
         this.worlds.put(world.getRegistryKey(), world);
+    }
+
+    @Override
+    public boolean multidim$hasWorld(RegistryKey<World> key) {
+        return this.worlds.containsKey(key);
     }
 
     @Override

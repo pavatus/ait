@@ -1,9 +1,7 @@
 package loqor.ait.core.blockentities;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.joml.Vector3f;
 
@@ -245,18 +243,16 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
             if (handler.hasActiveSequence() && handler.getActiveSequence() != null) {
                 List<Control> sequence = handler.getActiveSequence().getControls();
 
-                // Convert the sequence to a Set for efficient lookups
-                Set<Control> sequenceSet = new HashSet<>(sequence);
-
                 // Iterate only through entities whose controls are in the sequenceSet
                 this.controlEntities.forEach(entity -> {
                     // Since we're here, the entity's control is part of the sequence
+                    int index = sequence.indexOf(entity.getControl());
+
                     Control control = entity.getControl();
-                    entity.setPartOfSequence(sequenceSet.contains(control));
+                    entity.setPartOfSequence(index != -1);
                     entity.setWasSequenced(handler.doesControlIndexMatch(control));
-                    entity.setSequenceColor(sequence.indexOf(control)); // Note: This still incurs O(n), consider
-                                                                        // optimization if
-                    // needed
+                    entity.setSequenceIndex(index);
+                    entity.setSequenceLength(sequence.size());
                 });
             } else {
                 this.controlEntities.forEach(entity -> entity.setPartOfSequence(false));

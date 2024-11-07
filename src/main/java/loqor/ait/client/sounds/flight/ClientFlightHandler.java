@@ -44,11 +44,14 @@ public class ClientFlightHandler extends SoundHandler {
         sound.tick();
 
         if (sound.isDirty()) {
+            sound.setDirty(false);
+
             if (sound.getData().id().equals(tardis.getExterior().getVariant().flight().id())) return;
+
             this.stopSounds();
+            MinecraftClient.getInstance().getSoundManager().stop(FLIGHT);
             FLIGHT = null;
             this.generate(tardis);
-            sound.setDirty(false);
         }
     }
 

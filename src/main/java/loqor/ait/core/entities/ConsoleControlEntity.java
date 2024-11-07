@@ -56,8 +56,10 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             TrackedDataHandlerRegistry.VECTOR3F);
     private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class,
+    private static final TrackedData<Integer> SEQUENCE_INDEX = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.INTEGER); // <--->
+    private static final TrackedData<Integer> SEQUENCE_LENGTH = DataTracker.registerData(ConsoleControlEntity.class,
+            TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> WAS_SEQUENCED = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> ON_DELAY = DataTracker.registerData(ConsoleControlEntity.class,
@@ -105,7 +107,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.dataTracker.startTracking(HEIGHT, 0.125f);
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
         this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
-        this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
+        this.dataTracker.startTracking(SEQUENCE_INDEX, 0);
+        this.dataTracker.startTracking(SEQUENCE_LENGTH, 0);
         this.dataTracker.startTracking(WAS_SEQUENCED, false);
         this.dataTracker.startTracking(ON_DELAY, false);
     }
@@ -124,7 +127,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         nbt.putFloat("offsetY", this.getOffset().y());
         nbt.putFloat("offsetZ", this.getOffset().z());
         nbt.putBoolean("partOfSequence", this.isPartOfSequence());
-        nbt.putInt("sequenceColor", this.getSequenceColor());
+        nbt.putInt("sequenceColor", this.getSequenceIndex());
         nbt.putBoolean("wasSequenced", this.wasSequenced());
     }
 
@@ -153,7 +156,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
 
         if (nbt.contains("sequenceColor"))
-            this.setSequenceColor(nbt.getInt("sequenceColor"));
+            this.setSequenceIndex(nbt.getInt("sequenceColor"));
 
         if (nbt.contains("wasSequenced"))
             this.setWasSequenced(nbt.getBoolean("wasSequenced"));
@@ -162,22 +165,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-    }
-
-    @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
-
-        if (!this.getWorld().isClient())
-            return;
-
-        if (PART_OF_SEQUENCE.equals(data)) {
-            this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-        } else if (SEQUENCE_COLOR.equals(data)) {
-            this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-        } else if (WAS_SEQUENCED.equals(data)) {
-            this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
-        }
     }
 
     @Override
@@ -288,12 +275,24 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.dataTracker.set(OFFSET, offset);
     }
 
-    public int getSequenceColor() {
-        return this.dataTracker.get(SEQUENCE_COLOR);
+    public int getSequenceIndex() {
+        return this.dataTracker.get(SEQUENCE_INDEX);
     }
 
-    public void setSequenceColor(int color) {
-        this.dataTracker.set(SEQUENCE_COLOR, color);
+    public void setSequenceIndex(int i) {
+        this.dataTracker.set(SEQUENCE_INDEX, i);
+    }
+
+    public int getSequenceLength() {
+        return this.dataTracker.get(SEQUENCE_LENGTH);
+    }
+
+    public void setSequenceLength(int n) {
+        this.dataTracker.set(SEQUENCE_LENGTH, n);
+    }
+
+    public float getSequencePercentage() {
+        return (this.getSequenceIndex() + 1f) / this.getSequenceLength();
     }
 
     public boolean wasSequenced() {

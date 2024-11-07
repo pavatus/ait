@@ -111,7 +111,7 @@ public class TardisDesktop extends TardisComponent {
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
         DesktopGenerator generator = new DesktopGenerator(this.schema);
-        generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+        generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(true), this.corners);
 
         AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
     }

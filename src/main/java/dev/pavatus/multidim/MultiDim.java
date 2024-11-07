@@ -13,6 +13,7 @@ import dev.pavatus.multidim.impl.SimpleWorldProgressListener;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class MultiDim {
 
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> MultiDim.get(server).tick());
+        ServerPlayConnectionEvents.INIT.register((handler, server) -> MultiDim.get(server).load(handler.getPlayer().getServerWorld()));
     }
 
     public static MultiDim get(MinecraftServer server) {
@@ -105,7 +107,9 @@ public class MultiDim {
             dimensionsRegistry.multidim$freeze();
 
         ServerWorld world = builder.build(this.server, options);
-        this.loadLater(world);
+
+        if (builder.priority()) this.load(world);
+        else this.loadLater(world);
 
         return world;
     }
@@ -182,10 +186,15 @@ public class MultiDim {
     }
     private void load(ServerWorld world) {
         AITMod.LOGGER.info("Loading world {}", world.getRegistryKey().getValue());
+
+        if (((MultiDimServer) this.server).multidim$hasWorld(world.getRegistryKey())) {
+            AITMod.LOGGER.warn("World {} is already loaded", world.getRegistryKey().getValue());
+            return;
+        }
+
         ((MultiDimServer) this.server).multidim$addWorld(world);
 
         ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
-        // dont uncomment this it fucks interior placement
         world.tick(() -> true);
     }
     public Optional<ServerWorld> findLoading(Identifier world) {

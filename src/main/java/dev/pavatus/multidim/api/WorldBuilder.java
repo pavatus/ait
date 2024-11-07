@@ -32,6 +32,8 @@ public class WorldBuilder {
 
     private ChunkGenerator generator;
 
+    private boolean priority = false;
+
     public WorldBuilder(Identifier id) {
         this.id = id;
     }
@@ -68,6 +70,14 @@ public class WorldBuilder {
 
     public WorldBuilder withGenerator(ChunkGenerator generator) {
         this.generator = generator;
+        return this;
+    }
+
+    public boolean priority() {
+        return this.priority;
+    }
+    public WorldBuilder priority(boolean val) {
+        this.priority = val;
         return this;
     }
 

@@ -71,6 +71,8 @@ public class TardisStar {
     }
 
     public static void renderShine(WorldRenderContext context, Tardis tardis) {
+        if (tardis.getExterior() == null) return;
+
         if (tardis.isGrowth())
             return;
 
