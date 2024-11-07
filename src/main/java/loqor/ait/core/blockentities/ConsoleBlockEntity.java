@@ -30,6 +30,7 @@ import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
 import loqor.ait.core.tardis.control.sequences.SequenceHandler;
@@ -71,6 +72,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
             return;
 
         tardis.getDesktop().getConsolePos().add(this.pos);
+        tardis.asServer().markDirty(tardis.getDesktop());
         this.markNeedsControl();
     }
 
@@ -164,7 +166,14 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     public void onBroken() {
         this.killControls();
-        this.tardis().get().getDesktop().getConsolePos().remove(this.pos);
+        if (this.tardis().isEmpty())
+            return;
+
+        Tardis tardis = this.tardis().get();
+        TardisDesktop desktop = tardis.getDesktop();
+
+        desktop.getConsolePos().remove(this.pos);
+        tardis.asServer().markDirty(desktop);
     }
 
     public void killControls() {

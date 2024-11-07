@@ -54,22 +54,25 @@ public class InteriorFlightSound extends PositionedLoopingSound {
             return 1f;
 
         int speed = tardis.travel().speed();
+        int maxSpeed = tardis.travel().maxSpeed().get();
+        float speedPercentage = (float) speed / maxSpeed;
 
         if (ClientSoundManager.getFlight().hasThrottleAndHandbrakeDown(tardis)) {
-            // todo i hate switch
-            return switch (speed) {
-                case 1 -> 0.5f;
-                case 2 -> 0.55f;
-                case 3 -> 0.6f;
-                default -> 1.0f;
-            };
+            if (speedPercentage <= 0.33) {
+                return 0.5f;
+            } else if (speedPercentage <= 0.66) {
+                return 0.55f;
+            } else {
+                return 0.6f;
+            }
         }
 
-        return switch (speed) {
-            case 1 -> rnd.nextFloat(0.9f, 0.95f);
-            case 2 -> rnd.nextFloat(0.95f, 1.0f);
-            case 3 -> rnd.nextFloat(1.0f, 1.25f);
-            default -> 1.0f;
-        };
+        if (speedPercentage <= 0.33) {
+            return rnd.nextFloat(0.9f, 0.95f);
+        } else if (speedPercentage <= 0.66) {
+            return rnd.nextFloat(0.95f, 1.0f);
+        } else {
+            return rnd.nextFloat(1.0f, 1.25f);
+        }
     }
 }
