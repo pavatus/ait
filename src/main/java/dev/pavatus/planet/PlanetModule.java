@@ -77,11 +77,13 @@ public class PlanetModule extends Module {
         return Optional.of(new DataGenerator() {
             @Override
             public void lang(AITLanguageProvider provider) {
-                provider.addTranslation("itemGroup.ait.planets_item_group", "AIT: Planets");
+                provider.addTranslation("itemGroup.ait.planets_item_group", "AIT: Planetary Exploration");
             }
 
             @Override
             public void recipes(AITRecipeProvider provider) {
+
+                // Martian Stone
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_BRICKS);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_BRICK_WALL);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_BRICK_STAIRS);
@@ -96,6 +98,7 @@ public class PlanetModule extends Module {
                 // Martian Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
                         .add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_STONE_WALL);
+
                 // Anorthosite Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
                         .add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.ANORTHOSITE_WALL);

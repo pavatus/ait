@@ -13,6 +13,30 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
     // Mars
 
+    // Martian Sandstone
+
+    public static final Block MARTIAN_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block CRACKED_MARTIAN_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block POLISHED_MARTIAN_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block MARTIAN_SANDSTONE_PILLAR = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block MARTIAN_SANDSTONE_BRICKS = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block CRACKED_SANDSTONE_MARTIAN_BRICKS = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block CHISLED_MARTIAN_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+
     // Martian Stone
     public static final Block MARTIAN_SAND = new Block(
             AbstractBlock.Settings.copy(Blocks.SAND));
@@ -115,12 +139,40 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block SMOOTH_MARTIAN_STONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
 
+
+
     // Moon
 
-    // Anorthosite
+    // Moon Sandstone
+
+    public static final Block MOON_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block CRACKED_MOON_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block POLISHED_MOON_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block MOON_SANDSTONE_PILLAR = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block MOON_SANDSTONE_BRICKS = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block CRACKED_SANDSTONE_MOON_BRICKS = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+    public static final Block CHISLED_MOON_SANDSTONE = new Block(
+            AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
+
+    // Regolith
 
     public static final Block REGOLITH = new Block(
             AbstractBlock.Settings.copy(Blocks.SAND));
+
+    // Anorthosite
 
     public static final Block ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
