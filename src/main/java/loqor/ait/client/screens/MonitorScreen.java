@@ -1,6 +1,5 @@
 package loqor.ait.client.screens;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -391,7 +390,7 @@ public class MonitorScreen extends ConsoleScreen {
         stack.translate(0, 0, 50f);
 
         context.drawCenteredTextWithShadow(this.textRenderer, isExtUnlocked ? "" : "\uD83D\uDD12", x, y,
-                Color.WHITE.getRGB());
+                0xFFFFFF);
 
         stack.pop();
     }

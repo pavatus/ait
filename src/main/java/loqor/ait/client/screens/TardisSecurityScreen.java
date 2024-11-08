@@ -1,7 +1,5 @@
 package loqor.ait.client.screens;
 
-import java.awt.*;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -138,17 +136,17 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
         context.drawText(this.textRenderer,
                 Text.empty().append(": ").append(tardis.travel().leaveBehind().get() ? onText : offText),
-                (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), Color.ORANGE.getRGB(), false);
+                (int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * (0.1f * 2))), 0xffA500, false);
 
 
         context.drawText(this.textRenderer,
                 Text.empty().append(": ").append(tardis.alarm().hostilePresence().get() ? onText : offText),
-                (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), Color.ORANGE.getRGB(), false);
+                (int) (left + (bgWidth * 0.48f)), (int) (top + (bgHeight * (0.1f * 3))), 0xffA500, false);
 
 
         context.drawText(this.textRenderer,
                 Text.literal(": " + getMinimumLoyalty(tardis)),
-                (int) (left + (bgWidth * 0.51f)), (int) (top + (bgHeight * (0.1f * 4))), Color.ORANGE.getRGB(), false);
+                (int) (left + (bgWidth * 0.51f)), (int) (top + (bgHeight * (0.1f * 4))), 0xffA500, false);
 
 
         context.drawText(this.textRenderer,
@@ -165,7 +163,7 @@ public class TardisSecurityScreen extends ConsoleScreen {
 
         context.drawText(this.textRenderer,
                 Text.empty().append(": ").append(this.tardis().<StatsHandler>handler(TardisComponent.Id.STATS).receiveCalls().get() ? onText : offText),
-                (int) (left + (bgWidth * 0.7f)), (int) (top + (bgHeight * (0.1f * 5))), Color.ORANGE.getRGB(), false);
+                (int) (left + (bgWidth * 0.7f)), (int) (top + (bgHeight * (0.1f * 5))), 0xffA500, false);
 
         this.landingCodeInput.render(context, mouseX, mouseY, delta);
         this.landingCodeInput.setEditableColor(this.landingCodeInput.isSelected() || !this.landingCodeInput.getText().isBlank() ? 0xffffff: 0x545454);
