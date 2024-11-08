@@ -1,12 +1,13 @@
 package loqor.ait.core.sounds.travel;
 
+import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
     private static final TravelSoundRegistry instance = new TravelSoundRegistry();

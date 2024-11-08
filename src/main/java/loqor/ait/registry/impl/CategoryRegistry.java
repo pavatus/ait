@@ -2,11 +2,12 @@ package loqor.ait.registry.impl;
 
 import java.util.Random;
 
+import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+
 import loqor.ait.AITMod;
 import loqor.ait.data.datapack.DatapackCategory;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.category.*;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySchema> {
 

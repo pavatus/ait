@@ -1,5 +1,6 @@
 package loqor.ait.registry.impl.exterior;
 
+import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import org.joml.Vector3f;
@@ -46,7 +47,6 @@ import loqor.ait.data.schema.exterior.variant.stallion.client.ClientStallionStee
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimSoulVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
 
 public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> implements
         SimpleSynchronousResourceReloadListener {

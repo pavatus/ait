@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.google.gson.*;
+import dev.pavatus.register.unlockable.Unlockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -28,7 +29,6 @@ import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model,

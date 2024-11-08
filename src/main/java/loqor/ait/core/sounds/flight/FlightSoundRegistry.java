@@ -1,10 +1,11 @@
 package loqor.ait.core.sounds.flight;
 
+import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class FlightSoundRegistry extends SimpleDatapackRegistry<FlightSound> {
     private static final FlightSoundRegistry instance = new FlightSoundRegistry();

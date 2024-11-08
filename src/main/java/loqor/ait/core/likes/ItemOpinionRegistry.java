@@ -2,13 +2,14 @@ package loqor.ait.core.likes;
 
 import java.util.Optional;
 
+import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class ItemOpinionRegistry extends SimpleDatapackRegistry<ItemOpinion> {
     private static final ItemOpinionRegistry instance = new ItemOpinionRegistry();

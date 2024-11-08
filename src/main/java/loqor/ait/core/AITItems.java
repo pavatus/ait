@@ -1,12 +1,15 @@
 package loqor.ait.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
-import net.minecraft.item.BlockItem;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
@@ -18,6 +21,7 @@ import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
+import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
 public class AITItems implements ItemRegistryContainer {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
@@ -25,13 +29,17 @@ public class AITItems implements ItemRegistryContainer {
             .statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 500, 1), 0.5F).build();
 
     // TARDIS
+    @NoEnglish
     public static final Item TARDIS_ITEM = new TardisItemBuilder(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
+    @NoEnglish
     public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
 
     // Functional Items
+    @NoEnglish
     public static final Item REMOTE_ITEM = new RemoteItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+    @NoEnglish
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item RIFT_SCANNER = new RiftScannerItem(
@@ -39,15 +47,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item HAMMER = new HammerItem(3, -2.4F,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(600));
     public static final Item RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
-    public static final Item SPACESUIT_HELMET = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP).maxDamage(240), false);
-    public static final Item SPACESUIT_CHESTPLATE = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.CHESTPLATE,
-            new OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP).maxDamage(240), false);
-    public static final Item SPACESUIT_LEGGINGS = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.LEGGINGS,
-            new OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP).maxDamage(240), false);
-    public static final Item SPACESUIT_BOOTS = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.BOOTS,
-            new OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP).maxDamage(240), false);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);;
     public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
             ArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
             true);
@@ -69,11 +69,13 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item SKELETON_KEY = new KeyItem(
             new OwoItemSettings().rarity(Rarity.EPIC).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SKELETON,
             KeyItem.Protocols.HAIL, KeyItem.Protocols.SNAP);
-
+    @NoEnglish
     public static final Item GOLD_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Gold Key", "Gold Nugget");
+    @NoEnglish
     public static final Item NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Netherite Key", "Netherite Scrap");
+    @NoEnglish
     public static final Item CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Classic Key", "Amethyst Shard");
     public static final Item SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
@@ -122,8 +124,10 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
 
     // Music discs
+    @NoEnglish
     public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
+    @NoEnglish
     public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 216);
 
@@ -133,184 +137,17 @@ public class AITItems implements ItemRegistryContainer {
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
-     // Mars
+    public static List<Item> get() {
+        List<Item> list = new ArrayList<>();
 
-    // Martian Stone
+        for (Item item : Registries.ITEM) {
+            if (Registries.ITEM.getId(item).getNamespace().equalsIgnoreCase(AITMod.MOD_ID)) {
+                list.add(item);
+            }
+        }
 
-    public static final Item MARTIAN_SAND = new
-            BlockItem(AITBlocks.MARTIAN_SAND, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+        return list;
+    }
 
-    public static final Item MARTIAN_STONE = new
-            BlockItem(AITBlocks.MARTIAN_STONE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_STONE_SLAB = new
-            BlockItem(AITBlocks.MARTIAN_STONE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_STONE_WALL = new
-            BlockItem(AITBlocks.MARTIAN_STONE_WALL, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_STONE_STAIRS = new
-            BlockItem(AITBlocks.MARTIAN_STONE_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_STONE_BUTTON = new
-            BlockItem(AITBlocks.MARTIAN_STONE_BUTTON, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_STONE_PRESSURE_PLATE = new
-            BlockItem(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Martian Bricks
-    public static final Item MARTIAN_BRICKS = new
-            BlockItem(AITBlocks.MARTIAN_BRICKS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_BRICK_SLAB = new
-            BlockItem(AITBlocks.MARTIAN_BRICK_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_BRICK_WALL = new
-            BlockItem(AITBlocks.MARTIAN_BRICK_WALL, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_BRICK_STAIRS = new
-            BlockItem(AITBlocks.MARTIAN_BRICK_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Martian Cobblestone
-    public static final Item MARTIAN_COBBLESTONE = new
-            BlockItem(AITBlocks.MARTIAN_COBBLESTONE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_COBBLESTONE_WALL = new
-            BlockItem(AITBlocks.MARTIAN_COBBLESTONE_WALL, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_COBBLESTONE_STAIRS = new
-            BlockItem(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_COBBLESTONE_SLAB = new
-            BlockItem(AITBlocks.MARTIAN_COBBLESTONE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item MARTIAN_PILLAR = new
-            BlockItem(AITBlocks.MARTIAN_PILLAR, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item CHISELED_MARTIAN_STONE = new
-            BlockItem(AITBlocks.CHISELED_MARTIAN_STONE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item CRACKED_MARTIAN_BRICKS = new
-            BlockItem(AITBlocks.CRACKED_MARTIAN_BRICKS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Polished Martian Stone
-
-    public static final Item POLISHED_MARTIAN_STONE = new
-            BlockItem(AITBlocks.POLISHED_MARTIAN_STONE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item POLISHED_MARTIAN_STONE_STAIRS = new
-            BlockItem(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item POLISHED_MARTIAN_STONE_SLAB = new
-            BlockItem(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Smooth Martian Stone
-
-    public static final Item SMOOTH_MARTIAN_STONE = new
-            BlockItem(AITBlocks.SMOOTH_MARTIAN_STONE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item SMOOTH_MARTIAN_STONE_SLAB = new
-            BlockItem(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Mars
-
-    // Anorthosite Stone
-
-    public static final Item REGOLITH = new
-            BlockItem(AITBlocks.REGOLITH, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE = new
-            BlockItem(AITBlocks.ANORTHOSITE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_SLAB = new
-            BlockItem(AITBlocks.ANORTHOSITE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_WALL = new
-            BlockItem(AITBlocks.ANORTHOSITE_WALL, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_STAIRS = new
-            BlockItem(AITBlocks.ANORTHOSITE_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-
-    // Anorthosite Bricks
-    public static final Item ANORTHOSITE_BRICKS = new
-            BlockItem(AITBlocks.ANORTHOSITE_BRICKS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_BRICK_SLAB = new
-            BlockItem(AITBlocks.ANORTHOSITE_BRICK_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_BRICK_WALL = new
-            BlockItem(AITBlocks.ANORTHOSITE_BRICK_WALL, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_BRICK_STAIRS = new
-            BlockItem(AITBlocks.ANORTHOSITE_BRICK_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item ANORTHOSITE_PILLAR = new
-            BlockItem(AITBlocks.ANORTHOSITE_PILLAR, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item CHISELED_ANORTHOSITE_STONE = new
-            BlockItem(AITBlocks.CHISELED_ANORTHOSITE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item CRACKED_ANORTHOSITE_BRICKS = new
-            BlockItem(AITBlocks.CRACKED_ANORTHOSITE_BRICKS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Polished Anorthosite Stone
-
-    public static final Item POLISHED_ANORTHOSITE_STONE = new
-            BlockItem(AITBlocks.POLISHED_ANORTHOSITE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item POLISHED_ANORTHOSITE_STONE_STAIRS = new
-            BlockItem(AITBlocks.POLISHED_ANORTHOSITE_STAIRS, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item POLISHED_ANORTHOSITE_STONE_SLAB = new
-            BlockItem(AITBlocks.POLISHED_ANORTHOSITE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    // Smooth Anorthosite Stone
-
-    public static final Item SMOOTH_ANORTHOSITE_STONE = new
-            BlockItem(AITBlocks.SMOOTH_ANORTHOSITE, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
-
-    public static final Item SMOOTH_ANORTHOSITE_STONE_SLAB = new
-            BlockItem(AITBlocks.SMOOTH_ANORTHOSITE_SLAB, new
-            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
 }

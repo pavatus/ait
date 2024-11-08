@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.pavatus.register.datapack.DatapackRegistry;
+import dev.pavatus.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -47,8 +49,6 @@ import loqor.ait.data.schema.exterior.variant.stallion.StallionSteelVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimSoulVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantSchema> {
     private static ExteriorVariantRegistry INSTANCE;

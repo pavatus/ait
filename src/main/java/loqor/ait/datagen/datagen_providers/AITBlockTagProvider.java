@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.module.ModuleRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
@@ -11,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
@@ -26,7 +28,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         FabricTagBuilder builder = getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE);
-        for (Map.Entry<Block, Annotation> entry : AITBlockLootTables.getAnnotatedBlocks(AITBlocks.class, PickaxeMineable.class)) {
+        for (Map.Entry<Block, Annotation> entry : AITBlockLootTables.getAnnotatedBlocks(PickaxeMineable.class)) {
             builder.add(entry.getKey());
 
             PickaxeMineable annotation = (PickaxeMineable) entry.getValue();
@@ -54,11 +56,15 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
         getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
 
-        // Martian Blocks
-        getOrCreateTagBuilder(BlockTags.WALLS)
-                .add(AITBlocks.MARTIAN_BRICK_WALL).add(AITBlocks.MARTIAN_COBBLESTONE_WALL).add(AITBlocks.MARTIAN_STONE_WALL);
-        // Anorthosite Blocks
-        getOrCreateTagBuilder(BlockTags.WALLS)
-                .add(AITBlocks.ANORTHOSITE_BRICK_WALL).add(AITBlocks.ANORTHOSITE_WALL);
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getDataGenerator().ifPresent(generator -> {
+                generator.tags(this);
+            });
+        });
+    }
+
+    @Override
+    public FabricTagProvider<Block>.FabricTagBuilder getOrCreateTagBuilder(TagKey<Block> tag) {
+        return super.getOrCreateTagBuilder(tag);
     }
 }

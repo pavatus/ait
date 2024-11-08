@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl;
 
+import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+
 import net.minecraft.network.PacketByteBuf;
 
 import loqor.ait.AITMod;
@@ -7,7 +9,6 @@ import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.AITSounds;
 import loqor.ait.data.hum.DatapackHum;
 import loqor.ait.data.hum.Hum;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class HumRegistry extends SimpleDatapackRegistry<Hum> {
     private static final HumRegistry instance = new HumRegistry();

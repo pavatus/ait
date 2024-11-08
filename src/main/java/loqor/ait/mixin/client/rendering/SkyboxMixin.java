@@ -32,8 +32,6 @@ import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.planet.Planet;
-import loqor.ait.core.planet.PlanetRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.dim.TardisDimension;
 
@@ -287,18 +285,4 @@ public abstract class SkyboxMixin {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.depthMask(true);
     }
-
-    @Inject(method="renderClouds(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FDDD)V", at = @At("HEAD"), cancellable = true)
-    private void ait$renderClouds(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if(mc.player == null) return;
-
-        Planet planet = PlanetRegistry.getInstance().get(mc.player.getWorld());
-        if(planet == null) return;
-
-        if(!planet.hasClouds()) {
-            ci.cancel();
-        }
-    }
-
 }

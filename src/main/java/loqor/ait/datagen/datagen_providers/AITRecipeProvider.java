@@ -8,10 +8,10 @@ import java.util.function.Consumer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.data.server.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
 
 public class AITRecipeProvider extends FabricRecipeProvider {
@@ -19,6 +19,8 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     public List<ShapedRecipeJsonBuilder> shapedRecipes = new ArrayList<>();
     public HashMap<SmithingTransformRecipeJsonBuilder, Identifier> smithingTransformRecipes = new HashMap<>();
     public HashMap<ShapelessRecipeJsonBuilder, Identifier> shapelessRecipesWithNameHashMap = new HashMap<>();
+    public HashMap<SingleItemRecipeJsonBuilder, Identifier> stonecutting = new HashMap<>();
+
 
     public AITRecipeProvider(FabricDataOutput output) {
         super(output);
@@ -37,6 +39,10 @@ public class AITRecipeProvider extends FabricRecipeProvider {
         });
         smithingTransformRecipes.forEach((smithingTransformRecipeJsonBuilder, identifier) -> {
             smithingTransformRecipeJsonBuilder.offerTo(exporter, identifier);
+        });
+
+        stonecutting.forEach((stonecuttingRecipeJsonBuilder, identifier) -> {
+            stonecuttingRecipeJsonBuilder.offerTo(exporter, identifier);
         });
     }
 
@@ -58,5 +64,12 @@ public class AITRecipeProvider extends FabricRecipeProvider {
         if (!shapedRecipes.contains(builder)) {
             shapedRecipes.add(builder);
         }
+    }
+
+    public void addStonecutting(Block in, Block out, int count) {
+        stonecutting.put(SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(in), RecipeCategory.BUILDING_BLOCKS, out, count), new Identifier("ait", in.toString()));
+    }
+    public void addStonecutting(Block in, Block out) {
+        addStonecutting(in, out, 1);
     }
 }

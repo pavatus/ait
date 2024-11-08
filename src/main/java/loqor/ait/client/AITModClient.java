@@ -4,6 +4,8 @@ import static loqor.ait.AITMod.*;
 
 import java.util.UUID;
 
+import dev.pavatus.register.Registries;
+import dev.pavatus.register.api.RegistryEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,7 +42,6 @@ import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
-import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
@@ -58,16 +59,22 @@ import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
-import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        RegistryEvents.INIT.register((registries, env) -> {
+            env.init(ClientConsoleVariantRegistry.getInstance());
+            env.init(ClientExteriorVariantRegistry.getInstance());
+        });
+
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         // TODO move to Registries
@@ -90,7 +97,6 @@ public class AITModClient implements ClientModInitializer {
         AITKeyBinds.init();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
-        HudRenderCallback.EVENT.register(new AITHudOverlay());
 
         ClientLandingManager.init();
 

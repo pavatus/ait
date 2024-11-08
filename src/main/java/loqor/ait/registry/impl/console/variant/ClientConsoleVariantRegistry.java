@@ -1,5 +1,6 @@
 package loqor.ait.registry.impl.console.variant;
 
+import dev.pavatus.register.datapack.DatapackRegistry;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;
@@ -29,7 +30,6 @@ import loqor.ait.data.schema.console.variant.steam.client.ClientSteamVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaLegacyVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
 
 public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsoleVariantSchema> {
     private static ClientConsoleVariantRegistry INSTANCE;

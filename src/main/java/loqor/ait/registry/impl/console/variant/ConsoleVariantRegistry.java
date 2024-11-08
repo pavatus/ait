@@ -3,6 +3,7 @@ package loqor.ait.registry.impl.console.variant;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Vector3f;
@@ -33,7 +34,6 @@ import loqor.ait.data.schema.console.variant.steam.SteamVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaVariant;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSchema> {
     private static ConsoleVariantRegistry INSTANCE;

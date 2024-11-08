@@ -10,6 +10,7 @@ import java.util.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import dev.pavatus.register.unlockable.Unlockable;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
@@ -26,7 +27,6 @@ import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 public class StatsHandler extends KeyedTardisComponent {
 

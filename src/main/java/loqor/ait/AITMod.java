@@ -4,6 +4,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.PlanetModule;
+import dev.pavatus.planet.core.planet.PlanetRegistry;
+import dev.pavatus.register.Registries;
+import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
@@ -13,6 +18,8 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -31,6 +38,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
@@ -42,7 +50,11 @@ import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
+import loqor.ait.core.likes.ItemOpinionRegistry;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
@@ -54,10 +66,11 @@ import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
-import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
 
@@ -66,16 +79,14 @@ public class AITMod implements ModInitializer {
     public static final Random RANDOM = new Random();
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+    public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
+            GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
     //Creative Inventory Tabs
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
             .builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.TARDIS_ITEM))
             .disableDynamicTitle().build();
 
-
-    public static final OwoItemGroup AIT_PLANETS_ITEM_GROUP = OwoItemGroup
-            .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(AITItems.MARTIAN_STONE))
-            .disableDynamicTitle().build();
 
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
             new Identifier(MOD_ID, "zeiton_geode"));
@@ -103,6 +114,23 @@ public class AITMod implements ModInitializer {
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
                 AITModInitializer::onInitializeAIT);
+
+        RegistryEvents.INIT.register((registries, env) -> {
+            env.init(SonicRegistry.getInstance());
+            env.init(DesktopRegistry.getInstance());
+            env.init(ConsoleVariantRegistry.getInstance());
+            env.init(MachineRecipeRegistry.getInstance());
+            env.init(TravelSoundRegistry.getInstance());
+            env.init(FlightSoundRegistry.getInstance());
+            env.init(ExteriorVariantRegistry.getInstance());
+            env.init(CategoryRegistry.getInstance());
+            env.init(TardisComponentRegistry.getInstance());
+            env.init(PlanetRegistry.getInstance());
+            env.init(LockedDimensionRegistry.getInstance());
+            env.init(HumRegistry.getInstance());
+            env.init(ItemOpinionRegistry.getInstance());
+            env.init(ModuleRegistry.instance());
+        });
 
         Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
@@ -221,7 +249,7 @@ public class AITMod implements ModInitializer {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
         AIT_ITEM_GROUP.initialize();
-        AIT_PLANETS_ITEM_GROUP.initialize();
+        PlanetModule.ITEM_GROUP.initialize();
     }
 
     public void entityAttributeRegister() {

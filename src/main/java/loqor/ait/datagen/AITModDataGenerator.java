@@ -5,6 +5,7 @@ import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
 
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.module.ModuleRegistry;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -24,10 +25,10 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.datagen.datagen_providers.*;
 import loqor.ait.datagen.datagen_providers.lang.LanguageType;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
+import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
 public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
@@ -55,6 +56,11 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void generateRecipes(FabricDataGenerator.Pack pack) {
         pack.addProvider((((output, registriesFuture) -> {
             AITRecipeProvider provider = new AITRecipeProvider(output);
+
+            ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(dataGenerator -> {
+                dataGenerator.recipes(provider);
+            }));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_KEY, 1)
                     .pattern(" N ").pattern("IEI").pattern("IRI").input('N', Items.IRON_NUGGET)
                     .input('I', Items.IRON_INGOT).input('E', Items.ENDER_PEARL).input('R', Items.REDSTONE)
@@ -391,9 +397,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
+
         // Tabs
         provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
-        provider.addTranslation("itemGroup.ait.planets_item_group", "Adventures In Time: Planets");
 
         // Config
         provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
@@ -413,42 +420,20 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
 
-        provider.addTranslation(FallingTardisEntity.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
+        provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
 
         // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-        provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
-        provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
-        provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
-        provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
-        provider.addTranslation(AITItems.SKELETON_KEY, "Skeleton Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
-        provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
-        provider.addTranslation(AITItems.CHARGED_ZEITON_CRYSTAL, "Charged Zeiton Crystal");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
-        provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
-        provider.addTranslation(AITItems.BLUEPRINT, "Blueprint");
-        provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
-        provider.addTranslation(AITItems.HAMMER, "Hammer");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
-        provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
-        provider.addTranslation(AITItems.ZEITON_DUST, "Zeiton Dust");
-        provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
-        provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
-        provider.addTranslation(AITItems.HYPERCUBE, "Hypercube");
-        provider.addTranslation(AITItems.HAZANDRA, "Hazandra");
-        provider.addTranslation(AITItems.SPACESUIT_HELMET, "Spacesuit Helmet");
-        provider.addTranslation(AITItems.SPACESUIT_CHESTPLATE, "Spacesuit Chestplate");
-        provider.addTranslation(AITItems.SPACESUIT_LEGGINGS, "Spacesuit Leggings");
-        provider.addTranslation(AITItems.SPACESUIT_BOOTS, "Spacesuit Boots");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");
@@ -511,7 +496,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.song", "Song");
 
         // Blocks
-        provider.addTranslation(AITBlocks.WAYPOINT_BANK, "Waypoint Bank");
         provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
@@ -519,72 +503,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
         provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Block of Zeiton");
-        provider.addTranslation(AITBlocks.ZEITON_CLUSTER, "Zeiton Cluster");
-        provider.addTranslation(AITBlocks.BUDDING_ZEITON, "Budding Zeiton");
-        provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
-        provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
-        provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
         provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
         provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
-        provider.addTranslation(AITBlocks.ENVIRONMENT_PROJECTOR, "Environment Projector");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
-        provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
-        // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
-
-        // Martian Blocks (Planet)
-        // Stone
-        provider.addTranslation(AITBlocks.MARTIAN_SAND, "Martian Sand");
-        provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
-        provider.addTranslation(AITBlocks.MARTIAN_STONE_SLAB, "Martian Stone Slab");
-        provider.addTranslation(AITBlocks.MARTIAN_STONE_STAIRS, "Martian Stone Stairs");
-        provider.addTranslation(AITBlocks.MARTIAN_STONE_WALL, "Martian Stone Wall");
-        provider.addTranslation(AITBlocks.MARTIAN_STONE_BUTTON, "Martian Stone Button");
-        provider.addTranslation(AITBlocks.MARTIAN_STONE_PRESSURE_PLATE, "Martian Stone Pressure Plate");
-        // Bricks
-        provider.addTranslation(AITBlocks.MARTIAN_BRICKS, "Martian Bricks");
-        provider.addTranslation(AITBlocks.MARTIAN_BRICK_SLAB, "Martian Brick Slab");
-        provider.addTranslation(AITBlocks.MARTIAN_BRICK_STAIRS, "Martian Brick Stairs");
-        provider.addTranslation(AITBlocks.MARTIAN_BRICK_WALL, "Martian Brick Wall");
-        // Cobblestone
-        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE, "Martian Cobblestone");
-        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_SLAB, "Martian Cobblestone Slab");
-        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_STAIRS, "Martian Cobblestone Stairs");
-        provider.addTranslation(AITBlocks.MARTIAN_COBBLESTONE_WALL, "Martian Cobblestone Wall");
-        provider.addTranslation(AITBlocks.MARTIAN_PILLAR, "Martian Pillar");
-        provider.addTranslation(AITBlocks.CHISELED_MARTIAN_STONE, "Chiseled Martian Stone");
-        provider.addTranslation(AITBlocks.CRACKED_MARTIAN_BRICKS, "Cracked Martian Bricks");
-        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE, "Polished Martian Stone");
-        // Polished Stone
-        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_SLAB, "Polished Martian Stone Slab");
-        provider.addTranslation(AITBlocks.POLISHED_MARTIAN_STONE_STAIRS, "Polished Martian Stone Stairs");
-        provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE, "Smooth Martian Stone");
-        provider.addTranslation(AITBlocks.SMOOTH_MARTIAN_STONE_SLAB, "Smooth Martian Stone Slab");
-
-        // Moon Blocks (Planet)
-        // Stone
-        provider.addTranslation(AITBlocks.REGOLITH, "Regolith");
-        provider.addTranslation(AITBlocks.ANORTHOSITE, "Anorthosite");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_SLAB, "Anorthosite Slab");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_STAIRS, "Anorthosite Stairs");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_WALL, "Anorthosite Wall");
-        // Bricks
-        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICKS, "Anorthosite Bricks");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_SLAB, "Anorthosite Brick Slab");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_STAIRS, "Anorthosite Brick Stairs");
-        provider.addTranslation(AITBlocks.ANORTHOSITE_BRICK_WALL, "Anorthosite Brick Wall");
-        // Other
-        provider.addTranslation(AITBlocks.ANORTHOSITE_PILLAR, "Anorthosite Pillar");
-        provider.addTranslation(AITBlocks.CHISELED_ANORTHOSITE, "Chiseled Anorthosite");
-        provider.addTranslation(AITBlocks.CRACKED_ANORTHOSITE_BRICKS, "Cracked Anorthosite Bricks");
-        provider.addTranslation(AITBlocks.POLISHED_ANORTHOSITE, "Polished Anorthosite");
-        // Polished Stone
-        provider.addTranslation(AITBlocks.POLISHED_ANORTHOSITE_SLAB, "Polished Anorthosite Slab");
-        provider.addTranslation(AITBlocks.POLISHED_ANORTHOSITE_STAIRS, "Polished Anorthosite Stairs");
-        provider.addTranslation(AITBlocks.SMOOTH_ANORTHOSITE, "Smooth Anorthosite");
-        provider.addTranslation(AITBlocks.SMOOTH_ANORTHOSITE_SLAB, "Smooth Anorthosite Slab");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -864,6 +788,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // keybinds
         provider.addTranslation("category.ait.main", "Adventures in Time");
         provider.addTranslation("key.ait.snap", "Snap");
+
+        // automatic english for items
+        AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {
+            provider.addTranslation(var, fixupTranslationKey(var.getTranslationKey()));
+        });
+
+        // automatic english for blocks
+        AITBlockLootTables.filterBlocksWithAnnotation(AITBlocks.get(), NoEnglish.class, true).forEach(block -> {
+            provider.addTranslation(block, fixupTranslationKey(block.getTranslationKey()));
+        });
 
         return provider;
     }
@@ -1341,5 +1275,30 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
                                                                                                                 // (Ukrainian
                                                                                                                 // Ukraine)
+    }
+
+    public static String fixupTranslationKey(String key) {
+        // seperate at last .
+        int lastDot = key.lastIndexOf('.');
+        if (lastDot == -1) {
+            return key;
+        }
+        String suffix = key.substring(lastDot + 1);
+
+        // split at _
+        String[] parts = suffix.split("_");
+
+        // capitalise beginning of each string and join with space
+        StringBuilder builder = new StringBuilder();
+        for (String part : parts) {
+            builder.append(part.substring(0, 1).toUpperCase());
+            builder.append(part.substring(1));
+            builder.append(" ");
+        }
+
+        // remove last space
+        builder.deleteCharAt(builder.length() - 1);
+
+        return builder.toString();
     }
 }
