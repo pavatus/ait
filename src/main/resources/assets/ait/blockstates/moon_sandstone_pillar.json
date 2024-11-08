@@ -1,6 +1,16 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "ait:block/chiseled_anorthosite"
+  "variants": {
+    "axis=x": {
+      "model": "ait:block/martian_sandstone_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "ait:block/moon_sandstone_pillar"
+    },
+    "axis=z": {
+      "model": "ait:block/moon_sandstone_pillar_horizontal",
+      "x": 90
+    }
   }
 }
