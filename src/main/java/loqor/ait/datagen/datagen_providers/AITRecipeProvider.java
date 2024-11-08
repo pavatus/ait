@@ -69,7 +69,9 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     }
 
     public void addStonecutting(Block in, Block out, int count) {
-        stonecutting.put(SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(in), RecipeCategory.BUILDING_BLOCKS, out, count), getStonecuttingIdentifier(in, out));
+        Identifier id = getStonecuttingIdentifier(in, out);
+
+        stonecutting.put(SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(in), RecipeCategory.BUILDING_BLOCKS, out, count).criterion("has_block", VanillaRecipeProvider.conditionsFromItem(in)), id);
     }
     public void addStonecutting(Block in, Block out) {
         addStonecutting(in, out, 1);
