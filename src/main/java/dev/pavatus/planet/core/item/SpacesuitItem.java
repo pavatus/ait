@@ -17,9 +17,11 @@ import net.minecraft.world.World;
 
 import loqor.ait.core.item.RenderableArmorItem;
 
+
 public class SpacesuitItem extends RenderableArmorItem {
     public static final String OXYGEN_KEY = "oxygen";
     public static final double MAX_OXYGEN = 4.2D; // 20 minutes worth of oxygen in LITERS.
+
     public SpacesuitItem(ArmorMaterial material, Type type, Settings settings, boolean hasCustomRendering) {
         super(material, type, settings, hasCustomRendering);
     }
@@ -67,8 +69,9 @@ public class SpacesuitItem extends RenderableArmorItem {
         super.appendTooltip(stack, world, tooltip, context);
         if (this.type != Type.CHESTPLATE) return;
 
-        String oxygen = "" + stack.getOrCreateNbt().getDouble(OXYGEN_KEY);
+        double oxygenLevel = stack.getOrCreateNbt().getDouble(OXYGEN_KEY);
+        String oxygenFormatted = String.format("%.1f", oxygenLevel) + "L / " + MAX_OXYGEN + "L";
 
-        tooltip.add(Text.translatable("message.ait.oxygen" + oxygen.substring(0, 3) + "L / " + MAX_OXYGEN + "L").formatted(Formatting.BOLD, Formatting.BLUE));
+        tooltip.add(Text.translatable("message.ait.oxygen", oxygenFormatted).formatted(Formatting.BOLD, Formatting.BLUE));
     }
 }

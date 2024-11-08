@@ -78,7 +78,7 @@ public class PlanetModule extends Module {
             @Override
             public void lang(AITLanguageProvider provider) {
                 provider.addTranslation("itemGroup.ait.planets_item_group", "AIT: Planetary Exploration");
-                provider.addTranslation("message.ait.oxygen", "Stored Oxygen: ");
+                provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
             }
 
             @Override
