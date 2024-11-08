@@ -14,6 +14,8 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.AITMod;
+
 public class AITRecipeProvider extends FabricRecipeProvider {
     public List<ShapelessRecipeJsonBuilder> shapelessRecipes = new ArrayList<>();
     public List<ShapedRecipeJsonBuilder> shapedRecipes = new ArrayList<>();
@@ -67,9 +69,16 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     }
 
     public void addStonecutting(Block in, Block out, int count) {
-        stonecutting.put(SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(in), RecipeCategory.BUILDING_BLOCKS, out, count), new Identifier("ait", in.toString()));
+        stonecutting.put(SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(in), RecipeCategory.BUILDING_BLOCKS, out, count), getStonecuttingIdentifier(in, out));
     }
     public void addStonecutting(Block in, Block out) {
         addStonecutting(in, out, 1);
+    }
+
+    private Identifier getStonecuttingIdentifier(Block in, Block out) {
+        return AITMod.id(fixupBlockKey(in.getTranslationKey()) + "_to_" + fixupBlockKey(out.getTranslationKey()) + "_stonecutting");
+    }
+    private String fixupBlockKey(String key) {
+        return key.substring(key.lastIndexOf(".") + 1);
     }
 }
