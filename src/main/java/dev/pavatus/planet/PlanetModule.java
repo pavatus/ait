@@ -78,6 +78,7 @@ public class PlanetModule extends Module {
             @Override
             public void lang(AITLanguageProvider provider) {
                 provider.addTranslation("itemGroup.ait.planets_item_group", "AIT: Planetary Exploration");
+                provider.addTranslation("message.ait.oxygen", "Stored Oxygen: ");
             }
 
             @Override
@@ -103,17 +104,18 @@ public class PlanetModule extends Module {
                 provider.addStonecutting(PlanetBlocks.MARTIAN_BRICKS, PlanetBlocks.MARTIAN_BRICK_WALL);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_BRICKS, PlanetBlocks.MARTIAN_BRICK_STAIRS);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_BRICKS, PlanetBlocks.MARTIAN_BRICK_SLAB);
+
             }
 
             @Override
             public void tags(AITBlockTagProvider provider) {
                 // Martian Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
-                        .add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_WALL).add(PlanetBlocks.MARTIAN_STONE_WALL).add(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_WALL);
+                        .add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_WALL).add(PlanetBlocks.MARTIAN_STONE_WALL).add(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_WALL);
 
                 // Anorthosite Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
-                        .add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.ANORTHOSITE_WALL);
+                        .add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.ANORTHOSITE_WALL).add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.MOON_SANDSTONE_WALL);
 
             }
 
