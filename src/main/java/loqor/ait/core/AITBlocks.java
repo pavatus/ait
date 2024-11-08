@@ -107,6 +107,10 @@ public class AITBlocks implements BlockRegistryContainer {
     // Martian Stone
 
     @NoBlockItem
+    public static final Block MARTIAN_SAND = new Block(
+            AbstractBlock.Settings.copy(Blocks.SAND));
+
+    @NoBlockItem
     public static final Block MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
@@ -209,6 +213,10 @@ public class AITBlocks implements BlockRegistryContainer {
     // Moon
 
     // Anorthosite
+
+    @NoBlockItem
+    public static final Block REGOLITH = new Block(
+            AbstractBlock.Settings.copy(Blocks.SAND));
 
     @NoBlockItem
     public static final Block ANORTHOSITE = new Block(

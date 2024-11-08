@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.function.Predicate;
 
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -30,11 +31,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.*;
@@ -51,6 +52,9 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
     private static final int HURT_MAX = 100;
     private static final float HURT_AMOUNT = 40f;
+
+    public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRules.register("tardisGriefing",
+            GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
     public int timeFalling;
 
@@ -172,7 +176,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
                         public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
                             MinecraftServer server = ServerLifecycleHooks.get();
                             if (server == null) return false;
-                            if (!server.getGameRules().getBoolean(AITMod.TARDIS_GRIEFING)) return false;
+                            if (!server.getGameRules().getBoolean(TARDIS_GRIEFING)) return false;
 
                             return super.canDestroyBlock(explosion, world, pos, state, power);
                         }

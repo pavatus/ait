@@ -24,6 +24,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.datagen.datagen_providers.*;
 import loqor.ait.datagen.datagen_providers.lang.LanguageType;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
@@ -412,7 +413,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
 
-        provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
+        provider.addTranslation(FallingTardisEntity.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
 
         // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
@@ -535,6 +536,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Martian Blocks (Planet)
         // Stone
+        provider.addTranslation(AITBlocks.MARTIAN_SAND, "Martian Sand");
         provider.addTranslation(AITBlocks.MARTIAN_STONE, "Martian Stone");
         provider.addTranslation(AITBlocks.MARTIAN_STONE_SLAB, "Martian Stone Slab");
         provider.addTranslation(AITBlocks.MARTIAN_STONE_STAIRS, "Martian Stone Stairs");
@@ -563,6 +565,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Moon Blocks (Planet)
         // Stone
+        provider.addTranslation(AITBlocks.REGOLITH, "Regolith");
         provider.addTranslation(AITBlocks.ANORTHOSITE, "Anorthosite");
         provider.addTranslation(AITBlocks.ANORTHOSITE_SLAB, "Anorthosite Slab");
         provider.addTranslation(AITBlocks.ANORTHOSITE_STAIRS, "Anorthosite Stairs");

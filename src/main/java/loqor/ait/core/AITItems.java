@@ -137,6 +137,10 @@ public class AITItems implements ItemRegistryContainer {
 
     // Martian Stone
 
+    public static final Item MARTIAN_SAND = new
+            BlockItem(AITBlocks.MARTIAN_SAND, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
+
     public static final Item MARTIAN_STONE = new
             BlockItem(AITBlocks.MARTIAN_STONE, new
             OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
@@ -234,6 +238,10 @@ public class AITItems implements ItemRegistryContainer {
     // Mars
 
     // Anorthosite Stone
+
+    public static final Item REGOLITH = new
+            BlockItem(AITBlocks.REGOLITH, new
+            OwoItemSettings().group(AITMod.AIT_PLANETS_ITEM_GROUP));
 
     public static final Item ANORTHOSITE = new
             BlockItem(AITBlocks.ANORTHOSITE, new
