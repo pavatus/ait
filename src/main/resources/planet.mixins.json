@@ -9,7 +9,9 @@
     "gravity.LivingEntityMixin"
   ],
   "client": [
-    "client.CloudMixin"
+    "client.BipedEntityModelMixin",
+    "client.CloudMixin",
+    "client.PlayerEntityModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
