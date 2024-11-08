@@ -115,7 +115,7 @@ public class PlanetModule extends Module {
 
                 // Anorthosite Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
-                        .add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.ANORTHOSITE_WALL).add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.MOON_SANDSTONE_WALL);
+                        .add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.ANORTHOSITE_WALL).add(PlanetBlocks.MOON_SANDSTONE_BRICK_WALL).add(PlanetBlocks.MOON_SANDSTONE_WALL);
 
             }
 
