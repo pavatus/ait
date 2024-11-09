@@ -2,6 +2,7 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.planet.core.PlanetItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,8 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         // Items
         getOrCreateTagBuilder(AITTags.Items.SONIC_ITEM).add(AITItems.SONIC_SCREWDRIVER);
+
+        getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR).add(PlanetItems.SPACESUIT_BOOTS).add(PlanetItems.SPACESUIT_LEGGINGS).add(PlanetItems.SPACESUIT_CHESTPLATE).add(PlanetItems.SPACESUIT_HELMET);
 
         getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS).add(AITItems.DRIFTING_MUSIC_DISC)
                 .add(AITItems.MERCURY_MUSIC_DISC);

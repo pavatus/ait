@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -76,6 +77,9 @@ public abstract class Module implements Identifiable {
         void lang(AITLanguageProvider provider);
         void recipes(AITRecipeProvider provider);
         void tags(AITBlockTagProvider provider);
+
+        void generateItemModels(ItemModelGenerator itemModelGenerator);
+
         void models(BlockStateModelGenerator generator);
     }
 }

@@ -39,6 +39,7 @@ public class AITModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+
     }
 
     public void registerDirectionalBlock(Block block) {

@@ -19,6 +19,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
@@ -107,8 +109,10 @@ public class PlanetModule extends Module {
 
             }
 
+
             @Override
             public void tags(AITBlockTagProvider provider) {
+
                 // Martian Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
                         .add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_WALL).add(PlanetBlocks.MARTIAN_STONE_WALL).add(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_BRICK_WALL);
@@ -119,10 +123,18 @@ public class PlanetModule extends Module {
 
             }
 
+
+            @Override
+            public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
+                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
+                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
+                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_HELMET);
+            }
+
             @Override
             public void models(BlockStateModelGenerator generator) {
                 //Martian (Slabs, Walls, etc.)
-
                 BlockStateModelGenerator.BlockTexturePool martian_stone_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_STONE);
                 martian_stone_pool.stairs(PlanetBlocks.MARTIAN_STONE_STAIRS);
                 martian_stone_pool.wall(PlanetBlocks.MARTIAN_STONE_WALL);

@@ -393,6 +393,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
      *            The language type.
      * @return The AITLanguageProvider.
      */
+
     public AITLanguageProvider addEnglishTranslations(FabricDataOutput output,
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
