@@ -13,6 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.AITRegistryEvents;
 import loqor.ait.core.sounds.flight.FlightSoundRegistry;
 import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.data.datapack.DatapackExterior;
@@ -182,6 +183,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
     @Override
     protected void defaults() {
+        AITRegistryEvents.EXTERIOR_DEFAULTS.invoker().defaults();
+
         // TARDIM
         TARDIM_DEFAULT = register(new TardimDefaultVariant());
         TARDIM_FIRE = register(new TardimFireVariant());
