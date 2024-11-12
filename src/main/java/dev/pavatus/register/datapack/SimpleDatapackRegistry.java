@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
+import dev.pavatus.register.api.RegistryEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -112,7 +113,9 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
         AITMod.LOGGER.info("Read {} {} from server", size, this.name);
     }
 
-    protected abstract void defaults();
+    protected void defaults() {
+        RegistryEvents.REGISTER_DEFAULTS.invoker().register(this.name, this);
+    }
 
     protected T read(InputStream stream) {
         return this.deserializer.apply(stream);

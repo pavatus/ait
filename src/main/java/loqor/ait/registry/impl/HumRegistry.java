@@ -25,6 +25,8 @@ public class HumRegistry extends SimpleDatapackRegistry<Hum> {
 
     @Override
     protected void defaults() {
+        super.defaults();
+
         CORAL = register(Hum.create(AITMod.MOD_ID, "coral", AITSounds.CORAL_HUM));
     }
 

@@ -55,6 +55,8 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
 
     @Override
     protected void defaults() {
+        super.defaults();
+
         CLASSIC = register(new ClassicCategory());
         CAPSULE = register(new CapsuleCategory());
         POLICE_BOX = register(new PoliceBoxCategory());
