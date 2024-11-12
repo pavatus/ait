@@ -27,7 +27,6 @@ public class MachineRecipeRegistry extends SimpleDatapackRegistry<MachineRecipeS
 
     @Override
     protected void defaults() {
-        super.defaults();
     }
 
     public Optional<MachineRecipeSchema> findMatching(Collection<ItemStack> set) {

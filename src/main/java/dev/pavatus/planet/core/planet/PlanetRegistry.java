@@ -18,8 +18,6 @@ public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         OVERWORLD = register(new Planet(DimensionTypes.OVERWORLD_ID, -1, true, 288, true));
         THE_NETHER = register(new Planet(DimensionTypes.THE_NETHER_ID, -1, true, 548, false)); // -1f means dont change gravity btw
     }

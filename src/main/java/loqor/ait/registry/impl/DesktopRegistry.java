@@ -29,8 +29,6 @@ public class DesktopRegistry extends UnlockableRegistry<TardisDesktopSchema> {
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         DEFAULT_CAVE = register(new DefaultCaveDesktop());
         DEV = register(new DevDesktop());
     }

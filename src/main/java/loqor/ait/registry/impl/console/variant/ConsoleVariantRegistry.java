@@ -133,8 +133,6 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         // Hartnell variants
         HARTNELL = registerStatic(new HartnellVariant());
         HARTNELL_KELT = registerStatic(new KeltHartnellVariant());

@@ -22,8 +22,6 @@ public class FlightSoundRegistry extends SimpleDatapackRegistry<FlightSound> {
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         DEFAULT = register(new FlightSound(new Identifier(AITMod.MOD_ID, "default"), AITSounds.FLIGHT_LOOP.getId(), 80));
     }
 

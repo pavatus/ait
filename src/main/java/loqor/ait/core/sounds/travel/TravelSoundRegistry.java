@@ -27,8 +27,6 @@ public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         EMPTY = register(new TravelSound(TravelHandlerBase.State.FLIGHT, new Identifier(AITMod.MOD_ID, "empty"), AITSounds.VORTEX_SOUND.getId(), 0, 0, 0, 0, 0, 0));
         DEFAULT_DEMAT = register(new TravelSound(TravelHandlerBase.State.DEMAT, new Identifier(AITMod.MOD_ID, "default_demat"), AITSounds.DEMAT.getId(), 240, 240, 240, 210, 0.2f, 0.4f));
         DEFAULT_MAT = register(new TravelSound(TravelHandlerBase.State.MAT, new Identifier(AITMod.MOD_ID, "default_mat"), AITSounds.MAT.getId(), 460, 240, 240, 400, 0.2f, 0.4f));

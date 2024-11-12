@@ -182,8 +182,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         // TARDIM
         TARDIM_DEFAULT = register(new TardimDefaultVariant());
         TARDIM_FIRE = register(new TardimFireVariant());

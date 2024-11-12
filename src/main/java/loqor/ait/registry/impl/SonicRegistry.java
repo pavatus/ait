@@ -42,8 +42,6 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
 
     @Override
     protected void defaults() {
-        super.defaults();
-
         DEFAULT = register(BuiltinSonic.create("prime"));
 
         register(BuiltinSonic.create("copper"));
