@@ -34,6 +34,7 @@ public class AITConfigModel {
     public boolean SHOW_EXPERIMENTAL_WARNING = false;
     public boolean ENVIRONMENT_PROJECTOR = true;
     public boolean DISABLE_LOYALTY_FOG = false;
+    public boolean DISABLE_LOYALTY_SLEEPING_ACTIONBAR = false;
 
 
     public TemperatureType TEMPERATURE_TYPE = TemperatureType.CELCIUS;

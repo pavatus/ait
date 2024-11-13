@@ -415,6 +415,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.config.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
         provider.addTranslation("text.config.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
         provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
+        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
         provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
 
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
