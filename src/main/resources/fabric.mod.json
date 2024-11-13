@@ -40,8 +40,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"loqor.ait.AITMod",
-			"loqor.ait.datagen.datagen_providers.loot.LootTableModification"
+			"loqor.ait.AITMod"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
