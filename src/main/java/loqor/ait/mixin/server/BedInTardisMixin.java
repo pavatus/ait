@@ -38,7 +38,6 @@ public class BedInTardisMixin {
             if (tardis != null) {
                 Loyalty loyalty = tardis.loyalty().get(player);
 
-                // Show particles and message immediately
                 if (loyalty != null && loyalty.isOf(Loyalty.Type.PILOT)) {
                     if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
                         player.sendMessage(Text.literal("The TARDIS hums gently, showing trust..."), true);
