@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.PlanetModule;
+import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import dev.pavatus.register.Registries;
 import dev.pavatus.register.api.RegistryEvents;
@@ -25,6 +26,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.registry.Registry;
+import net.minecraft.world.gen.ProbabilityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +75,8 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
+import static dev.pavatus.planet.core.planet.Crater.CRATER_ID;
+
 public class AITMod implements ModInitializer {
 
     public static final String MOD_ID = "ait";
@@ -90,6 +95,8 @@ public class AITMod implements ModInitializer {
 
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
             new Identifier(MOD_ID, "zeiton_geode"));
+
+    public static final Crater CRATER = new Crater(ProbabilityConfig.CODEC);
 
     public static final ScreenHandlerType<EngineScreenHandler> ENGINE_SCREEN_HANDLER;
 
@@ -160,6 +167,8 @@ public class AITMod implements ModInitializer {
 
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
                 CUSTOM_GEODE_PLACED_KEY);
+
+        Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);
