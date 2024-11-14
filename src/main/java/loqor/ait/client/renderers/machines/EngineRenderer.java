@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
+import org.joml.Vector3f;
+
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -48,8 +50,9 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (tardis.engine().hasPower()) {
-            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+        if (tardis.subsystems().hasPower()) {
+            Vector3f colours = tardis.subsystems().engine().status().colour;
+            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, colours.x, colours.y, colours.z, 1);
         }
 
         matrices.pop();
@@ -57,6 +60,6 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
     @Override
     public void render(EngineBlockEntity entity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertices, light, overlay);
+        root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
     }
 }
