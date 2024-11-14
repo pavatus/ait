@@ -94,6 +94,15 @@ public class ZeitonCageBlock extends Block {
     }
 
     @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        ItemStack stack = AITBlocks.ZEITON_CAGE.asItem().getDefaultStack();
+
+        stack.getOrCreateNbt().putInt("Fuel", state.get(FUEL));
+
+        return stack;
+    }
+
+    @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
 

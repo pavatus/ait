@@ -9,12 +9,18 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.RavagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -24,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -43,9 +50,14 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
     private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
 
     public static final IntProperty AGE = Properties.AGE_7;
+    public static final BooleanProperty HAS_SMS = BooleanProperty.of("has_sms");
 
     public CoralPlantBlock(Settings settings) {
         super(settings);
+
+        this.setDefaultState(
+                this.getDefaultState().with(AGE, 0).with(HAS_SMS, false)
+        );
     }
 
     protected IntProperty getAgeProperty() {
@@ -67,11 +79,33 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
     public final boolean isMature(BlockState blockState) {
         return this.getAge(blockState) >= this.getMaxAge();
     }
+    public static boolean hasSms(BlockState state) {
+        return state.get(HAS_SMS);
+    }
 
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        ItemStack stack = player.getStackInHand(hand);
+        if (stack.isOf(AITBlocks.ENGINE_CORE_BLOCK.asItem()) && !hasSms(state)) {
+            if (world.isClient()) return ActionResult.SUCCESS;
+
+            // If the player is holding an engine core block, set the has_sms property to true
+            world.setBlockState(pos, state.with(HAS_SMS, true));
+            stack.decrement(1);
+
+            world.playSound(null, pos, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return ActionResult.SUCCESS;
+        }
+
+        return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
     public boolean hasRandomTicks(BlockState state) {
         return true;
     }
 
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (world.getBaseLightLevel(pos, 0) >= 9) {
             int i = this.getAge(state);
@@ -87,6 +121,11 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         if (!this.isMature(state))
             return;
+
+        if (!hasSms(state)) {
+            world.playSound(null, pos, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return;
+        }
 
         if (TardisDimension.isTardisDimension(world)) {
             this.createConsole(world, pos);
@@ -138,10 +177,12 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         TardisCriterions.PLACE_CORAL.trigger(player);
     }
 
+    @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return (world.getBaseLightLevel(pos, 0) >= 8 || world.isSkyVisible(pos)) && super.canPlaceAt(state, world, pos);
     }
 
+    @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
             world.breakBlock(pos, true, entity);
@@ -158,12 +199,14 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         return DEFAULT;
     }
 
+    @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         return AITBlocks.CORAL_PLANT.asItem().getDefaultStack();
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(AGE).add(FACING);
+        builder.add(AGE).add(FACING).add(HAS_SMS);
     }
 
     @Nullable @Override
