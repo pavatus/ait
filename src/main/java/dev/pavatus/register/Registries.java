@@ -8,7 +8,8 @@ import dev.pavatus.register.api.RegistryEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
-import loqor.ait.registry.impl.*;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 // TODO: move all registries over to here
 public class Registries {
@@ -24,11 +25,14 @@ public class Registries {
     }
 
     private void onCommonInit() {
-
+        RegistryEvents.INIT.invoker().init(this, false);
     }
 
-    private void onClientInit() {
+    private void onClientInit() { // todo client registries using the init event dont fire common as client is loaded after common
+        RegistryEvents.INIT.invoker().init(this, true);
 
+        register(ClientExteriorVariantRegistry.getInstance());
+        register(ClientConsoleVariantRegistry.getInstance());
     }
 
     public void subscribe(InitType env) {
@@ -39,7 +43,7 @@ public class Registries {
             env.init(registry);
         }
 
-        RegistryEvents.INIT.invoker().init(this, env);
+        RegistryEvents.SUBSCRIBE.invoker().subscribe(this, env);
     }
 
     public Registry register(Registry registry) {

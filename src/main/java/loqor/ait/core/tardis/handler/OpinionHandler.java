@@ -33,8 +33,6 @@ public class OpinionHandler extends KeyedTardisComponent {
             } while (this.opinions.contains(opinion.id()));
             this.add(opinion);
         }
-
-        System.out.println(this.opinions());
     }
     private boolean add(Opinion opinion) {
         if (this.opinions.contains(opinion.id())) return false;

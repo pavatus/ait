@@ -122,21 +122,23 @@ public class AITMod implements ModInitializer {
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
                 AITModInitializer::onInitializeAIT);
 
-        RegistryEvents.INIT.register((registries, env) -> {
-            env.init(SonicRegistry.getInstance());
-            env.init(DesktopRegistry.getInstance());
-            env.init(ConsoleVariantRegistry.getInstance());
-            env.init(MachineRecipeRegistry.getInstance());
-            env.init(TravelSoundRegistry.getInstance());
-            env.init(FlightSoundRegistry.getInstance());
-            env.init(ExteriorVariantRegistry.getInstance());
-            env.init(CategoryRegistry.getInstance());
-            env.init(TardisComponentRegistry.getInstance());
-            env.init(PlanetRegistry.getInstance());
-            env.init(LockedDimensionRegistry.getInstance());
-            env.init(HumRegistry.getInstance());
-            env.init(ItemOpinionRegistry.getInstance());
-            env.init(ModuleRegistry.instance());
+        RegistryEvents.INIT.register((registries, isClient) -> {
+            if (isClient) return;
+
+            registries.register(SonicRegistry.getInstance());
+            registries.register(DesktopRegistry.getInstance());
+            registries.register(ConsoleVariantRegistry.getInstance());
+            registries.register(MachineRecipeRegistry.getInstance());
+            registries.register(TravelSoundRegistry.getInstance());
+            registries.register(FlightSoundRegistry.getInstance());
+            registries.register(ExteriorVariantRegistry.getInstance());
+            registries.register(CategoryRegistry.getInstance());
+            registries.register(TardisComponentRegistry.getInstance());
+            registries.register(PlanetRegistry.getInstance());
+            registries.register(LockedDimensionRegistry.getInstance());
+            registries.register(HumRegistry.getInstance());
+            registries.register(ItemOpinionRegistry.getInstance());
+            registries.register(ModuleRegistry.instance());
         });
 
         Registries.getInstance().subscribe(Registries.InitType.COMMON);

@@ -40,7 +40,7 @@ public class PlanetModule extends Module {
 
     @Override
     public void init() {
-        RegistryEvents.INIT.register((registries, env) -> {
+        RegistryEvents.SUBSCRIBE.register((registries, env) -> {
             env.init(PlanetRegistry.getInstance());
         });
 
