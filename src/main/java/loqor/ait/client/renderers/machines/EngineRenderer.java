@@ -16,6 +16,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.EngineModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.EngineBlockEntity;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.dim.TardisDimension;
 
@@ -51,8 +52,9 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
         if (tardis.subsystems().hasPower()) {
-            Vector3f colours = tardis.subsystems().engine().status().colour;
-            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, colours.x, colours.y, colours.z, 1);
+            EngineSystem.Status status = tardis.subsystems().engine().status();
+            Vector3f colours = status.colour;
+            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, colours.x, colours.y, colours.z, (status != EngineSystem.Status.OFF) ? 1.0F : 0.0F);
         }
 
         matrices.pop();

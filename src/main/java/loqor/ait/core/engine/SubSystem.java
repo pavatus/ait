@@ -12,6 +12,7 @@ import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.Ordered;
 
@@ -61,6 +62,13 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
     }
     protected void onDisable() {
 
+    }
+
+    public void tick() {
+
+    }
+    protected void sync() {
+        ServerTardisManager.getInstance().markComponentDirty(this.tardis.subsystems());
     }
 
     @Override

@@ -4,12 +4,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
+import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.SubSystem;
@@ -21,7 +23,7 @@ import loqor.ait.data.enummap.EnumMap;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
-public class SubSystemHandler extends KeyedTardisComponent {
+public class SubSystemHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty POWER = new BoolProperty("power", false);
     private final BoolValue power = POWER.create(this);
 
@@ -105,6 +107,13 @@ public class SubSystemHandler extends KeyedTardisComponent {
         }
 
         return count;
+    }
+
+    @Override
+    public void tick(MinecraftServer server) {
+        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
+            it.next().tick();
+        }
     }
 
     public boolean hasPower() {

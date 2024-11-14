@@ -4,8 +4,13 @@ import org.joml.Vector3f;
 
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.util.ServerLifecycleHooks;
+import loqor.ait.data.Exclude;
 
 public class EngineSystem extends SubSystem {
+    @Exclude(strategy = Exclude.Strategy.FILE)
+    private Status status;
+
     public EngineSystem() {
         super(Id.ENGINE);
     }
@@ -24,8 +29,22 @@ public class EngineSystem extends SubSystem {
         this.tardis().subsystems().disablePower();
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.tryUpdateStatus();
+    }
+
     public Status status() {
-        return Status.from(this);
+        return this.status;
+    }
+    private void tryUpdateStatus() {
+        if (ServerLifecycleHooks.get() == null) return;
+        if (ServerLifecycleHooks.get().getTicks() % 40 != 0) return;
+
+        this.status = Status.from(this);
+        this.sync();
     }
 
     public static boolean hasEngine(Tardis t) {
