@@ -14,6 +14,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -283,6 +284,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .input('R', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.ZEITON_CAGE)
+                    .pattern("OZO").pattern("ZEZ").pattern("OZO")
+                    .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .input('E', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
+
             generateSmithingRecipes(provider);
             return provider;
         })));
@@ -509,8 +516,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
-        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
+        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
+        provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -792,6 +800,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // automatic english for items
         AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {
+            if (var instanceof BlockItem) return;
+
             provider.addTranslation(var, fixupTranslationKey(var.getTranslationKey()));
         });
 

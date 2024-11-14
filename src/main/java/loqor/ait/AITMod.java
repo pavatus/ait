@@ -69,6 +69,7 @@ import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.core.world.LandingPadManager;
+import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
 import loqor.ait.registry.impl.*;
@@ -117,6 +118,7 @@ public class AITMod implements ModInitializer {
         MoodEventPoolRegistry.init();
         LandingPadManager.init();
         ControlRegistry.init();
+        RiftChunkManager.init();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,

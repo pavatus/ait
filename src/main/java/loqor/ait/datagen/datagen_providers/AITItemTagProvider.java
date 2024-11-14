@@ -41,5 +41,7 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 
         getOrCreateTagBuilder(AITTags.Items.KEY).add(AITItems.IRON_KEY, AITItems.GOLD_KEY, AITItems.CLASSIC_KEY,
                 AITItems.NETHERITE_KEY, AITItems.SKELETON_KEY);
+
+        getOrCreateTagBuilder(AITTags.Items.IS_TARDIS_FUEL).add(AITItems.ZEITON_DUST, AITItems.ZEITON_SHARD);
     }
 }
