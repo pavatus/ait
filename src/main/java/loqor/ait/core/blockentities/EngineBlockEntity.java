@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.EngineSystem;
 
 public class EngineBlockEntity extends InteriorLinkableBlockEntity {
@@ -25,7 +24,7 @@ public class EngineBlockEntity extends InteriorLinkableBlockEntity {
         if (world.isClient() || this.tardis().isEmpty())
             return;
 
-        EngineSystem engine = (EngineSystem) this.tardis().get().subsystems().get(SubSystem.Id.ENGINE);
+        EngineSystem engine = this.tardis().get().subsystems().engine();
         engine.setEnabled(!engine.isEnabled());
     }
 

@@ -12,14 +12,14 @@ public class EngineSystem extends SubSystem {
     protected void onEnable() {
         super.onEnable();
 
-        this.tardis().engine().enablePower();
+        this.tardis().subsystems().enablePower();
     }
 
     @Override
     protected void onDisable() {
         super.onDisable();
 
-        this.tardis().engine().disablePower();
+        this.tardis().subsystems().disablePower();
     }
 
     public static boolean hasEngine(Tardis t) {
