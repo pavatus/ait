@@ -142,18 +142,29 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
     }
 
     public static Object serializer() {
-        return new Creator();
+        return new Adapter();
     }
 
-    private static class Creator implements InstanceCreator<SubSystem> {
+    private static class Adapter implements JsonSerializer<SubSystem>, JsonDeserializer<SubSystem> {
+
         @Override
-        public SubSystem createInstance(Type type) {
-            return new SubSystem(null) {
-                @Override
-                public IdLike getId() {
-                    return super.getId();
-                }
-            };
+        public SubSystem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            IdLike id = context.deserialize(jsonObject.get("id"), IdLike.class);
+            JsonElement element = jsonObject.get("data");
+
+            return context.deserialize(element, id.clazz());
+        }
+
+        @Override
+        public JsonElement serialize(SubSystem src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject result = new JsonObject();
+
+            result.add("id", context.serialize(src.getId()));
+            result.add("data", context.serialize(src, src.getClass()));
+
+            return result;
         }
     }
 }

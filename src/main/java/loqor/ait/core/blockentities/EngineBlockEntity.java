@@ -29,10 +29,16 @@ public class EngineBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void onBroken(World world, BlockPos pos) {
+        if (world.isClient())
+            return;
+
         this.tardis().ifPresent(tardis -> tardis.subsystems().engine().setEnabled(false));
     }
 
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {
+        if (world.isClient())
+            return;
+
         this.tardis().ifPresent(tardis -> tardis.subsystems().engine().setEnabled(true));
     }
 }

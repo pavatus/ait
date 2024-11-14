@@ -80,6 +80,33 @@ public class SubSystemHandler extends KeyedTardisComponent {
         return system;
     }
 
+    /**
+     * @return true if all subsystems are enabled
+     */
+    public boolean isEnabled() {
+        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
+            SubSystem i = it.next();
+
+            if (!i.isEnabled())
+                return false;
+        }
+
+        return true;
+    }
+    public int count() {
+        return this.systems.size();
+    }
+    public int countEnabled() {
+        int count = 0;
+
+        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
+            if (it.next().isEnabled())
+                count++;
+        }
+
+        return count;
+    }
+
     public boolean hasPower() {
         return power.get();
     }
