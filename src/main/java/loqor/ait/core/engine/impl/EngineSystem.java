@@ -2,12 +2,12 @@ package loqor.ait.core.engine.impl;
 
 import org.joml.Vector3f;
 
-import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 
-public class EngineSystem extends SubSystem {
+public class EngineSystem extends DurableSubSystem {
     @Exclude(strategy = Exclude.Strategy.FILE)
     private Status status;
 
@@ -30,9 +30,39 @@ public class EngineSystem extends SubSystem {
     }
 
     @Override
+    protected float cost() {
+        return 0.25f;
+    }
+
+    @Override
+    protected int changeFrequency() {
+        return 200; // drain 0.25 durability every 10 seconds
+    }
+
+    @Override
+    protected boolean shouldDurabilityChange() {
+        return tardis.subsystems().hasPower();
+    }
+
+    @Override
+    protected void onBreak() {
+        super.onBreak();
+
+        this.setEnabled(false);
+    }
+
+    @Override
+    protected void onRepair() {
+        super.onRepair();
+
+        this.setEnabled(true);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
+        this.tickForDurability();
         this.tryUpdateStatus();
     }
 
@@ -45,6 +75,11 @@ public class EngineSystem extends SubSystem {
 
         this.status = Status.from(this);
         this.sync();
+    }
+    private void tickForDurability() {
+        if (this.durability() <= 25) {
+            this.tardis.alarm().enabled().set(true);
+        }
     }
 
     public static boolean hasEngine(Tardis t) {

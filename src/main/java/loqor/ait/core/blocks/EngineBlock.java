@@ -7,10 +7,12 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -28,8 +30,9 @@ public class EngineBlock extends BlockWithEntity implements BlockEntityProvider 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
             BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
+        ItemStack stack = player.getStackInHand(hand);
         if (blockEntity instanceof EngineBlockEntity engineBlockEntity)
-            engineBlockEntity.useOn(state, world, player.isSneaking(), player);
+            engineBlockEntity.useOn(state, world, player.isSneaking(), player, stack);
 
         return ActionResult.SUCCESS;
     }
@@ -74,6 +77,30 @@ public class EngineBlock extends BlockWithEntity implements BlockEntityProvider 
         }
 
         super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+
+        if (!(world.getBlockEntity(pos) instanceof EngineBlockEntity engine))
+            return;
+        if (!engine.isLinked()) return;
+
+        float durability = engine.tardis().get().subsystems().engine().durability();
+
+        if (durability > 10) return;
+
+        // smoke and spark particles & sfx when below 50%
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1.25,
+                pos.getZ() + 0.5f, 0.15, 0, 0);
+        world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 0.1,
+                0, 0.05f);
+
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1.25,
+                pos.getZ() + 0.5f, -0.15, 0, 0);
+        world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, -0.1,
+                0, -0.05f);
     }
 
     @Override

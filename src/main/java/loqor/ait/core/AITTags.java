@@ -27,6 +27,7 @@ public class AITTags {
         public static final TagKey<Item> NO_BOP = createTag("no_bop");
         public static final TagKey<Item> KEY = createTag("key");
         public static final TagKey<Item> LINK = createTag("link"); // TODO use the tag instead of the item instanceof
+        public static final TagKey<Item> REPAIRS_SUBSYSTEM = createTag("repairs_subsystem");
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, name));
