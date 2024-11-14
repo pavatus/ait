@@ -511,6 +511,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
+        provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");

@@ -51,7 +51,8 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block LANDING_PAD = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
-    @NoBlockItem
+    @NoEnglish
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
     @NoEnglish

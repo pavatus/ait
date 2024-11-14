@@ -240,4 +240,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public OpinionHandler opinions() {
         return this.handler(TardisComponent.Id.OPINION);
     }
+    public SubSystemHandler subsystems() {
+        return this.handler(TardisComponent.Id.SUBSYSTEM);
+    }
 }

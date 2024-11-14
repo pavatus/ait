@@ -12,6 +12,7 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.data.DirectedGlobalPos;
@@ -19,7 +20,7 @@ import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-
+@Deprecated(forRemoval = true, since = "1.2.0") // todo to be moved to SubSystemHandler
 public class EngineHandler extends KeyedTardisComponent {
 
     private static final Vector2i ZERO = new Vector2i();
@@ -54,22 +55,25 @@ public class EngineHandler extends KeyedTardisComponent {
         engineCorePos.of(this, ENGINE_CORE_POS);
     }
 
+    @Deprecated
     public boolean hasEngineCore() {
         return engineCorePos.get() != null;
     }
 
+    @Deprecated
     public Vector2i getCorePos() {
         Vector2i result = engineCorePos.get();
         return result != null ? result : ZERO;
     }
 
+    @Deprecated
     public void linkEngine(int x, int z) {
         engineCorePos.set(new Vector2i(x, z));
     }
 
+    @Deprecated
     public void unlinkEngine() {
         engineCorePos.set((Vector2i) null);
-        this.disablePower();
     }
 
     public boolean hasPower() {
@@ -111,9 +115,7 @@ public class EngineHandler extends KeyedTardisComponent {
         if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
             return; // cant enable power if not enough fuel
         if (this.tardis.siege().isActive()) return;
-
-        if (!this.hasEngineCore())
-            return;
+        if (!EngineSystem.hasEngine(tardis)) return;
 
         this.power.set(true);
         this.updateExteriorState();
