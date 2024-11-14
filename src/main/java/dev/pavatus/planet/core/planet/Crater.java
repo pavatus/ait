@@ -1,6 +1,11 @@
 package dev.pavatus.planet.core.planet;
 
+import static loqor.ait.AITMod.MOD_ID;
+
+import java.util.Random;
+
 import com.mojang.serialization.Codec;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -8,10 +13,6 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
-
-import java.util.Random;
-
-import static loqor.ait.AITMod.MOD_ID;
 
 /**
  * @author Codiak540

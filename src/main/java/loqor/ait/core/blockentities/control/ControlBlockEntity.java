@@ -15,7 +15,7 @@ import loqor.ait.core.blocks.control.RedstoneControlBlock;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.control.Control;
-import loqor.ait.core.util.Scheduler;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.TimeUnit;
 import loqor.ait.registry.impl.ControlRegistry;
 

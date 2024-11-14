@@ -57,6 +57,7 @@ import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
@@ -70,6 +71,8 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Scheduler.Client.init();
+
         RegistryEvents.INIT.register((registries, env) -> {
             env.init(ClientConsoleVariantRegistry.getInstance());
             env.init(ClientExteriorVariantRegistry.getInstance());

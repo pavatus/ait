@@ -1,5 +1,7 @@
 package loqor.ait;
 
+import static dev.pavatus.planet.core.planet.Crater.CRATER_ID;
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -26,13 +28,12 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.registry.Registry;
-import net.minecraft.world.gen.ProbabilityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandlerType;
@@ -43,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 import loqor.ait.api.AITModInitializer;
@@ -62,10 +64,10 @@ import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
@@ -74,8 +76,6 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-
-import static dev.pavatus.planet.core.planet.Crater.CRATER_ID;
 
 public class AITMod implements ModInitializer {
 

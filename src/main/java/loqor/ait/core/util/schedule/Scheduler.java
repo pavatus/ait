@@ -1,9 +1,12 @@
-package loqor.ait.core.util;
+package loqor.ait.core.util.schedule;
 
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
 import net.minecraft.util.Util;
@@ -46,6 +49,42 @@ public class Scheduler {
         return task;
     }
 
+    @Environment(EnvType.CLIENT)
+    public static class Client {
+        private static Client self;
+        private final Deque<Task> tasks = new ConcurrentLinkedDeque<>();
+        private final ExecutorService service = Util.getMainWorkerExecutor();
+
+        private Client() {
+            ClientTickEvents.END_CLIENT_TICK.register(server -> this.tasks.removeIf(Task::tryTick));
+        }
+
+        public static void init() {
+            self = new Client();
+        }
+
+        public static Task runTaskLater(Runnable runnable, TimeUnit unit, long delay) {
+            return add(new SimpleTask(runnable, TimeUnit.TICKS.from(unit, delay)));
+        }
+
+        public static Task runAsyncTaskLater(Runnable runnable, TimeUnit unit, long delay) {
+            return add(new AsyncSimpleTask(runnable, TimeUnit.TICKS.from(unit, delay)));
+        }
+
+        public static Task runTaskTimer(Runnable runnable, TimeUnit unit, long period) {
+            return add(new RepeatingSimpleTask(runnable, TimeUnit.TICKS.from(unit, period)));
+        }
+
+        public static Task runAsyncTaskTimer(Runnable runnable, TimeUnit unit, long period) {
+            return add(new AsyncRepeatingSimpleTask(runnable, TimeUnit.TICKS.from(unit, period)));
+        }
+
+        private static Task add(Task task) {
+            self.tasks.add(task);
+            return task;
+        }
+    }
+
     public static abstract class Task {
 
         private final Runnable runnable;
@@ -83,7 +122,7 @@ public class Scheduler {
         }
     }
 
-    private static class SimpleTask extends Task {
+    static class SimpleTask extends Task {
 
         protected final long delay;
         protected long counter;

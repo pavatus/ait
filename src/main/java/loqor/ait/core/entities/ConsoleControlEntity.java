@@ -40,7 +40,7 @@ import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
-import loqor.ait.core.util.Scheduler;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.TimeUnit;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 

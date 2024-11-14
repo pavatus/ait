@@ -22,7 +22,7 @@ import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.Scheduler;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TimeUnit;
 import loqor.ait.data.properties.Property;

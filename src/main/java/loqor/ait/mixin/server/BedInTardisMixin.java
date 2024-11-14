@@ -1,6 +1,5 @@
 package loqor.ait.mixin.server;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,77 +20,38 @@ import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.Loyalty;
+import loqor.ait.data.TimeUnit;
 
 @Mixin(BedBlock.class)
 public class BedInTardisMixin {
-    private static int soundDelayCounter = 0;
-    private static PlayerEntity delayedPlayer;
-    private static World delayedWorld;
-    private static SoundEvent delayedSound;
-
     @Inject(at = @At("HEAD"), method = "onUse")
     private void ait$useOn(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                            BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (world.isClient()) {
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
-            if (tardis != null) {
-                Loyalty loyalty = tardis.loyalty().get(player);
+            if (tardis == null || AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) return;
 
-                if (loyalty != null && loyalty.isOf(Loyalty.Type.PILOT)) {
-                    if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
-                        player.sendMessage(Text.literal("The TARDIS hums gently, showing trust..."), true);
-                    }
-                    delayedSound = AITSounds.GHOST_MAT;
-                } else if (loyalty != null && loyalty.isOf(Loyalty.Type.REJECT)) {
-                    if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
-                        player.sendMessage(Text.literal("The TARDIS groans in frustration..."), true);
-                    }
-                    delayedSound = AITSounds.GROAN;
-                } else if (loyalty != null && loyalty.isOf(Loyalty.Type.COMPANION)) {
-                    if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
-                        player.sendMessage(Text.literal("The TARDIS glows warmly, as if glad to have you along for the journey..."), true);
-                    }
-                    delayedSound = AITSounds.GROAN;
-                } else if (loyalty != null && loyalty.isOf(Loyalty.Type.OWNER)) {
-                    if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
-                        player.sendMessage(Text.literal("The TARDIS vibrates gently, a sound of reassurance that it will always be here for you..."), true);
-                    }
-                    delayedSound = AITSounds.GROAN;
-                } else if (loyalty != null && loyalty.isOf(Loyalty.Type.NEUTRAL)) {
-                    if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
-                        player.sendMessage(Text.literal("The TARDIS hums softly, neither welcoming nor dismissing your presence..."), true);
-                    }
-                    delayedSound = AITSounds.GROAN;
-                } else {
-                   if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) {
-                       player.sendMessage(Text.literal("The TARDIS hums in uncertainty..."), true);
-                   }
-                   delayedSound = AITSounds.FAIL_DEMAT;
-                }
+            Loyalty loyalty = tardis.loyalty().get(player);
 
-                // Start sound delay counter
-                soundDelayCounter = 20; // 20 ticks for 1-second delay
-                delayedPlayer = player;
-                delayedWorld = world;
-            }
+            Text message = switch (loyalty.type()) {
+                case REJECT -> Text.literal("The TARDIS groans in frustration...");
+                case NEUTRAL ->
+                        Text.literal("The TARDIS hums softly, neither welcoming nor dismissing your presence...");
+                case COMPANION ->
+                        Text.literal("The TARDIS glows warmly, as if glad to have you along for the journey...");
+                case PILOT -> Text.literal("The TARDIS hums gently, showing trust...");
+                case OWNER ->
+                        Text.literal("The TARDIS vibrates gently, a sound of reassurance that it will always be here for you...");
+            };
+            player.sendMessage(message, true);
+
+            SoundEvent sound = switch(loyalty.type()) {
+                case PILOT -> AITSounds.GHOST_MAT;
+                default -> AITSounds.GROAN;
+            };
+            Scheduler.Client.runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
         }
-    }
-
-    static {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (soundDelayCounter > 0) {
-                soundDelayCounter--;
-                if (soundDelayCounter == 0 && delayedPlayer != null && delayedWorld != null) {
-                    // Play the delayed sound
-                    delayedPlayer.playSound(delayedSound, 1.0F, 1.0F);
-
-                    // Reset delay variables
-                    delayedPlayer = null;
-                    delayedWorld = null;
-                    delayedSound = null;
-                }
-            }
-        });
     }
 }
