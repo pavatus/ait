@@ -509,7 +509,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
-        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
+        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
 
         // ????
