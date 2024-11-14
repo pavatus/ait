@@ -26,7 +26,7 @@ public class PowerControl extends Control {
             return false;
         }
 
-        tardis.engine().togglePower();
+        tardis.subsystems().togglePower();
         return false;
     }
 
@@ -47,7 +47,7 @@ public class PowerControl extends Control {
 
     @Override
     public boolean shouldHaveDelay(Tardis tardis) {
-        if (tardis.engine().hasPower())
+        if (tardis.subsystems().hasPower())
             return false;
 
         return super.shouldHaveDelay();

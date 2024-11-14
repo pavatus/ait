@@ -7,7 +7,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -15,6 +14,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.EngineModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.EngineBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.dim.TardisDimension;
 
 // Made with Blockbench 4.8.3
@@ -36,10 +36,11 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
     public void render(EngineBlockEntity entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        if (entity.hasWorld() && TardisDimension.isTardisDimension((ClientWorld) entity.getWorld())
-                && entity.findTardis().isEmpty())
+        if (entity.hasWorld() && TardisDimension.isTardisDimension(entity.getWorld())
+                && entity.tardis().isEmpty())
             return;
 
+        Tardis tardis = entity.tardis().get();
         matrices.push();
         matrices.translate(0.5f, 1.5f, 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
@@ -47,7 +48,7 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (TardisDimension.isTardisDimension((ClientWorld) entity.getWorld()) && entity.findTardis().get().engine().hasPower()) {
+        if (tardis.engine().hasPower()) {
             ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
         }
 

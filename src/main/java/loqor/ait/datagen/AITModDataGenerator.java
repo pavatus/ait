@@ -517,6 +517,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
+        provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
 
@@ -757,6 +758,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
+        provider.addTranslation("tardis.message.interiorchange.subsystems_enabled",
+                "TARDIS has %s subsystems enabled. Are you sure you want to do this?");
 
         // Landing Pad
         provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");

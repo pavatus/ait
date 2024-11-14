@@ -110,6 +110,12 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                 return;
             }
         }
+        if (tardis.subsystems().isEnabled()) {
+            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
+                player.sendMessage(
+                        Text.translatable("tardis.message.interiorchange.subsystems_enabled", tardis.subsystems().countEnabled()).formatted(Formatting.RED));
+            }
+        }
 
         AITMod.LOGGER.info("Queueing interior change for {} to {}", this.tardis, schema);
 
