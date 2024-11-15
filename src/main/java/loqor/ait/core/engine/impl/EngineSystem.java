@@ -67,6 +67,8 @@ public class EngineSystem extends DurableSubSystem {
     }
 
     public Status status() {
+        if (this.status == null) this.status = Status.OKAY;
+
         return this.status;
     }
     private void tryUpdateStatus() {

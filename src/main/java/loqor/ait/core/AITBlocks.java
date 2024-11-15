@@ -18,6 +18,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
+import loqor.ait.core.engine.link.block.FluidLinkBlock;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
@@ -130,6 +131,8 @@ public class AITBlocks implements BlockRegistryContainer {
     @NoBlockItem
     public static final Block FABRICATOR = new FabricatorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
+
+    public static final Block FLUID_LINK = new FluidLinkBlock(FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F));
 
     // Control Blocks
     @NoBlockItem

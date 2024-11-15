@@ -16,11 +16,19 @@ import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.impl.EngineSystem;
+import loqor.ait.core.engine.link.IFluidLink;
+import loqor.ait.core.engine.link.IFluidSource;
+import loqor.ait.core.engine.link.ITardisSource;
+import loqor.ait.core.engine.link.tracker.WorldFluidTracker;
+import loqor.ait.core.tardis.Tardis;
 
-public class EngineBlockEntity extends InteriorLinkableBlockEntity {
+public class EngineBlockEntity extends InteriorLinkableBlockEntity implements ITardisSource {
+    private WorldFluidTracker tracker;
 
     public EngineBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, pos, state);
+
+        if (!this.hasWorld()) return;
     }
 
     public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
@@ -51,5 +59,20 @@ public class EngineBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         this.tardis().ifPresent(tardis -> tardis.subsystems().engine().setEnabled(true));
+    }
+
+    @Override
+    public Tardis getTardisForFluid() {
+        return this.tardis().get();
+    }
+
+    @Override
+    public void setSource(IFluidSource source) {
+
+    }
+
+    @Override
+    public void setLast(IFluidLink last) {
+
     }
 }

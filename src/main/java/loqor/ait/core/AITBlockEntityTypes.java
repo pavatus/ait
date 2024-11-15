@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntityType;
 
 import loqor.ait.core.blockentities.*;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
+import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
 public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
 
@@ -49,4 +50,6 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(AITRadioBlockEntity::new, AITBlocks.RADIO).build();
     public static BlockEntityType<RedstoneControlBlockEntity> REDSTONE_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
             .create(RedstoneControlBlockEntity::new, AITBlocks.REDSTONE_CONTROL_BLOCK).build();
+    public static BlockEntityType<FluidLinkBlockEntity> FLUID_LINK_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
+            .create(FluidLinkBlockEntity::new, AITBlocks.FLUID_LINK).build();
 }
