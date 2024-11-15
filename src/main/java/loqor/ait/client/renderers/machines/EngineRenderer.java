@@ -18,7 +18,6 @@ import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.EngineBlockEntity;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
@@ -39,8 +38,7 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
     public void render(EngineBlockEntity entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        if (entity.hasWorld() && TardisDimension.isTardisDimension(entity.getWorld())
-                && entity.tardis().isEmpty())
+        if (entity.tardis() == null || entity.tardis().isEmpty())
             return;
 
         Tardis tardis = entity.tardis().get();
