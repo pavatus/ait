@@ -14,7 +14,6 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -125,11 +124,6 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
             return;
 
         this.search(world, pos);
-
-        if (placer != null && this.source() != null) {
-            placer.sendMessage(Text.literal("Fluid link placed, source: " + this.source().toString()));
-        }
-
         this.updatePowered();
     }
 
