@@ -115,7 +115,8 @@ public class AITBlocks implements BlockRegistryContainer {
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
     public static final Block ZEITON_CAGE = new ZeitonCageBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
-            .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+            .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
+            .luminance(light -> 15));
 
 
     @NoBlockItem

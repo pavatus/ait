@@ -339,6 +339,8 @@ public class AITModClient implements ClientModInitializer {
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
                 WaypointBankBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ZEITON_CAGE_BLOCK_ENTITY_TYPE,
+                ZeitonCageRenderer::new);
     }
 
     public static void entityRenderRegister() {

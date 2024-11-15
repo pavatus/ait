@@ -29,6 +29,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
+import loqor.ait.api.TardisComponent;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.advancement.TardisCriterions;
@@ -36,6 +37,7 @@ import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.world.RiftChunkManager;
@@ -144,14 +146,14 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!(world.getPlayerByUuid(creatorId) instanceof ServerPlayerEntity player))
             return;
 
+        TardisBuilder builder = new TardisBuilder().at(DirectedGlobalPos.Cached.create(world, pos, (byte) 0))
+                .owner(player)
+                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(0))
+                .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
+                .desktop(DesktopRegistry.DEFAULT_CAVE);
+
         ServerTardis created = ServerTardisManager.getInstance()
-                .create(new TardisBuilder().at(DirectedGlobalPos.Cached.create(world, pos, (byte) 0))
-                        .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
-                        .desktop(DesktopRegistry.DEFAULT_CAVE).owner(player));
-
-        if (created == null) return;
-
-        created.fuel().setCurrentFuel(0);
+                .create(builder);
     }
 
     @Override

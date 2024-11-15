@@ -5,7 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,9 +30,10 @@ import net.minecraft.world.World;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
+import loqor.ait.core.blockentities.ZeitonCageBlockEntity;
 import loqor.ait.core.world.RiftChunkManager;
 
-public class ZeitonCageBlock extends Block {
+public class ZeitonCageBlock extends Block implements BlockEntityProvider {
     private static final int REQUIRED_FUEL = 500;
     private static final IntProperty FUEL = IntProperty.of("fuel", 0, REQUIRED_FUEL);
 
@@ -145,5 +148,10 @@ public class ZeitonCageBlock extends Block {
 
         int newFuel = Math.min(current + fuel, REQUIRED_FUEL);
         return state.with(FUEL, newFuel);
+    }
+
+    @Nullable @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new ZeitonCageBlockEntity(pos, state);
     }
 }
