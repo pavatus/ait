@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.engine.link.IFluidLink;
@@ -23,7 +24,7 @@ import loqor.ait.core.tardis.Tardis;
 
 public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSource {
     public EngineBlockEntity(BlockPos pos, BlockState state) {
-        super(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, pos, state);
+        super(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, pos, state, SubSystem.Id.ENGINE);
 
         if (!this.hasWorld()) return;
     }
@@ -44,14 +45,16 @@ public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSo
         engine.setEnabled(!engine.isEnabled());
     }
 
+    @Override
     public void onBroken(World world, BlockPos pos) {
-        if (world.isClient())
-            return;
+        super.onBroken(world, pos);
 
         this.tardis().ifPresent(tardis -> tardis.subsystems().engine().setEnabled(false));
     }
 
+    @Override
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {
+        super.onPlaced(world, pos, placer);
         if (world.isClient())
             return;
 
@@ -71,5 +74,20 @@ public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSo
     @Override
     public void setLast(IFluidLink last) {
 
+    }
+
+    @Override
+    public IFluidSource source(boolean search) {
+        return this;
+    }
+
+    @Override
+    public IFluidLink last() {
+        return this;
+    }
+
+    @Override
+    public BlockPos getLastPos() {
+        return this.getPos();
     }
 }

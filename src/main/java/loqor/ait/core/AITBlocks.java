@@ -117,6 +117,9 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block ZEITON_CAGE = new ZeitonCageBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
             .luminance(light -> 15));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block POWER_CONVERTER = new PowerConverterBlock(FabricBlockSettings.create().nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
 
     @NoBlockItem

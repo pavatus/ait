@@ -10,6 +10,7 @@ import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.engine.impl.EngineSystem;
+import loqor.ait.core.engine.impl.PowerConverterSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
@@ -84,7 +85,8 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
     }
 
     public enum Id implements SubSystem.IdLike {
-        ENGINE(EngineSystem.class, EngineSystem::new);
+        ENGINE(EngineSystem.class, EngineSystem::new),
+        POWER_CONVERTER(PowerConverterSystem.class, PowerConverterSystem::new);
         private final Supplier<SubSystem> creator;
 
         private final Class<? extends SubSystem> clazz;

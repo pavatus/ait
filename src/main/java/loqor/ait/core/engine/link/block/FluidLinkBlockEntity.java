@@ -68,7 +68,7 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     }
     private void updatePowered() {
         boolean before = this.powered;
-        this.powered = this.source(false) != null && this.source(false).level() > 0;
+        this.powered = this.source(true) != null && this.source(true).level() > 0;
 
         if (before != this.powered) {
             this.syncToWorld();
@@ -193,5 +193,6 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
         this.world.emitGameEvent(GameEvent.BLOCK_CHANGE, this.getPos(), GameEvent.Emitter.of(this.getCachedState()));
         this.markDirty();
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
+        this.getWorld().updateNeighborsAlways(this.getPos(), this.getCachedState().getBlock());
     }
 }

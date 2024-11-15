@@ -16,6 +16,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.EngineSystem;
+import loqor.ait.core.engine.impl.PowerConverterSystem;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.data.DirectedGlobalPos;
@@ -192,5 +193,8 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     public EngineSystem engine() {
         return this.get(SubSystem.Id.ENGINE);
+    }
+    public PowerConverterSystem converter() {
+        return this.get(SubSystem.Id.POWER_CONVERTER);
     }
 }

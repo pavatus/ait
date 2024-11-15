@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -40,15 +39,6 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
-
-        if (world.getBlockEntity(pos) instanceof EngineBlockEntity engine) {
-            engine.onPlaced(world, pos, placer);
-        }
-    }
-
-    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return Y_SHAPE;
     }
@@ -66,19 +56,6 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new EngineBlockEntity(pos, state);
-    }
-
-    @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) { // on break
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof EngineBlockEntity engine) {
-                world.updateComparators(pos, this);
-                engine.onBroken(world, pos);
-            }
-        }
-
-        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
     @Override

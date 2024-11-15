@@ -133,7 +133,8 @@ public class CableBlock extends FluidLinkBlock implements Waterloggable {
     private boolean shouldConnectTo(BlockState state, boolean faceFullSquare, Direction side) {
         Block block = state.getBlock();
         boolean bl = block instanceof FenceGateBlock && FenceGateBlock.canWallConnect(state, side);
-        return state.isOf(this) || !cannotConnect(state) && faceFullSquare || block instanceof PaneBlock || bl || block instanceof IFluidLink;
+        System.out.println(block);
+        return block instanceof IFluidLink || state.isOf(this) || !cannotConnect(state) && faceFullSquare || block instanceof PaneBlock || bl ;
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -158,6 +159,8 @@ public class CableBlock extends FluidLinkBlock implements Waterloggable {
                 blockState3.isSideSolidFullSquare(worldView, blockPos4, Direction.NORTH), Direction.NORTH);
         boolean bl4 = this.shouldConnectTo(blockState4,
                 blockState4.isSideSolidFullSquare(worldView, blockPos5, Direction.EAST), Direction.EAST);
+        boolean bl5 = this.shouldConnectTo(blockState5,
+                blockState5.isSideSolidFullSquare(worldView, blockPos6, Direction.UP), Direction.UP);
         BlockState blockState6 = this.getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
         return this.getStateWith(worldView, blockState6, blockPos6, blockState5, bl, bl2, bl3, bl4);
     }
@@ -229,7 +232,7 @@ public class CableBlock extends FluidLinkBlock implements Waterloggable {
     }
 
     private boolean shouldHavePost(BlockState state, BlockState aboveState, VoxelShape aboveShape) {
-        boolean bl = aboveState.getBlock() instanceof CableBlock && aboveState.get(UP);
+        boolean bl = aboveState.getBlock() instanceof IFluidLink;
         if (bl) {
             return true;
         } else {
@@ -250,7 +253,7 @@ public class CableBlock extends FluidLinkBlock implements Waterloggable {
                 if (bl7) {
                     return false;
                 } else {
-                    return aboveState.isIn(BlockTags.WALL_POST_OVERRIDE)
+                    return aboveState.getBlock() instanceof IFluidLink || aboveState.isIn(BlockTags.WALL_POST_OVERRIDE)
                             || shouldUseTallShape(aboveShape, TALL_POST_SHAPE);
                 }
             }
