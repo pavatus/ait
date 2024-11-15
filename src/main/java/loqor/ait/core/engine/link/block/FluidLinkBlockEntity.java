@@ -9,11 +9,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.engine.link.IFluidLink;
@@ -21,6 +26,7 @@ import loqor.ait.core.engine.link.IFluidSource;
 import loqor.ait.core.engine.link.tracker.WorldFluidTracker;
 
 public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
+    private boolean powered = false;
     private IFluidLink last;
     private IFluidSource source;
     private BlockPos lastPos;
@@ -30,6 +36,40 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
     }
     public FluidLinkBlockEntity(BlockPos pos, BlockState state) {
         this(AITBlockEntityTypes.FLUID_LINK_BLOCK_ENTITY, pos, state);
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+
+        nbt.putBoolean("IsPowered", this.powered);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        if (nbt.contains("IsPowered")) {
+            this.powered = nbt.getBoolean("IsPowered");
+        }
+    }
+
+    @Nullable @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        nbt.putBoolean("IsPowered", this.powered);
+        return nbt;
+    }
+
+    public boolean isPowered() {
+        return this.powered;
+    }
+    private void updatePowered() {
+        this.powered = this.source(false) != null && this.source(false).level() > 0;
+        this.sync();
     }
 
     @Override
@@ -54,9 +94,7 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
     public void setSource(IFluidSource source) {
         this.source = source;
 
-        if (this.hasWorld()) {
-            this.getWorld().updateNeighbors(this.getPos(), this.getCachedState().getBlock());
-        }
+        this.sync();
     }
 
     @Override
@@ -91,6 +129,8 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
         if (placer != null && this.source() != null) {
             placer.sendMessage(Text.literal("Fluid link placed, source: " + this.source().toString()));
         }
+
+        this.updatePowered();
     }
 
     private void search(World world, BlockPos pos) {
@@ -129,6 +169,8 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
         if (sourcePos.equals(this.getLastPos())) {
             this.onLastUpdate(world, pos);
         }
+
+        this.updatePowered();
     }
     private void onLastUpdate(World world, BlockPos pos) {
         IFluidLink link = WorldFluidTracker.query((ServerWorld) world, this.getLastPos());
@@ -140,5 +182,12 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
         if (this.source(false) == null && link.source(false) != null) {
             this.setSource(link.source(false));
         }
+    }
+    private void sync() {
+        if (!(this.hasWorld())) return;
+
+        this.world.emitGameEvent(GameEvent.BLOCK_CHANGE, this.getPos(), GameEvent.Emitter.of(this.getCachedState()));
+        this.markDirty();
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
     }
 }

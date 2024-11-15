@@ -51,5 +51,5 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
     public static BlockEntityType<RedstoneControlBlockEntity> REDSTONE_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
             .create(RedstoneControlBlockEntity::new, AITBlocks.REDSTONE_CONTROL_BLOCK).build();
     public static BlockEntityType<FluidLinkBlockEntity> FLUID_LINK_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
-            .create(FluidLinkBlockEntity::new, AITBlocks.FLUID_LINK).build();
+            .create(FluidLinkBlockEntity::new, AITBlocks.CABLE_BLOCK).build();
 }
