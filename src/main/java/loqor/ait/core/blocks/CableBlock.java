@@ -28,7 +28,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-public class CableBlock extends Block implements Waterloggable {
+import loqor.ait.core.engine.link.IFluidLink;
+import loqor.ait.core.engine.link.block.FluidLinkBlock;
+
+public class CableBlock extends FluidLinkBlock implements Waterloggable {
     public static final BooleanProperty UP;
     public static final EnumProperty<WallShape> EAST_SHAPE;
     public static final EnumProperty<WallShape> NORTH_SHAPE;
@@ -37,12 +40,6 @@ public class CableBlock extends Block implements Waterloggable {
     public static final BooleanProperty WATERLOGGED;
     private final Map<BlockState, VoxelShape> shapeMap;
     private final Map<BlockState, VoxelShape> collisionShapeMap;
-    private static final int field_31276 = 3;
-    private static final int field_31277 = 14;
-    private static final int field_31278 = 4;
-    private static final int field_31279 = 1;
-    private static final int field_31280 = 7;
-    private static final int field_31281 = 9;
     private static final VoxelShape TALL_POST_SHAPE;
     private static final VoxelShape TALL_NORTH_SHAPE;
     private static final VoxelShape TALL_SOUTH_SHAPE;
@@ -136,7 +133,7 @@ public class CableBlock extends Block implements Waterloggable {
     private boolean shouldConnectTo(BlockState state, boolean faceFullSquare, Direction side) {
         Block block = state.getBlock();
         boolean bl = block instanceof FenceGateBlock && FenceGateBlock.canWallConnect(state, side);
-        return state.isOf(this) || !cannotConnect(state) && faceFullSquare || block instanceof PaneBlock || bl;
+        return state.isOf(this) || !cannotConnect(state) && faceFullSquare || block instanceof PaneBlock || bl || block instanceof IFluidLink;
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -313,6 +310,11 @@ public class CableBlock extends Block implements Waterloggable {
             default :
                 return super.mirror(state, mirror);
         }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     static {

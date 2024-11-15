@@ -520,6 +520,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
+        provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
