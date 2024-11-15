@@ -193,7 +193,7 @@ public class TardisUtil {
 
     public static void teleportInside(Tardis tardis, Entity entity) {
         TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(true), entity, tardis.getDesktop().doorPos());
+        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().doorPos());
     }
 
     public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
