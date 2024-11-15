@@ -19,7 +19,7 @@ public class EngineSystem extends DurableSubSystem {
     protected void onEnable() {
         super.onEnable();
 
-        this.tardis().subsystems().enablePower();
+        this.tardis().subsystems().enablePower(true);
     }
 
     @Override

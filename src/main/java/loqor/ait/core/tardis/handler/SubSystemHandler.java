@@ -112,7 +112,9 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     @Override
     public void tick(MinecraftServer server) {
         for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
-            it.next().tick();
+            SubSystem next = it.next();
+            if (next == null) return;
+            next.tick();
         }
     }
 
@@ -148,20 +150,23 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         tardis.<HadsHandler>handler(Id.HADS).enabled().set(false);
     }
 
-    public void enablePower() {
+    public void enablePower(boolean requiresEngine) {
         if (this.power.get())
             return;
 
         if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
             return; // cant enable power if not enough fuel
         if (this.tardis.siege().isActive()) return;
-        if (!EngineSystem.hasEngine(tardis)) return;
+        if (requiresEngine && !EngineSystem.hasEngine(tardis)) return;
 
         this.power.set(true);
         this.updateExteriorState();
 
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
+    }
+    public void enablePower() {
+        this.enablePower(true);
     }
 
     // why is this in the engine handler? - Loqor

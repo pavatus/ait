@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import loqor.ait.core.tardis.handler.SubSystemHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -96,10 +97,8 @@ public class TardisItemBuilder extends Item {
         TardisBuilder builder = new TardisBuilder().at(pos)
                 .owner(serverPlayer)
                 .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
-                .<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
-                    engine.linkEngine(0, 0);
-                    engine.enablePower();
-                }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
+                .<SubSystemHandler>with(TardisComponent.Id.SUBSYSTEM, subs -> subs.enablePower(false))
+                .<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
                         loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER)));
 
         if (this.exterior == null || this.desktop == null) {

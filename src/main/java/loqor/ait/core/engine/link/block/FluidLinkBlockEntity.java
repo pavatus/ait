@@ -2,6 +2,7 @@ package loqor.ait.core.engine.link.block;
 
 import java.util.HashMap;
 
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -24,7 +25,7 @@ import loqor.ait.core.engine.link.IFluidLink;
 import loqor.ait.core.engine.link.IFluidSource;
 import loqor.ait.core.engine.link.tracker.WorldFluidTracker;
 
-public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
+public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements IFluidLink {
     private boolean powered = false;
     private IFluidLink last;
     private IFluidSource source;
@@ -67,8 +68,18 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
         return this.powered;
     }
     private void updatePowered() {
+        boolean before = this.powered;
         this.powered = this.source(false) != null && this.source(false).level() > 0;
-        this.sync();
+
+        if (before != this.powered) {
+            this.syncToWorld();
+
+            if (this.powered) {
+                this.onGainFluid();
+            } else {
+                this.onLoseFluid();
+            }
+        }
     }
 
     @Override
@@ -93,7 +104,7 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
     public void setSource(IFluidSource source) {
         this.source = source;
 
-        this.sync();
+        this.syncToWorld();
     }
 
     @Override
@@ -177,7 +188,7 @@ public class FluidLinkBlockEntity extends BlockEntity implements IFluidLink {
             this.setSource(link.source(false));
         }
     }
-    private void sync() {
+    private void syncToWorld() {
         if (!(this.hasWorld())) return;
 
         this.world.emitGameEvent(GameEvent.BLOCK_CHANGE, this.getPos(), GameEvent.Emitter.of(this.getCachedState()));

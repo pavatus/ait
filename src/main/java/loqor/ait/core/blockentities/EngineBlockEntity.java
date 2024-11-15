@@ -2,6 +2,7 @@ package loqor.ait.core.blockentities;
 
 
 
+import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
@@ -22,9 +23,7 @@ import loqor.ait.core.engine.link.ITardisSource;
 import loqor.ait.core.engine.link.tracker.WorldFluidTracker;
 import loqor.ait.core.tardis.Tardis;
 
-public class EngineBlockEntity extends InteriorLinkableBlockEntity implements ITardisSource {
-    private WorldFluidTracker tracker;
-
+public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSource {
     public EngineBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, pos, state);
 
