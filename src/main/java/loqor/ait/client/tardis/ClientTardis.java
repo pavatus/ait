@@ -46,6 +46,9 @@ public class ClientTardis extends Tardis implements Disposable {
     public void tick(MinecraftClient client) {
         // referencing client stuff where it COULD be server causes problems
         if (ClientShakeUtil.shouldShake(this)) {
+            if (this.flight().falling().get()) {
+                ClientShakeUtil.ShakeFromEverywhere();
+            }
             ClientShakeUtil.shakeFromConsole();
         }
 
