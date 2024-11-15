@@ -111,7 +111,7 @@ public class TardisDesktop extends TardisComponent {
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
         DesktopGenerator generator = new DesktopGenerator(this.schema);
-        boolean success = generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+        boolean success = generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(true), this.corners);
 
         if (!success)
             AITMod.LOGGER.error("Failed to generate interior for {}", this.tardis.getUuid());
