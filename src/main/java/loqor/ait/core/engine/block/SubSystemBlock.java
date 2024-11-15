@@ -1,19 +1,19 @@
 package loqor.ait.core.engine.block;
 
-import loqor.ait.core.engine.SubSystem;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
 
+import loqor.ait.core.engine.SubSystem;
+
 public abstract class SubSystemBlock extends BlockWithEntity {
-	private final SubSystem.IdLike id;
+    private final SubSystem.IdLike id;
 
-	protected SubSystemBlock(Settings settings, SubSystem.IdLike system) {
-		super(settings);
+    protected SubSystemBlock(Settings settings, SubSystem.IdLike system) {
+        super(settings);
 
-		this.id = system;
-	}
+        this.id = system;
+    }
 
-	public SubSystem.IdLike getSystemId() {
-		return this.id;
-	}
+    public SubSystem.IdLike getSystemId() {
+        return this.id;
+    }
 }

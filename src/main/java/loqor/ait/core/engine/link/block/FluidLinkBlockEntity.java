@@ -2,12 +2,10 @@ package loqor.ait.core.engine.link.block;
 
 import java.util.HashMap;
 
-import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -20,6 +18,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.engine.link.IFluidLink;
 import loqor.ait.core.engine.link.IFluidSource;

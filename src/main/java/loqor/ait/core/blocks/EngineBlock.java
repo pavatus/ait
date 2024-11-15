@@ -1,7 +1,5 @@
 package loqor.ait.core.blocks;
 
-import loqor.ait.core.engine.SubSystem;
-import loqor.ait.core.engine.block.SubSystemBlock;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -20,6 +18,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import loqor.ait.core.blockentities.EngineBlockEntity;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.block.SubSystemBlock;
 
 public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 48.0, 16.0);
