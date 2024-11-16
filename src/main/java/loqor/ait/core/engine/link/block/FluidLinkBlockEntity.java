@@ -13,6 +13,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -20,9 +21,11 @@ import net.minecraft.world.event.GameEvent;
 
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.link.IFluidLink;
 import loqor.ait.core.engine.link.IFluidSource;
 import loqor.ait.core.engine.link.tracker.WorldFluidTracker;
+import loqor.ait.core.util.SoundData;
 
 public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements IFluidLink {
     private boolean powered = false;
@@ -61,6 +64,26 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
         NbtCompound nbt = super.toInitialChunkDataNbt();
         nbt.putBoolean("IsPowered", this.powered);
         return nbt;
+    }
+
+    @Override
+    public void onGainFluid() {
+        if (this.hasWorld() && this.getGainPowerSound() != null) {
+            this.getGainPowerSound().play((ServerWorld) this.getWorld(), this.getPos());
+        }
+    }
+
+    @Override
+    public void onLoseFluid() {
+        if (this.hasWorld() && this.getLosePowerSound() != null) {
+            this.getLosePowerSound().play((ServerWorld) this.getWorld(), this.getPos());
+        }
+    }
+    protected SoundData getLosePowerSound() {
+        return new SoundData(AITSounds.HANDBRAKE_DOWN, SoundCategory.BLOCKS, 0.1F, 0.75F);
+    }
+    protected SoundData getGainPowerSound() {
+        return new SoundData(AITSounds.SONIC_SWITCH, SoundCategory.BLOCKS, 0.1F, 0.75F);
     }
 
     public boolean isPowered() {
@@ -127,6 +150,7 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     public void onBroken(World world, BlockPos pos) {
         if (world.isClient())
             return;
+        this.onLoseFluid();
     }
 
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {

@@ -13,6 +13,12 @@ public interface IFluidSource extends IFluidLink {
 
     double level();
     void setLevel(double level);
+    default void addLevel(double amount) {
+        setLevel(level() + amount);
+    }
+    default void removeLevel(double amount) {
+        addLevel(-amount);
+    }
 
     /**
      * @implNote you will need to call this yourself in setLevel

@@ -46,13 +46,6 @@ public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSo
     }
 
     @Override
-    public void onBroken(World world, BlockPos pos) {
-        super.onBroken(world, pos);
-
-        this.tardis().ifPresent(tardis -> tardis.subsystems().engine().setEnabled(false));
-    }
-
-    @Override
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {
         super.onPlaced(world, pos, placer);
         if (world.isClient())

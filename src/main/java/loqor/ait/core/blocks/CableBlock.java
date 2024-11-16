@@ -133,7 +133,6 @@ public class CableBlock extends FluidLinkBlock implements Waterloggable {
     private boolean shouldConnectTo(BlockState state, boolean faceFullSquare, Direction side) {
         Block block = state.getBlock();
         boolean bl = block instanceof FenceGateBlock && FenceGateBlock.canWallConnect(state, side);
-        System.out.println(block);
         return block instanceof IFluidLink || state.isOf(this) || !cannotConnect(state) && faceFullSquare || block instanceof PaneBlock || bl ;
     }
 

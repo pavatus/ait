@@ -4,11 +4,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
+import loqor.ait.core.util.SoundData;
 
 public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     private SubSystem.IdLike id;
@@ -33,26 +33,25 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
 
     @Override
     public void onGainFluid() {
-        this.system().setEnabled(true);
+        super.onGainFluid();
 
-        if (this.hasWorld()) {
-            this.getWorld().playSound(null, this.getPos(), AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 0.25f, 1.0F);
-        }
+        this.system().setEnabled(true);
     }
 
     @Override
     public void onLoseFluid() {
-        this.system().setEnabled(false);
+        super.onLoseFluid();
 
-        if (this.hasWorld()) {
-            this.getWorld().playSound(null, this.getPos(), AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 0.25f, 1.0F);
-        }
+        this.system().setEnabled(false);
     }
 
     @Override
-    public void onBroken(World world, BlockPos pos) {
-        super.onBroken(world, pos);
+    protected SoundData getGainPowerSound() {
+        return new SoundData(AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 0.25f, 1.0f);
+    }
 
-        this.onLoseFluid();
+    @Override
+    protected SoundData getLosePowerSound() {
+        return new SoundData(AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 0.25f, 1.0f);
     }
 }
