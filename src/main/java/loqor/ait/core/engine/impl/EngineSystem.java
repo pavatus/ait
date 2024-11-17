@@ -110,7 +110,7 @@ public class EngineSystem extends DurableSubSystem {
         CRITICAL(250, 33, 22) {
             @Override
             public boolean isViable(EngineSystem system) {
-                return false; // todo
+                return system.tardis.subsystems().findBrokenSubsystem().isPresent();
             }
         },
         LEAKAGE(114, 255, 33) {

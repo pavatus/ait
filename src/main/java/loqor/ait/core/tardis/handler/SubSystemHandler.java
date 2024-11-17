@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.handler;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
@@ -14,6 +15,7 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
@@ -116,6 +118,16 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
             if (next == null) return;
             next.tick();
         }
+    }
+
+    public Optional<DurableSubSystem> findBrokenSubsystem() {
+        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
+            SubSystem next = it.next();
+            if (next instanceof DurableSubSystem && ((DurableSubSystem) next).durability() <= 5)
+                return Optional.of((DurableSubSystem) next);
+        }
+
+        return Optional.empty();
     }
 
     public boolean hasPower() {
