@@ -74,10 +74,6 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         return state.get(this.getAgeProperty());
     }
 
-    public BlockState withAge(int age) {
-        return this.getDefaultState().with(this.getAgeProperty(), age);
-    }
-
     public final boolean isMature(BlockState blockState) {
         return this.getAge(blockState) >= this.getMaxAge();
     }
@@ -96,6 +92,9 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             stack.decrement(1);
 
             world.playSound(null, pos, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+            tryCreate((ServerWorld) world, pos, state);
+
             return ActionResult.SUCCESS;
         }
 
@@ -117,25 +116,31 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
                     return;
                 }
 
-                world.setBlockState(pos, this.withAge(i + 1), 2);
+                world.setBlockState(pos, state.with(AGE, i + 1), 2);
             }
         }
 
+        tryCreate(world, pos, state);
+    }
+
+    private boolean tryCreate(ServerWorld world, BlockPos pos, BlockState state) {
         if (!this.isMature(state))
-            return;
+            return false;
 
         if (!hasSms(state)) {
             world.playSound(null, pos, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return;
+            return false;
         }
 
         if (TardisDimension.isTardisDimension(world)) {
             this.createConsole(world, pos);
-            return;
+            return true;
         }
 
         if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral)
             this.createTardis(world, pos, coral.creator);
+
+        return true;
     }
 
     private void createConsole(ServerWorld world, BlockPos pos) {
