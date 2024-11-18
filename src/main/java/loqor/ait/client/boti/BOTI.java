@@ -6,21 +6,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.*;
 import net.minecraft.client.render.AITBufferBuilderStorage;
-import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.client.models.decoration.GallifreyFallsFrameModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.renderers.AITRenderLayers;
-import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
 
 public class BOTI {
 
@@ -37,9 +31,6 @@ public class BOTI {
         MinecraftClient.getInstance().getFramebuffer().endWrite();
 
         BOTI_HANDLER.setupFramebuffer();
-
-        Vec3d skyColor = MinecraftClient.getInstance().world.getSkyColor(MinecraftClient.getInstance().player.getPos(),
-                MinecraftClient.getInstance().world.getTime());
 
         VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
 
@@ -77,37 +68,5 @@ public class BOTI {
         BOTI_HANDLER.afbo.clear(MinecraftClient.IS_SYSTEM_MAC);
         MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
         stack.pop();
-    }
-
-    private static void renderWorld(MatrixStack stack, int light, VertexConsumerProvider consumer) {
-        stack.push();
-
-        MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
-
-        BlockPos offset = new BlockPos(0, 0, 0);
-
-        stack.scale(-1, -1, 1);
-
-        stack.translate(offset.getX(), offset.getY(), offset.getZ());
-
-        for (Entity e : MinecraftClient.getInstance().world.getEntities()) {
-            if (e instanceof GallifreyFallsPaintingEntity) continue;
-            stack.push();
-            Vec3d pos = e.getPos().subtract(offset.toCenterPos());
-            stack.translate(pos.getX(), pos.getY() - 8, pos.getZ());
-            EntityRenderer<? super Entity> renderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(e);
-            renderer.render(e, e.getBodyYaw(), e.getPitch(), stack, consumer, OverlayTexture.DEFAULT_UV);
-            stack.pop();
-        }
-
-        stack.pop();
-    }
-
-    public static void stencilStart(MatrixStack stack, int light, ModelPart part, VertexConsumer consumer, VertexConsumerProvider.Immediate bufferProvider) {
-
-    }
-
-    public static void stencilEnd(MatrixStack stack, int light, ModelPart part, VertexConsumer consumer, VertexConsumerProvider.Immediate bufferProvider) {
-
     }
 }
