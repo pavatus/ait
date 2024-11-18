@@ -73,14 +73,6 @@ public class WorldBuilder {
         return this;
     }
 
-    public boolean priority() {
-        return this.priority;
-    }
-    public WorldBuilder priority(boolean val) {
-        this.priority = val;
-        return this;
-    }
-
     public Identifier id() {
         return id;
     }

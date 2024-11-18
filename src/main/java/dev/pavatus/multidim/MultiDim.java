@@ -2,7 +2,6 @@ package dev.pavatus.multidim;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.Set;
 
 import com.mojang.serialization.Lifecycle;
@@ -23,7 +22,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
@@ -52,7 +50,6 @@ public class MultiDim {
 
     private final Set<ServerWorld> toDelete = new ReferenceOpenHashSet<>();
     private final Set<ServerWorld> toUnload = new ReferenceOpenHashSet<>();
-    private final Set<ServerWorld> toLoad = new ReferenceOpenHashSet<>();
 
     private MultiDim(MinecraftServer server) {
         this.server = server;
@@ -86,9 +83,6 @@ public class MultiDim {
     }
 
     public ServerWorld add(WorldBuilder builder) {
-        ServerWorld existing = this.findLoading(builder.id()).orElse(null);
-        if (existing != null) return existing;
-
         MutableRegistry<DimensionOptions> dimensionsRegistry = MultiDimUtil.getMutableDimensionsRegistry(this.server);
 
         boolean wasFrozen = dimensionsRegistry.multidim$isFrozen();
@@ -107,9 +101,7 @@ public class MultiDim {
             dimensionsRegistry.multidim$freeze();
 
         ServerWorld world = builder.build(this.server, options);
-
-        if (builder.priority()) this.load(world);
-        else this.loadLater(world);
+        this.load(world);
 
         return world;
     }
@@ -134,9 +126,6 @@ public class MultiDim {
     public void unloadLater(ServerWorld world) {
         this.server.submit(() -> this.toUnload.add(world));
     }
-    public void loadLater(ServerWorld world) {
-        this.server.submit(() -> this.toLoad.add(world));
-    }
 
     private void tick() {
         Set<ServerWorld> deletionQueue = this.toDelete;
@@ -148,11 +137,6 @@ public class MultiDim {
 
         if (!unloadingQueue.isEmpty())
             unloadingQueue.removeIf(this::tickUnloadWorld);
-
-        Set<ServerWorld> loadingQueue = this.toLoad;
-
-        if (!loadingQueue.isEmpty())
-            loadingQueue.removeIf(this::tickLoadWorld);
     }
 
     private boolean prepareForUnload(ServerWorld world) {
@@ -180,10 +164,6 @@ public class MultiDim {
         return true;
     }
 
-    private boolean tickLoadWorld(ServerWorld world) {
-        this.load(world);
-        return true;
-    }
     private void load(ServerWorld world) {
         AITMod.LOGGER.info("Loading world {}", world.getRegistryKey().getValue());
 
@@ -197,10 +177,6 @@ public class MultiDim {
         ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
         world.tick(() -> true);
     }
-    public Optional<ServerWorld> findLoading(Identifier world) {
-        return this.toLoad.stream().filter(w -> w.getRegistryKey().getValue().equals(world)).findFirst();
-    }
-
     public boolean isWorldUnloaded(ServerWorld world) {
         return world.getPlayers().isEmpty() && world.getChunkManager().getLoadedChunkCount() <= 0;
     }
