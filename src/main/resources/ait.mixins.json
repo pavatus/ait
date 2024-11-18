@@ -40,6 +40,8 @@
     "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",
     "client.rendering.HeldItemRendererMixin",
+    "client.rendering.framebuffer.MixinMainFramebufferTarget",
+    "client.rendering.framebuffer.MixinRenderFramebufferTarget",
     "client.rendering.PlayerEntityRendererMixin",
     "client.rendering.SkyboxMixin"
   ],

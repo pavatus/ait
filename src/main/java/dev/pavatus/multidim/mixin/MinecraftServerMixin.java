@@ -1,10 +1,13 @@
 package dev.pavatus.multidim.mixin;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import dev.pavatus.multidim.api.MultiDimServer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.registry.RegistryKey;
@@ -15,17 +18,26 @@ import net.minecraft.world.level.storage.LevelStorage;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin implements MultiDimServer {
-
-    @Shadow @Final private Map<RegistryKey<World>, ServerWorld> worlds;
-
     @Shadow @Final public LevelStorage.Session session;
+
+    @Shadow
+    @Final
+    @Mutable
+    private Map<RegistryKey<World>, ServerWorld> worlds;
 
     @Override
     public void multidim$addWorld(ServerWorld world) {
-        if (this.multidim$hasWorld(world.getRegistryKey()))
-            return;
+        // use read-copy-update to avoid concurrency issues
+        // from immersive portals
+        LinkedHashMap<RegistryKey<World>, ServerWorld> newMap =
+                Maps.newLinkedHashMap();
 
-        this.worlds.put(world.getRegistryKey(), world);
+        Map<RegistryKey<World>, ServerWorld> oldMap = this.worlds;
+
+        newMap.putAll(oldMap);
+        newMap.put(world.getRegistryKey(), world);
+
+        this.worlds = newMap;
     }
 
     @Override
@@ -35,7 +47,22 @@ public abstract class MinecraftServerMixin implements MultiDimServer {
 
     @Override
     public ServerWorld multidim$removeWorld(RegistryKey<World> key) {
-        return this.worlds.remove(key);
+        // use read-copy-update to avoid concurrency issues
+        // from immersive portals
+        LinkedHashMap<RegistryKey<World>, ServerWorld> newMap =
+                Maps.newLinkedHashMap();
+
+        Map<RegistryKey<World>, ServerWorld> oldMap = this.worlds;
+
+        for (Map.Entry<RegistryKey<World>, ServerWorld> entry : oldMap.entrySet()) {
+            if (entry.getKey() != key) {
+                newMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        this.worlds = newMap;
+
+        return oldMap.get(key);
     }
 
     @Override
