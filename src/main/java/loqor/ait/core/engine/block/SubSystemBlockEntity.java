@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 import loqor.ait.core.util.SoundData;
@@ -42,6 +43,9 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     public void onGainFluid() {
         super.onGainFluid();
 
+        if (this.system() instanceof DurableSubSystem durable) {
+            if (durable.isBroken()) return;
+        }
         this.system().setEnabled(true);
     }
 

@@ -72,12 +72,12 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
                     new BlockOffset(block, -x, -y, -z)
             );
         }
-        public static List<BlockOffset> volume(Block block, int x, int y, int z) {
+        public static List<BlockOffset> volume(Block block, int width, int height, int depth) {
             List<BlockOffset> offsets = new ArrayList<>();
-            for (int dx = -x; dx <= x; dx++) {
-                for (int dy = -y; dy <= y; dy++) {
-                    for (int dz = -z; dz <= z; dz++) {
-                        offsets.add(new BlockOffset(block, dx, dy, dz));
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    for (int z = 0; z < depth; z++) {
+                        offsets.add(new BlockOffset(block, x, y, z));
                     }
                 }
             }

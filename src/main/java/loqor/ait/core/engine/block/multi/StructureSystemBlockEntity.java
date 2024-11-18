@@ -27,7 +27,7 @@ public abstract class StructureSystemBlockEntity extends SubSystemBlockEntity {
 
     @Override
     public void onGainFluid() {
-        if (this.hasWorld() && this.isStructureComplete(this.getWorld(), this.getPos())) {
+        if (this.hasWorld() && this.isStructureComplete()) {
             super.onGainFluid();
         }
     }
@@ -40,8 +40,11 @@ public abstract class StructureSystemBlockEntity extends SubSystemBlockEntity {
 
         if (this.shouldRefresh((ServerWorld) world, pos)) {
             boolean complete = this.isStructureComplete();
-            if (!complete && this.isPowered()) {
+            if (!complete && this.isPowered() && this.system().isEnabled()) {
                 this.onLoseFluid();
+            }
+            if (complete && this.isPowered() && !this.system().isEnabled()) {
+                this.onGainFluid();
             }
         }
     }
