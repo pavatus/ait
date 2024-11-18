@@ -120,6 +120,9 @@ public class AITBlocks implements BlockRegistryContainer {
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block POWER_CONVERTER = new PowerConverterBlock(FabricBlockSettings.create().nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block DEMAT_CIRCUIT = new DematCircuitBlock(FabricBlockSettings.create().nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
 
     @NoBlockItem

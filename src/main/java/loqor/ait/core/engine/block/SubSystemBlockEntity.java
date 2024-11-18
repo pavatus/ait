@@ -1,9 +1,16 @@
 package loqor.ait.core.engine.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.SubSystem;
@@ -53,5 +60,15 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     @Override
     protected SoundData getLosePowerSound() {
         return new SoundData(AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 0.25f, 1.0f);
+    }
+
+    public void tick(World world, BlockPos pos, BlockState state) {}
+    public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
+
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void offsetModel(MatrixStack stack) {
+
     }
 }

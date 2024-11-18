@@ -17,6 +17,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.impl.DematCircuit;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -123,7 +124,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public Optional<DurableSubSystem> findBrokenSubsystem() {
         for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
             SubSystem next = it.next();
-            if (next instanceof DurableSubSystem && ((DurableSubSystem) next).durability() <= 5)
+            if (next instanceof DurableSubSystem && next.isEnabled() && ((DurableSubSystem) next).durability() <= 5)
                 return Optional.of((DurableSubSystem) next);
         }
 
@@ -204,5 +205,8 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     public EngineSystem engine() {
         return this.get(SubSystem.Id.ENGINE);
+    }
+    public DematCircuit demat() {
+        return this.get(SubSystem.Id.DEMAT);
     }
 }

@@ -51,8 +51,11 @@ public abstract class DurableSubSystem extends SubSystem {
         this.sync();
     }
     protected void onBreak() {
+        this.setEnabled(false);
     }
+
     protected void onRepair() {
+        this.setEnabled(true);
     }
     protected int changeFrequency() {
         return 20;

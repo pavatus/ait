@@ -9,6 +9,7 @@ import loqor.ait.api.Disposable;
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.engine.impl.DematCircuit;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
@@ -84,7 +85,8 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
     }
 
     public enum Id implements SubSystem.IdLike {
-        ENGINE(EngineSystem.class, EngineSystem::new),;
+        ENGINE(EngineSystem.class, EngineSystem::new),
+        DEMAT(DematCircuit.class, DematCircuit::new);
         private final Supplier<SubSystem> creator;
 
         private final Class<? extends SubSystem> clazz;
