@@ -27,12 +27,11 @@ import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
 
 public class TardisDimension {
-    private static WorldBuilder builder(ServerTardis tardis, boolean priority) {
+    private static WorldBuilder builder(ServerTardis tardis) {
         return new WorldBuilder(new Identifier(AITMod.MOD_ID, tardis.getUuid().toString()))
                 .withType(new Identifier(AITMod.MOD_ID, "tardis_dimension_type"))
                 .withSeed(WorldUtil.getOverworld().getSeed())
-                .withGenerator(new VoidChunkGenerator(WorldUtil.getOverworld().getRegistryManager().get(RegistryKeys.BIOME), RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"))))
-                .priority(priority);
+                .withGenerator(new VoidChunkGenerator(WorldUtil.getOverworld().getRegistryManager().get(RegistryKeys.BIOME), RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"))));
     }
 
     private static ServerWorld create(WorldBuilder builder) {
@@ -43,14 +42,11 @@ public class TardisDimension {
 
         return MultiDim.get(ServerLifecycleHooks.get()).add(builder);
     }
-    private static ServerWorld create(ServerTardis tardis, boolean priority) {
-        WorldBuilder builder = builder(tardis, priority);
-
-        ServerWorld created = MultiDim.get(ServerLifecycleHooks.get()).findLoading(builder.id()).orElse(null);
-        if (created != null) return created;
+    private static ServerWorld create(ServerTardis tardis) {
+        WorldBuilder builder = builder(tardis);
 
         AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
-        created = create(builder);
+        ServerWorld created = create(builder);
 
         WorldUtil.blacklist(created);
 
@@ -60,8 +56,8 @@ public class TardisDimension {
         ServerWorld found = ServerLifecycleHooks.get().getWorld(RegistryKey.of((RegistryKey)RegistryKeys.WORLD, new Identifier(AITMod.MOD_ID, tardis.getUuid().toString())));
         return Optional.ofNullable(found);
     }
-    public static ServerWorld getOrCreate(ServerTardis tardis, boolean priority) {
-        return get(tardis).orElseGet(() -> create(tardis, priority));
+    public static ServerWorld getOrCreate(ServerTardis tardis) {
+        return get(tardis).orElseGet(() -> create(tardis));
     }
     public static Optional<Tardis> get(World world) {
         UUID uuid;

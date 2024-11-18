@@ -23,9 +23,9 @@ public enum DefaultThemes {
     CORAL("coral", "exterior/police_box/coral", "coral", "console/coral"),
     PRIME("accursed", "exterior/capsule/default", "prime", "console/hartnell"),
     TOYOTA("toyota", "exterior/police_box/default", "toyota", "console/toyota"),
-    TOKAMAK("tokamak", "exterior/police_box/tokamak", "tokamak", "todo"),
+    TOKAMAK("accursed", "exterior/police_box/tokamak", "tokamak", "todo"), // todo - this and CRYSTALLINE freeze the game when the interior tries to generate, so ive temporarily replaced them with the default desktop
     WAR(AITMod.id("war"), new Identifier("frooploof", "coral_war"), AITMod.id("coral"), AITMod.id("console/coral")),
-    CRYSTALLINE("crystalline", "exterior/police_box/tokamak", "tokamak", "todo"),
+    CRYSTALLINE("accursed", "exterior/police_box/tokamak", "tokamak", "todo"),
     COPPER(AITMod.id("copper"), new Identifier("frooploof", "copper"), AITMod.id("copper"), AITMod.id("console/copper"));
     private final Identifier desktop;
     private final Identifier exterior;
