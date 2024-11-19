@@ -2,6 +2,7 @@ package loqor.ait.core.engine.block.multi;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -39,6 +40,23 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
     }
     public MultiBlockStructure offset(int x, int y, int z) {
         return offset(new BlockPos(x, y, z));
+    }
+    public Optional<BlockOffset> remove(BlockPos pos) {
+        Optional<BlockOffset> found = this.at(pos);
+
+	    found.ifPresent(this::remove);
+        return found;
+    }
+    public Optional<BlockOffset> at(BlockPos pos) {
+        return this.stream().filter(blockOffset -> blockOffset.offset.equals(pos)).findFirst();
+    }
+    public BlockOffset atOrDefault(BlockPos pos, BlockOffset def) {
+        return this.at(pos).orElse(def);
+    }
+    public Optional<BlockOffset> put(BlockOffset offset) {
+        Optional<BlockOffset> prev = this.remove(offset.offset);
+        this.add(offset);
+        return prev;
     }
 
     public record BlockOffset(AllowedBlocks block, BlockPos offset) {
