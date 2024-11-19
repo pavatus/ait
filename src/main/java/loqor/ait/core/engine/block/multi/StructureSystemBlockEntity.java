@@ -6,6 +6,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 
@@ -39,13 +40,23 @@ public abstract class StructureSystemBlockEntity extends SubSystemBlockEntity {
         if (world.isClient()) return;
 
         if (this.shouldRefresh((ServerWorld) world, pos)) {
-            boolean complete = this.isStructureComplete();
-            if (!complete && this.isPowered() && this.system().isEnabled()) {
-                this.onLoseFluid();
-            }
-            if (complete && this.isPowered() && !this.system().isEnabled()) {
-                this.onGainFluid();
-            }
+            this.processStructure();
+        }
+    }
+
+    protected void processStructure() {
+        boolean powered = this.isPowered();
+        if (!powered) return;
+
+        boolean complete = this.isStructureComplete();
+        boolean broken = (this.system() instanceof DurableSubSystem durable) && durable.isBroken();
+        boolean enabled = this.system().isEnabled();
+
+        if (!complete && enabled) {
+            this.onLoseFluid();
+        }
+        if (complete && !enabled && !broken) {
+            this.onGainFluid();
         }
     }
 }

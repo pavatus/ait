@@ -521,6 +521,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
         provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
+        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core"); // todo improve name
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -618,6 +619,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
+        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the subsystem block to set its type"); // todo - improve message
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");

@@ -58,7 +58,7 @@ public abstract class SubSystemBlock extends FluidLinkBlock {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         ItemStack stack = player.getStackInHand(hand);
         if (blockEntity instanceof SubSystemBlockEntity be)
-            be.useOn(state, world, player.isSneaking(), player, stack);
+            return be.useOn(state, world, player.isSneaking(), player, stack);
 
         return ActionResult.SUCCESS;
     }

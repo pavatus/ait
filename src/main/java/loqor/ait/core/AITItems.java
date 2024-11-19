@@ -13,13 +13,14 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.item.SubSystemItem;
 import loqor.ait.core.item.*;
 import loqor.ait.core.item.blueprint.BlueprintItem;
 import loqor.ait.core.item.control.GenericControlBlockItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
-import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
@@ -112,8 +113,8 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
 
     // Components
-    public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+    public static final Item DEMATERIALIZATION_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DEMAT);
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
