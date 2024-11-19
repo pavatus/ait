@@ -1,5 +1,7 @@
 package loqor.ait.datagen.datagen_providers;
 
+import static loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables.filterBlocksWithAnnotation;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,9 @@ import net.minecraft.data.client.*;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 
+import loqor.ait.core.AITBlocks;
+import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
+
 
 public class AITModelProvider extends FabricModelProvider {
     private final List<Block> directionalBlocksToRegister = new ArrayList<>();
@@ -22,24 +27,26 @@ public class AITModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+    public void generateBlockStateModels(BlockStateModelGenerator generator) {
+        filterBlocksWithAnnotation(AITBlocks.get(), AutomaticModel.class, false).forEach(generator::registerSimpleCubeAll);
+
         for (Block block : directionalBlocksToRegister) {
             // Identifier identifier = new
             // Identifier(block.getTranslationKey().split("\\.")[1]);
-            blockStateModelGenerator.blockStateCollector.accept(MultipartBlockStateSupplier.create(block).with(
+            generator.blockStateCollector.accept(MultipartBlockStateSupplier.create(block).with(
                     When.create().set(Properties.HORIZONTAL_FACING, Direction.NORTH),
                     BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R0)));
         }
         for (Block block : simpleBlocksToRegister) {
-            blockStateModelGenerator.registerSimpleCubeAll(block);
+            generator.registerSimpleCubeAll(block);
         }
 
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.models(blockStateModelGenerator)));
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.models(generator)));
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-
+    public void generateItemModels(ItemModelGenerator generator) {
+        // filterBlocksWithAnnotation(AITBlocks.get(), AutomaticModel.class, false).forEach(b -> generator.register(b.asItem(), Models.));
     }
 
     public void registerDirectionalBlock(Block block) {
