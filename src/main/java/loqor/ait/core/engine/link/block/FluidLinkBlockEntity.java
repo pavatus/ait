@@ -150,7 +150,8 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     public void onBroken(World world, BlockPos pos) {
         if (world.isClient())
             return;
-        this.onLoseFluid();
+        if (this.isPowered())
+            this.onLoseFluid();
     }
 
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {

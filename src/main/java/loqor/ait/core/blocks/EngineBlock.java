@@ -4,38 +4,25 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.EngineBlockEntity;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlock;
+import loqor.ait.core.engine.block.SubSystemBlockEntity;
 
 public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 48.0, 16.0);
 
     public EngineBlock(Settings settings) {
         super(settings, SubSystem.Id.ENGINE);
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-            BlockHitResult hit) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        ItemStack stack = player.getStackInHand(hand);
-        if (blockEntity instanceof EngineBlockEntity engineBlockEntity)
-            engineBlockEntity.useOn(state, world, player.isSneaking(), player, stack);
-
-        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -85,5 +72,10 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
+    protected BlockEntityType<? extends SubSystemBlockEntity> getType() {
+        return AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE;
     }
 }

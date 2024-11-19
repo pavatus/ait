@@ -45,20 +45,6 @@ public class EngineSystem extends DurableSubSystem {
     }
 
     @Override
-    protected void onBreak() {
-        super.onBreak();
-
-        this.setEnabled(false);
-    }
-
-    @Override
-    protected void onRepair() {
-        super.onRepair();
-
-        this.setEnabled(true);
-    }
-
-    @Override
     public void tick() {
         super.tick();
 

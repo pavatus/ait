@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import loqor.ait.core.blockentities.*;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
 import loqor.ait.core.blocks.PowerConverterBlock;
+import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
 public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
@@ -57,4 +58,6 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(ZeitonCageBlockEntity::new, AITBlocks.ZEITON_CAGE).build();
     public static BlockEntityType<PowerConverterBlock.BlockEntity> POWER_CONVERTER_BLOCK_TYPE = FabricBlockEntityTypeBuilder
             .create(PowerConverterBlock.BlockEntity::new, AITBlocks.POWER_CONVERTER).build();
+    public static BlockEntityType<GenericStructureSystemBlockEntity> GENERIC_SUBSYSTEM_BLOCK_TYPE = FabricBlockEntityTypeBuilder
+            .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
 }

@@ -1,17 +1,25 @@
 package loqor.ait.core.engine.block;
 
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
+import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.util.SoundData;
 
 public class SubSystemBlockEntity extends FluidLinkBlockEntity {
-    private SubSystem.IdLike id;
+    protected SubSystem.IdLike id;
 
     public SubSystemBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, SubSystem.IdLike id) {
         super(type, pos, state);
@@ -19,9 +27,9 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     }
 
     public SubSystem system() {
-        if (this.tardis() == null || this.tardis().isEmpty()) return null;
+        if (this.tardis() == null || this.tardis().isEmpty() || this.id() == null) return null;
 
-        return this.tardis().get().subsystems().get(this.id);
+        return this.tardis().get().subsystems().get(this.id());
     }
     protected SubSystem.IdLike id() {
         if (this.id == null) {
@@ -35,6 +43,9 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     public void onGainFluid() {
         super.onGainFluid();
 
+        if (this.system() instanceof DurableSubSystem durable) {
+            if (durable.isBroken()) return;
+        }
         this.system().setEnabled(true);
     }
 
@@ -53,5 +64,36 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     @Override
     protected SoundData getLosePowerSound() {
         return new SoundData(AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 0.25f, 1.0f);
+    }
+
+    public void tick(World world, BlockPos pos, BlockState state) {}
+    public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
+        if (this.system() instanceof DurableSubSystem durable) {
+            if (durable.isRepairItem(hand) && durable.durability() < 100) {
+                durable.addDurability(5);
+                hand.decrement(1);
+                world.playSound(null, this.getPos(), AITSounds.BWEEP, SoundCategory.BLOCKS, 0.5f, 1f);
+                return ActionResult.SUCCESS;
+            }
+        }
+        return ActionResult.PASS;
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+
+        if (this.id != null) {
+            nbt.putString("id", this.id.toString());
+        }
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+
+        if (nbt.contains("id")) {
+            this.id = SubSystemRegistry.getInstance().get(nbt.getString("id"));
+        }
     }
 }

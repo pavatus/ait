@@ -8,12 +8,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import loqor.ait.core.engine.impl.EngineSystem;
@@ -29,20 +28,19 @@ public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSo
         if (!this.hasWorld()) return;
     }
 
-    public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
+    @Override
+    public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
+        ActionResult result = super.useOn(state, world, sneaking, player, hand);
+        if (result != ActionResult.PASS)
+            return result;
+
         if (world.isClient() || this.tardis().isEmpty())
-            return;
+            return ActionResult.FAIL;
 
         EngineSystem engine = this.tardis().get().subsystems().engine();
 
-        if (engine.isRepairItem(hand) && engine.durability() < 100) {
-            engine.addDurability(5);
-            hand.decrement(1);
-            world.playSound(null, this.getPos(), AITSounds.BWEEP, SoundCategory.BLOCKS, 0.5f, 1f);
-            return;
-        }
-
         engine.setEnabled(!engine.isEnabled());
+        return ActionResult.SUCCESS;
     }
 
     @Override

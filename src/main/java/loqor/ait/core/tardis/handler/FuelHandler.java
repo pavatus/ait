@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.handler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.api.ArtronHolder;
 import loqor.ait.api.KeyedTardisComponent;
@@ -65,7 +66,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
     @Override
     public void setCurrentFuel(double fuel) {
         double prev = this.getCurrentFuel();
-        this.fuel.set(fuel);
+        this.fuel.set(MathHelper.clamp(fuel, 0, this.getMaxFuel()));
 
         if (this.isOutOfFuel() && prev != 0)
             TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(this.tardis);

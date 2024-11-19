@@ -96,7 +96,7 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
                 exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 0.1f,
                 exteriorPosition.getPos().toCenterPos().z, 1, 0.05D, 0.75D, 0.05D, 0.01D);
 
-        if (server.getTicks() % 40 == 0)
+        if (server.getTicks() % 40 != 0)
             return;
 
         if (TardisUtil.isInteriorEmpty(tardis.asServer()))
