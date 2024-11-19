@@ -81,7 +81,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // Crafting items
-    public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item ZEITON_SHARD = new ZeitonShardItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ZEITON_DUST = new Item(

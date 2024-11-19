@@ -289,6 +289,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
                     .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .input('E', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
+                    .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                    .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
+                    .input(AITBlocks.ZEITON_COBBLE).criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
+                    .input(AITItems.CHARGED_ZEITON_CRYSTAL).criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL)));
 
             generateSmithingRecipes(provider);
             return provider;
@@ -353,15 +359,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generateBlockModels(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> {
-            AITModelProvider aitModelProvider = new AITModelProvider(output);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
-            aitModelProvider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.FABRICATOR);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
-            return aitModelProvider;
+            AITModelProvider provider = new AITModelProvider(output);
+            provider.registerDirectionalBlock(AITBlocks.CONSOLE);
+            provider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
+            provider.registerDirectionalBlock(AITBlocks.FABRICATOR);
+            provider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
+            return provider;
         }));
     }
 
