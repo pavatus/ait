@@ -28,6 +28,7 @@ public class BOTIHandler {
     }
 
     public void endFBO() {
+        afbo.clear(MinecraftClient.IS_SYSTEM_MAC);
         afbo.endWrite();
     }
 
