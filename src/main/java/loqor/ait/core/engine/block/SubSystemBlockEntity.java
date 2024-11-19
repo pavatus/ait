@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +15,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
+import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.util.SoundData;
 
 public class SubSystemBlockEntity extends FluidLinkBlockEntity {
@@ -75,5 +77,23 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
             }
         }
         return ActionResult.PASS;
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+
+        if (this.id != null) {
+            nbt.putString("id", this.id.toString());
+        }
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+
+        if (nbt.contains("id")) {
+            this.id = SubSystemRegistry.getInstance().get(nbt.getString("id"));
+        }
     }
 }

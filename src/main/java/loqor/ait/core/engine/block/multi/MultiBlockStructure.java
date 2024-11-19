@@ -9,6 +9,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.AITMod;
+
 public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffset> {
     public MultiBlockStructure(BlockOffset... offsets) {
         this(List.of(offsets));
@@ -18,13 +20,15 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
     }
 
     public boolean check(World world, BlockPos center) {
-        return check(world, center, this);
+        return check(world, center, this, false);
     }
 
-    public static boolean check(World world, BlockPos center, List<BlockOffset> blockOffsets) {
+    public static boolean check(World world, BlockPos center, List<BlockOffset> blockOffsets, boolean log) {
         for (BlockOffset blockOffset : blockOffsets) {
             BlockPos targetPos = center.add(blockOffset.offset);
             if (!blockOffset.block.contains(world.getBlockState(targetPos))) {
+                if (log)
+                    AITMod.LOGGER.error("{} is not {} but {} for {}", targetPos, blockOffset.block, world.getBlockState(targetPos), blockOffsets);
                 return false;
             }
         }
@@ -44,7 +48,7 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
     public Optional<BlockOffset> remove(BlockPos pos) {
         Optional<BlockOffset> found = this.at(pos);
 
-	    found.ifPresent(this::remove);
+        found.ifPresent(this::remove);
         return found;
     }
     public Optional<BlockOffset> at(BlockPos pos) {
@@ -76,6 +80,14 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
         public BlockOffset allow(Block... blocks) {
             this.block.addAll(List.of(blocks));
             return this;
+        }
+
+        @Override
+        public String toString() {
+            return "BlockOffset{" +
+                    "block=" + block +
+                    ", offset=" + offset +
+                    '}';
         }
 
         public static List<BlockOffset> corners(Block block, int x, int y, int z) {

@@ -1,5 +1,8 @@
 package loqor.ait.core.engine.impl;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.util.math.BlockPos;
+
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.engine.DurableSubSystem;
@@ -7,9 +10,21 @@ import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class DematCircuit extends DurableSubSystem implements StructureHolder {
-    private static final MultiBlockStructure STRUCTURE = new MultiBlockStructure(
-            MultiBlockStructure.BlockOffset.volume(AITBlocks.ZEITON_BLOCK, 3, 1, 3)
-    ).offset(-1, -1, -1);
+    private static final MultiBlockStructure STRUCTURE = createStructure();
+    private static MultiBlockStructure createStructure() {
+        MultiBlockStructure made = new MultiBlockStructure(MultiBlockStructure.BlockOffset.volume(Blocks.WATER, 3, 3, 3)).offset(-1, -1 ,-1); // 3x3x3 water volume
+
+        // 5 adjacent faces allow zeiton
+        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 1, 0, 0).allow(AITBlocks.COMPACT_ZEITON));
+        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, -1, 0, 0).allow(AITBlocks.COMPACT_ZEITON));
+        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 0, 1, 0).allow(AITBlocks.COMPACT_ZEITON));
+        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 0, 0, 1).allow(AITBlocks.COMPACT_ZEITON));
+        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 0, 0, -1).allow(AITBlocks.COMPACT_ZEITON));
+        made.remove(new BlockPos(0, -1, 0)); // remove bottom
+        made.remove(new BlockPos(0, 0, 0)); // ignore centre
+
+        return made;
+    }
 
     static {
         TardisEvents.DEMAT.register(tardis -> {
