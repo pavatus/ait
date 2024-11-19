@@ -4,16 +4,20 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.api.ArtronHolderItem;
+import loqor.ait.core.AITBlocks;
 
 public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
     public static final double MAX_FUEL = 5000;
@@ -54,5 +58,18 @@ public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
         // colour based
         // off fuel
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+
+        if (state.isOf(AITBlocks.ZEITON_COBBLE)) {
+            context.getWorld().setBlockState(context.getBlockPos(), AITBlocks.COMPACT_ZEITON.getDefaultState());
+            context.getStack().decrement(1);
+            return ActionResult.SUCCESS;
+        }
+
+        return super.useOnBlock(context);
     }
 }
