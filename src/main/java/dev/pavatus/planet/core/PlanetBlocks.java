@@ -133,7 +133,7 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block POLISHED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    public static final Block MARTIAN_SANDSTONE_PILLAR = new Block(
+    public static final Block MARTIAN_SANDSTONE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
     public static final Block MARTIAN_SANDSTONE_BRICKS = new Block(
@@ -245,7 +245,7 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block POLISHED_MOON_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    public static final Block MOON_SANDSTONE_PILLAR = new Block(
+    public static final Block MOON_SANDSTONE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
     public static final Block MOON_SANDSTONE_BRICKS = new Block(
