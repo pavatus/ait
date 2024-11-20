@@ -34,6 +34,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.jake.client.ClientJakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
@@ -184,6 +185,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
+    public static ClientExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -261,6 +263,9 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_STEEL = register(new ClientStallionSteelVariant());
 
         ADAPTIVE = register(new ClientAdaptiveVariant());
+
+        // Jake
+        JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
     }
 
     @Override
