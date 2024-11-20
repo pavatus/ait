@@ -27,7 +27,7 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     }
 
     public SubSystem system() {
-        if (this.tardis() == null || this.tardis().isEmpty() || this.id() == null) return null;
+        if (!(this.isLinked()) || this.id() == null) return null;
 
         return this.tardis().get().subsystems().get(this.id());
     }
@@ -84,7 +84,7 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
         super.writeNbt(nbt);
 
         if (this.id != null) {
-            nbt.putString("id", this.id.toString());
+            nbt.putString("SystemId", this.id.name());
         }
     }
 
@@ -92,8 +92,8 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        if (nbt.contains("id")) {
-            this.id = SubSystemRegistry.getInstance().get(nbt.getString("id"));
+        if (nbt.contains("SystemId")) {
+            this.id = SubSystemRegistry.getInstance().get(nbt.getString("SystemId"));
         }
     }
 }

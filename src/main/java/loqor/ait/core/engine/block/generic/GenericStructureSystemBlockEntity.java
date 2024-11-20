@@ -58,6 +58,7 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
     }
     protected void onChangeId() {
         this.processStructure();
+        this.markDirty();
     }
 
     @Override
