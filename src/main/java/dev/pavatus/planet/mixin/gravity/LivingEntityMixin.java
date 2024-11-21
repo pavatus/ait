@@ -17,6 +17,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.core.tardis.dim.TardisDimension;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
@@ -63,7 +65,16 @@ public abstract class LivingEntityMixin extends Entity {
             return;
         }
 
-        if (!planet.hasOxygen() && !Planet.hasOxygenInTank(entity)) {
+        if (TardisDimension.isTardisDimension(entity.getWorld())) {
+            if (!TardisDimension.get(entity.getWorld()).get().subsystems().lifeSupport().isEnabled()) {
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
+                        200, false, false));
+                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
+                        200, 1, false, false));
+            }
+        }
+
+        if ((!planet.hasOxygen() && !Planet.hasOxygenInTank(entity))) {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA,
                     200, 1, false, false));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,

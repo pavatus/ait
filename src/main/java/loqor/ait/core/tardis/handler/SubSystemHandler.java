@@ -209,4 +209,8 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public DematCircuit demat() {
         return this.get(SubSystem.Id.DEMAT);
     }
+
+    public DematCircuit lifeSupport() {
+        return this.get(SubSystem.Id.LIFE_SUPPORT);
+    }
 }

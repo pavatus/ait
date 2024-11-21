@@ -147,7 +147,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
         if (isHeld && this.tardis.getExterior().findExteriorBlock().isPresent())
             this.setSiegeBeingHeld(null);
 
-        boolean freeze = !isHeld && this.getTimeInSiegeMode() > 60 * 20;
+        boolean freeze = !isHeld && this.getTimeInSiegeMode() > 60 * 20 && !this.tardis().subsystems().lifeSupport().isEnabled();
 
         for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             if (!player.isAlive())
