@@ -30,6 +30,7 @@ import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
+
 public class PlanetModule extends Module {
     public static final OwoItemGroup ITEM_GROUP = OwoItemGroup
             .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(PlanetBlocks.MARTIAN_STONE))
@@ -142,6 +143,8 @@ public class PlanetModule extends Module {
                 martian_stone_pool.button(PlanetBlocks.MARTIAN_STONE_BUTTON);
                 martian_stone_pool.pressurePlate(PlanetBlocks.MARTIAN_STONE_PRESSURE_PLATE);
 
+
+
                 BlockStateModelGenerator.BlockTexturePool martian_bricks_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_BRICKS);
                 martian_bricks_pool.stairs(PlanetBlocks.MARTIAN_BRICK_STAIRS);
                 martian_bricks_pool.wall(PlanetBlocks.MARTIAN_BRICK_WALL);
@@ -151,6 +154,7 @@ public class PlanetModule extends Module {
                 martian_cobblestone_pool.stairs(PlanetBlocks.MARTIAN_COBBLESTONE_STAIRS);
                 martian_cobblestone_pool.wall(PlanetBlocks.MARTIAN_COBBLESTONE_WALL);
                 martian_cobblestone_pool.slab(PlanetBlocks.MARTIAN_COBBLESTONE_SLAB);
+
 
                 BlockStateModelGenerator.BlockTexturePool mossy_martian_cobblestone_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE);
                 mossy_martian_cobblestone_pool.stairs(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_STAIRS);
@@ -173,6 +177,7 @@ public class PlanetModule extends Module {
                 BlockStateModelGenerator.BlockTexturePool polished_martian_stone_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.POLISHED_MARTIAN_STONE);
                 polished_martian_stone_pool.stairs(PlanetBlocks.POLISHED_MARTIAN_STONE_STAIRS);
                 polished_martian_stone_pool.slab(PlanetBlocks.POLISHED_MARTIAN_STONE_SLAB);
+
 
                 //Anorthosite (Slabs, Walls, etc.)
 

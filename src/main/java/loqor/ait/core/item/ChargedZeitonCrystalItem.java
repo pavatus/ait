@@ -50,9 +50,10 @@ public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
         Formatting fuelColor = currentFuel > (MAX_FUEL / 4) ? Formatting.GREEN : Formatting.RED;
 
         tooltip.add(
-                Text.translatable("message.ait.artron_units", currentFuel).formatted(Formatting.BLUE)
+                Text.translatable("message.ait.artron_units", currentFuel)
                         .formatted(fuelColor)
-                        .append(Text.literal("/" + MAX_FUEL).formatted(Formatting.GRAY))
+                        .append(Text.literal(" / ").formatted(Formatting.GRAY))
+                        .append(Text.literal(String.valueOf(MAX_FUEL)).formatted(Formatting.GRAY))
         );
 
         super.appendTooltip(stack, world, tooltip, context);

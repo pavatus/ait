@@ -42,7 +42,7 @@ public abstract class ClientJakeVariant extends ClientExteriorVariantSchema {
 
     @Override
     public Vector3f sonicItemTranslations() {
-        return new Vector3f(0.53f, 0.94f, 1.2f);
+        return new Vector3f(0.50f, 2.04f, 1.9f);
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
+import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 public class PlanetBlocks implements BlockRegistryContainer {
 
@@ -14,87 +15,88 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
     // Stone
 
+    @PickaxeMineable
     public static final Block MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_STONE_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_STONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_STONE_STAIRS = new StairsBlock(
             MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_STONE_BUTTON = new ButtonBlock(
             AbstractBlock.Settings.copy(Blocks.STONE_BUTTON), BlockSetType.STONE, 10, false);
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_STONE_PRESSURE_PLATE  = new PressurePlateBlock(
             PressurePlateBlock.ActivationRule.EVERYTHING, AbstractBlock.Settings.copy(Blocks.STONE_PRESSURE_PLATE),BlockSetType.STONE);
 
     // Cobblestone
-
+    @PickaxeMineable
     public static final Block MARTIAN_COBBLESTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_COBBLESTONE_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE_WALL));
 
-
+    @PickaxeMineable
     @NoBlockDrop
     public static final Block MARTIAN_COBBLESTONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE_SLAB));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_COBBLESTONE_STAIRS = new StairsBlock(
             MARTIAN_COBBLESTONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.COBBLESTONE_STAIRS));
 
     // Mossy Cobblestone
-
+    @PickaxeMineable
     public static final Block MOSSY_MARTIAN_COBBLESTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.MOSSY_COBBLESTONE));
 
-
+    @PickaxeMineable
     public static final Block MOSSY_MARTIAN_COBBLESTONE_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.MOSSY_COBBLESTONE_WALL));
 
-
+    @PickaxeMineable
     @NoBlockDrop
     public static final Block MOSSY_MARTIAN_COBBLESTONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.MOSSY_COBBLESTONE_SLAB));
 
-
+    @PickaxeMineable
     public static final Block MOSSY_MARTIAN_COBBLESTONE_STAIRS = new StairsBlock(
             MOSSY_MARTIAN_COBBLESTONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.MOSSY_COBBLESTONE_STAIRS));
 
     // Polished Stone
 
-
+    @PickaxeMineable
     public static final Block POLISHED_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
 
-
+    @PickaxeMineable
     public static final Block POLISHED_MARTIAN_STONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_SLAB));
 
-
+    @PickaxeMineable
     public static final Block POLISHED_MARTIAN_STONE_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_STAIRS));
 
 
     // Smooth Stone
 
-
+    @PickaxeMineable
     public static final Block SMOOTH_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
 
-
+    @PickaxeMineable
     @NoBlockDrop
     public static final Block SMOOTH_MARTIAN_STONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
@@ -105,76 +107,85 @@ public class PlanetBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.SAND));
 
     // Martian Sandstone
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICK_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICK_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICK_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block CRACKED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block POLISHED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block CRACKED_MARTIAN_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
-
+    @PickaxeMineable
     public static final Block CHISELED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
 
     // Bricks
-
+    @PickaxeMineable
     public static final Block MARTIAN_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_BRICK_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICK_SLAB));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_BRICK_STAIRS = new StairsBlock(
             MARTIAN_BRICKS.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE_BRICK_STAIRS));
 
-
+    @PickaxeMineable
     public static final Block MARTIAN_BRICK_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICK_WALL));
 
     // Other
-
+    @PickaxeMineable
     public static final Block MARTIAN_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR));
 
-
+    @PickaxeMineable
     public static final Block CHISELED_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.CHISELED_STONE_BRICKS));
 
-
+    @PickaxeMineable
     public static final Block CRACKED_MARTIAN_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
+
+    // Infested Blocks
+    @PickaxeMineable
+    public static final Block INFESTED_MARTIAN_STONE = new InfestedBlock(
+            Blocks.INFESTED_STONE, AbstractBlock.Settings.copy(Blocks.INFESTED_STONE));
+    @PickaxeMineable
+    public static final Block INFESTED_MARTIAN_COBBLESTONE = new InfestedBlock(
+            Blocks.INFESTED_COBBLESTONE, AbstractBlock.Settings.copy(Blocks.INFESTED_COBBLESTONE));
+
 
 
     // Moon
