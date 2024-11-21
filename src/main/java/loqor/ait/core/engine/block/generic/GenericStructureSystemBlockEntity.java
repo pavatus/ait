@@ -60,6 +60,9 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
         this.processStructure();
         this.markDirty();
     }
+    public boolean hasSystem() {
+        return this.id() != null;
+    }
 
     @Override
     protected MultiBlockStructure getStructure() {

@@ -8,20 +8,21 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
+import net.minecraft.util.math.Direction;
 
 public class DematCircuit extends DurableSubSystem implements StructureHolder {
     private static final MultiBlockStructure STRUCTURE = createStructure();
     private static MultiBlockStructure createStructure() {
-        MultiBlockStructure made = new MultiBlockStructure(MultiBlockStructure.BlockOffset.volume(Blocks.WATER, 3, 3, 3)).offset(-1, -1 ,-1); // 3x3x3 water volume
+        MultiBlockStructure made = new MultiBlockStructure();
 
-        // 5 adjacent faces allow zeiton
-        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 1, 0, 0).allow(AITBlocks.COMPACT_ZEITON));
-        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, -1, 0, 0).allow(AITBlocks.COMPACT_ZEITON));
-        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 0, 1, 0).allow(AITBlocks.COMPACT_ZEITON));
-        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 0, 0, 1).allow(AITBlocks.COMPACT_ZEITON));
-        made.put(new MultiBlockStructure.BlockOffset(AITBlocks.ZEITON_COBBLE, 0, 0, -1).allow(AITBlocks.COMPACT_ZEITON));
-        made.remove(new BlockPos(0, -1, 0)); // remove bottom
-        made.remove(new BlockPos(0, 0, 0)); // ignore centre
+        made.addAll(MultiBlockStructure.BlockOffset.square(Blocks.QUARTZ_BLOCK, Direction.NORTH, 2, AITBlocks.ZEITON_COBBLE, AITBlocks.COMPACT_ZEITON));
+        made.addAll(MultiBlockStructure.BlockOffset.square(Blocks.QUARTZ_BLOCK, Direction.EAST, 2, AITBlocks.ZEITON_COBBLE, AITBlocks.COMPACT_ZEITON));
+        made.addAll(MultiBlockStructure.BlockOffset.square(Blocks.QUARTZ_BLOCK, Direction.UP, 2, AITBlocks.ZEITON_COBBLE, AITBlocks.COMPACT_ZEITON));
+
+        // the blocks above and below the center can be cables
+        made.at(new BlockPos(0, 2, 0)).orElseThrow().allow(AITBlocks.CABLE_BLOCK);
+        made.at(new BlockPos(0,-2, 0)).orElseThrow().allow(AITBlocks.CABLE_BLOCK);
+        made.remove(new BlockPos(0, 0, 0));
 
         return made;
     }

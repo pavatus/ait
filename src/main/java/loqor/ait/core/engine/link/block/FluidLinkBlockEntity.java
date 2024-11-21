@@ -44,13 +44,13 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        nbt.putBoolean("IsPowered", this.powered);
+        nbt.putBoolean("HasFluid", this.powered);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        if (nbt.contains("IsPowered")) {
-            this.powered = nbt.getBoolean("IsPowered");
+        if (nbt.contains("HasFluid")) {
+            this.powered = nbt.getBoolean("HasFluid");
         }
     }
 

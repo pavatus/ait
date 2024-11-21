@@ -7,9 +7,11 @@ import java.util.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import org.jetbrains.annotations.Nullable;
 
 public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffset> {
     public MultiBlockStructure(BlockOffset... offsets) {
@@ -111,6 +113,32 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
                     }
                 }
             }
+            return offsets;
+        }
+        public static List<BlockOffset> square(Block block, Direction dir, int space, @Nullable Block... centre) {
+            if (centre == null) {
+                centre = new Block[]{block};
+            }
+            Block first = centre[0];
+
+            List<BlockOffset> offsets = new ArrayList<>();
+            for (int x = -space; x <= space; x++) {
+                for (int z = -space; z <= space; z++) {
+                    boolean isEdge = Math.abs(x) == space || Math.abs(z) == space;
+                    if (isEdge) {
+                        BlockOffset offset;
+                        if (dir == Direction.UP || dir == Direction.DOWN) {
+                            offset = new BlockOffset(x == 0 || z == 0 ? first : block, x, 0, z);
+                        } else if (dir == Direction.NORTH || dir == Direction.SOUTH) {
+                            offset = new BlockOffset(x == 0 || z == 0 ? first : block, x, z, 0);
+                        } else {
+                            offset = new BlockOffset(x == 0 || z == 0 ? first : block, 0, x, z);
+                        }
+                        offsets.add(offset.allow(centre));
+                    }
+                }
+            }
+
             return offsets;
         }
     }
