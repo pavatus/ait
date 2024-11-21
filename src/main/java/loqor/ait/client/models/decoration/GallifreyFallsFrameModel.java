@@ -37,7 +37,7 @@ public class GallifreyFallsFrameModel extends SinglePartEntityModel {
         //this.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.push();
         matrices.scale(1, 1, 1);
-        frame.getChild("plane").render(matrices, vertexConsumer.getBuffer(RenderLayer.getEntityTranslucent(GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE)), light, overlay, red, green, blue, alpha);
+        frame.getChild("plane").render(matrices, vertexConsumer.getBuffer(RenderLayer.getEntityCutoutNoCull(GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE)), light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 
