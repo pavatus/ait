@@ -19,6 +19,8 @@ import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.DematCircuit;
 import loqor.ait.core.engine.impl.EngineSystem;
+import loqor.ait.core.engine.impl.LifeSupportCircuit;
+import loqor.ait.core.engine.impl.ShieldsCircuit;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.data.DirectedGlobalPos;
@@ -210,7 +212,11 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         return this.get(SubSystem.Id.DEMAT);
     }
 
-    public DematCircuit lifeSupport() {
+    public LifeSupportCircuit lifeSupport() {
         return this.get(SubSystem.Id.LIFE_SUPPORT);
+    }
+
+    public ShieldsCircuit shields() {
+        return this.get(SubSystem.Id.SHIELDS);
     }
 }
