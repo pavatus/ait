@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import dev.pavatus.register.unlockable.Unlockable;
 
+import net.minecraft.world.World;
+
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
@@ -243,4 +245,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public SubSystemHandler subsystems() {
         return this.handler(TardisComponent.Id.SUBSYSTEM);
     }
+
+    public abstract World getInteriorWorld();
 }
