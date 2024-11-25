@@ -1,83 +1,15 @@
 package loqor.ait.core.blockentities;
 
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
-import loqor.ait.core.engine.impl.LifeSupportCircuit;
-import loqor.ait.core.engine.link.IFluidLink;
-import loqor.ait.core.engine.link.IFluidSource;
-import loqor.ait.core.engine.link.ITardisSource;
-import loqor.ait.core.tardis.Tardis;
 
-public class LifeSupportBlockEntity extends SubSystemBlockEntity implements ITardisSource {
+public class LifeSupportBlockEntity extends SubSystemBlockEntity {
     public LifeSupportBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.LIFE_SUPPORT_BLOCK_ENTITY_TYPE, pos, state, SubSystem.Id.LIFE_SUPPORT);
-
-        if (!this.hasWorld()) return;
-    }
-
-    @Override
-    public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
-        ActionResult result = super.useOn(state, world, sneaking, player, hand);
-        if (result != ActionResult.PASS)
-            return result;
-
-        if (world.isClient() || this.tardis().isEmpty())
-            return ActionResult.FAIL;
-
-        LifeSupportCircuit lifeSupportCircuit = this.tardis().get().subsystems().lifeSupport();
-
-        lifeSupportCircuit.setEnabled(!lifeSupportCircuit.isEnabled());
-        return ActionResult.SUCCESS;
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {
-        super.onPlaced(world, pos, placer);
-        if (world.isClient())
-            return;
-
-        this.tardis().ifPresent(tardis -> tardis.subsystems().lifeSupport().setEnabled(true));
-    }
-
-    @Override
-    public Tardis getTardisForFluid() {
-        return this.tardis().get();
-    }
-
-    @Override
-    public void setSource(IFluidSource source) {
-
-    }
-
-    @Override
-    public void setLast(IFluidLink last) {
-
-    }
-
-    @Override
-    public IFluidSource source(boolean search) {
-        return this;
-    }
-
-    @Override
-    public IFluidLink last() {
-        return this;
-    }
-
-    @Override
-    public BlockPos getLastPos() {
-        return this.getPos();
     }
 }

@@ -3,7 +3,6 @@ package dev.pavatus.planet.mixin.gravity;
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,8 +25,6 @@ import loqor.ait.core.tardis.dim.TardisDimension;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-
-    @Shadow @Nullable protected abstract @Nullable EquipmentSlot getEquipmentSlot(int slotId);
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
