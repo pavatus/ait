@@ -116,6 +116,9 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item DEMATERIALIZATION_CIRCUIT = new SubSystemItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DEMAT);
 
+    public static final Item SHIELDS_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.SHIELDS);
+
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
             new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */.rarity(Rarity.EPIC));

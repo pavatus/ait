@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -11,7 +13,9 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
+import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.util.ServerLifecycleHooks;
 
 public class LifeSupportCircuit extends DurableSubSystem implements StructureHolder {
     private static final MultiBlockStructure STRUCTURE = createStructure();
@@ -58,13 +62,15 @@ public class LifeSupportCircuit extends DurableSubSystem implements StructureHol
     public void tick() {
         super.tick();
 
-        if (this.tardis().asServer().getInteriorWorld().getServer().getTicks() % 20 != 0)
+        ServerTardis tardis = this.tardis().asServer();
+
+        if (ServerLifecycleHooks.get().getTicks() % 20 != 0)
             return;
 
-        List<LivingEntity> entities = TardisUtil.getLivingEntitiesInInterior(this.tardis().asServer());
+        List<LivingEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis);
 
         for (LivingEntity entity : entities) {
-            entity.heal(1.0f);
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 1, 1));
         }
     }
 }
