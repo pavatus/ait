@@ -44,19 +44,20 @@ public class EngineHandler extends KeyedTardisComponent {
         engineCorePos.set((Vector2i) null);
     }
 
+    @Deprecated
     public boolean hasPower() {
-        return this.tardis.subsystems().hasPower();
+        return this.tardis.fuel().hasPower();
     }
-
+    @Deprecated
     public void togglePower() {
-        this.tardis.subsystems().togglePower();
+        this.tardis.fuel().togglePower();
     }
-
+    @Deprecated
     public void disablePower() {
-        this.tardis.subsystems().disablePower();
+        this.tardis.fuel().disablePower();
     }
-
+    @Deprecated
     public void enablePower() {
-        this.tardis.subsystems().enablePower();
+        this.tardis.fuel().enablePower();
     }
 }

@@ -2,65 +2,52 @@ package loqor.ait.core.tardis.handler;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-import net.minecraft.block.BlockState;
+import com.google.gson.*;
+import org.jetbrains.annotations.ApiStatus;
+
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.*;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
-import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.EnumMap;
-import loqor.ait.data.properties.bool.BoolProperty;
-import loqor.ait.data.properties.bool.BoolValue;
 
 public class SubSystemHandler extends KeyedTardisComponent implements TardisTickable {
-    private static final BoolProperty POWER = new BoolProperty("power", false);
-    private final BoolValue power = POWER.create(this);
-
+    @Exclude
     private final EnumMap<SubSystem.IdLike, SubSystem> systems = new EnumMap<>(SubSystemRegistry::values,
             SubSystem[]::new);
 
     static {
-        TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.subsystems().disablePower());
+        TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.fuel().disablePower());
     }
 
     public SubSystemHandler() {
         super(Id.SUBSYSTEM);
     }
 
-    @Override
-    protected void onInit(InitContext ctx) {
-        super.onInit(ctx);
-
-        this.iterator().forEachRemaining(i -> SubSystem.init(i, this.tardis, ctx));
-    }
-
-    @Override
-    public void onLoaded() {
-        super.onLoaded();
-
-        power.of(this, POWER);
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        for (SubSystem.Id id : SubSystem.Id.values()) {
-            this.get(id);
-        }
+        SubSystemRegistry.getInstance().fill(this::create);
+    }
+
+    @Override
+    protected void onInit(InitContext ctx) {
+        super.onInit(ctx);
+
+        this.forEach(component -> SubSystem.init(component, this.tardis, ctx));
     }
 
     public <T extends SubSystem> T get(SubSystem.IdLike id) {
@@ -85,11 +72,27 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     private Iterator<SubSystem> iterator() {
         return Arrays.stream(this.systems.getValues()).iterator();
     }
+    private void forEach(Consumer<SubSystem> consumer) {
+        for (SubSystem system : this.systems.getValues()) {
+            if (system == null)
+                continue;
+
+            consumer.accept(system);
+        }
+    }
+
     private SubSystem create(SubSystem.IdLike id) {
         SubSystem system = id.create();
-        SubSystem.init(system, this.tardis, InitContext.createdAt(this.tardis.travel().position()));
+        if (tardis != null)
+            SubSystem.init(system, this.tardis, InitContext.createdAt(this.tardis.travel().position()));
         return system;
     }
+    private void create(SubSystem subSystem) {
+        this.systems.put(subSystem.getId(), subSystem);
+        if (this.tardis != null)
+            SubSystem.init(subSystem, this.tardis, InitContext.createdAt(this.tardis.travel().position()));
+    }
+
 
     /**
      * @return true if all subsystems are enabled
@@ -138,6 +141,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     }
 
     public void repairAll() {
+        AITMod.LOGGER.info("Repairing all subsystems for {}", this.tardis);
         for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
             SubSystem next = it.next();
             if (next == null) continue;
@@ -145,78 +149,6 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
                 ((DurableSubSystem) next).addDurability(100);
             next.setEnabled(true);
         }
-    }
-
-    public boolean hasPower() {
-        return power.get();
-    }
-
-    public void togglePower() {
-        if (this.power.get()) {
-            this.disablePower();
-        } else {
-            this.enablePower();
-        }
-    }
-
-    public void disablePower() {
-        if (!this.power.get())
-            return;
-
-        this.power.set(false);
-        this.updateExteriorState();
-
-        TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
-        this.disableProtocols();
-    }
-
-    private void disableProtocols() {
-        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
-
-        // disabling protocols
-        tardis.travel().antigravs().set(false);
-        tardis.stats().hailMary().set(false);
-        tardis.<HadsHandler>handler(Id.HADS).enabled().set(false);
-    }
-
-    public void enablePower(boolean requiresEngine) {
-        if (this.power.get())
-            return;
-
-        if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
-            return; // cant enable power if not enough fuel
-        if (this.tardis.siege().isActive()) return;
-        if (requiresEngine && !EngineSystem.hasEngine(tardis)) return;
-
-        this.power.set(true);
-        this.updateExteriorState();
-
-        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
-        TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
-    }
-    public void enablePower() {
-        this.enablePower(true);
-    }
-
-    // why is this in the engine handler? - Loqor
-    // idk, but i moved it here still - duzo
-    private void updateExteriorState() {
-        TravelHandler travel = this.tardis.travel();
-
-        if (travel.getState() != TravelHandler.State.LANDED)
-            return;
-
-        DirectedGlobalPos.Cached pos = travel.position();
-        World world = pos.getWorld();
-
-        if (world == null)
-            return;
-        BlockState state = world.getBlockState(pos.getPos());
-        if (!(state.getBlock() instanceof ExteriorBlock))
-            return;
-
-        world.setBlockState(pos.getPos(),
-                state.with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
     }
 
     public EngineSystem engine() {
@@ -241,5 +173,71 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     }
     public ChameleonCircuit chameleon() {
         return this.get(SubSystem.Id.CHAMELEON);
+    }
+
+    @ApiStatus.Internal
+    public <T extends SubSystem> void set(T t) {
+        this.systems.put(t.getId(), t);
+    }
+
+    public static Object serializer() {
+        return new Serializer();
+    }
+
+    static class Serializer implements JsonSerializer<SubSystemHandler>, JsonDeserializer<SubSystemHandler> {
+
+        @Override
+        public SubSystemHandler deserialize(JsonElement json, java.lang.reflect.Type type,
+                                                 JsonDeserializationContext context) throws JsonParseException {
+            SubSystemHandler manager = new SubSystemHandler();
+            Map<String, JsonElement> map = json.getAsJsonObject().asMap();
+
+            SubSystemRegistry registry = SubSystemRegistry.getInstance();
+
+            for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
+                String key = entry.getKey();
+                JsonElement element = entry.getValue();
+
+                SubSystem.IdLike id = registry.get(key);
+
+                if (id == null) {
+                    AITMod.LOGGER.error("Can't find a subsystem id with name '{}'!", key);
+                    continue;
+                }
+
+                manager.set(context.deserialize(element, id.clazz()));
+            }
+
+            for (int i = 0; i < manager.systems.size(); i++) {
+                if (manager.systems.get(i) != null)
+                    continue;
+
+                SubSystem.IdLike id = registry.get(i);
+                AITMod.LOGGER.debug("Appending new subsystem {}", id);
+
+                manager.get(id);
+            }
+
+            return manager;
+        }
+
+        @Override
+        public JsonElement serialize(SubSystemHandler manager, java.lang.reflect.Type type,
+                                     JsonSerializationContext context) {
+            JsonObject result = new JsonObject();
+
+            manager.forEach(component -> {
+                SubSystem.IdLike idLike = component.getId();
+
+                if (idLike == null) {
+                    AITMod.LOGGER.error("Id was null for {}", component.getClass());
+                    return;
+                }
+
+                result.add(idLike.name(), context.serialize(component));
+            });
+
+            return result;
+        }
     }
 }

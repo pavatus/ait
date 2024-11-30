@@ -95,11 +95,11 @@ public class TardisItemBuilder extends Item {
 
         TardisBuilder builder = new TardisBuilder().at(pos)
                 .owner(serverPlayer)
-                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
-                .<SubSystemHandler>with(TardisComponent.Id.SUBSYSTEM, subs -> {
-                    subs.enablePower(false);
-                    subs.repairAll();
+                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> {
+                    fuel.setCurrentFuel(fuel.getMaxFuel());
+                    fuel.enablePower();
                 })
+                .with(TardisComponent.Id.SUBSYSTEM, SubSystemHandler::repairAll)
                 .<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
                         loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER)));
 

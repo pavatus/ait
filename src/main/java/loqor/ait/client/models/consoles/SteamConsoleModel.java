@@ -1533,7 +1533,7 @@ public class SteamConsoleModel extends ConsoleModel {
 
         ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7")
                 .getChild("bone45");
-        power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
+        power.roll = power.roll + (tardis.fuel().hasPower() ? 0f : 1.5f);
 
         ModelPart landType = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("valve")
                 .getChild("bone9");

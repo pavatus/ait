@@ -32,14 +32,14 @@ public class EngineSystem extends DurableSubSystem {
     protected void onEnable() {
         super.onEnable();
 
-        this.tardis().subsystems().enablePower(true);
+        this.tardis().fuel().enablePower(true);
     }
 
     @Override
     protected void onDisable() {
         super.onDisable();
 
-        this.tardis().subsystems().disablePower();
+        this.tardis().fuel().disablePower();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class EngineSystem extends DurableSubSystem {
 
     @Override
     protected boolean shouldDurabilityChange() {
-        return tardis.subsystems().hasPower();
+        return tardis.fuel().hasPower();
     }
 
     @Override
@@ -174,7 +174,7 @@ public class EngineSystem extends DurableSubSystem {
         OFF(0, 0, 0) {
             @Override
             public boolean isViable(EngineSystem system) {
-                return !system.tardis.subsystems().hasPower();
+                return !system.tardis.fuel().hasPower();
             }
         },
         CRITICAL(250, 33, 22) {

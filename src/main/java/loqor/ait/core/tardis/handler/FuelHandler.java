@@ -1,15 +1,21 @@
 package loqor.ait.core.tardis.handler;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 import loqor.ait.api.ArtronHolder;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.impl.EmergencyPower;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -21,14 +27,15 @@ import loqor.ait.data.properties.doubl3.DoubleProperty;
 import loqor.ait.data.properties.doubl3.DoubleValue;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
-
     public static final double TARDIS_MAX_FUEL = 50000;
 
     private static final DoubleProperty FUEL = new DoubleProperty("fuel", 1000d);
     private static final BoolProperty REFUELING = new BoolProperty("refueling", false);
+    private static final BoolProperty POWER = new BoolProperty("power", false);
 
     private final DoubleValue fuel = FUEL.create(this);
     private final BoolValue refueling = REFUELING.create(this);
+    private final BoolValue power = POWER.create(this);
 
     static {
         TardisEvents.DEMAT.register(tardis -> tardis.fuel().refueling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
@@ -42,6 +49,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
     public void onLoaded() {
         refueling.of(this, REFUELING);
         fuel.of(this, FUEL);
+        power.of(this, POWER);
     }
 
     @Override
@@ -105,7 +113,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
         TravelHandler travel = this.tardis.travel();
         this.removeFuel(20 * (4 ^ travel.speed()) * travel.instability());
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             travel.crash();
     }
 
@@ -129,11 +137,82 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
             this.addFuel(20 * toAdd);
         }
 
-        if (!this.refueling().get() && tardis.engine().hasPower())
+        if (!this.refueling().get() && tardis.fuel().hasPower())
             this.removeFuel(20 * 0.25 * tardis.travel().instability());
     }
 
     public BoolValue refueling() {
         return refueling;
+    }
+
+    public boolean hasPower() {
+        return power.get();
+    }
+
+    public void togglePower() {
+        if (this.power.get()) {
+            this.disablePower();
+        } else {
+            this.enablePower();
+        }
+    }
+
+    public void disablePower() {
+        if (!this.power.get())
+            return;
+
+        this.power.set(false);
+        this.updateExteriorState();
+
+        TardisEvents.LOSE_POWER.invoker().onLosePower(this.tardis);
+        this.disableProtocols();
+    }
+    private void disableProtocols() {
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.SHUTDOWN, SoundCategory.AMBIENT, 10f, 1f);
+
+        // disabling protocols
+        tardis.travel().antigravs().set(false);
+        tardis.stats().hailMary().set(false);
+        tardis.<HadsHandler>handler(Id.HADS).enabled().set(false);
+    }
+
+    public void enablePower(boolean requiresEngine) {
+        if (this.power.get())
+            return;
+
+        if (this.tardis.getFuel() <= (0.01 * FuelHandler.TARDIS_MAX_FUEL))
+            return; // cant enable power if not enough fuel
+        if (this.tardis.siege().isActive()) return;
+        if (requiresEngine && !EngineSystem.hasEngine(tardis)) return;
+
+        this.power.set(true);
+        this.updateExteriorState();
+
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
+        TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
+    }
+    public void enablePower() {
+        this.enablePower(true);
+    }
+
+    // why is this in the engine handler? - Loqor
+    // idk, but i moved it here still - duzo
+    private void updateExteriorState() {
+        TravelHandler travel = this.tardis.travel();
+
+        if (travel.getState() != TravelHandler.State.LANDED)
+            return;
+
+        DirectedGlobalPos.Cached pos = travel.position();
+        World world = pos.getWorld();
+
+        if (world == null)
+            return;
+        BlockState state = world.getBlockState(pos.getPos());
+        if (!(state.getBlock() instanceof ExteriorBlock))
+            return;
+
+        world.setBlockState(pos.getPos(),
+                state.with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
     }
 }

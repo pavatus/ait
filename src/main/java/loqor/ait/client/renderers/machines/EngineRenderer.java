@@ -49,7 +49,7 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (tardis.subsystems().hasPower()) {
+        if (tardis.fuel().hasPower()) {
             EngineSystem.Status status = tardis.subsystems().engine().status();
             Vector3f colours = status.colour;
             ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, colours.x, colours.y, colours.z, (status != EngineSystem.Status.OFF) ? 1.0F : 0.0F);

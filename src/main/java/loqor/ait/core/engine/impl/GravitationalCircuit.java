@@ -8,7 +8,7 @@ import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class GravitationalCircuit extends DurableSubSystem implements StructureHolder {
-    private static final MultiBlockStructure STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "gravity"));
+    private static final MultiBlockStructure STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/gravity"));
 
     public GravitationalCircuit() {
         super(Id.GRAVITATIONAL);

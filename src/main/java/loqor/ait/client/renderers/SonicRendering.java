@@ -23,6 +23,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.dim.TardisDimension;
 
@@ -120,7 +122,7 @@ public class SonicRendering {
             return;
         }
         Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
-        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
+        BlockPos targetPos = BlockPos.ofFloored(targetVec).add(1, 0 ,1);
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
             profiler.pop();
@@ -147,11 +149,13 @@ public class SonicRendering {
             return;
         }
         Vec3d targetVec = crosshair.getPos();
-        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
+        BlockPos targetPos = BlockPos.ofFloored(targetVec);;
         BlockState state = client.world.getBlockState(targetPos);
 
         profiler.swap("redstone");
         renderRedstone(context, state, targetPos);
+        profiler.swap("durability");
+        renderDurability(context, targetPos);
 
         profiler.pop();
         profiler.pop();
@@ -166,6 +170,13 @@ public class SonicRendering {
         if (power == 0) return;
 
         context.drawCenteredTextWithShadow(client.textRenderer, "" + power, getCentreX(), (int) (getMaxY() * 0.4), Colors.WHITE);
+    }
+    private void renderDurability(DrawContext context, BlockPos pos) {
+        if (!(client.world.getBlockEntity(pos) instanceof SubSystemBlockEntity be)) return;
+        if (!(be.system() instanceof DurableSubSystem durable)) return;
+
+        float durability = durable.durability();
+        context.drawCenteredTextWithShadow(client.textRenderer, "" + durability, getCentreX(), (int) (getMaxY() * 0.42), Colors.WHITE);
     }
 
 

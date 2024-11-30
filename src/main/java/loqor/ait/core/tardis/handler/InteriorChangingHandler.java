@@ -245,6 +245,6 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     }
 
     private boolean canQueue() {
-        return tardis.isGrowth() || tardis.engine().hasPower() || tardis.crash().isToxic();
+        return tardis.isGrowth() || tardis.fuel().hasPower() || tardis.crash().isToxic();
     }
 }

@@ -29,6 +29,7 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
+import loqor.ait.core.tardis.handler.SubSystemHandler;
 import loqor.ait.core.tardis.handler.permissions.Permission;
 import loqor.ait.core.tardis.handler.permissions.PermissionLike;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
@@ -112,6 +113,7 @@ public abstract class TardisManager<T extends Tardis, C> {
                 .registerTypeAdapter(RegistryKey.class, new RegistryKeySerializer())
                 .registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
                 .registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())
+                .registerTypeAdapter(SubSystemHandler.class, SubSystemHandler.serializer())
                 .registerTypeAdapter(SubSystem.IdLike.class, SubSystemRegistry.idSerializer())
                 .registerTypeAdapter(SubSystem.class, SubSystem.serializer());
     }

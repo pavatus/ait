@@ -93,7 +93,7 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
 
         TravelHandler travel = tardis.travel();
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             this.disableAll();
 
         if (travel.getState() == TravelHandlerBase.State.FLIGHT)

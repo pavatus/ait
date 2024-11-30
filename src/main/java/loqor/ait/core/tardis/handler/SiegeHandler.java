@@ -112,7 +112,7 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 
         if (siege) {
             sound = AITSounds.SIEGE_ENABLE;
-            this.tardis.engine().disablePower();
+            this.tardis.fuel().disablePower();
 
             TardisUtil.giveEffectToInteriorPlayers(this.tardis.asServer(),
                     new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0, false, false));

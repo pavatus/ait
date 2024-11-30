@@ -89,7 +89,7 @@ public class ClientCreakHandler extends SoundHandler {
         }
 
         // todo should they play even with power? just make them more rare??
-        if (current.engine().hasPower()
+        if (current.fuel().hasPower()
                 && (current.travel().getState() == TravelHandlerBase.State.LANDED || current.travel().autopilot())) {
             this.stopSounds();
             return;

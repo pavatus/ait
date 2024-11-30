@@ -85,7 +85,7 @@ public class Control {
     }
 
     public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-        if ((this.requiresPower() && !tardis.subsystems().hasPower()))
+        if ((this.requiresPower() && !tardis.fuel().hasPower()))
             return false;
 
         boolean security = tardis.stats().security().get();
