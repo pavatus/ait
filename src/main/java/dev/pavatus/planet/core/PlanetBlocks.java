@@ -6,6 +6,7 @@ import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 
+import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
@@ -38,6 +39,47 @@ public class PlanetBlocks implements BlockRegistryContainer {
     @PickaxeMineable
     public static final Block MARTIAN_STONE_PRESSURE_PLATE  = new PressurePlateBlock(
             PressurePlateBlock.ActivationRule.EVERYTHING, AbstractBlock.Settings.copy(Blocks.STONE_PRESSURE_PLATE),BlockSetType.STONE);
+
+    // Ores
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.NONE)
+    public static final Block MARTIAN_COAL_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.COAL_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    public static final Block MARTIAN_COPPER_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.COPPER_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    public static final Block MARTIAN_IRON_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.IRON_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block MARTIAN_GOLD_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.GOLD_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block MARTIAN_LAPIS_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.LAPIS_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block MARTIAN_REDSTONE_ORE = new RedstoneOreBlock(
+            AbstractBlock.Settings.copy(Blocks.REDSTONE_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block MARTIAN_DIAMOND_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.DIAMOND_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block MARTIAN_EMERALD_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.EMERALD_ORE));
 
     // Cobblestone
     @PickaxeMineable
@@ -107,42 +149,55 @@ public class PlanetBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.SAND));
 
     // Martian Sandstone
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICK_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICK_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICK_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block CRACKED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block POLISHED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block CRACKED_MARTIAN_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
+
     @PickaxeMineable
     public static final Block CHISELED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
@@ -191,53 +246,42 @@ public class PlanetBlocks implements BlockRegistryContainer {
     // Moon
 
     // Anorthosite
-
     public static final Block ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
-
 
     public static final Block ANORTHOSITE_WALL = new WallBlock(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
-
     public static final Block ANORTHOSITE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
-
     public static final Block ANORTHOSITE_STAIRS = new StairsBlock(
             ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE));
-
 
     // Polished Stone
 
     public static final Block POLISHED_ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
 
-
     public static final Block POLISHED_ANORTHOSITE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_SLAB));
-
 
     public static final Block POLISHED_ANORTHOSITE_STAIRS = new StairsBlock(
             POLISHED_ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_STAIRS));
 
     // Smooth Stone
-
     public static final Block SMOOTH_ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
-
 
     @NoBlockDrop
     public static final Block SMOOTH_ANORTHOSITE_SLAB = new SlabBlock(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
 
     // Sand (Regolith)
-
     public static final Block REGOLITH = new FallingBlock(
             AbstractBlock.Settings.copy(Blocks.SAND));
 
     // Sandstone
-
     public static final Block MOON_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
