@@ -9,6 +9,7 @@ import loqor.ait.api.ArtronHolder;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.engine.impl.EmergencyPower;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -68,8 +69,27 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
         double prev = this.getCurrentFuel();
         this.fuel.set(MathHelper.clamp(fuel, 0, this.getMaxFuel()));
 
-        if (this.isOutOfFuel() && prev != 0)
+        if (this.isOutOfFuel() && prev != 0) {
+            EmergencyPower backup = this.tardis().subsystems().emergency();
+            if (backup.hasBackupPower()) {
+                this.setCurrentFuel(backup.getCurrentFuel());
+                backup.setCurrentFuel(0);
+                TardisEvents.USE_BACKUP_POWER.invoker().onUse(this.tardis(), this.getCurrentFuel());
+                return;
+            }
+
             TardisEvents.OUT_OF_FUEL.invoker().onNoFuel(this.tardis);
+        }
+    }
+
+    @Override
+    public double addFuel(double var) {
+        EmergencyPower backup = this.tardis().subsystems().emergency();
+        if (backup.isEnabled() && !backup.isFull()) {
+            return backup.addFuel(var);
+        }
+
+        return ArtronHolder.super.addFuel(var);
     }
 
     @Override

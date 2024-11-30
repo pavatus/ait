@@ -120,6 +120,12 @@ public final class TardisEvents {
                     callback.onRegainPower(tardis);
                 }
             });
+    public static final Event<UseBackupPower> USE_BACKUP_POWER = EventFactory.createArrayBacked(UseBackupPower.class,
+            callbacks -> (tardis, power) -> {
+                for (UseBackupPower callback : callbacks) {
+                    callback.onUse(tardis, power);
+                }
+            });
 
     // Door
     public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class,
@@ -340,6 +346,13 @@ public final class TardisEvents {
          * Called when a tardis regains power
          */
         void onRegainPower(Tardis tardis);
+    }
+    @FunctionalInterface
+    public interface UseBackupPower {
+        /**
+         * Called when a tardis fills itself with backup power
+         */
+        void onUse(Tardis tardis, double power);
     }
 
     /**
