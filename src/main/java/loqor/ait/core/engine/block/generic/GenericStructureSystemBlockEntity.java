@@ -2,8 +2,10 @@ package loqor.ait.core.engine.block.generic;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -26,6 +28,8 @@ import loqor.ait.core.engine.item.SubSystemItem;
  * @author duzo
  */
 public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntity {
+    private ItemStack idSource;
+
     protected GenericStructureSystemBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state, null);
     }
@@ -38,6 +42,8 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
         if (!(world.isClient())) {
             if (hand.getItem() instanceof SubSystemItem link) {
                 this.setId(link.id());
+                this.idSource = hand.copy();
+                this.idSource.setCount(1);
                 hand.decrement(1);
                 world.playSound(null, this.getPos(), AITSounds.WAYPOINT_ACTIVATE, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 return ActionResult.SUCCESS;
@@ -90,5 +96,31 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
         if (this.system() == null) return;
 
         super.onLoseFluid();
+    }
+
+    @Override
+    public void onBroken(World world, BlockPos pos) {
+        super.onBroken(world, pos);
+
+        if (this.idSource == null && !world.isClient()) return;
+        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), this.idSource));
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+
+        if (this.idSource != null) {
+            nbt.put("SourceStack", this.idSource.writeNbt(new NbtCompound()));
+        }
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+
+        if (nbt.contains("SourceStack")) {
+            this.idSource = ItemStack.fromNbt(nbt.getCompound("SourceStack"));
+        }
     }
 }
