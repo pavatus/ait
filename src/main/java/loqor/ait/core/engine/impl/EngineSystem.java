@@ -6,8 +6,10 @@ import java.util.function.Function;
 import org.joml.Vector3f;
 
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -133,7 +135,8 @@ public class EngineSystem extends DurableSubSystem {
             return new Phaser(
                     (phaser) -> {
                         system.tardis().alarm().enabled().set(true);
-                        TardisUtil.sendMessageToInterior(system.tardis().asServer(), Text.translatable("tardis.message.engine.phasing"));
+                        TardisUtil.sendMessageToInterior(system.tardis().asServer(), Text.translatable("tardis.message.engine.phasing").formatted(Formatting.RED));
+                        system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
                     },
                     (phaser) -> {
                         Tardis tardis1 = system.tardis();
