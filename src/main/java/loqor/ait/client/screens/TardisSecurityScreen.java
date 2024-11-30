@@ -22,7 +22,7 @@ import loqor.ait.data.properties.Value;
 
 public class TardisSecurityScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/consoles/monitors/security_menu.png");
+            "textures/gui/tardis/security_menu.png");
     int bgHeight = 138;
     int bgWidth = 216;
     int left, top;
