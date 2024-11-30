@@ -154,7 +154,7 @@ public class EngineSystem extends DurableSubSystem {
                     (phaser) -> {
                         system.tardis().alarm().enabled().set(false);
                     },
-                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && AITMod.RANDOM.nextInt(0, 512) == 1
+                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 512) == 1
             );
         }
     }

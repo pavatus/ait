@@ -30,7 +30,7 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
     }
 
     public boolean check(World world, BlockPos center) {
-        return check(world, center, this, false);
+        return check(world, center, this, AITMod.LOGGER.isDebugEnabled());
     }
 
     public static boolean check(World world, BlockPos center, List<BlockOffset> blockOffsets, boolean log) {

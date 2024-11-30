@@ -32,7 +32,7 @@ public class MultiBlockStructureRenderer {
     public void renderOffset(MultiBlockStructure.BlockOffset offset, BlockPos centre, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider, boolean holographic) {
         BlockPos pos = centre.add(offset.offset());
 
-        BlockPos diff = centre.subtract(pos);
+        BlockPos diff = pos.subtract(centre);
         BlockState state = this.getBlock(offset.block(), client.getServer().getTicks()).getDefaultState();
 
         matrices.push();
