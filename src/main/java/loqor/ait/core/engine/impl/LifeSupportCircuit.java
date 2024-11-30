@@ -64,13 +64,14 @@ public class LifeSupportCircuit extends DurableSubSystem implements StructureHol
 
         ServerTardis tardis = this.tardis().asServer();
 
+        if (!this.isEnabled()) return;
         if (ServerLifecycleHooks.get().getTicks() % 20 != 0)
             return;
 
         List<LivingEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis);
 
         for (LivingEntity entity : entities) {
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 1, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 20, 1));
         }
     }
 }
