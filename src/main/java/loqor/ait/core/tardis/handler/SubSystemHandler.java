@@ -239,4 +239,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public Stabilisers stabilisers() {
         return this.get(SubSystem.Id.STABILISERS);
     }
+    public ChameleonCircuit chameleon() {
+        return this.get(SubSystem.Id.CHAMELEON);
+    }
 }
