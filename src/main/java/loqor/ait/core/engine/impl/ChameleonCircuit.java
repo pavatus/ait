@@ -36,4 +36,11 @@ public class ChameleonCircuit extends DurableSubSystem implements StructureHolde
     public MultiBlockStructure getStructure() {
         return MultiBlockStructure.EMPTY;
     }
+
+    @Override
+    protected void onDisable() {
+        super.onDisable();
+
+        this.tardis().getExterior().setType(CategoryRegistry.CAPSULE);
+    }
 }

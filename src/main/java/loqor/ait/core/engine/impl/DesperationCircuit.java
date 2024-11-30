@@ -13,4 +13,12 @@ public class DesperationCircuit extends SubSystem implements StructureHolder {
     public MultiBlockStructure getStructure() {
         return MultiBlockStructure.EMPTY;
     }
+
+    @Override
+    protected void onDisable() {
+        super.onDisable();
+
+        this.tardis().stats().hailMary().set(false);
+        this.tardis().siege().setActive(false);
+    }
 }

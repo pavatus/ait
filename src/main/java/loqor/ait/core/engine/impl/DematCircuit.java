@@ -34,11 +34,6 @@ public class DematCircuit extends DurableSubSystem implements StructureHolder {
     }
 
     @Override
-    protected void onRepair() {
-
-    }
-
-    @Override
     public MultiBlockStructure getStructure() {
         return STRUCTURE;
     }

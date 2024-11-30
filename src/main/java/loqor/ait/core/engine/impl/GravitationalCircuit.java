@@ -28,4 +28,11 @@ public class GravitationalCircuit extends DurableSubSystem implements StructureH
     public MultiBlockStructure getStructure() {
         return STRUCTURE;
     }
+
+    @Override
+    protected void onDisable() {
+        super.onDisable();
+
+        this.tardis().travel().antigravs().set(false);
+    }
 }

@@ -50,10 +50,6 @@ public class LifeSupportCircuit extends DurableSubSystem implements StructureHol
     }
 
     @Override
-    protected void onRepair() {
-    }
-
-    @Override
     public MultiBlockStructure getStructure() {
         return STRUCTURE;
     }
