@@ -54,11 +54,20 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         power.of(this, POWER);
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        for (SubSystem.Id id : SubSystem.Id.values()) {
+            this.get(id);
+        }
+    }
+
     public <T extends SubSystem> T get(SubSystem.IdLike id) {
         SubSystem found = this.systems.get(id);
 
         if (found == null) {
-            AITMod.LOGGER.info("Creating subsystem: {} | {}", id, tardis().getUuid());
+            AITMod.LOGGER.info("Creating subsystem: {} | {}", id, tardis());
             found = this.add(this.create(id));
         }
 
