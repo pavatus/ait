@@ -128,6 +128,8 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DESPERATION);
     public static final Item STABILISERS = new SubSystemItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.STABILISERS);
+    public static final Item LIFE_SUPPORT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.LIFE_SUPPORT);
 
 
 

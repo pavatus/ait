@@ -60,6 +60,4 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(PowerConverterBlock.BlockEntity::new, AITBlocks.POWER_CONVERTER).build();
     public static BlockEntityType<GenericStructureSystemBlockEntity> GENERIC_SUBSYSTEM_BLOCK_TYPE = FabricBlockEntityTypeBuilder
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
-    public static BlockEntityType<LifeSupportBlockEntity> LIFE_SUPPORT_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(LifeSupportBlockEntity::new, AITBlocks.LIFE_SUPPORT_BLOCK).build();
 }

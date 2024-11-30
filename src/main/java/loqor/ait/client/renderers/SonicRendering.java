@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -115,14 +115,12 @@ public class SonicRendering {
         Profiler worldProfiler = context.profiler();
         worldProfiler.push("target");
 
-        HitResult crosshair = client.crosshairTarget;
-        if (crosshair == null) {
+        if (!(client.crosshairTarget instanceof BlockHitResult crosshair)) {
             profiler.pop();
             profiler.pop();
             return;
         }
-        Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
-        BlockPos targetPos = BlockPos.ofFloored(targetVec).add(1, 0 ,1);
+        BlockPos targetPos = crosshair.getBlockPos();
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
             profiler.pop();
@@ -141,15 +139,13 @@ public class SonicRendering {
         profiler.swap("sonic");
         profiler.push("gui");
 
-        profiler.push("target");
-        HitResult crosshair = client.crosshairTarget;
-        if (crosshair == null) {
+        profiler.push("target");;
+        if (!(client.crosshairTarget instanceof BlockHitResult crosshair)) {
             profiler.pop();
             profiler.pop();
             return;
         }
-        Vec3d targetVec = crosshair.getPos();
-        BlockPos targetPos = BlockPos.ofFloored(targetVec);;
+        BlockPos targetPos = crosshair.getBlockPos();
         BlockState state = client.world.getBlockState(targetPos);
 
         profiler.swap("redstone");

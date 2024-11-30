@@ -47,8 +47,6 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-
         if (!(world.getBlockEntity(pos) instanceof EngineBlockEntity engine))
             return;
         if (!engine.isLinked()) return;
