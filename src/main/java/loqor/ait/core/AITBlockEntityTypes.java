@@ -7,10 +7,7 @@ import net.minecraft.block.entity.BlockEntityType;
 
 import loqor.ait.core.blockentities.*;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
-import loqor.ait.core.blocks.BlockOfDesperation;
-import loqor.ait.core.blocks.ChameleonBlock;
 import loqor.ait.core.blocks.PowerConverterBlock;
-import loqor.ait.core.blocks.StabiliserBlock;
 import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
@@ -65,10 +62,4 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
     public static BlockEntityType<LifeSupportBlockEntity> LIFE_SUPPORT_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(LifeSupportBlockEntity::new, AITBlocks.LIFE_SUPPORT_BLOCK).build();
-    public static BlockEntityType<BlockOfDesperation.DesperationBlockEntity> DESPERATION_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(BlockOfDesperation.DesperationBlockEntity::new, AITBlocks.DESPERATION_BLOCK).build();
-    public static BlockEntityType<ChameleonBlock.ChameleonBlockEntity> CHAMELEON_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(ChameleonBlock.ChameleonBlockEntity::new, AITBlocks.CHAMELEON_BLOCK).build();
-    public static BlockEntityType<StabiliserBlock.StabiliserBlockEntity> STABILISER_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(StabiliserBlock.StabiliserBlockEntity::new, AITBlocks.STABILISER_BLOCK).build();
 }

@@ -122,6 +122,13 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.EMERGENCY_POWER);
     public static final Item GRAVITATIONAL_CIRCUIT = new SubSystemItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.GRAVITATIONAL);
+    public static final Item CHAMELEON_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.CHAMELEON);
+    public static final Item DESPERATION_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DESPERATION);
+    public static final Item STABILISERS = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.STABILISERS);
+
 
 
     // Blueprint
