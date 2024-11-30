@@ -64,4 +64,9 @@ public abstract class SubSystemBlock extends FluidLinkBlock {
     }
 
     protected abstract BlockEntityType<? extends SubSystemBlockEntity> getType();
+
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return this.getType().instantiate(pos, state);
+    }
 }

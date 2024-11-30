@@ -62,7 +62,11 @@ public class AITBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
                     .strength(3.0F).luminance((state) -> 15).nonOpaque());
     @NoEnglish
-    public static final Block LIFE_SUPPORT_BLOCK = new EngineCoreBlock(
+    public static final Block LIFE_SUPPORT_BLOCK = new LifeSupportBlock(
+            AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
+                    .strength(3.0F).luminance((state) -> 6).nonOpaque());
+    @NoEnglish
+    public static final Block DESPERATION_BLOCK = new BlockOfDesperation(
             AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
                     .strength(3.0F).luminance((state) -> 6).nonOpaque());
     @PickaxeMineable

@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntityType;
 
 import loqor.ait.core.blockentities.*;
 import loqor.ait.core.blockentities.control.RedstoneControlBlockEntity;
+import loqor.ait.core.blocks.BlockOfDesperation;
 import loqor.ait.core.blocks.PowerConverterBlock;
 import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
@@ -62,4 +63,6 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
     public static BlockEntityType<LifeSupportBlockEntity> LIFE_SUPPORT_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(LifeSupportBlockEntity::new, AITBlocks.LIFE_SUPPORT_BLOCK).build();
+    public static BlockEntityType<BlockOfDesperation.DesperationBlockEntity> DESPERATION_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+            .create(BlockOfDesperation.DesperationBlockEntity::new, AITBlocks.DESPERATION_BLOCK).build();
 }

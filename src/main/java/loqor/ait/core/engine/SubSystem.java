@@ -9,10 +9,7 @@ import loqor.ait.api.Disposable;
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.core.engine.impl.DematCircuit;
-import loqor.ait.core.engine.impl.EngineSystem;
-import loqor.ait.core.engine.impl.LifeSupportCircuit;
-import loqor.ait.core.engine.impl.ShieldsCircuit;
+import loqor.ait.core.engine.impl.*;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
@@ -90,7 +87,8 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
         ENGINE(EngineSystem.class, EngineSystem::new),
         DEMAT(DematCircuit.class, DematCircuit::new),
         LIFE_SUPPORT(LifeSupportCircuit.class, LifeSupportCircuit::new),
-        SHIELDS(ShieldsCircuit.class, ShieldsCircuit::new);
+        SHIELDS(ShieldsCircuit.class, ShieldsCircuit::new),
+        DESPERATION(DesperationCircuit.class, DesperationCircuit::new);
         private final Supplier<SubSystem> creator;
 
         private final Class<? extends SubSystem> clazz;
