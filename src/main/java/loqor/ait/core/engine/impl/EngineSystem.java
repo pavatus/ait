@@ -96,13 +96,16 @@ public class EngineSystem extends DurableSubSystem {
         private final Consumer<Phaser> miss;
         @Exclude(strategy = Exclude.Strategy.NETWORK)
         private final Consumer<Phaser> start;
+        @Exclude(strategy = Exclude.Strategy.NETWORK)
+        private final Consumer<Phaser> cancel;
         private int countdown;
 
-        public Phaser(Consumer<Phaser> onStart, Consumer<Phaser> onMiss, Function<Phaser, Boolean> canPhase) {
+        public Phaser(Consumer<Phaser> onStart, Consumer<Phaser> onMiss, Consumer<Phaser> onCancel, Function<Phaser, Boolean> canPhase) {
             this.countdown = 0;
             this.miss = onMiss;
             this.allowed = canPhase;
             this.start = onStart;
+            this.cancel = onCancel;
         }
 
         public void tick() {
@@ -129,6 +132,7 @@ public class EngineSystem extends DurableSubSystem {
         }
         public void cancel() {
             this.countdown = 0;
+            this.cancel.accept(this);
         }
 
         public static Phaser create(EngineSystem system) {
@@ -146,6 +150,9 @@ public class EngineSystem extends DurableSubSystem {
                             if (travel.isLanded())
                                 tardis1.travel().forceDemat();
                         });
+                    },
+                    (phaser) -> {
+                        system.tardis().alarm().enabled().set(false);
                     },
                     (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && AITMod.RANDOM.nextInt(0, 512) == 1
             );
