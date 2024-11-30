@@ -1,15 +1,26 @@
 package loqor.ait.core.engine.impl;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import org.joml.Vector3f;
 
+import net.minecraft.text.Text;
+
+import loqor.ait.AITMod;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelUtil;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 
 public class EngineSystem extends DurableSubSystem {
     @Exclude(strategy = Exclude.Strategy.FILE)
     private Status status;
+    @Exclude(strategy = Exclude.Strategy.FILE)
+    private Phaser phaser;
 
     public EngineSystem() {
         super(Id.ENGINE);
@@ -49,6 +60,7 @@ public class EngineSystem extends DurableSubSystem {
         super.tick();
 
         this.tickForDurability();
+        this.phaser().tick();
         this.tryUpdateStatus();
     }
 
@@ -69,10 +81,78 @@ public class EngineSystem extends DurableSubSystem {
             this.tardis.alarm().enabled().set(true);
         }
     }
+    public Phaser phaser() {
+        if (this.phaser == null) this.phaser = Phaser.create(this);
+
+        return this.phaser;
+    }
+
+    public static class Phaser {
+        @Exclude(strategy = Exclude.Strategy.NETWORK)
+        private final Function<Phaser, Boolean> allowed;
+        @Exclude(strategy = Exclude.Strategy.NETWORK)
+        private final Consumer<Phaser> miss;
+        @Exclude(strategy = Exclude.Strategy.NETWORK)
+        private final Consumer<Phaser> start;
+        private int countdown;
+
+        public Phaser(Consumer<Phaser> onStart, Consumer<Phaser> onMiss, Function<Phaser, Boolean> canPhase) {
+            this.countdown = 0;
+            this.miss = onMiss;
+            this.allowed = canPhase;
+            this.start = onStart;
+        }
+
+        public void tick() {
+            if (this.countdown > 0) {
+                this.countdown--;
+                if (this.countdown == 0) {
+                    this.miss.accept(this);
+                }
+            } else {
+                this.tryPhase();
+            }
+        }
+        private void tryPhase() {
+            if (this.allowed.apply(this)) {
+                this.startPhase();
+            }
+        }
+        private void startPhase() {
+            this.countdown = AITMod.RANDOM.nextInt(60, 200); // 3-10 seconds
+            this.start.accept(this);
+        }
+        public boolean isPhasing() {
+            return this.countdown > 0;
+        }
+        public void reset() {
+            this.countdown = 0;
+        }
+
+        public static Phaser create(EngineSystem system) {
+            return new Phaser(
+                    (phaser) -> {
+                        system.tardis().alarm().enabled().set(true);
+                        TardisUtil.sendMessageToInterior(system.tardis().asServer(), Text.translatable("tardis.message.engine.phasing"));
+                    },
+                    (phaser) -> {
+                        Tardis tardis1 = system.tardis();
+                        TravelHandler travel = tardis1.travel();
+                        TravelUtil.randomPos(tardis1, 10, 1000, cached -> {
+                            travel.forceDestination(cached);
+                            if (travel.isLanded())
+                                tardis1.travel().forceDemat();
+                        });
+                    },
+                    (phaser) -> system.isBroken() && system.tardis().travel().isLanded() && AITMod.RANDOM.nextInt(0, 256) < 5
+            );
+        }
+    }
 
     public static boolean hasEngine(Tardis t) {
         return t.subsystems().engine().isEnabled();
     }
+
 
     public enum Status {
         OKAY(132, 195, 240) {
@@ -87,16 +167,16 @@ public class EngineSystem extends DurableSubSystem {
                 return !system.tardis.subsystems().hasPower();
             }
         },
+        CRITICAL(250, 33, 22) {
+            @Override
+            public boolean isViable(EngineSystem system) {
+                return system.phaser().isPhasing() || system.tardis.subsystems().findBrokenSubsystem().isPresent();
+            }
+        },
         ERROR(250, 242, 22) {
             @Override
             public boolean isViable(EngineSystem system) {
                 return system.tardis.alarm().enabled().get() || system.tardis.sequence().hasActiveSequence();
-            }
-        },
-        CRITICAL(250, 33, 22) {
-            @Override
-            public boolean isViable(EngineSystem system) {
-                return system.tardis.subsystems().findBrokenSubsystem().isPresent();
             }
         },
         LEAKAGE(114, 255, 33) {

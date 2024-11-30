@@ -584,6 +584,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
+        provider.addTranslation("tardis.message.engine.phasing", "ENGINES PHASING");
 
 
         // Commands

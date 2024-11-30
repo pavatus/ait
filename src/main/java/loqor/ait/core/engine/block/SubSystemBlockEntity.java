@@ -43,6 +43,7 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     public void onGainFluid() {
         super.onGainFluid();
 
+        if (this.system() == null) return;
         if (this.system() instanceof DurableSubSystem durable) {
             if (durable.isBroken()) return;
         }
@@ -53,6 +54,7 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     public void onLoseFluid() {
         super.onLoseFluid();
 
+        if (this.system() == null) return;
         this.system().setEnabled(false);
     }
 

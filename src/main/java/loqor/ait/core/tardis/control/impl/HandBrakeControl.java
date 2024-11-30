@@ -6,6 +6,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -28,6 +30,12 @@ public class HandBrakeControl extends Control {
 
         if (tardis.isInDanger())
             return false;
+
+        EngineSystem.Phaser phaser = tardis.subsystems().engine().phaser();
+        if (phaser.isPhasing()) {
+            phaser.reset();
+            return true;
+        }
 
         // todo make this fancier when moving stuff from flightdata to travelhandler
         boolean handbrake = tardis.travel().handbrake();
@@ -61,5 +69,10 @@ public class HandBrakeControl extends Control {
     @Override
     public boolean requiresPower() {
         return false;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return null;
     }
 }

@@ -62,13 +62,6 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
-        nbt.putBoolean("HasFluid", this.powered);
-        return nbt;
-    }
-
-    @Override
     public void onGainFluid() {
         if (this.hasWorld() && this.getGainPowerSound() != null) {
             this.getGainPowerSound().play((ServerWorld) this.getWorld(), this.getPos());
