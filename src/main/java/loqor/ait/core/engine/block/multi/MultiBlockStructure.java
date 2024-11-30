@@ -8,11 +8,16 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.structure.StructureTemplate;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
 
 public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffset> {
     public MultiBlockStructure(BlockOffset... offsets) {
@@ -64,6 +69,45 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
         Optional<BlockOffset> prev = this.remove(offset.offset);
         this.add(offset);
         return prev;
+    }
+
+    public static MultiBlockStructure from(Identifier structure) {
+        StructureTemplate template = WorldUtil.getOverworld().getStructureTemplateManager()
+                .getTemplate(structure).orElse(null);
+
+        MultiBlockStructure created = new MultiBlockStructure();
+        if (template == null) {
+            AITMod.LOGGER.error("Failed to find structure template {}", structure);
+            return created;
+        }
+
+        List<StructureTemplate.StructureBlockInfo> list = ((StructureTemplateAccessor) template).getBlockInfo().get(0).getAll();
+        BlockPos center = null;
+        for (StructureTemplate.StructureBlockInfo info : list) {
+            if (info.state().isOf(AITBlocks.GENERIC_SUBSYSTEM)) {
+                center = info.pos();
+                break;
+            }
+        }
+
+        if (center == null) {
+            AITMod.LOGGER.error("No general subsystem block found in template, {}", structure);
+            return created;
+        }
+
+        // double iterationwow
+        for (StructureTemplate.StructureBlockInfo info : list) {
+            if (info.state().isOf(AITBlocks.GENERIC_SUBSYSTEM)) continue;
+            if (info.state().isAir()) continue;
+
+            BlockPos offset = info.pos().subtract(center);
+            BlockOffset blockOffset = new BlockOffset(new AllowedBlocks(info.state().getBlock()), offset);
+            created.add(blockOffset);
+        }
+
+        AITMod.LOGGER.info("Loaded multiblock structure {} with {} blocks", structure, created.size());
+
+        return created;
     }
 
     public record BlockOffset(AllowedBlocks block, BlockPos offset) {
