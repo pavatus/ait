@@ -16,4 +16,7 @@ public interface StructureTemplateAccessor {
 
     @Accessor("size")
     Vec3i getSize();
+
+    @Accessor("blockInfoLists")
+    List<StructureTemplate.PalettedBlockInfoList> getBlockInfo();
 }
