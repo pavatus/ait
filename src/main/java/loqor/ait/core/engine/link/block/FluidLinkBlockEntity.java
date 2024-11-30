@@ -49,6 +49,8 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
 
     @Override
     public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+
         if (nbt.contains("HasFluid")) {
             this.powered = nbt.getBoolean("HasFluid");
         }
@@ -62,7 +64,7 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbt = super.toInitialChunkDataNbt();
-        nbt.putBoolean("IsPowered", this.powered);
+        nbt.putBoolean("HasFluid", this.powered);
         return nbt;
     }
 
