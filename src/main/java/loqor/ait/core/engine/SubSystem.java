@@ -90,7 +90,8 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
         SHIELDS(ShieldsCircuit.class, ShieldsCircuit::new),
         DESPERATION(DesperationCircuit.class, DesperationCircuit::new),
         CHAMELEON(ChameleonCircuit.class, ChameleonCircuit::new),
-        EMERGENCY_POWER(EmergencyPower.class, EmergencyPower::new),;
+        EMERGENCY_POWER(EmergencyPower.class, EmergencyPower::new),
+        STABILISERS(Stabilisers.class, Stabilisers::new),;
         private final Supplier<SubSystem> creator;
 
         private final Class<? extends SubSystem> clazz;

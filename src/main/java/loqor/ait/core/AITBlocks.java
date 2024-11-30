@@ -73,6 +73,10 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block CHAMELEON_BLOCK = new ChameleonBlock(
             AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
                     .strength(3.0F).luminance((state) -> 6).nonOpaque());
+    @NoEnglish
+    public static final Block STABILISER_BLOCK = new StabiliserBlock(
+            AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
+                    .strength(3.0F).luminance((state) -> 6).nonOpaque());
     @PickaxeMineable
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)

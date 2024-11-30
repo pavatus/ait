@@ -219,4 +219,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public EmergencyPower emergency() {
         return this.get(SubSystem.Id.EMERGENCY_POWER);
     }
+    public Stabilisers stabilisers() {
+        return this.get(SubSystem.Id.STABILISERS);
+    }
 }

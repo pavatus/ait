@@ -9,19 +9,19 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlock;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 
-public class ChameleonBlock extends SubSystemBlock {
-    public ChameleonBlock(Settings settings) {
-        super(settings, SubSystem.Id.CHAMELEON);
+public class StabiliserBlock extends SubSystemBlock {
+    public StabiliserBlock(Settings settings) {
+        super(settings, SubSystem.Id.STABILISERS);
     }
 
     @Override
     protected BlockEntityType<? extends SubSystemBlockEntity> getType() {
-        return AITBlockEntityTypes.CHAMELEON_BLOCK_ENTITY_TYPE;
+        return AITBlockEntityTypes.STABILISER_BLOCK_ENTITY_TYPE;
     }
 
-    public static class ChameleonBlockEntity extends SubSystemBlockEntity {
-        public ChameleonBlockEntity(BlockPos pos, BlockState state) {
-            super(AITBlockEntityTypes.CHAMELEON_BLOCK_ENTITY_TYPE, pos, state, SubSystem.Id.CHAMELEON);
+    public static class StabiliserBlockEntity extends SubSystemBlockEntity {
+        public StabiliserBlockEntity(BlockPos pos, BlockState state) {
+            super(AITBlockEntityTypes.STABILISER_BLOCK_ENTITY_TYPE, pos, state, SubSystem.Id.STABILISERS);
         }
     }
 }
