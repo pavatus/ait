@@ -120,6 +120,9 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.SHIELDS);
     public static final Item BACKUP_CIRCUIT = new SubSystemItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.EMERGENCY_POWER);
+    public static final Item GRAVITATIONAL_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.GRAVITATIONAL);
+
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
