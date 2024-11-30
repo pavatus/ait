@@ -1,18 +1,15 @@
 package loqor.ait.client.renderers;
 
-import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.BlockRenderView;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class MultiBlockStructureRenderer {
@@ -27,42 +24,36 @@ public class MultiBlockStructureRenderer {
         this(MinecraftClient.getInstance());
     }
 
-    public void render(MultiBlockStructure structure, BlockPos centre, BlockRenderView view, @Nullable MatrixStack stack) {
+    public void render(MultiBlockStructure structure, BlockPos centre, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider, boolean holographic) {
         profiler.push("multi_block_structure");
         profiler.push("iterate_offsets");
-        structure.forEach(offset -> {
-            BlockPos pos = centre.add(offset.offset());
-            BlockState state = this.getBlock(offset.block(), client.getServer().getTicks()).getDefaultState();
-            profiler.swap("render_block");
-            renderBlock(state, pos, view, stack);
-        });
+        structure.forEach(offset -> renderOffset(offset, centre, view, matrices, provider, holographic));
     }
-    public void renderBlock(BlockState state, BlockPos pos, BlockRenderView view, @Nullable MatrixStack stack) {
-        if (stack == null) stack = new MatrixStack();
+    public void renderOffset(MultiBlockStructure.BlockOffset offset, BlockPos centre, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider, boolean holographic) {
+        BlockPos pos = centre.add(offset.offset());
 
-        BlockRenderManager manager = client.getBlockRenderManager();
-        // BlockBufferBuilderStorage builders = client.getBufferBuilders().getBlockBufferBuilders();
-        // BufferBuilder buffer = builders.get(RenderLayers.getBlockLayer(state));
-        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        BlockPos diff = centre.subtract(pos);
+        BlockState state = this.getBlock(offset.block(), client.getServer().getTicks()).getDefaultState();
 
-        if (!buffer.isBuilding()) buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
+        matrices.push();
+        matrices.translate(diff.getX(), diff.getY(), diff.getZ());
 
-        if (client.getServer().getTicks() % 20 == 0) {
-            AITMod.LOGGER.info("RENDERING MULTI BLOCK STRUCTURE, state {} | pos {}", state, pos);
+        if (holographic) {
+            matrices.scale(0.35f, 0.35f, 0.35f);
+            matrices.translate(0.95, 1, 1);
         }
-        stack.push();
 
-        manager.renderBlock(state, pos, view, stack, buffer, true, client.world.getRandom());
-
-        stack.pop();
-
-        Tessellator.getInstance().draw();
+        renderBlock(state, pos, view, matrices, provider);
+        matrices.pop();
+    }
+    private void renderBlock(BlockState state, BlockPos pos, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider) {
+        client.getBlockRenderManager().getModelRenderer().render(view, client.getBlockRenderManager().getModel(state), state, pos, matrices, provider.getBuffer(RenderLayers.getBlockLayer(state)), false, client.world.random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
     }
     private Block getBlock(MultiBlockStructure.AllowedBlocks block, int ticks) {
         if (block.size() == 1) return block.get(0);
 
-        // 20 ticks per block
-        int index = (ticks / 20) % block.size();
+        int size = block.size();
+        int index = (ticks / (size * 10)) % block.size();
         return block.get(index);
     }
 
