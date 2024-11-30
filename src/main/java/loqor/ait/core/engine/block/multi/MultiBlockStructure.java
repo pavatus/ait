@@ -20,6 +20,8 @@ import loqor.ait.core.util.WorldUtil;
 import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
 
 public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffset> {
+    public static final MultiBlockStructure EMPTY = new MultiBlockStructure();
+
     public MultiBlockStructure(BlockOffset... offsets) {
         this(List.of(offsets));
     }

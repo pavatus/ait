@@ -79,7 +79,7 @@ public class EngineSystem extends DurableSubSystem {
         this.sync();
     }
     private void tickForDurability() {
-        if (this.durability() <= 25) {
+        if (this.durability() <= 5) {
             this.tardis.alarm().enabled().set(true);
         }
     }

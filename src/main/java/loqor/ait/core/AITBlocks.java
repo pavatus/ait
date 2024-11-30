@@ -143,6 +143,7 @@ public class AITBlocks implements BlockRegistryContainer {
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
             .luminance(light -> 15));
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @AutomaticModel(justItem = true)
     public static final Block POWER_CONVERTER = new PowerConverterBlock(FabricBlockSettings.create().nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
