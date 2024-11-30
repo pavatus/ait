@@ -33,7 +33,7 @@ public class GenericSubSystemRenderer<T extends GenericStructureSystemBlockEntit
 
         // todo - no model yet :(
         SubSystem system = entity.system();
-        if (entity.hasSystem() && !system.isUsable() && system instanceof StructureHolder holder) {
+        if (entity.hasSystem() && system != null && !system.isUsable() && system instanceof StructureHolder holder) {
             MultiBlockStructureRenderer.instance().render(holder.getStructure(), entity.getPos(), entity.getWorld(), matrices, vertexConsumers, true);
         }
 
