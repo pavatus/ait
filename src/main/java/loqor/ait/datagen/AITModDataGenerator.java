@@ -791,6 +791,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("category.ait.main", "Adventures in Time");
         provider.addTranslation("key.ait.snap", "Snap");
 
+        // effects
+        provider.addTranslation("effect.ait.zeiton_high", "Zeiton High");
+
         // automatic english for items
         AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {
             provider.addTranslation(var, fixupTranslationKey(var.getTranslationKey()));
