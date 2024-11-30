@@ -48,6 +48,9 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
     public boolean isEnabled() {
         return enabled;
     }
+    public boolean isUsable() {
+        return this.isEnabled();
+    }
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
 

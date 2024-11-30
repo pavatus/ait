@@ -59,6 +59,7 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
     protected void onChangeId() {
         this.processStructure();
         this.markDirty();
+        this.sync();
     }
     public boolean hasSystem() {
         return this.id() != null;

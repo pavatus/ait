@@ -41,6 +41,11 @@ public abstract class DurableSubSystem extends SubSystem {
         return this.durability() <= 0;
     }
 
+    @Override
+    public boolean isUsable() {
+        return super.isUsable() && !this.isBroken();
+    }
+
     protected void onDurabilityChange(float before, float after) {
         if (before == 0 && after > 0) {
             this.onRepair();
