@@ -206,9 +206,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         cached = border.contains(pos) ? cached : cached.pos(border.clamp(pos.getX(), pos.getY(), pos.getZ()));
 
-        if (!this.antigravs.get()) {
-            cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
-        }
+        cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
 
         this.forceDestination(cached);
     }
