@@ -20,7 +20,7 @@ import loqor.ait.core.engine.block.SubSystemBlockEntity;
 public class LifeSupportBlock extends SubSystemBlock implements BlockEntityProvider {
 
     public LifeSupportBlock(Settings settings) {
-        super(settings, SubSystem.Id.ENGINE);
+        super(settings, SubSystem.Id.LIFE_SUPPORT);
     }
 
     @Override
