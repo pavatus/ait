@@ -56,11 +56,11 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 
         // Ore
         addDrop(PlanetBlocks.MARTIAN_COAL_ORE, oreDrops(PlanetBlocks.MARTIAN_COAL_ORE, Items.COAL));
-        addDrop(PlanetBlocks.MARTIAN_COPPER_ORE, oreDrops(PlanetBlocks.MARTIAN_COPPER_ORE, Items.COPPER_INGOT));
-        addDrop(PlanetBlocks.MARTIAN_IRON_ORE, oreDrops(PlanetBlocks.MARTIAN_IRON_ORE, Items.IRON_INGOT));
+        addDrop(PlanetBlocks.MARTIAN_COPPER_ORE, oreDrops(PlanetBlocks.MARTIAN_COPPER_ORE, Items.RAW_COPPER));
+        addDrop(PlanetBlocks.MARTIAN_IRON_ORE, oreDrops(PlanetBlocks.MARTIAN_IRON_ORE, Items.RAW_IRON));
         addDrop(PlanetBlocks.MARTIAN_LAPIS_ORE, oreDrops(PlanetBlocks.MARTIAN_LAPIS_ORE, Items.LAPIS_LAZULI));
         addDrop(PlanetBlocks.MARTIAN_REDSTONE_ORE, oreDrops(PlanetBlocks.MARTIAN_REDSTONE_ORE, Items.REDSTONE));
-        addDrop(PlanetBlocks.MARTIAN_GOLD_ORE, oreDrops(PlanetBlocks.MARTIAN_GOLD_ORE, Items.GOLD_INGOT));
+        addDrop(PlanetBlocks.MARTIAN_GOLD_ORE, oreDrops(PlanetBlocks.MARTIAN_GOLD_ORE, Items.RAW_GOLD));
         addDrop(PlanetBlocks.MARTIAN_DIAMOND_ORE, oreDrops(PlanetBlocks.MARTIAN_DIAMOND_ORE, Items.DIAMOND));
         addDrop(PlanetBlocks.MARTIAN_EMERALD_ORE, oreDrops(PlanetBlocks.MARTIAN_EMERALD_ORE, Items.EMERALD));
 
