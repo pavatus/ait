@@ -137,6 +137,16 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         return Optional.empty();
     }
 
+    public void repairAll() {
+        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
+            SubSystem next = it.next();
+            if (next == null) continue;
+            if (next instanceof DurableSubSystem)
+                ((DurableSubSystem) next).addDurability(100);
+            next.setEnabled(true);
+        }
+    }
+
     public boolean hasPower() {
         return power.get();
     }
