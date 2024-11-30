@@ -207,7 +207,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         nbt.putInt(MODE_KEY, 0);
         nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
-        nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
+        if (SonicRegistry.DEFAULT != null)
+            nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
 
         return stack;
     }
