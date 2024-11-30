@@ -45,9 +45,9 @@ import loqor.ait.registry.impl.HumRegistry;
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/new_interior_settings.png");
+            "textures/gui/tardis/interior_settings.png");
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/new_interior_settings.png");
+            "textures/gui/tardis/interior_settings.png");
     private static final Identifier MISSING_PREVIEW = new Identifier(AITMod.MOD_ID,
             "textures/gui/tardis/desktop/missing_preview.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
@@ -216,49 +216,65 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         context.getMatrices().pop();
 
         // FIXME @Loqor, this is dumb.
-        int startIndex = DependencyChecker.hasGravity() ? 5 : 4;
+        int startIndex = DependencyChecker.hasGravity() ? 4 : 3;
 
 
-        // Top Apply Button (INTERIOR)
+        // arrow (HUM)
 
         if (!this.buttons.get(startIndex + 0).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 113, 166, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 93, 166, 20,
                     12);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 113, 178, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 93, 178, 20,
+                    12);
+
+        if (!this.buttons.get(startIndex + 1).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 7, this.buttons.get(startIndex + 1).getY() - 3, 113, 166, 20,
+                    12);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 7, this.buttons.get(startIndex + 1).getY() - 3, 113, 178, 20,
                     12);
 
         // apply (HUM)
-        if (!this.buttons.get(startIndex + 1).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 11, this.buttons.get(startIndex + 1).getY() - 3, 133, 166, 53,
-                    12);
-        else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 11, this.buttons.get(startIndex + 1).getY() - 3, 133, 178, 53,
-                    12);
-        //arrow
+
         if (!this.buttons.get(startIndex + 2).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 7, this.buttons.get(startIndex + 2).getY() - 5, 0, 166, 20,
-                    20);
-        else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 7, this.buttons.get(startIndex + 2).getY() - 5, 0, 186, 20,
-                    20);
-        if (!this.buttons.get(startIndex + 3).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 5, this.buttons.get(startIndex + 3).getY() - 5, 20, 166, 20,
-                    20);
-        else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 5, this.buttons.get(startIndex + 3).getY() - 5, 20, 186, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 3, 133, 166, 53,
                     12);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 3, 133, 178, 53,
+                    12);
+
+        // arrow (Interior)
+
+        if (!this.buttons.get(startIndex + 3).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 7, this.buttons.get(startIndex + 3).getY() - 5, 0, 166, 20,
+                    20);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 7, this.buttons.get(startIndex + 3).getY() - 5, 0, 186, 20,
+                    20);
         if (!this.buttons.get(startIndex + 4).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 10, this.buttons.get(startIndex + 4).getY() - 5, 40, 166, 53,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 7, this.buttons.get(startIndex + 4).getY() - 5, 20, 166, 20,
                     20);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 10, this.buttons.get(startIndex + 4).getY() - 5, 40, 186, 53,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 7, this.buttons.get(startIndex + 4).getY() - 5, 20, 186, 20,
                     20);
+
+        // apply (Interior)
+
         if (!this.buttons.get(startIndex + 5).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 7, this.buttons.get(startIndex + 5).getY() - 5, 186, 166, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 11, this.buttons.get(startIndex + 5).getY() - 5, 40, 166, 53,
                     20);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 7, this.buttons.get(startIndex + 5).getY() - 5, 186, 186, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 11, this.buttons.get(startIndex + 5).getY() - 5, 40, 186, 53,
+                    20);
+
+        // back to main monitor menu
+
+        if (!this.buttons.get(startIndex + 6).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 6).getX() - 7, this.buttons.get(startIndex + 6).getY() - 5, 186, 166, 53,
+                    20);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 6).getX() - 7, this.buttons.get(startIndex + 6).getY() - 5, 186, 186, 53,
                     20);
 
 
