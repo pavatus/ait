@@ -15,7 +15,7 @@ public class PlanetBlocks implements BlockRegistryContainer {
     // Mars
 
     // Stone
-    @AutomaticModel
+
     @PickaxeMineable
     public static final Block MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
@@ -82,7 +82,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.EMERALD_ORE));
 
     // Cobblestone
-    @AutomaticModel
     @PickaxeMineable
     public static final Block MARTIAN_COBBLESTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.COBBLESTONE));
@@ -101,7 +100,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
             MARTIAN_COBBLESTONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.COBBLESTONE_STAIRS));
 
     // Mossy Cobblestone
-    @AutomaticModel
     @PickaxeMineable
     public static final Block MOSSY_MARTIAN_COBBLESTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.MOSSY_COBBLESTONE));
@@ -120,7 +118,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
             MOSSY_MARTIAN_COBBLESTONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.MOSSY_COBBLESTONE_STAIRS));
 
     // Polished Stone
-    @AutomaticModel
     @PickaxeMineable
     public static final Block POLISHED_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
@@ -135,7 +132,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
 
     // Smooth Stone
-    @AutomaticModel
     @PickaxeMineable
     public static final Block SMOOTH_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
@@ -147,13 +143,11 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
     // Sand
 
-    @AutomaticModel
     public static final Block MARTIAN_SAND = new FallingBlock(
             AbstractBlock.Settings.copy(Blocks.SAND));
 
     // Martian Sandstone
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
@@ -182,12 +176,10 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block MARTIAN_SANDSTONE_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block CRACKED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block POLISHED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
@@ -196,24 +188,20 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block MARTIAN_SANDSTONE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block MARTIAN_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block CRACKED_MARTIAN_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block CHISELED_MARTIAN_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
 
     // Bricks
-    @AutomaticModel
     @PickaxeMineable
     public static final Block MARTIAN_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
@@ -235,22 +223,19 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block MARTIAN_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block CHISELED_MARTIAN_STONE = new Block(
             AbstractBlock.Settings.copy(Blocks.CHISELED_STONE_BRICKS));
 
-    @AutomaticModel
     @PickaxeMineable
     public static final Block CRACKED_MARTIAN_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
 
     // Infested Blocks
-    @AutomaticModel
     @PickaxeMineable
     public static final Block INFESTED_MARTIAN_STONE = new InfestedBlock(
             Blocks.INFESTED_STONE, AbstractBlock.Settings.copy(Blocks.INFESTED_STONE));
-    @AutomaticModel
+
     @PickaxeMineable
     public static final Block INFESTED_MARTIAN_COBBLESTONE = new InfestedBlock(
             Blocks.INFESTED_COBBLESTONE, AbstractBlock.Settings.copy(Blocks.INFESTED_COBBLESTONE));
@@ -260,7 +245,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
     // Moon
 
     // Anorthosite
-    @AutomaticModel
     public static final Block ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE));
 
@@ -275,7 +259,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
     // Polished Stone
 
-    @AutomaticModel
     public static final Block POLISHED_ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
 
@@ -286,7 +269,6 @@ public class PlanetBlocks implements BlockRegistryContainer {
             POLISHED_ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE_STAIRS));
 
     // Smooth Stone
-    @AutomaticModel
     public static final Block SMOOTH_ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
 
@@ -295,12 +277,10 @@ public class PlanetBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE_SLAB));
 
     // Sand (Regolith)
-    @AutomaticModel
     public static final Block REGOLITH = new FallingBlock(
             AbstractBlock.Settings.copy(Blocks.SAND));
 
     // Sandstone
-    @AutomaticModel
     public static final Block MOON_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
@@ -313,18 +293,15 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block MOON_SANDSTONE_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     public static final Block CRACKED_MOON_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     public static final Block POLISHED_MOON_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
     public static final Block MOON_SANDSTONE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     public static final Block MOON_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
@@ -337,17 +314,14 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block MOON_SANDSTONE_BRICK_STAIRS = new StairsBlock(
             POLISHED_MARTIAN_STONE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     public static final Block CRACKED_MOON_SANDSTONE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
-    @AutomaticModel
     public static final Block CHISELED_MOON_SANDSTONE = new Block(
             AbstractBlock.Settings.copy(Blocks.SANDSTONE));
 
     // Bricks
 
-    @AutomaticModel
     public static final Block ANORTHOSITE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
 
@@ -365,15 +339,12 @@ public class PlanetBlocks implements BlockRegistryContainer {
             AbstractBlock.Settings.copy(Blocks.STONE_BRICK_WALL));
 
     // Other
-    @AutomaticModel
     public static final Block ANORTHOSITE_PILLAR = new PillarBlock(
             AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR));
 
-    @AutomaticModel
     public static final Block CHISELED_ANORTHOSITE = new Block(
             AbstractBlock.Settings.copy(Blocks.CHISELED_STONE_BRICKS));
 
-    @AutomaticModel
     public static final Block CRACKED_ANORTHOSITE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
 

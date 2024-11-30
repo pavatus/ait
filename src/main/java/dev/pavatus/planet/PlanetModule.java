@@ -192,8 +192,6 @@ public class PlanetModule extends Module {
                 martian_stone_pool.button(PlanetBlocks.MARTIAN_STONE_BUTTON);
                 martian_stone_pool.pressurePlate(PlanetBlocks.MARTIAN_STONE_PRESSURE_PLATE);
 
-
-
                 BlockStateModelGenerator.BlockTexturePool martian_bricks_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_BRICKS);
                 martian_bricks_pool.stairs(PlanetBlocks.MARTIAN_BRICK_STAIRS);
                 martian_bricks_pool.wall(PlanetBlocks.MARTIAN_BRICK_WALL);

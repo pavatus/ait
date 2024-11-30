@@ -2,13 +2,17 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.function.Consumer;
 
+import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -25,6 +29,52 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
     @Override
     public void generateAdvancement(Consumer<Advancement> consumer) {
         // todo replace all literals with translatables
+        // todo planet advancements need to be moved to the planet module butttt i cannot be bothered *shrug*
+
+        Advancement landOnMars = Advancement.Builder.create()
+                .display(
+                        PlanetBlocks.MARTIAN_SAND.asItem(),
+                        Text.literal("You were not the first."),
+                        Text.literal("Landed on Mars for the first time"),
+                        new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        true
+                )
+                .criterion(
+                        "enter_mars",
+                        ChangedDimensionCriterion.Conditions.to(
+                                RegistryKey.of(
+                                        RegistryKeys.WORLD,
+                                        new Identifier(AITMod.MOD_ID, "mars")
+                                )
+                        )
+                )
+                .build(consumer, AITMod.MOD_ID + "/enter_mars");
+
+        Advancement landOnMoon = Advancement.Builder.create()
+                .display(
+                        PlanetBlocks.ANORTHOSITE.asItem(),
+                        Text.literal("One small step for Time Lords"),
+                        Text.literal("Landed on the Moon for the first time"),
+                        new Identifier(AITMod.MOD_ID, "textures/block/regolith.png"),
+                        AdvancementFrame.TASK,
+                        true,
+                        true,
+                        true
+                )
+                .criterion(
+                        "enter_moon",
+                        ChangedDimensionCriterion.Conditions.to(
+                                RegistryKey.of(
+                                        RegistryKeys.WORLD,
+                                        new Identifier(AITMod.MOD_ID, "moon")
+                                )
+                        )
+                )
+                .build(consumer, AITMod.MOD_ID + "/enter_moon");
+
 
         Advancement placeCoral = Advancement.Builder.create()
                 .display(AITBlocks.CORAL_PLANT, Text.literal("Gardening Guru"),
@@ -84,4 +134,6 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .criterion("break_growth", new BreakVegetationCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/break_growth");
     }
+
+
 }
