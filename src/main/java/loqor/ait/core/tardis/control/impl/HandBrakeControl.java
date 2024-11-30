@@ -33,7 +33,7 @@ public class HandBrakeControl extends Control {
 
         EngineSystem.Phaser phaser = tardis.subsystems().engine().phaser();
         if (phaser.isPhasing()) {
-            phaser.reset();
+            phaser.cancel();
             return true;
         }
 

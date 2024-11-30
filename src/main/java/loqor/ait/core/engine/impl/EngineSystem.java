@@ -110,22 +110,22 @@ public class EngineSystem extends DurableSubSystem {
                     this.miss.accept(this);
                 }
             } else {
-                this.tryPhase();
+                this.attempt();
             }
         }
-        private void tryPhase() {
+        private void attempt() {
             if (this.allowed.apply(this)) {
-                this.startPhase();
+                this.start();
             }
         }
-        private void startPhase() {
+        public void start() {
             this.countdown = AITMod.RANDOM.nextInt(60, 200); // 3-10 seconds
             this.start.accept(this);
         }
         public boolean isPhasing() {
             return this.countdown > 0;
         }
-        public void reset() {
+        public void cancel() {
             this.countdown = 0;
         }
 
@@ -144,7 +144,7 @@ public class EngineSystem extends DurableSubSystem {
                                 tardis1.travel().forceDemat();
                         });
                     },
-                    (phaser) -> system.isBroken() && system.tardis().travel().isLanded() && AITMod.RANDOM.nextInt(0, 256) < 5
+                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && AITMod.RANDOM.nextInt(0, 512) == 1
             );
         }
     }
