@@ -26,7 +26,9 @@ import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 public class AITItems implements ItemRegistryContainer {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
-            .statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 500, 1), 0.5F).build();
+            .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
+            .statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 500, 1), 0.5F)
+            .build();
 
     // TARDIS
     @NoEnglish
