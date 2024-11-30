@@ -32,7 +32,7 @@ import loqor.ait.registry.impl.SonicRegistry;
 
 public class SonicSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/consoles/monitors/sonic_selection.png");
+            "textures/gui/tardis/sonic_selection.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     int bgHeight = 130;
     int bgWidth = 216;
@@ -81,7 +81,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.08f)), (int) (top + (bgHeight * 0.878f)),
                 this.textRenderer.getWidth("<"), 10, Text.literal("  "), button -> this.getLastSelectedSonic(),
                 this.textRenderer));
-        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.46f)), (int) (top + (bgHeight * 0.878f)),
+        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.42f)), (int) (top + (bgHeight * 0.878f)),
                 this.textRenderer.getWidth(">"), 10, Text.literal("  "), button -> this.getNextSelectedSonic(),
                 this.textRenderer));
     }

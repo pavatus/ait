@@ -53,7 +53,7 @@ public class JakeTheDogExteriorModel  extends ExteriorModel {
 
         matrices.push();
         matrices.translate(0, -1.5f, 0);
-        jake.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? 1.75f : 0f;
+        jake.getChild("door").pivotZ = exterior.tardis().get().door().isOpen() ? 2.0f : 0f;
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();

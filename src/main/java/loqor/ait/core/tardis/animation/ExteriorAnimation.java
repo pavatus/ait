@@ -9,6 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
@@ -108,6 +109,17 @@ public abstract class ExteriorAnimation {
 
     public void setAlpha(float alpha) {
         this.alpha = Math.clamp(0.0F, 1.0F, alpha);
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
+    public long getRunningTime() {
+        return MathHelper.lfloor((1f - ((double) getTimeLeft() / getStartTime())) * 1000.0f / 20.0f);
     }
 
     public void tellClientsToSetup(TravelHandlerBase.State state) {
