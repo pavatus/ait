@@ -571,6 +571,37 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
 
+        // Achivement
+        provider.addTranslation("achievement.ait.title.place_coral", "Gardening Guru");
+        provider.addTranslation("achievement.ait.description.place_coral", "Plant the TARDIS Coral, the seed of time itself.");
+        provider.addTranslation("achievement.ait.title.enter_tardis", "How Does It Fit?");
+        provider.addTranslation("achievement.ait.description.enter_tardis", "Enter the TARDIS for the first time.");
+        provider.addTranslation("achievement.ait.title.iron_key", "More than Just a Piece of Metal");
+        provider.addTranslation("achievement.ait.description.iron_key", "Gain an Iron Key.");
+        provider.addTranslation("achievement.ait.title.gold_key", "Golden Gatekeeper");
+        provider.addTranslation("achievement.ait.description.gold_key", "Gain an Golden Key.");
+        provider.addTranslation("achievement.ait.title.netherite_key", "Forged in Fire");
+        provider.addTranslation("achievement.ait.description.netherite_key", "Gain a Netherite Key.");
+        provider.addTranslation("achievement.ait.title.classic_key", "Time Traveler's Apprentice");
+        provider.addTranslation("achievement.ait.description.classic_key", "Gain a Classic Key.");
+        provider.addTranslation("achievement.ait.title.first_demat", "Maiden Voyage");
+        provider.addTranslation("achievement.ait.description.first_demat", "Successfully initiate the takeoff sequence and experience your first journey through time and space with your TARDIS.");
+        provider.addTranslation("achievement.ait.title.first_crash", "Temporal Turbulence");
+        provider.addTranslation("achievement.ait.description.first_crash", "Embrace the chaos of time and space by unintentionally crashing your TARDIS for the first time.");
+        provider.addTranslation("achievement.ait.title.break_growth", "Temporal Gardener");
+        provider.addTranslation("achievement.ait.description.break_growth", "Tend to the temporal vines and foliage clinging to your TARDIS by breaking off vegetation.");
+        provider.addTranslation("achievement.ait.title.redecorate", "I Don't Like It.");
+        provider.addTranslation("achievement.ait.description.redecorate", "Redecorate your TARDIS desktop.");
+        provider.addTranslation("achievement.ait.title.ultimate_counter", "It Doesn't Do Wood!");
+        provider.addTranslation("achievement.ait.description.ultimate_counter", "Attempt to use the sonic screwdriver on wood.");
+        provider.addTranslation("achievement.ait.title.forced_entry", "That Won't Have Consequences...");
+        provider.addTranslation("achievement.ait.description.forced_entry", "Forcefully enter a TARDIS.");
+        provider.addTranslation("achievement.ait.title.pui", "Seriously, piloting under the influence?");
+        provider.addTranslation("achievement.ait.description.pui", "Consume Zeiton Dust while the TARDIS is in flight.");
+        provider.addTranslation("achievement.ait.title.bonding", "I think it's starting to trust you.");
+        provider.addTranslation("achievement.ait.description.bonding", "Reach 'Pilot' loyalty for the first time.");
+        provider.addTranslation("achievement.ait.title.owner_ship", "But hey it trusts you now worth it right?");
+        provider.addTranslation("achievement.ait.description.owner_ship", "Reach 'Owner' loyalty for the first time.");
 
         // Commands
         // Fuel
