@@ -91,6 +91,12 @@ public class PlanetModule extends Module {
             public void lang(AITLanguageProvider provider) {
                 provider.addTranslation("itemGroup.ait.planets_item_group", "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
+                provider.addTranslation("achievements.ait.title.planet_root", "Planetary Exploration");
+                provider.addTranslation("achievements.ait.description.planet_root", "Explore the planets of the universe");
+                provider.addTranslation("achievements.ait.title.enter_mars", "You were not the first");
+                provider.addTranslation("achievements.ait.description.enter_mars", "Landed on Mars for the first time");
+                provider.addTranslation("achievements.ait.title.enter_moon", "One small step for Time Lords");
+                provider.addTranslation("achievements.ait.description.enter_moon", "Landed on the Moon for the first time");
             }
 
             @Override
@@ -283,8 +289,8 @@ public class PlanetModule extends Module {
                 Advancement root = Advancement.Builder.create()
                         .display(
                                 PlanetItems.SPACESUIT_HELMET,
-                                Text.literal("Planetary Exploration"),
-                                Text.literal("Explore the planets of the universe"),
+                                Text.translatable("achievements.ait.title.planet_root"),
+                                Text.translatable("achievements.ait.description.planet_root"),
                                 new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
                                 AdvancementFrame.TASK,
                                 true,
@@ -297,8 +303,8 @@ public class PlanetModule extends Module {
                         .parent(root)
                         .display(
                                 PlanetBlocks.MARTIAN_STONE,
-                                Text.literal("You were not the first."),
-                                Text.literal("Landed on Mars for the first time"),
+                                Text.translatable("achievements.ait.title.enter_mars"),
+                                Text.translatable("achievements.ait.description.enter_marse"),
                                 null,
                                 AdvancementFrame.TASK,
                                 true,
@@ -319,8 +325,8 @@ public class PlanetModule extends Module {
                         .parent(root)
                         .display(
                                 PlanetBlocks.ANORTHOSITE,
-                                Text.literal("One small step for Time Lords"),
-                                Text.literal("Landed on the Moon for the first time"),
+                                Text.translatable("achievements.ait.title.enter_moon"),
+                                Text.translatable("achievements.ait.description.enter_moon"),
                                 null,
                                 AdvancementFrame.TASK,
                                 true,

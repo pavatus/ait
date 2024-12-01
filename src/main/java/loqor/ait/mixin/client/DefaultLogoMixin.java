@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.LogoDrawer;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LogoDrawer.class)
 public class DefaultLogoMixin {

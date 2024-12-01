@@ -2,8 +2,6 @@ package loqor.ait;
 
 import static dev.pavatus.planet.core.planet.Crater.CRATER_ID;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Optional;
@@ -34,7 +32,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.state.property.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

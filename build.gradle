@@ -209,4 +209,3 @@ tasks.processResources {
         expand(branch: gitBranch)
     }
 }
-
