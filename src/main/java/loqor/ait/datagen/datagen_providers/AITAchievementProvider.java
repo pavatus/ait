@@ -42,7 +42,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
 
         Advancement firstEnter = Advancement.Builder.create().parent(placeCoral)
                 .display(AITItems.TARDIS_ITEM, Text.literal("How Does It Fit?"),
-                        Text.literal("Enter the TARDIS for the first time"), null, AdvancementFrame.CHALLENGE, true,
+                        Text.literal("Enter the TARDIS for the first time."), null, AdvancementFrame.CHALLENGE, true,
                         true, false)
                 .criterion("enter_tardis", new EnterTardisCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/enter_tardis"); // for now this is the root advancement, meaning
@@ -52,25 +52,25 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
 
         Advancement ironKey = Advancement.Builder.create().parent(firstEnter)
                 .display(AITItems.IRON_KEY, Text.literal("More than Just a Piece of Metal"),
-                        Text.literal("Gain an Iron Key"), null, AdvancementFrame.TASK, true, false, true)
+                        Text.literal("Gain an Iron Key."), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("iron_key", InventoryChangedCriterion.Conditions.items(AITItems.IRON_KEY))
                 .build(consumer, AITMod.MOD_ID + "/iron_key");
 
         Advancement goldKey = Advancement.Builder.create().parent(ironKey)
-                .display(AITItems.GOLD_KEY, Text.literal("Golden Gatekeeper"), Text.literal("Gain a Golden Key"), null,
+                .display(AITItems.GOLD_KEY, Text.literal("Golden Gatekeeper"), Text.literal("Gain a Golden Key."), null,
                         AdvancementFrame.TASK, true, false, true)
                 .criterion("gold_key", InventoryChangedCriterion.Conditions.items(AITItems.GOLD_KEY))
                 .build(consumer, AITMod.MOD_ID + "/gold_key");
 
         Advancement netheriteKey = Advancement.Builder.create().parent(goldKey)
-                .display(AITItems.NETHERITE_KEY, Text.literal("Forged in Fire"), Text.literal("Gain a Netherite Key"),
+                .display(AITItems.NETHERITE_KEY, Text.literal("Forged in Fire"), Text.literal("Gain a Netherite Key."),
                         null, AdvancementFrame.TASK, true, true, true)
                 .criterion("netherite_key", InventoryChangedCriterion.Conditions.items(AITItems.NETHERITE_KEY))
                 .build(consumer, AITMod.MOD_ID + "/netherite_key");
 
         Advancement classicKey = Advancement.Builder.create().parent(netheriteKey)
                 .display(AITItems.CLASSIC_KEY, Text.literal("Time Traveler's Apprentice"),
-                        Text.literal("Gain a Classic Key"), null, AdvancementFrame.TASK, true, true, true)
+                        Text.literal("Gain a Classic Key."), null, AdvancementFrame.TASK, true, true, true)
                 .criterion("classic_key", InventoryChangedCriterion.Conditions.items(AITItems.CLASSIC_KEY))
                 .build(consumer, AITMod.MOD_ID + "/classic_key");
 
@@ -115,11 +115,26 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .build(consumer, AITMod.MOD_ID + "/forced_entry");
 
         // @TODO Duzo please do this i don't remember how
-        Advancement pui = Advancement.Builder.create().parent(firstCrash)
-                .display(AITItems.ZEITON_DUST, Text.literal("PUI"),
+        Advancement pui = Advancement.Builder.create()
+                .display(AITItems.ZEITON_DUST, Text.literal("Seriously, piloting under the influence?"),
                         Text.literal("Consume Zeiton Dust while the TARDIS is in flight."), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("pui", new PUICriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/pui");
+
+        // @TODO Duzo please do this i don't remember how
+        Advancement bonding = Advancement.Builder.create()
+                .display(AITBlocks.CORAL_PLANT, Text.literal("I think it's starting to trust you."),
+                        Text.literal("Reach 'Pilot' loyalty for the first time."), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("bonding", new PUICriterion.Conditions())
+                .build(consumer, AITMod.MOD_ID + "/bonding");
+
+        // @TODO Duzo please do this i don't remember how
+        Advancement ownerShip = Advancement.Builder.create()
+                .display(AITItems.TARDIS_ITEM, Text.literal("But hey it trusts you now worth it right?"),
+                        Text.literal("Reach 'Owner' loyalty for the first time."), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("owner_ship", new PUICriterion.Conditions())
+                .build(consumer, AITMod.MOD_ID + "/owner_ship");
+
     }
 
 
