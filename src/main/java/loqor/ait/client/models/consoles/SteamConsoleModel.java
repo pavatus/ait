@@ -702,12 +702,12 @@ public class SteamConsoleModel extends ConsoleModel {
                 ModelTransform.of(0.0F, 0.25F, 0.0F, 0.0F, 0.0F, 0.4363F));
 
         ModelPartData stabilizer = rot.addChild("stabilizer",
-                ModelPartBuilder.create().uv(43, 86).cuboid(-0.5F, -0.3F, -2.0F, 1.0F, 1.0F, 4.0F, new Dilation(0.1F)),
+                ModelPartBuilder.create().uv(43, 86).cuboid(-0.5F, -0.3F, -2.0F, 1.0F, 1.0F, 4.0F, new Dilation(0.0F)),
                 ModelTransform.pivot(-0.5F, 0.0F, -4.0F));
 
         ModelPartData bone26 = stabilizer.addChild("bone26",
-                ModelPartBuilder.create().uv(108, 52).cuboid(-0.5F, -0.75F, -2.0F, 1.0F, 0.0F, 4.0F, new Dilation(0.0F))
-                        .uv(30, 68).cuboid(0.0F, -0.75F, -1.5F, 0.0F, 1.0F, 3.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(108, 52).cuboid(-0.5F, -0.75F, -2.0F, 1.0F, 0.0F, 4.0F, new Dilation(0.1F))
+                        .uv(30, 68).cuboid(0.0F, -0.75F, -1.5F, 0.0F, 1.0F, 3.0F, new Dilation(0.1F)),
                 ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData panel_2 = controls.addChild("panel_2", ModelPartBuilder.create(),
