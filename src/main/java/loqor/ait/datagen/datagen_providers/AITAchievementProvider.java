@@ -31,9 +31,53 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
         // todo replace all literals with translatables
         // todo planet advancements need to be moved to the planet module butttt i cannot be bothered *shrug*
 
+        Advancement Mars = Advancement.Builder.create()
+                .display(
+                        PlanetBlocks.MARTIAN_SAND,
+                        Text.literal("Mars"),
+                        Text.literal("Landed on Mars for the first time"),
+                        new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
+                        AdvancementFrame.TASK,
+                        false,
+                        false,
+                        true
+                )
+                .criterion(
+                        "mars",
+                        ChangedDimensionCriterion.Conditions.to(
+                                RegistryKey.of(
+                                        RegistryKeys.WORLD,
+                                        new Identifier(AITMod.MOD_ID, "mars")
+                                )
+                        )
+                )
+                .build(consumer, AITMod.MOD_ID + "/mars_root");
+
+        Advancement Moon = Advancement.Builder.create()
+                .display(
+                        PlanetBlocks.REGOLITH,
+                        Text.literal("Moon"),
+                        Text.literal("Landed on the Moon for the first time"),
+                        new Identifier("textures/block/regolith.png"),
+                        AdvancementFrame.TASK,
+                        false,
+                        false,
+                        true
+                )
+                .criterion(
+                        "moon",
+                        ChangedDimensionCriterion.Conditions.to(
+                                RegistryKey.of(
+                                        RegistryKeys.WORLD,
+                                        new Identifier(AITMod.MOD_ID, "moon")
+                                )
+                        )
+                )
+                .build(consumer, AITMod.MOD_ID + "/moon_root");
+
         Advancement landOnMars = Advancement.Builder.create()
                 .display(
-                        PlanetBlocks.MARTIAN_SAND.asItem(),
+                    PlanetBlocks.MARTIAN_STONE,
                         Text.literal("You were not the first."),
                         Text.literal("Landed on Mars for the first time"),
                         new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
@@ -55,10 +99,10 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
 
         Advancement landOnMoon = Advancement.Builder.create()
                 .display(
-                        PlanetBlocks.ANORTHOSITE.asItem(),
+                    PlanetBlocks.ANORTHOSITE,
                         Text.literal("One small step for Time Lords"),
                         Text.literal("Landed on the Moon for the first time"),
-                        new Identifier(AITMod.MOD_ID, "textures/block/regolith.png"),
+                        new Identifier("textures/block/regolith.png"),
                         AdvancementFrame.TASK,
                         true,
                         true,
@@ -74,7 +118,6 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                         )
                 )
                 .build(consumer, AITMod.MOD_ID + "/enter_moon");
-
 
         Advancement placeCoral = Advancement.Builder.create()
                 .display(AITBlocks.CORAL_PLANT, Text.literal("Gardening Guru"),
