@@ -1,6 +1,7 @@
 package dev.pavatus.planet;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import dev.pavatus.module.Module;
 import dev.pavatus.module.ModuleRegistry;
@@ -17,15 +18,22 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.advancement.EnterTardisCriterion;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
@@ -254,6 +262,67 @@ public class PlanetModule extends Module {
                 moon_sandstone_bricks_pool.stairs(PlanetBlocks.MOON_SANDSTONE_BRICK_STAIRS);
                 moon_sandstone_bricks_pool.wall(PlanetBlocks.MOON_SANDSTONE_BRICK_WALL);
                 moon_sandstone_bricks_pool.slab(PlanetBlocks.MOON_SANDSTONE_BRICK_SLAB);
+            }
+
+            @Override
+            public void advancements(Consumer<Advancement> consumer) {
+                Advancement root = Advancement.Builder.create()
+                        .display(
+                                PlanetItems.SPACESUIT_HELMET,
+                                Text.literal("Planetary Exploration"),
+                                Text.literal("Explore the planets of the universe"),
+                                new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
+                                AdvancementFrame.TASK,
+                                true,
+                                true,
+                                true
+                        )
+                        .criterion("enter_tardis", new EnterTardisCriterion.Conditions())
+                        .build(consumer, AITMod.MOD_ID + "/planet_root");
+                Advancement landOnMars = Advancement.Builder.create()
+                        .parent(root)
+                        .display(
+                                PlanetBlocks.MARTIAN_STONE,
+                                Text.literal("You were not the first."),
+                                Text.literal("Landed on Mars for the first time"),
+                                null,
+                                AdvancementFrame.TASK,
+                                true,
+                                true,
+                                true
+                        )
+                        .criterion(
+                                "enter_mars",
+                                ChangedDimensionCriterion.Conditions.to(
+                                        RegistryKey.of(
+                                                RegistryKeys.WORLD,
+                                                new Identifier(AITMod.MOD_ID, "mars")
+                                        )
+                                )
+                        )
+                        .build(consumer, AITMod.MOD_ID + "/enter_mars");
+                Advancement landOnMoon = Advancement.Builder.create()
+                        .parent(root)
+                        .display(
+                                PlanetBlocks.ANORTHOSITE,
+                                Text.literal("One small step for Time Lords"),
+                                Text.literal("Landed on the Moon for the first time"),
+                                null,
+                                AdvancementFrame.TASK,
+                                true,
+                                true,
+                                true
+                        )
+                        .criterion(
+                                "enter_moon",
+                                ChangedDimensionCriterion.Conditions.to(
+                                        RegistryKey.of(
+                                                RegistryKeys.WORLD,
+                                                new Identifier(AITMod.MOD_ID, "moon")
+                                        )
+                                )
+                        )
+                        .build(consumer, AITMod.MOD_ID + "/enter_moon");
             }
         });
     }
