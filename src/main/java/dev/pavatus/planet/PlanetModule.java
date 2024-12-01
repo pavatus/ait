@@ -34,7 +34,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.advancement.EnterTardisCriterion;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
@@ -291,7 +291,7 @@ public class PlanetModule extends Module {
                                 true,
                                 true
                         )
-                        .criterion("enter_tardis", new EnterTardisCriterion.Conditions())
+                        .criterion("enter_tardis", TardisCriterions.ENTER_TARDIS.conditions())
                         .build(consumer, AITMod.MOD_ID + "/planet_root");
                 Advancement landOnMars = Advancement.Builder.create()
                         .parent(root)

@@ -30,20 +30,25 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
             dataGenerator.advancements(consumer);
         }));
 
-        Advancement placeCoral = Advancement.Builder.create()
+        Advancement root = Advancement.Builder.create()
+                .display(AITItems.CHARGED_ZEITON_CRYSTAL, Text.translatable("achievement.ait.title.root"),
+                        Text.translatable("achievement.ait.description.root"), new Identifier("textures/entity/end_portal.png"), AdvancementFrame.TASK, false, false, false)
+                .criterion("root", TardisCriterions.ROOT.conditions())
+                .build(consumer, AITMod.MOD_ID + "/root");
+
+        Advancement placeCoral = Advancement.Builder.create().parent(root)
                 .display(AITBlocks.CORAL_PLANT, Text.translatable("achievement.ait.title.place_coral"),
                         Text.translatable("achievement.ait.description.place_coral"),
-                        new Identifier("textures/entity/end_portal.png"), // the background for the
-                        // advancement screen
+                        null,
                         AdvancementFrame.TASK, true, true, true)
-                .criterion("place_coral", new PlaceCoralCriterion.Conditions())
-                .build(consumer, AITMod.MOD_ID + "/root");
+                .criterion("place_coral", TardisCriterions.PLACE_CORAL.conditions())
+                .build(consumer, AITMod.MOD_ID + "/place_coral");
 
         Advancement firstEnter = Advancement.Builder.create().parent(placeCoral)
                 .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.enter_tardis"),
                         Text.translatable("achievement.ait.description.enter_tardis"), null, AdvancementFrame.CHALLENGE, true,
                         true, false)
-                .criterion("enter_tardis", new EnterTardisCriterion.Conditions())
+                .criterion("enter_tardis", TardisCriterions.ENTER_TARDIS.conditions())
                 .build(consumer, AITMod.MOD_ID + "/enter_tardis"); // for now this is the root advancement, meaning
         // its the first
         // one
@@ -77,61 +82,57 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .display(Items.ENDER_EYE, Text.translatable("achievement.ait.title.first_demat"), Text.translatable(
                         "achievement.ait.description.first_demat"),
                         null, AdvancementFrame.CHALLENGE, true, true, true)
-                .criterion("first_demat", new TakeOffCriterion.Conditions())
+                .criterion("first_demat", TardisCriterions.TAKEOFF.conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_demat");
 
         Advancement firstCrash = Advancement.Builder.create().parent(firstDemat)
                 .display(Items.TNT, Text.translatable("achievement.ait.title.first_crash"), Text.translatable(
                         "achievement.ait.description.first_crash"),
                         null, AdvancementFrame.CHALLENGE, true, true, true)
-                .criterion("first_crash", new CrashCriterion.Conditions())
+                .criterion("first_crash", TardisCriterions.CRASH.conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_crash");
 
         Advancement breakGrowth = Advancement.Builder.create().parent(firstEnter)
                 .display(Items.OAK_LEAVES, Text.translatable("achievement.ait.title.break_growth"), Text.translatable(
                         "achievement.ait.description.break_growth"),
                         null, AdvancementFrame.TASK, true, false, true)
-                .criterion("break_growth", new BreakVegetationCriterion.Conditions())
+                .criterion("break_growth", TardisCriterions.VEGETATION.conditions())
                 .build(consumer, AITMod.MOD_ID + "/break_growth");
 
         Advancement redecoration = Advancement.Builder.create().parent(firstEnter)
-                .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.redecorate"),
+                .display(Items.PAINTING , Text.translatable("achievement.ait.title.redecorate"),
                         Text.translatable("achievement.ait.description.redecorate"), null, AdvancementFrame.TASK, true, false, true)
-                .criterion("redecorate", new RedecorateCriterion.Conditions())
+                .criterion("redecorate", TardisCriterions.REDECORATE.conditions())
                 .build(consumer, AITMod.MOD_ID + "/redecorate");
 
-        // @TODO Duzo please do this i don't remember how
-        Advancement ultimateCounter = Advancement.Builder.create()
+        Advancement sonicWood = Advancement.Builder.create().parent(root)
                 .display(AITItems.SONIC_SCREWDRIVER, Text.translatable("achievement.ait.title.ultimate_counter"),
                         Text.translatable("achievement.ait.description.ultimate_counter"), null, AdvancementFrame.TASK, true, false, true)
-                .criterion("ultimate_counter", new UltimateCounterCriterion.Conditions())
+                .criterion("ultimate_counter", TardisCriterions.SONIC_WOOD.conditions())
                 .build(consumer, AITMod.MOD_ID + "/ultimate_counter");
 
-        Advancement forcedEntry = Advancement.Builder.create()
-                .display(Items.NETHERITE_AXE, Text.translatable("achievement.ait.title.forced_entry"),
+        Advancement axeTardis = Advancement.Builder.create().parent(firstEnter)
+                .display(Items.IRON_AXE, Text.translatable("achievement.ait.title.forced_entry"),
                         Text.translatable("achievement.ait.description.forced_entry"), null, AdvancementFrame.TASK, true, false, true)
-                .criterion("forced_entry", new ForcedEntryCriterion.Conditions())
+                .criterion("forced_entry", TardisCriterions.FORCED_ENTRY.conditions())
                 .build(consumer, AITMod.MOD_ID + "/forced_entry");
 
-        // @TODO Duzo please do this i don't remember how
-        Advancement pui = Advancement.Builder.create()
+        Advancement pilotHigh = Advancement.Builder.create().parent(firstDemat)
                 .display(AITItems.ZEITON_DUST, Text.translatable("achievement.ait.title.pui"),
                         Text.translatable("achievement.ait.description.pui"), null, AdvancementFrame.TASK, true, false, true)
-                .criterion("pui", new PUICriterion.Conditions())
+                .criterion("pui", TardisCriterions.PILOT_HIGH.conditions())
                 .build(consumer, AITMod.MOD_ID + "/pui");
 
-        // @TODO Duzo please do this i don't remember how
-        Advancement bonding = Advancement.Builder.create()
+        Advancement reachPilot = Advancement.Builder.create().parent(firstEnter)
                 .display(AITBlocks.CORAL_PLANT, Text.translatable("achievement.ait.title.bonding"),
                         Text.translatable("achievement.ait.description.bonding"), null, AdvancementFrame.TASK, true, false, true)
-                .criterion("bonding", new PUICriterion.Conditions())
+                .criterion("bonding", TardisCriterions.REACH_PILOT.conditions())
                 .build(consumer, AITMod.MOD_ID + "/bonding");
 
-        // @TODO Duzo please do this i don't remember how
-        Advancement ownerShip = Advancement.Builder.create()
+        Advancement reachOwner = Advancement.Builder.create().parent(firstEnter)
                 .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.owner_ship"),
                         Text.translatable("achievement.ait.description.owner_ship"), null, AdvancementFrame.TASK, true, false, true)
-                .criterion("owner_ship", new PUICriterion.Conditions())
+                .criterion("owner_ship", TardisCriterions.REACH_OWNER.conditions())
                 .build(consumer, AITMod.MOD_ID + "/owner_ship");
 
     }

@@ -572,6 +572,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
 
         // Achivement
+        provider.addTranslation("achievement.ait.title.root", "Adventures in Time");
+        provider.addTranslation("achievement.ait.description.root", "Discover the wonders of time and space.");
         provider.addTranslation("achievement.ait.title.place_coral", "Gardening Guru");
         provider.addTranslation("achievement.ait.description.place_coral", "Plant the TARDIS Coral, the seed of time itself.");
         provider.addTranslation("achievement.ait.title.enter_tardis", "How Does It Fit?");
