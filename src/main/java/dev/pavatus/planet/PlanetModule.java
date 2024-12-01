@@ -24,6 +24,7 @@ import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.Models;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.registry.RegistryKey;
@@ -183,11 +184,24 @@ public class PlanetModule extends Module {
 
 
             @Override
-            public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_HELMET);
+            public void generateItemModels(ItemModelGenerator generator) {
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_HELMET);
+
+                generator.register(PlanetItems.MARTIAN_STONE_SWORD, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_SHOVEL, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_PICKAXE, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_HOE, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_AXE, Models.HANDHELD);
+
+                generator.register(PlanetItems.ANORTHOSITE_SWORD, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_SHOVEL, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
+
             }
 
             @Override
