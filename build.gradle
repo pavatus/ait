@@ -86,6 +86,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
 
+    implementation 'com.google.code.gson:gson:2.8.9'
+
     annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
     //include(implementation("org.apache.fury:fury-core:0.7.0"))
 
@@ -199,3 +201,12 @@ publishing {
         // retrieving dependencies.
     }
 }
+
+def gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+
+tasks.processResources {
+    filesMatching("*.properties") {
+        expand(branch: gitBranch)
+    }
+}
+
