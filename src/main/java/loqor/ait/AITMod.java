@@ -2,10 +2,14 @@ package loqor.ait;
 
 import static dev.pavatus.planet.core.planet.Crater.CRATER_ID;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Crater;
@@ -78,6 +82,8 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
+
+
 public class AITMod implements ModInitializer {
 
     public static final String MOD_ID = "ait";
@@ -104,6 +110,30 @@ public class AITMod implements ModInitializer {
     static {
         ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"),
                 EngineScreenHandler::new);
+    }
+
+    public static final String BRANCH;
+
+    static {
+        String branch = "unknown";
+        try (Reader reader = new InputStreamReader(
+                AITMod.class.getClassLoader().getResourceAsStream("branch.json"))) {
+            if (reader != null) {
+                JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
+                branch = json.get("branch").getAsString();
+            } else {
+                System.err.println("branch.json file not found!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        BRANCH = branch;
+        System.out.println("Loaded branch: " + BRANCH);
+    }
+
+    public static boolean isUnsafeBranch() {
+        // Define branches that are not main or release
+        return !BRANCH.equals("main") && !BRANCH.equals("release");
     }
 
     @Override
