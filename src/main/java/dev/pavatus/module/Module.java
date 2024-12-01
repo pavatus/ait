@@ -1,11 +1,13 @@
 package dev.pavatus.module;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.minecraft.advancement.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -81,5 +83,7 @@ public abstract class Module implements Identifiable {
         void generateItemModels(ItemModelGenerator itemModelGenerator);
 
         void models(BlockStateModelGenerator generator);
+
+        void advancements(Consumer<Advancement> consumer);
     }
 }

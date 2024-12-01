@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Math;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.CloakHandler;
@@ -40,7 +42,7 @@ public abstract class ExteriorAnimation {
             return 1f;
 
         if (this.exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED) {
-            if (this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
+            if (!ZeitonHighEffect.isHigh(MinecraftClient.getInstance().player) && this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
                 return 0.105f;
             }
             return 1.0f;

@@ -288,6 +288,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 lockTardis(false, tardis, player, true); // forcefully unlock the tardis
                 tardis.door().openDoors();
 
+                TardisEvents.FORCED_ENTRY.invoker().onForcedEntry(tardis, player);
+
                 return true;
             }
 

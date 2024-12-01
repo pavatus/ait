@@ -145,6 +145,7 @@ public class AITMod implements ModInitializer {
 
         Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
+        AITStatusEffects.init();
 
         // ServerVortexDataHandler.init();
         ServerLifecycleHooks.init();

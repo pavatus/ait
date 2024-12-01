@@ -18,7 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -37,6 +39,7 @@ import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
@@ -169,10 +172,14 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             return;
         }
 
-        if (world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
+        BlockState state = world.getBlockState(pos);
+        if (state.getBlock() == AITBlocks.ZEITON_CLUSTER) {
             this.addFuel(200, stack);
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
             return;
+        }
+        if (state.isIn(BlockTags.PLANKS) || state.isIn(BlockTags.LOGS)) {
+            TardisCriterions.SONIC_WOOD.trigger((ServerPlayerEntity) user);
         }
 
         if (mode == Mode.INACTIVE) {
@@ -207,7 +214,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         nbt.putInt(MODE_KEY, 0);
         nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
-        nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
+        if (SonicRegistry.DEFAULT != null)
+            nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
 
         return stack;
     }

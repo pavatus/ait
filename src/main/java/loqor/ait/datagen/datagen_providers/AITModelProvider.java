@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.PlanetItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 
@@ -64,6 +65,20 @@ public class AITModelProvider extends FabricModelProvider {
         for (Map.Entry<Item, Annotation> entry : AITBlockLootTables.getAnnotatedItems(AutomaticModel.class)) {
             registerItem(generator, entry.getKey(), AITMod.MOD_ID);
         }
+        // filterBlocksWithAnnotation(AITBlocks.get(), AutomaticModel.class, false).forEach(b -> generator.register(b.asItem(), Models.));
+        generator.register(PlanetItems.MARTIAN_STONE_SWORD, Models.HANDHELD);
+        generator.register(PlanetItems.MARTIAN_STONE_SHOVEL, Models.HANDHELD);
+        generator.register(PlanetItems.MARTIAN_STONE_PICKAXE, Models.HANDHELD);
+        generator.register(PlanetItems.MARTIAN_STONE_HOE, Models.HANDHELD);
+        generator.register(PlanetItems.MARTIAN_STONE_AXE, Models.HANDHELD);
+
+        generator.register(PlanetItems.ANORTHOSITE_SWORD, Models.HANDHELD);
+        generator.register(PlanetItems.ANORTHOSITE_SHOVEL, Models.HANDHELD);
+        generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
+        generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
+        generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
+
+
     }
 
     public void registerDirectionalBlock(Block block) {

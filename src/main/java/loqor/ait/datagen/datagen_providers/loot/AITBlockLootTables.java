@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.loot.condition.MatchToolLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.ApplyBonusLootFunction;
@@ -46,9 +47,24 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 
 
         addDrop(AITBlocks.WAYPOINT_BANK, doorDrops(AITBlocks.WAYPOINT_BANK));
+
+        // Martian
+        addDrop(PlanetBlocks.MARTIAN_STONE, drops(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_COBBLESTONE));
         addDrop(PlanetBlocks.MARTIAN_BRICK_SLAB, slabDrops(PlanetBlocks.MARTIAN_BRICK_SLAB));
         addDrop(PlanetBlocks.MARTIAN_COBBLESTONE_SLAB, slabDrops(PlanetBlocks.MARTIAN_COBBLESTONE_SLAB));
         addDrop(PlanetBlocks.SMOOTH_MARTIAN_STONE_SLAB, slabDrops(PlanetBlocks.SMOOTH_MARTIAN_STONE_SLAB));
+
+        // Ore
+        addDrop(PlanetBlocks.MARTIAN_COAL_ORE, oreDrops(PlanetBlocks.MARTIAN_COAL_ORE, Items.COAL));
+        addDrop(PlanetBlocks.MARTIAN_COPPER_ORE, oreDrops(PlanetBlocks.MARTIAN_COPPER_ORE, Items.RAW_COPPER));
+        addDrop(PlanetBlocks.MARTIAN_IRON_ORE, oreDrops(PlanetBlocks.MARTIAN_IRON_ORE, Items.RAW_IRON));
+        addDrop(PlanetBlocks.MARTIAN_LAPIS_ORE, oreDrops(PlanetBlocks.MARTIAN_LAPIS_ORE, Items.LAPIS_LAZULI));
+        addDrop(PlanetBlocks.MARTIAN_REDSTONE_ORE, oreDrops(PlanetBlocks.MARTIAN_REDSTONE_ORE, Items.REDSTONE));
+        addDrop(PlanetBlocks.MARTIAN_GOLD_ORE, oreDrops(PlanetBlocks.MARTIAN_GOLD_ORE, Items.RAW_GOLD));
+        addDrop(PlanetBlocks.MARTIAN_DIAMOND_ORE, oreDrops(PlanetBlocks.MARTIAN_DIAMOND_ORE, Items.DIAMOND));
+        addDrop(PlanetBlocks.MARTIAN_EMERALD_ORE, oreDrops(PlanetBlocks.MARTIAN_EMERALD_ORE, Items.EMERALD));
+
+        // Anorthosite
         addDrop(PlanetBlocks.ANORTHOSITE_BRICK_SLAB, slabDrops(PlanetBlocks.ANORTHOSITE_BRICK_SLAB));
         addDrop(PlanetBlocks.ANORTHOSITE_SLAB, slabDrops(PlanetBlocks.ANORTHOSITE_SLAB));
         addDrop(PlanetBlocks.POLISHED_ANORTHOSITE_SLAB, slabDrops(PlanetBlocks.POLISHED_ANORTHOSITE_SLAB));

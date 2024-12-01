@@ -218,6 +218,13 @@ public final class TardisEvents {
                 }
             });
 
+    public static final Event<OnForcedEntry> FORCED_ENTRY = EventFactory.createArrayBacked(OnForcedEntry.class,
+            callbacks -> (tardis, player) -> {
+                for (OnForcedEntry callback : callbacks) {
+                    callback.onForcedEntry(tardis, player);
+                }
+            });
+
     /**
      * Called when a TARDIS successfully ( passed all checks ) starts to take off,
      * before anything else is ran
@@ -429,6 +436,11 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface OnExteriorChange {
         void onChange(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface OnForcedEntry {
+        void onForcedEntry(Tardis tardis, Entity entity);
     }
 
     public enum Interaction {

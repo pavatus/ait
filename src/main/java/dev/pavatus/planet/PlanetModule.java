@@ -1,6 +1,7 @@
 package dev.pavatus.planet;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import dev.pavatus.module.Module;
 import dev.pavatus.module.ModuleRegistry;
@@ -17,15 +18,23 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.Models;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
@@ -87,7 +96,7 @@ public class PlanetModule extends Module {
             @Override
             public void recipes(AITRecipeProvider provider) {
 
-                // Martian Stone
+                // Martian
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_BRICKS);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_BRICK_WALL);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_BRICK_STAIRS);
@@ -96,7 +105,10 @@ public class PlanetModule extends Module {
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_STONE_SLAB);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_STONE, PlanetBlocks.MARTIAN_STONE_STAIRS);
 
-                // Martian Sandstone
+                provider.addStonecutting(PlanetBlocks.MARTIAN_COBBLESTONE, PlanetBlocks.MARTIAN_COBBLESTONE_SLAB);
+                provider.addStonecutting(PlanetBlocks.MARTIAN_COBBLESTONE, PlanetBlocks.MARTIAN_COBBLESTONE_STAIRS);
+                provider.addStonecutting(PlanetBlocks.MARTIAN_COBBLESTONE, PlanetBlocks.MARTIAN_COBBLESTONE_WALL);
+
                 provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE, PlanetBlocks.CHISELED_MARTIAN_SANDSTONE);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE, PlanetBlocks.MARTIAN_SANDSTONE_PILLAR);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE, PlanetBlocks.MARTIAN_SANDSTONE_BRICKS);
@@ -104,9 +116,55 @@ public class PlanetModule extends Module {
                 provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE, PlanetBlocks.MARTIAN_SANDSTONE_STAIRS);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE, PlanetBlocks.MARTIAN_SANDSTONE_WALL);
 
+                provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE_BRICKS, PlanetBlocks.CHISELED_MARTIAN_SANDSTONE);
+                provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE_BRICKS, PlanetBlocks.MARTIAN_SANDSTONE_BRICK_SLAB);
+                provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE_BRICKS, PlanetBlocks.MARTIAN_SANDSTONE_BRICK_STAIRS);
+                provider.addStonecutting(PlanetBlocks.MARTIAN_SANDSTONE_BRICKS, PlanetBlocks.MARTIAN_SANDSTONE_BRICK_WALL);
+
                 provider.addStonecutting(PlanetBlocks.MARTIAN_BRICKS, PlanetBlocks.MARTIAN_BRICK_WALL);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_BRICKS, PlanetBlocks.MARTIAN_BRICK_STAIRS);
                 provider.addStonecutting(PlanetBlocks.MARTIAN_BRICKS, PlanetBlocks.MARTIAN_BRICK_SLAB);
+
+                provider.addStonecutting(PlanetBlocks.SMOOTH_MARTIAN_STONE, PlanetBlocks.SMOOTH_MARTIAN_STONE_SLAB);
+
+                provider.addStonecutting(PlanetBlocks.POLISHED_MARTIAN_STONE, PlanetBlocks.POLISHED_MARTIAN_STONE_SLAB);
+                provider.addStonecutting(PlanetBlocks.POLISHED_MARTIAN_STONE, PlanetBlocks.POLISHED_MARTIAN_STONE_STAIRS);
+
+                provider.addStonecutting(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE, PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_SLAB);
+                provider.addStonecutting(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE, PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_STAIRS);
+
+                // Anorthosite
+
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_BRICKS);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_BRICK_WALL);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_BRICK_STAIRS);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_BRICK_SLAB);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.CHISELED_ANORTHOSITE);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_SLAB);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_STAIRS);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_WALL);
+
+
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.CHISELED_MOON_SANDSTONE);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_PILLAR);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_BRICKS);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_SLAB);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_STAIRS);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_WALL);
+
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE_BRICKS, PlanetBlocks.CHISELED_MOON_SANDSTONE);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE_BRICKS, PlanetBlocks.MOON_SANDSTONE_BRICK_SLAB);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE_BRICKS, PlanetBlocks.MOON_SANDSTONE_BRICK_STAIRS);
+                provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE_BRICKS, PlanetBlocks.MOON_SANDSTONE_BRICK_WALL);
+
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE_BRICKS, PlanetBlocks.MARTIAN_BRICK_WALL);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE_BRICKS, PlanetBlocks.MARTIAN_BRICK_STAIRS);
+                provider.addStonecutting(PlanetBlocks.ANORTHOSITE_BRICKS, PlanetBlocks.MARTIAN_BRICK_SLAB);
+
+                provider.addStonecutting(PlanetBlocks.SMOOTH_ANORTHOSITE, PlanetBlocks.SMOOTH_ANORTHOSITE_SLAB);
+
+                provider.addStonecutting(PlanetBlocks.POLISHED_ANORTHOSITE, PlanetBlocks.POLISHED_ANORTHOSITE_SLAB);
+                provider.addStonecutting(PlanetBlocks.POLISHED_ANORTHOSITE, PlanetBlocks.POLISHED_ANORTHOSITE_STAIRS);
 
             }
 
@@ -126,11 +184,24 @@ public class PlanetModule extends Module {
 
 
             @Override
-            public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
-                itemModelGenerator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_HELMET);
+            public void generateItemModels(ItemModelGenerator generator) {
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
+                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_HELMET);
+
+                generator.register(PlanetItems.MARTIAN_STONE_SWORD, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_SHOVEL, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_PICKAXE, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_HOE, Models.HANDHELD);
+                generator.register(PlanetItems.MARTIAN_STONE_AXE, Models.HANDHELD);
+
+                generator.register(PlanetItems.ANORTHOSITE_SWORD, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_SHOVEL, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
+                generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
+
             }
 
             @Override
@@ -142,8 +213,6 @@ public class PlanetModule extends Module {
                 martian_stone_pool.slab(PlanetBlocks.MARTIAN_STONE_SLAB);
                 martian_stone_pool.button(PlanetBlocks.MARTIAN_STONE_BUTTON);
                 martian_stone_pool.pressurePlate(PlanetBlocks.MARTIAN_STONE_PRESSURE_PLATE);
-
-
 
                 BlockStateModelGenerator.BlockTexturePool martian_bricks_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_BRICKS);
                 martian_bricks_pool.stairs(PlanetBlocks.MARTIAN_BRICK_STAIRS);
@@ -207,6 +276,67 @@ public class PlanetModule extends Module {
                 moon_sandstone_bricks_pool.stairs(PlanetBlocks.MOON_SANDSTONE_BRICK_STAIRS);
                 moon_sandstone_bricks_pool.wall(PlanetBlocks.MOON_SANDSTONE_BRICK_WALL);
                 moon_sandstone_bricks_pool.slab(PlanetBlocks.MOON_SANDSTONE_BRICK_SLAB);
+            }
+
+            @Override
+            public void advancements(Consumer<Advancement> consumer) {
+                Advancement root = Advancement.Builder.create()
+                        .display(
+                                PlanetItems.SPACESUIT_HELMET,
+                                Text.literal("Planetary Exploration"),
+                                Text.literal("Explore the planets of the universe"),
+                                new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
+                                AdvancementFrame.TASK,
+                                true,
+                                true,
+                                true
+                        )
+                        .criterion("enter_tardis", TardisCriterions.ENTER_TARDIS.conditions())
+                        .build(consumer, AITMod.MOD_ID + "/planet_root");
+                Advancement landOnMars = Advancement.Builder.create()
+                        .parent(root)
+                        .display(
+                                PlanetBlocks.MARTIAN_STONE,
+                                Text.literal("You were not the first."),
+                                Text.literal("Landed on Mars for the first time"),
+                                null,
+                                AdvancementFrame.TASK,
+                                true,
+                                true,
+                                true
+                        )
+                        .criterion(
+                                "enter_mars",
+                                ChangedDimensionCriterion.Conditions.to(
+                                        RegistryKey.of(
+                                                RegistryKeys.WORLD,
+                                                new Identifier(AITMod.MOD_ID, "mars")
+                                        )
+                                )
+                        )
+                        .build(consumer, AITMod.MOD_ID + "/enter_mars");
+                Advancement landOnMoon = Advancement.Builder.create()
+                        .parent(root)
+                        .display(
+                                PlanetBlocks.ANORTHOSITE,
+                                Text.literal("One small step for Time Lords"),
+                                Text.literal("Landed on the Moon for the first time"),
+                                null,
+                                AdvancementFrame.TASK,
+                                true,
+                                true,
+                                true
+                        )
+                        .criterion(
+                                "enter_moon",
+                                ChangedDimensionCriterion.Conditions.to(
+                                        RegistryKey.of(
+                                                RegistryKeys.WORLD,
+                                                new Identifier(AITMod.MOD_ID, "moon")
+                                        )
+                                )
+                        )
+                        .build(consumer, AITMod.MOD_ID + "/enter_moon");
             }
         });
     }
