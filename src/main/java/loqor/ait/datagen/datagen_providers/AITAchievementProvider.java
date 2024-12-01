@@ -39,6 +39,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                         AdvancementFrame.TASK, true, true, true)
                 .criterion("place_coral", new PlaceCoralCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/root");
+
         Advancement firstEnter = Advancement.Builder.create().parent(placeCoral)
                 .display(AITItems.TARDIS_ITEM, Text.literal("How Does It Fit?"),
                         Text.literal("Enter the TARDIS for the first time"), null, AdvancementFrame.CHALLENGE, true,
@@ -54,16 +55,19 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                         Text.literal("Gain an Iron Key"), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("iron_key", InventoryChangedCriterion.Conditions.items(AITItems.IRON_KEY))
                 .build(consumer, AITMod.MOD_ID + "/iron_key");
+
         Advancement goldKey = Advancement.Builder.create().parent(ironKey)
                 .display(AITItems.GOLD_KEY, Text.literal("Golden Gatekeeper"), Text.literal("Gain a Golden Key"), null,
                         AdvancementFrame.TASK, true, false, true)
                 .criterion("gold_key", InventoryChangedCriterion.Conditions.items(AITItems.GOLD_KEY))
                 .build(consumer, AITMod.MOD_ID + "/gold_key");
+
         Advancement netheriteKey = Advancement.Builder.create().parent(goldKey)
                 .display(AITItems.NETHERITE_KEY, Text.literal("Forged in Fire"), Text.literal("Gain a Netherite Key"),
                         null, AdvancementFrame.TASK, true, true, true)
                 .criterion("netherite_key", InventoryChangedCriterion.Conditions.items(AITItems.NETHERITE_KEY))
                 .build(consumer, AITMod.MOD_ID + "/netherite_key");
+
         Advancement classicKey = Advancement.Builder.create().parent(netheriteKey)
                 .display(AITItems.CLASSIC_KEY, Text.literal("Time Traveler's Apprentice"),
                         Text.literal("Gain a Classic Key"), null, AdvancementFrame.TASK, true, true, true)
@@ -76,18 +80,46 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                         null, AdvancementFrame.CHALLENGE, true, true, true)
                 .criterion("first_demat", new TakeOffCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_demat");
+
         Advancement firstCrash = Advancement.Builder.create().parent(firstDemat)
                 .display(Items.TNT, Text.literal("Temporal Turbulence"), Text.literal(
                         "Embrace the chaos of time and space by unintentionally crashing your TARDIS for the first time."),
                         null, AdvancementFrame.CHALLENGE, true, true, true)
                 .criterion("first_crash", new CrashCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_crash");
+
         Advancement breakGrowth = Advancement.Builder.create().parent(firstEnter)
                 .display(Items.OAK_LEAVES, Text.literal("Temporal Gardener"), Text.literal(
                         "Tend to the temporal vines and foliage clinging to your TARDIS by breaking off vegetation."),
                         null, AdvancementFrame.TASK, true, false, true)
                 .criterion("break_growth", new BreakVegetationCriterion.Conditions())
                 .build(consumer, AITMod.MOD_ID + "/break_growth");
+
+        Advancement redecoration = Advancement.Builder.create().parent(firstEnter)
+                .display(AITItems.TARDIS_ITEM, Text.literal("I Don't Like It."),
+                        Text.literal("Redecorate your TARDIS desktop."), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("redecorate", new RedecorateCriterion.Conditions())
+                .build(consumer, AITMod.MOD_ID + "/redecorate");
+
+        // @TODO Duzo please do this i don't remember how
+        Advancement ultimateCounter = Advancement.Builder.create()
+                .display(AITItems.SONIC_SCREWDRIVER, Text.literal("It Doesn't Do Wood!"),
+                        Text.literal("Attempt to use the sonic screwdriver on wood."), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("ultimate_counter", new UltimateCounterCriterion.Conditions())
+                .build(consumer, AITMod.MOD_ID + "/ultimate_counter");
+
+        Advancement forcedEntry = Advancement.Builder.create()
+                .display(Items.NETHERITE_AXE, Text.literal("That Won't Have Consequences..."),
+                        Text.literal("Forcefully enter a TARDIS."), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("forced_entry", new ForcedEntryCriterion.Conditions())
+                .build(consumer, AITMod.MOD_ID + "/forced_entry");
+
+        // @TODO Duzo please do this i don't remember how
+        Advancement pui = Advancement.Builder.create().parent(firstCrash)
+                .display(AITItems.ZEITON_DUST, Text.literal("PUI"),
+                        Text.literal("Consume Zeiton Dust while the TARDIS is in flight."), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("pui", new PUICriterion.Conditions())
+                .build(consumer, AITMod.MOD_ID + "/pui");
     }
 
 
