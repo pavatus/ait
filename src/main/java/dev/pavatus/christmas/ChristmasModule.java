@@ -40,6 +40,8 @@ public class ChristmasModule extends Module {
 
     @Override
     public void init() {
+        ITEM_GROUP.initialize();
+
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
         });
 
@@ -59,6 +61,8 @@ public class ChristmasModule extends Module {
             public void lang(AITLanguageProvider provider) {
                 provider.addTranslation("achievement." + AITMod.MOD_ID + ".title.christmas_root", "Merry Christmas");
                 provider.addTranslation("achievement." + AITMod.MOD_ID + ".description.christmas_root", "and a happy new year!");
+
+                provider.addTranslation(ITEM_GROUP, "Advent(ures) in Snow");
             }
 
             @Override
