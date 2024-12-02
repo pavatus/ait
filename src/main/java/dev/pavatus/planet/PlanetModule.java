@@ -36,6 +36,7 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
+import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
@@ -185,6 +186,11 @@ public class PlanetModule extends Module {
                 // Anorthosite Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
                         .add(PlanetBlocks.ANORTHOSITE_BRICK_WALL).add(PlanetBlocks.ANORTHOSITE_WALL).add(PlanetBlocks.MOON_SANDSTONE_BRICK_WALL).add(PlanetBlocks.MOON_SANDSTONE_WALL);
+
+            }
+
+            @Override
+            public void itemTags(AITItemTagProvider provider) {
 
             }
 
