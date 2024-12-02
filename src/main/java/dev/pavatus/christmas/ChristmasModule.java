@@ -25,7 +25,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
@@ -37,7 +36,7 @@ public class ChristmasModule extends Module {
     private static final ChristmasModule INSTANCE = new ChristmasModule();
 
     public static final OwoItemGroup ITEM_GROUP = OwoItemGroup
-            .builder(new Identifier(AITMod.MOD_ID, "christmas_item_group"), () -> Icon.of(AITItems.GOLD_KEY))
+            .builder(new Identifier(AITMod.MOD_ID, "christmas_item_group"), () -> Icon.of(ChristmasItems.FESTIVE_KEY))
             .disableDynamicTitle().build();
 
     @Override
@@ -65,6 +64,7 @@ public class ChristmasModule extends Module {
                 provider.addTranslation("achievement." + AITMod.MOD_ID + ".description.christmas_root", "and a happy new year!");
 
                 provider.addTranslation(ITEM_GROUP, "Advent(ures) in Snow");
+                provider.addTranslation(ChristmasItems.FESTIVE_KEY, "Festive Key");
             }
 
             @Override
