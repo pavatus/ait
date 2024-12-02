@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import dev.pavatus.module.ModuleRegistry;
-import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import dev.pavatus.register.Registries;
@@ -276,7 +275,6 @@ public class AITMod implements ModInitializer {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
         AIT_ITEM_GROUP.initialize();
-        PlanetModule.ITEM_GROUP.initialize();
     }
 
     public void entityAttributeRegister() {

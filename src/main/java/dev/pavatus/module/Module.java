@@ -3,6 +3,7 @@ package dev.pavatus.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,6 +71,25 @@ public abstract class Module implements Identifiable {
 
     public boolean shouldRegister() {
         return true;
+    }
+
+    protected OwoItemGroup.Builder buildItemGroup() {
+        return null;
+    }
+    public OwoItemGroup getItemGroup() {
+        OwoItemGroup.Builder builder = buildItemGroup();
+
+        if (builder == null) throw new UnsupportedOperationException("Item Group for module " + this + " is not defined");
+        if (!(this.shouldRegister())) throw new UnsupportedOperationException("Tried to access item group for module " + this + " but it is not registered");
+
+        return builder.build();
+    }
+
+    @Override
+    public String toString() {
+        return "Module{" +
+                "id=" + id() +
+                '}';
     }
 
     public Optional<DataGenerator> getDataGenerator() {
