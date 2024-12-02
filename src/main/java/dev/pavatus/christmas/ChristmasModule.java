@@ -1,5 +1,7 @@
 package dev.pavatus.christmas;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -117,11 +119,26 @@ public class ChristmasModule extends Module {
     }
 
     @Override
+    public boolean shouldRegister() {
+        return isChristmasSeason();
+    }
+
+    @Override
     public Identifier id() {
         return REFERENCE;
     }
 
     public static ChristmasModule instance() {
         return INSTANCE;
+    }
+
+    /**
+     * @return true if the current date is between Dec 1st -> Jan 6th of the next year
+     */
+    public static boolean isChristmasSeason() {
+        LocalDate now = LocalDate.now();
+        LocalDate start = LocalDate.of(now.getYear(), Month.DECEMBER, 1);
+        LocalDate end = LocalDate.of(now.getYear() + 1, Month.JANUARY, 6);
+        return !now.isBefore(start) && !now.isAfter(end);
     }
 }
