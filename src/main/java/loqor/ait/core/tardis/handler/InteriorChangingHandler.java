@@ -163,7 +163,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED),
                     true);
-            TardisCriterions.REDECORATE.trigger(player);
+            if (!tardis.isGrowth())
+                TardisCriterions.REDECORATE.trigger(player);
         }
     }
 

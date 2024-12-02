@@ -2,6 +2,7 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -12,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
@@ -46,5 +48,16 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
         getOrCreateTagBuilder(AITTags.Items.REPAIRS_SUBSYSTEM).add(Items.IRON_INGOT, AITItems.ZEITON_SHARD, AITItems.ZEITON_DUST);
 
         getOrCreateTagBuilder(AITTags.Items.IS_TARDIS_FUEL).add(AITItems.ZEITON_DUST, AITItems.ZEITON_SHARD);
+
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getDataGenerator().ifPresent(generator -> {
+                generator.itemTags(this);
+            });
+        });
+    }
+
+    @Override
+    public FabricTagProvider<Item>.FabricTagBuilder getOrCreateTagBuilder(TagKey<Item> tag) {
+        return super.getOrCreateTagBuilder(tag);
     }
 }

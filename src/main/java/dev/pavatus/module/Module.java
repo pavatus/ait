@@ -23,6 +23,7 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
+import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
@@ -78,7 +79,8 @@ public abstract class Module implements Identifiable {
          */
         void lang(AITLanguageProvider provider);
         void recipes(AITRecipeProvider provider);
-        void tags(AITBlockTagProvider provider);
+        void blockTags(AITBlockTagProvider provider);
+        void itemTags(AITItemTagProvider provider);
 
         void generateItemModels(ItemModelGenerator itemModelGenerator);
 

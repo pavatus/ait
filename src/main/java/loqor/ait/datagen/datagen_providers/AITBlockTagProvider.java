@@ -61,7 +61,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         ModuleRegistry.instance().iterator().forEachRemaining(module -> {
             module.getDataGenerator().ifPresent(generator -> {
-                generator.tags(this);
+                generator.blockTags(this);
             });
         });
     }
