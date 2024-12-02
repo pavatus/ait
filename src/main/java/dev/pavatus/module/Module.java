@@ -72,6 +72,10 @@ public abstract class Module implements Identifiable {
         return Optional.empty();
     }
 
+    public boolean shouldRegister() {
+        return true;
+    }
+
     public interface DataGenerator {
         /**
          * Called when the ENGLISH language provider is generating
