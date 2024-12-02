@@ -12,7 +12,6 @@ import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
@@ -41,13 +40,13 @@ public class ChristmasModule extends Module {
 
     @Override
     public void init() {
-        ITEM_GROUP.initialize();
-
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
         });
 
-        FieldRegistrationHandler.register(ChristmasItems.class, AITMod.MOD_ID, false);
-        FieldRegistrationHandler.register(ChristmasBlocks.class, AITMod.MOD_ID, false);
+        ChristmasItems.init();
+        ChristmasBlocks.init();
+
+        ITEM_GROUP.initialize();
     }
 
     @Override
@@ -140,5 +139,18 @@ public class ChristmasModule extends Module {
         LocalDate start = LocalDate.of(now.getYear(), Month.DECEMBER, 1);
         LocalDate end = LocalDate.of(now.getYear() + 1, Month.JANUARY, 6);
         return !now.isBefore(start) && !now.isAfter(end);
+    }
+
+    public enum Feature {
+        FESTIVE_KEY(LocalDate.of(LocalDate.now().getYear(), Month.DECEMBER, 26));
+
+        public final LocalDate unlock;
+        Feature(LocalDate unlocksAt) {
+            this.unlock = unlocksAt;
+        }
+
+        public boolean isUnlocked() {
+            return LocalDate.now().isAfter(unlock);
+        }
     }
 }
