@@ -3,7 +3,7 @@ ext.getCurrentVersion = {
     var branch = System.getenv("GITHUB_REF")
 
     if (branch != null && branch.startsWith("refs/heads/")) {
-        branch = branch.substring("refs/heads/".length)
+        branch = branch.substring("refs/heads/".length())
         // replace / with _
         branch = branch.replaceAll("/", "_")
         if (branch == "main" || branch == "release") {
