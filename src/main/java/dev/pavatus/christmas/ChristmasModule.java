@@ -53,7 +53,7 @@ public class ChristmasModule extends Module {
     @Override
     protected OwoItemGroup.Builder buildItemGroup() {
         return OwoItemGroup
-                .builder(new Identifier(AITMod.MOD_ID, "christmas_item_group"), () -> Icon.of(ChristmasItems.FESTIVE_KEY))
+                .builder(new Identifier(AITMod.MOD_ID, "christmas_item_group"), () -> Icon.of(Blocks.SNOW_BLOCK))
                 .disableDynamicTitle();
     }
 
@@ -66,7 +66,7 @@ public class ChristmasModule extends Module {
                 provider.addTranslation("achievement." + AITMod.MOD_ID + ".description.christmas_root", "and a happy new year!");
 
                 provider.addTranslation(getItemGroup(), "Advent(ures) in Snow");
-                provider.addTranslation(ChristmasItems.FESTIVE_KEY, "Festive Key");
+                provider.addTranslation("item.ait.festive_key", "Festive Key");
             }
 
             @Override
@@ -145,7 +145,7 @@ public class ChristmasModule extends Module {
     }
 
     public enum Feature {
-        FESTIVE_KEY(LocalDate.of(LocalDate.now().getYear(), Month.DECEMBER, 26));
+        FESTIVE_KEY(LocalDate.of(LocalDate.now().getYear(), Month.DECEMBER, 1)); // todo 26th
 
         public final LocalDate unlock;
         Feature(LocalDate unlocksAt) {
