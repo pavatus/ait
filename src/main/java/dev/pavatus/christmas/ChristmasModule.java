@@ -1,6 +1,7 @@
 package dev.pavatus.christmas;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import dev.pavatus.christmas.core.ChristmasBlocks;
 import dev.pavatus.christmas.core.ChristmasItems;
@@ -11,12 +12,23 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.BlockItem;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.advancement.TardisCriterions;
+import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
+import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
+import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
+import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 public class ChristmasModule extends Module {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "christmas");
@@ -38,6 +50,51 @@ public class ChristmasModule extends Module {
     @Override
     public void initClient() {
 
+    }
+
+    @Override
+    public Optional<DataGenerator> getDataGenerator() {
+        return Optional.of(new DataGenerator() {
+            @Override
+            public void lang(AITLanguageProvider provider) {
+                provider.addTranslation("achievement." + AITMod.MOD_ID + ".title.christmas_root", "Merry Christmas");
+                provider.addTranslation("achievement." + AITMod.MOD_ID + ".description.christmas_root", "and a happy new year!");
+            }
+
+            @Override
+            public void recipes(AITRecipeProvider provider) {
+
+            }
+
+            @Override
+            public void blockTags(AITBlockTagProvider provider) {
+
+            }
+
+            @Override
+            public void itemTags(AITItemTagProvider provider) {
+
+            }
+
+            @Override
+            public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+
+            }
+
+            @Override
+            public void models(BlockStateModelGenerator generator) {
+
+            }
+
+            @Override
+            public void advancements(Consumer<Advancement> consumer) {
+                Advancement root = Advancement.Builder.create()
+                        .display(Blocks.SNOW_BLOCK, Text.translatable("achievement." + AITMod.MOD_ID + ".title.christmas_root"),
+                                Text.translatable("achievement." + AITMod.MOD_ID + ".description.christmas_root"), new Identifier("textures/block/snow.png"), AdvancementFrame.TASK, false, false, false)
+                        .criterion("root", TardisCriterions.ROOT.conditions())
+                        .build(consumer, AITMod.MOD_ID + "/christmas_root");
+            }
+        });
     }
 
     @Override
