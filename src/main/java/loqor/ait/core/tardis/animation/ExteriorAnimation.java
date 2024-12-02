@@ -1,5 +1,7 @@
 package loqor.ait.core.tardis.animation;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Math;
@@ -21,6 +23,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.NetworkUtil;
+import loqor.ait.core.util.ServerLifecycleHooks;
 
 public abstract class ExteriorAnimation {
 
@@ -42,13 +45,23 @@ public abstract class ExteriorAnimation {
             return 1f;
 
         if (this.exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED) {
-            if (!ZeitonHighEffect.isHigh(MinecraftClient.getInstance().player) && this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
+            if (!isHigh() && this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
                 return 0.105f;
             }
             return 1.0f;
         }
 
         return this.alpha;
+    }
+
+    private static boolean isHigh() {
+        if (ServerLifecycleHooks.isServer()) return false;
+
+        return amIHigh();
+    }
+    @Environment(EnvType.CLIENT)
+    private static boolean amIHigh() {
+        return MinecraftClient.getInstance().player != null && ZeitonHighEffect.isHigh(MinecraftClient.getInstance().player);
     }
 
     public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {

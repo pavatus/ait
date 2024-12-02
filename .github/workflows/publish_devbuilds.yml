@@ -8,8 +8,11 @@
 name: Automated donator builds
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ "main", "feat/engine" ]
+    branches:
+      - 'feat/**'
+      - 'main'
 
 jobs:
   build:
