@@ -276,7 +276,7 @@ public class AITMod implements ModInitializer {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
         AIT_ITEM_GROUP.initialize();
-        PlanetModule.ITEM_GROUP.initialize();
+        PlanetModule.ITEM_GROUP.initialize(); // todo move this to the planet module please
     }
 
     public void entityAttributeRegister() {
