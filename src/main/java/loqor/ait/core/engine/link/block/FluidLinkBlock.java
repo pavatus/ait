@@ -11,7 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class FluidLinkBlock extends BlockWithEntity {
+import loqor.ait.core.engine.link.IFluidLink;
+import loqor.ait.core.engine.link.IFluidSource;
+
+public class FluidLinkBlock extends BlockWithEntity implements IFluidLink {
     public FluidLinkBlock(Settings settings) {
         super(settings);
     }
@@ -50,5 +53,25 @@ public class FluidLinkBlock extends BlockWithEntity {
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new FluidLinkBlockEntity(pos, state);
+    }
+
+    @Override
+    public IFluidSource source(boolean search) {
+        throw new UnsupportedOperationException("FluidLinkBlock does not support this operation, did you mean to use FluidLinkBlockEntity?");
+    }
+
+    @Override
+    public void setSource(IFluidSource source) {
+        throw new UnsupportedOperationException("FluidLinkBlock does not support this operation, did you mean to use FluidLinkBlockEntity?");
+    }
+
+    @Override
+    public IFluidLink last() {
+        throw new UnsupportedOperationException("FluidLinkBlock does not support this operation, did you mean to use FluidLinkBlockEntity?");
+    }
+
+    @Override
+    public void setLast(IFluidLink last) {
+        throw new UnsupportedOperationException("FluidLinkBlock does not support this operation, did you mean to use FluidLinkBlockEntity?");
     }
 }
