@@ -13,7 +13,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.item.KeyItem;
 
 public class ChristmasItems {
-    public static KeyItem FESTIVE_KEY = new KeyItem(new OwoItemSettings().group(ChristmasModule.ITEM_GROUP).rarity(Rarity.EPIC));
+    public static KeyItem FESTIVE_KEY = new KeyItem(new OwoItemSettings().group(ChristmasModule.instance().getItemGroup()).rarity(Rarity.EPIC));
 
     public static void init() {
         if (ChristmasModule.Feature.FESTIVE_KEY.isUnlocked()) {

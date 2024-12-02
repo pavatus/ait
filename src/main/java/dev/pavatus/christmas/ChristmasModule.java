@@ -34,10 +34,6 @@ public class ChristmasModule extends Module {
     public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "christmas");
     private static final ChristmasModule INSTANCE = new ChristmasModule();
 
-    public static final OwoItemGroup ITEM_GROUP = OwoItemGroup
-            .builder(new Identifier(AITMod.MOD_ID, "christmas_item_group"), () -> Icon.of(ChristmasItems.FESTIVE_KEY))
-            .disableDynamicTitle().build();
-
     @Override
     public void init() {
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
@@ -46,12 +42,19 @@ public class ChristmasModule extends Module {
         ChristmasItems.init();
         ChristmasBlocks.init();
 
-        ITEM_GROUP.initialize();
+        getItemGroup().initialize();
     }
 
     @Override
     public void initClient() {
 
+    }
+
+    @Override
+    protected OwoItemGroup.Builder buildItemGroup() {
+        return OwoItemGroup
+                .builder(new Identifier(AITMod.MOD_ID, "christmas_item_group"), () -> Icon.of(ChristmasItems.FESTIVE_KEY))
+                .disableDynamicTitle();
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ChristmasModule extends Module {
                 provider.addTranslation("achievement." + AITMod.MOD_ID + ".title.christmas_root", "Merry Christmas");
                 provider.addTranslation("achievement." + AITMod.MOD_ID + ".description.christmas_root", "and a happy new year!");
 
-                provider.addTranslation(ITEM_GROUP, "Advent(ures) in Snow");
+                provider.addTranslation(getItemGroup(), "Advent(ures) in Snow");
                 provider.addTranslation(ChristmasItems.FESTIVE_KEY, "Festive Key");
             }
 
@@ -104,7 +107,7 @@ public class ChristmasModule extends Module {
 
     @Override
     public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(ITEM_GROUP));
+        return new BlockItem(block, new OwoItemSettings().group(getItemGroup()));
     }
 
     @Override
