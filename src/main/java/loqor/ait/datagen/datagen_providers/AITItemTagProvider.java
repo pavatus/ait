@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
@@ -48,5 +49,10 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
                 generator.itemTags(this);
             });
         });
+    }
+
+    @Override
+    public FabricTagProvider<Item>.FabricTagBuilder getOrCreateTagBuilder(TagKey<Item> tag) {
+        return super.getOrCreateTagBuilder(tag);
     }
 }
