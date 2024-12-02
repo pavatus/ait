@@ -68,10 +68,6 @@ public abstract class Module implements Identifiable {
         return Optional.empty();
     }
 
-    public boolean shouldRegister() {
-        return true;
-    }
-
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.empty();
     }
