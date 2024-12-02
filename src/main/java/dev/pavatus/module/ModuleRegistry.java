@@ -30,6 +30,13 @@ public class ModuleRegistry extends DatapackRegistry<Module> {
     }
 
     @Override
+    public Module register(Module schema) {
+        if (!schema.shouldRegister()) return schema;
+
+        return super.register(schema);
+    }
+
+    @Override
     public Module fallback() {
         return null;
     }
