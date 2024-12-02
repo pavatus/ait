@@ -13,16 +13,16 @@ public class PlanetItems implements ItemRegistryContainer {
 
     // SPACESUIT
     public static final Item SPACESUIT_HELMET = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(PlanetModule.ITEM_GROUP).maxDamage(240), true);
+            new OwoItemSettings().group(PlanetModule.instance().getItemGroup()).maxDamage(240), true);
 
     public static final Item SPACESUIT_CHESTPLATE = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.CHESTPLATE,
-            new OwoItemSettings().group(PlanetModule.ITEM_GROUP).maxDamage(240), true);
+            new OwoItemSettings().group(PlanetModule.instance().getItemGroup()).maxDamage(240), true);
 
     public static final Item SPACESUIT_LEGGINGS = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.LEGGINGS,
-            new OwoItemSettings().group(PlanetModule.ITEM_GROUP).maxDamage(240), true);
+            new OwoItemSettings().group(PlanetModule.instance().getItemGroup()).maxDamage(240), true);
 
     public static final Item SPACESUIT_BOOTS = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.BOOTS,
-            new OwoItemSettings().group(PlanetModule.ITEM_GROUP).maxDamage(240), true);
+            new OwoItemSettings().group(PlanetModule.instance().getItemGroup()).maxDamage(240), true);
 
     // TOOLS
 
