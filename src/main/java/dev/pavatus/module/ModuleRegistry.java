@@ -1,5 +1,6 @@
 package dev.pavatus.module;
 
+import dev.pavatus.christmas.ChristmasModule;
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.api.EnvType;
@@ -17,6 +18,7 @@ public class ModuleRegistry extends DatapackRegistry<Module> {
         super.onCommonInit();
 
         register(PlanetModule.instance());
+        register(ChristmasModule.instance());
 
         iterator().forEachRemaining(Module::init);
     }
