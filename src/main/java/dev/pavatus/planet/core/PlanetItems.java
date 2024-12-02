@@ -5,12 +5,9 @@ import dev.pavatus.planet.core.item.PlanetToolMaterial;
 import dev.pavatus.planet.core.item.SpacesuitItem;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
-
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+
 import net.minecraft.item.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 
 public class PlanetItems implements ItemRegistryContainer {
 
@@ -42,6 +39,7 @@ public class PlanetItems implements ItemRegistryContainer {
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new OwoItemSettings());
 
     // ITEM GROUP TOOL PLACEMENT
+
     static {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             entries.addAfter(Items.STONE_SWORD, MARTIAN_STONE_SWORD);
