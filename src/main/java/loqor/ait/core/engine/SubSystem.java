@@ -19,7 +19,8 @@ import loqor.ait.data.enummap.Ordered;
 public abstract class SubSystem extends Initializable<TardisComponent.InitContext> implements Disposable {
     @Exclude protected Tardis tardis;
 
-    @Exclude(strategy = Exclude.Strategy.NETWORK) private final IdLike id;
+    @Exclude(strategy = Exclude.Strategy.NETWORK)
+    private final IdLike id;
     private boolean enabled = false;
 
     protected SubSystem(IdLike id) {

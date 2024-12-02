@@ -62,8 +62,11 @@ public class ZeitonCageBlock extends Block implements BlockEntityProvider {
             return ActionResult.FAIL;
         }
         if (world.isClient()) return ActionResult.SUCCESS; // Don't run on client
-        if (!(RiftChunkManager.isRiftChunk((ServerWorld) world, pos))) return ActionResult.FAIL; // Only allow in rift chunks
+        if (!(RiftChunkManager.isRiftChunk((ServerWorld) world, pos))) {
+            world.playSound(null, pos, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 1.0F, 2.0F);
 
+            return ActionResult.FAIL; // Only allow in rift chunks
+        }
         stack.decrement(1);
         state = addFuel(state, 10);
         world.setBlockState(pos, state);
@@ -111,6 +114,13 @@ public class ZeitonCageBlock extends Block implements BlockEntityProvider {
 
         tooltip.add(Text.translatable("message.ait.tooltips.artron_units").formatted(Formatting.GOLD).append(
                 Text.literal("" + getFuel(stack)).formatted(hasReachedMaxFuel(stack) ? Formatting.GREEN : Formatting.RED)));
+        if (hasReachedMaxFuel(stack)) {
+            tooltip.add(Text.translatable("message.ait.cage.full").formatted(Formatting.LIGHT_PURPLE));
+            tooltip.add(Text.translatable("message.ait.cage.void_hint").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
+        }
+        if (getFuel(stack) == 0) {
+            tooltip.add(Text.translatable("message.ait.cage.empty").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
+        }
     }
 
     public static void onVoid(ItemStack stack, @Nullable ServerPlayerEntity nearest) {

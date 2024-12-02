@@ -152,13 +152,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .criterion(hasItem(AITBlocks.CONSOLE_GENERATOR), conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder
-                    .create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ENGINE_CORE_BLOCK, 1).pattern("GHG")
-                    .pattern("HCH").pattern("GHG").input('G', Items.GLASS).input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
-                    .input('C', Items.CONDUIT).criterion(hasItem(Items.GLASS), conditionsFromItem(Items.GLASS))
-                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL),
-                            conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
-                    .criterion(hasItem(Items.CONDUIT), conditionsFromItem(Items.CONDUIT)));
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1).pattern("GSG")
                             .pattern("SBS").pattern("GSG").input('G', Items.GOLD_NUGGET).input('S', Items.SPRUCE_SLAB)
@@ -585,6 +578,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
         provider.addTranslation("tardis.message.engine.phasing", "ENGINES PHASING");
+        provider.addTranslation("message.ait.cage.full", "It calls for the void..");
+        provider.addTranslation("message.ait.cage.void_hint", "(Throw this into the END void)");
+        provider.addTranslation("message.ait.cage.empty", "(Place this in a rift chunk)");
 
         // Achivement
         provider.addTranslation("achievement.ait.title.root", "Adventures in Time");
