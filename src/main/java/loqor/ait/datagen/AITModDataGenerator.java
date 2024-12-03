@@ -646,6 +646,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
         provider.addTranslation("message.ait.tooltips.artron_units", "Artron Units: ");
+        provider.addTranslation("message.ait.ammo", "Ammo: ");
         provider.addTranslation("tooltip.ait.position", "Position: ");
         provider.addTranslation("message.ait.artron_units2", " AU");
 

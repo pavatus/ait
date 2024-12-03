@@ -1,14 +1,17 @@
 package loqor.ait.core.item;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CrossbowUser;
@@ -16,10 +19,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.ClickType;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -33,6 +43,8 @@ import loqor.ait.core.AITStatusEffects;
 public class BaseGunItem extends RangedWeaponItem {
     public static final Identifier SHOOT = new Identifier(AITMod.MOD_ID, "shoot_gun");
     public static final Predicate<ItemStack> GUN_PROJECTILES = itemStack -> itemStack.isOf(AITItems.STASER_BOLT_MAGAZINE);
+    public static final double MAX_AMMO = 2000;
+    public static final String AMMO_KEY = "ammo";
 
     public BaseGunItem(Settings settings) {
         super(settings);
@@ -44,10 +56,32 @@ public class BaseGunItem extends RangedWeaponItem {
         boolean isAds = buf.readBoolean();
 
         if (shoot) {
-            BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), AITItems.STASER_BOLT_MAGAZINE.getDefaultStack(),
-                    1.0f, false, 4.0f, player.hasStatusEffect(AITStatusEffects.ZEITON_HIGH) ? 20f : (isAds ? 0.2f : 1.42323f), 0.0f);
+            if (player.getMainHandStack().getItem() instanceof BaseGunItem gun) {
+                if (gun.getCurrentAmmo() <= 0) {
+                    player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF, SoundCategory.PLAYERS, 1.0f, 1.0f);
+                    return;
+                }
+                BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), AITItems.STASER_BOLT_MAGAZINE.getDefaultStack(),
+                        1.0f, false, 4.0f, player.hasStatusEffect(AITStatusEffects.ZEITON_HIGH) ? 20f : (isAds ? 0.2f : 1.42323f), 0.0f);
+                NbtCompound compound = player.getMainHandStack().getOrCreateNbt();
+                double current = compound.getDouble(AMMO_KEY);
+                double removableAmmo = (isAds ? 15 : 10);
+                if (current - removableAmmo <= 0) {
+                    compound.putDouble(AMMO_KEY, 0);
+                } else {
+                    compound.putDouble(AMMO_KEY, current - removableAmmo <= 0 ? 0 : current - removableAmmo);
+                }
+            }
         }
         });
+    }
+
+    @Override
+    public ItemStack getDefaultStack() {
+        ItemStack stack = new ItemStack(this);
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putDouble(AMMO_KEY, 0);
+        return stack;
     }
 
     public static void shootGun(boolean shoot, boolean isAds) {
@@ -69,8 +103,33 @@ public class BaseGunItem extends RangedWeaponItem {
     }
 
     @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (otherStack.getItem() instanceof StaserBoltMagazine magazine) {
+            double magazineAmmo = magazine.getCurrentFuel(otherStack);
+            double ammo = stack.getOrCreateNbt().getDouble(AMMO_KEY);
+            NbtCompound gunNbt = stack.getOrCreateNbt();
+            if (clickType == ClickType.RIGHT) {
+                if (ammo <= MAX_AMMO) {
+                    gunNbt.putDouble(AMMO_KEY, Math.min(ammo + magazineAmmo, MAX_AMMO));
+                    magazine.removeFuel(magazineAmmo, otherStack);
+                    return true;
+                }
+            }
+        }
+        return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
+    }
+
+    @Override
     public Predicate<ItemStack> getProjectiles() {
         return GUN_PROJECTILES;
+    }
+
+    public double getCurrentAmmo() {
+        return new ItemStack(this).getOrCreateNbt().getDouble(AMMO_KEY);
+    }
+
+    public double getMaxAmmo() {
+        return MAX_AMMO;
     }
 
     @Override
@@ -84,7 +143,6 @@ public class BaseGunItem extends RangedWeaponItem {
             return;
         }
         projectileEntity = BaseGunItem.createBolt(world, shooter, gun, projectile);
-        if (projectileEntity == null) return;
         if (creative || simulated != 0.0f) {
             projectileEntity.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
         }
@@ -116,5 +174,20 @@ public class BaseGunItem extends RangedWeaponItem {
             persistentProjectileEntity.setPierceLevel((byte)i);
         }
         return persistentProjectileEntity;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+
+        double currentAmmo = this.getCurrentAmmo();
+        Formatting ammoColor = currentAmmo > (MAX_AMMO / 4) ? Formatting.GREEN : Formatting.RED;
+
+        tooltip.add(
+                Text.translatable("message.ait.ammo", currentAmmo)
+                        .formatted(ammoColor)
+                        .append(Text.literal(" / ").formatted(Formatting.GRAY))
+                        .append(Text.literal(String.valueOf(MAX_AMMO)).formatted(Formatting.GRAY))
+        );
     }
 }
