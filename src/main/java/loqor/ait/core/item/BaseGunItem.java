@@ -109,11 +109,9 @@ public class BaseGunItem extends RangedWeaponItem {
             double ammo = stack.getOrCreateNbt().getDouble(AMMO_KEY);
             NbtCompound gunNbt = stack.getOrCreateNbt();
             if (clickType == ClickType.RIGHT) {
-                if (ammo <= MAX_AMMO) {
-                    gunNbt.putDouble(AMMO_KEY, Math.min(ammo + magazineAmmo, MAX_AMMO));
-                    magazine.removeFuel(magazineAmmo, otherStack);
-                    return true;
-                }
+                gunNbt.putDouble(AMMO_KEY, Math.min(ammo + magazineAmmo, MAX_AMMO));
+                magazine.removeFuel(magazineAmmo, otherStack);
+                return true;
             }
         }
         return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
