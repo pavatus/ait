@@ -25,6 +25,7 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.ArtronCollectorItem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
+import loqor.ait.core.item.StaserBoltMagazine;
 import loqor.ait.core.world.RiftChunkManager;
 
 public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEntityTicker<ArtronCollectorBlockEntity>, ArtronHolder {
@@ -58,6 +59,9 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
                 this.setCurrentFuel(residual);
             } else if (stack.getItem() instanceof ChargedZeitonCrystalItem crystal) {
                 double residual = crystal.addFuel(this.getCurrentFuel(), stack);
+                this.setCurrentFuel(residual);
+            } else if (stack.getItem() instanceof StaserBoltMagazine magazine) {
+                double residual = magazine.addFuel(this.getCurrentFuel(), stack);
                 this.setCurrentFuel(residual);
             }
             if (stack.isOf(AITBlocks.ZEITON_CLUSTER.asItem())) {
