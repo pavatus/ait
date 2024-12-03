@@ -13,6 +13,7 @@ import net.minecraft.registry.Registry;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
+import loqor.ait.core.entities.StaserBoltEntity;
 
 public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
     @AssignedName("control_entity")
@@ -27,6 +28,10 @@ public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
 
     public static final EntityType<GallifreyFallsPaintingEntity> GALLIFREY_FALLS_PAINTING_TYPE = FabricEntityTypeBuilder
             .create(SpawnGroup.MISC, GallifreyFallsPaintingEntity::new)
+            .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
+
+    public static final EntityType<StaserBoltEntity> STASER_BOLT_ENTITY_TYPE = FabricEntityTypeBuilder
+            .create(SpawnGroup.MISC, StaserBoltEntity::new)
             .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
 
     @Override

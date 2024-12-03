@@ -11,6 +11,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -20,6 +21,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +39,7 @@ import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer;
+import loqor.ait.client.renderers.entities.projectiles.StaserBoltEntityRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
@@ -83,6 +86,7 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
+        staserPredicate();
         siegeItemPredicate();
 
         // TODO make skybox renderer for mars so we dont have to render the moon
@@ -106,6 +110,8 @@ public class AITModClient implements ClientModInitializer {
          * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
          * vortex.renderVortexNodes(context, node); } } } });
          */
+
+        ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             if (!ClientTardisUtil.isPlayerInATardis())
@@ -308,6 +314,20 @@ public class AITModClient implements ClientModInitializer {
                 });
     }
 
+    public static void staserPredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.CULT_STASER, new Identifier("ads"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0f;
+            if (itemStack.getItem() instanceof BaseGunItem && livingEntity.getMainHandStack().getItem() instanceof BaseGunItem) {
+                if (livingEntity instanceof PlayerEntity) {
+                    boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
+                    return bl ? 1.0f : 0.0f;
+                }
+            }
+            return 0.0F;
+        });
+    }
+
     public static void siegeItemPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("bricked"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
@@ -345,6 +365,7 @@ public class AITModClient implements ClientModInitializer {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
+        EntityRendererRegistry.register(AITEntityTypes.STASER_BOLT_ENTITY_TYPE, StaserBoltEntityRenderer::new);
     }
 
     public static void setupBlockRendering() {

@@ -77,6 +77,7 @@ public class AITSounds {
 
     // Tools
     public static final SoundEvent DING = register("tools/goes_ding");
+    public static final SoundEvent STASER = register("tools/staser");
 
     // Sonic
     public static final SoundEvent SONIC_USE = register("sonic/use");
