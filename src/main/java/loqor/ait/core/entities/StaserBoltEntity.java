@@ -150,7 +150,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
         this.setPosition(h, j, k);
         this.checkBlockCollision();
 
-        if (this.age > 10000) {
+        if (this.age > 10) {
             this.discard();
         }
     }

@@ -29,7 +29,7 @@ public class StaserBoltEntityRenderer
     @Override
     public void render(StaserBoltEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
-        matrices.scale(2f, 2, 2);
+        matrices.scale(1.5f, 1.5f, 1.5f);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getYaw()));
         matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(entity.getPitch()));
         matrices.translate(0, -1.125f, 0);

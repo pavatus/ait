@@ -163,32 +163,43 @@
 			}
 		}
 	],
+	"overrides": [
+		{"predicate": {"ads": 0}, "model": "ait:item/cult_staser"},
+		{"predicate": {"ads": 1}, "model": "ait:item/cult_staser_ads"}
+	],
 	"display": {
 		"thirdperson_righthand": {
-			"translation": [0, 1.25, -0.25],
-			"scale": [0.75, 0.75, 0.75]
+			"translation": [0, 0.75, -0.25],
+			"scale": [0.5, 0.5, 0.5]
 		},
 		"thirdperson_lefthand": {
-			"translation": [0, 1.25, -0.25],
-			"scale": [0.75, 0.75, 0.75]
+			"translation": [0, 0.75, -0.25],
+			"scale": [0.5, 0.5, 0.5]
 		},
 		"firstperson_righthand": {
-			"translation": [1.5, 2.75, -2.75]
+			"translation": [-0.5, 1.25, -2.75],
+			"scale": [0.75, 0.75, 0.75]
 		},
 		"firstperson_lefthand": {
-			"translation": [1.5, 2.75, -2.75]
+			"translation": [-0.5, 1.25, -2.75],
+			"scale": [0.75, 0.75, 0.75]
 		},
 		"ground": {
-			"translation": [0, 2.5, 0]
+			"translation": [0, 2.5, 0],
+			"scale": [0.75, 0.75, 0.75]
 		},
 		"gui": {
-			"rotation": [30, 137, 0]
+			"rotation": [30, 137, 0],
+			"translation": [0, -0.5, 0],
+			"scale": [0.75, 0.75, 0.75]
 		},
 		"head": {
-			"translation": [0, 0, -5.75]
+			"translation": [0, 0, -5.75],
+			"scale": [0.5, 0.5, 0.5]
 		},
 		"fixed": {
-			"rotation": [0, 90, 0]
+			"rotation": [0, 90, 0],
+			"scale": [0.75, 0.75, 0.75]
 		}
 	},
 	"groups": [
@@ -198,10 +209,5 @@
 			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 		}
-	],
-
-	"overrides": [
-		{"predicate": {"ads": 0}, "model": "ait:item/cult_staser"},
-		{"predicate": {"ads": 1}, "model": "ait:item/cult_staser_ads"}
 	]
 }

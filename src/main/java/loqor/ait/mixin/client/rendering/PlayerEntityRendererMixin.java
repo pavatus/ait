@@ -79,7 +79,10 @@ public abstract class PlayerEntityRendererMixin
     @Inject(at = @At("RETURN"), method = "getArmPose", cancellable = true)
     private static void ait$getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
         if (player == null) return;
-        if (MinecraftClient.getInstance().options.useKey.isPressed() && player.getMainHandStack().getItem() instanceof BaseGunItem) {
+        if (player.getMainHandStack().getItem() instanceof BaseGunItem) {
+            if (MinecraftClient.getInstance().options.useKey.isPressed()) {
+                cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_CHARGE);
+            }
             cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
         }
     }

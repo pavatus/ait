@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.AITStatusEffects;
 
 public class BaseGunItem extends RangedWeaponItem {
     public static final Identifier SHOOT = new Identifier(AITMod.MOD_ID, "shoot_gun");
@@ -43,7 +44,8 @@ public class BaseGunItem extends RangedWeaponItem {
         boolean isAds = buf.readBoolean();
 
         if (shoot) {
-            BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), AITItems.STASER_BOLT_MAGAZINE.getDefaultStack(), 1.0f, false, 4.0f, isAds ? 0.2f : 3.42323f, 0.0f);
+            BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), AITItems.STASER_BOLT_MAGAZINE.getDefaultStack(),
+                    1.0f, false, 4.0f, player.hasStatusEffect(AITStatusEffects.ZEITON_HIGH) ? 20f : (isAds ? 0.2f : 1.42323f), 0.0f);
         }
         });
     }
@@ -96,7 +98,7 @@ public class BaseGunItem extends RangedWeaponItem {
             projectileEntity.setVelocity(vector3f.x(), vector3f.y(), vector3f.z(), speed, divergence);
         }
         gun.damage(3, shooter, e -> e.sendToolBreakStatus(hand));
-        projectileEntity.setPos(shooter.getX(), shooter.getY() + 0.75f, shooter.getZ());
+        projectileEntity.setPos(shooter.getX(), shooter.getY() + 1.2f, shooter.getZ());
         world.spawnEntity(projectileEntity);
         world.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(), AITSounds.STASER, SoundCategory.PLAYERS, 1.0f, soundPitch);
     }
