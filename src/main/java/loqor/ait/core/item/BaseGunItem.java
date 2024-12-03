@@ -106,12 +106,12 @@ public class BaseGunItem extends RangedWeaponItem {
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (otherStack.getItem() instanceof StaserBoltMagazine magazine) {
             double magazineAmmo = magazine.getCurrentFuel(otherStack);
-            NbtCompound gunNbt = new ItemStack(this).getOrCreateNbt();
-            double ammo = gunNbt.getDouble(AMMO_KEY);
-            if (clickType == ClickType.RIGHT) {
-                if (ammo <= MAX_AMMO) {
-                    gunNbt.putDouble(AMMO_KEY, Math.min(ammo + magazineAmmo, MAX_AMMO));
-                    magazine.removeFuel(magazineAmmo, otherStack);
+            if (stack.getItem() instanceof BaseGunItem gun) {
+                double ammo = gun.getCurrentAmmo();
+                if (clickType == ClickType.RIGHT && gun.getCurrentAmmo() < MAX_AMMO) {
+                    double residual = (ammo + magazineAmmo) - MAX_AMMO;
+                    gun.setCurrentAmmo(ammo + magazineAmmo, stack);
+                    magazine.setCurrentFuel(residual, otherStack);
                     return true;
                 }
             }
@@ -126,6 +126,10 @@ public class BaseGunItem extends RangedWeaponItem {
 
     public double getCurrentAmmo() {
         return new ItemStack(this).getOrCreateNbt().getDouble(AMMO_KEY);
+    }
+
+    public void setCurrentAmmo(double var, ItemStack stack) {
+        stack.getOrCreateNbt().putDouble(AMMO_KEY, Math.min(var, MAX_AMMO));
     }
 
     public double getMaxAmmo() {
