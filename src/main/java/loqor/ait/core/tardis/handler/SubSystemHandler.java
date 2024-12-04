@@ -205,7 +205,11 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
                     continue;
                 }
 
-                manager.set(context.deserialize(element, id.clazz()));
+                try {
+                    manager.set(context.deserialize(element, id.clazz()));
+                } catch (Exception e) {
+                    AITMod.LOGGER.error("Failed to deserialize subsystem " + id, e);
+                }
             }
 
             for (int i = 0; i < manager.systems.size(); i++) {
