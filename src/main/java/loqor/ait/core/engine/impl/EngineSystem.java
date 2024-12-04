@@ -124,15 +124,15 @@ public class EngineSystem extends DurableSubSystem {
             }
         }
         public void start() {
-            this.countdown = AITMod.RANDOM.nextInt(60, 200); // 3-10 seconds
+            this.countdown = AITMod.RANDOM.nextInt(100, 200); // 5-10 seconds
             this.start.accept(this);
         }
         public boolean isPhasing() {
             return this.countdown > 0;
         }
         public void cancel() {
-            this.countdown = 0;
             this.cancel.accept(this);
+            this.countdown = 0;
         }
 
         public static Phaser create(EngineSystem system) {
@@ -140,21 +140,29 @@ public class EngineSystem extends DurableSubSystem {
                     (phaser) -> {
                         system.tardis().alarm().enabled().set(true);
                         TardisUtil.sendMessageToInterior(system.tardis().asServer(), Text.translatable("tardis.message.engine.phasing").formatted(Formatting.RED));
-                        system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
+                        system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.HOP_DEMAT);
+                        system.tardis().getExterior().playSound(AITSounds.HOP_DEMAT);
                     },
                     (phaser) -> {
                         Tardis tardis1 = system.tardis();
                         TravelHandler travel = tardis1.travel();
                         TravelUtil.randomPos(tardis1, 10, 1000, cached -> {
                             travel.forceDestination(cached);
-                            if (travel.isLanded())
+                            if (travel.isLanded()) {
+                                system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
+                                system.tardis().getExterior().playSound(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 tardis1.travel().forceDemat();
+                            }
                         });
                     },
                     (phaser) -> {
+                        if (phaser.countdown < (20 * 6)) {
+                            system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.HOP_MAT);
+                            system.tardis().getExterior().playSound(AITSounds.HOP_MAT);
+                        }
                         system.tardis().alarm().enabled().set(false);
                     },
-                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 512) == 1
+                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 1024) == 1
             );
         }
     }
