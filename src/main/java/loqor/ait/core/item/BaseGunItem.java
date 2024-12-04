@@ -57,7 +57,7 @@ public class BaseGunItem extends RangedWeaponItem {
 
         if (shoot) {
             if (player.getMainHandStack().getItem() instanceof BaseGunItem gun) {
-                if (gun.getCurrentAmmo() <= 0) {
+                if (gun.getCurrentAmmo(player.getMainHandStack()) <= 0) {
                     player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF, SoundCategory.PLAYERS, 1.0f, 1.0f);
                     return;
                 }
@@ -107,8 +107,8 @@ public class BaseGunItem extends RangedWeaponItem {
         if (otherStack.getItem() instanceof StaserBoltMagazine magazine) {
             double magazineAmmo = magazine.getCurrentFuel(otherStack);
             if (stack.getItem() instanceof BaseGunItem gun) {
-                double ammo = gun.getCurrentAmmo();
-                if (clickType == ClickType.RIGHT && gun.getCurrentAmmo() < MAX_AMMO) {
+                double ammo = gun.getCurrentAmmo(stack);
+                if (clickType == ClickType.RIGHT && gun.getCurrentAmmo(stack) < MAX_AMMO) {
                     double residual = (ammo + magazineAmmo) - MAX_AMMO;
                     gun.setCurrentAmmo(ammo + magazineAmmo, stack);
                     magazine.setCurrentFuel(residual, otherStack);
@@ -124,12 +124,15 @@ public class BaseGunItem extends RangedWeaponItem {
         return GUN_PROJECTILES;
     }
 
-    public double getCurrentAmmo() {
-        return new ItemStack(this).getOrCreateNbt().getDouble(AMMO_KEY);
+    public double getCurrentAmmo(ItemStack stack) {
+        if (stack.getItem() == this)
+            return stack.getOrCreateNbt().getDouble(AMMO_KEY);
+        return 0.0d;
     }
 
     public void setCurrentAmmo(double var, ItemStack stack) {
-        stack.getOrCreateNbt().putDouble(AMMO_KEY, Math.min(var, MAX_AMMO));
+        if (stack.getItem() == this)
+            stack.getOrCreateNbt().putDouble(AMMO_KEY, Math.min(var, MAX_AMMO));
     }
 
     public double getMaxAmmo() {
@@ -184,7 +187,7 @@ public class BaseGunItem extends RangedWeaponItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        double currentAmmo = this.getCurrentAmmo();
+        double currentAmmo = this.getCurrentAmmo(stack);
         Formatting ammoColor = currentAmmo > (MAX_AMMO / 4) ? Formatting.GREEN : Formatting.RED;
 
         tooltip.add(
