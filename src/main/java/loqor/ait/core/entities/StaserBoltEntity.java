@@ -70,6 +70,14 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
             this.getWorld().playSound(null, result.getBlockPos(), AITSounds.STASER, SoundCategory.BLOCKS, 1.0f, 0.5f);
             this.remove(RemovalReason.DISCARDED);
         }
+        if (getOwner() instanceof PlayerEntity player) {
+            if (hitResult.getType() == HitResult.Type.ENTITY && player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE) {
+                this.setDamage(20d);
+            } else {
+                this.setDamage(10d);
+            }
+        }
+
         super.onCollision(hitResult);
     }
 
@@ -150,7 +158,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
         this.setPosition(h, j, k);
         this.checkBlockCollision();
 
-        if (this.age > 10) {
+        if (this.age > 100) {
             this.discard();
         }
     }

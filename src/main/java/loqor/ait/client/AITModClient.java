@@ -34,6 +34,7 @@ import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
+import loqor.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import loqor.ait.client.renderers.decoration.PlaqueRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
@@ -78,6 +79,7 @@ public class AITModClient implements ClientModInitializer {
         // TODO move to Registries
         ClientDoorRegistry.init();
         ClientTardisManager.init();
+        HudRenderCallback.EVENT.register(new AITOverlay());
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -87,6 +89,7 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         hammerPredicate();
         staserPredicate();
+        staserRiflePredicate();
         siegeItemPredicate();
 
         // TODO make skybox renderer for mars so we dont have to render the moon
@@ -318,7 +321,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.CULT_STASER, new Identifier("ads"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0f;
-            if (itemStack.getItem() instanceof BaseGunItem && livingEntity.getMainHandStack().getItem() instanceof BaseGunItem) {
+            if (itemStack.getItem() == AITItems.CULT_STASER && livingEntity.getMainHandStack().getItem() == AITItems.CULT_STASER) {
                 if (livingEntity instanceof PlayerEntity) {
                     boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
                     return bl ? 1.0f : 0.0f;
@@ -326,6 +329,20 @@ public class AITModClient implements ClientModInitializer {
             }
             return 0.0F;
         });
+    }
+
+    public static void staserRiflePredicate() {
+        ModelPredicateProviderRegistry.register(AITItems.CULT_STASER_RIFLE, new Identifier("ads"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (livingEntity == null) return 0.0f;
+                    if (itemStack.getItem() == AITItems.CULT_STASER_RIFLE && livingEntity.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE) {
+                        if (livingEntity instanceof PlayerEntity) {
+                            boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
+                            return bl ? 1.0f : 0.0f;
+                        }
+                    }
+                    return 0.0F;
+                });
     }
 
     public static void siegeItemPredicate() {
@@ -359,6 +376,7 @@ public class AITModClient implements ClientModInitializer {
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
                 WaypointBankBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.FLAG_BLOCK_ENTITY_TYPE, FlagBlockEntityRenderer::new);
     }
 
     public static void entityRenderRegister() {

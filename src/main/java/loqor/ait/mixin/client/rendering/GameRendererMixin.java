@@ -15,6 +15,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.client.util.ShaderUtils;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.item.BaseGunItem;
 
 @Mixin(GameRenderer.class)
@@ -50,7 +51,7 @@ public abstract class GameRendererMixin {
     }
 
     @Unique private double setADS(double fov, ClientPlayerEntity player) {
-        double realTargetFOV = Math.max(30, currentFOV - targetFOV);
+        double realTargetFOV = Math.max((player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE ? 10 : 30), currentFOV - (player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE ? 70 : targetFOV));
         if (isADS(player)) {
             currentFOV = MathHelper.lerp(Math.min(0.8f * MinecraftClient.getInstance().getTickDelta(), 0.8f), currentFOV, realTargetFOV);
             goBackFOV = true;

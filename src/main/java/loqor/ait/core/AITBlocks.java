@@ -151,6 +151,10 @@ public class AITBlocks implements BlockRegistryContainer {
      * 6.0F));
      */
 
+    // Decoration
+    public static final Block FLAG = new FlagBlock(
+            FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+
     @NoEnglish
     public static final Block CABLE_BLOCK = new CableBlock(
             FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));

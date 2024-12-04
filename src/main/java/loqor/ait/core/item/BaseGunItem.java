@@ -62,7 +62,7 @@ public class BaseGunItem extends RangedWeaponItem {
                     return;
                 }
                 BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), AITItems.STASER_BOLT_MAGAZINE.getDefaultStack(),
-                        1.0f, false, 4.0f, player.hasStatusEffect(AITStatusEffects.ZEITON_HIGH) ? 20f : (isAds ? 0.2f : 1.42323f), 0.0f);
+                        1.0f, false, 4.0f, player.hasStatusEffect(AITStatusEffects.ZEITON_HIGH) ? 20f : gun.getAimDeviation(isAds), 0.0f);
                 NbtCompound compound = player.getMainHandStack().getOrCreateNbt();
                 double current = compound.getDouble(AMMO_KEY);
                 double removableAmmo = (isAds ? 15 : 10);
@@ -108,8 +108,8 @@ public class BaseGunItem extends RangedWeaponItem {
             double magazineAmmo = magazine.getCurrentFuel(otherStack);
             if (stack.getItem() instanceof BaseGunItem gun) {
                 double ammo = gun.getCurrentAmmo(stack);
-                if (clickType == ClickType.RIGHT && gun.getCurrentAmmo(stack) < MAX_AMMO) {
-                    double residual = (ammo + magazineAmmo) - MAX_AMMO;
+                if (clickType == ClickType.RIGHT && gun.getCurrentAmmo(stack) < gun.getMaxAmmo()) {
+                    double residual = (ammo + magazineAmmo) - gun.getMaxAmmo();
                     gun.setCurrentAmmo(ammo + magazineAmmo, stack);
                     magazine.setCurrentFuel(residual, otherStack);
                     return true;
@@ -132,11 +132,15 @@ public class BaseGunItem extends RangedWeaponItem {
 
     public void setCurrentAmmo(double var, ItemStack stack) {
         if (stack.getItem() == this)
-            stack.getOrCreateNbt().putDouble(AMMO_KEY, Math.min(var, MAX_AMMO));
+            stack.getOrCreateNbt().putDouble(AMMO_KEY, Math.min(var, this.getMaxAmmo()));
     }
 
     public double getMaxAmmo() {
         return MAX_AMMO;
+    }
+
+    public float getAimDeviation(boolean isAds) {
+        return isAds ? 0.2f : 1.42323f;
     }
 
     @Override
@@ -188,13 +192,13 @@ public class BaseGunItem extends RangedWeaponItem {
         super.appendTooltip(stack, world, tooltip, context);
 
         double currentAmmo = this.getCurrentAmmo(stack);
-        Formatting ammoColor = currentAmmo > (MAX_AMMO / 4) ? Formatting.GREEN : Formatting.RED;
+        Formatting ammoColor = currentAmmo > (this.getMaxAmmo() / 4) ? Formatting.GREEN : Formatting.RED;
 
         tooltip.add(
                 Text.translatable("message.ait.ammo", currentAmmo)
                         .formatted(ammoColor)
                         .append(Text.literal(" / ").formatted(Formatting.GRAY))
-                        .append(Text.literal(String.valueOf(MAX_AMMO)).formatted(Formatting.GRAY))
+                        .append(Text.literal(String.valueOf(this.getMaxAmmo())).formatted(Formatting.GRAY))
         );
     }
 }
