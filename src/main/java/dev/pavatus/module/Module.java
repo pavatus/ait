@@ -3,6 +3,7 @@ package dev.pavatus.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,6 +12,7 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.BlockItem;
@@ -28,6 +30,8 @@ import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 public abstract class Module implements Identifiable {
+    private OwoItemGroup group;
+
     public abstract void init();
 
     @Environment(EnvType.CLIENT)
@@ -68,6 +72,32 @@ public abstract class Module implements Identifiable {
         return Optional.empty();
     }
 
+    public boolean shouldRegister() {
+        return true;
+    }
+
+    protected OwoItemGroup.Builder buildItemGroup() {
+        return null;
+    }
+    public OwoItemGroup getItemGroup() {
+        OwoItemGroup.Builder builder = buildItemGroup();
+
+        if (builder == null) throw new UnsupportedOperationException("Item Group for module " + this + " is not defined");
+        if (!(this.shouldRegister())) throw new UnsupportedOperationException("Tried to access item group for module " + this + " but it is not registered");
+
+        if (group == null) {
+            group = builder.build();
+        }
+
+        return group;
+    }
+
+    @Override
+    public String toString() {
+        return "Module{" +
+                "id=" + id() +
+                '}';
+    }
 
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.empty();

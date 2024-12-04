@@ -157,6 +157,13 @@ public class AITItems implements ItemRegistryContainer {
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
+     // Guns
+
+    public static final Item CULT_STASER = new BaseGunItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(AITMod.AIT_ITEM_GROUP));
+    public static final Item CULT_STASER_RIFLE = new StaserRifleItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(AITMod.AIT_ITEM_GROUP));
+
+    public static final Item STASER_BOLT_MAGAZINE = new StaserBoltMagazine(new OwoItemSettings().maxCount(16).rarity(Rarity.RARE).group(AITMod.AIT_ITEM_GROUP));
+
     public static List<Item> get() {
         List<Item> list = new ArrayList<>();
 

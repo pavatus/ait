@@ -52,6 +52,9 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(AITRadioBlockEntity::new, AITBlocks.RADIO).build();
     public static BlockEntityType<RedstoneControlBlockEntity> REDSTONE_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
             .create(RedstoneControlBlockEntity::new, AITBlocks.REDSTONE_CONTROL_BLOCK).build();
+
+    public static final BlockEntityType<FlagBlockEntity> FLAG_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+            .create(FlagBlockEntity::new, AITBlocks.FLAG).build();
     public static BlockEntityType<FluidLinkBlockEntity> FLUID_LINK_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
             .create(FluidLinkBlockEntity::new, AITBlocks.CABLE_BLOCK).build();
     public static BlockEntityType<ZeitonCageBlockEntity> ZEITON_CAGE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
