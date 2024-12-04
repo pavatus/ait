@@ -8,10 +8,11 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.item.StaserRifleItem;
 
 public class ScopeOverlay implements HudRenderCallback {
-    private static final Identifier SPYGLASS_SCOPE = new Identifier("textures/misc/spyglass_scope.png");
+    private static final Identifier SPYGLASS_SCOPE = new Identifier(AITMod.MOD_ID, "textures/gui/scope.png");
     private int scaledWidth, scaledHeight;
     private float spyglassScale;
 
