@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
 
@@ -74,6 +75,12 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
     }
 
     public static MultiBlockStructure from(Identifier structure) {
+        if (!ServerLifecycleHooks.isServer()) {
+            AITMod.LOGGER.error("Attempted to load multiblock structure on client side");
+            // todo SYNC THIS SHI TO CLIENT !!
+            return EMPTY;
+        }
+
         StructureTemplate template = WorldUtil.getOverworld().getStructureTemplateManager()
                 .getTemplate(structure).orElse(null);
 
