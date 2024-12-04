@@ -147,6 +147,7 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
             return;
         if (this.isPowered())
             this.onLoseFluid();
+        this.clear();
     }
 
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {
@@ -162,7 +163,11 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
 
         for (Direction dir : connections.keySet()) {
             IFluidLink i = connections.get(dir);
-            if (i == this) continue;
+            if (i == this || isCircular(i)) continue;
+
+            Direction inferredDirection = getDirectionFromPositions(pos, pos.offset(dir));
+            if (inferredDirection != null && isParallel(inferredDirection, getDirectionFromPositions(pos, this.getLastPos()))) continue;
+
 
             if (i != null && i.source(false) != null) {
                 this.setLast(i);
@@ -176,10 +181,14 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
             }
         }
     }
-    private void clear() {
+    private void clear(boolean sync) {
         this.setLast(null);
         this.setLastPos(null);
         this.setSource(null);
+        if (sync) this.syncToWorld();
+    }
+    private void clear() {
+        this.clear(true);
     }
 
     public void onNeighborUpdate(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
@@ -187,7 +196,15 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
             return;
 
         if (this.last() == null) { // if last is null, search for new source
-            this.search(world, pos);
+            IFluidLink link = WorldFluidTracker.query((ServerWorld) world, sourcePos);
+            if (link != null && link.source(false) != null && !isCircular(link)) {
+                Direction inferredDirection = getDirectionFromPositions(pos, sourcePos);
+                if (inferredDirection != null && isParallel(inferredDirection, getDirectionFromPositions(pos, this.getLastPos()))) return;
+
+                this.setLast(link);
+                this.setLastPos(sourcePos);
+                this.setSource(link.source(false));
+            }
         }
 
         if (sourcePos.equals(this.getLastPos())) {
@@ -197,14 +214,8 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
         this.updatePowered();
     }
     private void onLastUpdate(World world, BlockPos pos) {
-        IFluidLink link = WorldFluidTracker.query((ServerWorld) world, this.getLastPos());
-        if ((world.getBlockState(this.getLastPos()).isAir()) || (link != null && link.source(false) == null)) { // is last in chain and is removed
+        if ((world.getBlockState(this.getLastPos()).isAir()) || (last != null && last.source(false) == null)) { // is last in chain and is removed
             this.clear();
-        }
-
-        if (link == null) return;
-        if (this.source(false) == null && link.source(false) != null) {
-            this.setSource(link.source(false));
         }
     }
     private void syncToWorld() {
@@ -214,5 +225,36 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
         this.markDirty();
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
         this.getWorld().updateNeighborsAlways(this.getPos(), this.getCachedState().getBlock());
+
+        for (Direction dir : Direction.values()) {
+            if (this.getWorld().getBlockEntity(this.getPos().offset(dir)) instanceof  FluidLinkBlockEntity be) {
+                be.onNeighborUpdate(this.getWorld(), this.getPos().offset(dir), null, this.getPos());
+            }
+        }
+    }
+
+    private boolean isCircular(IFluidLink link) {
+        IFluidLink current = this;
+        while (current != null) {
+            if (current == link) {
+                return true;
+            }
+            current = current.last();
+        }
+        return false;
+    }
+
+    private Direction getDirectionFromPositions(BlockPos from, BlockPos to) {
+        for (Direction direction : Direction.values()) {
+            if (from.offset(direction).equals(to)) {
+                return direction;
+            }
+        }
+        return null;
+    }
+    private boolean isParallel(Direction dir1, Direction dir2) {
+        // return dir1.getAxis() == dir2.getAxis();
+        // todo
+        return false;
     }
 }
