@@ -46,7 +46,7 @@ public class ScopeOverlay implements HudRenderCallback {
         int l = (this.scaledHeight - j) / 2;
         int m = k + i;
         int n = l + j;
-        context.drawTexture(SPYGLASS_SCOPE, k, l, -90, 0.0f, 0.0f, i, j, i, j);
+        context.drawTexture(SPYGLASS_SCOPE, k, l, -100, 0.0f, 0.0f, i, j, i, j);
         context.fill(RenderLayer.getGuiOverlay(), 0, n, this.scaledWidth, this.scaledHeight, -90, -16777216);
         context.fill(RenderLayer.getGuiOverlay(), 0, 0, this.scaledWidth, l, -90, -16777216);
         context.fill(RenderLayer.getGuiOverlay(), 0, l, k, n, -90, -16777216);

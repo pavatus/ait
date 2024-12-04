@@ -72,9 +72,9 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
         }
         if (getOwner() instanceof PlayerEntity player) {
             if (hitResult.getType() == HitResult.Type.ENTITY && player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE) {
-                this.setDamage(20d);
+                this.setDamage(12d);
             } else {
-                this.setDamage(10d);
+                this.setDamage(2d);
             }
         }
 

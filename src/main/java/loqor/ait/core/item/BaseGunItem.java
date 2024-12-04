@@ -68,6 +68,7 @@ public class BaseGunItem extends RangedWeaponItem {
                 NbtCompound compound = player.getMainHandStack().getOrCreateNbt();
                 double current = compound.getDouble(AMMO_KEY);
                 double removableAmmo = (isAds ? 15 : 10);
+                player.getItemCooldownManager().set(gun, gun.getCooldown());
                 if (current - removableAmmo <= 0) {
                     compound.putDouble(AMMO_KEY, 0);
                 } else {
@@ -96,7 +97,7 @@ public class BaseGunItem extends RangedWeaponItem {
 
     @Environment(EnvType.CLIENT)
     public void tryShoot(World world, Entity entity, boolean selected) {
-        if (world.isClient() && entity instanceof PlayerEntity) {
+        if (world.isClient() && entity instanceof PlayerEntity player) {
             if (selected) {
                 BaseGunItem.shootGun(MinecraftClient.getInstance().options.attackKey.isPressed(), MinecraftClient.getInstance().options.useKey.isPressed());
                 MinecraftClient.getInstance().options.attackKey.setPressed(false);
@@ -108,7 +109,10 @@ public class BaseGunItem extends RangedWeaponItem {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (world.isClient()) {
-            this.tryShoot(world, entity, selected);
+            if (entity instanceof PlayerEntity player) {
+                if (!player.getItemCooldownManager().isCoolingDown(this))
+                    this.tryShoot(world, entity, selected);
+            }
         }
     }
 
@@ -151,6 +155,10 @@ public class BaseGunItem extends RangedWeaponItem {
 
     public float getAimDeviation(boolean isAds) {
         return isAds ? 0.2f : 1.42323f;
+    }
+
+    public int getCooldown() {
+        return 20;
     }
 
     @Override
