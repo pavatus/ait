@@ -15,7 +15,7 @@ import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class EmergencyPower extends SubSystem implements ArtronHolder, StructureHolder {
-    private static final MultiBlockStructure STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/emergency_power"));
+    private static MultiBlockStructure STRUCTURE;
     private double fuel;
 
     static {
@@ -58,6 +58,10 @@ public class EmergencyPower extends SubSystem implements ArtronHolder, Structure
 
     @Override
     public MultiBlockStructure getStructure() {
+        if (STRUCTURE == null) {
+            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/emergency_power"));
+        }
+
         return STRUCTURE;
     }
 }

@@ -9,7 +9,7 @@ import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class DematCircuit extends DurableSubSystem implements StructureHolder {
-    private static final MultiBlockStructure STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/demat"));
+    private static MultiBlockStructure STRUCTURE;
 
     static {
         TardisEvents.DEMAT.register(tardis -> {
@@ -35,6 +35,10 @@ public class DematCircuit extends DurableSubSystem implements StructureHolder {
 
     @Override
     public MultiBlockStructure getStructure() {
+        if (STRUCTURE == null) {
+            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/demat"));
+        }
+
         return STRUCTURE;
     }
 }

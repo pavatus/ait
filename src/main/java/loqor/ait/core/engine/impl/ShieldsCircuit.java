@@ -10,7 +10,7 @@ import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 import loqor.ait.core.tardis.handler.ShieldHandler;
 
 public class ShieldsCircuit extends DurableSubSystem implements StructureHolder {
-    private static final MultiBlockStructure STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/shield"));
+    private static MultiBlockStructure STRUCTURE;
 
     public ShieldsCircuit() {
         super(Id.SHIELDS);
@@ -28,6 +28,10 @@ public class ShieldsCircuit extends DurableSubSystem implements StructureHolder 
 
     @Override
     public MultiBlockStructure getStructure() {
+        if (STRUCTURE == null) {
+            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/shield"));
+        }
+
         return STRUCTURE;
     }
 
