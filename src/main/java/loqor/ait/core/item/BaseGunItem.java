@@ -3,6 +3,8 @@ package loqor.ait.core.item;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -84,6 +86,7 @@ public class BaseGunItem extends RangedWeaponItem {
         return stack;
     }
 
+    @Environment(EnvType.CLIENT)
     public static void shootGun(boolean shoot, boolean isAds) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBoolean(shoot);
@@ -91,14 +94,21 @@ public class BaseGunItem extends RangedWeaponItem {
         ClientPlayNetworking.send(BaseGunItem.SHOOT, buf);
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
+    @Environment(EnvType.CLIENT)
+    public void tryShoot(World world, Entity entity, boolean selected) {
         if (world.isClient() && entity instanceof PlayerEntity) {
             if (selected) {
                 BaseGunItem.shootGun(MinecraftClient.getInstance().options.attackKey.isPressed(), MinecraftClient.getInstance().options.useKey.isPressed());
                 MinecraftClient.getInstance().options.attackKey.setPressed(false);
             }
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+        if (world.isClient()) {
+            this.tryShoot(world, entity, selected);
         }
     }
 

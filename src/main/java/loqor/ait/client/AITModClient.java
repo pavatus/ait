@@ -79,7 +79,7 @@ public class AITModClient implements ClientModInitializer {
         // TODO move to Registries
         ClientDoorRegistry.init();
         ClientTardisManager.init();
-        HudRenderCallback.EVENT.register(new AITOverlay());
+        HudRenderCallback.EVENT.register(new ScopeOverlay());
 
         setupBlockRendering();
         sonicModelPredicate();

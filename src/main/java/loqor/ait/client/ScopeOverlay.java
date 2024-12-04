@@ -10,7 +10,7 @@ import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.core.item.StaserRifleItem;
 
-public class AITOverlay implements HudRenderCallback {
+public class ScopeOverlay implements HudRenderCallback {
     private static final Identifier SPYGLASS_SCOPE = new Identifier("textures/misc/spyglass_scope.png");
     private int scaledWidth, scaledHeight;
     private float spyglassScale;
