@@ -55,7 +55,7 @@ public abstract class PlayerEntityRendererMixin
         if (!(player.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof SpacesuitItem)) return;
         ci.cancel();
 
-        PlayerEntityModel playerEntityModel = (PlayerEntityModel) this.getModel();
+        PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel = this.getModel();
         this.setModelPose(player);
         playerEntityModel.handSwingProgress = 0.0f;
         playerEntityModel.sneaking = false;
