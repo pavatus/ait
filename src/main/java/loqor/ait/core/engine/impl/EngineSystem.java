@@ -156,7 +156,7 @@ public class EngineSystem extends DurableSubSystem {
                         });
                     },
                     (phaser) -> {
-                        if (phaser.countdown < (20 * 6)) {
+                        if (phaser.countdown < (20 * 6F)) {
                             system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.HOP_MAT);
                             system.tardis().getExterior().playSound(AITSounds.HOP_MAT);
                         }
