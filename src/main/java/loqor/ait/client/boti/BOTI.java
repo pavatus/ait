@@ -5,6 +5,7 @@ import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRe
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
@@ -30,12 +31,12 @@ public class BOTI {
         MinecraftClient.getInstance().getFramebuffer().endWrite();
         BOTI_HANDLER.setupFramebuffer();
 
-        //GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
-        //GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, BOTI_HANDLER.afbo.fbo);
-        //GL30.glBlitFramebuffer(0, 0, MinecraftClient.getInstance().getFramebuffer().textureWidth,
-        //        MinecraftClient.getInstance().getFramebuffer().textureHeight, 0, 0,
-        //        BOTI_HANDLER.afbo.textureWidth,
-        //        BOTI_HANDLER.afbo.textureHeight, GL30.GL_DEPTH_BUFFER_BIT | GL30.GL_COLOR_BUFFER_BIT, GL30.GL_NEAREST);
+        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
+        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, BOTI_HANDLER.afbo.fbo);
+        GL30.glBlitFramebuffer(0, 0, MinecraftClient.getInstance().getFramebuffer().textureWidth,
+                MinecraftClient.getInstance().getFramebuffer().textureHeight, 0, 0,
+                BOTI_HANDLER.afbo.textureWidth,
+                BOTI_HANDLER.afbo.textureHeight, GL30.GL_DEPTH_BUFFER_BIT, GL30.GL_NEAREST);
 
         VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
 
@@ -53,8 +54,7 @@ public class BOTI {
 
         // Set up stencil test to only render where the stencil buffer is equal to 1
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-        GL11.glStencilMask(0xFF);
-        GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        GL11.glStencilMask(0x00);
 
         // Render the falls model (this should only render inside the frame)
         GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -65,25 +65,23 @@ public class BOTI {
 
         // Draw the framebuffer
 
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
-
-        //GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, BOTI_HANDLER.afbo.fbo);
-        //GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
-        //GL30.glBlitFramebuffer(0, 0, BOTI_HANDLER.afbo.textureWidth,
-        //        BOTI_HANDLER.afbo.textureHeight, 0, 0,
-        //        MinecraftClient.getInstance().getFramebuffer().textureWidth,
-        //        MinecraftClient.getInstance().getFramebuffer().textureHeight, GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, GL30.GL_NEAREST);
+        MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
         BOTI_HANDLER.afbo.draw(MinecraftClient.getInstance().getWindow().getFramebufferWidth(), MinecraftClient.getInstance().getWindow().getFramebufferHeight(), false);
+        BOTI_HANDLER.endFBO();
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.colorMask(true, true, true, true);
 
         // Clean up
-        BOTI_HANDLER.endFBO();
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
         stack.pop();
+
+        GL11.glDisable(GL11.GL_STENCIL_TEST);
+        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+
+        GL11.glColorMask(true, true, true, true);
+
     }
 }
