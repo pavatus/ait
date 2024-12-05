@@ -43,7 +43,6 @@ public class GallifreyFallsPaintingEntityRenderer
 
         BOTI.renderBOTI(matrixStack, frame, this.getLight(paintingEntity, i), vertexConsumerProvider);
         matrixStack.pop();
-        super.render(paintingEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override

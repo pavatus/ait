@@ -16,6 +16,7 @@ import loqor.ait.client.models.decoration.GallifreyFallsFrameModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 
+
 public class BOTI {
 
     public static BOTIHandler BOTI_HANDLER = new BOTIHandler();
@@ -29,6 +30,13 @@ public class BOTI {
         MinecraftClient.getInstance().getFramebuffer().endWrite();
         BOTI_HANDLER.setupFramebuffer();
 
+        //GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
+        //GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, BOTI_HANDLER.afbo.fbo);
+        //GL30.glBlitFramebuffer(0, 0, MinecraftClient.getInstance().getFramebuffer().textureWidth,
+        //        MinecraftClient.getInstance().getFramebuffer().textureHeight, 0, 0,
+        //        BOTI_HANDLER.afbo.textureWidth,
+        //        BOTI_HANDLER.afbo.textureHeight, GL30.GL_DEPTH_BUFFER_BIT | GL30.GL_COLOR_BUFFER_BIT, GL30.GL_NEAREST);
+
         VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
 
         // Enable stencil testing and clear the stencil buffer
@@ -40,7 +48,7 @@ public class BOTI {
 
         // Render the frame model to the stencil buffer
         GL11.glColorMask(true, true, true, false);
-        ((GallifreyFallsFrameModel) singlePartEntityModel).renderWithFbo(stack, botiProvider, null, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        ((GallifreyFallsFrameModel) singlePartEntityModel).renderWithFbo(stack, botiProvider, null, light, OverlayTexture.DEFAULT_UV, 0.0F, 0.0F, 0.0F, 1.0F);
         GL11.glColorMask(false, false, false, true);
 
         // Set up stencil test to only render where the stencil buffer is equal to 1
@@ -59,11 +67,19 @@ public class BOTI {
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
 
+        //GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, BOTI_HANDLER.afbo.fbo);
+        //GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
+        //GL30.glBlitFramebuffer(0, 0, BOTI_HANDLER.afbo.textureWidth,
+        //        BOTI_HANDLER.afbo.textureHeight, 0, 0,
+        //        MinecraftClient.getInstance().getFramebuffer().textureWidth,
+        //        MinecraftClient.getInstance().getFramebuffer().textureHeight, GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, GL30.GL_NEAREST);
+
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
         BOTI_HANDLER.afbo.draw(MinecraftClient.getInstance().getWindow().getFramebufferWidth(), MinecraftClient.getInstance().getWindow().getFramebufferHeight(), false);
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.colorMask(true, true, true, true);
 
         // Clean up
         BOTI_HANDLER.endFBO();

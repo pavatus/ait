@@ -40,11 +40,11 @@ public class AITRenderLayers extends RenderLayer {
 
     public static RenderLayer getBoti() {
         MultiPhaseParameters parameters = MultiPhaseParameters.builder()
-                .texture(MIPMAP_BLOCK_ATLAS_TEXTURE)
+                .texture(RenderPhase.MIPMAP_BLOCK_ATLAS_TEXTURE)
                 .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
                 .layering(RenderPhase.NO_LAYERING)
                 .build(false);
-        return RenderLayer.of("boti", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
+        return RenderLayer.of("boti", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT,
                 VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
     }
 }
