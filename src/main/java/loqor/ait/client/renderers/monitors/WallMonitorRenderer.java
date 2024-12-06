@@ -37,6 +37,13 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         this.plaqueModel = new PlaqueModel(PlaqueModel.getTexturedModelData().createModel());
     }
 
+    private String truncateDimensionName(String name, int maxLength) {
+        if (name.length() > maxLength) {
+            return name.substring(0, maxLength) + "...";
+        }
+        return name;
+    }
+
     @Override
     public void render(WallMonitorBlockEntity entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -80,12 +87,13 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         BlockPos abpdPos = abpd.getPos();
 
         String positionPosText = abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
-        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
+        Text positionDimensionText = Text.of(truncateDimensionName(WorldUtil.worldText(abpp.getDimension()).getString(), 16));
 
         String fuelText = Math.round((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 100) + "%";
 
         String destinationPosText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
+        Text destinationDimensionText = Text.of(truncateDimensionName(WorldUtil.worldText(abpd.getDimension()).getString(), 16));
+
 
         float v = -20f;
 

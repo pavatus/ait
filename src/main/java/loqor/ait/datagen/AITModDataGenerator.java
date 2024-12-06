@@ -6,6 +6,8 @@ import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
 import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
+import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -17,6 +19,8 @@ import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -43,6 +47,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generateSoundData(pack);
         generateAdvancements(pack);
         generateLoot(pack);
+        generateWorldFeatures(pack);
     }
 
     public void generateLoot(FabricDataGenerator.Pack pack) {
@@ -51,6 +56,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     private void generateAdvancements(FabricDataGenerator.Pack pack) {
         pack.addProvider(AITAchievementProvider::new);
+    }
+
+    private void generateWorldFeatures(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITWorldGeneratorProvider::new);
+    }
+
+    @Override
+    public void buildRegistry(RegistryBuilder registryBuilder) {
+            registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, PlanetConfiguredFeatures::bootstrap);
+        registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, PlanetPlacedFeatures::boostrap);
     }
 
     public void generateRecipes(FabricDataGenerator.Pack pack) {
