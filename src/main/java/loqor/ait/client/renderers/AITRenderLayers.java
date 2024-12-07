@@ -58,6 +58,17 @@ public class AITRenderLayers extends RenderLayer {
                             .depthTest(ALWAYS_DEPTH_TEST).overlay(ENABLE_OVERLAY_COLOR).writeMaskState(COLOR_MASK).build(false)));
 
     public static RenderLayer getBotiInterior(Identifier texture) {
-        return BOTI_INTERIOR.apply(texture);
+        MultiPhaseParameters parameters = MultiPhaseParameters.builder()
+                .texture(new Texture(texture, false, false))
+                .program(ENTITY_CUTOUT_NONULL_PROGRAM)
+                .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+                .cull(DISABLE_CULLING)
+                .layering(RenderPhase.NO_LAYERING)
+                .lightmap(ENABLE_LIGHTMAP)
+                .overlay(ENABLE_OVERLAY_COLOR)
+                .depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
+                .build(false);
+        return RenderLayer.of("boti_interior", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+                VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
     }
 }

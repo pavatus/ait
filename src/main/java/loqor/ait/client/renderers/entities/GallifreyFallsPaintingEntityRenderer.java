@@ -41,7 +41,7 @@ public class GallifreyFallsPaintingEntityRenderer
         matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180));
         matrixStack.translate(0, -0.5, 0.5);
 
-        BOTI.renderBOTI(matrixStack, frame, this.getLight(paintingEntity, i), vertexConsumerProvider);
+        BOTI.renderGallifreyFallsPainting(matrixStack, frame, this.getLight(paintingEntity, i), vertexConsumerProvider);
 
         matrixStack.pop();
     }
