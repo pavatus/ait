@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.doors;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -13,6 +15,8 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 import loqor.ait.api.TardisComponent;
+import loqor.ait.client.boti.BOTI;
+import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
@@ -67,6 +71,13 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         this.renderDoor(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
         profiler.pop();
 
+        profiler.pop();
+    }
+
+    private void renderDoorBoti(Identifier texture, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        profiler.push("boti");
+        if (model.getPart().getChild("Doors") != null)
+            BOTI.renderInteriorDoorBoti(matrices, texture, model, model.getPart().getChild("Doors"), interiorTexture, new GallifreyFallsModel(GallifreyFallsModel.getTexturedModelData().createModel()), light);
         profiler.pop();
     }
 
@@ -142,6 +153,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                         overlay, 1, 1, 1, 1);
             }
         }
+
+        //if (tardis.travel().inFlight())
+            this.renderDoorBoti(texture, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
 
         matrices.pop();
         profiler.pop();

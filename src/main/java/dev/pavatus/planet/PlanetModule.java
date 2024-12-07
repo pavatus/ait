@@ -55,14 +55,18 @@ public class PlanetModule extends Module {
 
     @Override
     public void init() {
+        this.getItemGroup().initialize();
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
             env.init(PlanetRegistry.getInstance());
         });
 
         FieldRegistrationHandler.register(PlanetItems.class, AITMod.MOD_ID, false);
         FieldRegistrationHandler.register(PlanetBlocks.class, AITMod.MOD_ID, false);
+    }
 
-        getItemGroup().initialize();
+    @Override
+    protected OwoItemGroup.Builder buildItemGroup() {
+        return OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()), () -> Icon.of(PlanetItems.SPACESUIT_HELMET));
     }
 
     @Environment(EnvType.CLIENT)
@@ -78,14 +82,7 @@ public class PlanetModule extends Module {
 
     @Override
     public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(getItemGroup()));
-    }
-
-    @Override
-    protected OwoItemGroup.Builder buildItemGroup() {
-        return OwoItemGroup
-                .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(PlanetBlocks.MARTIAN_STONE))
-                .disableDynamicTitle();
+        return new BlockItem(block, new OwoItemSettings().group(this.getItemGroup()));
     }
 
     @Override

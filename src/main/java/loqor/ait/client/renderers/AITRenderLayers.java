@@ -1,6 +1,7 @@
 package loqor.ait.client.renderers;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,6 +46,29 @@ public class AITRenderLayers extends RenderLayer {
                 .layering(RenderPhase.NO_LAYERING)
                 .build(false);
         return RenderLayer.of("boti", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT,
+                VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
+    }
+
+    private static final Function<Identifier, RenderLayer> BOTI_INTERIOR = Util.memoize(texture ->
+            RenderLayer.of("boti_interior", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+                    VertexFormat.DrawMode.QUADS, 256, false, true,
+                    MultiPhaseParameters.builder().program(TRANSPARENT_TEXT_PROGRAM)
+                            .texture(new RenderPhase.Texture(texture, false, false))
+                            .transparency(TRANSLUCENT_TRANSPARENCY).cull(DISABLE_CULLING).lightmap(ENABLE_LIGHTMAP)
+                            .depthTest(ALWAYS_DEPTH_TEST).overlay(ENABLE_OVERLAY_COLOR).writeMaskState(COLOR_MASK).build(false)));
+
+    public static RenderLayer getBotiInterior(Identifier texture) {
+        MultiPhaseParameters parameters = MultiPhaseParameters.builder()
+                .texture(new Texture(texture, false, false))
+                .program(ENTITY_CUTOUT_NONULL_PROGRAM)
+                .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+                .cull(DISABLE_CULLING)
+                .layering(RenderPhase.NO_LAYERING)
+                .lightmap(ENABLE_LIGHTMAP)
+                .overlay(ENABLE_OVERLAY_COLOR)
+                .depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
+                .build(false);
+        return RenderLayer.of("boti_interior", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                 VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
     }
 }
