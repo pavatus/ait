@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import loqor.ait.core.tardis.handler.ShieldHandler;
+import loqor.ait.core.tardis.util.TardisUtil;
+import net.minecraft.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -135,12 +138,12 @@ public class KeyItem extends LinkableItem {
             return;
 
         if (!keyType.hasProtocol(Protocols.HAIL))
-            return;
+           return;
 
         if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
             return;
 
-        if (player.getHealth() > 4 || player.getWorld() == tardis.asServer().getInteriorWorld())
+        if (player.getHealth() > 4)
             return;
 
         World world = player.getWorld();
@@ -149,13 +152,33 @@ public class KeyItem extends LinkableItem {
         DirectedGlobalPos.Cached globalPos = DirectedGlobalPos.Cached.create((ServerWorld) world, pos,
                 (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
+        List<PlayerEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis.asServer())
+                .stream()
+                .filter(entity -> entity instanceof PlayerEntity)
+                .map(entity -> (PlayerEntity) entity)
+                .toList();
+
+        for (PlayerEntity entity : entities) {
+            entity.sendMessage(
+                    Text.translatable("tardis.message.protocol_813.travel").formatted(Formatting.RED),
+                    true
+            );
+        }
+        tardis.alarm().enabled().set(true);
+
+
         travel.dematerialize();
+        travel.autopilot(true);
 
         if (travel.getState() != TravelHandlerBase.State.DEMAT)
             return;
 
         travel.forceDestination(globalPos);
+        travel.speed(9999);
         travel.forceRemat();
+
+        tardis.removeFuel(100);
+
 
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));
