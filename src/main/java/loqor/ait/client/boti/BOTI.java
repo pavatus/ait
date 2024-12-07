@@ -1,6 +1,5 @@
 package loqor.ait.client.boti;
 
-import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE;
 import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer.PAINTING_TEXTURE;
 
 import com.mojang.blaze3d.platform.GlConst;
@@ -32,10 +31,6 @@ public class BOTI {
     public static void renderGallifreyFallsPainting(MatrixStack stack, SinglePartEntityModel singlePartEntityModel, int light, VertexConsumerProvider provider) {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
-
-        GallifreyFallsFrameModel model = new GallifreyFallsFrameModel(GallifreyFallsFrameModel.getTexturedModelData().createModel());
-
-        model.render(stack, provider.getBuffer(RenderLayer.getEntityCutout(FRAME_TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
 
         stack.push();
         stack.translate(0, 0, -0.125);
@@ -92,8 +87,6 @@ public class BOTI {
     public static void renderInteriorDoorBoti(MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, Identifier interiorTex, SinglePartEntityModel interior, int light) {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
-
-        // Render the FRAME of whatever you want to render here
 
         stack.push();
         stack.translate(0, 0.1, 0.8);
