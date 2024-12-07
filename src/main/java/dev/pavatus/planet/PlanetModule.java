@@ -42,6 +42,9 @@ import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 
 public class PlanetModule extends Module {
+    public static final OwoItemGroup ITEM_GROUP = OwoItemGroup
+            .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(PlanetBlocks.MARTIAN_STONE))
+            .disableDynamicTitle().build();
     private static final PlanetModule INSTANCE = new PlanetModule();
 
     public static final Identifier ID = AITMod.id("planet");
@@ -54,8 +57,6 @@ public class PlanetModule extends Module {
 
         FieldRegistrationHandler.register(PlanetItems.class, AITMod.MOD_ID, false);
         FieldRegistrationHandler.register(PlanetBlocks.class, AITMod.MOD_ID, false);
-
-        getItemGroup().initialize();
     }
 
     @Environment(EnvType.CLIENT)
@@ -71,14 +72,7 @@ public class PlanetModule extends Module {
 
     @Override
     public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(getItemGroup()));
-    }
-
-    @Override
-    protected OwoItemGroup.Builder buildItemGroup() {
-        return OwoItemGroup
-                .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(PlanetBlocks.MARTIAN_STONE))
-                .disableDynamicTitle();
+        return new BlockItem(block, new OwoItemSettings().group(ITEM_GROUP));
     }
 
     @Override
