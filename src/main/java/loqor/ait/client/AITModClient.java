@@ -4,6 +4,7 @@ import static loqor.ait.AITMod.*;
 
 import java.util.UUID;
 
+import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -317,10 +318,10 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void staserPredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.CULT_STASER, new Identifier("ads"),
+        ModelPredicateProviderRegistry.register(PlanetItems.CULT_STASER, new Identifier("ads"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
             if (livingEntity == null) return 0.0f;
-            if (itemStack.getItem() == AITItems.CULT_STASER && livingEntity.getMainHandStack().getItem() == AITItems.CULT_STASER) {
+            if (itemStack.getItem() == PlanetItems.CULT_STASER && livingEntity.getMainHandStack().getItem() == PlanetItems.CULT_STASER) {
                 if (livingEntity instanceof PlayerEntity) {
                     boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
                     return bl ? 1.0f : 0.0f;
@@ -331,10 +332,10 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void staserRiflePredicate() {
-        ModelPredicateProviderRegistry.register(AITItems.CULT_STASER_RIFLE, new Identifier("ads"),
+        ModelPredicateProviderRegistry.register(PlanetItems.CULT_STASER_RIFLE, new Identifier("ads"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (livingEntity == null) return 0.0f;
-                    if (itemStack.getItem() == AITItems.CULT_STASER_RIFLE && livingEntity.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE) {
+                    if (itemStack.getItem() == PlanetItems.CULT_STASER_RIFLE && livingEntity.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE) {
                         if (livingEntity instanceof PlayerEntity) {
                             boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
                             return bl ? 1.0f : 0.0f;
