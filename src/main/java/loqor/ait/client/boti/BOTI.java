@@ -37,12 +37,12 @@ public class BOTI {
         stack.translate(0, 0, -0.125);
 
         MinecraftClient.getInstance().getFramebuffer().endWrite();
+
         BOTI_HANDLER.setupFramebuffer();
 
         BOTI.copyFramebuffer(MinecraftClient.getInstance().getFramebuffer(), BOTI_HANDLER.afbo);
 
         VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
-        VertexConsumerProvider.Immediate nonBotiProvider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 
         // Enable stencil testing and clear the stencil buffer
         GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -51,15 +51,15 @@ public class BOTI {
         GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
         GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 
-        // Render the frame model to the stencil buffer
-        RenderSystem.depthMask(false);
+        // Render the mask overtop the interior of the interior stuff
+
+        RenderSystem.depthMask(true);
         stack.push();
-        ((GallifreyFallsFrameModel) singlePartEntityModel).renderWithFbo(stack, botiProvider, null, light, OverlayTexture.DEFAULT_UV, 0.0F, 0.0F, 0.0F, 1.0F);
+        ((GallifreyFallsFrameModel) singlePartEntityModel).renderWithFbo(stack, botiProvider, null, light, OverlayTexture.DEFAULT_UV, 0, 0, 0, 1);
         botiProvider.draw();
         stack.pop();
-        RenderSystem.depthMask(true);
+        RenderSystem.depthMask(false);
 
-        // Set up stencil test to only render where the stencil buffer is equal to 1
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
         GlStateManager._depthFunc(GL11.GL_ALWAYS);
@@ -67,26 +67,22 @@ public class BOTI {
         // Render the falls model (this should only render inside the frame)
         GL11.glColorMask(true, true, true, false);
         stack.push();
-        GallifreyFallsModel.getTexturedModelData().createModel().render(stack, botiProvider.getBuffer(AITRenderLayers.getEntityCutoutNoCull(PAINTING_TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        GallifreyFallsModel.getTexturedModelData().createModel().render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(PAINTING_TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
-        GL11.glColorMask(false, false, false, true);
-
         GlStateManager._depthFunc(GL11.GL_LEQUAL);
+
+        GL11.glColorMask(false, false, false, true);
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
         BOTI.copyFramebuffer(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
 
-        // Clean up
-        stack.pop();
-
         GL11.glDisable(GL11.GL_STENCIL_TEST);
-
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
 
         GL11.glColorMask(true, true, true, true);
 
+        stack.pop();
     }
 
     private static void copyFramebuffer(Framebuffer src, Framebuffer dest) {
