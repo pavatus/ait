@@ -113,7 +113,6 @@ public class AITModClient implements ClientModInitializer {
          * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
          * vortex.renderVortexNodes(context, node); } } } });
          */
-
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
