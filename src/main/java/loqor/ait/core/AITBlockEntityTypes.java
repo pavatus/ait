@@ -55,7 +55,7 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(RedstoneControlBlockEntity::new, AITBlocks.REDSTONE_CONTROL_BLOCK).build();
 
     public static final BlockEntityType<FlagBlockEntity> FLAG_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(FlagBlockEntity::new, AITBlocks.FLAG).build();
+            .create(FlagBlockEntity::new, PlanetBlocks.FLAG).build();
     public static BlockEntityType<FluidLinkBlockEntity> FLUID_LINK_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
             .create(FluidLinkBlockEntity::new, AITBlocks.CABLE_BLOCK).build();
     public static BlockEntityType<ZeitonCageBlockEntity> ZEITON_CAGE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
@@ -64,5 +64,4 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(PowerConverterBlock.BlockEntity::new, AITBlocks.POWER_CONVERTER).build();
     public static BlockEntityType<GenericStructureSystemBlockEntity> GENERIC_SUBSYSTEM_BLOCK_TYPE = FabricBlockEntityTypeBuilder
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
-            .create(FlagBlockEntity::new, PlanetBlocks.FLAG).build();
 }
