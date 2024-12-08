@@ -22,6 +22,7 @@ import loqor.ait.client.models.decoration.GallifreyFallsFrameModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.renderers.VortexUtil;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 
 public class BOTI {
@@ -72,6 +73,7 @@ public class BOTI {
 
         // Render the falls model (this should only render inside the frame)
         stack.push();
+        stack.translate(0, 0, -1.5f);
         GallifreyFallsModel.getTexturedModelData().createModel().render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(PAINTING_TEXTURE)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
@@ -88,13 +90,12 @@ public class BOTI {
         stack.pop();
     }
 
-    public static void renderInteriorDoorBoti(MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, Identifier interiorTex, SinglePartEntityModel interior, int light) {
+    public static void renderInteriorDoorBoti(ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, Identifier interiorTex, SinglePartEntityModel interior, int light) {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
 
         stack.push();
-        stack.translate(0, 0.1, 0.8);
-        stack.scale(0.635F, 0.631F, 0.631F);
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
 
         MinecraftClient.getInstance().getFramebuffer().endWrite();
 
@@ -113,6 +114,8 @@ public class BOTI {
 
         RenderSystem.depthMask(true);
         stack.push();
+        stack.translate(0, -1.7f, -0.5);
+        stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight() / 2, 1f);
         mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         botiProvider.draw();
         stack.pop();
@@ -126,7 +129,7 @@ public class BOTI {
         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
         stack.translate(Math.sin(MinecraftClient.getInstance().player.age / 5.0f * 360f), -2.125f - Math.sin(MinecraftClient.getInstance().player.age / 20.0f * 360f), 400 + Math.cos(MinecraftClient.getInstance().player.age / 10.0f * 360f));
-        VortexUtil util = new VortexUtil("space");
+        VortexUtil util = new VortexUtil("cream");
         util.renderVortex(stack);
         botiProvider.draw();
         stack.pop();

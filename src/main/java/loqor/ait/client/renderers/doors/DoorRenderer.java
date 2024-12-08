@@ -14,8 +14,10 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.boti.BOTI;
+import loqor.ait.client.models.boti.BotiPortalModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
@@ -74,10 +76,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         profiler.pop();
     }
 
-    private void renderDoorBoti(Identifier texture, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    private void renderDoorBoti(ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         profiler.push("boti");
-        if (model.getPart().getChild("Doors") != null)
-            BOTI.renderInteriorDoorBoti(matrices, texture, model, model.getPart().getChild("Doors"), interiorTexture, new GallifreyFallsModel(GallifreyFallsModel.getTexturedModelData().createModel()), light);
+        BOTI.renderInteriorDoorBoti(variant, matrices, new Identifier(AITMod.MOD_ID, "textures/painting/texture.png"), model, BotiPortalModel.getTexturedModelData().createModel(), interiorTexture, new GallifreyFallsModel(GallifreyFallsModel.getTexturedModelData().createModel()), light);
         profiler.pop();
     }
 
@@ -154,8 +155,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             }
         }
 
-        //if (tardis.travel().inFlight())
-            this.renderDoorBoti(texture, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+        if (tardis.travel().getState() != TravelHandlerBase.State.LANDED && tardis.door().isOpen())
+            this.renderDoorBoti(variant, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
 
         matrices.pop();
         profiler.pop();

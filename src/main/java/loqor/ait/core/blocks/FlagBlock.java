@@ -26,7 +26,7 @@ public class FlagBlock extends Block implements BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
 
     // i genuinely cannot be bothered to do math :)))
-    private static final VoxelShape POLE = VoxelShapes.cuboid(0, 0, 0, (double) 1 / 16, (double) 2 / 16, (double) 1 / 16);
+    private static final VoxelShape POLE = VoxelShapes.cuboid(0, 0, 0, 1, 2, 1);
 
     public FlagBlock(Settings settings) {
         super(settings);
