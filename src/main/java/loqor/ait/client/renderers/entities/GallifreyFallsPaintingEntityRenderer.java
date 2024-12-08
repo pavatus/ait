@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -20,7 +19,6 @@ import loqor.ait.AITMod;
 import loqor.ait.client.boti.BOTI;
 import loqor.ait.client.models.decoration.GallifreyFallsFrameModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
-import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
 
 @Environment(value=EnvType.CLIENT)
@@ -41,9 +39,8 @@ public class GallifreyFallsPaintingEntityRenderer
     public void render(GallifreyFallsPaintingEntity paintingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
         matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(paintingEntity.getBodyYaw()));
         matrixStack.translate(0, -0.5, 0.5);
-
-        frame.render(matrixStack, vertexConsumerProvider.getBuffer(AITRenderLayers.getEntityCutout(FRAME_TEXTURE)), i, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
         BOTI.renderGallifreyFallsPainting(matrixStack, frame, this.getLight(paintingEntity, i), vertexConsumerProvider);
 

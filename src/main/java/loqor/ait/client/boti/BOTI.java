@@ -1,5 +1,6 @@
 package loqor.ait.client.boti;
 
+import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE;
 import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer.PAINTING_TEXTURE;
 
 import com.mojang.blaze3d.platform.GlConst;
@@ -32,8 +33,9 @@ public class BOTI {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
 
+        GallifreyFallsFrameModel model = new GallifreyFallsFrameModel(GallifreyFallsFrameModel.getTexturedModelData().createModel());
+
         stack.push();
-        stack.translate(0, 0, -0.125);
 
         MinecraftClient.getInstance().getFramebuffer().endWrite();
 
@@ -42,6 +44,11 @@ public class BOTI {
         BOTI.copyFramebuffer(MinecraftClient.getInstance().getFramebuffer(), BOTI_HANDLER.afbo);
 
         VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
+
+        model.render(stack, botiProvider.getBuffer(AITRenderLayers.getEntityCutout(FRAME_TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        botiProvider.draw();
+
+        stack.translate(0, 0, -0.125);
 
         // Enable stencil testing and clear the stencil buffer
         GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -64,14 +71,11 @@ public class BOTI {
         GlStateManager._depthFunc(GL11.GL_ALWAYS);
 
         // Render the falls model (this should only render inside the frame)
-        GL11.glColorMask(true, true, true, false);
         stack.push();
-        GallifreyFallsModel.getTexturedModelData().createModel().render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(PAINTING_TEXTURE)), light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+        GallifreyFallsModel.getTexturedModelData().createModel().render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(PAINTING_TEXTURE)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
         GlStateManager._depthFunc(GL11.GL_LEQUAL);
-
-        GL11.glColorMask(false, false, false, true);
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
@@ -79,7 +83,7 @@ public class BOTI {
 
         GL11.glDisable(GL11.GL_STENCIL_TEST);
 
-        GL11.glColorMask(true, true, true, true);
+        RenderSystem.depthMask(true);
 
         stack.pop();
     }
@@ -118,7 +122,6 @@ public class BOTI {
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
         GlStateManager._depthFunc(GL11.GL_ALWAYS);
 
-        GL11.glColorMask(true, true, true, false);
         stack.push();
         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
@@ -129,15 +132,13 @@ public class BOTI {
         stack.pop();
         GlStateManager._depthFunc(GL11.GL_LEQUAL);
 
-        GL11.glColorMask(false, false, false, true);
-
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
         BOTI.copyFramebuffer(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
 
         GL11.glDisable(GL11.GL_STENCIL_TEST);
 
-        GL11.glColorMask(true, true, true, true);
+        RenderSystem.depthMask(true);
 
         stack.pop();
     }
