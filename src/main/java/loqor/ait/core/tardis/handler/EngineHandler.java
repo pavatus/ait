@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.handler;
 
 import org.joml.Vector2i;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
@@ -133,8 +134,11 @@ public class EngineHandler extends KeyedTardisComponent {
 
         if (world == null)
             return;
+        BlockState state = world.getBlockState(pos.getPos());
+        if (!(state.getBlock() instanceof ExteriorBlock))
+            return;
 
         world.setBlockState(pos.getPos(),
-                world.getBlockState(pos.getPos()).with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
+                state.with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
     }
 }

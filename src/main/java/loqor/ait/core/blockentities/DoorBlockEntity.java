@@ -26,6 +26,7 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import loqor.ait.api.TardisEvents;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
@@ -36,8 +37,10 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.DoorHandler;
+import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
@@ -102,6 +105,8 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         if (tardis.isGrowth() && tardis.hasGrowthExterior())
             return;
 
+        this.checkDesktopDoor(tardis.getDesktop());
+
         if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()) {
             ItemStack key = player.getMainHandStack();
             UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
@@ -114,6 +119,16 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
                                                                                             // with key
             }
 
+            return;
+        }
+
+        if (tardis.sonic().getExteriorSonic() != null) {
+            SonicHandler handler = tardis.sonic();
+            if (pos != null) {
+                player.giveItemStack(handler.takeExteriorSonic());
+                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
+                        0.2F);
+            }
             return;
         }
 
@@ -162,7 +177,15 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         TardisUtil.teleportOutside(tardis, entity);
+
+        this.checkDesktopDoor(tardis.getDesktop());
     }
+
+    private void checkDesktopDoor(TardisDesktop desktop) {
+        if (desktop.hasDoorPosition()) return;
+        desktop.setInteriorDoorPos(DirectedBlockPos.create(this.pos, (byte) RotationPropertyHelper.fromDirection(this.getFacing())));
+    }
+
 
     @Override
     public void onLinked() {
@@ -180,6 +203,15 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     public void onBreak() {
         if (!this.isLinked() || this.tardis().isEmpty()) return;
 
-        this.tardis().get().door().closeDoors();
+        Tardis tardis = this.tardis().get();
+        tardis.door().closeDoors();
+
+        TardisEvents.BREAK_DOOR.invoker().onBreak(tardis, this.getPos());
+
+        // if main door set to null so another door can set it
+        TardisDesktop desktop = tardis.getDesktop();
+        if (desktop.doorPos().getPos().equals(this.getPos())) {
+            desktop.setInteriorDoorPos(null);
+        }
     }
 }

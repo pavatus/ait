@@ -7,6 +7,7 @@ import net.minecraft.world.level.storage.LevelStorage;
 
 public interface MultiDimServer {
     void multidim$addWorld(ServerWorld world);
+    boolean multidim$hasWorld(RegistryKey<World> key);
     ServerWorld multidim$removeWorld(RegistryKey<World> key);
 
     LevelStorage.Session multidim$getSession();

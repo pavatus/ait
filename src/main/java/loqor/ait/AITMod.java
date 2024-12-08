@@ -1,9 +1,16 @@
 package loqor.ait;
 
+import static dev.pavatus.planet.core.planet.Crater.CRATER_ID;
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.planet.Crater;
+import dev.pavatus.planet.core.planet.PlanetRegistry;
+import dev.pavatus.register.Registries;
+import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
@@ -13,6 +20,8 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -23,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandlerType;
@@ -31,7 +41,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.feature.PlacedFeature;
 
 import loqor.ait.api.AITModInitializer;
@@ -42,22 +54,29 @@ import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
+import loqor.ait.core.likes.ItemOpinionRegistry;
+import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
-import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
+import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+
+
 
 public class AITMod implements ModInitializer {
 
@@ -66,18 +85,38 @@ public class AITMod implements ModInitializer {
     public static final Random RANDOM = new Random();
 
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+    public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
+            GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
+
+    //Creative Inventory Tabs
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
             .builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.TARDIS_ITEM))
             .disableDynamicTitle().build();
 
+
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
             new Identifier(MOD_ID, "zeiton_geode"));
+
+    public static final Crater CRATER = new Crater(ProbabilityConfig.CODEC);
 
     public static final ScreenHandlerType<EngineScreenHandler> ENGINE_SCREEN_HANDLER;
 
     static {
         ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"),
                 EngineScreenHandler::new);
+    }
+
+    public static final String BRANCH;
+
+    static {
+        // ait-1.x.x.xxx-1.20.1-xxxx-xxxx
+        String version = FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString();
+        // get the last part of the version string after the -
+        BRANCH = version.substring(version.lastIndexOf("-") + 1);
+    }
+
+    public static boolean isUnsafeBranch() {
+        return !BRANCH.equals("release");
     }
 
     @Override
@@ -87,7 +126,6 @@ public class AITMod implements ModInitializer {
         AsyncLocatorUtil.setupExecutorService();
 
         ConsoleRegistry.init();
-        HumsRegistry.init();
         CreakRegistry.init();
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();
@@ -98,15 +136,35 @@ public class AITMod implements ModInitializer {
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
                 AITModInitializer::onInitializeAIT);
 
+        RegistryEvents.INIT.register((registries, isClient) -> {
+            if (isClient) return;
+
+            registries.register(SonicRegistry.getInstance());
+            registries.register(DesktopRegistry.getInstance());
+            registries.register(ConsoleVariantRegistry.getInstance());
+            registries.register(MachineRecipeRegistry.getInstance());
+            registries.register(TravelSoundRegistry.getInstance());
+            registries.register(FlightSoundRegistry.getInstance());
+            registries.register(ExteriorVariantRegistry.getInstance());
+            registries.register(CategoryRegistry.getInstance());
+            registries.register(TardisComponentRegistry.getInstance());
+            registries.register(PlanetRegistry.getInstance());
+            registries.register(LockedDimensionRegistry.getInstance());
+            registries.register(HumRegistry.getInstance());
+            registries.register(ItemOpinionRegistry.getInstance());
+            registries.register(ModuleRegistry.instance());
+        });
+
         Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
+        AITStatusEffects.init();
 
         // ServerVortexDataHandler.init();
         ServerLifecycleHooks.init();
 
         AITArgumentTypes.register();
 
-        FieldRegistrationHandler.register(AITSounds.class, MOD_ID, false);
+        AITSounds.init();
         FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
@@ -126,6 +184,8 @@ public class AITMod implements ModInitializer {
 
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
                 CUSTOM_GEODE_PLACED_KEY);
+
+        Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);
@@ -151,6 +211,7 @@ public class AITMod implements ModInitializer {
             VersionCommand.register(dispatcher);
             SafePosCommand.register(dispatcher);
             ListCommand.register(dispatcher);
+            LoadCommand.register(dispatcher);
             DebugCommand.register(dispatcher);
         }));
 
@@ -239,5 +300,8 @@ public class AITMod implements ModInitializer {
         buf.writeBlockPos(console);
 
         ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
+    }
+    public static Identifier id(String path) {
+        return new Identifier(MOD_ID, path);
     }
 }

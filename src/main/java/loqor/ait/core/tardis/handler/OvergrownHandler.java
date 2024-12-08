@@ -2,17 +2,19 @@ package loqor.ait.core.tardis.handler;
 
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class OvergrownHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty IS_OVERGROWN_PROPERTY = new BoolProperty("is_overgrown", false);
@@ -63,11 +65,12 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         this.setTicks(0);
     }
 
+    @Environment(EnvType.CLIENT)
     public Identifier getOvergrownTexture() {
-        ExteriorCategorySchema exterior = this.tardis().getExterior().getCategory();
+        ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
 
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/"
-                + exterior.toString().toLowerCase() + "_" + "overgrown" + ".png");
+
+        return variant.texture().withSuffixedPath("_overgrown"); // todo - best to have a fallback somehow but icr how to check if texture exists
     }
 
     public static Random random() {

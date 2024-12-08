@@ -28,6 +28,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 }
  */
 public class DatapackConsole extends ConsoleVariantSchema {
+    public static final Identifier EMPTY = new Identifier(AITMod.MOD_ID, "intentionally_empty");
 
     protected final Identifier texture;
     protected final Identifier emission;
@@ -40,10 +41,10 @@ public class DatapackConsole extends ConsoleVariantSchema {
             .group(Identifier.CODEC.fieldOf("id").forGetter(ConsoleVariantSchema::id),
                     Identifier.CODEC.fieldOf("parent").forGetter(ConsoleVariantSchema::parentId),
                     Identifier.CODEC.fieldOf("texture").forGetter(DatapackConsole::texture),
-                    Identifier.CODEC.fieldOf("emission").forGetter(DatapackConsole::emission),
-                    Codec.list(Codec.FLOAT).optionalFieldOf("sonic_rotation", null)
+                    Identifier.CODEC.optionalFieldOf("emission", EMPTY).forGetter(DatapackConsole::emission),
+                    Codec.list(Codec.FLOAT).optionalFieldOf("sonic_rotation", List.of())
                             .forGetter(DatapackConsole::sonicRotation),
-                    MoreCodec.VECTOR3F.optionalFieldOf("sonic_translation", null).forGetter(DatapackConsole::sonicTranslation),
+                    MoreCodec.VECTOR3F.optionalFieldOf("sonic_translation", new Vector3f()).forGetter(DatapackConsole::sonicTranslation),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackConsole::wasDatapack))
             .apply(instance, DatapackConsole::new));
 

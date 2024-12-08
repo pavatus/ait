@@ -4,12 +4,15 @@ import static loqor.ait.AITMod.*;
 
 import java.util.UUID;
 
+import dev.pavatus.planet.core.PlanetItems;
+import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -19,6 +22,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -31,16 +35,17 @@ import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
+import loqor.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import loqor.ait.client.renderers.decoration.PlaqueRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
 import loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer;
+import loqor.ait.client.renderers.entities.projectiles.StaserBoltEntityRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
-import loqor.ait.client.renderers.wearables.AITHudOverlay;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
@@ -56,9 +61,9 @@ import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
-import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
@@ -68,11 +73,14 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Scheduler.Client.init();
+
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         // TODO move to Registries
         ClientDoorRegistry.init();
         ClientTardisManager.init();
+        HudRenderCallback.EVENT.register(new ScopeOverlay());
 
         setupBlockRendering();
         sonicModelPredicate();
@@ -81,6 +89,8 @@ public class AITModClient implements ClientModInitializer {
         chargedZeitonCrystalPredicate();
         waypointPredicate();
         hammerPredicate();
+        staserPredicate();
+        staserRiflePredicate();
         siegeItemPredicate();
 
         // TODO make skybox renderer for mars so we dont have to render the moon
@@ -90,7 +100,6 @@ public class AITModClient implements ClientModInitializer {
         AITKeyBinds.init();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
-        HudRenderCallback.EVENT.register(new AITHudOverlay());
 
         ClientLandingManager.init();
 
@@ -105,6 +114,7 @@ public class AITModClient implements ClientModInitializer {
          * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
          * vortex.renderVortexNodes(context, node); } } } });
          */
+        ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             if (!ClientTardisUtil.isPlayerInATardis())
@@ -307,6 +317,34 @@ public class AITModClient implements ClientModInitializer {
                 });
     }
 
+    public static void staserPredicate() {
+        ModelPredicateProviderRegistry.register(PlanetItems.CULT_STASER, new Identifier("ads"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+            if (livingEntity == null) return 0.0f;
+            if (itemStack.getItem() == PlanetItems.CULT_STASER && livingEntity.getMainHandStack().getItem() == PlanetItems.CULT_STASER) {
+                if (livingEntity instanceof PlayerEntity) {
+                    boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
+                    return bl ? 1.0f : 0.0f;
+                }
+            }
+            return 0.0F;
+        });
+    }
+
+    public static void staserRiflePredicate() {
+        ModelPredicateProviderRegistry.register(PlanetItems.CULT_STASER_RIFLE, new Identifier("ads"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (livingEntity == null) return 0.0f;
+                    if (itemStack.getItem() == PlanetItems.CULT_STASER_RIFLE && livingEntity.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE) {
+                        if (livingEntity instanceof PlayerEntity) {
+                            boolean bl = MinecraftClient.getInstance().options.useKey.isPressed();
+                            return bl ? 1.0f : 0.0f;
+                        }
+                    }
+                    return 0.0F;
+                });
+    }
+
     public static void siegeItemPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("bricked"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
@@ -338,12 +376,14 @@ public class AITModClient implements ClientModInitializer {
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
                 WaypointBankBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.FLAG_BLOCK_ENTITY_TYPE, FlagBlockEntityRenderer::new);
     }
 
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
+        EntityRendererRegistry.register(AITEntityTypes.STASER_BOLT_ENTITY_TYPE, StaserBoltEntityRenderer::new);
     }
 
     public static void setupBlockRendering() {

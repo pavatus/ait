@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -18,11 +19,12 @@ import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.Scheduler;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TimeUnit;
 import loqor.ait.data.properties.Property;
@@ -72,6 +74,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             tardis.getExterior().setType(CategoryRegistry.CAPSULE);
             return TardisEvents.Interaction.SUCCESS; // force mat even if checks fail
         });
+
+        TardisEvents.LOSE_POWER.register(tardis -> tardis.interiorChangingHandler().queued.set(false));
 
         ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,
                 ServerTardisManager.receiveTardis(((tardis, server, player, handler, buf, responseSender) -> {
@@ -150,9 +154,11 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     }
 
     private void warnPlayers() {
-        for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED),
                     true);
+            if (!tardis.isGrowth())
+                TardisCriterions.REDECORATE.trigger(player);
         }
     }
 

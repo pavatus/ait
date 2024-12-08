@@ -1,6 +1,7 @@
 package loqor.ait.core.item;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -36,6 +39,7 @@ import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
@@ -149,16 +153,33 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             world.playSound(null, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1f, 1f);
             cycleMode(stack);
             Mode previousMode = findPreviousMode(stack);
-            user.sendMessage(
-                    Text.literal(previousMode.asString()).formatted(previousMode.format).formatted(Formatting.BOLD),
-                    true);
+            Text message = null;
+
+            if (Objects.equals(previousMode.asString(), "INACTIVE")) {
+                message = Text.translatable("sonic.ait.mode.inactive").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "INTERACTION")) {
+                message = Text.translatable("sonic.ait.mode.interaction").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "OVERLOAD")) {
+                message = Text.translatable("sonic.ait.mode.overload").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "SCANNING")) {
+                message = Text.translatable("sonic.ait.mode.scanning").formatted(previousMode.format, Formatting.BOLD);
+            } else if (Objects.equals(previousMode.asString(), "TARDIS")) {
+                message = Text.translatable("sonic.ait.mode.tardis").formatted(previousMode.format, Formatting.BOLD);
+            }
+
+
+            user.sendMessage(message, true);
             return;
         }
 
-        if (world.getBlockState(pos).getBlock() == AITBlocks.ZEITON_CLUSTER) {
+        BlockState state = world.getBlockState(pos);
+        if (state.getBlock() == AITBlocks.ZEITON_CLUSTER) {
             this.addFuel(200, stack);
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
             return;
+        }
+        if (state.isIn(BlockTags.PLANKS) || state.isIn(BlockTags.LOGS)) {
+            TardisCriterions.SONIC_WOOD.trigger((ServerPlayerEntity) user);
         }
 
         if (mode == Mode.INACTIVE) {
@@ -193,7 +214,8 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
         nbt.putInt(MODE_KEY, 0);
         nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
-        nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
+        if (SonicRegistry.DEFAULT != null)
+            nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
 
         return stack;
     }
@@ -329,14 +351,23 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         tooltip.add(Text.translatable("message.ait.sonic.mode").formatted(Formatting.BLUE));
 
         Mode mode = findPreviousMode(stack);
-        tooltip.add(Text.literal(mode.asString()).formatted(mode.format).formatted(Formatting.BOLD));
 
-        tooltip.add(Text.literal("AU: ").formatted(Formatting.BLUE).append(
-                Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(Formatting.GREEN))); // todo
-                                                                                                                    // translatable
-                                                                                                                    // +
-                                                                                                                    // changing
-        // of colour based off fuel
+        if (Objects.equals(mode.asString(), "INACTIVE")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.inactive").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "INTERACTION")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.interaction").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "OVERLOAD")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.overload").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "SCANNING")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.scanning").formatted(mode.format, Formatting.BOLD));
+        } else if (Objects.equals(mode.asString(), "TARDIS")) {
+            tooltip.add(Text.translatable("sonic.ait.mode.tardis").formatted(mode.format, Formatting.BOLD));
+        }
+
+
+        tooltip.add(Text.translatable("message.ait.tooltips.artron_units").formatted(Formatting.BLUE).append(
+                Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(this.getCurrentFuel(stack) > (this.getMaxFuel(stack) / 4) ? Formatting.GREEN : Formatting.RED)));
+
 
         if (tag.contains("tardis"))
             tooltip.add(ScreenTexts.EMPTY);
@@ -344,7 +375,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         super.appendTooltip(stack, world, tooltip, context);
 
         if (tag.contains("tardis")) { // Adding the sonics mode
-            tooltip.add(Text.literal("Position: ").formatted(Formatting.BLUE));
+            tooltip.add(Text.translatable("tooltip.ait.position").formatted(Formatting.BLUE));
             tooltip.add(Text.literal("> " + position).formatted(Formatting.GRAY));
         }
 
@@ -495,8 +526,11 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                 if (!isRift) return;
 
-                player.sendMessage(Text.literal("AU: " + (RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos))))
-                        .formatted(Formatting.GOLD));
+                int artronValue = (int) RiftChunkManager.getInstance(world).getArtron(new ChunkPos(pos));
+                player.sendMessage(
+                        Text.translatable("message.ait.artron_units", artronValue)
+                                .formatted(Formatting.GOLD)
+                );
             }
             private static void sendTardisInfo(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null)
@@ -509,7 +543,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 }
 
                 player.sendMessage(
-                        Text.literal("AU: " + tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
+                        Text.translatable("message.ait.artron_units", tardis.fuel().getCurrentFuel()).formatted(Formatting.GOLD), true);
             }
         },
         TARDIS(Formatting.BLUE) {

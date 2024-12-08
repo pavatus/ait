@@ -26,7 +26,7 @@ public class AITKeyBinds {
                 bind.tick(client);
         });
 
-        register(new KeyBind.Held("open", "snap", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, client -> {
+        register(new KeyBind.Held("snap", "main", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, client -> {
             ClientPlayerEntity player = client.player;
 
             if (player == null)

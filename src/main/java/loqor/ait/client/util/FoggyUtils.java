@@ -24,7 +24,7 @@ public class FoggyUtils {
 
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
-        if (tardis == null)
+        if (tardis == null || tardis.getExterior() == null)
             return;
 
         if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()

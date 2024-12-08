@@ -1,16 +1,24 @@
 package loqor.ait.datagen.datagen_providers;
 
+import java.lang.annotation.Annotation;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
+import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
+import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     public AITBlockTagProvider(FabricDataOutput output,
@@ -20,16 +28,15 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(AITBlocks.DOOR_BLOCK).add(AITBlocks.ZEITON_BLOCK)
-                .add(AITBlocks.ZEITON_CLUSTER).add(AITBlocks.BUDDING_ZEITON).add(AITBlocks.LARGE_ZEITON_BUD)
-                .add(AITBlocks.MEDIUM_ZEITON_BUD).add(AITBlocks.SMALL_ZEITON_BUD).add(AITBlocks.MONITOR_BLOCK)
-                .add(AITBlocks.ARTRON_COLLECTOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR);
+        FabricTagBuilder builder = getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE);
+        for (Map.Entry<Block, Annotation> entry : AITBlockLootTables.getAnnotatedBlocks(PickaxeMineable.class)) {
+            builder.add(entry.getKey());
 
-        getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(AITBlocks.ZEITON_BLOCK).add(AITBlocks.BUDDING_ZEITON)
-                .add(AITBlocks.ZEITON_CLUSTER);
-
-        getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL).add(AITBlocks.LARGE_ZEITON_BUD)
-                .add(AITBlocks.MEDIUM_ZEITON_BUD).add(AITBlocks.SMALL_ZEITON_BUD).add(AITBlocks.MONITOR_BLOCK);
+            PickaxeMineable annotation = (PickaxeMineable) entry.getValue();
+            if (annotation.tool() != PickaxeMineable.Tool.NONE) {
+                getOrCreateTagBuilder(annotation.tool().tag).add(entry.getKey());
+            }
+        }
 
         getOrCreateTagBuilder(AITTags.Blocks.SONIC_INTERACTABLE).add(Blocks.IRON_DOOR).add(Blocks.IRON_TRAPDOOR)
                 .add(Blocks.TNT).add(Blocks.CAMPFIRE).add(Blocks.CANDLE).add(Blocks.CANDLE_CAKE)
@@ -47,7 +54,20 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE)
                 .add(AITBlocks.MACHINE_CASING);
 
+        getOrCreateTagBuilder(BlockTags.DIRT).add(PlanetBlocks.MARTIAN_SAND).add(PlanetBlocks.REGOLITH);
+
         getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
         getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
+
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getDataGenerator().ifPresent(generator -> {
+                generator.blockTags(this);
+            });
+        });
+    }
+
+    @Override
+    public FabricTagProvider<Block>.FabricTagBuilder getOrCreateTagBuilder(TagKey<Block> tag) {
+        return super.getOrCreateTagBuilder(tag);
     }
 }

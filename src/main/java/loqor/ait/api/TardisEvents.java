@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 
@@ -162,6 +163,12 @@ public final class TardisEvents {
                     callback.onLeave(tardis, entity);
                 }
             });
+    public static final Event<BreakDoor> BREAK_DOOR = EventFactory.createArrayBacked(BreakDoor.class,
+            callbacks -> (tardis, pos) -> {
+                for (BreakDoor callback : callbacks) {
+                    callback.onBreak(tardis, pos);
+                }
+            });
 
     public static final Event<Shields> TOGGLE_SHIELDS = EventFactory.createArrayBacked(Shields.class,
             callbacks -> (tardis, active, visual) -> {
@@ -202,6 +209,13 @@ public final class TardisEvents {
             callbacks -> tardis -> {
                 for (OnExteriorChange callback : callbacks) {
                     callback.onChange(tardis);
+                }
+            });
+
+    public static final Event<OnForcedEntry> FORCED_ENTRY = EventFactory.createArrayBacked(OnForcedEntry.class,
+            callbacks -> (tardis, player) -> {
+                for (OnForcedEntry callback : callbacks) {
+                    callback.onForcedEntry(tardis, player);
                 }
             });
 
@@ -377,6 +391,11 @@ public final class TardisEvents {
     }
 
     @FunctionalInterface
+    public interface BreakDoor {
+        void onBreak(Tardis tardis, BlockPos pos);
+    }
+
+    @FunctionalInterface
     public interface Shields {
         void onShields(Tardis tardis, boolean active, boolean visual);
     }
@@ -404,6 +423,11 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface OnExteriorChange {
         void onChange(Tardis tardis);
+    }
+
+    @FunctionalInterface
+    public interface OnForcedEntry {
+        void onForcedEntry(Tardis tardis, Entity entity);
     }
 
     public enum Interaction {

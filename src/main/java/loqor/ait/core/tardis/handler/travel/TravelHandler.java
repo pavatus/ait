@@ -28,8 +28,8 @@ import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TimeUnit;
 
@@ -266,7 +266,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     public void forceDemat() {
         this.state.set(State.DEMAT);
-        SoundEvent sound = this.getState().effect().sound();
+
+        SoundEvent sound = this.tardis.getExterior().getVariant().effects().get(this.getState()).sound();
 
         // Play dematerialize sound at the position
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
@@ -330,13 +331,13 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         pos = result.result().orElse(pos);
 
         this.state.set(State.MAT);
-        SoundEvent sound = this.getState().effect().sound();
+        SoundEvent sound = this.tardis.getExterior().getVariant().effects().get(this.getState()).sound();
 
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
-        this.destination(pos, true);
-        this.forcePosition(pos);
+        this.destination(pos);
+        this.forcePosition(this.destination());
 
         // Play materialize sound at the destination
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);

@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.NameTagItem;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -21,9 +22,12 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.likes.ItemOpinion;
+import loqor.ait.core.likes.ItemOpinionRegistry;
 import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
@@ -31,6 +35,7 @@ import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.distress.DistressCall;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.Loyalty;
 
 public class TelepathicControl extends Control {
 
@@ -109,7 +114,27 @@ public class TelepathicControl extends Control {
             return true;
         }
 
+        if (held.isOf(Items.NETHER_STAR) && tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)) {
+            tardis.selfDestruct().boom();
+            if (!(tardis.selfDestruct().isQueued())) return false;
+
+            if (!player.isCreative())
+                held.decrement(1);
+            return true;
+        }
+
         if (LockedDimensionRegistry.tryUnlockDimension(player, held, tardis.asServer())) return true;
+
+        ItemOpinion opinion = ItemOpinionRegistry.getInstance().get(held.getItem()).orElse(null);
+        if (opinion != null && tardis.opinions().contains(opinion) && (player.experienceLevel >= opinion.cost() || player.isCreative())) {
+            opinion.apply(tardis.asServer(), player);
+
+            player.getServerWorld().playSound(null, console, AITSounds.GROAN, SoundCategory.AMBIENT, 0.25f, 1f);
+            player.getServerWorld().spawnParticles((opinion.likes()) ? ParticleTypes.HEART : ParticleTypes.ANGRY_VILLAGER, console.toCenterPos().getX(),
+                    console.toCenterPos().getY() + 1, console.toCenterPos().getZ(), 1, 0f, 1F, 0f, 5.0F);
+
+            return true;
+        }
 
         Text text = Text.translatable("tardis.message.control.telepathic.choosing");
         player.sendMessage(text, true);

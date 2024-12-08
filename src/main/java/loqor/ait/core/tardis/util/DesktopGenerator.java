@@ -11,6 +11,7 @@ import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.Structure;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.Corners;
@@ -26,18 +27,20 @@ public class DesktopGenerator {
         this.schema = schema;
     }
 
-    public void place(Tardis tardis, ServerWorld level, Corners corners) {
+    public boolean place(Tardis tardis, ServerWorld level, Corners corners) {
         Optional<StructureTemplate> optional = this.schema.findTemplate();
 
-        if (optional.isEmpty())
-            return;
+        if (optional.isEmpty()) {
+            AITMod.LOGGER.error("Failed to find template for {}", this.schema.id());
+            return false;
+        }
 
         StructureTemplate template = optional.get();
 
         if (template instanceof Structure structure)
             structure.ait$setTardis(tardis);
 
-        template.place(level, BlockPos.ofFloored(corners.getBox().getCenter()),
+        return template.place(level, BlockPos.ofFloored(corners.getBox().getCenter()),
                 BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, level.getRandom(), Block.FORCE_STATE);
     }
 

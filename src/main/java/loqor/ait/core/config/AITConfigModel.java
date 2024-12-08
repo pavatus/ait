@@ -25,6 +25,7 @@ public class AITConfigModel {
     public int TRAVEL_PER_TICK = 2;
 
     public boolean SEND_BULK = true;
+    public int MAX_TARDISES = -1;
 
     @SectionHeader("Client")
     public float INTERIOR_HUM_VOLUME = 0.2f;
@@ -32,8 +33,9 @@ public class AITConfigModel {
     public boolean CUSTOM_MENU = true;
     public boolean SHOW_EXPERIMENTAL_WARNING = false;
     public boolean ENVIRONMENT_PROJECTOR = true;
-    public boolean DISABLE_CONSOLE_ANIMATIONS = false;
     public boolean DISABLE_LOYALTY_FOG = false;
+    public boolean DISABLE_LOYALTY_SLEEPING_ACTIONBAR = false;
+
 
     public TemperatureType TEMPERATURE_TYPE = TemperatureType.CELCIUS;
     public enum TemperatureType {
