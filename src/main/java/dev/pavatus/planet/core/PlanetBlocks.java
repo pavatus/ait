@@ -2,15 +2,21 @@ package dev.pavatus.planet.core;
 
 import dev.pavatus.planet.PlanetModule;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 
+import loqor.ait.core.blocks.FlagBlock;
 import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 public class PlanetBlocks implements BlockRegistryContainer {
+
+    public static final Block FLAG = new FlagBlock(
+            FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     // Mars
 

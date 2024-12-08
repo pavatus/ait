@@ -8,6 +8,11 @@ import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
 import net.minecraft.item.*;
+import net.minecraft.util.Rarity;
+
+import loqor.ait.core.item.BaseGunItem;
+import loqor.ait.core.item.StaserBoltMagazine;
+import loqor.ait.core.item.StaserRifleItem;
 
 public class PlanetItems implements ItemRegistryContainer {
 
@@ -37,6 +42,16 @@ public class PlanetItems implements ItemRegistryContainer {
     public static final Item ANORTHOSITE_PICKAXE = new PickaxeItem(PlanetToolMaterial.ANORTHOSITE, 2, 2f, new OwoItemSettings());
     public static final Item ANORTHOSITE_AXE = new AxeItem(PlanetToolMaterial.ANORTHOSITE, 3, 1f, new OwoItemSettings());
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new OwoItemSettings());
+
+    // WEAPONS
+    // Guns
+
+    public static final Item CULT_STASER = new BaseGunItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(PlanetModule.instance().getItemGroup()));
+
+    public static final Item CULT_STASER_RIFLE = new StaserRifleItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(PlanetModule.instance().getItemGroup()));
+
+    public static final Item STASER_BOLT_MAGAZINE = new StaserBoltMagazine(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(PlanetModule.instance().getItemGroup()));
+
 
     // ITEM GROUP TOOL PLACEMENT
     static {

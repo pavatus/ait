@@ -1,5 +1,7 @@
 package loqor.ait.core.entities;
 
+import dev.pavatus.planet.core.PlanetItems;
+
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -23,7 +25,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITEntityTypes;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 
 public class StaserBoltEntity extends PersistentProjectileEntity {
@@ -46,7 +47,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
 
     @Override
     protected ItemStack asItemStack() {
-        return new ItemStack(AITItems.STASER_BOLT_MAGAZINE);
+        return new ItemStack(PlanetItems.STASER_BOLT_MAGAZINE);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
             this.remove(RemovalReason.DISCARDED);
         }
         if (getOwner() instanceof PlayerEntity player) {
-            if (hitResult.getType() == HitResult.Type.ENTITY && player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE) {
+            if (hitResult.getType() == HitResult.Type.ENTITY && player.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE) {
                 this.setDamage(12d);
             } else {
                 this.setDamage(2d);
