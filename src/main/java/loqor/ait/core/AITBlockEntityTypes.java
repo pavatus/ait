@@ -1,5 +1,6 @@
 package loqor.ait.core;
 
+import dev.pavatus.planet.core.PlanetBlocks;
 import io.wispforest.owo.registration.reflect.BlockEntityRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
@@ -63,4 +64,5 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(PowerConverterBlock.BlockEntity::new, AITBlocks.POWER_CONVERTER).build();
     public static BlockEntityType<GenericStructureSystemBlockEntity> GENERIC_SUBSYSTEM_BLOCK_TYPE = FabricBlockEntityTypeBuilder
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
+            .create(FlagBlockEntity::new, PlanetBlocks.FLAG).build();
 }

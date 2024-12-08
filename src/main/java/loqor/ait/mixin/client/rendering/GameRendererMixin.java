@@ -1,6 +1,7 @@
 package loqor.ait.mixin.client.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.pavatus.planet.core.PlanetItems;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +16,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.client.util.ShaderUtils;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.item.BaseGunItem;
 
 @Mixin(GameRenderer.class)
@@ -51,9 +51,10 @@ public abstract class GameRendererMixin {
     }
 
     @Unique private double setADS(double fov, ClientPlayerEntity player) {
-        double realTargetFOV = Math.max((player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE ? 10 : 30), currentFOV - (player.getMainHandStack().getItem() == AITItems.CULT_STASER_RIFLE ? 70 : targetFOV));
+        double realTargetFOV = Math.max((player.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE ? 10 : 30), currentFOV - (player.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE ? 70 : targetFOV));
         if (isADS(player)) {
-            currentFOV = MathHelper.lerp(Math.min(0.8f * MinecraftClient.getInstance().getTickDelta(), 0.8f), currentFOV, realTargetFOV);
+            float speed = player.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE ? 0.2f : 0.4f;
+            currentFOV = MathHelper.lerp(Math.min(speed * MinecraftClient.getInstance().getTickDelta(), speed), currentFOV, realTargetFOV);
             goBackFOV = true;
             return currentFOV;
         }

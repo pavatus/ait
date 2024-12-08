@@ -28,7 +28,8 @@ public class FlagBlockEntityRenderer<T extends FlagBlockEntity> implements Block
         matrices.push();
         matrices.translate(0.5, 1.5f, 0.5);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getCachedState().get(FlagBlock.FACING).asRotation()));
+        float k = entity.getCachedState().get(FlagBlock.FACING).asRotation();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k));
         flagModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(FLAG_TEXTURE)), light, overlay, 1, 1, 1, 1);
         matrices.pop();
     }

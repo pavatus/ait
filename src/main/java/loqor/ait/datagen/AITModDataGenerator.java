@@ -6,6 +6,8 @@ import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
 import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
+import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -18,6 +20,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -44,6 +48,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generateSoundData(pack);
         generateAdvancements(pack);
         generateLoot(pack);
+        generateWorldFeatures(pack);
     }
 
     public void generateLoot(FabricDataGenerator.Pack pack) {
@@ -54,6 +59,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(AITAchievementProvider::new);
     }
 
+    private void generateWorldFeatures(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITWorldGeneratorProvider::new);
+    }
+
+    @Override
+    public void buildRegistry(RegistryBuilder registryBuilder) {
+            registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, PlanetConfiguredFeatures::bootstrap);
+        registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, PlanetPlacedFeatures::boostrap);
+    }
+
     public void generateRecipes(FabricDataGenerator.Pack pack) {
         pack.addProvider((((output, registriesFuture) -> {
             AITRecipeProvider provider = new AITRecipeProvider(output);
@@ -62,64 +77,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 dataGenerator.recipes(provider);
             }));
 
-            // guns
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CULT_STASER, 1)
-                    .pattern("I I")
-                    .pattern("PRM")
-                    .pattern(" BB")
-                    .input('R', Items.REDSTONE)
-                    .input('I', Items.IRON_INGOT)
-                    .input('M', AITItems.STASER_BOLT_MAGAZINE)
-                    .input('P', Items.REPEATER)
-                    .input('B', Items.BLACK_CONCRETE)
-                    .criterion(hasItem(AITItems.STASER_BOLT_MAGAZINE), conditionsFromItem(AITItems.STASER_BOLT_MAGAZINE))
-                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(hasItem(Items.REPEATER), conditionsFromItem(Items.REPEATER))
-                    .criterion(hasItem(Items.BLACK_CONCRETE), conditionsFromItem(Items.BLACK_CONCRETE))
-                    .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
-
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.STASER_BOLT_MAGAZINE, 1)
-                    .pattern("IRI")
-                    .pattern("RZR")
-                    .pattern("IRI")
-                    .input('R', Items.REDSTONE)
-                    .input('Z', AITItems.CHARGED_ZEITON_CRYSTAL)
-                    .input('I', Items.IRON_INGOT)
-                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
-                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
-
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.FLAG, 1)
-                    .pattern("GBR")
-                    .pattern("IWW")
-                    .pattern("I  ")
-                    .input('G', Items.GOLD_INGOT)
-                    .input('I', Items.IRON_INGOT)
-                    .input('B', Items.BLUE_WOOL)
-                    .input('R', Items.RED_WOOL)
-                    .input('W', Items.WHITE_WOOL)
-                    .criterion(hasItem(Items.GOLD_INGOT), conditionsFromItem(Items.GOLD_INGOT))
-                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(hasItem(Items.RED_WOOL), conditionsFromItem(Items.RED_WOOL))
-                    .criterion(hasItem(Items.BLUE_WOOL), conditionsFromItem(Items.BLUE_WOOL))
-                    .criterion(hasItem(Items.WHITE_WOOL), conditionsFromItem(Items.WHITE_WOOL)));
-
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CULT_STASER_RIFLE, 1)
-                    .pattern("ISI")
-                    .pattern("PDM")
-                    .pattern(" BB")
-                    .input('D', Items.DIAMOND)
-                    .input('I', Items.IRON_INGOT)
-                    .input('M', AITItems.STASER_BOLT_MAGAZINE)
-                    .input('P', Items.REPEATER)
-                    .input('B', Items.BLACK_CONCRETE)
-                    .input('S', Items.SPYGLASS)
-                    .criterion(hasItem(AITItems.STASER_BOLT_MAGAZINE), conditionsFromItem(AITItems.STASER_BOLT_MAGAZINE))
-                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(hasItem(Items.REPEATER), conditionsFromItem(Items.REPEATER))
-                    .criterion(hasItem(Items.BLACK_CONCRETE), conditionsFromItem(Items.BLACK_CONCRETE))
-                    .criterion(hasItem(Items.SPYGLASS), conditionsFromItem(Items.SPYGLASS))
-                    .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_KEY, 1)
                     .pattern(" N ").pattern("IEI").pattern("IRI").input('N', Items.IRON_NUGGET)
