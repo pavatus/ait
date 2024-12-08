@@ -6,7 +6,6 @@ import java.util.Set;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -143,13 +142,13 @@ public class TardisDesktop extends TardisComponent {
         dim.addBlockEntity(generator);
     }
 
-    public static void playSoundAtConsole(ServerWorld dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
+    public static void playSoundAtConsole(World dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
             float pitch) {
         dim.playSound(null, console, sound, category, volume, pitch);
     }
 
     public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category, float volume, float pitch) {
-        this.getConsolePos().forEach(consolePos -> playSoundAtConsole(this.tardis.asServer().getInteriorWorld(), consolePos, sound, category, volume, pitch));
+        this.getConsolePos().forEach(consolePos -> playSoundAtConsole(this.tardis.getInteriorWorld(), consolePos, sound, category, volume, pitch));
     }
 
     public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category) {

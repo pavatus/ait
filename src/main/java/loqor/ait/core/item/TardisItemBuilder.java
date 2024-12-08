@@ -18,9 +18,9 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.handler.EngineHandler;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.LoyaltyHandler;
+import loqor.ait.core.tardis.handler.SubSystemHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
@@ -95,11 +95,12 @@ public class TardisItemBuilder extends Item {
 
         TardisBuilder builder = new TardisBuilder().at(pos)
                 .owner(serverPlayer)
-                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
-                .<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
-                    engine.linkEngine(0, 0);
-                    engine.enablePower();
-                }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
+                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> {
+                    fuel.setCurrentFuel(fuel.getMaxFuel());
+                    fuel.enablePower();
+                })
+                .with(TardisComponent.Id.SUBSYSTEM, SubSystemHandler::repairAll)
+                .<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
                         loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER)));
 
         if (this.exterior == null || this.desktop == null) {

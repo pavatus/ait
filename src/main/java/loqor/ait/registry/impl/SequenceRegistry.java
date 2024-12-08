@@ -120,7 +120,7 @@ public class SequenceRegistry {
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                    missedTardis.engine().disablePower();
+                    missedTardis.fuel().disablePower();
                 }), 110L, Text.translatable("sequence.ait.power_drain_imminent").formatted(Formatting.ITALIC, Formatting.YELLOW),
                         new PowerControl(), new RefuelerControl(), new RandomiserControl()));
 
@@ -130,7 +130,7 @@ public class SequenceRegistry {
                     finishedTardis.addFuel(random.nextBetween(45, 125));
                 }), (missedTardis -> {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
-                    missedTardis.engine().disablePower();
+                    missedTardis.fuel().disablePower();
                 }), 110L, Text.translatable("sequence.ait.ship_computer_offline").formatted(Formatting.ITALIC,
                         Formatting.YELLOW), new AutoPilotControl()));
 

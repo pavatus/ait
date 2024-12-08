@@ -43,7 +43,7 @@ public class ClientDriftingSoundHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySound(ClientTardis tardis) {
-        return tardis != null && !tardis.engine().hasPower();
+        return tardis != null && !tardis.fuel().hasPower();
     }
 
     public void tick(MinecraftClient client) {
