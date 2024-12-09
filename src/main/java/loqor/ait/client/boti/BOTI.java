@@ -129,7 +129,7 @@ public class BOTI {
         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100.0f * 360f));
         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
         stack.translate(Math.sin(MinecraftClient.getInstance().player.age / 5.0f * 360f), -2.125f - Math.sin(MinecraftClient.getInstance().player.age / 20.0f * 360f), 400 + Math.cos(MinecraftClient.getInstance().player.age / 10.0f * 360f));
-        VortexUtil util = new VortexUtil("storm");
+        VortexUtil util = new VortexUtil("tokamak");
         util.renderVortex(stack);
         botiProvider.draw();
         stack.pop();
