@@ -30,7 +30,9 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.item.SonicItem;
@@ -70,15 +72,15 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         SonicHandler handler = tardis.sonic();
 
+        ItemStack hand = player.getMainHandStack();
         boolean hasSonic = handler.getExteriorSonic() != null;
         boolean shouldEject = player.isSneaking();
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()
+        if (hand.getItem() instanceof KeyItem && !tardis.siege().isActive()
                 && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isQueued()) {
-            ItemStack key = player.getMainHandStack();
-            UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
+            UUID keyId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
 
-            if (key.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
+            if (hand.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
                 DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -104,19 +106,13 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
         }
 
-        if (player.getMainHandStack().getItem() instanceof SonicItem && !tardis.siege().isActive()
+        if (hand.getItem() instanceof SonicItem && !tardis.siege().isActive()
                 && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isQueued()
                 && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
-            ItemStack sonic = player.getMainHandStack();
-            UUID sonicId = LinkableItem.getTardisIdFromUuid(sonic, "tardis");
+            UUID sonicId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
 
             if (Objects.equals(tardis.getUuid(), sonicId)) {
-                ItemStack stack = player.getMainHandStack();
-
-                if (!(stack.getItem() instanceof SonicItem))
-                    return;
-
-                handler.insertExteriorSonic(stack);
+                handler.insertExteriorSonic(hand);
 
                 player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
                 world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
@@ -127,6 +123,14 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                                                                                             // with current tool!
             }
 
+            return;
+        }
+
+        // try to stop phasing
+        EngineSystem.Phaser phasing = tardis.subsystems().engine().phaser();
+        if (phasing.isPhasing() && SonicItem.isSonic(hand) && SonicItem.isOf(world, hand, tardis)) {
+            world.playSound(null, pos, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1F, 1F);
+            phasing.cancel();
             return;
         }
 

@@ -5,12 +5,14 @@ import java.util.function.Function;
 
 import org.joml.Vector3f;
 
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
@@ -99,6 +101,7 @@ public class EngineSystem extends DurableSubSystem {
         @Exclude(strategy = Exclude.Strategy.NETWORK)
         private final Consumer<Phaser> cancel;
         private int countdown;
+        private int initial;
 
         public Phaser(Consumer<Phaser> onStart, Consumer<Phaser> onMiss, Consumer<Phaser> onCancel, Function<Phaser, Boolean> canPhase) {
             this.countdown = 0;
@@ -124,7 +127,8 @@ public class EngineSystem extends DurableSubSystem {
             }
         }
         public void start() {
-            this.countdown = AITMod.RANDOM.nextInt(100, 200); // 5-10 seconds
+            this.initial = AITMod.RANDOM.nextInt(140, 200); // 7-10 seconds
+            this.countdown = this.initial;
             this.start.accept(this);
         }
         public boolean isPhasing() {
@@ -138,10 +142,14 @@ public class EngineSystem extends DurableSubSystem {
         public static Phaser create(EngineSystem system) {
             return new Phaser(
                     (phaser) -> {
-                        system.tardis().alarm().enabled().set(true);
-                        TardisUtil.sendMessageToInterior(system.tardis().asServer(), Text.translatable("tardis.message.engine.phasing").formatted(Formatting.RED));
-                        system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.HOP_DEMAT);
-                        system.tardis().getExterior().playSound(AITSounds.HOP_DEMAT);
+                        ServerTardis tdis = system.tardis().asServer();
+
+                        TardisUtil.sendMessageToInterior(tdis, Text.translatable("tardis.message.engine.phasing").formatted(Formatting.RED));
+                        TardisUtil.sendMessageToLinked(tdis, Text.translatable("tardis.message.engine.phasing").formatted(Formatting.RED));
+
+                        tdis.alarm().enabled().set(true);
+                        tdis.getDesktop().playSoundAtEveryConsole(AITSounds.HOP_DEMAT);
+                        tdis.getExterior().playSound(AITSounds.HOP_DEMAT);
                     },
                     (phaser) -> {
                         Tardis tardis1 = system.tardis();
@@ -156,10 +164,11 @@ public class EngineSystem extends DurableSubSystem {
                         });
                     },
                     (phaser) -> {
-                        if (phaser.countdown < (20 * 6F)) {
-                            system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.HOP_MAT);
-                            system.tardis().getExterior().playSound(AITSounds.HOP_MAT);
-                        }
+                        SoundEvent sound = (phaser.countdown < (phaser.initial - (100))) ? AITSounds.HOP_MAT : AITSounds.LAND_THUD;
+
+                        system.tardis().getDesktop().playSoundAtEveryConsole(sound);
+                        system.tardis().getExterior().playSound(sound);
+
                         system.tardis().alarm().enabled().set(false);
                     },
                     (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 1024) == 1
