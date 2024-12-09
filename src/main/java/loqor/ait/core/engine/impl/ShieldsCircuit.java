@@ -18,7 +18,7 @@ public class ShieldsCircuit extends DurableSubSystem implements StructureHolder 
 
     @Override
     protected float cost() {
-        return 1f;
+        return 0.1f;
     }
 
     @Override

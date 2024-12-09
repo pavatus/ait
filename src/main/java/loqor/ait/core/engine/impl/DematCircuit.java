@@ -25,7 +25,7 @@ public class DematCircuit extends DurableSubSystem implements StructureHolder {
 
     @Override
     protected float cost() {
-        return 1f;
+        return 0.05f * this.tardis().travel().speed();
     }
 
     @Override

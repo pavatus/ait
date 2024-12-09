@@ -25,7 +25,7 @@ public class ChameleonCircuit extends DurableSubSystem implements StructureHolde
 
     @Override
     protected float cost() {
-        return 1f;
+        return 0.2f;
     }
 
     @Override

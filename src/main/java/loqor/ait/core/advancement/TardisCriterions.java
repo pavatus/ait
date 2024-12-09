@@ -64,12 +64,15 @@ public class TardisCriterions {
 
         TardisEvents.SUBSYSTEM_ENABLE.register(system -> {
             if (system instanceof EngineSystem) return;
+            if (system.isClient()) return;
 
             for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(system.tardis().asServer())) {
                 TardisCriterions.ENABLE_SUBSYSTEM.trigger(player);
             }
         });
         TardisEvents.SUBSYSTEM_REPAIR.register(system -> {
+            if (system.isClient()) return;
+
             for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(system.tardis().asServer())) {
                 TardisCriterions.REPAIR_SUBSYSTEM.trigger(player);
             }

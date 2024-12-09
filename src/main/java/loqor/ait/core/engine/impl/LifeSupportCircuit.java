@@ -41,7 +41,7 @@ public class LifeSupportCircuit extends DurableSubSystem implements StructureHol
 
     @Override
     protected float cost() {
-        return 1f;
+        return 0.25f;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LifeSupportCircuit extends DurableSubSystem implements StructureHol
         List<LivingEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis);
 
         for (LivingEntity entity : entities) {
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 20, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 20, 1, true, true));
         }
     }
 }

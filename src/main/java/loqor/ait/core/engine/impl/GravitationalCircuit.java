@@ -16,7 +16,7 @@ public class GravitationalCircuit extends DurableSubSystem implements StructureH
 
     @Override
     protected float cost() {
-        return 1f;
+        return 0.25f;
     }
 
     @Override
