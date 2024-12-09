@@ -125,7 +125,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
             // Safe to get as ^ that method runs the check for us
             ServerTardis tardis = (ServerTardis) this.tardis();
 
-            if (!tardis.engine().hasPower())
+            if (!tardis.fuel().hasPower())
                 return;
 
             this.addFuel(10, consoleSonic);

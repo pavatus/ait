@@ -18,6 +18,8 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
+import loqor.ait.core.engine.block.generic.GenericSubSystemBlock;
+import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
@@ -112,7 +114,26 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
                     .luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    @AutomaticModel
+    public static final Block COMPACT_ZEITON = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    @AutomaticModel
+    public static final Block ZEITON_COBBLE = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
 
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @NoEnglish
+    public static final Block ZEITON_CAGE = new ZeitonCageBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
+            .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
+            .luminance(light -> 15));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @AutomaticModel(justItem = true)
+    public static final Block POWER_CONVERTER = new PowerConverterBlock(FabricBlockSettings.create().nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @NoEnglish
+    public static final Block GENERIC_SUBSYSTEM = new GenericSubSystemBlock(FabricBlockSettings.create().nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     @NoBlockItem
     public static final Block PLUGBOARD = new PlugBoardBlock(

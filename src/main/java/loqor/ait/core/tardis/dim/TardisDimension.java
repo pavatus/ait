@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.dim;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.VoidChunkGenerator;
@@ -23,8 +24,10 @@ import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
+
 
 public class TardisDimension {
     private static WorldBuilder builder(ServerTardis tardis) {
@@ -69,6 +72,18 @@ public class TardisDimension {
         }
 
         return Optional.ofNullable(TardisManager.with(world, ((o, manager) -> manager.demandTardis(o, uuid))));
+    }
+    public static void withTardis(ServerWorld world, Consumer<ServerTardis> consumer) {
+        UUID uuid;
+
+        try {
+            uuid = UUID.fromString(world.getRegistryKey().getValue().getPath());
+        } catch (Exception e) {
+            consumer.accept(null);
+            return;
+        }
+
+        ServerTardisManager.getInstance().getTardis(world.getServer(), uuid, consumer);
     }
     public static boolean isTardisDimension(RegistryKey<World> world) {
         Identifier value = world.getValue();

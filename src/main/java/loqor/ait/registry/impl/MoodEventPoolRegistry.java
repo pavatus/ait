@@ -121,7 +121,7 @@ public class MoodEventPoolRegistry {
         RANDOM_POWER_OFF = register(
                 MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_power_off"), tardis -> {
                     if (!tardis.travel().inFlight())
-                        tardis.engine().disablePower();
+                        tardis.fuel().disablePower();
                 }, 256, TardisMood.Alignment.NEGATIVE));
 
         RANDOM_ALARM_ACTIVATION = register(

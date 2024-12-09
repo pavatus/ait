@@ -8,6 +8,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.CloakHandler;
@@ -47,5 +48,10 @@ public class CloakControl extends Control {
     @Override
     public SoundEvent getSound() {
         return SoundEvents.INTENTIONALLY_EMPTY;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.CHAMELEON;
     }
 }

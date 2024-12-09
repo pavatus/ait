@@ -177,7 +177,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         boolean alarms = tardis.alarm().enabled().get();
 
         if (alpha > 0.105f && emission != null && !(emission.equals(DatapackConsole.EMPTY)))
-            ClientLightUtil.renderEmissivable(tardis.engine().hasPower(), model::renderWithAnimations, emission, entity,
+            ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations, emission, entity,
                     this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1,
                     alarms ? 0.3f : 1, alpha);
 

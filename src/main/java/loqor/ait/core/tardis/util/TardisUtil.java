@@ -395,4 +395,21 @@ public class TardisUtil {
     public static void sendMessageToLinked(ServerTardis tardis, Text message) {
         NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
     }
+
+    public static Optional<ServerPlayerEntity> findNearestPlayer(DirectedGlobalPos.Cached position) {
+        ServerWorld world = position.getWorld();
+        BlockPos pos = position.getPos();
+        ServerPlayerEntity nearestPlayer = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            double distance = player.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestPlayer = player;
+            }
+        }
+
+        return Optional.ofNullable(nearestPlayer);
+    }
 }

@@ -1779,7 +1779,7 @@ public class CopperConsoleModel extends ConsoleModel {
 
         // power
         ModelPart power = this.copper.getChild("desktop").getChild("desktop2").getChild("desktop3").getChild("desktop4").getChild("desktop5").getChild("desktop6").getChild("panels12").getChild("rot6").getChild("lever9").getChild("bone131");
-        power.roll += tardis.engine().hasPower() ? 0f : -1.0f;
+        power.roll += tardis.fuel().hasPower() ? 0f : -1.0f;
 
         // siege mode
         ModelPart wibblyLever = this.copper.getChild("controls").getChild("panel_3").getChild("rot9").getChild("lever7").getChild("bone96");

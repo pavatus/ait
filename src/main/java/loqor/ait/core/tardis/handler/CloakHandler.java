@@ -30,7 +30,7 @@ public class CloakHandler extends KeyedTardisComponent implements TardisTickable
         if (!this.cloaked().get())
             return;
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             this.cloaked().set(false);
 
         TravelHandler travel = this.tardis.travel();

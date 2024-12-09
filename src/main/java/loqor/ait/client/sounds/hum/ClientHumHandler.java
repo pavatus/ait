@@ -109,7 +109,7 @@ public class ClientHumHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySounds(ClientTardis tardis) {
-        return tardis != null && tardis.engine().hasPower();
+        return tardis != null && tardis.fuel().hasPower();
     }
 
     public void tick(MinecraftClient client) {

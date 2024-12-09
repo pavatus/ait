@@ -6,6 +6,8 @@ import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -117,5 +119,19 @@ public class TardisExterior extends TardisComponent {
             return Optional.empty();
 
         return Optional.of(exterior);
+    }
+
+    public void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+        DirectedGlobalPos.Cached pos = tardis.travel().position();
+
+        pos.getWorld().playSound(null, pos.getPos(), sound, category, volume, pitch);
+    }
+
+    public void playSound(SoundEvent sound, SoundCategory category) {
+        this.playSound(sound, category, 1f, 1f);
+    }
+
+    public void playSound(SoundEvent sound) {
+        this.playSound(sound, SoundCategory.BLOCKS);
     }
 }
