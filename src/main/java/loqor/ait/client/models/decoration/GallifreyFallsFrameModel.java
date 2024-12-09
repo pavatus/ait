@@ -34,11 +34,7 @@ public class GallifreyFallsFrameModel extends SinglePartEntityModel {
     }
 
     public void renderWithFbo(MatrixStack matrices, VertexConsumerProvider vertexConsumer, Framebuffer buffer, int light, int overlay, float red, float green, float blue, float alpha) {
-        //this.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-        matrices.push();
-        matrices.scale(1, 1, 1);
-        frame.getChild("plane").render(matrices, vertexConsumer.getBuffer(RenderLayer.getEntityCutoutNoCull(GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE)), light, overlay, red, green, blue, alpha);
-        matrices.pop();
+        frame.getChild("plane").render(matrices, vertexConsumer.getBuffer(RenderLayer.getEntityTranslucentCull(GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE)), light, overlay, red, green, blue, alpha);
     }
 
     @Override

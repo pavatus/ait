@@ -11,12 +11,8 @@ public class BOTIHandler {
     public void setupFramebuffer() {
         Window window = MinecraftClient.getInstance().getWindow();
 
-        if (afbo != null && (afbo.viewportWidth != window.getFramebufferWidth() || afbo.viewportHeight != window.getFramebufferHeight())) {
-            afbo = null;
-        }
-
-        if (afbo == null) {
-            afbo = new SimpleFramebuffer(window.getFramebufferWidth(), window.getFramebufferHeight(), true, MinecraftClient.IS_SYSTEM_MAC);
+        if (afbo == null || afbo.textureWidth != window.getFramebufferWidth() || afbo.textureHeight != window.getFramebufferHeight()) {
+            afbo = new SimpleFramebuffer(window.getFramebufferWidth(), window.getFramebufferHeight(), true, MinecraftClient.IS_SYSTEM_MAC);;
         }
 
         afbo.beginWrite(false);

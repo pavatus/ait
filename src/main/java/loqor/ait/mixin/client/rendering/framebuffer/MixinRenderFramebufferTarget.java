@@ -46,9 +46,9 @@ public abstract class MixinRenderFramebufferTarget implements StencilFrameBuffer
     private void ait$modifyTexImage2D(Args args) {
         if (Objects.equals(args.get(2), GL_DEPTH_COMPONENT)) {
             if (isStencilBufferEnabled) {
-                args.set(2, GL_DEPTH32F_STENCIL8);
+                args.set(2, GL_DEPTH24_STENCIL8);
                 args.set(6, ARBFramebufferObject.GL_DEPTH_STENCIL);
-                args.set(7, GL_FLOAT_32_UNSIGNED_INT_24_8_REV);
+                args.set(7, GL_UNSIGNED_INT_24_8);
             }
         }
     }
