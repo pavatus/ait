@@ -1,5 +1,6 @@
-package loqor.ait.client.renderers.entities.projectiles;
+package dev.pavatus.gun.client.render;
 
+import dev.pavatus.gun.core.entity.StaserBoltEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -14,7 +15,6 @@ import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.entities.projectiles.StaserBoltEntityModel;
-import loqor.ait.core.entities.StaserBoltEntity;
 
 @Environment(value=EnvType.CLIENT)
 public class StaserBoltEntityRenderer

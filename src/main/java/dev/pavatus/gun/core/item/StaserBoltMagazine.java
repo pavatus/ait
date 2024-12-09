@@ -1,7 +1,9 @@
-package loqor.ait.core.item;
+package dev.pavatus.gun.core.item;
 
 import java.util.List;
 
+import dev.pavatus.gun.core.entity.GunEntityTypes;
+import dev.pavatus.gun.core.entity.StaserBoltEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -16,8 +18,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.api.ArtronHolderItem;
-import loqor.ait.core.AITEntityTypes;
-import loqor.ait.core.entities.StaserBoltEntity;
 
 public class StaserBoltMagazine extends Item implements ArtronHolderItem {
     public StaserBoltMagazine(Settings settings) {
@@ -27,7 +27,7 @@ public class StaserBoltMagazine extends Item implements ArtronHolderItem {
     public static final double MAX_FUEL = 2000;
 
     public PersistentProjectileEntity createStaserbolt(World world, ItemStack stack, LivingEntity shooter) {
-        StaserBoltEntity staserBoltEntity = new StaserBoltEntity(AITEntityTypes.STASER_BOLT_ENTITY_TYPE, world);
+        StaserBoltEntity staserBoltEntity = new StaserBoltEntity(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, world);
         return staserBoltEntity.createFromConstructor(world, shooter);
     }
     @Override

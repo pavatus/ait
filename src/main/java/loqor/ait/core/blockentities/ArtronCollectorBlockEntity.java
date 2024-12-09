@@ -1,5 +1,6 @@
 package loqor.ait.core.blockentities;
 
+import dev.pavatus.gun.core.item.StaserBoltMagazine;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -25,7 +26,6 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.ArtronCollectorItem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
-import loqor.ait.core.item.StaserBoltMagazine;
 import loqor.ait.core.world.RiftChunkManager;
 
 public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEntityTicker<ArtronCollectorBlockEntity>, ArtronHolder {

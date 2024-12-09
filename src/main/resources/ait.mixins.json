@@ -37,7 +37,6 @@
     "client.rendering.BakedModelManagerMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.DebugRendererMixin",
-    "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",
     "client.rendering.HeldItemRendererMixin",
     "client.rendering.framebuffer.MixinMainFramebufferTarget",

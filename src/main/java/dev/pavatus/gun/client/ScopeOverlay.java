@@ -1,5 +1,6 @@
-package loqor.ait.client;
+package dev.pavatus.gun.client;
 
+import dev.pavatus.gun.core.item.StaserRifleItem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.client.MinecraftClient;
@@ -9,7 +10,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.item.StaserRifleItem;
 
 public class ScopeOverlay implements HudRenderCallback {
     private static final Identifier SPYGLASS_SCOPE = new Identifier(AITMod.MOD_ID, "textures/gui/scope.png");
