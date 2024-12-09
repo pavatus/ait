@@ -126,10 +126,10 @@ public class BOTI {
         GlStateManager._depthFunc(GL11.GL_ALWAYS);
 
         stack.push();
-        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
+        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100.0f * 360f));
         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
         stack.translate(Math.sin(MinecraftClient.getInstance().player.age / 5.0f * 360f), -2.125f - Math.sin(MinecraftClient.getInstance().player.age / 20.0f * 360f), 400 + Math.cos(MinecraftClient.getInstance().player.age / 10.0f * 360f));
-        VortexUtil util = new VortexUtil("cream");
+        VortexUtil util = new VortexUtil("storm");
         util.renderVortex(stack);
         botiProvider.draw();
         stack.pop();
