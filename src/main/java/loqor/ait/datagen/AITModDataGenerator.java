@@ -631,6 +631,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.description.bonding", "Reach 'Pilot' loyalty for the first time.");
         provider.addTranslation("achievement.ait.title.owner_ship", "But hey it trusts you now worth it right?");
         provider.addTranslation("achievement.ait.description.owner_ship", "Reach 'Owner' loyalty for the first time.");
+        provider.addTranslation("achievement.ait.title.enable_subsystem", "Time-Space Engineer");
+        provider.addTranslation("achievement.ait.description.enable_subsystem", "Enable a subsystem.");
+        provider.addTranslation("achievement.ait.title.repair_subsystem", "Handyman!");
+        provider.addTranslation("achievement.ait.description.repair_subsystem", "Repair a broken subsystem");
 
         // Commands
         // Fuel

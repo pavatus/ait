@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 
+import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.DirectedBlockPos;
@@ -222,6 +224,32 @@ public final class TardisEvents {
             callbacks -> (tardis, player) -> {
                 for (OnForcedEntry callback : callbacks) {
                     callback.onForcedEntry(tardis, player);
+                }
+            });
+
+    // Subsystem
+    public static final Event<OnSubSystemBreak> SUBSYSTEM_BREAK = EventFactory.createArrayBacked(OnSubSystemBreak.class,
+            callbacks -> system -> {
+                for (OnSubSystemBreak callback : callbacks) {
+                    callback.onBreak(system);
+                }
+            });
+    public static final Event<OnSubSystemRepair> SUBSYSTEM_REPAIR = EventFactory.createArrayBacked(OnSubSystemRepair.class,
+            callbacks -> system -> {
+                for (OnSubSystemRepair callback : callbacks) {
+                    callback.onRepair(system);
+                }
+            });
+    public static final Event<OnSubSystemEnable> SUBSYSTEM_ENABLE = EventFactory.createArrayBacked(OnSubSystemEnable.class,
+            callbacks -> system -> {
+                for (OnSubSystemEnable callback : callbacks) {
+                    callback.onEnable(system);
+                }
+            });
+    public static final Event<OnSubSystemDisable> SUBSYSTEM_DISABLE = EventFactory.createArrayBacked(OnSubSystemDisable.class,
+            callbacks -> system -> {
+                for (OnSubSystemDisable callback : callbacks) {
+                    callback.onDisable(system);
                 }
             });
 
@@ -441,6 +469,23 @@ public final class TardisEvents {
     @FunctionalInterface
     public interface OnForcedEntry {
         void onForcedEntry(Tardis tardis, Entity entity);
+    }
+
+    @FunctionalInterface
+    public interface OnSubSystemBreak {
+        void onBreak(DurableSubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnSubSystemRepair {
+        void onRepair(DurableSubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnSubSystemEnable {
+        void onEnable(SubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnSubSystemDisable {
+        void onDisable(SubSystem system);
     }
 
     public enum Interaction {

@@ -7,6 +7,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.effects.ZeitonHighEffect;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.util.TardisUtil;
 
 public class TardisCriterions {
@@ -22,6 +23,8 @@ public class TardisCriterions {
     public static SimpleCriterion PILOT_HIGH = SimpleCriterion.create("pilot_high").register();
     public static SimpleCriterion REACH_PILOT = SimpleCriterion.create("reach_pilot").register();
     public static SimpleCriterion REACH_OWNER = SimpleCriterion.create("reach_owner").register();
+    public static SimpleCriterion ENABLE_SUBSYSTEM = SimpleCriterion.create("enable_subsystem").register();
+    public static SimpleCriterion REPAIR_SUBSYSTEM = SimpleCriterion.create("repair_subsystem").register();
 
 
     public static void init() {
@@ -57,6 +60,19 @@ public class TardisCriterions {
             if (!(entity instanceof ServerPlayerEntity player)) return;
 
             TardisCriterions.FORCED_ENTRY.trigger(player);
+        });
+
+        TardisEvents.SUBSYSTEM_ENABLE.register(system -> {
+            if (system instanceof EngineSystem) return;
+
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(system.tardis().asServer())) {
+                TardisCriterions.ENABLE_SUBSYSTEM.trigger(player);
+            }
+        });
+        TardisEvents.SUBSYSTEM_REPAIR.register(system -> {
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(system.tardis().asServer())) {
+                TardisCriterions.REPAIR_SUBSYSTEM.trigger(player);
+            }
         });
     }
 }

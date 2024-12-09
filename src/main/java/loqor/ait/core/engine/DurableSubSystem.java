@@ -2,6 +2,7 @@ package loqor.ait.core.engine;
 
 import net.minecraft.item.ItemStack;
 
+import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.util.ServerLifecycleHooks;
 
@@ -57,10 +58,12 @@ public abstract class DurableSubSystem extends SubSystem {
     }
     protected void onBreak() {
         this.setEnabled(false);
+        TardisEvents.SUBSYSTEM_BREAK.invoker().onBreak(this);
     }
 
     protected void onRepair() {
         this.setEnabled(true);
+        TardisEvents.SUBSYSTEM_REPAIR.invoker().onRepair(this);
     }
     protected int changeFrequency() {
         return 20;

@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import loqor.ait.api.Disposable;
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.engine.impl.*;
@@ -67,10 +68,10 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
         }
     }
     protected void onEnable() {
-
+        TardisEvents.SUBSYSTEM_ENABLE.invoker().onEnable(this);
     }
     protected void onDisable() {
-
+        TardisEvents.SUBSYSTEM_DISABLE.invoker().onDisable(this);
     }
 
     public void tick() {
