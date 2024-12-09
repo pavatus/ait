@@ -1,13 +1,13 @@
 package loqor.ait.core.engine.block.multi;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -72,6 +72,17 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
         Optional<BlockOffset> prev = this.remove(offset.offset);
         this.add(offset);
         return prev;
+    }
+
+    public List<ItemStack> toStacks() {
+        SimpleInventory inv = new SimpleInventory(256);
+        for (BlockOffset blockOffset : this) {
+            for (ItemStack stack : blockOffset.toStacks()) {
+                inv.addStack(stack);
+            }
+        }
+
+        return inv.clearToList();
     }
 
     public static MultiBlockStructure from(Identifier structure) {
@@ -146,6 +157,14 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
                     '}';
         }
 
+        public List<ItemStack> toStacks() {
+            List<ItemStack> stacks = new ArrayList<>();
+            for (Block block : this.block) {
+                stacks.add(new ItemStack(block));
+            }
+            return stacks;
+        }
+
         public static List<BlockOffset> corners(Block block, int x, int y, int z) {
             return List.of(
                     new BlockOffset(block, x, y, z),
@@ -197,7 +216,7 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
         }
     }
 
-    public static class AllowedBlocks extends ArrayList<Block> {
+    public static class AllowedBlocks extends HashSet<Block> {
         public AllowedBlocks(Block... blocks) {
             super(List.of(blocks));
         }

@@ -50,11 +50,7 @@ public class MultiBlockStructureRenderer {
         client.getBlockRenderManager().getModelRenderer().render(view, client.getBlockRenderManager().getModel(state), state, pos, matrices, provider.getBuffer(RenderLayers.getBlockLayer(state)), false, client.world.random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
     }
     private Block getBlock(MultiBlockStructure.AllowedBlocks block, int ticks) {
-        if (block.size() == 1) return block.get(0);
-
-        int size = block.size();
-        int index = (ticks / (size * 10)) % block.size();
-        return block.get(index);
+        return (Block) block.toArray()[0];
     }
 
     private static MultiBlockStructureRenderer INSTANCE;

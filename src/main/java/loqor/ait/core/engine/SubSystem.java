@@ -1,14 +1,19 @@
 package loqor.ait.core.engine;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.google.gson.*;
+
+import net.minecraft.item.ItemStack;
 
 import loqor.ait.api.Disposable;
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.engine.impl.*;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
@@ -71,6 +76,22 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
     public void tick() {
 
     }
+
+    /**
+     * TEMPORARY - will be removed when ARS is implemented
+     */
+    @Deprecated(forRemoval = true)
+    public List<ItemStack> toStacks() {
+        List<ItemStack> stacks = new ArrayList<>();
+
+        if (this instanceof StructureHolder holder) {
+            stacks.addAll(holder.getStructure().toStacks());
+        }
+        stacks.add(AITBlocks.GENERIC_SUBSYSTEM.asItem().getDefaultStack());
+
+        return stacks;
+    }
+
     protected void sync() {
         ServerTardisManager.getInstance().markComponentDirty(this.tardis.subsystems());
     }

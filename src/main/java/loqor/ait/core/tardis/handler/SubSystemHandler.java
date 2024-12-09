@@ -1,13 +1,11 @@
 package loqor.ait.core.tardis.handler;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 import com.google.gson.*;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -22,7 +20,7 @@ import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.EnumMap;
 
-public class SubSystemHandler extends KeyedTardisComponent implements TardisTickable {
+public class SubSystemHandler extends KeyedTardisComponent implements TardisTickable, Iterable<SubSystem> {
     @Exclude
     private final EnumMap<SubSystem.IdLike, SubSystem> systems = new EnumMap<>(SubSystemRegistry::values,
             SubSystem[]::new);
@@ -69,10 +67,10 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         this.sync();
         return found;
     }
-    private Iterator<SubSystem> iterator() {
+    public @NotNull Iterator<SubSystem> iterator() {
         return Arrays.stream(this.systems.getValues()).iterator();
     }
-    private void forEach(Consumer<SubSystem> consumer) {
+    public void forEach(Consumer<? super SubSystem> consumer) {
         for (SubSystem system : this.systems.getValues()) {
             if (system == null)
                 continue;
@@ -98,9 +96,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
      * @return true if all subsystems are enabled
      */
     public boolean isEnabled() {
-        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
-            SubSystem i = it.next();
-
+        for (SubSystem i : this) {
             if (!i.isEnabled())
                 return false;
         }
@@ -113,8 +109,8 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public int countEnabled() {
         int count = 0;
 
-        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
-            if (it.next().isEnabled())
+        for (SubSystem subSystem : this) {
+            if (subSystem.isEnabled())
                 count++;
         }
 
@@ -123,16 +119,14 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     @Override
     public void tick(MinecraftServer server) {
-        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
-            SubSystem next = it.next();
+        for (SubSystem next : this) {
             if (next == null) return;
             next.tick();
         }
     }
 
     public Optional<DurableSubSystem> findBrokenSubsystem() {
-        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
-            SubSystem next = it.next();
+        for (SubSystem next : this) {
             if (next instanceof DurableSubSystem && next.isEnabled() && ((DurableSubSystem) next).durability() <= 5)
                 return Optional.of((DurableSubSystem) next);
         }
@@ -142,13 +136,22 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     public void repairAll() {
         AITMod.LOGGER.info("Repairing all subsystems for {}", this.tardis);
-        for (Iterator<SubSystem> it = this.iterator(); it.hasNext(); ) {
-            SubSystem next = it.next();
+        for (SubSystem next : this) {
             if (next == null) continue;
             if (next instanceof DurableSubSystem)
                 ((DurableSubSystem) next).addDurability(100);
             next.setEnabled(true);
         }
+    }
+
+    public List<SubSystem> getEnabled() {
+        List<SubSystem> enabled = new ArrayList<>();
+        for (SubSystem next : this) {
+            if (next.isEnabled())
+                enabled.add(next);
+        }
+
+        return enabled;
     }
 
     public EngineSystem engine() {
