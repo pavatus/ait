@@ -76,9 +76,9 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         profiler.pop();
     }
 
-    private void renderDoorBoti(ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    private void renderDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         profiler.push("boti");
-        BOTI.renderInteriorDoorBoti(variant, matrices, new Identifier(AITMod.MOD_ID, "textures/painting/texture.png"), model, BotiPortalModel.getTexturedModelData().createModel(), interiorTexture, new GallifreyFallsModel(GallifreyFallsModel.getTexturedModelData().createModel()), light);
+        BOTI.renderInteriorDoorBoti(door, variant, matrices, new Identifier(AITMod.MOD_ID, "textures/painting/texture.png"), model, BotiPortalModel.getTexturedModelData().createModel(), interiorTexture, new GallifreyFallsModel(GallifreyFallsModel.getTexturedModelData().createModel()), light);
         profiler.pop();
     }
 
@@ -155,8 +155,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             }
         }
 
-        if (tardis.travel().getState() != TravelHandlerBase.State.LANDED && tardis.door().isOpen())
-            this.renderDoorBoti(variant, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+        if (/*tardis.travel().getState() != TravelHandlerBase.State.LANDED && */tardis.door().isOpen())
+            this.renderDoorBoti(entity, variant, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
 
         matrices.pop();
         profiler.pop();
