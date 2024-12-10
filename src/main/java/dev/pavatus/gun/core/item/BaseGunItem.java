@@ -1,9 +1,8 @@
-package loqor.ait.core.item;
+package dev.pavatus.gun.core.item;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-import dev.pavatus.planet.core.PlanetItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -44,7 +43,7 @@ import loqor.ait.core.AITStatusEffects;
 
 public class BaseGunItem extends RangedWeaponItem {
     public static final Identifier SHOOT = new Identifier(AITMod.MOD_ID, "shoot_gun");
-    public static final Predicate<ItemStack> GUN_PROJECTILES = itemStack -> itemStack.isOf(PlanetItems.STASER_BOLT_MAGAZINE);
+    public static final Predicate<ItemStack> GUN_PROJECTILES = itemStack -> itemStack.isOf(GunItems.STASER_BOLT_MAGAZINE);
     public static final double MAX_AMMO = 2000;
     public static final String AMMO_KEY = "ammo";
 
@@ -63,7 +62,7 @@ public class BaseGunItem extends RangedWeaponItem {
                     player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF, SoundCategory.PLAYERS, 1.0f, 1.0f);
                     return;
                 }
-                BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), PlanetItems.STASER_BOLT_MAGAZINE.getDefaultStack(),
+                BaseGunItem.shoot(player.getWorld(), player, Hand.MAIN_HAND, player.getMainHandStack(), GunItems.STASER_BOLT_MAGAZINE.getDefaultStack(),
                         1.0f, false, 4.0f, player.hasStatusEffect(AITStatusEffects.ZEITON_HIGH) ? 20f : gun.getAimDeviation(isAds), 0.0f);
                 NbtCompound compound = player.getMainHandStack().getOrCreateNbt();
                 double current = compound.getDouble(AMMO_KEY);
@@ -191,7 +190,7 @@ public class BaseGunItem extends RangedWeaponItem {
     }
 
     private static PersistentProjectileEntity createBolt(World world, LivingEntity entity, ItemStack gun, ItemStack bolt) {
-        StaserBoltMagazine boltItem = (StaserBoltMagazine)(bolt.getItem() instanceof StaserBoltMagazine ? bolt.getItem() : PlanetItems.STASER_BOLT_MAGAZINE);
+        StaserBoltMagazine boltItem = (StaserBoltMagazine)(bolt.getItem() instanceof StaserBoltMagazine ? bolt.getItem() : GunItems.STASER_BOLT_MAGAZINE);
         PersistentProjectileEntity persistentProjectileEntity = boltItem.createStaserbolt(world, bolt, entity);
         if (entity instanceof PlayerEntity) {
             persistentProjectileEntity.setCritical(true);

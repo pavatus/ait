@@ -26,6 +26,25 @@ public class PlanetOreGeneration {
                 GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.MARTIAN_DIAMOND_ORE_PLACED_KEY);
         BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMars(),
                 GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.MARTIAN_EMERALD_ORE_PLACED_KEY);
+
+        //Anorthosite
+
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_COAL_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_COPPER_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_IRON_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_REDSTONE_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_LAPIS_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_GOLD_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_DIAMOND_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(PlanetBiomeSelectors.foundInMoon(),
+                GenerationStep.Feature.UNDERGROUND_ORES, PlanetPlacedFeatures.ANORTHOSITE_EMERALD_ORE_PLACED_KEY);
     }
 
 }

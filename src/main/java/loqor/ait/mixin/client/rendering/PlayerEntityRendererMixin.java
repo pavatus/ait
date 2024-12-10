@@ -8,9 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
@@ -19,15 +17,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
 
 import loqor.ait.client.renderers.wearables.RespiratorFeatureRenderer;
-import loqor.ait.core.item.BaseGunItem;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin
@@ -73,17 +68,6 @@ public abstract class PlayerEntityRendererMixin
         } else {
             spacesuitModel.LeftArm.copyTransform(arm);
             spacesuitModel.LeftArm.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(SpacesuitFeatureRenderer.BLANK_SPACESUIT)), light, OverlayTexture.DEFAULT_UV);
-        }
-    }
-
-    @Inject(at = @At("RETURN"), method = "getArmPose", cancellable = true)
-    private static void ait$getArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
-        if (player == null) return;
-        if (player.getMainHandStack().getItem() instanceof BaseGunItem) {
-            if (MinecraftClient.getInstance().options.useKey.isPressed()) {
-                cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_CHARGE);
-            }
-            cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
         }
     }
 }

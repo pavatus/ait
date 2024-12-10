@@ -16,12 +16,17 @@ import net.minecraft.client.render.AITBufferBuilderStorage;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.client.models.decoration.GallifreyFallsFrameModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
+import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.renderers.VortexUtil;
+import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 
@@ -90,7 +95,7 @@ public class BOTI {
         stack.pop();
     }
 
-    public static void renderInteriorDoorBoti(ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, Identifier interiorTex, SinglePartEntityModel interior, int light) {
+    public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, Identifier interiorTex, SinglePartEntityModel interior, int light) {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
 
@@ -114,8 +119,9 @@ public class BOTI {
 
         RenderSystem.depthMask(true);
         stack.push();
-        stack.translate(0, -1.7f, -0.5);
-        stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight() / 2, 1f);
+        Vec3d vec = variant.parent().door().adjustPortalPos(new Vec3d(0, -1.1725f, 0), Direction.NORTH);
+        stack.translate(vec.x, vec.y, vec.z);
+        stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight(), 1f);
         mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         botiProvider.draw();
         stack.pop();
@@ -123,17 +129,39 @@ public class BOTI {
 
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
-        GlStateManager._depthFunc(GL11.GL_ALWAYS);
 
         stack.push();
-        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
-        stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) Math.sin(MinecraftClient.getInstance().player.age / 100.0f * 600f)));
-        stack.translate(Math.sin(MinecraftClient.getInstance().player.age / 5.0f * 360f), -2.125f - Math.sin(MinecraftClient.getInstance().player.age / 20.0f * 360f), 400 + Math.cos(MinecraftClient.getInstance().player.age / 10.0f * 360f));
-        VortexUtil util = new VortexUtil("cream");
-        util.renderVortex(stack);
+        if (!door.tardis().get().travel().autopilot() && door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
+            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 360f));
+        if (!door.tardis().get().crash().isNormal())
+            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
+        stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+        // STOP SHAKING IT IT LOOKS SO BAD
+        // stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
+        stack.translate(0, 0, 500);
+        VortexUtil util = variant.parent().vortex().toUtil();
+        if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
+            util.renderVortex(stack);
+        else
+            // this doesnt work to clear it, but i wanna clear it to be white
+            RenderSystem.clearColor(1, 1, 1, 1);
         botiProvider.draw();
         stack.pop();
-        GlStateManager._depthFunc(GL11.GL_LEQUAL);
+
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+
+        ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+        botiProvider.draw();
+        stack.pop();
+
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+        if (variant.emission() != null)
+            ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+        botiProvider.draw();
+        stack.pop();
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 

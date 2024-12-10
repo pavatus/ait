@@ -1,4 +1,4 @@
-package loqor.ait.core.item;
+package dev.pavatus.gun.core.item;
 
 public class StaserRifleItem extends BaseGunItem {
     public StaserRifleItem(Settings settings) {

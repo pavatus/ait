@@ -8,11 +8,6 @@ import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
 import net.minecraft.item.*;
-import net.minecraft.util.Rarity;
-
-import loqor.ait.core.item.BaseGunItem;
-import loqor.ait.core.item.StaserBoltMagazine;
-import loqor.ait.core.item.StaserRifleItem;
 
 public class PlanetItems implements ItemRegistryContainer {
 
@@ -45,12 +40,6 @@ public class PlanetItems implements ItemRegistryContainer {
 
     // WEAPONS
     // Guns
-
-    public static final Item CULT_STASER = new BaseGunItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(PlanetModule.instance().getItemGroup()));
-
-    public static final Item CULT_STASER_RIFLE = new StaserRifleItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(PlanetModule.instance().getItemGroup()));
-
-    public static final Item STASER_BOLT_MAGAZINE = new StaserBoltMagazine(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE).group(PlanetModule.instance().getItemGroup()));
 
 
     // ITEM GROUP TOOL PLACEMENT

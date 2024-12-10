@@ -1,6 +1,6 @@
-package loqor.ait.core.entities;
+package dev.pavatus.gun.core.entity;
 
-import dev.pavatus.planet.core.PlanetItems;
+import dev.pavatus.gun.core.item.GunItems;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -24,20 +24,19 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
 
 public class StaserBoltEntity extends PersistentProjectileEntity {
     public StaserBoltEntity(EntityType<? extends StaserBoltEntity> entityType, World world) {
-        super(AITEntityTypes.STASER_BOLT_ENTITY_TYPE, world);
+        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, world);
     }
 
     private StaserBoltEntity(World world, double x, double y, double z) {
-        super(AITEntityTypes.STASER_BOLT_ENTITY_TYPE, x, y, z, world);
+        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, x, y, z, world);
     }
 
     private StaserBoltEntity(World world, LivingEntity shooter) {
-        super(AITEntityTypes.STASER_BOLT_ENTITY_TYPE, shooter, world);
+        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, shooter, world);
     }
 
     // this exists because I forgot how to do the constructors so the registry doesn't scream at me - Loqor
@@ -47,7 +46,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
 
     @Override
     protected ItemStack asItemStack() {
-        return new ItemStack(PlanetItems.STASER_BOLT_MAGAZINE);
+        return new ItemStack(GunItems.STASER_BOLT_MAGAZINE);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
             this.remove(RemovalReason.DISCARDED);
         }
         if (getOwner() instanceof PlayerEntity player) {
-            if (hitResult.getType() == HitResult.Type.ENTITY && player.getMainHandStack().getItem() == PlanetItems.CULT_STASER_RIFLE) {
+            if (hitResult.getType() == HitResult.Type.ENTITY && player.getMainHandStack().getItem() == GunItems.CULT_STASER_RIFLE) {
                 this.setDamage(12d);
             } else {
                 this.setDamage(2d);
