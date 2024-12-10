@@ -1,6 +1,5 @@
 package loqor.ait.client.screens;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,12 +28,12 @@ import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
@@ -46,7 +45,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class MonitorScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/consoles/monitors/new_monitor_gui.png");
+            "textures/gui/tardis/monitor_gui.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorCategorySchema category;
     private ClientExteriorVariantSchema currentVariant;
@@ -113,9 +112,9 @@ public class MonitorScreen extends ConsoleScreen {
     private void createButtons() {
         this.buttons.clear();
         // exterior change text button
-        Text applyText = Text.literal("Apply");
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
-                this.textRenderer.getWidth(applyText), 20, Text.literal("Apply").formatted(Formatting.BOLD), button -> {
+                this.textRenderer.getWidth(applyText), 20, Text.translatable("screen.ait.monitor.apply").formatted(Formatting.BOLD), button -> {
                     sendExteriorPacket(this.tardis(), this.getCategory(), this.getCurrentVariant());
                 }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 8), this.textRenderer.getWidth("<#>"),
@@ -134,7 +133,7 @@ public class MonitorScreen extends ConsoleScreen {
                 15, Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.LIGHT_PURPLE), button -> {
                     whichDirectionVariant(true);
                 }, this.textRenderer));
-        Text desktopSettingsText = Text.literal("⚙");
+        Text desktopSettingsText = Text.translatable("screen.ait.monitor.gear_icon");
         this.addButton(new PressableTextWidget((width / 2 - 6), (height / 2 + 57),
                 this.textRenderer.getWidth(desktopSettingsText), 10,
                 Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.WHITE),
@@ -379,7 +378,7 @@ public class MonitorScreen extends ConsoleScreen {
         model.render(stack, context.getVertexConsumers().getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
                 LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, base, base, base, 1f);
 
-        if (hasPower && emissive != null) {
+        if (hasPower && emissive != null && !(emissive.equals(DatapackConsole.EMPTY))) {
             ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(model::render), emissive, null,
                     model.getPart(), stack, context.getVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE,
                     OverlayTexture.DEFAULT_UV, base, tinted, tinted, 1f);
@@ -391,7 +390,7 @@ public class MonitorScreen extends ConsoleScreen {
         stack.translate(0, 0, 50f);
 
         context.drawCenteredTextWithShadow(this.textRenderer, isExtUnlocked ? "" : "\uD83D\uDD12", x, y,
-                Color.WHITE.getRGB());
+                0xFFFFFF);
 
         stack.pop();
     }
@@ -421,23 +420,21 @@ public class MonitorScreen extends ConsoleScreen {
 
         BlockPos dabpdPos = dabpd.getPos();
 
-        String directionText = DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
         String destinationText = dabpdPos.getX() + ", " + dabpdPos.getY() + ", " + dabpdPos.getZ();
         Text dDimensionText = WorldUtil.worldText(dabpd.getDimension());
-        String dDirectionText = DirectionControl.rotationToDirection(dabpd.getRotation()).toUpperCase();
 
         // position
         context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 119), (height / 2 - 48), 0xFFFFFF,
                 true);
         context.drawText(this.textRenderer, dimensionText, (width / 2 - 119), (height / 2 - 38), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(directionText), (width / 2 - 119), (height / 2 - 28), 0xFFFFFF,
+        context.drawText(this.textRenderer, WorldUtil.rot2Text(abpd.getRotation()).asOrderedText(), (width / 2 - 119), (height / 2 - 28), 0xFFFFFF,
                 true);
 
         // destination
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 119), (height / 2 - 10),
                 0xFFFFFF, true);
         context.drawText(this.textRenderer, dDimensionText, (width / 2 - 119), (height / 2), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, Text.literal(dDirectionText), (width / 2 - 119), (height / 2 + 10),
+        context.drawText(this.textRenderer, WorldUtil.rot2Text(dabpd.getRotation()).asOrderedText(), (width / 2 - 119), (height / 2 + 10),
                 0xFFFFFF, true);
     }
 

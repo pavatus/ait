@@ -110,6 +110,8 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
                         .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
                         .desktop(DesktopRegistry.DEFAULT_CAVE).owner(player));
 
+        if (created == null) return;
+
         created.fuel().setCurrentFuel(0);
     }
 

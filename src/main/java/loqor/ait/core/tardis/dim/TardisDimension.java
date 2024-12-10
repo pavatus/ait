@@ -43,9 +43,9 @@ public class TardisDimension {
         return MultiDim.get(ServerLifecycleHooks.get()).add(builder);
     }
     private static ServerWorld create(ServerTardis tardis) {
-        AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
-
         WorldBuilder builder = builder(tardis);
+
+        AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
         ServerWorld created = create(builder);
 
         WorldUtil.blacklist(created);

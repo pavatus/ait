@@ -9,6 +9,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class DirectionControl extends Control {
@@ -51,16 +52,7 @@ public class DirectionControl extends Control {
     }
 
     public static String rotationToDirection(int currentRot) {
-        return switch (currentRot) {
-            case 1, 2, 3 -> "North East";
-            case 4 -> "East";
-            case 5, 6, 7 -> "South East";
-            case 8 -> "South";
-            case 9, 10, 11 -> "South West";
-            case 12 -> "West";
-            case 13, 14, 15, 16 -> "North West";
-            default -> "North";
-        };
+        return WorldUtil.rot2Text(currentRot).getString();
     }
 
     public static int getNextGeneralizedRotation(int rotation) {

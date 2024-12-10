@@ -231,12 +231,12 @@ public class TardisUtil {
                         return;
 
                     if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
-                        entity.refreshPositionAndAngles(offset(vec, directed, 0.5f).x, vec.y,
-                                offset(vec, directed, 0.5f).z,
+                        entity.refreshPositionAndAngles(offset(vec, directed, -0.5f).x, vec.y,
+                                offset(vec, directed, -0.5f).z,
                                 RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
                                 entity.getPitch());
                     } else {
-                        entity.teleport(world, offset(vec, directed, 0.5f).x, vec.y, offset(vec, directed, 0.5f).z,
+                        entity.teleport(world, offset(vec, directed, -0.5f).x, vec.y, offset(vec, directed, -0.5f).z,
                                 Set.of(),
                                 RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
                                 entity.getPitch());

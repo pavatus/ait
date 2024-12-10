@@ -1,5 +1,6 @@
 package loqor.ait.core;
 
+import dev.pavatus.planet.core.PlanetBlocks;
 import io.wispforest.owo.registration.reflect.BlockEntityRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
@@ -49,4 +50,7 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(AITRadioBlockEntity::new, AITBlocks.RADIO).build();
     public static BlockEntityType<RedstoneControlBlockEntity> REDSTONE_CONTROL_BLOCK_ENTITY = FabricBlockEntityTypeBuilder
             .create(RedstoneControlBlockEntity::new, AITBlocks.REDSTONE_CONTROL_BLOCK).build();
+
+    public static final BlockEntityType<FlagBlockEntity> FLAG_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+            .create(FlagBlockEntity::new, PlanetBlocks.FLAG).build();
 }

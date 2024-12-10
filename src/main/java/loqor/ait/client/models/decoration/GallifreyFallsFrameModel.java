@@ -24,7 +24,7 @@ public class GallifreyFallsFrameModel extends SinglePartEntityModel {
         ModelPartData modelPartData = modelData.getRoot();
         ModelPartData frame = modelPartData.addChild("frame", ModelPartBuilder.create().uv(0, 0).cuboid(-24.0F, -32.0F, -9.0F, 48.0F, 32.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-        ModelPartData plane = frame.addChild("plane", ModelPartBuilder.create().uv(0, 33).cuboid(-19.0F, -25.0F, -1.0F, 38.0F, 22.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, -8.0F));
+        ModelPartData plane = frame.addChild("plane", ModelPartBuilder.create().uv(0, 33).cuboid(-19.0F, -25.0F, -1.0F, 38.0F, 22.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 22.0F, -6.0F));
         return TexturedModelData.of(modelData, 128, 128);
     }
     @Override
@@ -34,8 +34,7 @@ public class GallifreyFallsFrameModel extends SinglePartEntityModel {
     }
 
     public void renderWithFbo(MatrixStack matrices, VertexConsumerProvider vertexConsumer, Framebuffer buffer, int light, int overlay, float red, float green, float blue, float alpha) {
-        //this.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-        frame.getChild("plane").render(matrices, vertexConsumer.getBuffer(RenderLayer.getEntityCutout(GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE)), light, overlay, red, green, blue, alpha);
+        frame.getChild("plane").render(matrices, vertexConsumer.getBuffer(RenderLayer.getEntityTranslucentCull(GallifreyFallsPaintingEntityRenderer.FRAME_TEXTURE)), light, overlay, red, green, blue, alpha);
     }
 
     @Override

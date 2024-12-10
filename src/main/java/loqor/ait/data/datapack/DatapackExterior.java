@@ -1,5 +1,7 @@
 package loqor.ait.data.datapack;
 
+import static loqor.ait.data.datapack.DatapackConsole.EMPTY;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
@@ -18,7 +20,11 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
+import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.door.DoorSchema;
@@ -42,16 +48,18 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId),
                     Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
                     Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
-                    Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
+                    Identifier.CODEC.optionalFieldOf("emission", EMPTY).forGetter(DatapackExterior::emission),
                     Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
                     BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),
+                    TravelSoundMap.CODEC.optionalFieldOf("effects", new TravelSoundMap().of(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.DEFAULT_DEMAT).of(TravelHandlerBase.State.MAT, TravelSoundRegistry.DEFAULT_MAT)).forGetter(ExteriorVariantSchema::effects),
+                    Identifier.CODEC.optionalFieldOf("flight", FlightSoundRegistry.DEFAULT.id()).forGetter(DatapackExterior::flightId),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack))
             .apply(instance, DatapackExterior::new));
 
     public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture,
-            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, boolean isDatapack) {
-        super(category, id, loyalty);
+            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, TravelSoundMap effects, Identifier flightId, boolean isDatapack) {
+        super(category, id, loyalty, effects, FlightSoundRegistry.getInstance().get(flightId));
         this.parent = parent;
         this.texture = texture;
         this.emission = emission;
@@ -131,5 +139,8 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
     public Identifier emission() {
         return this.emission;
+    }
+    public Identifier flightId() {
+        return this.flight().id();
     }
 }

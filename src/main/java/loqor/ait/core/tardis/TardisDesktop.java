@@ -12,6 +12,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
@@ -80,7 +82,17 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public DirectedBlockPos doorPos() {
+        if (!this.hasDoorPosition()) {
+            if (!this.consolePos.isEmpty())
+                return DirectedBlockPos.create(this.consolePos.stream().findAny().orElseThrow().up(), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+
+            return DirectedBlockPos.create(BlockPos.ofFloored(this.corners.getBox().getCenter()), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+        }
+
         return doorPos;
+    }
+    public boolean hasDoorPosition() {
+        return doorPos != null;
     }
 
     public void setInteriorDoorPos(DirectedBlockPos pos) {
@@ -89,7 +101,7 @@ public class TardisDesktop extends TardisComponent {
     }
 
     // TODO this is strictly for clearing the interior now
-    //@Deprecated(forRemoval = true, since = "1.1.0")
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public Corners getCorners() {
         return corners;
     }
@@ -102,7 +114,10 @@ public class TardisDesktop extends TardisComponent {
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
         DesktopGenerator generator = new DesktopGenerator(this.schema);
-        generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+        boolean success = generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+
+        if (!success)
+            AITMod.LOGGER.error("Failed to generate interior for {}", this.tardis.getUuid());
 
         AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
     }

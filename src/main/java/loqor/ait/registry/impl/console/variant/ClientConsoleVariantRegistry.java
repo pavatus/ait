@@ -1,5 +1,6 @@
 package loqor.ait.registry.impl.console.variant;
 
+import dev.pavatus.register.datapack.DatapackRegistry;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;
@@ -13,6 +14,7 @@ import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientBlueAlnicoVariant;
+import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.data.schema.console.variant.coral.client.ClientBlueCoralVariant;
 import loqor.ait.data.schema.console.variant.coral.client.ClientGreenCoralVariant;
@@ -28,7 +30,6 @@ import loqor.ait.data.schema.console.variant.steam.client.ClientSteamVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaLegacyVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
 
 public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsoleVariantSchema> {
     private static ClientConsoleVariantRegistry INSTANCE;
@@ -118,7 +119,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
             @Override
             public float[] sonicItemRotations() {
-                if (variant.sonicRotation() == null) {
+                if (variant.sonicRotation().isEmpty()) {
                     return parentVariant.sonicItemRotations();
                 }
 
@@ -133,7 +134,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
             @Override
             public Vector3f sonicItemTranslations() {
-                if (variant.sonicTranslation() == null) {
+                if (variant.sonicTranslation().equals(0,0,0)) {
                     return parentVariant.sonicItemTranslations();
                 }
 
@@ -167,6 +168,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema STEAM_GILDED;
     public static ClientConsoleVariantSchema HUDOLIN;
     public static ClientConsoleVariantSchema COPPER;
+    public static ClientConsoleVariantSchema COPPER_TAIGA;
 
     @Override
     public void onClientInit() {
@@ -201,5 +203,6 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
         // Copper variants
         COPPER = register(new ClientCopperVariant());
+        COPPER_TAIGA = register(new ClientCopperTaigaVariant());
     }
 }
