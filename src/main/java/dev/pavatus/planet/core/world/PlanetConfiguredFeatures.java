@@ -27,14 +27,14 @@ public class PlanetConfiguredFeatures {
    public static final RegistryKey<ConfiguredFeature<?, ?>> MARTIAN_DIAMOND_ORE = registryKey("martian_diamond_ore");
    public static final RegistryKey<ConfiguredFeature<?, ?>> MARTIAN_EMERALD_ORE = registryKey("martian_emerald_ore");
 
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_COAL_ORE = registryKey("martian_coal_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_COPPER_ORE = registryKey("martian_copper_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_IRON_ORE = registryKey("martian_iron_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_GOLD_ORE = registryKey("martian_gold_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_REDSTONE_ORE = registryKey("martian_redstone_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_LAPIS_ORE = registryKey("martian_lapis_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_DIAMOND_ORE = registryKey("martian_diamond_ore");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_EMERALD_ORE = registryKey("martian_emerald_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_COAL_ORE = registryKey("anorthosite_coal_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_COPPER_ORE = registryKey("anorthosite_copper_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_IRON_ORE = registryKey("anorthosite_iron_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_GOLD_ORE = registryKey("anorthosite_gold_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_REDSTONE_ORE = registryKey("anorthosite_redstone_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_LAPIS_ORE = registryKey("anorthosite_lapis_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_DIAMOND_ORE = registryKey("anorthosite_diamond_ore");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> ANORTHOSITE_EMERALD_ORE = registryKey("anorthosite_emerald_ore");
 
    public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context) {
        RuleTest martianStoneReplaceables = new BlockMatchRuleTest(PlanetBlocks.MARTIAN_STONE);
@@ -49,7 +49,7 @@ public class PlanetConfiguredFeatures {
                        OreFeatureConfig.createTarget(martianStoneReplaceables, PlanetBlocks.MARTIAN_LAPIS_ORE.getDefaultState()),
                        OreFeatureConfig.createTarget(martianStoneReplaceables, PlanetBlocks.MARTIAN_DIAMOND_ORE.getDefaultState()),
                        OreFeatureConfig.createTarget(martianStoneReplaceables, PlanetBlocks.MARTIAN_EMERALD_ORE.getDefaultState()));
-       /*
+
 
        List<OreFeatureConfig.Target> anorthorsiteOres =
                List.of(OreFeatureConfig.createTarget(anorthositeReplaceables, PlanetBlocks.ANORTHOSITE_COAL_ORE.getDefaultState()),
@@ -61,7 +61,6 @@ public class PlanetConfiguredFeatures {
                        OreFeatureConfig.createTarget(anorthositeReplaceables, PlanetBlocks.ANORTHOSITE_DIAMOND_ORE.getDefaultState()),
                        OreFeatureConfig.createTarget(anorthositeReplaceables, PlanetBlocks.ANORTHOSITE_EMERALD_ORE.getDefaultState()));
 
-        */
 
        register(context, MARTIAN_COAL_ORE, Feature.ORE, new OreFeatureConfig(marsOres, 12));
        register(context, MARTIAN_COPPER_ORE, Feature.ORE, new OreFeatureConfig(marsOres, 10));
@@ -72,7 +71,7 @@ public class PlanetConfiguredFeatures {
        register(context, MARTIAN_DIAMOND_ORE, Feature.ORE, new OreFeatureConfig(marsOres, 3));
        register(context, MARTIAN_EMERALD_ORE, Feature.ORE, new OreFeatureConfig(marsOres, 1));
 
-       /*
+
        register(context, ANORTHOSITE_COAL_ORE, Feature.ORE, new OreFeatureConfig(anorthorsiteOres, 12));
        register(context, ANORTHOSITE_COPPER_ORE, Feature.ORE, new OreFeatureConfig(anorthorsiteOres, 10));
        register(context, ANORTHOSITE_IRON_ORE, Feature.ORE, new OreFeatureConfig(anorthorsiteOres, 8));
@@ -81,8 +80,6 @@ public class PlanetConfiguredFeatures {
        register(context, ANORTHOSITE_LAPIS_ORE, Feature.ORE, new OreFeatureConfig(anorthorsiteOres, 4));
        register(context, ANORTHOSITE_DIAMOND_ORE, Feature.ORE, new OreFeatureConfig(anorthorsiteOres, 3));
        register(context, ANORTHOSITE_EMERALD_ORE, Feature.ORE, new OreFeatureConfig(anorthorsiteOres, 1));
-        */
-
    }
 
     public static RegistryKey<ConfiguredFeature<?, ?>> registryKey(String name) {

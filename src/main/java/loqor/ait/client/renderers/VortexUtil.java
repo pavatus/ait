@@ -8,7 +8,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.vortex.VortexNode;
@@ -36,8 +35,8 @@ public class VortexUtil {
         TEXTURE_LOCATION = new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png");
         this.distortionSpeed = 0.5f;
         this.distortionSeparationFactor = 32f;
-        this.distortionFactor = 8; // distortionFactor;
-        this.scale = 21f;
+        this.distortionFactor = 2; // distortionFactor;
+        this.scale = 32f;
         this.rotationFactor = 1f;
         this.rotationSpeed = 1f;
         this.speed = 4f;
@@ -48,16 +47,16 @@ public class VortexUtil {
         time += MinecraftClient.getInstance().getTickDelta() / 360f;
 
         matrixStack.push();
-        RenderSystem.enableBlend();
-        RenderSystem.enableCull();
+        //RenderSystem.enableBlend();
+        //RenderSystem.enableCull();
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
 
         matrixStack.scale(scale, scale, scale);
 
         float f0 = (float) Math.toDegrees(this.rotationFactor * time * this.rotationSpeed);
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 50.0f) * 360f));
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90f));
+        //matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 50.0f) * 360f));
+        //matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90f));
 
         /*
          * float alternate = (float) (((targetPosition.x - position.x) *
@@ -87,15 +86,16 @@ public class VortexUtil {
         // targetPosition.z, (float) position.x, (float) position.y, (float)
         // position.z);
 
-        for (int i = 0; i < 36; ++i) {
-            this.renderSection(buffer, i, (MinecraftClient.getInstance().player.age / 200.0f) * -this.speed, (float) Math.sin(i * Math.PI / 36),
-                    (float) Math.sin((i + 1) * Math.PI / 36), matrixStack.peek().getPositionMatrix());
+        for (int i = 0; i < 64; ++i) {
+            this.renderSection(buffer, i, (MinecraftClient.getInstance().player.age / 200.0f) * -this.speed, (float) Math.sin(i * Math.PI / 64),
+                    (float) Math.sin((i + 1) * Math.PI / 64), matrixStack.peek().getPositionMatrix());
         }
 
         tessellator.draw();
 
-        RenderSystem.disableCull();
-        RenderSystem.disableBlend();
+
+        //RenderSystem.disableCull();
+        //RenderSystem.disableBlend();
         matrixStack.pop();
     }
 
@@ -207,8 +207,8 @@ public class VortexUtil {
     }
 
     private float computeDistortionFactor(float time, int t) {
-        return 0; // (float) (Math.sin(8 * this.distortionSpeed * 2.0 * Math.PI + (13 - t) *
-        // this.distortionSeparationFactor) * this.distortionFactor) / 8;
+        return (float) (Math.sin(time * this.distortionSpeed * 2.0 * Math.PI + (13 - t) *
+        this.distortionSeparationFactor) * this.distortionFactor) / 8;
     }
 
     public void renderVortexNodes(WorldRenderContext context, VortexNode node) {
