@@ -137,9 +137,10 @@ public class BOTI {
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
+        // STOP SHAKING IT IT LOOKS SO BAD
+        // stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
         stack.translate(0, 0, 500);
-        VortexUtil util = new VortexUtil("tokamak");
+        VortexUtil util = variant.parent().vortex().toUtil();
         if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
             util.renderVortex(stack);
         else
