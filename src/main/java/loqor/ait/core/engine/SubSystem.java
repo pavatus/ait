@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.google.gson.*;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.ItemStack;
 
@@ -19,10 +20,11 @@ import loqor.ait.core.engine.impl.*;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.Ordered;
 
-public abstract class SubSystem extends Initializable<TardisComponent.InitContext> implements Disposable {
+public abstract class SubSystem extends Initializable<SubSystem.InitContext> implements Disposable {
     @Exclude protected Tardis tardis;
 
     @Exclude(strategy = Exclude.Strategy.NETWORK)
@@ -106,7 +108,7 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
         if (system == null) return;
 
         system.setTardis(tardis);
-        Initializable.init(system, context);
+        Initializable.init(system, InitContext.fromTardisContext(context));
     }
 
     public enum Id implements SubSystem.IdLike {
@@ -181,6 +183,27 @@ public abstract class SubSystem extends Initializable<TardisComponent.InitContex
         int index();
 
         void index(int i);
+    }
+
+    public record InitContext(@Nullable DirectedGlobalPos.Cached pos,
+                              boolean deserialized) implements Initializable.Context {
+
+        public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
+            return new InitContext(pos, false);
+        }
+
+        public static InitContext deserialize() {
+            return new InitContext(null, true);
+        }
+
+        public static InitContext fromTardisContext(TardisComponent.InitContext context) {
+            return new InitContext(context.pos(), context.deserialized());
+        }
+
+        @Override
+        public boolean created() {
+            return !deserialized;
+        }
     }
 
     public static Object serializer() {
