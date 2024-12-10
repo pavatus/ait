@@ -14,7 +14,7 @@ public class BotiPortalModel extends SinglePartEntityModel {
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData BOTI = modelPartData.addChild("BOTI", ModelPartBuilder.create().uv(0, 0).cuboid(-8.0F, -32.0F, 0.0F, 16.0F, 32.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+        ModelPartData BOTI = modelPartData.addChild("BOTI", ModelPartBuilder.create().uv(0, 0).cuboid(-8.0F, -32.0F, 0.0F, 16.0F, 16.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
         return TexturedModelData.of(modelData, 32, 32);
     }
     @Override
