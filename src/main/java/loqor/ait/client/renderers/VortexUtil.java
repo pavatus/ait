@@ -2,6 +2,7 @@ package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import org.jetbrains.annotations.ApiStatus;
 import org.joml.Matrix4f;
 
 import net.minecraft.client.MinecraftClient;
@@ -31,8 +32,8 @@ public class VortexUtil {
     private final float speed;
     private float time = 0;
 
-    public VortexUtil(String name /* , float distortionFactor */) {
-        TEXTURE_LOCATION = new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png");
+    public VortexUtil(Identifier texture /* , float distortionFactor */) {
+        TEXTURE_LOCATION = texture;
         this.distortionSpeed = 0.5f;
         this.distortionSeparationFactor = 32f;
         this.distortionFactor = 2; // distortionFactor;
@@ -40,6 +41,11 @@ public class VortexUtil {
         this.rotationFactor = 1f;
         this.rotationSpeed = 1f;
         this.speed = 4f;
+    }
+    @ApiStatus.Internal
+    @Deprecated(forRemoval = true)
+    public VortexUtil(String name) {
+        this(new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png"));
     }
 
     public void renderVortex(MatrixStack matrixStack) {
