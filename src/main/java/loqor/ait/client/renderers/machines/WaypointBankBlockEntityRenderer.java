@@ -41,7 +41,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
 
         Tardis tardis = entity.tardis().get();
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             return;
 
         float facing = entity.getCachedState().get(WaypointBankBlock.FACING).asRotation();

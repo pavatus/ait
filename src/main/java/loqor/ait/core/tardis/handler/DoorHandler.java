@@ -255,7 +255,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
         }
 
-        if (!tardis.engine().hasPower() && tardis.getLockedTardis()) {
+        if (!tardis.fuel().hasPower() && tardis.getLockedTardis()) {
             // Bro cant escape
             if (player == null)
                 return false;

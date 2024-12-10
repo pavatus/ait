@@ -1671,7 +1671,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
         // @TODO MONSTER THE ONE ON THE LEFT IS THE POWER NOT THE RIGHT SMH
         // Power Switch and Lights
         ModelPart power = this.toyota.getChild("panel1").getChild("controls").getChild("dooropen");
-        power.pitch = tardis.engine().hasPower() ? power.pitch : power.pitch - 1.55f;
+        power.pitch = tardis.fuel().hasPower() ? power.pitch : power.pitch - 1.55f;
 
         // Anti Gravity Control
         ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1")

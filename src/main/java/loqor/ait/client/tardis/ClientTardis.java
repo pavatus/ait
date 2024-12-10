@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.gson.InstanceCreator;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Disposable;
@@ -15,6 +16,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.data.Exclude;
 
 public class ClientTardis extends Tardis implements Disposable {
@@ -93,6 +95,15 @@ public class ClientTardis extends Tardis implements Disposable {
     @Override
     public String toString() {
         return super.toString() + " (" + Integer.toHexString(check.hashCode()) + ")";
+    }
+
+    @Override
+    public ClientWorld getInteriorWorld() {
+        ClientWorld world = MinecraftClient.getInstance().world;
+        if (world == null) return null;
+        if (!(TardisDimension.isTardisDimension(world))) return null;
+
+        return world;
     }
 
     public static Object creator() {

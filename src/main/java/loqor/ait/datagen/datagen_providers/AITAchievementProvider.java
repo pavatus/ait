@@ -131,9 +131,19 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
 
         Advancement reachOwner = Advancement.Builder.create().parent(firstEnter)
                 .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.owner_ship"),
-                        Text.translatable("achievement.ait.description.owner_ship"), null, AdvancementFrame.TASK, true, false, true)
+                        Text.translatable("achievement.ait.description.owner_ship"), null, AdvancementFrame.CHALLENGE, true, true, true)
                 .criterion("owner_ship", TardisCriterions.REACH_OWNER.conditions())
                 .build(consumer, AITMod.MOD_ID + "/owner_ship");
 
+        Advancement enableSubsystem = Advancement.Builder.create().parent(firstEnter)
+                .display(AITBlocks.GENERIC_SUBSYSTEM, Text.translatable("achievement.ait.title.enable_subsystem"),
+                        Text.translatable("achievement.ait.description.enable_subsystem"), null, AdvancementFrame.CHALLENGE, true, true, true)
+                .criterion("enable_subsystem", TardisCriterions.ENABLE_SUBSYSTEM.conditions())
+                .build(consumer, AITMod.MOD_ID + "/enable_subsystem");
+        Advancement repairSubsystem = Advancement.Builder.create().parent(firstEnter)
+                .display(AITItems.HAMMER, Text.translatable("achievement.ait.title.repair_subsystem"),
+                        Text.translatable("achievement.ait.description.repair_subsystem"), null, AdvancementFrame.TASK, true, true, true)
+                .criterion("repair_subsystem", TardisCriterions.REPAIR_SUBSYSTEM.conditions())
+                .build(consumer, AITMod.MOD_ID + "/repair_subsystem");
     }
 }

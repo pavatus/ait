@@ -143,6 +143,10 @@ public class DatapackExterior extends ExteriorVariantSchema {
         return this.emission;
     }
     public Identifier flightId() {
+        if (this.flight() == null) {
+            return FlightSoundRegistry.DEFAULT.id();
+        }
+
         return this.flight().id();
     }
     public Identifier vortexId() {

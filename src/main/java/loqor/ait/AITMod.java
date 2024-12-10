@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
-import dev.pavatus.planet.core.planet.PlanetRegistry;
 import dev.pavatus.register.Registries;
 import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
@@ -51,6 +50,7 @@ import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.config.AITConfig;
+import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
@@ -69,6 +69,7 @@ import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.core.world.LandingPadManager;
+import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
 import loqor.ait.registry.impl.*;
@@ -132,6 +133,7 @@ public class AITMod implements ModInitializer {
         MoodEventPoolRegistry.init();
         LandingPadManager.init();
         ControlRegistry.init();
+        RiftChunkManager.init();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
@@ -150,9 +152,9 @@ public class AITMod implements ModInitializer {
             registries.register(ExteriorVariantRegistry.getInstance());
             registries.register(CategoryRegistry.getInstance());
             registries.register(TardisComponentRegistry.getInstance());
-            registries.register(PlanetRegistry.getInstance());
             registries.register(LockedDimensionRegistry.getInstance());
             registries.register(HumRegistry.getInstance());
+            registries.register(SubSystemRegistry.getInstance());
             registries.register(ItemOpinionRegistry.getInstance());
             registries.register(ModuleRegistry.instance());
         });
