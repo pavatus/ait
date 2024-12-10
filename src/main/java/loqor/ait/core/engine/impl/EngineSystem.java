@@ -150,6 +150,8 @@ public class EngineSystem extends DurableSubSystem {
                         tdis.alarm().enabled().set(true);
                         tdis.getDesktop().playSoundAtEveryConsole(AITSounds.HOP_DEMAT);
                         tdis.getExterior().playSound(AITSounds.HOP_DEMAT);
+
+                        system.tardis().subsystems().demat().removeDurability(2);
                     },
                     (phaser) -> {
                         Tardis tardis1 = system.tardis();
@@ -157,6 +159,8 @@ public class EngineSystem extends DurableSubSystem {
                         TravelUtil.randomPos(tardis1, 10, 1000, cached -> {
                             travel.forceDestination(cached);
                             if (travel.isLanded()) {
+                                system.tardis().subsystems().demat().removeDurability(10);
+
                                 system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 system.tardis().getExterior().playSound(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 tardis1.travel().forceDemat();
@@ -171,7 +175,7 @@ public class EngineSystem extends DurableSubSystem {
 
                         system.tardis().alarm().enabled().set(false);
                     },
-                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 1024) == 1
+                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().durability() < 10 && !system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 1024) == 1
             );
         }
     }
