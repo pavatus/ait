@@ -15,5 +15,5 @@
     },
     "effects": ["ait:ghost_mat", "ait:eight_demat"],
     "flight": "ait:unstable",
-    "vortex": "ait:cream"
+    "vortex": "ait:tokamak"
 }

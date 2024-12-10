@@ -5,5 +5,6 @@
   "texture": "ait:textures/blockentities/exteriors/classic/classic_hudolin.png",
   "emission": "ait:textures/blockentities/exteriors/classic/classic_hudolin_emission.png",
   "effects": ["ait:eight_mat", "ait:eight_demat"],
-  "flight": "ait:eight"
+  "flight": "ait:eight",
+  "vortex": "ait:cream"
 }
