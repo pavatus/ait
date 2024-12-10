@@ -1,5 +1,8 @@
 package dev.pavatus.planet;
 
+import static net.minecraft.data.server.recipe.RecipeProvider.conditionsFromItem;
+import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -25,8 +28,11 @@ import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
@@ -48,14 +54,18 @@ public class PlanetModule extends Module {
 
     @Override
     public void init() {
+        this.getItemGroup().initialize();
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
             env.init(PlanetRegistry.getInstance());
         });
 
         FieldRegistrationHandler.register(PlanetItems.class, AITMod.MOD_ID, false);
         FieldRegistrationHandler.register(PlanetBlocks.class, AITMod.MOD_ID, false);
+    }
 
-        getItemGroup().initialize();
+    @Override
+    protected OwoItemGroup.Builder buildItemGroup() {
+        return OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()), () -> Icon.of(PlanetItems.SPACESUIT_HELMET));
     }
 
     @Environment(EnvType.CLIENT)
@@ -71,14 +81,7 @@ public class PlanetModule extends Module {
 
     @Override
     public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(getItemGroup()));
-    }
-
-    @Override
-    protected OwoItemGroup.Builder buildItemGroup() {
-        return OwoItemGroup
-                .builder(new Identifier(AITMod.MOD_ID, "planets_item_group"), () -> Icon.of(PlanetBlocks.MARTIAN_STONE))
-                .disableDynamicTitle();
+        return new BlockItem(block, new OwoItemSettings().group(this.getItemGroup()));
     }
 
     @Override
@@ -96,7 +99,7 @@ public class PlanetModule extends Module {
         return Optional.of(new DataGenerator() {
             @Override
             public void lang(AITLanguageProvider provider) {
-                provider.addTranslation("itemGroup.ait.planets_item_group", "AIT: Planetary Exploration");
+                provider.addTranslation(getItemGroup(), "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
                 provider.addTranslation("achievements.ait.title.planet_root", "Planetary Exploration");
                 provider.addTranslation("achievements.ait.description.planet_root", "Explore the planets of the universe");
@@ -157,7 +160,6 @@ public class PlanetModule extends Module {
                 provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_STAIRS);
                 provider.addStonecutting(PlanetBlocks.ANORTHOSITE, PlanetBlocks.ANORTHOSITE_WALL);
 
-
                 provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.CHISELED_MOON_SANDSTONE);
                 provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_PILLAR);
                 provider.addStonecutting(PlanetBlocks.MOON_SANDSTONE, PlanetBlocks.MOON_SANDSTONE_BRICKS);
@@ -179,6 +181,20 @@ public class PlanetModule extends Module {
                 provider.addStonecutting(PlanetBlocks.POLISHED_ANORTHOSITE, PlanetBlocks.POLISHED_ANORTHOSITE_SLAB);
                 provider.addStonecutting(PlanetBlocks.POLISHED_ANORTHOSITE, PlanetBlocks.POLISHED_ANORTHOSITE_STAIRS);
 
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetBlocks.FLAG, 1)
+                        .pattern("GBR")
+                        .pattern("IWW")
+                        .pattern("I  ")
+                        .input('G', Items.GOLD_INGOT)
+                        .input('I', Items.IRON_INGOT)
+                        .input('B', Items.BLUE_WOOL)
+                        .input('R', Items.RED_WOOL)
+                        .input('W', Items.WHITE_WOOL)
+                        .criterion(hasItem(Items.GOLD_INGOT), conditionsFromItem(Items.GOLD_INGOT))
+                        .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                        .criterion(hasItem(Items.RED_WOOL), conditionsFromItem(Items.RED_WOOL))
+                        .criterion(hasItem(Items.BLUE_WOOL), conditionsFromItem(Items.BLUE_WOOL))
+                        .criterion(hasItem(Items.WHITE_WOOL), conditionsFromItem(Items.WHITE_WOOL)));
             }
 
 

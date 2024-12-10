@@ -5,10 +5,14 @@ import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Rarity;
 
@@ -22,6 +26,7 @@ import loqor.ait.core.item.link.MercurialLinkItem;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
+
 
 public class AITItems implements ItemRegistryContainer {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
@@ -128,16 +133,19 @@ public class AITItems implements ItemRegistryContainer {
     // Music discs
     @NoEnglish
     public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
+            new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 169);
+
     @NoEnglish
     public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 216);
+            new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
+
 
     // Block controls
 
      public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
 
     public static List<Item> get() {
         List<Item> list = new ArrayList<>();
@@ -151,5 +159,10 @@ public class AITItems implements ItemRegistryContainer {
         return list;
     }
 
-
+    static {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
+            entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
+        });
+    }
 }

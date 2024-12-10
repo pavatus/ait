@@ -20,7 +20,7 @@ public interface ArtronHolderItem {
     default void setCurrentFuel(double var, ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putDouble(this.getFuelKey(), var);
+        nbt.putDouble(this.getFuelKey(), var <= 0 ? 0 : var);
     }
 
     default double addFuel(double var, ItemStack stack) {

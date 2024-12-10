@@ -151,6 +151,9 @@ public class AITBlocks implements BlockRegistryContainer {
      * 6.0F));
      */
 
+    // Decoration
+
+
     @NoEnglish
     public static final Block CABLE_BLOCK = new CableBlock(
             FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));

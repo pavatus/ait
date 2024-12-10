@@ -38,6 +38,10 @@ public class PlanetItems implements ItemRegistryContainer {
     public static final Item ANORTHOSITE_AXE = new AxeItem(PlanetToolMaterial.ANORTHOSITE, 3, 1f, new OwoItemSettings());
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new OwoItemSettings());
 
+    // WEAPONS
+    // Guns
+
+
     // ITEM GROUP TOOL PLACEMENT
     static {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {

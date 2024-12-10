@@ -6,6 +6,8 @@ import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
 import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
+import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -17,6 +19,8 @@ import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -43,6 +47,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generateSoundData(pack);
         generateAdvancements(pack);
         generateLoot(pack);
+        generateWorldFeatures(pack);
     }
 
     public void generateLoot(FabricDataGenerator.Pack pack) {
@@ -53,6 +58,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(AITAchievementProvider::new);
     }
 
+    private void generateWorldFeatures(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITWorldGeneratorProvider::new);
+    }
+
+    @Override
+    public void buildRegistry(RegistryBuilder registryBuilder) {
+            registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, PlanetConfiguredFeatures::bootstrap);
+        registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, PlanetPlacedFeatures::boostrap);
+    }
+
     public void generateRecipes(FabricDataGenerator.Pack pack) {
         pack.addProvider((((output, registriesFuture) -> {
             AITRecipeProvider provider = new AITRecipeProvider(output);
@@ -60,6 +75,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(dataGenerator -> {
                 dataGenerator.recipes(provider);
             }));
+
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_KEY, 1)
                     .pattern(" N ").pattern("IEI").pattern("IRI").input('N', Items.IRON_NUGGET)
@@ -646,6 +662,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
         provider.addTranslation("message.ait.tooltips.artron_units", "Artron Units: ");
+        provider.addTranslation("message.ait.ammo", "Ammo: %s");
         provider.addTranslation("tooltip.ait.position", "Position: ");
         provider.addTranslation("message.ait.artron_units2", " AU");
 

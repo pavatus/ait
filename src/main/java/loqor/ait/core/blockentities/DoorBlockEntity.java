@@ -132,8 +132,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
         }
 
-        if (tardis.travel().isLanded() || tardis.travel().inFlight())
-            DoorHandler.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        DoorHandler.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
     }
 
     public Direction getFacing() {
