@@ -2,9 +2,11 @@ package loqor.ait.client.renderers.exteriors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -17,6 +19,7 @@ import net.minecraft.util.profiler.Profiler;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.client.boti.BOTI;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
@@ -166,6 +169,9 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
 
+        // if (tardis.door().isOpen())
+        //     this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
+
         if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices,
                     vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(
@@ -221,6 +227,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         matrices.pop();
         profiler.pop();
+    }
+
+    private void renderExteriorBoti(T entity, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier texture, SinglePartEntityModel model, ModelPart mask, int light) {
+        BOTI.renderExteriorBoti(entity, variant, stack, texture, model, mask, light);
     }
 
     private void updateModel(Tardis tardis) {

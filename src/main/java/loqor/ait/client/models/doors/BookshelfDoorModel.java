@@ -5,8 +5,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
-import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class BookshelfDoorModel extends DoorModel {
@@ -43,8 +43,8 @@ public class BookshelfDoorModel extends DoorModel {
     }
 
     @Override
-    public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+    public void renderWithAnimations(AbstractLinkableBlockEntity doorEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         DoorHandler door = doorEntity.tardis().get().door();
 
         this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 4.75F : 0.0F;

@@ -5,8 +5,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
-import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class GeometricDoorModel extends DoorModel {
@@ -39,8 +39,8 @@ public class GeometricDoorModel extends DoorModel {
     }
 
     @Override
-    public void renderWithAnimations(DoorBlockEntity doorEntity, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+    public void renderWithAnimations(AbstractLinkableBlockEntity doorEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         DoorHandler door = doorEntity.tardis().get().door();
 
         this.geometric.getChild("door").pivotZ = door.isOpen() ? 2.05f : 1f;
