@@ -65,7 +65,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         Tardis tardis = entity.tardis().get();
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             return;
 
         matrices.push();

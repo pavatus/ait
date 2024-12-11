@@ -2452,12 +2452,12 @@ public class CoralConsoleModel extends ConsoleModel {
         }
 
         // Power Lever
-        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = tardis.engine()
+        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = tardis.fuel()
                 .hasPower()
                         ? controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll
                         : controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll
                                 - 1.5f;
-        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = tardis.engine()
+        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = tardis.fuel()
                 .hasPower()
                         ? controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll
                         : controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll

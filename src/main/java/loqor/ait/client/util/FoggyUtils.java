@@ -35,7 +35,7 @@ public class FoggyUtils {
             RenderSystem.setShaderFogColor(0, 0, 0, tardis.siege().isActive() ? 0.85f : 1f);
         }
 
-        if (ClientTardisUtil.isPlayerInATardis() && tardis.crash().isToxic() && tardis.engine().hasPower()) {
+        if (ClientTardisUtil.isPlayerInATardis() && tardis.crash().isToxic() && tardis.fuel().hasPower()) {
             RenderSystem
                     .setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
@@ -50,7 +50,7 @@ public class FoggyUtils {
         /*
          * if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_FOG() &&
          * ClientTardisUtil.isPlayerInATardis() && !tardis.crash().isToxic() &&
-         * !tardis.alarm().enabled().get() && tardis.engine().hasPower() ) {
+         * !tardis.alarm().enabled().get() && tardis.fuel().hasPower() ) {
          * RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().
          * getTickDelta() / 100f, -8, 24));
          * RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().

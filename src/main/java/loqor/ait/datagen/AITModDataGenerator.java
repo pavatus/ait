@@ -16,6 +16,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -64,7 +65,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistryBuilder registryBuilder) {
-            registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, PlanetConfiguredFeatures::bootstrap);
+        registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, PlanetConfiguredFeatures::bootstrap);
         registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, PlanetPlacedFeatures::boostrap);
     }
 
@@ -167,13 +168,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .criterion(hasItem(AITBlocks.CONSOLE_GENERATOR), conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder
-                    .create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ENGINE_CORE_BLOCK, 1).pattern("GHG")
-                    .pattern("HCH").pattern("GHG").input('G', Items.GLASS).input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
-                    .input('C', Items.CONDUIT).criterion(hasItem(Items.GLASS), conditionsFromItem(Items.GLASS))
-                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL),
-                            conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
-                    .criterion(hasItem(Items.CONDUIT), conditionsFromItem(Items.CONDUIT)));
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1).pattern("GSG")
                             .pattern("SBS").pattern("GSG").input('G', Items.GOLD_NUGGET).input('S', Items.SPRUCE_SLAB)
@@ -276,7 +270,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                             .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
                             .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS))
-                            );
+            );
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HYPERCUBE)
                     .pattern("BBB").pattern("BEB").pattern("BBB").input('B', AITItems.ZEITON_SHARD)
@@ -298,6 +292,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('E', Items.ENDER_EYE).criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
                     .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .input('R', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.ZEITON_CAGE)
+                    .pattern("OZO").pattern("ZEZ").pattern("OZO")
+                    .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .input('E', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
+                    .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                    .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
+                    .input(AITBlocks.ZEITON_COBBLE).criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
+                    .input(AITItems.CHARGED_ZEITON_CRYSTAL).criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL)));
 
             generateSmithingRecipes(provider);
             return provider;
@@ -362,15 +368,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generateBlockModels(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> {
-            AITModelProvider aitModelProvider = new AITModelProvider(output);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
-            aitModelProvider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.FABRICATOR);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
-            return aitModelProvider;
+            AITModelProvider provider = new AITModelProvider(output);
+            provider.registerDirectionalBlock(AITBlocks.CONSOLE);
+            provider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
+            provider.registerDirectionalBlock(AITBlocks.FABRICATOR);
+            provider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
+            return provider;
         }));
     }
 
@@ -401,17 +404,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     /**
      * Adds English translations to the language file.
      *
-     * @param output
-     *            The data generator output.
-     * @param registriesFuture
-     *            The registries future.
-     * @param languageType
-     *            The language type.
+     * @param output           The data generator output.
+     * @param registriesFuture The registries future.
+     * @param languageType     The language type.
      * @return The AITLanguageProvider.
      */
 
     public AITLanguageProvider addEnglishTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
         ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
@@ -526,8 +526,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
-        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
+        provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
+        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
+        provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
+        provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
+        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core"); // todo improve name
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -586,6 +590,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
+        provider.addTranslation("tardis.message.engine.phasing", "ENGINES PHASING");
+        provider.addTranslation("message.ait.cage.full", "It calls for the void..");
+        provider.addTranslation("message.ait.cage.void_hint", "(Throw this into the END void)");
+        provider.addTranslation("message.ait.cage.empty", "(Place this in a rift chunk)");
 
         // Achivement
         provider.addTranslation("achievement.ait.title.root", "Adventures in Time");
@@ -620,6 +628,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.description.bonding", "Reach 'Pilot' loyalty for the first time.");
         provider.addTranslation("achievement.ait.title.owner_ship", "But hey it trusts you now worth it right?");
         provider.addTranslation("achievement.ait.description.owner_ship", "Reach 'Owner' loyalty for the first time.");
+        provider.addTranslation("achievement.ait.title.enable_subsystem", "Time-Space Engineer");
+        provider.addTranslation("achievement.ait.description.enable_subsystem", "Enable a subsystem.");
+        provider.addTranslation("achievement.ait.title.repair_subsystem", "Handyman!");
+        provider.addTranslation("achievement.ait.description.repair_subsystem", "Repair a broken subsystem");
 
         // Commands
         // Fuel
@@ -658,6 +670,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
+        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the subsystem block to set its type"); // todo - improve message
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
@@ -720,7 +733,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sequence.ait.ground_unstable", "Unstable landing position!");
         provider.addTranslation("sequence.ait.increment_scale_recalculation_necessary", "Increment scale error! Recalculation necessary!");
         provider.addTranslation("sequence.ait.small_debris_field", "Small debris field!");
-
 
 
         // Hums
@@ -800,6 +812,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
+        provider.addTranslation("tardis.message.interiorchange.subsystems_enabled",
+                "TARDIS has %s subsystems enabled. Are you sure you want to do this?");
 
         // Landing Pad
         provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");
@@ -846,6 +860,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // automatic english for items
         AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {
+            if (var instanceof BlockItem) return;
+
             provider.addTranslation(var, fixupTranslationKey(var.getTranslationKey()));
         });
 
@@ -860,16 +876,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     /**
      * Adds French translations to the language file.
      *
-     * @param output
-     *            The data generator output.
-     * @param registriesFuture
-     *            The registries future.
-     * @param languageType
-     *            The language type.
+     * @param output           The data generator output.
+     * @param registriesFuture The registries future.
+     * @param languageType     The language type.
      * @return The AITLanguageProvider.
      */
     public AITLanguageProvider addFrenchTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                     CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
         aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
@@ -976,16 +989,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     /**
      * Adds Spanish translations to the language file.
      *
-     * @param output
-     *            The data generator output.
-     * @param registriesFuture
-     *            The registries future.
-     * @param languageType
-     *            The language type.
+     * @param output           The data generator output.
+     * @param registriesFuture The registries future.
+     * @param languageType     The language type.
      * @return The AITLanguageProvider.
      */
     public AITLanguageProvider addSpanishTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
         aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
@@ -1076,7 +1086,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public AITLanguageProvider addGermanTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                     CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
         aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Abenteuer in der Zeit");
@@ -1175,7 +1185,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public AITLanguageProvider addPortugueseTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                         CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
         return provider;
     }
@@ -1183,136 +1193,136 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void generate_DE_AT_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_AT))); // de_at
-                                                                                                                        // (German
-                                                                                                                        // Austria)
+        // (German
+        // Austria)
     }
 
     public void generate_DE_CH_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_CH))); // de_ch
-                                                                                                                        // (German
-                                                                                                                        // Switzerland)
+        // (German
+        // Switzerland)
     }
 
     public void generate_DE_DE_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_DE))); // de_de
-                                                                                                                        // (German
-                                                                                                                        // Germany)
+        // (German
+        // Germany)
     }
 
     public void generate_NDS_DE_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.NDS_DE))); // nds_de
-                                                                                                                        // (Nordic
-                                                                                                                        // German)
+        // (Nordic
+        // German)
     }
 
     public void generate_EN_US_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_US))); // en_us
-                                                                                                                        // (English
-                                                                                                                        // US)
+        // (English
+        // US)
     }
 
     public void generate_EN_UK_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_UK))); // en_uk
-                                                                                                                        // (English
-                                                                                                                        // UK)
+        // (English
+        // UK)
     }
 
     public void generate_FR_CA_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addFrenchTranslations(output, registriesFuture, LanguageType.FR_CA)))); // fr_ca
-                                                                                                                        // (French
-                                                                                                                        // Canadian)
+        // (French
+        // Canadian)
     }
 
     public void generate_FR_FR_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addFrenchTranslations(output, registriesFuture, LanguageType.FR_FR)))); // fr_fr
-                                                                                                                        // (French
-                                                                                                                        // France)
+        // (French
+        // France)
     }
 
     public void generate_ES_AR_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_AR)))); // es_ar
-                                                                                                                            // (Spanish
-                                                                                                                            // Argentina)
+        // (Spanish
+        // Argentina)
     }
 
     public void generate_ES_CL_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_CL)))); // es_cl
-                                                                                                                            // (Spanish
-                                                                                                                            // Chile)
+        // (Spanish
+        // Chile)
     }
 
     public void generate_ES_EC_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_EC)))); // es_ec
-                                                                                                                            // (Spanish
-                                                                                                                            // Ecuador)
+        // (Spanish
+        // Ecuador)
     }
 
     public void generate_ES_ES_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_ES)))); // es_es
-                                                                                                                            // (Spanish
-                                                                                                                            // Spain)
+        // (Spanish
+        // Spain)
     }
 
     public void generate_ES_MX_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_MX)))); // es_mx
-                                                                                                                            // (Spanish
-                                                                                                                            // Mexico)
+        // (Spanish
+        // Mexico)
     }
 
     public void generate_ES_UY_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_UY)))); // es_uy
-                                                                                                                            // (Spanish
-                                                                                                                            // Uruguay)
+        // (Spanish
+        // Uruguay)
     }
 
     public void generate_ES_VE_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_VE)))); // es_ve
-                                                                                                                            // (Spanish
-                                                                                                                            // Venezuela)
+        // (Spanish
+        // Venezuela)
     }
 
     public void generate_EN_AU_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_AU))); // en_au
-                                                                                                                        // (English
-                                                                                                                        // Australia)
+        // (English
+        // Australia)
     }
 
     public void generate_EN_CA_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_CA))); // en_ca
-                                                                                                                        // (English
-                                                                                                                        // Canada)
+        // (English
+        // Canada)
     }
 
     public void generate_EN_GB_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_GB))); // en_gb
-                                                                                                                        // (English
-                                                                                                                        // Great
-                                                                                                                        // Britain)
+        // (English
+        // Great
+        // Britain)
     }
 
     public void generate_EN_NZ_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_NZ))); // en_nz
-                                                                                                                        // (English
-                                                                                                                        // New
-                                                                                                                        // Zealand)
+        // (English
+        // New
+        // Zealand)
     }
 
     public void generate_PT_BR_Language(FabricDataGenerator.Pack pack) {
@@ -1322,14 +1332,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru
-                                                                                                                // (Russian
-                                                                                                                // Russia)
+        // (Russian
+        // Russia)
     }
 
     public void generate_UK_UA_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
-                                                                                                                // (Ukrainian
-                                                                                                                // Ukraine)
+        // (Ukrainian
+        // Ukraine)
     }
 
     public static String fixupTranslationKey(String key) {
