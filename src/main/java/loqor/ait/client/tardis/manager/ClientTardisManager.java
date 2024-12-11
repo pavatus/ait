@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -64,6 +65,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
         ClientLoginConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
     }
 
     private void remove(PacketByteBuf buf) {

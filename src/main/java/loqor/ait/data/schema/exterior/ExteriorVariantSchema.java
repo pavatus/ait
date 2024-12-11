@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.google.gson.*;
+import dev.pavatus.register.unlockable.Unlockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -17,14 +18,19 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.sounds.flight.FlightSound;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
+import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
+import loqor.ait.core.tardis.vortex.reference.VortexReference;
+import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model,
@@ -48,23 +54,39 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     private final Identifier id;
     private final Loyalty loyalty;
 
+    // these three are for removal \/
+    private final TravelSoundMap effects;
+    private final FlightSound flight;
+    private final VortexReference vortex;
+
     @Environment(EnvType.CLIENT)
     private ClientExteriorVariantSchema cachedSchema;
 
-    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty) {
+    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty, TravelSoundMap effects, FlightSound flight, VortexReference vortex) {
         super("exterior");
         this.category = category;
 
         this.id = id;
         this.loyalty = loyalty.orElse(null);
+        this.effects = effects;
+        this.flight = flight;
+        this.vortex = vortex;
+    }
+
+    protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty, TravelSoundMap effects) {
+        this(category, id, Optional.of(loyalty), effects, FlightSoundRegistry.DEFAULT, VortexReferenceRegistry.SPACE);
     }
 
     protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
-        this(category, id, Optional.of(loyalty));
+        this(category, id, Optional.of(loyalty), TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT, VortexReferenceRegistry.SPACE);
     }
 
     protected ExteriorVariantSchema(Identifier category, Identifier id) {
-        this(category, id, Optional.empty());
+        this(category, id, Optional.empty(), TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT, VortexReferenceRegistry.SPACE);
+    }
+
+    public static Object serializer() {
+        return new Serializer();
     }
 
     @Override
@@ -125,6 +147,18 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     public double portalHeight() {
         return 2d;
     }
+    @Deprecated(forRemoval = true)
+    public TravelSoundMap effects() {
+        return this.effects;
+    }
+    @Deprecated(forRemoval = true)
+    public FlightSound flight() {
+        return this.flight;
+    }
+    @Deprecated(forRemoval = true)
+    public VortexReference vortex() {
+        return this.vortex;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -134,14 +168,10 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
         return o instanceof ExteriorVariantSchema other && id.equals(other.id);
     }
 
-    public static Object serializer() {
-        return new Serializer();
-    }
-
     private static class Serializer
             implements
-                JsonSerializer<ExteriorVariantSchema>,
-                JsonDeserializer<ExteriorVariantSchema> {
+            JsonSerializer<ExteriorVariantSchema>,
+            JsonDeserializer<ExteriorVariantSchema> {
 
         @Override
         public ExteriorVariantSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

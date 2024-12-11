@@ -100,8 +100,10 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
             double toAdd = 7;
 
-            if (manager.getArtron(chunk) > 0 && !TardisDimension.isTardisDimension(world))
-                toAdd += (int) manager.removeFuel(chunk, 2);
+            if (manager.getArtron(chunk) > 0 && !TardisDimension.isTardisDimension(world)) {
+                manager.removeFuel(chunk, 2);
+                toAdd += 2;
+            }
 
             this.addFuel(20 * toAdd);
         }

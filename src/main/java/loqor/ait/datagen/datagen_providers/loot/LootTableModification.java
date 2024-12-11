@@ -1,14 +1,6 @@
+/*
 package loqor.ait.datagen.datagen_providers.loot;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.entry.ItemEntry;
-
-import loqor.ait.core.AITItems;
-import loqor.ait.registry.impl.BlueprintRegistry;
 
 public class LootTableModification implements ModInitializer {
 
@@ -29,3 +21,4 @@ public class LootTableModification implements ModInitializer {
         });
     }
 }
+*/

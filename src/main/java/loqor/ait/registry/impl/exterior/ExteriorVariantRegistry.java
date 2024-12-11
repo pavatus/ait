@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.pavatus.register.datapack.DatapackRegistry;
+import dev.pavatus.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -11,6 +13,10 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.AITRegistryEvents;
+import loqor.ait.core.sounds.flight.FlightSoundRegistry;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
+import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
@@ -32,6 +38,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.GeometricFireVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.jake.JakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
@@ -45,8 +52,6 @@ import loqor.ait.data.schema.exterior.variant.stallion.StallionSteelVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimSoulVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantSchema> {
     private static ExteriorVariantRegistry INSTANCE;
@@ -74,7 +79,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
             buf.encodeAsJson(DatapackExterior.CODEC,
                     new DatapackExterior(schema.id(), schema.categoryId(), schema.id(),
                             DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, schema.requirement(),
-                            BiomeOverrides.EMPTY, false));
+                            BiomeOverrides.EMPTY, TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT.id(), VortexReferenceRegistry.SPACE.id(), false));
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);
@@ -145,7 +150,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema DEFINITIVE;
     public static ExteriorVariantSchema PTORED;
     public static ExteriorVariantSchema MINT;
-    public static ExteriorVariantSchema HUDOLIN;
     public static ExteriorVariantSchema SHALKA;
     public static ExteriorVariantSchema EXILE;
     public static ExteriorVariantSchema CAPSULE_DEFAULT;
@@ -178,9 +182,12 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
     public static ExteriorVariantSchema ADAPTIVE;
+    public static ExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
     protected void defaults() {
+        AITRegistryEvents.EXTERIOR_DEFAULTS.invoker().defaults();
+
         // TARDIM
         TARDIM_DEFAULT = register(new TardimDefaultVariant());
         TARDIM_FIRE = register(new TardimFireVariant());
@@ -201,7 +208,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
         PTORED = register(new ClassicBoxPtoredVariant());
         MINT = register(new ClassicBoxMintVariant());
-        HUDOLIN = register(new ClassicBoxHudolinVariant());
         SHALKA = register(new ClassicBoxShalkaVariant());
         EXILE = register(new ClassicBoxExileVariant());
 
@@ -256,5 +262,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Adaptive
         ADAPTIVE = register(new AdaptiveVariant());
+
+        // Jake
+        JAKE_DEFAULT = register(new JakeDefaultVariant());
     }
 }

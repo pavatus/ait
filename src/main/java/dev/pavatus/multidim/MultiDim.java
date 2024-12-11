@@ -26,6 +26,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.storage.LevelStorage;
 
+import loqor.ait.AITMod;
+
 public class MultiDim {
 
     private static MultiDim instance;
@@ -33,6 +35,7 @@ public class MultiDim {
 
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> MultiDim.get(server).tick());
+        // ServerPlayConnectionEvents.INIT.register((handler, server) -> MultiDim.get(server).load(handler.getPlayer().getServerWorld()));
     }
 
     public static MultiDim get(MinecraftServer server) {
@@ -79,6 +82,9 @@ public class MultiDim {
     }
 
     public ServerWorld add(WorldBuilder builder) {
+        ServerWorld existing = this.server.getWorld(RegistryKey.of(RegistryKeys.WORLD, builder.id()));
+        if (existing != null) return existing;
+
         MutableRegistry<DimensionOptions> dimensionsRegistry = MultiDimUtil.getMutableDimensionsRegistry(this.server);
 
         boolean wasFrozen = dimensionsRegistry.multidim$isFrozen();
@@ -97,10 +103,7 @@ public class MultiDim {
             dimensionsRegistry.multidim$freeze();
 
         ServerWorld world = builder.build(this.server, options);
-        ((MultiDimServer) this.server).multidim$addWorld(world);
-
-        ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
-        world.tick(() -> true);
+        this.load(world);
 
         return world;
     }
@@ -163,6 +166,19 @@ public class MultiDim {
         return true;
     }
 
+    private void load(ServerWorld world) {
+        AITMod.LOGGER.info("Loading world {}", world.getRegistryKey().getValue());
+
+        if (((MultiDimServer) this.server).multidim$hasWorld(world.getRegistryKey())) {
+            AITMod.LOGGER.warn("World {} is already loaded", world.getRegistryKey().getValue());
+            return;
+        }
+
+        ((MultiDimServer) this.server).multidim$addWorld(world);
+
+        ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
+        world.tick(() -> true);
+    }
     public boolean isWorldUnloaded(ServerWorld world) {
         return world.getPlayers().isEmpty() && world.getChunkManager().getLoadedChunkCount() <= 0;
     }

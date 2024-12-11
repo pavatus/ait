@@ -32,6 +32,8 @@ public class WorldBuilder {
 
     private ChunkGenerator generator;
 
+    private boolean priority = false;
+
     public WorldBuilder(Identifier id) {
         this.id = id;
     }

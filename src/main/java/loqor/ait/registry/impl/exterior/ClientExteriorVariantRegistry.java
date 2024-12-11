@@ -1,5 +1,6 @@
 package loqor.ait.registry.impl.exterior;
 
+import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import org.joml.Vector3f;
@@ -33,6 +34,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.jake.client.ClientJakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
@@ -46,7 +48,6 @@ import loqor.ait.data.schema.exterior.variant.stallion.client.ClientStallionStee
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimSoulVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
 
 public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> implements
         SimpleSynchronousResourceReloadListener {
@@ -184,6 +185,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
+    public static ClientExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -261,6 +263,9 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_STEEL = register(new ClientStallionSteelVariant());
 
         ADAPTIVE = register(new ClientAdaptiveVariant());
+
+        // Jake
+        JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
     }
 
     @Override

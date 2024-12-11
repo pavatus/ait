@@ -1,8 +1,8 @@
 package loqor.ait.core;
 
-import net.minecraft.entity.decoration.painting.PaintingVariant;
+import dev.pavatus.register.auto.PaintingRegistryContainer;
 
-import loqor.ait.registry.auto.PaintingRegistryContainer;
+import net.minecraft.entity.decoration.painting.PaintingVariant;
 
 public class AITPaintings implements PaintingRegistryContainer {
 

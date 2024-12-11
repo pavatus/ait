@@ -32,7 +32,7 @@ public class RandomiserControl extends Control {
         }
 
         TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis), cached -> {
-            tardis.travel().forceDestination(cached);
+            tardis.travel().destination(cached);
             tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
 
             messagePlayer(player, travel);
