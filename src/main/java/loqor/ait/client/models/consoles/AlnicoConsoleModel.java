@@ -1409,7 +1409,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
         handbrake.pitch = !tardis.travel().handbrake() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
 
         ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
-        power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
+        power.pitch = !tardis.fuel().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
         ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel")
                 .getChild("longswitch1");

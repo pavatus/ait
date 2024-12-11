@@ -88,12 +88,12 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
 
     @Override
     public void tick(MinecraftServer server) {
-        if (!this.shielded().get())
+        if (!this.shielded().get() || !this.tardis().subsystems().shields().isEnabled() || this.tardis().subsystems().shields().isBroken())
             return;
 
         TravelHandler travel = tardis.travel();
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             this.disableAll();
 
         if (travel.getState() == TravelHandlerBase.State.FLIGHT)

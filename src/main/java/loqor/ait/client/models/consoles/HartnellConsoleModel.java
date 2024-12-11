@@ -1460,8 +1460,8 @@ public class HartnellConsoleModel extends ConsoleModel {
                 .getChild("bone134").getChild("m_lever_3").getChild("bone142");
         ModelPart rotor = this.bone.getChild("rotor");
 
-        powerControl.roll = tardis.engine().hasPower() ? powerControl.roll + 1 : powerControl.roll;
-        rotor.pivotY = !tardis.engine().hasPower() ? rotor.pivotY + 5 : rotor.pivotY;
+        powerControl.roll = tardis.fuel().hasPower() ? powerControl.roll + 1 : powerControl.roll;
+        rotor.pivotY = !tardis.fuel().hasPower() ? rotor.pivotY + 5 : rotor.pivotY;
 
         // Door Control Movements
         ModelPart doorControl = this.bone.getChild("panels").getChild("p_5").getChild("bone112").getChild("bone113")

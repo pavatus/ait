@@ -4,8 +4,6 @@ import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
@@ -49,7 +47,6 @@ public class Scheduler {
         return task;
     }
 
-    @Environment(EnvType.CLIENT)
     public static class Client {
         private static Client self;
         private final Deque<Task> tasks = new ConcurrentLinkedDeque<>();

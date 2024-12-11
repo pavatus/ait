@@ -156,7 +156,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
-        boolean hasPower = this.tardis.engine().hasPower();
+        boolean hasPower = this.tardis.fuel().hasPower();
 
         BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState()
                 .with(ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation()))
@@ -222,7 +222,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.getState() != State.LANDED)
             return;
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             return;
 
         if (this.autopilot()) {

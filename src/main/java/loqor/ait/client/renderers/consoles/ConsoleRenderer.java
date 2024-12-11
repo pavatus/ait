@@ -64,7 +64,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         profiler.push("model");
 
         this.updateModel(entity);
-        boolean hasPower = tardis.engine().hasPower();
+        boolean hasPower = tardis.fuel().hasPower();
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
