@@ -63,6 +63,7 @@ import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -145,6 +146,7 @@ public class AITMod implements ModInitializer {
             registries.register(MachineRecipeRegistry.getInstance());
             registries.register(TravelSoundRegistry.getInstance());
             registries.register(FlightSoundRegistry.getInstance());
+            registries.register(VortexReferenceRegistry.getInstance());
             registries.register(ExteriorVariantRegistry.getInstance());
             registries.register(CategoryRegistry.getInstance());
             registries.register(TardisComponentRegistry.getInstance());
