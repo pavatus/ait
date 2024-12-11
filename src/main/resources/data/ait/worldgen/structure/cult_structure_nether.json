@@ -7,10 +7,10 @@
   "start_height": {
     "type": "minecraft:very_biased_to_bottom",
     "min_inclusive": {
-      "absolute": 0
+      "absolute": 20
     },
     "max_inclusive": {
-      "absolute": 20
+      "absolute": 30
     }
   },
   "start_pool": "ait:cult_structure_nether",
