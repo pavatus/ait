@@ -16,13 +16,25 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
+import loqor.ait.api.Nameable;
 import loqor.ait.client.renderers.VortexUtil;
 
-public record VortexReference(Identifier id, Identifier texture) implements Identifiable {
+public record VortexReference(Identifier id, Identifier texture, String name) implements Identifiable, Nameable {
     public static final Codec<VortexReference> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("id").forGetter(VortexReference::id),
-            Identifier.CODEC.fieldOf("texture").forGetter(VortexReference::texture)
+            Identifier.CODEC.fieldOf("texture").forGetter(VortexReference::texture),
+            Codec.STRING.optionalFieldOf("name", "").forGetter(VortexReference::name)
     ).apply(instance, VortexReference::new));
+
+    public VortexReference {
+        if (name.isEmpty()) {
+            name = id.getPath();
+        }
+    }
+
+    public VortexReference(Identifier id, Identifier texture) {
+        this(id, texture, id.getPath());
+    }
 
     @Environment(EnvType.CLIENT)
     public VortexUtil toUtil() {
@@ -43,5 +55,4 @@ public record VortexReference(Identifier id, Identifier texture) implements Iden
 
         return created.get();
     }
-
 }
