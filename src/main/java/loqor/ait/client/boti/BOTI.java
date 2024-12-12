@@ -140,7 +140,7 @@ public class BOTI {
         // STOP SHAKING IT IT LOOKS SO BAD
         // stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
         stack.translate(0, 0, 500);
-        VortexUtil util = variant.parent().vortex().toUtil();
+        VortexUtil util = door.tardis().get().stats().getVortexEffects().toUtil();
         if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
             util.renderVortex(stack);
         else
