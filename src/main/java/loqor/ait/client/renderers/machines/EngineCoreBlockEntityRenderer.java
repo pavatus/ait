@@ -40,7 +40,7 @@ public class EngineCoreBlockEntityRenderer implements BlockEntityRenderer<Engine
             return;
 
         Tardis tardis = entity.tardis().get();
-        boolean power = tardis.engine().hasPower();
+        boolean power = tardis.fuel().hasPower();
 
         matrices.push();
         matrices.translate(0.5f, 0.35f, 0.5f);

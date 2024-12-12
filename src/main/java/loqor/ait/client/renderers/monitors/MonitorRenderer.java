@@ -72,7 +72,7 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
 
         Tardis tardis = entity.tardis().get();
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             return;
 
         matrices.push();

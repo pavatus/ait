@@ -137,7 +137,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         boolean alarms = tardis.alarm().enabled().get();
 
         if (!variant.equals(ClientExteriorVariantRegistry.DOOM))
-            ClientLightUtil.renderEmissivable(tardis.engine().hasPower(), model::renderWithAnimations,
+            ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations,
                 this.variant.emission(), entity, model.getPart(), matrices, vertexConsumers, light, overlay, 1,
                 alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 

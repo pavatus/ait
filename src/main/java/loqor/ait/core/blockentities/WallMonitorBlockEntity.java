@@ -28,7 +28,7 @@ public class WallMonitorBlockEntity extends InteriorLinkableBlockEntity {
 
         Tardis tardis = this.tardis().get();
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             return;
 
         boolean security = tardis.stats().security().get();

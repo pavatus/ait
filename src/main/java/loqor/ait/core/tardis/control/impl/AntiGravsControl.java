@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.data.DirectedGlobalPos;
@@ -41,5 +42,10 @@ public class AntiGravsControl extends Control {
     @Override
     public SoundEvent getSound() {
         return AITSounds.HANDBRAKE_LEVER_PULL;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.GRAVITATIONAL;
     }
 }

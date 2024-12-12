@@ -56,7 +56,7 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySounds(ClientTardis tardis) {
-        return tardis != null && tardis.engine().hasPower()
+        return tardis != null && tardis.fuel().hasPower()
                 && (tardis.travel().inFlight() || hasThrottleAndHandbrakeDown(tardis));
     }
 
