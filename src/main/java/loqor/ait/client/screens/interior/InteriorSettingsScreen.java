@@ -25,22 +25,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.Nameable;
 import loqor.ait.api.TardisClientEvents;
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.screens.ConsoleScreen;
 import loqor.ait.client.screens.SonicSettingsScreen;
 import loqor.ait.client.screens.TardisSecurityScreen;
-import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.client.screens.widget.SwitcherManager;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ServerHumHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.hum.Hum;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.impl.HumRegistry;
 
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
@@ -56,9 +53,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     int left, top;
     private int tickForSpin = 0;
     public int choicesCount = 0;
-    private Hum hum;
     private final Screen parent;
     private TardisDesktopSchema selectedDesktop;
+    private SwitcherManager.ModeManager modeManager;
 
     public InteriorSettingsScreen(ClientTardis tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.interiorsettings.title"), tardis, console);
@@ -73,11 +70,12 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
     @Override
     protected void init() {
+        this.modeManager = new SwitcherManager.ModeManager(this.tardis());
         this.selectedDesktop = tardis().getDesktop().getSchema();
-        this.hum = getHumSound();
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.createButtons();
+
 
         super.init();
     }
@@ -114,13 +112,12 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         TardisClientEvents.SETTINGS_SETUP.invoker().onSetup(this);
 
         this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 64),
-                this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> previousHum(), this.textRenderer));
+                this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> this.modeManager.get().previous(), this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 105), (height / 2 + 64),
-                this.textRenderer.getWidth(">"), 10, Text.literal(""), button -> nextHum(), this.textRenderer));
-        Text applyHumText = Text.literal("AP");
+                this.textRenderer.getWidth(">"), 10, Text.literal(""), button -> this.modeManager.get().next(), this.textRenderer));
         Text applyInteriorText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 64),
-                this.textRenderer.getWidth(applyInteriorText), 10, Text.translatable(""), button -> applyHum(), this.textRenderer));
+                this.textRenderer.getWidth(applyInteriorText), 10, Text.literal(""), button -> this.modeManager.get().sync(this.tardis()), this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 8), this.textRenderer.getWidth("<"), 10,
                 Text.literal(""), button -> {
                     previousDesktop();
@@ -136,6 +133,13 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 this.textRenderer.getWidth(exteriorSettingsText), 10,
                 Text.literal("").formatted(Formatting.BOLD).formatted(Formatting.WHITE),
                 button -> backToExteriorChangeScreen(), this.textRenderer));
+
+
+        this.addButton(new PressableTextWidget((width / 2 + 85), (height / 2 + 32),
+                this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> this.modeManager.previous(), this.textRenderer));
+        this.addButton(new PressableTextWidget((width / 2 + 105), (height / 2 + 32),
+                this.textRenderer.getWidth(">"), 10, Text.literal(""), button -> this.modeManager.next(), this.textRenderer));
+
     }
 
     private void toSonicScreen() {
@@ -221,62 +225,82 @@ public class InteriorSettingsScreen extends ConsoleScreen {
 
         // arrow (HUM)
 
-        if (!this.buttons.get(startIndex + 0).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 93, 166, 20,
+        int buttonIndex = startIndex;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 93, 166, 20,
                     12);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 0).getX() - 7, this.buttons.get(startIndex + 0).getY() - 3, 93, 178, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 93, 178, 20,
                     12);
 
-        if (!this.buttons.get(startIndex + 1).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 7, this.buttons.get(startIndex + 1).getY() - 3, 113, 166, 20,
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 113, 166, 20,
                     12);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 1).getX() - 7, this.buttons.get(startIndex + 1).getY() - 3, 113, 178, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 113, 178, 20,
                     12);
 
         // apply (HUM)
-
-        if (!this.buttons.get(startIndex + 2).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 3, 133, 166, 53,
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 11, this.buttons.get(buttonIndex).getY() - 3, 133, 166, 53,
                     12);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 2).getX() - 11, this.buttons.get(startIndex + 2).getY() - 3, 133, 178, 53,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 11, this.buttons.get(buttonIndex).getY() - 3, 133, 178, 53,
                     12);
 
         // arrow (Interior)
-
-        if (!this.buttons.get(startIndex + 3).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 7, this.buttons.get(startIndex + 3).getY() - 5, 0, 166, 20,
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 5, 0, 166, 20,
                     20);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 3).getX() - 7, this.buttons.get(startIndex + 3).getY() - 5, 0, 186, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 5, 0, 186, 20,
                     20);
-        if (!this.buttons.get(startIndex + 4).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 7, this.buttons.get(startIndex + 4).getY() - 5, 20, 166, 20,
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 5, 20, 166, 20,
                     20);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 4).getX() - 7, this.buttons.get(startIndex + 4).getY() - 5, 20, 186, 20,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 5, 20, 186, 20,
                     20);
 
         // apply (Interior)
 
-        if (!this.buttons.get(startIndex + 5).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 11, this.buttons.get(startIndex + 5).getY() - 5, 40, 166, 53,
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 11, this.buttons.get(buttonIndex).getY() - 5, 40, 166, 53,
                     20);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 5).getX() - 11, this.buttons.get(startIndex + 5).getY() - 5, 40, 186, 53,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 11, this.buttons.get(buttonIndex).getY() - 5, 40, 186, 53,
                     20);
 
         // back to main monitor menu
 
-        if (!this.buttons.get(startIndex + 6).isHovered())
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 6).getX() - 7, this.buttons.get(startIndex + 6).getY() - 5, 186, 166, 53,
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 5, 186, 166, 53,
                     20);
         else
-            context.drawTexture(TEXTURE, this.buttons.get(startIndex + 6).getX() - 7, this.buttons.get(startIndex + 6).getY() - 5, 186, 186, 53,
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 5, 186, 186, 53,
                     20);
 
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 93, 166, 20,
+                    12);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 93, 178, 20,
+                    12);
+
+        buttonIndex++;
+        if (!this.buttons.get(buttonIndex).isHovered())
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 113, 166, 20,
+                    12);
+        else
+            context.drawTexture(TEXTURE, this.buttons.get(buttonIndex).getX() - 7, this.buttons.get(buttonIndex).getY() - 3, 113, 178, 20,
+                    12);
 
 
         if (tardis() == null)
@@ -317,7 +341,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         }
 
 
-        this.renderHums(context);
+        this.renderCurrentMode(context);
         super.render(context, mouseX, mouseY, delta);
     }
 
@@ -347,49 +371,15 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         context.getMatrices().pop();
     }
 
-    private Hum getHumSound() {
-        return tardis().<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum();
-    }
+    private void renderCurrentMode(DrawContext context) {
+        Nameable current = this.modeManager.get().get();
 
-    private void applyHum() {
-        ClientSoundManager.getHum().setServersHum(this.tardis(), this.hum);
-    }
-
-    private void nextHum() {
-        this.hum = nextHum(this.hum);
-    }
-
-    private static Hum nextHum(Hum current) {
-        List<Hum> list = HumRegistry.getInstance().toList();
-
-        int idx = list.indexOf(current);
-        if (idx < 0 || idx + 1 == list.size())
-            return list.get(0);
-        return list.get(idx + 1);
-    }
-
-    private void previousHum() {
-        this.hum = previousHum(this.hum);
-    }
-
-    private static Hum previousHum(Hum current) {
-        List<Hum> list = HumRegistry.getInstance().toList();
-
-        int idx = list.indexOf(current);
-        if (idx <= 0)
-            return list.get(list.size() - 1);
-        return list.get(idx - 1);
-    }
-
-    private void renderHums(DrawContext context) {
-        if (getHumSound() == null)
-            return;
-        Text humsText = Text.translatable("screen.ait.interior.settings.hum");
-        context.drawText(this.textRenderer, humsText,
-                (int) (left + (bgWidth * 0.65f)) - this.textRenderer.getWidth(humsText) / 2,
-                (int) (top + (bgHeight * 0.7f)), 0xffffff, true);
-        Text hum = Text.translatable("screen.ait.interior.settings." + this.hum.name());
-        context.drawText(this.textRenderer, hum, (int) (left + (bgWidth * 0.77f)) - this.textRenderer.getWidth(hum) / 2,
+        Text modeText = Text.literal(this.modeManager.get().name().toUpperCase());
+        context.drawText(this.textRenderer, modeText,
+                (width / 2 + 50) - this.textRenderer.getWidth(modeText) / 2,
+                height / 2 + 31, 0xffffff, true);
+        Text currentText = Text.literal(current .name().toUpperCase());
+        context.drawText(this.textRenderer, currentText, (int) (left + (bgWidth * 0.78f)) - this.textRenderer.getWidth(currentText) / 2,
                 (int) (top + (bgHeight * 0.792f)), 0xffffff, true);
     }
 
@@ -438,7 +428,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
             previousDesktop(); // ooo incursion crash
     }
 
-    private boolean doesTextureExist(Identifier id) {
+    public static boolean doesTextureExist(Identifier id) {
         return MinecraftClient.getInstance().getResourceManager().getResource(id).isPresent();
     }
 

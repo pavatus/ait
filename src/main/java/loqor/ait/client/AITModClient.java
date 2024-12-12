@@ -215,7 +215,14 @@ public class AITModClient implements ClientModInitializer {
         // somewhere else it can go
         // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
-                responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
+                responseSender) -> {
+            ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
+
+            if (tardis == null)
+                return;
+
+            client.getSoundManager().stopSounds(tardis.stats().getTravelEffects().get(TravelHandlerBase.State.DEMAT).soundId(), SoundCategory.BLOCKS);
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange());
 
