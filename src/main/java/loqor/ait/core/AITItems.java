@@ -5,23 +5,29 @@ import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.item.SubSystemItem;
 import loqor.ait.core.item.*;
 import loqor.ait.core.item.blueprint.BlueprintItem;
 import loqor.ait.core.item.control.GenericControlBlockItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
-import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.item.part.MachinePartItem;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
+
 
 public class AITItems implements ItemRegistryContainer {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
@@ -83,7 +89,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // Crafting items
-    public static final Item ZEITON_SHARD = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item ZEITON_SHARD = new ZeitonShardItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
     public static final Item ZEITON_DUST = new Item(
@@ -114,8 +120,25 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
 
     // Components
-    public static final Item DEMATERIALIZATION_CIRCUIT = new MachineItem(
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+    public static final Item DEMATERIALIZATION_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DEMAT);
+
+    public static final Item SHIELDS_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.SHIELDS);
+    public static final Item BACKUP_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.EMERGENCY_POWER);
+    public static final Item GRAVITATIONAL_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.GRAVITATIONAL);
+    public static final Item CHAMELEON_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.CHAMELEON);
+    public static final Item DESPERATION_CIRCUIT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DESPERATION);
+    public static final Item STABILISERS = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.STABILISERS);
+    public static final Item LIFE_SUPPORT = new SubSystemItem(
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.LIFE_SUPPORT);
+
+
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
@@ -128,16 +151,19 @@ public class AITItems implements ItemRegistryContainer {
     // Music discs
     @NoEnglish
     public static final Item DRIFTING_MUSIC_DISC = new MusicDiscItem(1, AITSounds.DRIFTING_MUSIC,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 169);
+            new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 169);
+
     @NoEnglish
-    public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).rarity(Rarity.RARE), 216);
+    public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.ERROR,
+            new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
+
 
     // Block controls
 
      public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
 
     public static List<Item> get() {
         List<Item> list = new ArrayList<>();
@@ -151,5 +177,10 @@ public class AITItems implements ItemRegistryContainer {
         return list;
     }
 
-
+    static {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
+            entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
+        });
+    }
 }

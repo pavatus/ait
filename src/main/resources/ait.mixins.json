@@ -23,7 +23,7 @@
     "server.ServerPlayerMixin",
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
-    "server.structure.StructureTemplateAccessor",
+      "server.structure.StructureTemplateAccessor",
     "server.structure.StructureTemplateMixin"
   ],
   "client": [
@@ -37,13 +37,12 @@
     "client.rendering.BakedModelManagerMixin",
     "client.rendering.BGRendererMixin",
     "client.rendering.DebugRendererMixin",
-    "client.rendering.GameRendererMixin",
     "client.rendering.HeadFeatureRendererMixin",
     "client.rendering.HeldItemRendererMixin",
-    "client.rendering.framebuffer.MixinMainFramebufferTarget",
-    "client.rendering.framebuffer.MixinRenderFramebufferTarget",
     "client.rendering.PlayerEntityRendererMixin",
-    "client.rendering.SkyboxMixin"
+    "client.rendering.SkyboxMixin",
+    "client.rendering.framebuffer.MixinMainFramebufferTarget",
+    "client.rendering.framebuffer.MixinRenderFramebufferTarget"
   ],
   "injectors": {
     "defaultRequire": 1

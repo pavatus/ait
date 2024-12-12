@@ -90,7 +90,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                     BlockPos pos = directed.getPos();
 
                     Vec3d motion = pos
-                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.075);
+                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
 
                     // Apply the motion to the entity
                     entity.setVelocity(entity.getVelocity().add(motion));
@@ -106,7 +106,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
 
         return tardis.travel().getState() != TravelHandlerBase.State.LANDED && this.isOpen()
-                && tardis.travel().getState() != TravelHandlerBase.State.MAT && !tardis.areShieldsActive()
+                && !tardis.areShieldsActive()
+                && !tardis.travel().autopilot()
                 && tardis.asServer().getInteriorWorld().getBlockEntity(directed.getPos()) instanceof DoorBlockEntity;
     }
 
@@ -254,7 +255,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
         }
 
-        if (!tardis.engine().hasPower() && tardis.getLockedTardis()) {
+        if (!tardis.fuel().hasPower() && tardis.getLockedTardis()) {
             // Bro cant escape
             if (player == null)
                 return false;

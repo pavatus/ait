@@ -156,7 +156,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
-        boolean hasPower = this.tardis.engine().hasPower();
+        boolean hasPower = this.tardis.fuel().hasPower();
 
         BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState()
                 .with(ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation()))
@@ -222,7 +222,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.getState() != State.LANDED)
             return;
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             return;
 
         if (this.autopilot()) {
@@ -267,7 +267,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     public void forceDemat() {
         this.state.set(State.DEMAT);
 
-        SoundEvent sound = this.tardis.getExterior().getVariant().effects().get(this.getState()).sound();
+        SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 
         // Play dematerialize sound at the position
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
@@ -331,7 +331,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         pos = result.result().orElse(pos);
 
         this.state.set(State.MAT);
-        SoundEvent sound = this.tardis.getExterior().getVariant().effects().get(this.getState()).sound();
+        SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;

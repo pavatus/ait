@@ -20,7 +20,7 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private InteriorFlightSound createFlightSound(ClientTardis tardis) {
-        return new InteriorFlightSound(tardis.getExterior().getVariant().flight(), SoundCategory.BLOCKS);
+        return new InteriorFlightSound(tardis.stats().getFlightEffects(), SoundCategory.BLOCKS);
     }
 
     public static ClientFlightHandler create() {
@@ -46,7 +46,7 @@ public class ClientFlightHandler extends SoundHandler {
         if (sound.isDirty()) {
             sound.setDirty(false);
 
-            if (sound.getData().id().equals(tardis.getExterior().getVariant().flight().id())) return;
+            if (sound.getData().id().equals(tardis.stats().getFlightEffects().id())) return;
 
             this.stopSounds();
             MinecraftClient.getInstance().getSoundManager().stop(FLIGHT);
@@ -56,7 +56,7 @@ public class ClientFlightHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySounds(ClientTardis tardis) {
-        return tardis != null && tardis.engine().hasPower()
+        return tardis != null && tardis.fuel().hasPower()
                 && (tardis.travel().inFlight() || hasThrottleAndHandbrakeDown(tardis));
     }
 

@@ -11,7 +11,7 @@ public class FlightSoundRegistry extends SimpleDatapackRegistry<FlightSound> {
     private static final FlightSoundRegistry instance = new FlightSoundRegistry();
 
     public FlightSoundRegistry() {
-        super(FlightSound::fromInputStream, FlightSound.CODEC, "sfx/flight", true);
+        super(FlightSound::fromInputStream, FlightSound.CODEC, "fx/flight", true);
     }
 
     public static FlightSoundRegistry getInstance() {
@@ -22,7 +22,7 @@ public class FlightSoundRegistry extends SimpleDatapackRegistry<FlightSound> {
 
     @Override
     protected void defaults() {
-        DEFAULT = register(new FlightSound(new Identifier(AITMod.MOD_ID, "default"), AITSounds.FLIGHT_LOOP.getId(), 80));
+        DEFAULT = register(new FlightSound(new Identifier(AITMod.MOD_ID, "default"), AITSounds.FLIGHT_LOOP.getId(), 80, "default"));
     }
 
     @Override

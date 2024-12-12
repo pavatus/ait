@@ -16,16 +16,23 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
+import loqor.ait.api.Nameable;
 import loqor.ait.core.AITSounds;
 
-public record FlightSound(Identifier id, Identifier soundId, int length) implements Identifiable {
+public record FlightSound(Identifier id, Identifier soundId, int length, String name) implements Identifiable, Nameable {
     public static final Codec<FlightSound> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(FlightSound::id),
                     Identifier.CODEC.fieldOf("sound").forGetter(FlightSound::soundId),
-                    Codec.INT.fieldOf("length").forGetter(FlightSound::length)
+                    Codec.INT.fieldOf("length").forGetter(FlightSound::length),
+                    Codec.STRING.optionalFieldOf("name", "").forGetter(FlightSound::name)
             ).apply(instance, FlightSound::new)
     );
+    public FlightSound {
+        if (name.isEmpty()) {
+            name = id.getPath();
+        }
+    }
 
     @Override
     public Identifier id() {

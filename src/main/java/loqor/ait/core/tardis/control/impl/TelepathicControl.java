@@ -1,5 +1,8 @@
 package loqor.ait.core.tardis.control.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -8,6 +11,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.StructureTags;
 import net.minecraft.registry.tag.TagKey;
@@ -153,6 +157,16 @@ public class TelepathicControl extends Control {
             getStructureViaChunkGen(player, tardis, world, source, RADIUS, StructureKeys.END_CITY);
         } else if (world.getRegistryKey() == World.OVERWORLD) {
             getStructureViaWorld(player, tardis, world, source, RADIUS, StructureTags.VILLAGE);
+        } else {
+            Registry<Structure> registry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
+            // get a list of all the registry entries
+            List<RegistryEntry<Structure>> structures = new ArrayList<>();
+
+            for (int i = 0; i < registry.size() - 1; i++) {
+                structures.add(registry.getEntry(i).orElseThrow());
+            }
+
+            locateWithChunkGenAsync(player, tardis, RegistryEntryList.of(structures), world, source, RADIUS);
         }
     }
 

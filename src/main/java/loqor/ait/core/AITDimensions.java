@@ -17,5 +17,4 @@ public class AITDimensions {
             new Identifier(AITMod.MOD_ID, "moon"));
     public static final RegistryKey<World> SPACE = RegistryKey.of(RegistryKeys.WORLD,
             new Identifier(AITMod.MOD_ID, "space"));
-
 }

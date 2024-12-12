@@ -6,8 +6,9 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.api.Identifiable;
+import loqor.ait.api.Nameable;
 
-public class Hum implements Identifiable {
+public class Hum implements Identifiable, Nameable {
     private final Identifier id;
     private final SoundEvent sound;
     private final String name;
@@ -27,6 +28,7 @@ public class Hum implements Identifiable {
         return this.sound;
     }
 
+    @Override
     public String name() {
         return this.name;
     }

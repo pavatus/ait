@@ -69,7 +69,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
             if (AITMod.RANDOM.nextInt(0, 20) == 14)
                 continue;
 
-            this.addLevel(player, 5);
+            this.addLevel(player, 1);
         }
     }
 

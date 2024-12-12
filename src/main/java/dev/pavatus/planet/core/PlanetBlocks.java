@@ -2,15 +2,21 @@ package dev.pavatus.planet.core;
 
 import dev.pavatus.planet.PlanetModule;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 
+import loqor.ait.core.blocks.FlagBlock;
 import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 public class PlanetBlocks implements BlockRegistryContainer {
+
+    public static final Block FLAG = new FlagBlock(
+            FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     // Mars
 
@@ -256,6 +262,48 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
     public static final Block ANORTHOSITE_STAIRS = new StairsBlock(
             ANORTHOSITE.getDefaultState(), AbstractBlock.Settings.copy(Blocks.STONE));
+
+    // Ores
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.NONE)
+    public static final Block ANORTHOSITE_COAL_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.COAL_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    public static final Block ANORTHOSITE_COPPER_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.COPPER_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    public static final Block ANORTHOSITE_IRON_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.IRON_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block ANORTHOSITE_GOLD_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.GOLD_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block ANORTHOSITE_LAPIS_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.LAPIS_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block ANORTHOSITE_REDSTONE_ORE = new RedstoneOreBlock(
+            AbstractBlock.Settings.copy(Blocks.REDSTONE_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block ANORTHOSITE_DIAMOND_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.DIAMOND_ORE));
+
+    @AutomaticModel
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block ANORTHOSITE_EMERALD_ORE = new Block(
+            AbstractBlock.Settings.copy(Blocks.EMERALD_ORE));
 
     // Polished Stone
 

@@ -14,8 +14,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.AITRegistryEvents;
-import loqor.ait.core.sounds.flight.FlightSoundRegistry;
-import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
@@ -78,7 +76,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
             buf.encodeAsJson(DatapackExterior.CODEC,
                     new DatapackExterior(schema.id(), schema.categoryId(), schema.id(),
                             DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, schema.requirement(),
-                            BiomeOverrides.EMPTY, TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT.id(), false));
+                            BiomeOverrides.EMPTY, false));
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);

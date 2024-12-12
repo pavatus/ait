@@ -18,10 +18,6 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.flight.FlightSound;
-import loqor.ait.core.sounds.flight.FlightSoundRegistry;
-import loqor.ait.core.sounds.travel.TravelSoundRegistry;
-import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
@@ -51,32 +47,23 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     private final Identifier category;
     private final Identifier id;
     private final Loyalty loyalty;
-    private final TravelSoundMap effects;
-    private final FlightSound flight;
 
     @Environment(EnvType.CLIENT)
     private ClientExteriorVariantSchema cachedSchema;
 
-    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty, TravelSoundMap effects, FlightSound flight) {
+    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty) {
         super("exterior");
         this.category = category;
 
         this.id = id;
         this.loyalty = loyalty.orElse(null);
-        this.effects = effects;
-        this.flight = flight;
-    }
-
-    protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty, TravelSoundMap effects) {
-        this(category, id, Optional.of(loyalty), effects, FlightSoundRegistry.DEFAULT);
     }
 
     protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
-        this(category, id, Optional.of(loyalty), TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT);
+        this(category, id, Optional.of(loyalty));
     }
-
     protected ExteriorVariantSchema(Identifier category, Identifier id) {
-        this(category, id, Optional.empty(), TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT);
+        this(category, id, Optional.empty());
     }
 
     public static Object serializer() {
@@ -140,14 +127,6 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 
     public double portalHeight() {
         return 2d;
-    }
-
-    public TravelSoundMap effects() {
-        return this.effects;
-    }
-
-    public FlightSound flight() {
-        return this.flight;
     }
 
     @Override

@@ -93,6 +93,9 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
     public boolean hasGravityModifier() {
         return this.gravity() >= 0;
     }
+    public boolean hasNoFallDamage() {
+        return this.hasGravityModifier() && this.gravity() < 1;
+    }
 
     public Planet with(Identifier dimension) {
         return new Planet(dimension, this.gravity, this.hasOxygen, this.temperature, this.hasClouds);

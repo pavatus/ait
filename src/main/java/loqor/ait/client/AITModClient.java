@@ -4,6 +4,7 @@ import static loqor.ait.AITMod.*;
 
 import java.util.UUID;
 
+import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -11,6 +12,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -32,6 +34,7 @@ import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
+import loqor.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import loqor.ait.client.renderers.decoration.PlaqueRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
@@ -106,6 +109,7 @@ public class AITModClient implements ClientModInitializer {
          * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
          * vortex.renderVortexNodes(context, node); } } } });
          */
+        ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             if (!ClientTardisUtil.isPlayerInATardis())
@@ -211,7 +215,14 @@ public class AITModClient implements ClientModInitializer {
         // somewhere else it can go
         // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
-                responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
+                responseSender) -> {
+            ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
+
+            if (tardis == null)
+                return;
+
+            client.getSoundManager().stopSounds(tardis.stats().getTravelEffects().get(TravelHandlerBase.State.DEMAT).soundId(), SoundCategory.BLOCKS);
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange());
 
@@ -339,6 +350,13 @@ public class AITModClient implements ClientModInitializer {
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
                 WaypointBankBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.FLAG_BLOCK_ENTITY_TYPE, FlagBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ZEITON_CAGE_BLOCK_ENTITY_TYPE,
+                ZeitonCageRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.GENERIC_SUBSYSTEM_BLOCK_TYPE,
+                GenericSubSystemRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE,
+                PowerConverterRenderer::new);
     }
 
     public static void entityRenderRegister() {
