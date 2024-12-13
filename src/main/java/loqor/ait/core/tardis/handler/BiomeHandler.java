@@ -23,6 +23,7 @@ import net.minecraft.world.gen.feature.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.enummap.Ordered;
@@ -62,6 +63,10 @@ public class BiomeHandler extends KeyedTardisComponent {
         this.type.set(biome);
     }
 
+    public void forceTypeDefault() {
+        this.type.set(BiomeType.DEFAULT);
+    }
+
     public Gaslighter3000 testBiome(ServerWorld world, BlockPos pos) {
         RegistryEntry<Biome> biome = world.getBiome(pos);
         List<ConfiguredFeature<?, ?>> trees = this.findTrees(world, biome);
@@ -76,6 +81,13 @@ public class BiomeHandler extends KeyedTardisComponent {
 
         tree.generate(access, world.getChunkManager().getChunkGenerator(), world.random, pos);
         return gaslighter;
+    }
+
+    static {
+        TardisEvents.DEMAT.register(tardis -> {
+            tardis.<BiomeHandler>handler(Id.BIOME).forceTypeDefault();
+            return TardisEvents.Interaction.PASS;
+        });
     }
 
     private static final Set<Class<? extends Feature<?>>> TREES = Set.of(

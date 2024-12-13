@@ -20,12 +20,7 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.flight.FlightSoundRegistry;
-import loqor.ait.core.sounds.travel.TravelSoundRegistry;
-import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.door.DoorSchema;
@@ -53,15 +48,12 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
                     BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),
-                    TravelSoundMap.CODEC.optionalFieldOf("effects", new TravelSoundMap().of(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.DEFAULT_DEMAT).of(TravelHandlerBase.State.MAT, TravelSoundRegistry.DEFAULT_MAT)).forGetter(ExteriorVariantSchema::effects),
-                    Identifier.CODEC.optionalFieldOf("flight", FlightSoundRegistry.DEFAULT.id()).forGetter(DatapackExterior::flightId),
-                    Identifier.CODEC.optionalFieldOf("vortex", VortexReferenceRegistry.SPACE.id()).forGetter(DatapackExterior::vortexId),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack))
             .apply(instance, DatapackExterior::new));
 
     public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture,
-            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, TravelSoundMap effects, Identifier flightId, Identifier vortexId, boolean isDatapack) {
-        super(category, id, loyalty, effects, FlightSoundRegistry.getInstance().get(flightId), VortexReferenceRegistry.getInstance().get(vortexId));
+            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, boolean isDatapack) {
+        super(category, id, loyalty);
         this.parent = parent;
         this.texture = texture;
         this.emission = emission;
@@ -141,15 +133,5 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
     public Identifier emission() {
         return this.emission;
-    }
-    public Identifier flightId() {
-        if (this.flight() == null) {
-            return FlightSoundRegistry.DEFAULT.id();
-        }
-
-        return this.flight().id();
-    }
-    public Identifier vortexId() {
-        return this.vortex().id();
     }
 }

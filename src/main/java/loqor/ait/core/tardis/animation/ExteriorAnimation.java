@@ -110,7 +110,7 @@ public abstract class ExteriorAnimation {
         };
 
         this.tellClientsToSetup(state);
-        TravelSound sound = tardis.getExterior().getVariant().effects().get(state);
+        TravelSound sound = tardis.stats().getTravelEffects().get(state);
 
         if (sound == null)
             return false;

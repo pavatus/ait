@@ -85,6 +85,49 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
         return inv.clearToList();
     }
 
+    public static MultiBlockStructure testInteriorRendering(Identifier structure) {
+        if (!ServerLifecycleHooks.isServer()) {
+            AITMod.LOGGER.error("Attempted to load multiblock structure on client side");
+            // todo SYNC THIS SHI TO CLIENT !!
+            return EMPTY;
+        }
+
+        StructureTemplate template = WorldUtil.getOverworld().getStructureTemplateManager()
+                .getTemplate(structure).orElse(null);
+
+        MultiBlockStructure created = new MultiBlockStructure();
+        if (template == null) {
+            AITMod.LOGGER.error("Failed to find structure template {}", structure);
+            return created;
+        }
+
+        List<StructureTemplate.StructureBlockInfo> list = ((StructureTemplateAccessor) template).getBlockInfo().get(0).getAll();
+        BlockPos center = null;
+        for (StructureTemplate.StructureBlockInfo info : list) {
+            if (info.state().isOf(AITBlocks.DOOR_BLOCK)) {
+                center = info.pos();
+                break;
+            }
+        }
+
+        if (center == null) {
+            AITMod.LOGGER.error("No general subsystem block found in template, {}", structure);
+            return created;
+        }
+
+        // double iterationwow
+        for (StructureTemplate.StructureBlockInfo info : list) {
+            if (info.state().isOf(AITBlocks.DOOR_BLOCK)) continue;
+            if (info.state().isAir()) continue;
+
+            BlockPos offset = info.pos().subtract(center);
+            BlockOffset blockOffset = new BlockOffset(new AllowedBlocks(info.state().getBlock()), offset);
+            created.add(blockOffset);
+        }
+
+        return created;
+    }
+
     public static MultiBlockStructure from(Identifier structure) {
         if (!ServerLifecycleHooks.isServer()) {
             AITMod.LOGGER.error("Attempted to load multiblock structure on client side");

@@ -48,7 +48,7 @@ public class InteriorFlightSound extends PositionedLoopingSound {
     }
     public FlightSound getData() {
         if (this.data == null && ClientTardisUtil.getCurrentTardis() != null)
-            this.data = ClientTardisUtil.getCurrentTardis().getExterior().getVariant().flight();
+            this.data = ClientTardisUtil.getCurrentTardis().stats().getFlightEffects();
 
         return this.data;
     }
