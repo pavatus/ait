@@ -25,8 +25,15 @@ public class FlagBlock extends Block implements BlockEntityProvider {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final DirectionProperty FACING = Properties.FACING;
 
-    // i genuinely cannot be bothered to do math :)))
-    private static final VoxelShape POLE = VoxelShapes.cuboid(0, 0, 0, 1, 2, 1);
+    private static final VoxelShape POLE = VoxelShapes.cuboid(
+            0.45,
+            0,
+            0.45,
+            0.55,
+            2,
+            0.55
+    );
+
 
     public FlagBlock(Settings settings) {
         super(settings);
