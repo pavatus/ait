@@ -61,7 +61,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
         if (!super.setupAnimation(state))
             return false;
 
-        TravelSound sound = exterior.tardis().get().getExterior().getVariant().effects().get(state);
+        TravelSound sound = exterior.tardis().get().stats().getTravelEffects().get(state);
 
         this.frequency = sound.frequency();
         this.intensity = sound.intensity();

@@ -18,13 +18,7 @@ import net.minecraft.util.shape.VoxelShape;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.flight.FlightSound;
-import loqor.ait.core.sounds.flight.FlightSoundRegistry;
-import loqor.ait.core.sounds.travel.TravelSoundRegistry;
-import loqor.ait.core.sounds.travel.map.TravelSoundMap;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.vortex.reference.VortexReference;
-import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.data.schema.door.DoorSchema;
@@ -54,35 +48,22 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     private final Identifier id;
     private final Loyalty loyalty;
 
-    // these three are for removal \/
-    private final TravelSoundMap effects;
-    private final FlightSound flight;
-    private final VortexReference vortex;
-
     @Environment(EnvType.CLIENT)
     private ClientExteriorVariantSchema cachedSchema;
 
-    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty, TravelSoundMap effects, FlightSound flight, VortexReference vortex) {
+    protected ExteriorVariantSchema(Identifier category, Identifier id, Optional<Loyalty> loyalty) {
         super("exterior");
         this.category = category;
 
         this.id = id;
         this.loyalty = loyalty.orElse(null);
-        this.effects = effects;
-        this.flight = flight;
-        this.vortex = vortex;
-    }
-
-    protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty, TravelSoundMap effects) {
-        this(category, id, Optional.of(loyalty), effects, FlightSoundRegistry.DEFAULT, VortexReferenceRegistry.SPACE);
     }
 
     protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
-        this(category, id, Optional.of(loyalty), TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT, VortexReferenceRegistry.SPACE);
+        this(category, id, Optional.of(loyalty));
     }
-
     protected ExteriorVariantSchema(Identifier category, Identifier id) {
-        this(category, id, Optional.empty(), TravelSoundRegistry.DEFAULT, FlightSoundRegistry.DEFAULT, VortexReferenceRegistry.SPACE);
+        this(category, id, Optional.empty());
     }
 
     public static Object serializer() {
@@ -146,18 +127,6 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 
     public double portalHeight() {
         return 2d;
-    }
-    @Deprecated(forRemoval = true)
-    public TravelSoundMap effects() {
-        return this.effects;
-    }
-    @Deprecated(forRemoval = true)
-    public FlightSound flight() {
-        return this.flight;
-    }
-    @Deprecated(forRemoval = true)
-    public VortexReference vortex() {
-        return this.vortex;
     }
 
     @Override
