@@ -129,7 +129,11 @@ public class BOTI {
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         botiProvider.draw();
         stack.pop();
-        RenderSystem.depthMask(false);
+        copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
+        // RenderSystem.depthMask(false);
+
+        BOTI_HANDLER.afbo.beginWrite(false);
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
@@ -143,7 +147,7 @@ public class BOTI {
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
         stack.translate(0, 0, 500);
-        VortexUtil util = new VortexUtil("war");
+        VortexUtil util = door.tardis().get().stats().getVortexEffects().toUtil();
         if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
             util.renderVortex(stack);
         botiProvider.draw();
@@ -165,7 +169,7 @@ public class BOTI {
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
-        BOTI.copyFramebuffer(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
+        BOTI.copyColor(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
 
         GL11.glDisable(GL11.GL_STENCIL_TEST);
 
@@ -197,7 +201,7 @@ public class BOTI {
 
         RenderSystem.depthMask(true);
         stack.push();
-        Vec3d vec = variant.parent().adjustPortalPos(new Vec3d(0, -1.5f, 0), (byte) 0);
+        Vec3d vec = variant.parent().adjustPortalPos(new Vec3d(0, -1f, 0), (byte) 0);
         stack.translate(vec.x, vec.y, vec.z);
         stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight(), 1f);
 
@@ -207,33 +211,40 @@ public class BOTI {
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         botiProvider.draw();
         stack.pop();
-        RenderSystem.depthMask(false);
+
+        copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
+
+        BOTI_HANDLER.afbo.beginWrite(false);
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
         stack.push();
-        if (!exterior.tardis().get().travel().autopilot() && exterior.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
-            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / exterior.tardis().get().travel().speed()) * 360f));
-        if (!exterior.tardis().get().crash().isNormal())
-            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
-        stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / exterior.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / exterior.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / exterior.tardis().get().travel().speed()) * 600f));
-        stack.translate(0, 0, 500);
-        VortexUtil util = new VortexUtil("war");
-        //if (exterior.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
-            util.renderVortex(stack);
+        stack.translate(-0.5, 0, -0.5);
+        //stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+
+        variant.getDoor().model().renderWithAnimations(exterior, variant.getDoor().model().getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+
+        //MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(new Identifier(AITMod.MOD_ID, "interiors/coral")), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
+        /*ChunkRendererRegionBuilder builder = new ChunkRendererRegionBuilder();
+        ChunkRendererRegion region = builder.build(TardisDimension.get(exterior.tardis().get().asServer()).get(), new BlockPos(0, 0, 0),  new BlockPos(30, 30, 30), 0);*/
+        botiProvider.draw();
+        stack.pop();
+
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0));
+        if (variant.emission() != null)
+            variant.getDoor().model().renderWithAnimations(exterior, variant.getDoor().model().getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
-        BOTI.copyFramebuffer(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
+        BOTI.copyColor(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
 
         GL11.glDisable(GL11.GL_STENCIL_TEST);
-
-        RenderSystem.depthMask(true);
 
         stack.pop();
     }
@@ -242,5 +253,17 @@ public class BOTI {
         GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, src.fbo);
         GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, dest.fbo);
         GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT | GlConst.GL_COLOR_BUFFER_BIT, GlConst.GL_NEAREST);
+    }
+
+    private static void copyColor(Framebuffer src, Framebuffer dest) {
+        GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, src.fbo);
+        GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, dest.fbo);
+        GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_COLOR_BUFFER_BIT, GlConst.GL_NEAREST);
+    }
+
+    private static void copyDepth(Framebuffer src, Framebuffer dest) {
+        GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, src.fbo);
+        GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, dest.fbo);
+        GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT, GlConst.GL_NEAREST);
     }
 }
