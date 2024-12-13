@@ -135,9 +135,9 @@ public class InteriorSettingsScreen extends ConsoleScreen {
                 button -> backToExteriorChangeScreen(), this.textRenderer));
 
 
-        this.addButton(new PressableTextWidget((width / 2 + 85), (height / 2 + 32),
+        this.addButton(new PressableTextWidget((width / 2 + 84), (height / 2 + 33),
                 this.textRenderer.getWidth("<"), 10, Text.literal(""), button -> this.modeManager.previous(), this.textRenderer));
-        this.addButton(new PressableTextWidget((width / 2 + 105), (height / 2 + 32),
+        this.addButton(new PressableTextWidget((width / 2 + 105), (height / 2 + 33),
                 this.textRenderer.getWidth(">"), 10, Text.literal(""), button -> this.modeManager.next(), this.textRenderer));
 
     }
@@ -377,7 +377,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
         Text modeText = Text.literal(this.modeManager.get().name().toUpperCase());
         context.drawText(this.textRenderer, modeText,
                 (width / 2 + 50) - this.textRenderer.getWidth(modeText) / 2,
-                height / 2 + 31, 0xffffff, true);
+                height / 2 + 32, 0xffffff, true);
         Text currentText = Text.literal(current .name().toUpperCase());
         context.drawText(this.textRenderer, currentText, (int) (left + (bgWidth * 0.78f)) - this.textRenderer.getWidth(currentText) / 2,
                 (int) (top + (bgHeight * 0.792f)), 0xffffff, true);
