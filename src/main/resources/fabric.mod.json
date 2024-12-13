@@ -69,5 +69,17 @@
 	"suggests": {
 		"immersiveportals": "*",
 		"k9-mod": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"parent": {
+				"id": "ait",
+				"name": "Adventures In Time",
+				"description": "Adds the TARDIS from Doctor Who into Minecraft 1.20.1.",
+				"icon": "assets/ait/icon.png",
+				"badges": [ "Pavatus", "Doctor WHO" ]
+			},
+			"update_checker": true
+		}
 	}
 }
