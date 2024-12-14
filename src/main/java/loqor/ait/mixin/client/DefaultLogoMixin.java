@@ -52,15 +52,14 @@ public class DefaultLogoMixin {
     @Inject(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At("TAIL"))
     private void renderWarningMessage(DrawContext context, int screenWidth, float alpha, int y, CallbackInfo ci) {
         if (AITMod.isUnsafeBranch()) {
-
-            String warningMessage = ChristmasModule.instance().shouldRegister() ? "HO HO HO!: You are using an experimental branch (" + AITMod.BRANCH + "), please be cautious when testing or the grinch will smell you toes!" : "WARNING!: You are using an experimental version (" + AITMod.BRANCH + "), please be cautious when testing!";
+            String warningMessage = "Warning: You are using an experimental version (" + AITMod.BRANCH + "), please be cautious when testing!";
             screenWidth = this.client.getWindow().getScaledWidth();
             int textWidth = this.client.textRenderer.getWidth(warningMessage);
 
 
             int x = (screenWidth - textWidth) / 2;
-            y = 10;
-            int padding = 7;
+            y = 9;
+            int padding = 5;
 
 
             context.fill(0, y - padding, screenWidth, y + this.client.textRenderer.fontHeight + padding, 0xAA000000);

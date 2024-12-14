@@ -18,7 +18,6 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.boti.BOTI;
 import loqor.ait.client.models.boti.BotiPortalModel;
-import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.models.doors.DoomDoorModel;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
@@ -78,7 +77,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
     private void renderDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         profiler.push("boti");
-        BOTI.renderInteriorDoorBoti(door, variant, matrices, new Identifier(AITMod.MOD_ID, "textures/painting/texture.png"), model, BotiPortalModel.getTexturedModelData().createModel(), interiorTexture, new GallifreyFallsModel(GallifreyFallsModel.getTexturedModelData().createModel()), light);
+        BOTI.renderInteriorDoorBoti(door, variant, matrices, new Identifier(AITMod.MOD_ID, "textures/painting/texture.png"), model, BotiPortalModel.getTexturedModelData().createModel(), light);
         profiler.pop();
     }
 

@@ -57,7 +57,7 @@ public class AITRenderLayers extends RenderLayer {
                 .layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
                 .lightmap(ENABLE_LIGHTMAP)
                 .overlay(ENABLE_OVERLAY_COLOR)
-                .depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
+                .depthTest(RenderPhase.LEQUAL_DEPTH_TEST)
                 .build(false);
         return RenderLayer.of("boti_interior_emission", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                 VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
@@ -72,7 +72,7 @@ public class AITRenderLayers extends RenderLayer {
                 .layering(RenderPhase.NO_LAYERING)
                 .lightmap(ENABLE_LIGHTMAP)
                 .overlay(ENABLE_OVERLAY_COLOR)
-                .depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
+                .depthTest(RenderPhase.LEQUAL_DEPTH_TEST)
                 .build(false);
         return RenderLayer.of("boti_interior", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                 VertexFormat.DrawMode.QUADS, 256, false, true, parameters);

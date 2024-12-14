@@ -37,7 +37,6 @@ public class GunModule extends Module {
 
     @Override
     public void init() {
-        this.getItemGroup().initialize();
 
         FieldRegistrationHandler.register(GunItems.class, AITMod.MOD_ID, false);
         FieldRegistrationHandler.register(GunEntityTypes.class, AITMod.MOD_ID, false);

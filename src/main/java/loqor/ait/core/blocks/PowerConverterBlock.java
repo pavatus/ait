@@ -24,7 +24,15 @@ import loqor.ait.core.engine.link.block.FluidLinkBlock;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
 public class PowerConverterBlock extends FluidLinkBlock {
-    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32, 16.0);
+    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
+            4.0,
+            0.0,
+            2.5,
+            12.0,
+            32.0,
+            13.5
+    );
+
 
     public PowerConverterBlock(Settings settings) {
         super(settings);

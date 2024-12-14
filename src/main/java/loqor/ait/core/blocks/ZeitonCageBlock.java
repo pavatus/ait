@@ -34,8 +34,8 @@ import loqor.ait.core.blockentities.ZeitonCageBlockEntity;
 import loqor.ait.core.world.RiftChunkManager;
 
 public class ZeitonCageBlock extends Block implements BlockEntityProvider {
-    private static final int REQUIRED_FUEL = 500;
-    private static final IntProperty FUEL = IntProperty.of("fuel", 0, REQUIRED_FUEL);
+    public static final int REQUIRED_FUEL = 500;
+    public static final IntProperty FUEL = IntProperty.of("fuel", 0, REQUIRED_FUEL);
 
     public ZeitonCageBlock(Settings settings) {
         super(settings);

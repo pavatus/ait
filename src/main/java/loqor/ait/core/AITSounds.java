@@ -38,6 +38,9 @@ public class AITSounds {
     public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
     public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
 
+    // TARDIS SFX
+    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
+
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = register("controls/demat_lever_pull");
     public static final SoundEvent HANDBRAKE_LEVER_PULL = register("controls/handbrake_lever_pull");

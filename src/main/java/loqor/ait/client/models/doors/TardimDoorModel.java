@@ -7,8 +7,8 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
-import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class TardimDoorModel extends DoorModel {
@@ -62,18 +62,18 @@ public class TardimDoorModel extends DoorModel {
     }
 
     @Override
-    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+    public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
-        DoorHandler handler = door.tardis().get().door();
+        DoorHandler handler = linkableBlockEntity.tardis().get().door();
 
         this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
         this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
 
-        super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
     }
 }
