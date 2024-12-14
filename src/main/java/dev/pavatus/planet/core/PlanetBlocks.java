@@ -16,7 +16,7 @@ import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 public class PlanetBlocks implements BlockRegistryContainer {
 
     public static final Block FLAG = new FlagBlock(
-            FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+            FabricBlockSettings.create().nonOpaque().strength(0.2F, 0.2F).pistonBehavior(PistonBehavior.DESTROY));
 
     // Mars
 
