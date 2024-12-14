@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
+import loqor.ait.client.screens.BlueprintFabricatorScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -243,10 +244,10 @@ public class AITModClient implements ClientModInitializer {
 
     public static Screen screenFromId(int id, @Nullable ClientTardis tardis, @Nullable BlockPos console) {
         return switch (id) {
-            default -> null;
-            case 0 -> new MonitorScreen(tardis, console);
-            // case 1 -> new EngineScreen(tardis);
+	        case 0 -> new MonitorScreen(tardis, console);
+            case 1 -> new BlueprintFabricatorScreen();
             case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
+	        default -> null;
         };
     }
 

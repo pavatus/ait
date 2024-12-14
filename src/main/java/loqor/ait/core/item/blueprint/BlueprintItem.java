@@ -27,7 +27,7 @@ public class BlueprintItem extends Item {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putString("id", BlueprintRegistry.getInstance().getRandom().id().toString());
+        nbt.putString("Blueprint", BlueprintRegistry.getInstance().getRandom().id().toString());
         return stack;
     }
 
@@ -35,27 +35,34 @@ public class BlueprintItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
+        BlueprintSchema blueprint = getSchema(stack);
+        if (blueprint == null) return;
+
+        tooltip.add(Text.translatable("ait.blueprint.tooltip").formatted(Formatting.BLUE)
+                .append(blueprint.text().copy().formatted(Formatting.GRAY)));
+    }
+
+    public static BlueprintSchema getSchema(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
-        NbtElement element = nbt.get("id");
+        NbtElement element = nbt.get("Blueprint");
 
         if (element == null)
-            return;
+            return null;
 
         Identifier id = Identifier.tryParse(element.asString());
 
         if (id == null) {
             AITMod.LOGGER.warn("Couldn't parse blueprint id: '{}'", element.asString());
-            return;
+            return null;
         }
 
-        BlueprintSchema blueprint = BlueprintRegistry.getInstance().get(new Identifier(element.asString()));
+        BlueprintSchema schema = BlueprintRegistry.getInstance().get(id);
 
-        if (blueprint == null) {
+        if (schema == null) {
             AITMod.LOGGER.warn("Couldn't find blueprint with id: '{}'!", id);
-            return;
+            return null;
         }
 
-        tooltip.add(Text.translatable("ait.blueprint.tooltip").formatted(Formatting.BLUE)
-                .append(blueprint.text().copy().formatted(Formatting.GRAY)));
+        return schema;
     }
 }

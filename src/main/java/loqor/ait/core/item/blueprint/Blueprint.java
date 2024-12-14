@@ -1,6 +1,7 @@
 package loqor.ait.core.item.blueprint;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -29,27 +30,40 @@ public class Blueprint {
      * @return true if the stack was a valid requirement and was removed, false otherwise
      */
     public boolean tryAdd(ItemStack stack) {
-        boolean success = false;
-
         for (ItemStack requirement : requirements) {
-            if (ItemStack.areEqual(requirement, stack)) {
-                success = true; // to avoid concurrent modification
-                break;
+            if (ItemStack.areItemsEqual(requirement, stack)) {
+                // now we need to check if the stack has the same amount of items
+                if (requirement.getCount() == stack.getCount()) {
+                    requirements.remove(requirement);
+                } else if (requirement.getCount() < stack.getCount()) {
+                    stack.decrement(requirement.getCount());
+                    requirements.remove(requirement);
+                } else {
+                    requirement.decrement(stack.getCount());
+                    stack.decrement(stack.getCount());
+                }
+
+                return true;
             }
         }
 
-        if (success) {
-            requirements.remove(stack);
-        }
-
-        return success;
+        return false;
     }
 
     public boolean isComplete() {
         return requirements.isEmpty();
     }
     public ItemStack getOutput() {
-        return source.output();
+        return source.output().copy();
+    }
+    public Optional<ItemStack> tryCraft() {
+        if (!isComplete()) return Optional.empty();
+
+        return Optional.of(getOutput());
+    }
+
+    public List<ItemStack> getRequirements() {
+        return requirements;
     }
 
     public NbtCompound toNbt() {
@@ -71,5 +85,13 @@ public class Blueprint {
         }
 
         return nbt;
+    }
+
+    @Override
+    public String toString() {
+        return "Blueprint{" +
+                "source=" + source +
+                ", requirements=" + requirements +
+                '}';
     }
 }

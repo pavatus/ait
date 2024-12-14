@@ -24,18 +24,12 @@ import loqor.ait.api.Identifiable;
 
 public record BlueprintSchema(Identifier id, Text text, InputList inputs, ItemStack output) implements Identifiable {
     public static Codec<BlueprintSchema> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Identifier.CODEC.fieldOf("id").forGetter(BlueprintSchema::id),
-            Codec.STRING.fieldOf("text").forGetter(BlueprintSchema::getTextString),
-            InputList.CODEC.fieldOf("inputs").forGetter(BlueprintSchema::inputs),
-            ItemStack.CODEC.fieldOf("output").forGetter(BlueprintSchema::output)
+            ItemStack.CODEC.fieldOf("output").forGetter(BlueprintSchema::output),
+            InputList.CODEC.fieldOf("inputs").forGetter(BlueprintSchema::inputs)
     ).apply(instance, BlueprintSchema::new));
 
     public BlueprintSchema(ItemStack output, InputList inputs) {
         this(Registries.ITEM.getId(output.getItem()), Text.translatable(output.getTranslationKey()), inputs, output);
-    }
-
-    private BlueprintSchema(Identifier identifier, String s, InputList inputs, ItemStack itemStack) {
-        this(identifier, Text.literal(s), inputs, itemStack);
     }
 
     private String getTextString() {
@@ -44,6 +38,16 @@ public record BlueprintSchema(Identifier id, Text text, InputList inputs, ItemSt
 
     public Blueprint toBlueprint() {
         return new Blueprint(this);
+    }
+
+    @Override
+    public String toString() {
+        return "BlueprintSchema{" +
+                "id=" + id +
+                ", text=" + text +
+                ", inputs=" + inputs +
+                ", output=" + output +
+                '}';
     }
 
     public static BlueprintSchema fromInputStream(InputStream stream) {
@@ -103,6 +107,15 @@ public record BlueprintSchema(Identifier id, Text text, InputList inputs, ItemSt
          */
         public ItemStack toStack() {
             return new ItemStack(item, minCount + (int) (Math.random() * (maxCount - minCount)));
+        }
+
+        @Override
+        public String toString() {
+            return "Input{" +
+                    "item=" + item +
+                    ", maxCount=" + maxCount +
+                    ", minCount=" + minCount +
+                    '}';
         }
     }
     public static class InputList extends ArrayList<Input> {

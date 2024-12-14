@@ -48,7 +48,7 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
                 vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(FABRICATOR_TEXTURE)), light, overlay, 1.0F,
                 1.0F, 1.0F, 1.0F);
 
-        if (entity.getWorld().getBlockState(entity.getPos().down()).isOf(Blocks.SMITHING_TABLE)) {
+        if (entity.isValid()) {
             ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(fabricatorModel::render),
                     EMISSIVE_FABRICATOR_TEXTURE, entity, fabricatorModel.getPart(), matrices, vertexConsumers, light,
                     overlay, 1, 1, 1, 1);
@@ -57,21 +57,22 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
         matrices.pop();
         matrices.push();
 
-        ItemStack stack = new ItemStack(AITItems.BLUEPRINT);
+        ItemStack stack = entity.getShowcaseStack();
 
-        double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
+        if (!stack.isEmpty()) {
+            double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
 
-        if (stack.getItem() == AITItems.DEMATERIALIZATION_CIRCUIT) {
-            matrices.scale(0.75f, 0.75f, 0.75f);
-            matrices.translate(0.65f, 0.35f + (offset / 2), 0.65f);
-        } else {
-            matrices.scale(1, 1, 1);
-            matrices.translate(0.5f, 0.275f + offset, 0.5f);
+            if (stack.getItem() == AITItems.DEMATERIALIZATION_CIRCUIT) {
+                matrices.scale(0.75f, 0.75f, 0.75f);
+                matrices.translate(0.65f, 0.35f + (offset / 2), 0.65f);
+            } else {
+                matrices.scale(1, 1, 1);
+                matrices.translate(0.5f, 0.275f + offset, 0.5f);
+            }
+
+            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
+                    overlay, matrices, vertexConsumers, entity.getWorld(), 0);
         }
-
-        MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
-                overlay, matrices, vertexConsumers, entity.getWorld(), 0);
-
         matrices.pop();
         profiler.pop();
     }
