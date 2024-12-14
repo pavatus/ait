@@ -20,7 +20,6 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.client.boti.BOTI;
-import loqor.ait.client.models.boti.BotiPortalModel;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
@@ -170,8 +169,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
 
-        if (tardis.door().isOpen())
-            this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
+        //if (tardis.door().isOpen())
+        //    this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
 
         if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices,
