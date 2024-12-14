@@ -145,8 +145,10 @@ public class ChristmasModule extends Module {
     }
 
     public enum Feature {
-        FESTIVE_KEY(LocalDate.of(LocalDate.now().getYear(), Month.DECEMBER, 1)); // todo 26th
-
+        FESTIVE_KEY(LocalDate.of(2024, Month.DECEMBER, 1)), // todo 26th
+        FESTIVE_HAZANDRA(LocalDate.of(2024, Month.DECEMBER, 1)), // todo 28th
+        FESTIVE_HYPERCUBE(LocalDate.of(2024, Month.DECEMBER, 1)), // todo january 2nd
+        HOT_CHOCOLATE(LocalDate.of(2024, Month.DECEMBER, 1)); // todo january 1st
         public final LocalDate unlock;
         Feature(LocalDate unlocksAt) {
             this.unlock = unlocksAt;

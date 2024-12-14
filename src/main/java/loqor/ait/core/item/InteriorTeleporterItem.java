@@ -58,14 +58,14 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         };
 
         if (!success) {
-            createTeleportEffect((ServerPlayerEntity) user, PARTICLE_FAIL);
+            createTeleportEffect((ServerPlayerEntity) user, getFailParticle());
             world.playSound(null, user.getBlockPos(), AITSounds.UNSTABLE_FLIGHT_LOOP, SoundCategory.PLAYERS, 1f, 1f);
             user.getItemCooldownManager().set(this, 4 * 20);
 
             return TypedActionResult.fail(stack);
         }
 
-        createTeleportEffect((ServerPlayerEntity) user, PARTICLE_SUCCESS);
+        createTeleportEffect((ServerPlayerEntity) user, getSuccessParticle());
         world.playSound(null, user.getBlockPos(), AITSounds.BWEEP, SoundCategory.PLAYERS, 1f, 1f);
 
         TardisUtil.teleportInside(tardis, user);
@@ -79,6 +79,13 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         world.playSound(null, door, AITSounds.LAND_THUD, SoundCategory.PLAYERS, 1f, 1f);
 
         return TypedActionResult.success(stack, true);
+    }
+
+    protected ParticleEffect getSuccessParticle() {
+        return PARTICLE_SUCCESS;
+    }
+    protected ParticleEffect getFailParticle() {
+        return PARTICLE_FAIL;
     }
 
     /**
