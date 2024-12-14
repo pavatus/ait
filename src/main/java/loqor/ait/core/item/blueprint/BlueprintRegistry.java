@@ -2,10 +2,9 @@ package loqor.ait.core.item.blueprint;
 
 import dev.pavatus.register.datapack.SimpleDatapackRegistry;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 import loqor.ait.core.AITItems;
-import net.minecraft.item.Items;
 
 
 public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {

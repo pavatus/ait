@@ -1,33 +1,30 @@
 package loqor.ait.core.blockentities;
 
 
-import loqor.ait.AITMod;
-import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.core.AITItems;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.item.blueprint.Blueprint;
-import loqor.ait.core.item.blueprint.BlueprintItem;
-import loqor.ait.core.item.blueprint.BlueprintSchema;
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.item.blueprint.Blueprint;
+import loqor.ait.core.item.blueprint.BlueprintItem;
+import loqor.ait.core.item.blueprint.BlueprintSchema;
 
 public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
     private Blueprint blueprint;
@@ -137,8 +134,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
             nbt.put("Blueprint", blueprint.toNbt());
         }
     }
-    @Nullable
-    @Override
+    @Nullable @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
