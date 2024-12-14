@@ -52,6 +52,7 @@ import loqor.ait.core.commands.*;
 import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.item.blueprint.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.likes.ItemOpinionRegistry;
@@ -149,6 +150,7 @@ public class AITMod implements ModInitializer {
             registries.register(TravelSoundRegistry.getInstance());
             registries.register(FlightSoundRegistry.getInstance());
             registries.register(VortexReferenceRegistry.getInstance());
+            registries.register(BlueprintRegistry.getInstance());
             registries.register(ExteriorVariantRegistry.getInstance());
             registries.register(CategoryRegistry.getInstance());
             registries.register(TardisComponentRegistry.getInstance());
@@ -174,9 +176,6 @@ public class AITMod implements ModInitializer {
         FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITPaintings.class, MOD_ID, false);
-
-        // important to init after items registration
-        BlueprintRegistry.init();
 
         WorldUtil.init();
         TardisUtil.init();

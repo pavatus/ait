@@ -15,7 +15,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.impl.BlueprintRegistry;
 
 public class BlueprintItem extends Item {
 
@@ -28,7 +27,7 @@ public class BlueprintItem extends Item {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putString("id", BlueprintRegistry.getRandomEntry().id().toString());
+        nbt.putString("id", BlueprintRegistry.getInstance().getRandom().id().toString());
         return stack;
     }
 
@@ -49,7 +48,7 @@ public class BlueprintItem extends Item {
             return;
         }
 
-        BlueprintType blueprint = BlueprintRegistry.REGISTRY.get(new Identifier(element.asString()));
+        BlueprintSchema blueprint = BlueprintRegistry.getInstance().get(new Identifier(element.asString()));
 
         if (blueprint == null) {
             AITMod.LOGGER.warn("Couldn't find blueprint with id: '{}'!", id);

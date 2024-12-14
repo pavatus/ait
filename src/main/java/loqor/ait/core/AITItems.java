@@ -142,7 +142,7 @@ public class AITItems implements ItemRegistryContainer {
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */.rarity(Rarity.EPIC));
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).rarity(Rarity.EPIC));
 
     // Waypoint-related
     public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(
