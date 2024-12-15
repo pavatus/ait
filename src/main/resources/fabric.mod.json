@@ -40,7 +40,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"loqor.ait.AITMod"
+			"loqor.ait.AITMod",
+			"dev.pavatus.multidim.MultiDim"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
