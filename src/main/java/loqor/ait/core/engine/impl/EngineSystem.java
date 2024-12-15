@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.tardis.ServerTardis;
@@ -165,6 +166,8 @@ public class EngineSystem extends DurableSubSystem {
                                 system.tardis().getExterior().playSound(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 tardis1.travel().forceDemat();
                             }
+
+                            TardisEvents.ENGINES_PHASE.invoker().onPhase(system);
                         });
                     },
                     (phaser) -> {
