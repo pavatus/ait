@@ -38,7 +38,7 @@ public class TardisCriterions {
             }
         });
 
-        TardisEvents.DEMAT.register(tardis -> {
+        TardisEvents.ENTER_FLIGHT.register(tardis -> {
             for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 TardisCriterions.TAKEOFF.trigger(player);
 
@@ -46,8 +46,6 @@ public class TardisCriterions {
                     TardisCriterions.PILOT_HIGH.trigger(player);
                 }
             }
-
-            return TardisEvents.Interaction.PASS;
         });
 
         TardisEvents.ENTER_TARDIS.register((tardis, entity) -> {
