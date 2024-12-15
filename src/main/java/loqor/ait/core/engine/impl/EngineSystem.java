@@ -13,6 +13,7 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -164,7 +165,7 @@ public class EngineSystem extends DurableSubSystem {
 
                                 system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 system.tardis().getExterior().playSound(AITSounds.UNSTABLE_FLIGHT_LOOP);
-                                tardis1.travel().forceDemat();
+                                tardis1.travel().forceDemat(TravelSoundRegistry.PHASING_DEMAT);
                             }
 
                             TardisEvents.ENGINES_PHASE.invoker().onPhase(system);

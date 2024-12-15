@@ -22,6 +22,7 @@ public class AITSounds {
     public static final SoundEvent HOP_MAT = register("tardis/hop_land");
     public static final SoundEvent FAIL_DEMAT = register("tardis/fail_takeoff");
     public static final SoundEvent FAIL_MAT = register("tardis/fail_land");
+    public static final SoundEvent PHASING_DEMAT = register("tardis/engine_phasing_demat");
     public static final SoundEvent EMERG_MAT = register("tardis/emergency_land");
     public static final SoundEvent FLIGHT_LOOP = register("tardis/flight_loop");
     public static final SoundEvent UNSTABLE_FLIGHT_LOOP = register("tardis/unstable_flight_loop");

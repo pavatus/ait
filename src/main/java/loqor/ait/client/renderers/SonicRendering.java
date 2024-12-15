@@ -173,7 +173,7 @@ public class SonicRendering {
         String text = "";
 
         if (be.system() instanceof DurableSubSystem) {
-            text = ((DurableSubSystem) be.system()).durability() + " / 100";
+            text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 100";
         }
         if (!be.system().isEnabled()) {
             text = "LINK TO ENGINE VIA FLUID LINKS";
