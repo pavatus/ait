@@ -107,6 +107,8 @@ public class PlanetModule extends Module {
                 provider.addTranslation("achievements.ait.description.enter_mars", "Landed on Mars for the first time");
                 provider.addTranslation("achievements.ait.title.enter_moon", "One small step for Time Lords");
                 provider.addTranslation("achievements.ait.description.enter_moon", "Landed on the Moon for the first time");
+                provider.addTranslation("achievements.ait.find_planet_structure.title", "Veneration.");
+                provider.addTranslation("achievements.ait.find_planet_structure.description", "Dread.");
             }
 
             @Override
@@ -321,9 +323,9 @@ public class PlanetModule extends Module {
                                 Text.translatable("achievements.ait.description.planet_root"),
                                 new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
                                 AdvancementFrame.TASK,
-                                true,
-                                true,
-                                true
+                                false,
+                                false,
+                                false
                         )
                         .criterion("enter_tardis", TardisCriterions.ENTER_TARDIS.conditions())
                         .build(consumer, AITMod.MOD_ID + "/planet_root");
@@ -332,7 +334,7 @@ public class PlanetModule extends Module {
                         .display(
                                 PlanetBlocks.MARTIAN_STONE,
                                 Text.translatable("achievements.ait.title.enter_mars"),
-                                Text.translatable("achievements.ait.description.enter_marse"),
+                                Text.translatable("achievements.ait.description.enter_mars"),
                                 null,
                                 AdvancementFrame.TASK,
                                 true,
@@ -371,6 +373,9 @@ public class PlanetModule extends Module {
                                 )
                         )
                         .build(consumer, AITMod.MOD_ID + "/enter_moon");
+
+                // todo - idk how to do this
+                // Advancement findStructure = Advancement.Builder.create().parent(root).display(Blocks.REDSTONE_BLOCK, Text.translatable("advancements.ait.find_planet_structure.title"), Text.translatable("advancements.ait.find_planet_structure.description"), null, AdvancementFrame.CHALLENGE, true, true, true).criterion("planet_structure", TickCriterion.Conditions.createLocation(LocationPredicate.feature(RegistryKey.of(RegistryKeys.STRUCTURE, AITMod.id("cult_structures_overworld"))))).build(consumer, AITMod.MOD_ID + "/find_planet_structure");
             }
         });
     }
