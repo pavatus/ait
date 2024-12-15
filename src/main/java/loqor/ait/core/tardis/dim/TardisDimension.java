@@ -32,6 +32,7 @@ import loqor.ait.core.util.WorldUtil;
 public class TardisDimension {
     private static WorldBuilder builder(ServerTardis tardis) {
         return new WorldBuilder(new Identifier(AITMod.MOD_ID, tardis.getUuid().toString()))
+                .loadOnStartup(true)
                 .withType(new Identifier(AITMod.MOD_ID, "tardis_dimension_type"))
                 .withSeed(WorldUtil.getOverworld().getSeed())
                 .withGenerator(new VoidChunkGenerator(WorldUtil.getOverworld().getRegistryManager().get(RegistryKeys.BIOME), RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"))));
