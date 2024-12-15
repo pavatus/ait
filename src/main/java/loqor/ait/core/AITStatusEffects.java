@@ -1,5 +1,6 @@
 package loqor.ait.core;
 
+import dev.pavatus.planet.core.effect.LunarRegolithEffect;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -10,6 +11,7 @@ import loqor.ait.core.effects.ZeitonHighEffect;
 
 public class AITStatusEffects {
     public static StatusEffect ZEITON_HIGH = register(new ZeitonHighEffect(), "zeiton_high");
+    public static StatusEffect LUNAR_REGOLITH = register(new LunarRegolithEffect(), "lunar_regolith");
 
     public static void init() {
 
