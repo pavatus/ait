@@ -145,5 +145,10 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                         Text.translatable("achievement.ait.description.repair_subsystem"), null, AdvancementFrame.TASK, true, true, true)
                 .criterion("repair_subsystem", TardisCriterions.REPAIR_SUBSYSTEM.conditions())
                 .build(consumer, AITMod.MOD_ID + "/repair_subsystem");
+        Advancement enginesPhase = Advancement.Builder.create().parent(firstDemat)
+                .display(AITItems.DEMATERIALIZATION_CIRCUIT, Text.translatable("achievement.ait.title.engines_phase"),
+                        Text.translatable("achievement.ait.description.engines_phase"), null, AdvancementFrame.CHALLENGE, true, true, true)
+                .criterion("engines_phase", TardisCriterions.ENGINES_PHASE.conditions())
+                .build(consumer, AITMod.MOD_ID + "/engines_phase");
     }
 }

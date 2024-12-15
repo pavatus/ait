@@ -29,21 +29,6 @@ public class EngineBlockEntity extends SubSystemBlockEntity implements ITardisSo
     }
 
     @Override
-    public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
-        ActionResult result = super.useOn(state, world, sneaking, player, hand);
-        if (result != ActionResult.PASS)
-            return result;
-
-        if (world.isClient() || this.tardis().isEmpty())
-            return ActionResult.FAIL;
-
-        EngineSystem engine = this.tardis().get().subsystems().engine();
-
-        engine.setEnabled(!engine.isEnabled());
-        return ActionResult.SUCCESS;
-    }
-
-    @Override
     public void onPlaced(World world, BlockPos pos, @Nullable LivingEntity placer) {
         super.onPlaced(world, pos, placer);
         if (world.isClient())

@@ -169,10 +169,17 @@ public class SonicRendering {
     }
     private void renderDurability(DrawContext context, BlockPos pos) {
         if (!(client.world.getBlockEntity(pos) instanceof SubSystemBlockEntity be)) return;
-        if (!(be.system() instanceof DurableSubSystem durable)) return;
 
-        float durability = durable.durability();
-        context.drawCenteredTextWithShadow(client.textRenderer, "" + durability, getCentreX(), (int) (getMaxY() * 0.42), Colors.WHITE);
+        String text = "";
+
+        if (be.system() instanceof DurableSubSystem) {
+            text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 100";
+        }
+        if (!be.system().isEnabled()) {
+            text = "LINK TO ENGINE VIA FLUID LINKS";
+        }
+
+        context.drawCenteredTextWithShadow(client.textRenderer, text, getCentreX(), (int) (getMaxY() * 0.42), Colors.WHITE);
     }
 
 

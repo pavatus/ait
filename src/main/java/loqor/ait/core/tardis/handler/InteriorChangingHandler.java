@@ -206,11 +206,16 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
         // set chest contents
         ChestBlockEntity chest = (ChestBlockEntity) safe.getWorld().getBlockEntity(safe.getPos());
-        for (int i = 0; i < contents.size() - 1; i++) {
-            chest.setStack(i, contents.get(i));
+        List<ItemStack> overflow = new ArrayList<>(contents);
+        for (int i = 0; i < 27 && !overflow.isEmpty(); i++) {
+            chest.setStack(i, overflow.remove(0));
         }
 
         AITMod.LOGGER.debug("Created recovery chest at {} for {}", safe, this.tardis());
+
+        if (!overflow.isEmpty()) {
+            createChestAtInteriorDoor(overflow);
+        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package dev.pavatus.planet;
 
-import static net.minecraft.data.server.recipe.RecipeProvider.conditionsFromItem;
-import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
+import static net.minecraft.data.server.recipe.RecipeProvider.*;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -28,10 +27,11 @@ import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -100,6 +100,7 @@ public class PlanetModule extends Module {
             @Override
             public void lang(AITLanguageProvider provider) {
                 provider.addTranslation(getItemGroup(), "AIT: Planetary Exploration");
+                provider.addTranslation("itemGroup.ait.planet", "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
                 provider.addTranslation("achievements.ait.title.planet_root", "Planetary Exploration");
                 provider.addTranslation("achievements.ait.description.planet_root", "Explore the planets of the universe");
@@ -107,6 +108,8 @@ public class PlanetModule extends Module {
                 provider.addTranslation("achievements.ait.description.enter_mars", "Landed on Mars for the first time");
                 provider.addTranslation("achievements.ait.title.enter_moon", "One small step for Time Lords");
                 provider.addTranslation("achievements.ait.description.enter_moon", "Landed on the Moon for the first time");
+                provider.addTranslation("achievements.ait.find_planet_structure.title", "Veneration.");
+                provider.addTranslation("achievements.ait.find_planet_structure.description", "Dread.");
             }
 
             @Override
@@ -181,7 +184,7 @@ public class PlanetModule extends Module {
                 provider.addStonecutting(PlanetBlocks.POLISHED_ANORTHOSITE, PlanetBlocks.POLISHED_ANORTHOSITE_SLAB);
                 provider.addStonecutting(PlanetBlocks.POLISHED_ANORTHOSITE, PlanetBlocks.POLISHED_ANORTHOSITE_STAIRS);
 
-                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetBlocks.FLAG, 1)
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, PlanetBlocks.FLAG, 1)
                         .pattern("GBR")
                         .pattern("IWW")
                         .pattern("I  ")
@@ -195,6 +198,113 @@ public class PlanetModule extends Module {
                         .criterion(hasItem(Items.RED_WOOL), conditionsFromItem(Items.RED_WOOL))
                         .criterion(hasItem(Items.BLUE_WOOL), conditionsFromItem(Items.BLUE_WOOL))
                         .criterion(hasItem(Items.WHITE_WOOL), conditionsFromItem(Items.WHITE_WOOL)));
+
+                // Martian Tools
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.MARTIAN_STONE_PICKAXE, 1)
+                        .pattern("MMM")
+                        .pattern(" S ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.MARTIAN_COBBLESTONE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_COBBLESTONE), conditionsFromItem(PlanetBlocks.MARTIAN_COBBLESTONE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.MARTIAN_STONE_SWORD, 1)
+                        .pattern(" M ")
+                        .pattern(" M ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.MARTIAN_COBBLESTONE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_COBBLESTONE), conditionsFromItem(PlanetBlocks.MARTIAN_COBBLESTONE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.MARTIAN_STONE_SHOVEL, 1)
+                        .pattern(" M ")
+                        .pattern(" S ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.MARTIAN_COBBLESTONE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_COBBLESTONE), conditionsFromItem(PlanetBlocks.MARTIAN_COBBLESTONE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.MARTIAN_STONE_HOE, 1)
+                        .pattern(" MM")
+                        .pattern(" S ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.MARTIAN_COBBLESTONE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_COBBLESTONE), conditionsFromItem(PlanetBlocks.MARTIAN_COBBLESTONE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.MARTIAN_STONE_AXE, 1)
+                        .pattern(" MM")
+                        .pattern(" SM")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.MARTIAN_COBBLESTONE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_COBBLESTONE), conditionsFromItem(PlanetBlocks.MARTIAN_COBBLESTONE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                // Anorthosite Tools
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.ANORTHOSITE_PICKAXE, 1)
+                        .pattern("MMM")
+                        .pattern(" S ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.ANORTHOSITE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.ANORTHOSITE), conditionsFromItem(PlanetBlocks.ANORTHOSITE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.ANORTHOSITE_SWORD, 1)
+                        .pattern(" M ")
+                        .pattern(" M ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.ANORTHOSITE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.ANORTHOSITE), conditionsFromItem(PlanetBlocks.ANORTHOSITE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.ANORTHOSITE_SHOVEL, 1)
+                        .pattern(" M ")
+                        .pattern(" S ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.ANORTHOSITE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.ANORTHOSITE), conditionsFromItem(PlanetBlocks.ANORTHOSITE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.ANORTHOSITE_HOE, 1)
+                        .pattern(" MM")
+                        .pattern(" S ")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.ANORTHOSITE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.ANORTHOSITE), conditionsFromItem(PlanetBlocks.ANORTHOSITE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.ANORTHOSITE_AXE, 1)
+                        .pattern(" MM")
+                        .pattern(" SM")
+                        .pattern(" S ")
+                        .input('M', PlanetBlocks.ANORTHOSITE)
+                        .input('S', Items.STICK)
+                        .criterion(hasItem(PlanetBlocks.ANORTHOSITE), conditionsFromItem(PlanetBlocks.ANORTHOSITE))
+                        .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK)));
+
+                // Martian Stone
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_WALL, 1)
+                        .pattern("   ")
+                        .pattern("SSS")
+                        .pattern("SSS")
+                        .input('S', PlanetBlocks.MARTIAN_STONE)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
+
+                createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
+                createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
+
             }
 
 
@@ -321,9 +431,9 @@ public class PlanetModule extends Module {
                                 Text.translatable("achievements.ait.description.planet_root"),
                                 new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
                                 AdvancementFrame.TASK,
-                                true,
-                                true,
-                                true
+                                false,
+                                false,
+                                false
                         )
                         .criterion("enter_tardis", TardisCriterions.ENTER_TARDIS.conditions())
                         .build(consumer, AITMod.MOD_ID + "/planet_root");
@@ -332,7 +442,7 @@ public class PlanetModule extends Module {
                         .display(
                                 PlanetBlocks.MARTIAN_STONE,
                                 Text.translatable("achievements.ait.title.enter_mars"),
-                                Text.translatable("achievements.ait.description.enter_marse"),
+                                Text.translatable("achievements.ait.description.enter_mars"),
                                 null,
                                 AdvancementFrame.TASK,
                                 true,
@@ -371,6 +481,9 @@ public class PlanetModule extends Module {
                                 )
                         )
                         .build(consumer, AITMod.MOD_ID + "/enter_moon");
+
+                // todo - idk how to do this
+                // Advancement findStructure = Advancement.Builder.create().parent(root).display(Blocks.REDSTONE_BLOCK, Text.translatable("advancements.ait.find_planet_structure.title"), Text.translatable("advancements.ait.find_planet_structure.description"), null, AdvancementFrame.CHALLENGE, true, true, true).criterion("planet_structure", TickCriterion.Conditions.createLocation(LocationPredicate.feature(RegistryKey.of(RegistryKeys.STRUCTURE, AITMod.id("cult_structures_overworld"))))).build(consumer, AITMod.MOD_ID + "/find_planet_structure");
             }
         });
     }

@@ -32,7 +32,8 @@ public class WorldBuilder {
 
     private ChunkGenerator generator;
 
-    private boolean priority = false;
+    private boolean loadOnStartup = true;
+    private DimensionOptions options;
 
     public WorldBuilder(Identifier id) {
         this.id = id;
@@ -70,6 +71,17 @@ public class WorldBuilder {
 
     public WorldBuilder withGenerator(ChunkGenerator generator) {
         this.generator = generator;
+        return this;
+    }
+    public WorldBuilder loadOnStartup(boolean val) {
+        this.loadOnStartup = val;
+        return this;
+    }
+    public boolean loadOnStartup() {
+        return this.loadOnStartup;
+    }
+    public WorldBuilder withOptions(DimensionOptions options) {
+        this.options = options;
         return this;
     }
 
@@ -114,6 +126,8 @@ public class WorldBuilder {
     }
 
     public DimensionOptions buildOptions(MinecraftServer server) {
+        if (this.options != null) return this.options;
+
         RegistryEntry<DimensionType> typeEntry = this.resolveType(server);
 
         if (typeEntry == null)
