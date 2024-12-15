@@ -57,7 +57,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
 
     @Override
     public void tick(MinecraftServer server) {
-        if (server.getTicks() % 20 != 0)
+        if (server.getTicks() % 40 != 0)
             return;
 
         for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior((ServerTardis) tardis)) {
@@ -66,7 +66,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
             if (!loyalty.isOf(Loyalty.Type.NEUTRAL))
                 continue;
 
-            if (AITMod.RANDOM.nextInt(0, 20) == 14)
+            if (AITMod.RANDOM.nextInt(0, 20) != 14)
                 continue;
 
             this.addLevel(player, 1);
