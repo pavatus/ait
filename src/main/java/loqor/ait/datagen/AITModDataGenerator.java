@@ -1,11 +1,12 @@
 package loqor.ait.datagen;
 
-import static net.minecraft.data.server.recipe.RecipeProvider.conditionsFromItem;
-import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
+import static net.minecraft.data.server.recipe.RecipeProvider.*;
+import static net.minecraft.data.server.recipe.RecipeProvider.createSlabRecipe;
 
 import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
 import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -13,9 +14,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
@@ -304,6 +303,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
                     .input(AITBlocks.ZEITON_COBBLE).criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
                     .input(AITItems.CHARGED_ZEITON_CRYSTAL).criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL)));
+
+            createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
+            createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
 
             generateSmithingRecipes(provider);
             return provider;

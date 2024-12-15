@@ -62,6 +62,7 @@ public class AITRecipeProvider extends FabricRecipeProvider {
         smithingTransformRecipes.put(builder, id);
     }
 
+
     public void addShapedRecipe(ShapedRecipeJsonBuilder builder) {
         if (!shapedRecipes.contains(builder)) {
             shapedRecipes.add(builder);
