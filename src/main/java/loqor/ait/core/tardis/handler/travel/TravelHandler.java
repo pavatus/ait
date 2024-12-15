@@ -19,6 +19,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.lock.LockedDimension;
 import loqor.ait.core.lock.LockedDimensionRegistry;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
@@ -218,7 +219,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         Scheduler.runTaskLater(() -> this.travelCooldown = false, TimeUnit.SECONDS, 5);
     }
 
-    public void dematerialize() {
+    public void dematerialize(TravelSound sound) {
         if (this.getState() != State.LANDED)
             return;
 
@@ -239,7 +240,10 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             return;
         }
 
-        this.forceDemat();
+        this.forceDemat(sound);
+    }
+    public void dematerialize() {
+        this.dematerialize(null);
     }
 
     private void failDemat() {
@@ -264,8 +268,13 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.createCooldown();
     }
 
-    public void forceDemat() {
+    public void forceDemat(TravelSound replacementSound) {
         this.state.set(State.DEMAT);
+
+        TravelSound before = tardis.stats().getTravelEffects().get(State.DEMAT);
+        if (replacementSound != null && replacementSound.target() == State.DEMAT) {
+            tardis.stats().setTravelEffects(replacementSound);
+        }
 
         SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 
@@ -276,6 +285,11 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.runAnimations();
 
         this.startFlight();
+
+        tardis.stats().setTravelEffects(before);
+    }
+    public void forceDemat() {
+        this.forceDemat(null);
     }
 
     public void finishDemat() {

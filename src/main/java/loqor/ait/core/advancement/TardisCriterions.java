@@ -25,7 +25,7 @@ public class TardisCriterions {
     public static SimpleCriterion REACH_OWNER = SimpleCriterion.create("reach_owner").register();
     public static SimpleCriterion ENABLE_SUBSYSTEM = SimpleCriterion.create("enable_subsystem").register();
     public static SimpleCriterion REPAIR_SUBSYSTEM = SimpleCriterion.create("repair_subsystem").register();
-
+    public static SimpleCriterion ENGINES_PHASE = SimpleCriterion.create("engines_phase").register();
 
     public static void init() {
         AITMod.LOGGER.info("Initializing Tardis Criterions");
@@ -38,7 +38,7 @@ public class TardisCriterions {
             }
         });
 
-        TardisEvents.DEMAT.register(tardis -> {
+        TardisEvents.ENTER_FLIGHT.register(tardis -> {
             for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                 TardisCriterions.TAKEOFF.trigger(player);
 
@@ -46,8 +46,6 @@ public class TardisCriterions {
                     TardisCriterions.PILOT_HIGH.trigger(player);
                 }
             }
-
-            return TardisEvents.Interaction.PASS;
         });
 
         TardisEvents.ENTER_TARDIS.register((tardis, entity) -> {
@@ -75,6 +73,14 @@ public class TardisCriterions {
 
             for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(system.tardis().asServer())) {
                 TardisCriterions.REPAIR_SUBSYSTEM.trigger(player);
+            }
+        });
+
+        TardisEvents.ENGINES_PHASE.register(system -> {
+            if (system.isClient()) return;
+
+            for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(system.tardis().asServer())) {
+                TardisCriterions.REACH_PILOT.trigger(player);
             }
         });
     }

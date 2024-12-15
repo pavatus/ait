@@ -29,8 +29,8 @@ public class PowerConverterRenderer<T extends PowerConverterBlock.BlockEntity> i
     public void render(PowerConverterBlock.BlockEntity entity, float tickDelta, MatrixStack matrices,
                        VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
-        matrices.scale(1.1f, 1.1f, 1.1f);
-        matrices.translate(0.425f, 1.5f, 0.425f);
+        matrices.scale(1.35f, 1.35f, 1.35f);
+        matrices.translate(0.38, 1.5f, 0.38);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)),

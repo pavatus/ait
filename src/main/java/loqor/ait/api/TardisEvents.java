@@ -14,6 +14,7 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.DirectedBlockPos;
@@ -128,6 +129,7 @@ public final class TardisEvents {
                     callback.onUse(tardis, power);
                 }
             });
+
 
     // Door
     public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class,
@@ -250,6 +252,12 @@ public final class TardisEvents {
             callbacks -> system -> {
                 for (OnSubSystemDisable callback : callbacks) {
                     callback.onDisable(system);
+                }
+            });
+    public static final Event<OnEnginesPhase> ENGINES_PHASE = EventFactory.createArrayBacked(OnEnginesPhase.class,
+            callbacks -> system -> {
+                for (OnEnginesPhase callback : callbacks) {
+                    callback.onPhase(system);
                 }
             });
 
@@ -487,6 +495,11 @@ public final class TardisEvents {
     public interface OnSubSystemDisable {
         void onDisable(SubSystem system);
     }
+    @FunctionalInterface
+    public interface OnEnginesPhase {
+        void onPhase(EngineSystem system);
+    }
+
 
     public enum Interaction {
         SUCCESS, FAIL, PASS

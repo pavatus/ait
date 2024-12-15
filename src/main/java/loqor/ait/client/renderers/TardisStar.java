@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -31,9 +32,13 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = camera.getPos();
-        if (tardis.engine() == null) return;
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x() == 0 ? camera.getPos().getX() : tardis.engine().getCorePos().x(),
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), tardis.engine().getCorePos().y() == 0 ? camera.getPos().getZ() : tardis.engine().getCorePos().y());
+        BlockPos pos = tardis.getDesktop().getConsolePos().stream().findFirst().orElse(null);
+        if (pos == null) return;
+        int x = pos.getX();
+        int y = pos.getY();
+
+        Vec3d targetPos = new Vec3d(x == 0 ? camera.getPos().getX() : x,
+                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), y == 0 ? camera.getPos().getZ() : y);
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
@@ -45,11 +50,11 @@ public class TardisStar {
                     tardis.getDesktop().doorPos().getPos().getX());
         } else {
             matrixStack.translate(
-                    tardis.engine().getCorePos().x != 0
+                    x != 0
                             ? diff.x - .5
                             : tardis.getDesktop().doorPos().getPos().getX() - .5,
                     diff.y,
-                    tardis.engine().getCorePos().y != 0
+                    y != 0
                             ? diff.z - .5
                             : tardis.getDesktop().doorPos().getPos().getX() - .5);
         }
@@ -80,8 +85,10 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = context.camera().getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), tardis.engine().getCorePos().y());
+        BlockPos pos = tardis.getDesktop().getConsolePos().stream().findFirst().orElse(null);
+        if (pos == null) return;
+        Vec3d targetPos = new Vec3d(pos.getX(),
+                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), pos.getY());
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
@@ -97,11 +104,11 @@ public class TardisStar {
                     tardis.getDesktop().doorPos().getPos().getX());
         } else {
             matrixStack.translate(
-                    tardis.engine().getCorePos().x != 0
+                    pos.getX() != 0
                             ? diff.x - .5
                             : tardis.getDesktop().doorPos().getPos().getX() - .5,
                     diff.y,
-                    tardis.engine().getCorePos().y != 0
+                    pos.getY() != 0
                             ? diff.z - .5
                             : tardis.getDesktop().doorPos().getPos().getX() - .5);
         }

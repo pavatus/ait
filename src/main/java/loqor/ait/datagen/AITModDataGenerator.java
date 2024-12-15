@@ -634,6 +634,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.description.enable_subsystem", "Enable a subsystem.");
         provider.addTranslation("achievement.ait.title.repair_subsystem", "Handyman!");
         provider.addTranslation("achievement.ait.description.repair_subsystem", "Repair a broken subsystem");
+        provider.addTranslation("achievement.ait.title.engines_phase", "Technical Problems");
+        provider.addTranslation("achievement.ait.description.engines_phase", "ENGINES PHASING! That doesnt sound good.");
+
 
         // Commands
         // Fuel

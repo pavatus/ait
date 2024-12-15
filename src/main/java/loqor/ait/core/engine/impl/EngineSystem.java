@@ -10,8 +10,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -46,12 +48,12 @@ public class EngineSystem extends DurableSubSystem {
 
     @Override
     protected float cost() {
-        return 0.25f;
+        return 0.05f;
     }
 
     @Override
     protected int changeFrequency() {
-        return 200; // drain 0.25 durability every 10 seconds
+        return 1200; // drain 0.05 durability every minute
     }
 
     @Override
@@ -163,8 +165,10 @@ public class EngineSystem extends DurableSubSystem {
 
                                 system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 system.tardis().getExterior().playSound(AITSounds.UNSTABLE_FLIGHT_LOOP);
-                                tardis1.travel().forceDemat();
+                                tardis1.travel().forceDemat(TravelSoundRegistry.PHASING_DEMAT);
                             }
+
+                            TardisEvents.ENGINES_PHASE.invoker().onPhase(system);
                         });
                     },
                     (phaser) -> {
