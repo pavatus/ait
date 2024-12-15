@@ -74,6 +74,7 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (!(world.getBlockEntity(pos) instanceof FabricatorBlockEntity be)) return;
         if (!be.isValid()) return;
+        if (!be.hasBlueprint()) return;
 
         Direction direction = state.get(FACING);
         double d = (double) pos.getX() + 0.55 - (double) (random.nextFloat() * 0.1f);

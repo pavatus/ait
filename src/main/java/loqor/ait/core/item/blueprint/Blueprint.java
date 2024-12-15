@@ -50,6 +50,16 @@ public class Blueprint {
         return false;
     }
 
+    public int getCountLeftFor(ItemStack stack) {
+        for (ItemStack requirement : requirements) {
+            if (ItemStack.areItemsEqual(requirement, stack)) {
+                return requirement.getCount();
+            }
+        }
+
+        return 0;
+    }
+
     public boolean isComplete() {
         return requirements.isEmpty();
     }

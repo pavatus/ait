@@ -70,9 +70,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
                 ItemStack stack = output.get();
                 player.getInventory().offerOrDrop(stack);
                 world.playSound(null, this.getPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
-                this.blueprint = null;
-                this.syncChanges();
-                return;
+                this.setBlueprint(null, true);
             }
         }
     }
@@ -84,7 +82,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public Optional<Blueprint> getBlueprint() {
-        return Optional.ofNullable(blueprint);
+        return Optional.ofNullable(this.blueprint);
     }
     public boolean hasBlueprint() {
         return this.getBlueprint().isPresent();
@@ -94,11 +92,18 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
      * attempts to set the blueprint of this fabricator
      * @return false if this fabricator already has a blueprint
      */
-    public boolean setBlueprint(Blueprint blueprint) {
-        if (this.hasBlueprint()) return false;
+    public boolean setBlueprint(Blueprint blueprint, boolean force) {
+        if (!force && this.hasBlueprint()) return false;
         this.blueprint = blueprint;
         this.syncChanges();
         return true;
+    }
+    /**
+     * attempts to set the blueprint of this fabricator
+     * @return false if this fabricator already has a blueprint
+     */
+    public boolean setBlueprint(Blueprint blueprint) {
+        return this.setBlueprint(blueprint, false);
     }
 
     /**
@@ -133,6 +138,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
         if (blueprint != null) {
             nbt.put("Blueprint", blueprint.toNbt());
         }
+        nbt.putBoolean("HasBlueprint", this.hasBlueprint());
     }
     @Nullable @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
@@ -142,6 +148,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
     protected void syncChanges() {
         if (this.getWorld().isClient()) return;
 
+        System.out.println("SYNCIUNG CHANGES");
         ServerWorld world = (ServerWorld) this.getWorld();
         world.getChunkManager().markForUpdate(this.getPos());
         this.markDirty();

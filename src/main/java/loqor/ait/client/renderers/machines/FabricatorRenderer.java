@@ -1,6 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -8,6 +9,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
@@ -18,6 +20,7 @@ import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.FabricatorBlockEntity;
 import loqor.ait.core.blocks.FabricatorBlock;
+import loqor.ait.core.item.blueprint.Blueprint;
 
 public class FabricatorRenderer<T extends FabricatorBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -59,6 +62,7 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
         ItemStack stack = entity.getShowcaseStack();
 
         if (!stack.isEmpty()) {
+            matrices.push();
             double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
 
             if (stack.getItem() == AITItems.DEMATERIALIZATION_CIRCUIT) {
@@ -71,8 +75,40 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
 
             MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
                     overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+            matrices.pop();
         }
+        renderText(entity, tickDelta, matrices, vertexConsumers, light, overlay);
+
         matrices.pop();
         profiler.pop();
+    }
+
+    private void renderText(FabricatorBlockEntity entity, float tickDelta, MatrixStack matrices,
+                            VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+        matrices.push();
+        matrices.translate(0.93, 0.1255, 0.315);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
+        matrices.scale(0.005f, 0.005f, 0.005f);
+
+        // display "PRESS TO CRAFT" if enough materials
+        Text text = Text.literal("COLLECT OUTPUT");
+
+        // if does not have blueprint, text is "INSERT BLUEPRINT"
+        if (!entity.hasBlueprint()) {
+            text = Text.literal("INSERT BLUEPRINT");
+        }
+
+        Blueprint print = entity.getBlueprint().orElse(null);
+        ItemStack stack = entity.getShowcaseStack();
+        // display "INSERT (COUNT) MATERIAL" if not enough materials
+        if (print != null && !print.isComplete()) {
+            text = Text.literal("INSERT " + print.getCountLeftFor(stack) + " " + Text.translatable(stack.getTranslationKey()).getString().toUpperCase());
+        }
+
+        renderer.drawWithOutline(text.asOrderedText(), 0, 40, 0x60eaf0, 0x108fb3,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        matrices.pop();
     }
 }
