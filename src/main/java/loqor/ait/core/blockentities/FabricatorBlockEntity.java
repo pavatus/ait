@@ -44,7 +44,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
             BlueprintSchema schema = BlueprintItem.getSchema(hand);
             if (schema == null) return;
 
-            this.setBlueprint(schema.toBlueprint());
+            this.setBlueprint(schema.create());
             hand.decrement(1);
             world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1, 1);
             return;

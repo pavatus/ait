@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITItems;
 
 public class BlueprintItem extends Item {
 
@@ -46,8 +47,11 @@ public class BlueprintItem extends Item {
         NbtCompound nbt = stack.getOrCreateNbt();
         NbtElement element = nbt.get("Blueprint");
 
-        if (element == null)
-            return null;
+        if (element == null) {
+            BlueprintSchema schema = BlueprintRegistry.getInstance().getRandom();
+            nbt.putString("Blueprint", schema.id().toString());
+            return schema;
+        }
 
         Identifier id = Identifier.tryParse(element.asString());
 
@@ -64,5 +68,13 @@ public class BlueprintItem extends Item {
         }
 
         return schema;
+    }
+
+    public static ItemStack createStack(BlueprintSchema schema) {
+        ItemStack stack = new ItemStack(AITItems.BLUEPRINT);
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        nbt.putString("Blueprint", schema.id().toString());
+        return stack;
     }
 }

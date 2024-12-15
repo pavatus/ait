@@ -32,11 +32,7 @@ public record BlueprintSchema(Identifier id, Text text, InputList inputs, ItemSt
         this(Registries.ITEM.getId(output.getItem()), Text.translatable(output.getTranslationKey()), inputs, output);
     }
 
-    private String getTextString() {
-        return text.getString();
-    }
-
-    public Blueprint toBlueprint() {
+    public Blueprint create() {
         return new Blueprint(this);
     }
 
