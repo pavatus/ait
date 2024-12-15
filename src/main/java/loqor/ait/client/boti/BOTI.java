@@ -25,6 +25,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.models.decoration.GallifreyFallsFrameModel;
 import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.models.doors.DoorModel;
@@ -108,10 +109,16 @@ public class BOTI {
     }
 
     public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
+
+        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
+            return;
+        }
+
         if (!isNvidiaVideocard()) {
             sendNvidiaWarning();
             return;
         }
+
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -195,10 +202,16 @@ public class BOTI {
     }
 
     public static void renderExteriorBoti(ExteriorBlockEntity exterior, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
+
+        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
+            return;
+        }
+
         if (!isNvidiaVideocard()) {
             sendNvidiaWarning();
             return;
         }
+
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -297,7 +310,7 @@ public class BOTI {
         if (!sendNvidiaWarning) {
             sendNvidiaWarning = true;
 
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("Nvidia videocard is required for BOTI effects").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("A Nvidia Videocard is required for BOTI effects, please disable BOTI in the Config.").formatted(Formatting.RED), false);
             MinecraftClient.getInstance().player.sendMessage(Text.literal("NAG LOQOR IN THE DISCORD TO FIX BOTI !!!").formatted(Formatting.RED), false);
         }
     }

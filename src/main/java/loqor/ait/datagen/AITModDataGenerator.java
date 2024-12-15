@@ -435,6 +435,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
         provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
         provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
+        provider.addTranslation("text.config.aitconfig.option.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
 
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");

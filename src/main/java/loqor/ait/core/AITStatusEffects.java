@@ -1,6 +1,7 @@
 package loqor.ait.core;
 
 import dev.pavatus.planet.core.effect.LunarRegolithEffect;
+
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
