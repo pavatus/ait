@@ -2,7 +2,6 @@ package loqor.ait.core.engine.block.generic;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -19,6 +18,7 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 import loqor.ait.core.engine.block.multi.StructureSystemBlockEntity;
 import loqor.ait.core.engine.item.SubSystemItem;
+import loqor.ait.core.util.StackUtil;
 
 /**
  * a mutable version of the structure system block entity
@@ -102,8 +102,8 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
     public void onBroken(World world, BlockPos pos) {
         super.onBroken(world, pos);
 
-        if (this.idSource == null && !world.isClient()) return;
-        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), this.idSource));
+        if (world.isClient() || this.idSource == null) return;
+        StackUtil.spawn(world, pos, this.idSource.copyAndEmpty());
     }
 
     @Override

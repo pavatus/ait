@@ -1,14 +1,14 @@
 package loqor.ait.client.renderers.machines;
 
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 
-import loqor.ait.AITMod;
+import loqor.ait.client.models.machines.GenericSubSystemModel;
 import loqor.ait.client.renderers.MultiBlockStructureRenderer;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.engine.StructureHolder;
@@ -16,14 +16,10 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 
 public class GenericSubSystemRenderer<T extends GenericStructureSystemBlockEntity> implements BlockEntityRenderer<T>, ClientLightUtil.Renderable<T> {
-
-    public static final Identifier ENGINE_TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/machines/engine.png"));
-    public static final Identifier EMISSIVE_ENGINE_TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/machines/engine_emission.png"));
+    private GenericSubSystemModel model;
 
     public GenericSubSystemRenderer(BlockEntityRendererFactory.Context ctx) {
-        // todo model
+        this.model = new GenericSubSystemModel();
     }
 
     @Override
@@ -36,6 +32,10 @@ public class GenericSubSystemRenderer<T extends GenericStructureSystemBlockEntit
         if (entity.hasSystem() && system != null && !system.isUsable() && system instanceof StructureHolder holder) {
             MultiBlockStructureRenderer.instance().render(holder.getStructure(), entity.getPos(), entity.getWorld(), matrices, vertexConsumers, true);
         }
+
+        matrices.translate(0.5f, -0.5f, 0.5f);
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(GenericSubSystemModel.TEXTURE)),
+                light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
         matrices.pop();
     }
