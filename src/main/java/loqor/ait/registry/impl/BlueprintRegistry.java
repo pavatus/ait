@@ -5,6 +5,8 @@ import java.util.Random;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
@@ -14,13 +16,14 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.item.blueprint.BlueprintType;
+import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 //import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 
 public class BlueprintRegistry {
 
-    //public static final LootFunctionType BLUEPRINT_TYPE = Registry.register(Registries.LOOT_FUNCTION_TYPE,
-            //new Identifier(AITMod.MOD_ID, "set_blueprint"),
-            //new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
+    public static final LootFunctionType BLUEPRINT_TYPE = Registry.register(Registries.LOOT_FUNCTION_TYPE,
+            new Identifier(AITMod.MOD_ID, "set_blueprint"),
+            new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
 
     public static final SimpleRegistry<BlueprintType> REGISTRY = FabricRegistryBuilder
             .createSimple(RegistryKey.<BlueprintType>ofRegistry(new Identifier(AITMod.MOD_ID, "blueprint_type")))

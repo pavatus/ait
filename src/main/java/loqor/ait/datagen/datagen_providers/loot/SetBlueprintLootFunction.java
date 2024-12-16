@@ -1,6 +1,25 @@
-/*
+
 package loqor.ait.datagen.datagen_providers.loot;
 
+
+import java.util.Random;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSyntaxException;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.condition.LootCondition;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.function.ConditionalLootFunction;
+import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
+
+import loqor.ait.AITMod;
+import loqor.ait.core.item.blueprint.BlueprintType;
+import loqor.ait.registry.impl.BlueprintRegistry;
 
 public class SetBlueprintLootFunction extends ConditionalLootFunction {
     final BlueprintType blueprint;
@@ -38,7 +57,7 @@ public class SetBlueprintLootFunction extends ConditionalLootFunction {
 
         @Override
         public SetBlueprintLootFunction fromJson(JsonObject jsonObject,
-                JsonDeserializationContext jsonDeserializationContext, LootCondition[] lootConditions) {
+                                                 JsonDeserializationContext jsonDeserializationContext, LootCondition[] lootConditions) {
             String string = JsonHelper.getString(jsonObject, "id");
             BlueprintType blueprint = BlueprintRegistry.REGISTRY.getOrEmpty(Identifier.tryParse(string))
                     .orElseThrow(() -> new JsonSyntaxException("Unknown blueprint '" + string + "'"));
@@ -46,4 +65,3 @@ public class SetBlueprintLootFunction extends ConditionalLootFunction {
         }
     }
 }
-*/
