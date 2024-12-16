@@ -47,6 +47,7 @@ public class StatsHandler extends KeyedTardisComponent {
     private static final Property<String> PLAYER_CREATOR_NAME = new Property<>(Property.Type.STR, "player_creator_name",
             "");
     private static final Property<String> DATE = new Property<>(Property.Type.STR, "date", "");
+    private static final Property<String> DATE_TIME_ZONE = new Property<>(Property.Type.STR, "date_time_zone", "");
     private static final Property<RegistryKey<World>> SKYBOX = new Property<>(Property.Type.WORLD_KEY, "skybox",
             World.END);
     private static final Property<HashSet<String>> UNLOCKS = new Property<>(Property.Type.STR_SET, "unlocks",
@@ -62,6 +63,7 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<String> tardisName = NAME.create(this);
     private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME.create(this);
     private final Value<String> creationDate = DATE.create(this);
+    private final Value<String> dateTimeZone = DATE_TIME_ZONE.create(this);
     private final Value<RegistryKey<World>> skybox = SKYBOX.create(this);
     private final Value<HashSet<String>> unlocks = UNLOCKS.create(this);
     private final BoolValue security = SECURITY.create(this);
@@ -96,6 +98,7 @@ public class StatsHandler extends KeyedTardisComponent {
         tardisName.of(this, NAME);
         playerCreatorName.of(this, PLAYER_CREATOR_NAME);
         creationDate.of(this, DATE);
+        dateTimeZone.of(this, DATE_TIME_ZONE);
         security.of(this, SECURITY);
         hailMary.of(this, HAIL_MARY);
         receiveCalls.of(this, RECEIVE_CALLS);
@@ -239,14 +242,14 @@ public class StatsHandler extends KeyedTardisComponent {
             markCreationDate();
         }
 
-        String date = creationDate.get();
-
+        // parse a Date from the creationDate, and add to the hours the difference between this time zone and the time zone stored in the dateTimeZone
         try {
-            return DateFormat.getDateTimeInstance(DateFormat.LONG, 3).parse(date);
+            Date date = DateFormat.getDateTimeInstance(DateFormat.LONG, 3).parse(creationDate.get());
+            TimeZone timeZone = TimeZone.getTimeZone(dateTimeZone.get());
+            date.setTime(date.getTime() + timeZone.getRawOffset());
+            return date;
         } catch (Exception e) {
-            AITMod.LOGGER.error("Failed to parse date from {}", date);
-            this.markCreationDate();
-
+            AITMod.LOGGER.error("Error parsing creation date for {}", tardis.getUuid().toString(), e);
             return Date.from(Instant.now());
         }
     }
@@ -256,7 +259,10 @@ public class StatsHandler extends KeyedTardisComponent {
     }
 
     public void markCreationDate() {
-        creationDate.set(DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(Date.from(Instant.now())));
+        // set the creation date to now, along with the time zone, and store it in a computer-readable string format
+        Date now = Date.from(Instant.now());
+        creationDate.set(DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(now));
+        dateTimeZone.set(DateFormat.getTimeInstance(DateFormat.LONG).getTimeZone().getID());
     }
 
     public void markPlayerCreatorName() {

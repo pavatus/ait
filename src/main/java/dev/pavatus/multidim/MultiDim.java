@@ -2,6 +2,7 @@ package dev.pavatus.multidim;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Set;
 
 import com.mojang.serialization.Lifecycle;
@@ -10,6 +11,8 @@ import dev.pavatus.multidim.api.MutableRegistry;
 import dev.pavatus.multidim.api.WorldBuilder;
 import dev.pavatus.multidim.impl.SimpleWorldProgressListener;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import org.apache.commons.io.FileUtils;
@@ -28,14 +31,15 @@ import net.minecraft.world.level.storage.LevelStorage;
 
 import loqor.ait.AITMod;
 
-public class MultiDim {
+public class MultiDim implements ModInitializer {
 
     private static MultiDim instance;
-    private static final Logger LOGGER = LoggerFactory.getLogger("ait-multidim");
+    public static final Logger LOGGER = LoggerFactory.getLogger("ait-multidim");
 
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> MultiDim.get(server).tick());
-        // ServerPlayConnectionEvents.INIT.register((handler, server) -> MultiDim.get(server).load(handler.getPlayer().getServerWorld()));
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> MultiDim.get(server).onServerStopping());
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> MultiDim.get(server).onServerStarting());
     }
 
     public static MultiDim get(MinecraftServer server) {
@@ -46,12 +50,22 @@ public class MultiDim {
     }
 
     private final MinecraftServer server;
+    private final MultiDimFileManager files;
 
     private final Set<ServerWorld> toDelete = new ReferenceOpenHashSet<>();
     private final Set<ServerWorld> toUnload = new ReferenceOpenHashSet<>();
 
     private MultiDim(MinecraftServer server) {
         this.server = server;
+        this.files = new MultiDimFileManager();
+    }
+
+    /**
+     * dont use! is for fabric init only
+     */
+    public MultiDim() {
+        this.server = null;
+        this.files = null;
     }
 
     @SuppressWarnings("resource")
@@ -104,6 +118,10 @@ public class MultiDim {
 
         ServerWorld world = builder.build(this.server, options);
         this.load(world);
+
+        if (builder.loadOnStartup()) {
+            this.files.add(world);
+        }
 
         return world;
     }
@@ -193,5 +211,22 @@ public class MultiDim {
         for (ServerPlayerEntity player : world.getPlayers()) {
             player.teleport(overworld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), player.getYaw(), player.getPitch());
         }
+    }
+
+    private void onServerStopping() {
+        this.files.write(this.server);
+    }
+    private void onServerStarting() {
+        HashMap<RegistryKey<World>, DimensionOptions> map = this.files.read(this.server);
+
+        // load all worlds
+        for (RegistryKey<World> key : map.keySet()) {
+            this.add(new WorldBuilder(key.getValue()).withOptions(map.get(key)));
+        }
+    }
+
+    @Override
+    public void onInitialize() {
+
     }
 }
