@@ -148,7 +148,6 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
     protected void syncChanges() {
         if (this.getWorld().isClient()) return;
 
-        System.out.println("SYNCIUNG CHANGES");
         ServerWorld world = (ServerWorld) this.getWorld();
         world.getChunkManager().markForUpdate(this.getPos());
         this.markDirty();

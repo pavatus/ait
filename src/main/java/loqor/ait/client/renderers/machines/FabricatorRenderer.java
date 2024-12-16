@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
+import org.joml.Vector3f;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -17,7 +19,6 @@ import net.minecraft.util.profiler.Profiler;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.FabricatorModel;
 import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.FabricatorBlockEntity;
 import loqor.ait.core.blocks.FabricatorBlock;
 import loqor.ait.core.item.blueprint.Blueprint;
@@ -65,13 +66,11 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
             matrices.push();
             double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
 
-            if (stack.getItem() == AITItems.DEMATERIALIZATION_CIRCUIT) {
-                matrices.scale(0.75f, 0.75f, 0.75f);
-                matrices.translate(0.65f, 0.35f + (offset / 2), 0.65f);
-            } else {
-                matrices.scale(1, 1, 1);
-                matrices.translate(0.5f, 0.275f + offset, 0.5f);
-            }
+            matrices.translate(0.5f, 0.35f + (offset / 2), 0.5f);
+
+            Vector3f scale = MinecraftClient.getInstance().getItemRenderer().getModel(stack, entity.getWorld(), null, 0).getTransformation().firstPersonRightHand.scale;
+            matrices.scale(0.7f, 0.7f, 0.7f);
+            matrices.scale(scale.x, scale.y, scale.z);
 
             MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
                     overlay, matrices, vertexConsumers, entity.getWorld(), 0);
