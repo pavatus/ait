@@ -11,6 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -25,6 +26,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.FabricatorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 
@@ -85,6 +87,10 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
         world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d + (double) direction.getOffsetX() * g,
                 e + (double) direction.getOffsetY() * g, f + (double) direction.getOffsetZ() * g,
                 random.nextGaussian() * 0.005, random.nextGaussian() * 0.005, random.nextGaussian() * 0.005);
+
+        if (random.nextDouble() < 0.05) {
+            world.playSound(d, e, f, AITSounds.FABRICATOR_LOOP, SoundCategory.BLOCKS, 0.25f, 1.0f, false);
+        }
     }
 
     @Override

@@ -83,6 +83,11 @@ public class AITSounds {
     public static final SoundEvent DING = register("tools/goes_ding");
     public static final SoundEvent STASER = register("tools/staser");
 
+    // Fabricator
+    public static final SoundEvent FABRICATOR_START = register("tools/fabricator/start");
+    public static final SoundEvent FABRICATOR_END = register("tools/fabricator/end");
+    public static final SoundEvent FABRICATOR_LOOP = register("tools/fabricator/loop");
+
     // Sonic
     public static final SoundEvent SONIC_USE = register("sonic/use");
     public static final SoundEvent SONIC_SWITCH = register("sonic/switch");

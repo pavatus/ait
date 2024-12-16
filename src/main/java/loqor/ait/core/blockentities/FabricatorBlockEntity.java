@@ -15,7 +15,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -46,7 +45,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
 
             this.setBlueprint(schema.create());
             hand.decrement(1);
-            world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1, 1);
+            world.playSound(null, this.getPos(), AITSounds.FABRICATOR_START, SoundCategory.BLOCKS, 1, 1);
             return;
         }
 
@@ -54,11 +53,11 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
         if (this.hasBlueprint()) {
             Blueprint blueprint = this.getBlueprint().get();
             if (blueprint.tryAdd(hand)) {
-                world.playSound(null, this.getPos(), AITSounds.BWEEP, SoundCategory.BLOCKS, 1, 1);
+                // world.playSound(null, this.getPos(), AITSounds.DING, SoundCategory.BLOCKS, 1, 1);
                 this.syncChanges();
 
                 if (blueprint.isComplete()) {
-                    world.playSound(null, this.getPos(), AITSounds.DING, SoundCategory.BLOCKS, 1, 1);
+                    world.playSound(null, this.getPos(), AITSounds.FABRICATOR_END, SoundCategory.BLOCKS, 1, 1);
                 }
 
                 return;
@@ -69,7 +68,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
             if (output.isPresent()) {
                 ItemStack stack = output.get();
                 player.getInventory().offerOrDrop(stack);
-                world.playSound(null, this.getPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
+                // world.playSound(null, this.getPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
                 this.setBlueprint(null, true);
             }
         }
