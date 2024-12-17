@@ -19,7 +19,11 @@ import loqor.ait.core.engine.block.SubSystemBlock;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 
 public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
-    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 48.0, 16.0);
+    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
+            -16.0, 0.0, -16.0,
+            32.0, 48.0, 32.0
+    );
+
 
     public EngineBlock(Settings settings) {
         super(settings, SubSystem.Id.ENGINE);
