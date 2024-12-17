@@ -1,15 +1,15 @@
 package loqor.ait.client.sounds;
 
-import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.client.util.ClientTardisUtil;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundCategory;
+import static loqor.ait.core.AITSounds.CONSOLE_AMBIENT;
 
 import java.util.Objects;
 
-import static loqor.ait.core.AITSounds.CONSOLE_AMBIENT;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
+
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.client.util.ClientTardisUtil;
+import loqor.ait.core.AITSounds;
 
 public class ClientConsoleAmbientSoundsHandler extends SoundHandler {
     public static LoopingSound CONSOLE_AMBIENT;
