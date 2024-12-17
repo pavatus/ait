@@ -52,6 +52,10 @@ public class AITSounds {
     public static final SoundEvent SNAP = register("controls/snap");
     public static final SoundEvent BWEEP = register("controls/bweep");
 
+    // Console
+    public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");
+    public static final SoundEvent CONSOLE_BOOTUP = register("tardis/console_bootup");
+
     // Hums
     public static final SoundEvent TOYOTA_HUM = register("tardis/hums/toyota_hum");
     public static final SoundEvent CORAL_HUM = register("tardis/hums/coral_hum");

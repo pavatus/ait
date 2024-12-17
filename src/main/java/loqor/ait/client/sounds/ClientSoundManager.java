@@ -34,6 +34,7 @@ public class ClientSoundManager {
     private static SonicSoundHandler sonicSound;
     private static ClientFallSoundHandler fallSound;
     private static ClientDriftingSoundHandler driftingSound;
+    private static ClientConsoleAmbientSoundsHandler ambientSound;
 
     public static ClientHumHandler getHum() {
         if (hum == null)
@@ -68,6 +69,13 @@ public class ClientSoundManager {
             vortexSounds = ClientVortexSoundsHandler.create();
 
         return vortexSounds;
+    }
+
+    public static ClientConsoleAmbientSoundsHandler getAmbientSounds() {
+        if (ambientSound == null)
+            ambientSound = ClientConsoleAmbientSoundsHandler.create();
+
+        return ambientSound;
     }
 
     public static ClientRainSoundHandler getRainSound() {
@@ -127,6 +135,9 @@ public class ClientSoundManager {
 
         if (getVortexSounds() != null)
             getVortexSounds().tick(client);
+
+        if (getAmbientSounds() != null)
+            getAmbientSounds().tick(client);
 
         if (getRainSound() != null)
             getRainSound().tick(client);
