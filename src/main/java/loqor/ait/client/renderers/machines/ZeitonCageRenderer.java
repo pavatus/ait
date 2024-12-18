@@ -18,20 +18,19 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ZeitonCageBlockEntity;
 import loqor.ait.core.blocks.ZeitonCageBlock;
 
-// Made with Blockbench 4.8.3
-// Exported for Minecraft version 1.17+ for Yarn
-// Paste this class into your mod and generate all required imports
 public class ZeitonCageRenderer<T extends ZeitonCageBlockEntity> implements BlockEntityRenderer<T> {
 
     public static final Identifier ZEITON_CAGE_TEXTURE = new Identifier(AITMod.MOD_ID,
             ("textures/blockentities/machines/zeiton_cage.png"));
     private final ZeitonCageModel zeitonCageModel;
 
-    private ItemStack stack = new ItemStack(AITBlocks.ZEITON_BLOCK);
+    private final ItemStack stack = new ItemStack(AITBlocks.ZEITON_BLOCK);
 
     public ZeitonCageRenderer(BlockEntityRendererFactory.Context ctx) {
         this.zeitonCageModel = new ZeitonCageModel(ZeitonCageModel.getTexturedModelData().createModel());
     }
+
+    // TODO add a timer so this runs for a minute then causes a small explosion resulting in a rift.
 
     @Override
     public void render(ZeitonCageBlockEntity entity, float tickDelta, MatrixStack matrices,
