@@ -11,6 +11,7 @@ import dev.pavatus.planet.client.SpaceSuitOverlay;
 import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
+import dev.pavatus.planet.core.util.PlanetCustomTrades;
 import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -55,6 +56,7 @@ public class PlanetModule extends Module {
     @Override
     public void init() {
         this.getItemGroup().initialize();
+        PlanetCustomTrades.registerCustomTrades();
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
             env.init(PlanetRegistry.getInstance());
         });
