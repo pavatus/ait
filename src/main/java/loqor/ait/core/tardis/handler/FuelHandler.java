@@ -189,7 +189,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
         this.updateExteriorState();
 
         this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.POWERUP, SoundCategory.AMBIENT, 10f, 1f);
-        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CONSOLE_BOOTUP, SoundCategory.AMBIENT, 2f, 1f);
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CONSOLE_BOOTUP, SoundCategory.AMBIENT, 0.15f, 1f);
         TardisEvents.REGAIN_POWER.invoker().onRegainPower(this.tardis);
     }
     public void enablePower() {

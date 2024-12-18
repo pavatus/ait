@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
 import loqor.ait.client.sounds.alarm.ClientAlarmHandler;
+import loqor.ait.client.sounds.console.ClientConsoleAmbientSoundsHandler;
 import loqor.ait.client.sounds.drifting.ClientDriftingSoundHandler;
 import loqor.ait.client.sounds.fall.ClientFallSoundHandler;
 import loqor.ait.client.sounds.flight.ClientFlightHandler;
