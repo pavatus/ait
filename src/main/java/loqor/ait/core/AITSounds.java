@@ -78,7 +78,7 @@ public class AITSounds {
     public static final SoundEvent CREAK_SEVEN = register("tardis/creaks/creak_seven");
     public static final SoundEvent WHISPER = register("tardis/creaks/whisper");
 
-    // Vortex Sounds
+    // Outside Sounds
     public static final SoundEvent VORTEX_SOUND = register("tardis/vortex_sound");
     public static final SoundEvent RAIN = register("tardis/exterior/rain");
     public static final SoundEvent THUNDER = register("tardis/exterior/thunder");
@@ -95,6 +95,10 @@ public class AITSounds {
     public static final SoundEvent DOOM_DOOR_OPEN = register("tardis/secret/doom_door_open");
     public static final SoundEvent DOOM_DOOR_CLOSE = register("tardis/secret/doom_door_close");
     public static final SoundEvent ERROR = register("error");
+
+    // Engine
+    public static final SoundEvent ENGINE_REFUEL = register("tardis/engine_refuel");
+
 
     public static void init() {
 

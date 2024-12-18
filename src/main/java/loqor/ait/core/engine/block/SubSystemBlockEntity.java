@@ -74,7 +74,7 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
             if (durable.isRepairItem(hand) && durable.durability() < 100) {
                 durable.addDurability(5);
                 hand.decrement(1);
-                world.playSound(null, this.getPos(), AITSounds.BWEEP, SoundCategory.BLOCKS, 0.5f, 1f);
+                world.playSound(null, this.getPos(), AITSounds.ENGINE_REFUEL, SoundCategory.BLOCKS, 0.5f, 1f);
                 return ActionResult.SUCCESS;
             }
         }
