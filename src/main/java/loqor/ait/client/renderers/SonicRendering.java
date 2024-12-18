@@ -24,7 +24,9 @@ import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.dim.TardisDimension;
 
@@ -172,10 +174,11 @@ public class SonicRendering {
 
         String text = "";
 
-        if (be.system() instanceof DurableSubSystem) {
+        SubSystem system = be.system();
+        if (system instanceof DurableSubSystem) {
             text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 100";
         }
-        if (!be.system().isEnabled()) {
+        if (!system.isEnabled() && !(system instanceof EngineSystem)) {
             text = "LINK TO ENGINE VIA FLUID LINKS";
         }
 

@@ -32,7 +32,6 @@ import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -304,8 +303,21 @@ public class PlanetModule extends Module {
                         .input('S', PlanetBlocks.MARTIAN_STONE)
                         .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
 
-                createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
-                createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_STAIRS, 1)
+                        .pattern("S  ")
+                        .pattern("SS ")
+                        .pattern("SSS")
+                        .input('S', PlanetBlocks.MARTIAN_STONE)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, 1)
+                        .pattern("   ")
+                        .pattern("   ")
+                        .pattern("SSS")
+                        .input('S', PlanetBlocks.MARTIAN_STONE)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
+
+
 
             }
 
