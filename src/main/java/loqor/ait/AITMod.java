@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -30,6 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -52,6 +56,7 @@ import loqor.ait.core.commands.*;
 import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.item.blueprint.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.likes.ItemOpinionRegistry;
@@ -149,6 +154,7 @@ public class AITMod implements ModInitializer {
             registries.register(TravelSoundRegistry.getInstance());
             registries.register(FlightSoundRegistry.getInstance());
             registries.register(VortexReferenceRegistry.getInstance());
+            registries.register(BlueprintRegistry.getInstance());
             registries.register(ExteriorVariantRegistry.getInstance());
             registries.register(CategoryRegistry.getInstance());
             registries.register(TardisComponentRegistry.getInstance());
@@ -174,9 +180,6 @@ public class AITMod implements ModInitializer {
         FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AITPaintings.class, MOD_ID, false);
-
-        // important to init after items registration
-        BlueprintRegistry.init();
 
         WorldUtil.init();
         TardisUtil.init();
@@ -279,6 +282,20 @@ public class AITMod implements ModInitializer {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
         AIT_ITEM_GROUP.initialize();
+
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if (source.isBuiltin()
+                    && (id.equals(LootTables.NETHER_BRIDGE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
+                    || id.equals(LootTables.VILLAGE_ARMORER_CHEST))
+                    || id.equals(LootTables.END_CITY_TREASURE_CHEST) || id.equals(LootTables.SHIPWRECK_MAP_CHEST)
+                    || id.equals(LootTables.SIMPLE_DUNGEON_CHEST) || id.equals(LootTables.STRONGHOLD_LIBRARY_CHEST)) {
+
+
+                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(AITItems.BLUEPRINT).weight(10));
+
+                tableBuilder.pool(poolBuilder);
+            }
+        });
     }
 
     public void entityAttributeRegister() {
@@ -289,6 +306,12 @@ public class AITMod implements ModInitializer {
     public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
     public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
     public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
+
+    public static void openScreen(ServerPlayerEntity player, int id) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(id);
+        ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
+    }
 
     public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
         PacketByteBuf buf = PacketByteBufs.create();

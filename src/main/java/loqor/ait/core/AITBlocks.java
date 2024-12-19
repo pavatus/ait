@@ -147,7 +147,6 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block MACHINE_CASING = new MachineCasingBlock(FabricBlockSettings.create().nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
-    @NoBlockItem
     public static final Block FABRICATOR = new FabricatorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 

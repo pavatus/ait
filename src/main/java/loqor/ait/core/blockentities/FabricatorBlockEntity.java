@@ -3,111 +3,151 @@ package loqor.ait.core.blockentities;
 
 import java.util.Optional;
 
-import io.wispforest.owo.util.ImplementedInventory;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import loqor.ait.api.link.LinkableBlockEntity;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.screen_handlers.EngineScreenHandler;
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.item.blueprint.Blueprint;
+import loqor.ait.core.item.blueprint.BlueprintItem;
+import loqor.ait.core.item.blueprint.BlueprintSchema;
 
-public class FabricatorBlockEntity extends LinkableBlockEntity
-        implements
-            NamedScreenHandlerFactory,
-            ImplementedInventory,
-            SidedInventory {
-
-    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
+public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
+    private Blueprint blueprint;
 
     public FabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE, pos, state);
     }
 
     public void useOn(BlockState state, World world, boolean sneaking, PlayerEntity player) {
-        // if (world.isClient() || this.findTardis().isEmpty()) return;
+        if (world.isClient()) return;
+        if (!this.isValid()) return;
 
-        /*
-         * if (world.isClient()) MinecraftClient.getInstance().setScreen(new
-         * BlueprintFabricatorScreen(Text.literal("Blueprint Fabricator")));
-         */
+        ItemStack hand = player.getMainHandStack();
+        // accept new blueprint
+        if (!this.hasBlueprint() && hand.getItem() instanceof BlueprintItem) {
+            BlueprintSchema schema = BlueprintItem.getSchema(hand);
+            if (schema == null) return;
 
-        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
-        /*
-         * NamedScreenHandlerFactory screenHandlerFactory =
-         * state.createScreenHandlerFactory(world, pos);
-         * System.out.println(screenHandlerFactory); if (screenHandlerFactory != null) {
-         * player.openHandledScreen(screenHandlerFactory); }
-         */
+            this.setBlueprint(schema.create());
+            // hand.decrement(1);
+            world.playSound(null, this.getPos(), AITSounds.FABRICATOR_START, SoundCategory.BLOCKS, 1, 1);
+            return;
+        }
+
+        // try to insert items into the fabricator
+        if (this.hasBlueprint()) {
+            Blueprint blueprint = this.getBlueprint().get();
+            if (blueprint.tryAdd(hand)) {
+                // world.playSound(null, this.getPos(), AITSounds.DING, SoundCategory.BLOCKS, 1, 1);
+                this.syncChanges();
+
+                if (blueprint.isComplete()) {
+                    world.playSound(null, this.getPos(), AITSounds.FABRICATOR_END, SoundCategory.BLOCKS, 1, 1);
+                }
+
+                return;
+            }
+
+            // try to craft the blueprint
+            Optional<ItemStack> output = blueprint.tryCraft();
+            if (output.isPresent()) {
+                ItemStack stack = output.get();
+                player.getInventory().offerOrDrop(stack);
+                // world.playSound(null, this.getPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
+                this.setBlueprint(null, true);
+            }
+        }
     }
 
-    @Override
-    public Optional<Tardis> findTardis() {
-        if (this.tardisId == null && this.hasWorld()) {
-            TardisDimension.get(this.world).ifPresent(this::setTardis);
+    public boolean isValid() {
+        if (!this.hasWorld()) return false;
+
+        return this.getWorld().getBlockState(this.getPos().down()).isOf(Blocks.SMITHING_TABLE);
+    }
+
+    public Optional<Blueprint> getBlueprint() {
+        return Optional.ofNullable(this.blueprint);
+    }
+    public boolean hasBlueprint() {
+        return this.getBlueprint().isPresent();
+    }
+
+    /**
+     * attempts to set the blueprint of this fabricator
+     * @return false if this fabricator already has a blueprint
+     */
+    public boolean setBlueprint(Blueprint blueprint, boolean force) {
+        if (!force && this.hasBlueprint()) return false;
+        this.blueprint = blueprint;
+        this.syncChanges();
+        return true;
+    }
+    /**
+     * attempts to set the blueprint of this fabricator
+     * @return false if this fabricator already has a blueprint
+     */
+    public boolean setBlueprint(Blueprint blueprint) {
+        return this.setBlueprint(blueprint, false);
+    }
+
+    /**
+     * @return the itemstack that should be displayed in the fabricator's renderer
+     */
+    public ItemStack getShowcaseStack() {
+        if (this.hasBlueprint()) {
+            if (this.blueprint.isComplete()) return this.blueprint.getOutput();
+
+            // cycle through the requirements based off world ticks
+            int index = (int) (world.getTime() / 20 % this.blueprint.getRequirements().size());
+            return this.blueprint.getRequirements().get(index);
         }
-        return super.findTardis();
+
+        return ItemStack.EMPTY;
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        Inventories.readNbt(nbt, items);
+
+        this.blueprint = null;
+        if (nbt.contains("Blueprint")) {
+            blueprint = new Blueprint(nbt.getCompound("Blueprint"));
+        }
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, items);
         super.writeNbt(nbt);
-    }
 
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public int[] getAvailableSlots(Direction side) {
-        int[] result = new int[getItems().size()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = i;
+        if (blueprint != null) {
+            nbt.put("Blueprint", blueprint.toNbt());
         }
-        return result;
+        nbt.putBoolean("HasBlueprint", this.hasBlueprint());
     }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return dir != Direction.UP;
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return true;
-    }
-
-    @Override
-    public Text getDisplayName() {
-        return Text.literal("idk");
-    }
-
     @Nullable @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new EngineScreenHandler(syncId, playerInventory, this);
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    protected void syncChanges() {
+        if (this.getWorld().isClient()) return;
+
+        ServerWorld world = (ServerWorld) this.getWorld();
+        world.getChunkManager().markForUpdate(this.getPos());
+        this.markDirty();
     }
 }

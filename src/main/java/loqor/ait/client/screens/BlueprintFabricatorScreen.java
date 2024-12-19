@@ -13,8 +13,8 @@ public class BlueprintFabricatorScreen extends Screen {
     int backgroundHeight = 166;
     int backgroundWidth = 176;
 
-    public BlueprintFabricatorScreen(Text title) {
-        super(title);
+    public BlueprintFabricatorScreen() {
+        super(Text.literal("Blueprint Fabricator")); // todo translatable
     }
 
     protected void drawBackground(DrawContext context) {

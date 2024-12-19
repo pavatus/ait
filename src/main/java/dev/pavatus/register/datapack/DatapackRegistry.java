@@ -67,6 +67,9 @@ public abstract class DatapackRegistry<T extends Identifiable> implements Regist
     public T getOrFallback(Identifier id) {
         return this.getOrElse(id, this.fallback());
     }
+    public Optional<T> getOptional(Identifier id) {
+        return Optional.ofNullable(this.get(id));
+    }
 
     public List<T> toList() {
         return List.copyOf(REGISTRY.values());

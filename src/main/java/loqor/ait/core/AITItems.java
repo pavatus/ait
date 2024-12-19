@@ -14,6 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
@@ -21,6 +23,8 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.item.SubSystemItem;
 import loqor.ait.core.item.*;
 import loqor.ait.core.item.blueprint.BlueprintItem;
+import loqor.ait.core.item.blueprint.BlueprintRegistry;
+import loqor.ait.core.item.blueprint.BlueprintSchema;
 import loqor.ait.core.item.control.GenericControlBlockItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
@@ -97,27 +101,27 @@ public class AITItems implements ItemRegistryContainer {
 
     // Machine parts
     public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item DATA_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.DATA,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.VORTEX,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.ARTRON,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.DATA,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.VORTEX,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     public static final Item CONDENSER = new MachinePartItem(MachinePartItem.Type.CONDENSER,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item MANIPULATOR = new MachinePartItem(MachinePartItem.Type.MANIPULATOR,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
     public static final Item BULB = new MachinePartItem(MachinePartItem.Type.BULB,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings() .group(AITMod.AIT_ITEM_GROUP));
     public static final Item INDUCTOR = new MachinePartItem(MachinePartItem.Type.INDUCTOR,
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */);
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // Components
     public static final Item DEMATERIALIZATION_CIRCUIT = new SubSystemItem(
@@ -142,7 +146,7 @@ public class AITItems implements ItemRegistryContainer {
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
-            new OwoItemSettings() /* .group(AITMod.AIT_ITEM_GROUP) */.rarity(Rarity.EPIC));
+            new OwoItemSettings().rarity(Rarity.EPIC));
 
     // Waypoint-related
     public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(
@@ -181,6 +185,12 @@ public class AITItems implements ItemRegistryContainer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
             entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, AITMod.AIT_ITEM_GROUP.id())).register(entries -> {
+            for (BlueprintSchema schema : BlueprintRegistry.getInstance().toList()) {
+                entries.add(BlueprintItem.createStack(schema));
+            }
         });
     }
 }
