@@ -36,7 +36,6 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
         if (world.isClient()) return;
         if (!this.isValid()) return;
 
-        // todo SOUNDS
         ItemStack hand = player.getMainHandStack();
         // accept new blueprint
         if (!this.hasBlueprint() && hand.getItem() instanceof BlueprintItem) {
@@ -44,7 +43,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
             if (schema == null) return;
 
             this.setBlueprint(schema.create());
-            hand.decrement(1);
+            // hand.decrement(1);
             world.playSound(null, this.getPos(), AITSounds.FABRICATOR_START, SoundCategory.BLOCKS, 1, 1);
             return;
         }
