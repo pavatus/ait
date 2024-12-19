@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
@@ -14,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
@@ -29,7 +33,7 @@ import loqor.ait.core.item.part.MachinePartItem;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
 
-public class AITItems implements ItemRegistryContainer {
+public class AITItems implements AutoRegistryContainer<BlockEntityType<?>> {
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
@@ -182,5 +186,16 @@ public class AITItems implements ItemRegistryContainer {
             entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
             entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
         });
+    }
+
+    @Override
+    public Registry<BlockEntityType<?>> getRegistry() {
+        return Registry.BLOCK_ENTITY_TYPE;
+    }
+
+
+    @Override
+    public Class<BlockEntityType<?>> getTargetFieldType() {
+        return null;
     }
 }
