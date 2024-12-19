@@ -1,5 +1,6 @@
 package loqor.ait.mixin.client;
 
+import dev.pavatus.christmas.ChristmasModule;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +19,12 @@ import loqor.ait.AITMod;
 public class DefaultLogoMixin {
 
     @Unique private static final Identifier AIT_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_logo.png");
+    @Unique private static final Identifier AIT_CHRISTMAS_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_christmas_logo.png");
     @Unique private static final Identifier AIT_EDITION = new Identifier(AITMod.MOD_ID, "textures/gui/title/edition.png");
     @Unique private final MinecraftClient client = MinecraftClient.getInstance();
+
+
+    @Unique Identifier currentLogo = ChristmasModule.instance().shouldRegister() ? AIT_CHRISTMAS_LOGO : AIT_LOGO;
 
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0))
     private void ait$drawCustomLogo(DrawContext context, Identifier texture, int x, int y, float u, float v, int width,
@@ -31,7 +36,7 @@ public class DefaultLogoMixin {
 
         int screenWidth = this.client.getWindow().getScaledWidth();
         int centerX = screenWidth / 2 - 128;
-        context.drawTexture(AIT_LOGO, centerX, y - 18, 0.0f, 0.0f, 266, 94, 266, 94);
+        context.drawTexture(currentLogo, centerX, y - 18, 0.0f, 0.0f, 266, ChristmasModule.instance().shouldRegister() ? 74 : 94, 266, ChristmasModule.instance().shouldRegister() ? 74 : 94);
     }
 
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1))
