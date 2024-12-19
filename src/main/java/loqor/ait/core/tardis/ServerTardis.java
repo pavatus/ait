@@ -77,6 +77,7 @@ public class ServerTardis extends Tardis {
         return this.delta.size();
     }
 
+    @Override
     public ServerWorld getInteriorWorld() {
         return TardisDimension.getOrCreate(this);
     }

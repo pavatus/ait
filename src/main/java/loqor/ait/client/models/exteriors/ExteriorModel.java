@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -41,7 +42,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
         float newAlpha = alpha;
 
-        if (tardis.cloak().cloaked().get()) {
+        if (tardis.cloak().cloaked().get() && !ZeitonHighEffect.isHigh(MinecraftClient.getInstance().player)) {
             PlayerEntity player = MinecraftClient.getInstance().player;
 
             if (!(tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION))) {

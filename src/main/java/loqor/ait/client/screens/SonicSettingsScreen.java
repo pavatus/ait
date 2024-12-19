@@ -1,6 +1,5 @@
 package loqor.ait.client.screens;
 
-import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,10 +32,10 @@ import loqor.ait.registry.impl.SonicRegistry;
 
 public class SonicSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/consoles/monitors/sonic_selection.png");
+            "textures/gui/tardis/sonic_selection.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
-    int bgHeight = 126;
-    int bgWidth = 201;
+    int bgHeight = 130;
+    int bgWidth = 216;
     int left, top;
     int choicesCount = 0;
     private final Screen parent;
@@ -69,21 +68,21 @@ public class SonicSettingsScreen extends ConsoleScreen {
         choicesCount = 0;
         this.buttons.clear();
 
-        Text applyText = Text.literal("Apply");
-        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.21f)), (int) (top + (bgHeight * 0.878f)),
+        Text applyText = Text.translatable("screen.ait.monitor.apply");
+        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.2f)), (int) (top + (bgHeight * 0.878f)),
                 this.textRenderer.getWidth(applyText), 10, Text.literal("     "), button -> {
                     sendSonicChangePacket();
                 }, this.textRenderer));
 
         Text back = Text.translatable("screen.ait.sonicsettings.back");
-        this.addButton(new PressableTextWidget((width / 2 - 94), (height / 2 - 58), this.textRenderer.getWidth(back),
+        this.addButton(new PressableTextWidget((width / 2 - 102), (height / 2 - 59), this.textRenderer.getWidth(back),
                 10, back, button -> backToInteriorSettings(), this.textRenderer));
 
-        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.06f)), (int) (top + (bgHeight * 0.882f)),
-                this.textRenderer.getWidth("<"), 10, Text.literal(" "), button -> this.getLastSelectedSonic(),
+        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.08f)), (int) (top + (bgHeight * 0.878f)),
+                this.textRenderer.getWidth("<"), 10, Text.literal("  "), button -> this.getLastSelectedSonic(),
                 this.textRenderer));
-        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.47f)), (int) (top + (bgHeight * 0.882f)),
-                this.textRenderer.getWidth(">"), 10, Text.literal(" "), button -> this.getNextSelectedSonic(),
+        this.addButton(new AITPressableTextWidget((int) (left + (bgWidth * 0.42f)), (int) (top + (bgHeight * 0.878f)),
+                this.textRenderer.getWidth(">"), 10, Text.literal("  "), button -> this.getNextSelectedSonic(),
                 this.textRenderer));
     }
 
@@ -145,7 +144,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
             stack.push();
             stack.translate(50f, 50f, 1000f);
             context.drawCenteredTextWithShadow(this.textRenderer, (tardis().isUnlocked(schema)) ? "" : "\uD83D\uDD12",
-                    x, y, Color.WHITE.getRGB());
+                    x, y, 0xFFFFFF);
             stack.pop();
 
             stack.push();
@@ -171,20 +170,20 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
             stack.push();
             stack.translate(0, 0, 500f);
-            context.drawCenteredTextWithShadow(this.textRenderer, "Sonic Casing", x + 140, y + 10,
-                    Color.WHITE.getRGB());
+            context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.sonic_casing"), x + 140, y + 10,
+                    0xFFFFFF);
             context.drawCenteredTextWithShadow(this.textRenderer, SonicItem.findSchema(sonicCopy).name(), x + 140,
-                    y + 20, Color.CYAN.getRGB());
-            context.drawCenteredTextWithShadow(this.textRenderer, "Current AU", x + 140, y + 40, Color.WHITE.getRGB());
+                    y + 20, 0x00FFFF);
+            context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.current_au"), x + 140, y + 40, 0xFFFFFF);
             context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem.FUEL_KEY) + " AU", x + 140,
-                    y + 50, Color.CYAN.getRGB());
+                    y + 50, 0x00FFFF);
 
             UUID tardis = LinkableItem.getTardisIdFromUuid(sonicCopy, "tardis");
             if (tardis != null) {
-                context.drawCenteredTextWithShadow(this.textRenderer, "Linked TARDIS", x + 140, y + 70,
-                        Color.WHITE.getRGB());
+                context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.linked_tardis"), x + 140, y + 70,
+                        0xFFFFFF);
                 context.drawCenteredTextWithShadow(this.textRenderer, tardis.toString().substring(0, 8), x + 140,
-                        y + 80, Color.CYAN.getRGB());
+                        y + 80, 0x00FFFF);
             }
 
             stack.pop();
@@ -206,17 +205,23 @@ public class SonicSettingsScreen extends ConsoleScreen {
         this.drawBackground(context);
         this.drawSonicScrewdriver(context, (width / 2 - 92), (height / 2 - 45), 6f);
         if (!this.buttons.get(0).isHovered())
-            context.drawTexture(BACKGROUND, left + 27, top + 106, 0, 156, 57, 12);
+            context.drawTexture(BACKGROUND, left + 30, top + 109, 40, 130, 53, 12);
+        else
+            context.drawTexture(BACKGROUND, left + 30, top + 109, 40, 142, 53, 12);
         if (!this.buttons.get(2).isHovered())
-            context.drawTexture(BACKGROUND, left + 8, top + 88, 0, 126, 15, 30);
+            context.drawTexture(BACKGROUND, left + 9, top + 109, 0, 130, 20, 12);
+        else
+            context.drawTexture(BACKGROUND, left + 9, top + 109, 0, 142, 20, 12);
         if (!this.buttons.get(3).isHovered())
-            context.drawTexture(BACKGROUND, left + 88, top + 88, 15, 126, 15, 30);
+            context.drawTexture(BACKGROUND, left + 84, top + 109, 20, 130, 20, 12);
+        else
+            context.drawTexture(BACKGROUND, left + 84, top + 109, 20, 142, 20, 12);
         super.render(context, mouseX, mouseY, delta);
     }
 
     private void drawBackground(DrawContext context) {
         context.drawTexture(BACKGROUND, left, top, 0, 0, bgWidth, bgHeight);
-        context.drawTexture(BACKGROUND, left + 9, top + 24, 0, 168, 93, 76);
+        context.drawTexture(BACKGROUND, left + 9, top + 25, 0, 154, 95, 84);
     }
 
     public static class AITPressableTextWidget extends ButtonWidget {

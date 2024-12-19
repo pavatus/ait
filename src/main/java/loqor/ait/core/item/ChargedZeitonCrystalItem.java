@@ -4,16 +4,20 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.api.ArtronHolderItem;
+import loqor.ait.core.AITBlocks;
 
 public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
     public static final double MAX_FUEL = 5000;
@@ -46,13 +50,29 @@ public class ChargedZeitonCrystalItem extends Item implements ArtronHolderItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.literal("AU: ").formatted(Formatting.BLUE)
-                .append(Text.literal(String.valueOf(Math.round(this.getCurrentFuel(stack)))).formatted(Formatting.GREEN)
-                        .append(Text.literal("/" + MAX_FUEL).formatted(Formatting.GRAY)))); // todo
-        // translatable +
-        // changing of
-        // colour based
-        // off fuel
+        int currentFuel = (int) Math.round(this.getCurrentFuel(stack));
+        Formatting fuelColor = currentFuel > (MAX_FUEL / 4) ? Formatting.GREEN : Formatting.RED;
+
+        tooltip.add(
+                Text.translatable("message.ait.artron_units", currentFuel)
+                        .formatted(fuelColor)
+                        .append(Text.literal(" / ").formatted(Formatting.GRAY))
+                        .append(Text.literal(String.valueOf(MAX_FUEL)).formatted(Formatting.GRAY))
+        );
+
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+
+        if (state.isOf(AITBlocks.ZEITON_COBBLE)) {
+            context.getWorld().setBlockState(context.getBlockPos(), AITBlocks.COMPACT_ZEITON.getDefaultState());
+            context.getStack().decrement(1);
+            return ActionResult.SUCCESS;
+        }
+
+        return super.useOnBlock(context);
     }
 }

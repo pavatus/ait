@@ -19,6 +19,7 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.lock.LockedDimension;
 import loqor.ait.core.lock.LockedDimensionRegistry;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
@@ -28,8 +29,8 @@ import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TimeUnit;
 
@@ -156,7 +157,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
-        boolean hasPower = this.tardis.engine().hasPower();
+        boolean hasPower = this.tardis.fuel().hasPower();
 
         BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState()
                 .with(ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation()))
@@ -218,11 +219,11 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         Scheduler.runTaskLater(() -> this.travelCooldown = false, TimeUnit.SECONDS, 5);
     }
 
-    public void dematerialize() {
+    public void dematerialize(TravelSound sound) {
         if (this.getState() != State.LANDED)
             return;
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             return;
 
         if (this.autopilot()) {
@@ -239,7 +240,10 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             return;
         }
 
-        this.forceDemat();
+        this.forceDemat(sound);
+    }
+    public void dematerialize() {
+        this.dematerialize(null);
     }
 
     private void failDemat() {
@@ -264,9 +268,15 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.createCooldown();
     }
 
-    public void forceDemat() {
+    public void forceDemat(TravelSound replacementSound) {
         this.state.set(State.DEMAT);
-        SoundEvent sound = this.getState().effect().sound();
+
+        TravelSound before = tardis.stats().getTravelEffects().get(State.DEMAT);
+        if (replacementSound != null && replacementSound.target() == State.DEMAT) {
+            tardis.stats().setTravelEffects(replacementSound);
+        }
+
+        SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 
         // Play dematerialize sound at the position
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
@@ -275,6 +285,11 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.runAnimations();
 
         this.startFlight();
+
+        tardis.stats().setTravelEffects(before);
+    }
+    public void forceDemat() {
+        this.forceDemat(null);
     }
 
     public void finishDemat() {
@@ -330,13 +345,13 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         pos = result.result().orElse(pos);
 
         this.state.set(State.MAT);
-        SoundEvent sound = this.getState().effect().sound();
+        SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 
         if (this.isCrashing())
             sound = AITSounds.EMERG_MAT;
 
-        this.destination(pos, true);
-        this.forcePosition(pos);
+        this.destination(pos);
+        this.forcePosition(this.destination());
 
         // Play materialize sound at the destination
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);

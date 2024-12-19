@@ -3,7 +3,7 @@
 	"id": "ait",
 	"version": "${version}",
 	"name": "Adventures In Time",
-	"description": "Adventures In Time - the mod with the longest development cycle since Minecraft itself.",
+	"description": "Adventures In Time - Apparatus Vivi. Living machine. TARDIS from Doctor Who. Whatever you call it, it grows with you. It learns with you, and flies the way you fly. Sure, you might be the pilot, but despite that, it does with that what it may.",
 	"authors": [
 		"Developers: \n",
 		"Loqor",
@@ -41,7 +41,7 @@
 	"entrypoints": {
 		"main": [
 			"loqor.ait.AITMod",
-			"loqor.ait.datagen.datagen_providers.loot.LootTableModification"
+			"dev.pavatus.multidim.MultiDim"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
@@ -57,7 +57,8 @@
 	"mixins": [
 		"ait.mixins.json",
 		"gaslighter.mixins.json",
-		"multidim.mixins.json"
+		"multidim.mixins.json",
+		"planet.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",
@@ -69,5 +70,17 @@
 	"suggests": {
 		"immersiveportals": "*",
 		"k9-mod": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"parent": {
+				"id": "ait",
+				"name": "Adventures In Time",
+				"description": "Adds the TARDIS from Doctor Who into Minecraft 1.20.1.",
+				"icon": "assets/ait/icon.png",
+				"badges": [ "Pavatus", "Doctor WHO" ]
+			},
+			"update_checker": true
+		}
 	}
 }

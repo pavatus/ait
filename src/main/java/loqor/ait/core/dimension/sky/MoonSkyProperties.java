@@ -7,7 +7,7 @@ public class MoonSkyProperties extends DimensionEffects {
     public static final float[] SUNSET_COLORS = {0,0  , 1, 1};
 
     public MoonSkyProperties() {
-        super(Overworld.CLOUDS_HEIGHT, true, SkyType.NORMAL, true, false);
+        super(-9999, true, SkyType.NORMAL, true, false);
     }
 
     //adjustSkyColor

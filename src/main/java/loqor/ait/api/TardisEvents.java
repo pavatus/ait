@@ -8,9 +8,13 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
 
+import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.DirectedBlockPos;
@@ -119,6 +123,13 @@ public final class TardisEvents {
                     callback.onRegainPower(tardis);
                 }
             });
+    public static final Event<UseBackupPower> USE_BACKUP_POWER = EventFactory.createArrayBacked(UseBackupPower.class,
+            callbacks -> (tardis, power) -> {
+                for (UseBackupPower callback : callbacks) {
+                    callback.onUse(tardis, power);
+                }
+            });
+
 
     // Door
     public static final Event<OpenDoor> DOOR_OPEN = EventFactory.createArrayBacked(OpenDoor.class,
@@ -162,6 +173,12 @@ public final class TardisEvents {
                     callback.onLeave(tardis, entity);
                 }
             });
+    public static final Event<BreakDoor> BREAK_DOOR = EventFactory.createArrayBacked(BreakDoor.class,
+            callbacks -> (tardis, pos) -> {
+                for (BreakDoor callback : callbacks) {
+                    callback.onBreak(tardis, pos);
+                }
+            });
 
     public static final Event<Shields> TOGGLE_SHIELDS = EventFactory.createArrayBacked(Shields.class,
             callbacks -> (tardis, active, visual) -> {
@@ -202,6 +219,45 @@ public final class TardisEvents {
             callbacks -> tardis -> {
                 for (OnExteriorChange callback : callbacks) {
                     callback.onChange(tardis);
+                }
+            });
+
+    public static final Event<OnForcedEntry> FORCED_ENTRY = EventFactory.createArrayBacked(OnForcedEntry.class,
+            callbacks -> (tardis, player) -> {
+                for (OnForcedEntry callback : callbacks) {
+                    callback.onForcedEntry(tardis, player);
+                }
+            });
+
+    // Subsystem
+    public static final Event<OnSubSystemBreak> SUBSYSTEM_BREAK = EventFactory.createArrayBacked(OnSubSystemBreak.class,
+            callbacks -> system -> {
+                for (OnSubSystemBreak callback : callbacks) {
+                    callback.onBreak(system);
+                }
+            });
+    public static final Event<OnSubSystemRepair> SUBSYSTEM_REPAIR = EventFactory.createArrayBacked(OnSubSystemRepair.class,
+            callbacks -> system -> {
+                for (OnSubSystemRepair callback : callbacks) {
+                    callback.onRepair(system);
+                }
+            });
+    public static final Event<OnSubSystemEnable> SUBSYSTEM_ENABLE = EventFactory.createArrayBacked(OnSubSystemEnable.class,
+            callbacks -> system -> {
+                for (OnSubSystemEnable callback : callbacks) {
+                    callback.onEnable(system);
+                }
+            });
+    public static final Event<OnSubSystemDisable> SUBSYSTEM_DISABLE = EventFactory.createArrayBacked(OnSubSystemDisable.class,
+            callbacks -> system -> {
+                for (OnSubSystemDisable callback : callbacks) {
+                    callback.onDisable(system);
+                }
+            });
+    public static final Event<OnEnginesPhase> ENGINES_PHASE = EventFactory.createArrayBacked(OnEnginesPhase.class,
+            callbacks -> system -> {
+                for (OnEnginesPhase callback : callbacks) {
+                    callback.onPhase(system);
                 }
             });
 
@@ -334,6 +390,13 @@ public final class TardisEvents {
          */
         void onRegainPower(Tardis tardis);
     }
+    @FunctionalInterface
+    public interface UseBackupPower {
+        /**
+         * Called when a tardis fills itself with backup power
+         */
+        void onUse(Tardis tardis, double power);
+    }
 
     /**
      * Called when a TARDIS Door opens ( called when its state is set to any of the
@@ -377,6 +440,11 @@ public final class TardisEvents {
     }
 
     @FunctionalInterface
+    public interface BreakDoor {
+        void onBreak(Tardis tardis, BlockPos pos);
+    }
+
+    @FunctionalInterface
     public interface Shields {
         void onShields(Tardis tardis, boolean active, boolean visual);
     }
@@ -405,6 +473,33 @@ public final class TardisEvents {
     public interface OnExteriorChange {
         void onChange(Tardis tardis);
     }
+
+    @FunctionalInterface
+    public interface OnForcedEntry {
+        void onForcedEntry(Tardis tardis, Entity entity);
+    }
+
+    @FunctionalInterface
+    public interface OnSubSystemBreak {
+        void onBreak(DurableSubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnSubSystemRepair {
+        void onRepair(DurableSubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnSubSystemEnable {
+        void onEnable(SubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnSubSystemDisable {
+        void onDisable(SubSystem system);
+    }
+    @FunctionalInterface
+    public interface OnEnginesPhase {
+        void onPhase(EngineSystem system);
+    }
+
 
     public enum Interaction {
         SUCCESS, FAIL, PASS

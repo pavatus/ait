@@ -1,7 +1,7 @@
 package loqor.ait.core.tardis.animation;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -26,14 +26,14 @@ public class PulsatingAnimation extends ExteriorAnimation {
             this.setupAnimation(travel.getState()); // fixme is a jank fix for the timeLeft going negative on
         // client
 
-        if (state == TravelHandlerBase.State.DEMAT)
-            this.setAlpha(1f - this.getPulseAlpha());
+        boolean hasStarted = timeLeft < startTime;
+
+        if (state == TravelHandlerBase.State.DEMAT) {
+            this.setAlpha(hasStarted ? 1f - this.getPulseAlpha() : 1f);
+        }
 
         if (state == TravelHandlerBase.State.MAT) {
-            if (timeLeft < startTime)
-                this.setAlpha(this.getPulseAlpha());
-            else
-                this.alpha = 0f;
+            this.setAlpha(hasStarted ? this.getPulseAlpha() : 0f);
         }
 
         this.timeLeft--;
@@ -61,7 +61,7 @@ public class PulsatingAnimation extends ExteriorAnimation {
         if (!super.setupAnimation(state))
             return false;
 
-        MatSound sound = state.effect();
+        TravelSound sound = exterior.tardis().get().stats().getTravelEffects().get(state);
 
         this.frequency = sound.frequency();
         this.intensity = sound.intensity();
