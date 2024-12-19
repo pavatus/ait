@@ -11,6 +11,7 @@ import dev.pavatus.planet.client.SpaceSuitOverlay;
 import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
+import dev.pavatus.planet.core.util.PlanetCustomTrades;
 import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -31,7 +32,6 @@ import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -55,6 +55,7 @@ public class PlanetModule extends Module {
     @Override
     public void init() {
         this.getItemGroup().initialize();
+        PlanetCustomTrades.registerCustomTrades();
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
             env.init(PlanetRegistry.getInstance());
         });
@@ -302,8 +303,21 @@ public class PlanetModule extends Module {
                         .input('S', PlanetBlocks.MARTIAN_STONE)
                         .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
 
-                createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
-                createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_STAIRS, 1)
+                        .pattern("S  ")
+                        .pattern("SS ")
+                        .pattern("SSS")
+                        .input('S', PlanetBlocks.MARTIAN_STONE)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, 1)
+                        .pattern("   ")
+                        .pattern("   ")
+                        .pattern("SSS")
+                        .input('S', PlanetBlocks.MARTIAN_STONE)
+                        .criterion(hasItem(PlanetBlocks.MARTIAN_STONE), conditionsFromItem(PlanetBlocks.MARTIAN_STONE)));
+
+
 
             }
 
