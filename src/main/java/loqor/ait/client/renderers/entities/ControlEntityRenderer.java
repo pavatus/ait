@@ -101,43 +101,23 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         matrices.translate(0, (-2 - entity.getControlHeight() / 2) + entity.getWorld().random.nextFloat() * 0.02, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
 
+        float alpha = entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f;
+        float red = entity.wasSequenced() ? 0.0f : 1.0f;
+        float green = (entity.wasSequenced()) ? 1.0f : 1 - (entity.getSequencePercentage());
+
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light,
                 OverlayTexture.DEFAULT_UV,
-                !entity.wasSequenced()
-                        ? 0.95f - (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.0f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.9f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.1f,
-                entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                red,
+                green,
+                0,
+                alpha);
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0,
                 OverlayTexture.DEFAULT_UV,
-                !entity.wasSequenced()
-                        ? 0.95f - (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.5f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.9f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.5f,
-                entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                red,
+                green,
+                0,
+                alpha);
 
         matrices.pop();
     }

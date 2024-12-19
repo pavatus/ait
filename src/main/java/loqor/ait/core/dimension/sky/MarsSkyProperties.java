@@ -13,6 +13,7 @@ public class MarsSkyProperties extends DimensionEffects {
         super(Overworld.CLOUDS_HEIGHT, true, SkyType.NORMAL, true, false);
     }
 
+
     //adjustSkyColor
     @Override
     public Vec3d adjustFogColor(Vec3d color, float sunHeight) {

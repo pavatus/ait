@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.dim;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.VoidChunkGenerator;
@@ -23,12 +24,15 @@ import loqor.ait.compat.immersive.PortalsHandler;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
+import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
+
 
 public class TardisDimension {
     private static WorldBuilder builder(ServerTardis tardis) {
         return new WorldBuilder(new Identifier(AITMod.MOD_ID, tardis.getUuid().toString()))
+                .loadOnStartup(true)
                 .withType(new Identifier(AITMod.MOD_ID, "tardis_dimension_type"))
                 .withSeed(WorldUtil.getOverworld().getSeed())
                 .withGenerator(new VoidChunkGenerator(WorldUtil.getOverworld().getRegistryManager().get(RegistryKeys.BIOME), RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"))));
@@ -43,9 +47,9 @@ public class TardisDimension {
         return MultiDim.get(ServerLifecycleHooks.get()).add(builder);
     }
     private static ServerWorld create(ServerTardis tardis) {
-        AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
-
         WorldBuilder builder = builder(tardis);
+
+        AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
         ServerWorld created = create(builder);
 
         WorldUtil.blacklist(created);
@@ -69,6 +73,18 @@ public class TardisDimension {
         }
 
         return Optional.ofNullable(TardisManager.with(world, ((o, manager) -> manager.demandTardis(o, uuid))));
+    }
+    public static void withTardis(ServerWorld world, Consumer<ServerTardis> consumer) {
+        UUID uuid;
+
+        try {
+            uuid = UUID.fromString(world.getRegistryKey().getValue().getPath());
+        } catch (Exception e) {
+            consumer.accept(null);
+            return;
+        }
+
+        ServerTardisManager.getInstance().getTardis(world.getServer(), uuid, consumer);
     }
     public static boolean isTardisDimension(RegistryKey<World> world) {
         Identifier value = world.getValue();

@@ -22,7 +22,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITSounds;
 
 public class AITRadioBlockEntity extends BlockEntity {
 
@@ -131,7 +130,7 @@ public class AITRadioBlockEntity extends BlockEntity {
         // Loqor
         // @Creativious
         if (((int) (Math.nextUp(this.getTickRot("volume") * (180 / Math.PI) * 11) / 360) + 1) == 10) {
-            world.playSound(null, pos, AITSounds.SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
+            // world.playSound(null, pos, AITSounds.SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
         }
 
         if (this.isRadioOn()) {

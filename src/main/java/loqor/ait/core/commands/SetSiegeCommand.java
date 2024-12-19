@@ -27,7 +27,7 @@ public class SetSiegeCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
         boolean sieged = BoolArgumentType.getBool(context, "siege");
 
-        tardis.siege().setActive(true);
+        tardis.siege().setActive(sieged);
         return Command.SINGLE_SUCCESS;
     }
 }

@@ -2,6 +2,7 @@ package dev.pavatus.multidim;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Set;
 
 import com.mojang.serialization.Lifecycle;
@@ -10,6 +11,8 @@ import dev.pavatus.multidim.api.MutableRegistry;
 import dev.pavatus.multidim.api.WorldBuilder;
 import dev.pavatus.multidim.impl.SimpleWorldProgressListener;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import org.apache.commons.io.FileUtils;
@@ -26,13 +29,17 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.storage.LevelStorage;
 
-public class MultiDim {
+import loqor.ait.AITMod;
+
+public class MultiDim implements ModInitializer {
 
     private static MultiDim instance;
-    private static final Logger LOGGER = LoggerFactory.getLogger("ait-multidim");
+    public static final Logger LOGGER = LoggerFactory.getLogger("ait-multidim");
 
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> MultiDim.get(server).tick());
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> MultiDim.get(server).onServerStopping());
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> MultiDim.get(server).onServerStarting());
     }
 
     public static MultiDim get(MinecraftServer server) {
@@ -43,12 +50,22 @@ public class MultiDim {
     }
 
     private final MinecraftServer server;
+    private final MultiDimFileManager files;
 
     private final Set<ServerWorld> toDelete = new ReferenceOpenHashSet<>();
     private final Set<ServerWorld> toUnload = new ReferenceOpenHashSet<>();
 
     private MultiDim(MinecraftServer server) {
         this.server = server;
+        this.files = new MultiDimFileManager();
+    }
+
+    /**
+     * dont use! is for fabric init only
+     */
+    public MultiDim() {
+        this.server = null;
+        this.files = null;
     }
 
     @SuppressWarnings("resource")
@@ -79,6 +96,9 @@ public class MultiDim {
     }
 
     public ServerWorld add(WorldBuilder builder) {
+        ServerWorld existing = this.server.getWorld(RegistryKey.of(RegistryKeys.WORLD, builder.id()));
+        if (existing != null) return existing;
+
         MutableRegistry<DimensionOptions> dimensionsRegistry = MultiDimUtil.getMutableDimensionsRegistry(this.server);
 
         boolean wasFrozen = dimensionsRegistry.multidim$isFrozen();
@@ -97,10 +117,11 @@ public class MultiDim {
             dimensionsRegistry.multidim$freeze();
 
         ServerWorld world = builder.build(this.server, options);
-        ((MultiDimServer) this.server).multidim$addWorld(world);
+        this.load(world);
 
-        ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
-        world.tick(() -> true);
+        if (builder.loadOnStartup()) {
+            this.files.add(world);
+        }
 
         return world;
     }
@@ -163,6 +184,19 @@ public class MultiDim {
         return true;
     }
 
+    private void load(ServerWorld world) {
+        AITMod.LOGGER.info("Loading world {}", world.getRegistryKey().getValue());
+
+        if (((MultiDimServer) this.server).multidim$hasWorld(world.getRegistryKey())) {
+            AITMod.LOGGER.warn("World {} is already loaded", world.getRegistryKey().getValue());
+            return;
+        }
+
+        ((MultiDimServer) this.server).multidim$addWorld(world);
+
+        ServerWorldEvents.LOAD.invoker().onWorldLoad(this.server, world);
+        world.tick(() -> true);
+    }
     public boolean isWorldUnloaded(ServerWorld world) {
         return world.getPlayers().isEmpty() && world.getChunkManager().getLoadedChunkCount() <= 0;
     }
@@ -177,5 +211,22 @@ public class MultiDim {
         for (ServerPlayerEntity player : world.getPlayers()) {
             player.teleport(overworld, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), player.getYaw(), player.getPitch());
         }
+    }
+
+    private void onServerStopping() {
+        this.files.write(this.server);
+    }
+    private void onServerStarting() {
+        HashMap<RegistryKey<World>, DimensionOptions> map = this.files.read(this.server);
+
+        // load all worlds
+        for (RegistryKey<World> key : map.keySet()) {
+            this.add(new WorldBuilder(key.getValue()).withOptions(map.get(key)));
+        }
+    }
+
+    @Override
+    public void onInitialize() {
+
     }
 }

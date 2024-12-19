@@ -3,6 +3,7 @@ package loqor.ait.registry.impl.console.variant;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Vector3f;
@@ -17,6 +18,8 @@ import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.alnico.AlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.BlueAlnicoVariant;
+import loqor.ait.data.schema.console.variant.copper.CopperTaigaVariant;
+import loqor.ait.data.schema.console.variant.copper.CopperVariant;
 import loqor.ait.data.schema.console.variant.coral.BlueCoralVariant;
 import loqor.ait.data.schema.console.variant.coral.CoralVariant;
 import loqor.ait.data.schema.console.variant.coral.WhiteCoralVariant;
@@ -31,7 +34,6 @@ import loqor.ait.data.schema.console.variant.steam.SteamVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaVariant;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSchema> {
     private static ConsoleVariantRegistry INSTANCE;
@@ -126,6 +128,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema STEAM_GILDED;
     public static ConsoleVariantSchema HUDOLIN;
     public static ConsoleVariantSchema COPPER;
+    public static ConsoleVariantSchema COPPER_TAIGA;
     public static ConsoleVariantSchema BOREALIS;
 
     @Override
@@ -161,7 +164,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         // HUDOLIN = registerStatic(new HudolinVariant());
 
         // Copper variants
-        // COPPER = registerStatic(new CopperVariant());
+        COPPER = registerStatic(new CopperVariant());
+        COPPER_TAIGA = registerStatic(new CopperTaigaVariant());
 
         // Borealis variants
         // BOREALIS = registerStatic(new BorealisVariant());

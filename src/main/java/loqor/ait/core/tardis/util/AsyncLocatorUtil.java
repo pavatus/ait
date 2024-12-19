@@ -32,6 +32,12 @@ public class AsyncLocatorUtil {
 
         int threads = Runtime.getRuntime().availableProcessors() / 2;
         AITMod.LOGGER.trace("Starting locating executor service with thread pool size of {}", threads);
+
+        if (threads <= 0) {
+            AITMod.LOGGER.error("Failed to start locating executor service: thread pool size is 0 or less - {}. Available Processors {}", threads, Runtime.getRuntime().availableProcessors());
+            return;
+        }
+
         LOCATING_EXECUTOR_SERVICE = Executors.newFixedThreadPool(threads, new ThreadFactory() {
             private static final AtomicInteger poolNum = new AtomicInteger(1);
             private final AtomicInteger threadNum = new AtomicInteger(1);
