@@ -13,6 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
 
@@ -62,6 +63,16 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
 
         ItemStack stack = entity.getShowcaseStack();
 
+        // Apply the same rotation as the block
+        matrices.translate(0.5, 1.5, 0.5);
+        float rotation = entity.getCachedState().get(FabricatorBlock.FACING).asRotation();
+        if (entity.getCachedState().get(FabricatorBlock.FACING) == Direction.NORTH ||
+                entity.getCachedState().get(FabricatorBlock.FACING) == Direction.SOUTH) {
+            rotation += 180;
+        }
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+        matrices.translate(-0.5, -1.5, -0.5);
+
         if (!stack.isEmpty()) {
             matrices.push();
             double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
@@ -86,6 +97,7 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
                             VertexConsumerProvider vertexConsumers, int light, int overlay) {
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
         matrices.push();
+
         matrices.translate(0.93, 0.1255, 0.315);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
