@@ -72,8 +72,13 @@ public class BlueprintItem extends Item {
 
     public static ItemStack createStack(BlueprintSchema schema) {
         ItemStack stack = new ItemStack(AITItems.BLUEPRINT);
-        NbtCompound nbt = stack.getOrCreateNbt();
 
+        setSchema(stack, schema);
+
+        return stack;
+    }
+    public static ItemStack setSchema(ItemStack stack, BlueprintSchema schema) {
+        NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putString("Blueprint", schema.id().toString());
         return stack;
     }

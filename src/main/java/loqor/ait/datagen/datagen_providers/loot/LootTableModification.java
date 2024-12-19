@@ -10,7 +10,7 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 
 import loqor.ait.core.AITItems;
-import loqor.ait.registry.impl.BlueprintRegistry;
+import loqor.ait.core.item.blueprint.BlueprintRegistry;
 
 public class LootTableModification implements ModInitializer {
 
@@ -24,7 +24,7 @@ public class LootTableModification implements ModInitializer {
                     || id.equals(LootTables.SIMPLE_DUNGEON_CHEST) || id.equals(LootTables.STRONGHOLD_LIBRARY_CHEST)) {
 
                 LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(AITItems.BLUEPRINT).weight(10)
-                        .apply(SetBlueprintLootFunction.builder(BlueprintRegistry.getRandomEntry())));
+                        .apply(SetBlueprintLootFunction.builder(BlueprintRegistry.getInstance().getRandom())));
 
                 tableBuilder.pool(poolBuilder);
             }
