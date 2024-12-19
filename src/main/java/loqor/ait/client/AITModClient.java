@@ -44,6 +44,7 @@ import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
+import loqor.ait.client.screens.BlueprintFabricatorScreen;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
@@ -243,10 +244,10 @@ public class AITModClient implements ClientModInitializer {
 
     public static Screen screenFromId(int id, @Nullable ClientTardis tardis, @Nullable BlockPos console) {
         return switch (id) {
-            default -> null;
             case 0 -> new MonitorScreen(tardis, console);
-            // case 1 -> new EngineScreen(tardis);
+            case 1 -> new BlueprintFabricatorScreen();
             case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
+            default -> null;
         };
     }
 

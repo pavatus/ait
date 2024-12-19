@@ -10,6 +10,7 @@ import net.minecraft.screen.slot.Slot;
 
 import loqor.ait.AITMod;
 
+@Deprecated(forRemoval = true)
 public class EngineScreenHandler extends ScreenHandler {
     private final Inventory inventory;
 
