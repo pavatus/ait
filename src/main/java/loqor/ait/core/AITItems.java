@@ -182,7 +182,7 @@ public class AITItems implements ItemRegistryContainer {
      // TODO ADVENT STUFF
 
     static {
-        /*if (isUnlockedOnThisDay(12, 27)) {
+        /*if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
             // TODO FESTIVE SANTA RESPIRATOR
         }*/
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
@@ -193,19 +193,27 @@ public class AITItems implements ItemRegistryContainer {
             HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
             MUG = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
         }
-        /*if (isUnlockedOnThisDay(1,4)) {
+        /*if (isUnlockedOnThisDay(Calendar.JANUARY,4)) {
             // TODO SONIC CANDY CANE
         }
-        if (isUnlockedOnThisDay(1,5)) {
-            // TODO DALEK MOD EXTERIOR CROSSOVER
+        if (isUnlockedOnThisDay(Calendar.JANUARY,5)) {
+           // TODO FESTIVE ICY EXTERIOR, SOMETHING EXTRA?
         }
-        if (isUnlockedOnThisDay(1,6)) {
-            // TODO FESTIVE ICY EXTERIOR, SOMETHING EXTRA?
+        if (isUnlockedAfterAdvent2024()) {
+            // TODO DALEK MOD EXTERIOR CROSSOVER
         }*/
     }
 
     public static boolean isUnlockedOnThisDay(int month, int day) {
         return getAdventDates(month, Calendar.JANUARY, day, 6);
+    }
+
+    public static boolean isUnlockedAfterAdvent2024() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int day = calendar.get(Calendar.DATE);
+
+        return year >= 2025 && day >= 6;
     }
 
     public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
