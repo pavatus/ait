@@ -1,5 +1,4 @@
 package loqor.ait.core;
-
 import io.wispforest.owo.registration.annotations.AssignedName;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -10,6 +9,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
+import loqor.ait.core.entities.CobbledSnowballEntity;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
@@ -28,6 +28,10 @@ public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
     public static final EntityType<GallifreyFallsPaintingEntity> GALLIFREY_FALLS_PAINTING_TYPE = FabricEntityTypeBuilder
             .create(SpawnGroup.MISC, GallifreyFallsPaintingEntity::new)
             .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
+
+    public static final EntityType<CobbledSnowballEntity> COBBLED_SNOWBALL_TYPE = FabricEntityTypeBuilder
+            .create(SpawnGroup.MISC, CobbledSnowballEntity::new)
+            .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).trackRangeBlocks(4).trackedUpdateRate(10).build();
 
     @Override
     public Registry<EntityType<?>> getRegistry() {
