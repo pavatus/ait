@@ -163,6 +163,10 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 169);
 
     @NoEnglish
+    public static final Item WONDERFUL_TIME_IN_SPACE = new MusicDiscItem(1, AITSounds.WONDERFUL_TIME_IN_SPACE,
+            new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 73);
+
+    @NoEnglish
     public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.ERROR,
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
 
@@ -176,11 +180,8 @@ public class AITItems implements ItemRegistryContainer {
      // TODO ADVENT STUFF
 
     static {
-        /*if (isUnlockedOnThisDay(12, 26)) {
-            // TODO FESTIVE KEY RETEXTURE
-        }
-        if (isUnlockedOnThisDay(12, 27)) {
-            // TODO FESTIVE RESPIRATOR RETEXTURE
+        /*if (isUnlockedOnThisDay(12, 27)) {
+            // TODO FESTIVE SANTA RESPIRATOR
         }*/
         if (isUnlockedOnThisDay(12, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
