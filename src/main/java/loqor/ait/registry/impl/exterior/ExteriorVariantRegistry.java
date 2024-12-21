@@ -35,7 +35,6 @@ import loqor.ait.data.schema.exterior.variant.geometric.GeometricFireVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
-import loqor.ait.data.schema.exterior.variant.jake.JakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;

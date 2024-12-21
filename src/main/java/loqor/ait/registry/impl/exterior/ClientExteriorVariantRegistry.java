@@ -34,7 +34,6 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
-import loqor.ait.data.schema.exterior.variant.jake.client.ClientJakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
