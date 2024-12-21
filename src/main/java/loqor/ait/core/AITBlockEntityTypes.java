@@ -64,4 +64,8 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(PowerConverterBlock.BlockEntity::new, AITBlocks.POWER_CONVERTER).build();
     public static BlockEntityType<GenericStructureSystemBlockEntity> GENERIC_SUBSYSTEM_BLOCK_TYPE = FabricBlockEntityTypeBuilder
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
+
+    // TODO ADVENT might have to make this work like the block as well
+    public static BlockEntityType<SnowGlobeBlockEntity> SNOW_GLOBE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+            .create(SnowGlobeBlockEntity::new, AITBlocks.SNOW_GLOBE).build();
 }

@@ -24,7 +24,11 @@ import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
+
 public class AITBlocks implements BlockRegistryContainer {
+
+    // TODO ADVENT BLOCKS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
+    public static Block SNOW_GLOBE;
 
     @NoBlockItem
     @NoBlockDrop
@@ -171,7 +175,12 @@ public class AITBlocks implements BlockRegistryContainer {
      * 6.0F));
      */
 
-    // Decoration
+    // TODO ADVENT
+    static {
+        //if (isUnlockedOnThisDay(12, 30)) {
+            SNOW_GLOBE = new SnowGlobeBlock(FabricBlockSettings.create());
+        //}
+    }
 
 
     @NoEnglish

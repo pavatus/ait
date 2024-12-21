@@ -38,6 +38,7 @@ public class AITItems implements ItemRegistryContainer {
 
     // TODO ADVENT ITEMS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
     public static Item COBBLED_SNOWBALL;
+    public static Item HOT_CHOCOLATE_PACKET;
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
@@ -184,11 +185,8 @@ public class AITItems implements ItemRegistryContainer {
         if (isUnlockedOnThisDay(12, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
         }
-        /*if (isUnlockedOnThisDay(12, 30)) {
-            // TODO TARDIS SNOWGLOBE
-        }
-        if (isUnlockedOnThisDay(1, 2)) {
-            // TODO HOT CHOCOLATE REPLACEMENT FOR ZEITON DUST
+        /*if (isUnlockedOnThisDay(1, 2)) {
+            HOT_CHOCOLATE_PACKET = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
         }
         if (isUnlockedOnThisDay(1,4)) {
             // TODO SONIC CANDY CANE

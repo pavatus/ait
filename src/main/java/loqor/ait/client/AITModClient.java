@@ -37,6 +37,7 @@ import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
 import loqor.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import loqor.ait.client.renderers.decoration.PlaqueRenderer;
+import loqor.ait.client.renderers.decoration.SnowGlobeRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
@@ -89,6 +90,7 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         hammerPredicate();
         siegeItemPredicate();
+        adventItemPredicates();
 
         // TODO make skybox renderer for mars so we dont have to render the moon
         // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
@@ -347,6 +349,38 @@ public class AITModClient implements ClientModInitializer {
                     }
                     return 0.0F;
                 });
+
+        ModelPredicateProviderRegistry.register(AITItems.IRON_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.GOLD_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.NETHERITE_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.CLASSIC_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
     }
 
     public static void blockEntityRendererRegister() {
@@ -377,6 +411,8 @@ public class AITModClient implements ClientModInitializer {
                 GenericSubSystemRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE,
                 PowerConverterRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.SNOW_GLOBE_BLOCK_ENTITY_TYPE,
+                SnowGlobeRenderer::new);
     }
 
     public static void entityRenderRegister() {
