@@ -919,6 +919,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // effects
         provider.addTranslation("effect.ait.zeiton_high", "Zeiton High");
+        provider.addTranslation("effect.ait.lunar_regolith", "Lunar Regolith Poisoned");
+        provider.addTranslation("effect.ait.oxygenated", "Oxygenator Field");
 
         // automatic english for items
         AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {

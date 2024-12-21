@@ -63,6 +63,10 @@ public abstract class LivingEntityMixin extends Entity {
             if (player.isCreative()) return;
         }
 
+        if (entity instanceof PlayerEntity player) {
+            if (player.isSpectator()) return;
+        }
+
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
         if (planet == null) return;
 
