@@ -1,6 +1,9 @@
 package loqor.ait.core;
 
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -173,9 +176,9 @@ public class AITBlocks implements BlockRegistryContainer {
 
     // TODO ADVENT
     static {
-        //if (isUnlockedOnThisDay(12, 30)) {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             SNOW_GLOBE = new SnowGlobeBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
-        //}
+        }
     }
 
 
