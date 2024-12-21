@@ -149,7 +149,8 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item LIFE_SUPPORT = new SubSystemItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.LIFE_SUPPORT);
 
-
+    @NoEnglish
+    public static final Item GALIFRAY_FALLS_PAINTING = new AITDecorationItem(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
