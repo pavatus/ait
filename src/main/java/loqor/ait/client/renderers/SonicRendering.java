@@ -175,6 +175,7 @@ public class SonicRendering {
         String text = "";
 
         SubSystem system = be.system();
+        if (system == null) return;
         if (system instanceof DurableSubSystem) {
             text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 100";
         }
