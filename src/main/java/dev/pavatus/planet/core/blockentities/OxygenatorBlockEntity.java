@@ -1,6 +1,8 @@
 package dev.pavatus.planet.core.blockentities;
 
 import dev.pavatus.planet.core.PlanetBlockEntities;
+import dev.pavatus.planet.core.planet.Planet;
+import dev.pavatus.planet.core.planet.PlanetRegistry;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,6 +21,8 @@ public class OxygenatorBlockEntity extends BlockEntity {
 
     public void tick(World world, BlockPos blockPos, BlockState blockState, OxygenatorBlockEntity oxygenatorBlockEntity) {
         if (world.isClient()) return;
+        Planet planet = PlanetRegistry.getInstance().get(world);
+        if (planet.hasOxygen()) return;
         world.getOtherEntities(null, new Box(blockPos).expand(20), entity -> entity instanceof LivingEntity).forEach(entity -> {
             if  (entity instanceof LivingEntity livingEntity) {
                 livingEntity.addStatusEffect(new StatusEffectInstance(AITStatusEffects.OXYGENATED, 20, 1));
