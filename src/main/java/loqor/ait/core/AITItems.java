@@ -1,6 +1,7 @@
 package loqor.ait.core;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -34,6 +35,9 @@ import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
 
 public class AITItems implements ItemRegistryContainer {
+
+    // TODO ADVENT ITEMS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
+    public static Item COBBLED_SNOWBALL;
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
@@ -167,6 +171,59 @@ public class AITItems implements ItemRegistryContainer {
      public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+
+     // TODO ADVENT STUFF
+
+    static {
+        /*if (isUnlockedOnThisDay(12, 26)) {
+            // TODO FESTIVE KEY RETEXTURE
+        }
+        if (isUnlockedOnThisDay(12, 27)) {
+            // TODO FESTIVE RESPIRATOR RETEXTURE
+        }
+        if (isUnlockedOnThisDay(12, 28)) {
+            // TODO FESTIVE HAZANDRA PRESENT BOX
+        }*/
+        if (isUnlockedOnThisDay(12, 29)) {
+            COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
+        }
+        /*if (isUnlockedOnThisDay(12, 30)) {
+            // TODO TARDIS SNOWGLOBE
+        }
+        if (isUnlockedOnThisDay(12, 31)) {
+            // TODO SNOW USED ON TELEPATHIC CIRCUITS
+        }
+        if (isUnlockedOnThisDay(1, 1)) {
+            // TODO CHRISTMAS CARD HYPERCUBE
+        }
+        if (isUnlockedOnThisDay(1, 2)) {
+            // TODO HOT CHOCOLATE REPLACEMENT FOR ZEITON DUST
+        }
+        if (isUnlockedOnThisDay(1,3)) {
+            // TODO CHRISTMAS HUM
+        }
+        if (isUnlockedOnThisDay(1,4)) {
+            // TODO SONIC CANDY CANE
+        }
+        if (isUnlockedOnThisDay(1,5)) {
+            // TODO DALEK MOD EXTERIOR CROSSOVER
+        }
+        if (isUnlockedOnThisDay(1,6)) {
+            // TODO FESTIVE ICY EXTERIOR, SOMETHING EXTRA?
+        }*/
+    }
+
+    public static boolean isUnlockedOnThisDay(int month, int day) {
+        return getAdventDates(month, 1, day, 6);
+    }
+
+    public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH) + 1 >= monthBegin &&
+                calendar.get(Calendar.MONTH) + 1 <= monthEnd &&
+                calendar.get(Calendar.DATE) >= dayBegin &&
+                calendar.get(Calendar.DATE) <= dayEnd;
+    }
 
 
     public static List<Item> get() {
