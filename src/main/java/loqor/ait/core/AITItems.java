@@ -180,9 +180,6 @@ public class AITItems implements ItemRegistryContainer {
         }
         if (isUnlockedOnThisDay(12, 27)) {
             // TODO FESTIVE RESPIRATOR RETEXTURE
-        }
-        if (isUnlockedOnThisDay(12, 28)) {
-            // TODO FESTIVE HAZANDRA PRESENT BOX
         }*/
         if (isUnlockedOnThisDay(12, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
@@ -190,17 +187,8 @@ public class AITItems implements ItemRegistryContainer {
         /*if (isUnlockedOnThisDay(12, 30)) {
             // TODO TARDIS SNOWGLOBE
         }
-        if (isUnlockedOnThisDay(12, 31)) {
-            // TODO SNOW USED ON TELEPATHIC CIRCUITS
-        }
-        if (isUnlockedOnThisDay(1, 1)) {
-            // TODO CHRISTMAS CARD HYPERCUBE
-        }
         if (isUnlockedOnThisDay(1, 2)) {
             // TODO HOT CHOCOLATE REPLACEMENT FOR ZEITON DUST
-        }
-        if (isUnlockedOnThisDay(1,3)) {
-            // TODO CHRISTMAS HUM
         }
         if (isUnlockedOnThisDay(1,4)) {
             // TODO SONIC CANDY CANE

@@ -59,6 +59,7 @@ public class AITSounds {
     // Hums
     public static final SoundEvent TOYOTA_HUM = register("tardis/hums/toyota_hum");
     public static final SoundEvent CORAL_HUM = register("tardis/hums/coral_hum");
+    public static final SoundEvent CHRISTMAS_HUM = register("tardis/hums/advent/christmas_hum");
     public static final SoundEvent EIGHT_HUM = register("tardis/hums/eight_hum");
     public static final SoundEvent COPPER_HUM = register("tardis/hums/copper_hum");
     public static final SoundEvent EXILE_HUM = register("tardis/hums/exile_hum");
