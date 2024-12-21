@@ -568,6 +568,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.mechanical", "Mechanical");
         provider.addTranslation("sonic.ait.song", "Song");
         provider.addTranslation("sonic.ait.singularity", "Singularity");
+        provider.addTranslation("sonic.ait.candy_cane", "Candy Cane");
 
         // Blocks
         provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
@@ -600,6 +601,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 
         // TARDIS Control Actionbar Title
+        provider.addTranslation("tardis.message.protocol_813.travel", "Hail Mary: Protocol 813 is active, please prepare for departure.");
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.engaged", "Protocol 813: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.disengaged", "Protocol 813: DISENGAGED");
