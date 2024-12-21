@@ -2,6 +2,7 @@ package loqor.ait.client;
 
 import static loqor.ait.AITMod.*;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
@@ -337,7 +338,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.HYPERCUBE, new Identifier("advent"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (itemStack.getItem() instanceof HypercubeItem) {
-                        return AITItems.isUnlockedOnThisDay(1, 1) ? 1.0F : 0.0F;
+                        return AITItems.isUnlockedOnThisDay(Calendar.JANUARY, 1) ? 1.0F : 0.0F;
                     }
                     return 0.0F;
                 });
@@ -345,7 +346,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.HAZANDRA, new Identifier("advent"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (itemStack.getItem() instanceof InteriorTeleporterItem) {
-                        return AITItems.isUnlockedOnThisDay(12, 28) ? 1.0F : 0.0F;
+                        return AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 28) ? 1.0F : 0.0F;
                     }
                     return 0.0F;
                 });
@@ -353,7 +354,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.IRON_KEY, new Identifier("advent"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (itemStack.getItem() instanceof KeyItem) {
-                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                        return AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
                     }
                     return 0.0F;
                 });
@@ -361,7 +362,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.GOLD_KEY, new Identifier("advent"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (itemStack.getItem() instanceof KeyItem) {
-                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                        return AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
                     }
                     return 0.0F;
                 });
@@ -369,7 +370,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.NETHERITE_KEY, new Identifier("advent"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (itemStack.getItem() instanceof KeyItem) {
-                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                        return AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
                     }
                     return 0.0F;
                 });
@@ -377,7 +378,7 @@ public class AITModClient implements ClientModInitializer {
         ModelPredicateProviderRegistry.register(AITItems.CLASSIC_KEY, new Identifier("advent"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
                     if (itemStack.getItem() instanceof KeyItem) {
-                        return AITItems.isUnlockedOnThisDay(12, 26) ? 1.0F : 0.0F;
+                        return AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
                     }
                     return 0.0F;
                 });

@@ -13,6 +13,7 @@ import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
 public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
+    public static BlockEntityType<SnowGlobeBlockEntity> SNOW_GLOBE_BLOCK_ENTITY_TYPE;
 
     public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();
@@ -66,6 +67,10 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
 
     // TODO ADVENT might have to make this work like the block as well
-    public static BlockEntityType<SnowGlobeBlockEntity> SNOW_GLOBE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(SnowGlobeBlockEntity::new, AITBlocks.SNOW_GLOBE).build();
+    static {
+        //if (isUnlockedOnThisDay(12, 30)) {
+            SNOW_GLOBE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+                    .create(SnowGlobeBlockEntity::new, AITBlocks.SNOW_GLOBE).build();
+        //}
+    }
 }

@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl;
 
+import java.util.Calendar;
+
 import dev.pavatus.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.network.PacketByteBuf;
@@ -28,7 +30,7 @@ public class HumRegistry extends SimpleDatapackRegistry<Hum> {
     @Override
     protected void defaults() {
         CORAL = register(Hum.create(AITMod.MOD_ID, "coral", AITSounds.CORAL_HUM));
-        if (AITItems.isUnlockedOnThisDay(1,3)) {
+        if (AITItems.isUnlockedOnThisDay(Calendar.JANUARY,3)) {
             CHRISTMAS = register(Hum.create(AITMod.MOD_ID, "christmas", AITSounds.CHRISTMAS_HUM));
         }
     }

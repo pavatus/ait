@@ -1,6 +1,7 @@
 package loqor.ait.core.tardis.control.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import net.minecraft.block.Blocks;
@@ -71,7 +72,7 @@ public class TelepathicControl extends Control {
             return false;
         }
 
-        if (AITItems.isUnlockedOnThisDay(12, 31) && (type == Blocks.SNOW.asItem() || type == Blocks.SNOW_BLOCK.asItem() || type == Blocks.POWDER_SNOW.asItem())) {
+        if (AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 31) && (type == Blocks.SNOW.asItem() || type == Blocks.SNOW_BLOCK.asItem() || type == Blocks.POWDER_SNOW.asItem())) {
             //TODO DUZO PLEASE DO THIS - locate a snow biome nearby!
             return true;
         }

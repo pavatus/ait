@@ -185,10 +185,10 @@ public class AITItems implements ItemRegistryContainer {
         /*if (isUnlockedOnThisDay(12, 27)) {
             // TODO FESTIVE SANTA RESPIRATOR
         }*/
-        if (isUnlockedOnThisDay(12, 29)) {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
         }
-        if (isUnlockedOnThisDay(1, 2)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
             HOT_CHOCOLATE_POWDER = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
             HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
             MUG = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
@@ -205,15 +205,20 @@ public class AITItems implements ItemRegistryContainer {
     }
 
     public static boolean isUnlockedOnThisDay(int month, int day) {
-        return getAdventDates(month, 1, day, 6);
+        return getAdventDates(month, Calendar.JANUARY, day, 6);
     }
 
     public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) + 1 >= monthBegin &&
-                calendar.get(Calendar.MONTH) + 1 <= monthEnd &&
-                calendar.get(Calendar.DATE) >= dayBegin &&
-                calendar.get(Calendar.DATE) <= dayEnd;
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Handle the case where the date range spans across two years
+        if (monthBegin == Calendar.DECEMBER && monthEnd == Calendar.JANUARY) {
+            return (currentMonth == Calendar.DECEMBER && currentDay >= dayBegin) || (currentMonth == Calendar.JANUARY && currentDay <= dayEnd);
+        } else {
+            return currentMonth >= monthBegin && currentMonth <= monthEnd && currentDay >= dayBegin && currentDay <= dayEnd;
+        }
     }
 
 
