@@ -732,7 +732,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the subsystem block to set its type"); // todo - improve message
+        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type."); // todo - improve message
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
