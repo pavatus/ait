@@ -331,6 +331,24 @@ public class AITModClient implements ClientModInitializer {
                 });
     }
 
+    public static void adventItemPredicates() {
+        ModelPredicateProviderRegistry.register(AITItems.HYPERCUBE, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof HypercubeItem) {
+                        return AITItems.isUnlockedOnThisDay(1, 1) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.HAZANDRA, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof InteriorTeleporterItem) {
+                        return AITItems.isUnlockedOnThisDay(12, 28) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+    }
+
     public static void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE,

@@ -6,6 +6,7 @@ import net.minecraft.network.PacketByteBuf;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.data.hum.DatapackHum;
 import loqor.ait.data.hum.Hum;
@@ -22,10 +23,14 @@ public class HumRegistry extends SimpleDatapackRegistry<Hum> {
     }
 
     public static Hum CORAL;
+    public static Hum CHRISTMAS;
 
     @Override
     protected void defaults() {
         CORAL = register(Hum.create(AITMod.MOD_ID, "coral", AITSounds.CORAL_HUM));
+        if (AITItems.isUnlockedOnThisDay(1,3)) {
+            CHRISTMAS = register(Hum.create(AITMod.MOD_ID, "christmas", AITSounds.CHRISTMAS_HUM));
+        }
     }
 
     @Override

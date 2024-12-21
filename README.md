@@ -48,31 +48,27 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - [Loqor](https://loqor.dev/)
 - [duzo](https://duzo.is-a.dev/)
 - [Dr. Theo](https://theo.is-a.dev/)
-- Nitrogenesis
+- Maketendo
 
 ---
 
 ### Artists:
-- Tright (Modeler)
-- b2bmrww2 (Modeler)
-- classic_account (Builder)
-- Monsterwaill (Animator)
+- Westankrang
+- Tright
+- b2
+- Ouro
 
 ---
 
 ### Sound Design:
+- Dian
 - [Radio](https://im-radio.bandcamp.com/album/ait-mod-music-disc-drifting)
 - TARDISSFX (the YouTube channel)
 
 ---
 
 ## Thank You's:
-- [MagicMan(?)](https://magicmaan.github.io/) (Help with modeling)
-- Bug1312 (Help with code)
 - DocArcane (Credit for the Steampunk console design)
-- Creativious (Help with code)
-- [Jeryn](https://craig.software) (Suff) (Help with code)
-- Maggie (Help with texturing)
 
 
 ## Links
