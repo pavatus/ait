@@ -140,10 +140,6 @@ public class AITBlocks implements BlockRegistryContainer {
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     @NoBlockItem
-    public static final Block PLUGBOARD = new PlugBoardBlock(
-            FabricBlockSettings.create().solid().noCollision().strength(1.0f));
-
-    @NoBlockItem
     public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
 
     // Machines
