@@ -12,6 +12,7 @@ import net.minecraft.item.*;
 public class PlanetItems implements ItemRegistryContainer {
 
     // SPACESUIT
+
     public static final Item SPACESUIT_HELMET = new SpacesuitItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
             new OwoItemSettings().group(PlanetModule.instance().getItemGroup()).maxDamage(240), true);
 
@@ -38,7 +39,7 @@ public class PlanetItems implements ItemRegistryContainer {
     public static final Item ANORTHOSITE_AXE = new AxeItem(PlanetToolMaterial.ANORTHOSITE, 3, 1f, new OwoItemSettings());
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new OwoItemSettings());
 
-    // WEAPONS
+    // MATERIALS
     public static final Item FABRIC = new Item(new OwoItemSettings());
 
 
