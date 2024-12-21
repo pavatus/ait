@@ -20,7 +20,7 @@ import loqor.ait.core.AITItems;
 public class BlueprintItem extends Item {
 
     public BlueprintItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override
