@@ -20,6 +20,7 @@ public class PlanetBlocks implements BlockRegistryContainer {
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
 
     // Tech
+
     public static final Block OXYGENATOR_BLOCK = new OxygenatorBlock(
             FabricBlockSettings.copy(Blocks.IRON_BLOCK));
 
