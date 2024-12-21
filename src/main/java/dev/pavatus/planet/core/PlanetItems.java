@@ -39,7 +39,7 @@ public class PlanetItems implements ItemRegistryContainer {
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new OwoItemSettings());
 
     // WEAPONS
-    // Guns
+    public static final Item FABRIC = new Item(new OwoItemSettings());
 
 
     // ITEM GROUP TOOL PLACEMENT
@@ -47,6 +47,10 @@ public class PlanetItems implements ItemRegistryContainer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             entries.addAfter(Items.STONE_SWORD, MARTIAN_STONE_SWORD);
             entries.addAfter(MARTIAN_STONE_SWORD, ANORTHOSITE_SWORD);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+            entries.addAfter(Items.PAPER, FABRIC);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {

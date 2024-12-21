@@ -200,6 +200,47 @@ public class PlanetModule extends Module {
                         .criterion(hasItem(Items.BLUE_WOOL), conditionsFromItem(Items.BLUE_WOOL))
                         .criterion(hasItem(Items.WHITE_WOOL), conditionsFromItem(Items.WHITE_WOOL)));
 
+                // Spacesuits
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, PlanetItems.SPACESUIT_BOOTS, 1)
+                        .pattern("   ")
+                        .pattern("F F")
+                        .pattern("FBF")
+                        .input('F', PlanetItems.FABRIC)
+                        .input('B', Items.IRON_BOOTS)
+                        .criterion(hasItem(PlanetItems.FABRIC), conditionsFromItem(PlanetItems.FABRIC))
+                        .criterion(hasItem(Items.IRON_BOOTS), conditionsFromItem(Items.IRON_BOOTS)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, PlanetItems.SPACESUIT_LEGGINGS, 1)
+                        .pattern("FLF")
+                        .pattern("F F")
+                        .pattern("F F")
+                        .input('F', PlanetItems.FABRIC)
+                        .input('L', Items.IRON_LEGGINGS)
+                        .criterion(hasItem(PlanetItems.FABRIC), conditionsFromItem(PlanetItems.FABRIC))
+                        .criterion(hasItem(Items.IRON_LEGGINGS), conditionsFromItem(Items.IRON_LEGGINGS)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, PlanetItems.SPACESUIT_CHESTPLATE, 1)
+                        .pattern("F F")
+                        .pattern("FCF")
+                        .pattern("FBF")
+                        .input('F', PlanetItems.FABRIC)
+                        .input('B', Items.BUCKET)
+                        .input('C', Items.IRON_CHESTPLATE)
+                        .criterion(hasItem(PlanetItems.FABRIC), conditionsFromItem(PlanetItems.FABRIC))
+                        .criterion(hasItem(Items.BUCKET), conditionsFromItem(Items.BUCKET))
+                        .criterion(hasItem(Items.IRON_CHESTPLATE), conditionsFromItem(Items.IRON_CHESTPLATE)));
+
+                provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, PlanetItems.SPACESUIT_HELMET, 1)
+                        .pattern("FHF")
+                        .pattern("FGF")
+                        .pattern("FFF")
+                        .input('F', PlanetItems.FABRIC)
+                        .input('H', Items.IRON_HELMET)
+                        .input('G', Items.YELLOW_STAINED_GLASS_PANE)
+                        .criterion(hasItem(PlanetItems.FABRIC), conditionsFromItem(PlanetItems.FABRIC))
+                        .criterion(hasItem(Items.IRON_HELMET), conditionsFromItem(Items.IRON_HELMET))
+                        .criterion(hasItem(Items.YELLOW_STAINED_GLASS_PANE), conditionsFromItem(Items.YELLOW_STAINED_GLASS_PANE)));
+
                 // Martian Tools
 
                 provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetItems.MARTIAN_STONE_PICKAXE, 1)
