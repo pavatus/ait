@@ -87,7 +87,7 @@ public class AITDecorationItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
 
 
-        if (stack.getItem() == AITItems.GALIFRAY_FALLS_PAINTING) {
+        if (stack.getItem() == AITItems.GALLIFREY_FALLS_PAINTING) {
             tooltip.add(Text.translatable("painting.ait.gallifrey_falls.title").formatted(Formatting.YELLOW));
             tooltip.add(Text.translatable("painting.ait.gallifrey_falls.author").formatted(Formatting.GRAY));
         }

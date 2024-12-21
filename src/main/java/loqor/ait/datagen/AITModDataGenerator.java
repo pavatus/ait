@@ -506,7 +506,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        provider.addTranslation(AITItems.GALIFRAY_FALLS_PAINTING, "Painting");
+        provider.addTranslation(AITItems.GALLIFREY_FALLS_PAINTING, "Painting");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");

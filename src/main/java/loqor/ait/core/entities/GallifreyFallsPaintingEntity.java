@@ -97,7 +97,7 @@ public class GallifreyFallsPaintingEntity extends AbstractDecorationEntity {
 
     @Override
     public ItemStack getPickBlockStack() {
-        return new ItemStack(AITItems.GALIFRAY_FALLS_PAINTING);
+        return new ItemStack(AITItems.GALLIFREY_FALLS_PAINTING);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class GallifreyFallsPaintingEntity extends AbstractDecorationEntity {
                 return;
             }
         }
-        this.dropItem(AITItems.GALIFRAY_FALLS_PAINTING);
+        this.dropItem(AITItems.GALLIFREY_FALLS_PAINTING);
     }
 
     @Override

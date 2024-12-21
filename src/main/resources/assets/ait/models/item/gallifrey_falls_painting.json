@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "ait:item/galifray_falls_painting"
+    "layer0": "ait:item/gallifrey_falls_painting"
   }
 }
