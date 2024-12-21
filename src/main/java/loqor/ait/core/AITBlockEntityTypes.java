@@ -1,5 +1,9 @@
 package loqor.ait.core;
 
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
+import java.util.Calendar;
+
 import dev.pavatus.planet.core.PlanetBlocks;
 import io.wispforest.owo.registration.reflect.BlockEntityRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -66,9 +70,9 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
 
     // TODO ADVENT might have to make this work like the block as well
     static {
-        //if (isUnlockedOnThisDay(12, 30)) {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             SNOW_GLOBE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
                     .create(SnowGlobeBlockEntity::new, AITBlocks.SNOW_GLOBE).build();
-        //}
+        }
     }
 }

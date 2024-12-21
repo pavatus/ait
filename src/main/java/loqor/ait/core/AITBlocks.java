@@ -174,7 +174,7 @@ public class AITBlocks implements BlockRegistryContainer {
     // TODO ADVENT
     static {
         //if (isUnlockedOnThisDay(12, 30)) {
-            SNOW_GLOBE = new SnowGlobeBlock(FabricBlockSettings.create());
+            SNOW_GLOBE = new SnowGlobeBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
         //}
     }
 

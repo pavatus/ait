@@ -15,6 +15,7 @@ public class SnowGlobeBlock extends HorizontalDirectionalBlock implements BlockE
     public SnowGlobeBlock(Settings settings) {
         super(settings);
     }
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
