@@ -179,7 +179,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
     public static ExteriorVariantSchema ADAPTIVE;
-    public static ExteriorVariantSchema JAKE_DEFAULT;
+    //public static ExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
     protected void defaults() {
@@ -261,6 +261,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         ADAPTIVE = register(new AdaptiveVariant());
 
         // Jake
-        JAKE_DEFAULT = register(new JakeDefaultVariant());
+        //JAKE_DEFAULT = register(new JakeDefaultVariant());
     }
 }

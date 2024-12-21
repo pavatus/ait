@@ -35,7 +35,7 @@ public class DoorRegistry {
     public static DoorSchema GEOMETRIC;
     public static DoorSchema STALLION;
     public static DoorSchema ADAPTIVE;
-    public static DoorSchema JAKE;
+    //public static DoorSchema JAKE;
 
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
@@ -54,6 +54,6 @@ public class DoorRegistry {
         GEOMETRIC = register(new GeometricDoorVariant());
         STALLION = register(new StallionDoorVariant());
         ADAPTIVE = register(new AdaptiveDoorVariant());
-        JAKE = register(new JakeDoorVariant());
+        //JAKE = register(new JakeDoorVariant());
     }
 }

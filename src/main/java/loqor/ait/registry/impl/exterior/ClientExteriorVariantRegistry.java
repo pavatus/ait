@@ -185,7 +185,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
-    public static ClientExteriorVariantSchema JAKE_DEFAULT;
+    //public static ClientExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -265,7 +265,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         ADAPTIVE = register(new ClientAdaptiveVariant());
 
         // Jake
-        JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
+        //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
     }
 
     @Override
