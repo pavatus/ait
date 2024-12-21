@@ -1,6 +1,6 @@
 {
   "textures": {
     "all": "ait:block/flag",
-    "particle": "ait:block/particles/flag_pole"
+    "particle": "minecraft:block/barrier"
   }
 }
