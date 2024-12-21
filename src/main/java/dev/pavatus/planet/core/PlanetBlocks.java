@@ -1,6 +1,7 @@
 package dev.pavatus.planet.core;
 
 import dev.pavatus.planet.PlanetModule;
+import dev.pavatus.planet.core.block.OxygenatorBlock;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
@@ -17,6 +18,10 @@ public class PlanetBlocks implements BlockRegistryContainer {
 
     public static final Block FLAG = new FlagBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
+
+    // Tech
+    public static final Block OXYGENATOR_BLOCK = new OxygenatorBlock(
+            FabricBlockSettings.copy(Blocks.IRON_BLOCK));
 
     // Mars
 

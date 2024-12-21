@@ -8,10 +8,13 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.effects.OxygenatedEffect;
 import loqor.ait.core.effects.ZeitonHighEffect;
 
 public class AITStatusEffects {
     public static StatusEffect ZEITON_HIGH = register(new ZeitonHighEffect(), "zeiton_high");
+
+    public static StatusEffect OXYGENATED = register(new OxygenatedEffect(), "oxygenated");
     public static StatusEffect LUNAR_REGOLITH = register(new LunarRegolithEffect(), "lunar_regolith");
 
     public static void init() {

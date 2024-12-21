@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.core.AITStatusEffects;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.dim.TardisDimension;
 
@@ -65,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity {
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
         if (planet == null) return;
 
-        if (planet.isFreezing() &&  !Planet.hasFullSuit(entity)) {
+        if (planet.isFreezing() &&  !Planet.hasFullSuit(entity) && !entity.hasStatusEffect(AITStatusEffects.OXYGENATED)) {
             // freeze effect on cold planets
             if (entity.getFrozenTicks() < entity.getMinFreezeDamageTicks()) {
                 entity.setFrozenTicks(entity.getMinFreezeDamageTicks() + 20);
@@ -84,7 +85,7 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
 
-        if ((!planet.hasOxygen() && !Planet.hasOxygenInTank(entity))) {
+        if (!planet.hasOxygen() && !Planet.hasOxygenInTank(entity) && !entity.hasStatusEffect(AITStatusEffects.OXYGENATED)) {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA,
                     200, 1, false, false));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
