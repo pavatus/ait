@@ -22,6 +22,7 @@ public class OxygenatorBlockEntity extends BlockEntity {
     public void tick(World world, BlockPos blockPos, BlockState blockState, OxygenatorBlockEntity oxygenatorBlockEntity) {
         if (world.isClient()) return;
         Planet planet = PlanetRegistry.getInstance().get(world);
+        if (planet == null) return;
         if (planet.hasOxygen()) return;
         world.getOtherEntities(null, new Box(blockPos).expand(20), entity -> entity instanceof LivingEntity).forEach(entity -> {
             if  (entity instanceof LivingEntity livingEntity) {
