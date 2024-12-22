@@ -161,19 +161,6 @@ public class AITBlocks implements BlockRegistryContainer {
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
 
-    // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
-    /*
-     * public static final Block CONSOLE_ROOM_PORT_BLOCK = new
-     * ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-     * .addItemSettings(new NeptuneItemSettings().group(() ->
-     * AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F,
-     * 6.0F)); public static final Block ENGINE_ROOM_PORT_BLOCK = new
-     * EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-     * .addItemSettings(new NeptuneItemSettings().group(() ->
-     * AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F,
-     * 6.0F));
-     */
-
     // TODO ADVENT
     static {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
