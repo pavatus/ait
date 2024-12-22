@@ -13,6 +13,7 @@ import loqor.ait.client.models.decoration.SnowGlobeModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.core.blockentities.SnowGlobeBlockEntity;
 import loqor.ait.core.blocks.SnowGlobeBlock;
+import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
@@ -39,6 +40,7 @@ public class SnowGlobeRenderer<T extends SnowGlobeBlockEntity> implements BlockE
         ClientExteriorVariantSchema schema = ClientExteriorVariantRegistry.BOX_DEFAULT;
         schema.model().render(matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(schema.texture())), light, overlay, 1, 1, 1, 1);
         schema.model().render(matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(schema.emission(), true)), 0xf000f0, overlay, 1, 1, 1, 1);
+        schema.model().render(matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(schema.overrides().get(BiomeHandler.BiomeType.SNOWY), false)), light, overlay, 1, 1, 1, 1);
         matrices.pop();
         matrices.pop();
     }

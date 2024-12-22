@@ -1,6 +1,6 @@
 {
   "parent": "ait:item/advent/bauble_key",
   "textures": {
-    "texture": "ait:item/advent/keys/gold"
+    "0": "ait:item/advent/keys/gold"
   }
 }
