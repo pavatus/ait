@@ -230,6 +230,10 @@ public class AITItems implements ItemRegistryContainer {
         }
     }
 
+    public static boolean isInAdvent() {
+
+        return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, 26, 6);
+    }
 
     public static List<Item> get() {
         List<Item> list = new ArrayList<>();
