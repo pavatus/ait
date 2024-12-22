@@ -2,7 +2,6 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"1": "block/ancient_debris_side",
 		"particle": "block/flower_pot",
 		"flowerpot": "block/flower_pot"
 	},
@@ -106,7 +105,7 @@
 			"scale": [0.75, 0.75, 0.75]
 		},
 		"thirdperson_lefthand": {
-			"rotation": [0, 90, 0],
+			"rotation": [0, -90, 0],
 			"translation": [0, 2.75, -2.75],
 			"scale": [0.75, 0.75, 0.75]
 		},
