@@ -206,7 +206,7 @@ public class AITItems implements ItemRegistryContainer {
     }
 
     public static boolean isUnlockedOnThisDay(int month, int day) {
-        return getAdventDates(month, Calendar.JANUARY, day, 6);
+        return true;//return getAdventDates(month, Calendar.JANUARY, day, 6);
     }
 
     public static boolean isUnlockedAfterAdvent2024() {
