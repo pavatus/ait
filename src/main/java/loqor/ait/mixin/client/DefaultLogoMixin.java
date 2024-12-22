@@ -1,8 +1,6 @@
 package loqor.ait.mixin.client;
 
-import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
-
-import java.util.Calendar;
+import static loqor.ait.core.AITItems.isInAdvent;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,7 +23,7 @@ public class DefaultLogoMixin {
     @Unique private static final Identifier AIT_CHRISTMAS_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_christmas_logo.png");
     @Unique private static final Identifier AIT_EDITION = new Identifier(AITMod.MOD_ID, "textures/gui/title/edition.png");
     @Unique private final MinecraftClient client = MinecraftClient.getInstance();
-    @Unique boolean isChristmas = isUnlockedOnThisDay(Calendar.DECEMBER, 27);
+    @Unique boolean isChristmas = isInAdvent();
 
 
 
@@ -48,7 +46,7 @@ public class DefaultLogoMixin {
 
         int screenWidth = this.client.getWindow().getScaledWidth();
         int centerX = screenWidth / 2 - 128;
-        if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
+        if (isChristmas) {
             context.drawTexture(currentLogo, centerX, y - 18, 0.0f, 0.0f, 266,  74, 266, 74);
         } else {
             context.drawTexture(currentLogo, centerX, y - 18, 0.0f, 0.0f, 266, 94, 266, 94);
@@ -62,10 +60,6 @@ public class DefaultLogoMixin {
             context.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
         }
     }
-
-    // Renders the warning message for any other branch than main or release
-
-
 
     @Inject(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At("TAIL"))
     private void renderWarningMessage(DrawContext context, int screenWidth, float alpha, int y, CallbackInfo ci) {
