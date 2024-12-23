@@ -16,6 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.AITRegistryEvents;
+import loqor.ait.core.AITItems;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
@@ -42,6 +43,7 @@ import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
+import loqor.ait.data.schema.exterior.variant.present.PresentDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeCabinetVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeTronVariant;
@@ -188,6 +190,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema DALEK_MOD_1976;
     public static ExteriorVariantSchema DALEK_MOD_1980;
     //public static ExteriorVariantSchema JAKE_DEFAULT;
+    public static ExteriorVariantSchema PRESENT_DEFAULT;
 
     @Override
     protected void defaults() {
@@ -279,5 +282,9 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Jake
         //JAKE_DEFAULT = register(new JakeDefaultVariant());
+
+        // Present
+        if (AITItems.isUnlockedAdvent2024(5))
+            PRESENT_DEFAULT = register(new PresentDefaultVariant());
     }
 }

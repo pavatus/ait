@@ -56,6 +56,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     public static ExteriorCategorySchema ADAPTIVE;
     public static ExteriorCategorySchema DALEK_MOD;
     //public static ExteriorCategorySchema JAKE;
+    public static ExteriorCategorySchema PRESENT;
 
     @Override
     protected void defaults() {
@@ -77,5 +78,6 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
             DALEK_MOD = register(new DalekModCategory());
         }
         //JAKE = register(new JakeCategory());
+        PRESENT = register(new PresentCategory());
     }
 }

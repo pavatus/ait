@@ -23,6 +23,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Arm;
 
 import loqor.ait.client.renderers.wearables.RespiratorFeatureRenderer;
+import loqor.ait.client.renderers.wearables.SantaHatFeatureRenderer;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin
@@ -43,6 +44,7 @@ public abstract class PlayerEntityRendererMixin
 
         this.addFeature(new RespiratorFeatureRenderer<>(renderer, ctx.getModelLoader()));
         this.addFeature(new SpacesuitFeatureRenderer<>(renderer, ctx.getModelLoader()));
+        this.addFeature(new SantaHatFeatureRenderer<>(renderer, ctx.getModelLoader()));
     }
 
     @Inject(method = "renderArm", at = @At("HEAD"), cancellable = true)

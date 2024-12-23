@@ -8,6 +8,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITItems;
 import loqor.ait.data.schema.door.ClientDoorSchema;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.door.impl.*;
@@ -54,6 +55,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema ADAPTIVE;
     public static ClientDoorSchema DALEK_MOD;
     //public static ClientDoorSchema JAKE;
+    public static ClientDoorSchema PRESENT;
 
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
@@ -74,5 +76,7 @@ public class ClientDoorRegistry {
         ADAPTIVE = register(new ClientAdaptiveDoorVariant());
         DALEK_MOD = register(new ClientDalekModDoorVariant());
         //JAKE = register(new ClientJakeDoorVariant());
+        if (AITItems.isUnlockedAdvent2024(5))
+            PRESENT = register(new ClientPresentDoorVariant());
     }
 }

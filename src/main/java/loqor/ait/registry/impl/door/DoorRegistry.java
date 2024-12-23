@@ -8,6 +8,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITItems;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.door.impl.*;
 
@@ -37,6 +38,7 @@ public class DoorRegistry {
     public static DoorSchema ADAPTIVE;
     public static DoorSchema DALEK_MOD;
     //public static DoorSchema JAKE;
+    public static DoorSchema PRESENT;
 
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
@@ -57,5 +59,7 @@ public class DoorRegistry {
         ADAPTIVE = register(new AdaptiveDoorVariant());
         DALEK_MOD = register(new DalekModDoorVariant());
         //JAKE = register(new JakeDoorVariant());
+        if (AITItems.isUnlockedAdvent2024(5))
+            PRESENT = register(new PresentDoorVariant());
     }
 }
