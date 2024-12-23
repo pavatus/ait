@@ -1,6 +1,7 @@
 package loqor.ait.registry.impl.exterior;
 
-import static loqor.ait.core.AITItems.isUnlockedAfterAdvent2024;
+
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
 
 import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -15,7 +16,6 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.core.AITItems;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
@@ -275,7 +275,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         ADAPTIVE = register(new ClientAdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedAfterAdvent2024()) {
+        if (isUnlockedAdvent2024(6)) {
             DALEK_MOD_1963 = register(new ClientDalekMod1963Varient());
             DALEK_MOD_1967 = register(new ClientDalekMod1967Varient());
             DALEK_MOD_1970 = register(new ClientDalekMod1970Varient());
@@ -287,7 +287,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
 
         // Present
-        if (AITItems.isUnlockedAdvent2024(5))
+        if (isUnlockedAdvent2024(5))
             PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
     }
 

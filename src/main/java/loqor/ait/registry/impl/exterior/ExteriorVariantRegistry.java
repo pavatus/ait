@@ -1,6 +1,6 @@
 package loqor.ait.registry.impl.exterior;
 
-import static loqor.ait.core.AITItems.isUnlockedAfterAdvent2024;
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.AITRegistryEvents;
-import loqor.ait.core.AITItems;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
@@ -272,7 +271,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         ADAPTIVE = register(new AdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedAfterAdvent2024()) {
+        if (isUnlockedAdvent2024(6)) {
             DALEK_MOD_1963 = register(new DalekMod1963Varient());
             DALEK_MOD_1967 = register(new DalekMod1967Varient());
             DALEK_MOD_1970 = register(new DalekMod1970Varient());
@@ -284,7 +283,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         //JAKE_DEFAULT = register(new JakeDefaultVariant());
 
         // Present
-        if (AITItems.isUnlockedAdvent2024(5))
+        if (isUnlockedAdvent2024(5))
             PRESENT_DEFAULT = register(new PresentDefaultVariant());
     }
 }

@@ -192,7 +192,7 @@ public class AITItems implements ItemRegistryContainer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
         }
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
+       if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
             HOT_CHOCOLATE_POWDER = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
             HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
             MUG = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));

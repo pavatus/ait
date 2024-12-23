@@ -36,7 +36,8 @@ import loqor.ait.datagen.datagen_providers.lang.LanguageType;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
-public class AITModDataGenerator implements DataGeneratorEntrypoint {
+public class
+AITModDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
@@ -524,7 +525,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.classic", "Classic");
         provider.addTranslation("exterior.ait.stallion", "Stallion");
         provider.addTranslation("exterior.ait.jake", "Jake");
-        provider.addTranslation("exterior.ait.dalek_mod", "Dalek Mod Box");
+        provider.addTranslation("exterior.ait.dalek_mod", "Dalek Mod");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
@@ -811,7 +812,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
-        // Exterior translations
+        // Exterior Varients translations
 
         // All
         provider.addTranslation("exterior.ait.adaptive", "Adaptive");
@@ -853,7 +854,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.stallion_pristine", "Pristine");
         provider.addTranslation("exterior.ait.stallion_green", "Green");
 
-        // frooploof
+        // Frooploof Police Box
         provider.addTranslation("exterior.frooploof.copper", "Copper");
         provider.addTranslation("exterior.frooploof.eleven_toyota", "Toyota (1)");
         provider.addTranslation("exterior.frooploof.eleven_toyota_alternate", "Toyota (2)");
@@ -863,6 +864,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.frooploof.coral_bad_wolf", "Coral (Bad Wolf)");
         provider.addTranslation("exterior.frooploof.coral_war", "War");
         provider.addTranslation("exterior.frooploof.tokamak_eotd", "Tokamak (EOTD)");
+
+        // Dalek Mod
+
+        provider.addTranslation("exterior.ait.1963", "1963");
+        provider.addTranslation("exterior.ait.1967", "1967");
+        provider.addTranslation("exterior.ait.1970", "1970");
+        provider.addTranslation("exterior.ait.1976", "1976");
+        provider.addTranslation("exterior.ait.1980", "1980");
+
+
 
         // Security Settings Menu
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");

@@ -12,6 +12,9 @@ import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -20,11 +23,16 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
+import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 
 public class CobbledSnowballEntity extends ThrownItemEntity {
     public CobbledSnowballEntity(EntityType<? extends CobbledSnowballEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    public CobbledSnowballEntity(LivingEntity livingEntity, World world) {
+        super(AITEntityTypes.COBBLED_SNOWBALL_TYPE, livingEntity, world);
     }
 
     @Override
@@ -69,4 +77,10 @@ public class CobbledSnowballEntity extends ThrownItemEntity {
             this.discard();
         }
     }
+
+    @Override
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
+        return new EntitySpawnS2CPacket(this);
+    }
+
 }

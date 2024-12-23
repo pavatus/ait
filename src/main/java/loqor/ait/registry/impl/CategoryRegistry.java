@@ -1,6 +1,7 @@
 package loqor.ait.registry.impl;
 
-import static loqor.ait.core.AITItems.isUnlockedAfterAdvent2024;
+
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
 
 import java.util.Random;
 
@@ -74,7 +75,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
-        if (isUnlockedAfterAdvent2024()) {
+        if (isUnlockedAdvent2024(6)) {
             DALEK_MOD = register(new DalekModCategory());
         }
         //JAKE = register(new JakeCategory());

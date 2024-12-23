@@ -30,7 +30,7 @@ public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
             .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
 
     public static final EntityType<CobbledSnowballEntity> COBBLED_SNOWBALL_TYPE = FabricEntityTypeBuilder
-            .create(SpawnGroup.MISC, CobbledSnowballEntity::new)
+            .<CobbledSnowballEntity>create(SpawnGroup.MISC, CobbledSnowballEntity::new)
             .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).trackRangeBlocks(4).trackedUpdateRate(10).build();
 
     @Override

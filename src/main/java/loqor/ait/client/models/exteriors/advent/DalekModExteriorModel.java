@@ -65,15 +65,20 @@ public class DalekModExteriorModel extends ExteriorModel {
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.scale(1f, 1f, 1f);
+        matrices.translate(0, -0.1, 0);
         dalekmod.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        matrices.pop();
     }
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
         return switch (state) {
-            case CLOSED -> DoorAnimations.K2BOOTH_EXTERIOR_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.K2BOOTH_EXTERIOR_OPEN_ANIMATION;
-            case SECOND, BOTH -> Animation.Builder.create(0).build();
+            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
+            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
+            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
+            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
         };
     }
 
@@ -81,7 +86,7 @@ public class DalekModExteriorModel extends ExteriorModel {
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
                               VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         matrices.push();
-        matrices.scale(1f, 1f, 1f);
+        matrices.scale(1.5f, 1.5f, 1.5f);
         matrices.translate(0, -1.5f, 0);
 
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -100,7 +105,7 @@ public class DalekModExteriorModel extends ExteriorModel {
             return;
 
         matrices.push();
-        matrices.scale(0.63F, 0.63F, 0.63F);
+        matrices.scale(0.945F, 0.945F, 0.945F);
         matrices.translate(0, -1.5f, 0);
 
         DoorHandler door = exterior.tardis().get().door();

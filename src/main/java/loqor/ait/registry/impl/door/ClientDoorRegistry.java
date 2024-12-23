@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl.door;
 
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
+
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 
 import net.minecraft.registry.Registry;
@@ -8,7 +10,6 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.AITItems;
 import loqor.ait.data.schema.door.ClientDoorSchema;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.door.impl.*;
@@ -74,9 +75,10 @@ public class ClientDoorRegistry {
         GEOMETRIC = register(new ClientGeometricDoorVariant());
         STALLION = register(new ClientStallionDoorVariant());
         ADAPTIVE = register(new ClientAdaptiveDoorVariant());
-        DALEK_MOD = register(new ClientDalekModDoorVariant());
+        if (isUnlockedAdvent2024(6))
+            DALEK_MOD = register(new ClientDalekModDoorVariant());
         //JAKE = register(new ClientJakeDoorVariant());
-        if (AITItems.isUnlockedAdvent2024(5))
+        if (isUnlockedAdvent2024(5))
             PRESENT = register(new ClientPresentDoorVariant());
     }
 }
