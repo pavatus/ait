@@ -41,6 +41,7 @@ public class AITItems implements ItemRegistryContainer {
     public static Item HOT_CHOCOLATE_POWDER;
     public static Item HOT_CHOCOLATE;
     public static Item MUG;
+    public static Item SANTA_HAT;
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
@@ -66,7 +67,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item HAMMER = new HammerItem(3, -2.4F,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(600));
     public static final Item RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);;
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
     public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
             ArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
             true);
@@ -166,7 +167,7 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 169);
 
     @NoEnglish
-    public static final Item WONDERFUL_TIME_IN_SPACE = new MusicDiscItem(1, AITSounds.WONDERFUL_TIME_IN_SPACE,
+    public static final Item WONDERFUL_TIME_IN_SPACE_MUSIC_DISC = new MusicDiscItem(1, AITSounds.WONDERFUL_TIME_IN_SPACE,
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 73);
 
     @NoEnglish
@@ -183,24 +184,23 @@ public class AITItems implements ItemRegistryContainer {
      // TODO ADVENT STUFF
 
     static {
-        /*if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
-            // TODO FESTIVE SANTA RESPIRATOR
-        }*/
-        //if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
+            SANTA_HAT = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
+        }
+
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
-        //}
-        //if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
+        }
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
             HOT_CHOCOLATE_POWDER = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
             HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
             MUG = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-        //}
-        /*if (isUnlockedOnThisDay(Calendar.JANUARY,4)) {
+        }
+        /*if (isUnlockedAdvent2024(4)) {
             // TODO SONIC CANDY CANE
         }
-        if (isUnlockedOnThisDay(Calendar.JANUARY,5)) {
-           // TODO FESTIVE ICY EXTERIOR, SOMETHING EXTRA?
-        }
-        if (isUnlockedAfterAdvent2024()) {
+        if (isUnlockedAdvent2024(6)) {
             // TODO DALEK MOD EXTERIOR CROSSOVER
         }*/
     }
@@ -209,12 +209,11 @@ public class AITItems implements ItemRegistryContainer {
         return getAdventDates(month, Calendar.JANUARY, day, 6);
     }
 
-    public static boolean isUnlockedAfterAdvent2024() {
+    public static boolean isUnlockedAdvent2024(int day) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
-        int day = calendar.get(Calendar.DATE);
 
-        return year >= 2025 && day >= 6;
+        return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, day, 6) || year >= 2024;
     }
 
     public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {

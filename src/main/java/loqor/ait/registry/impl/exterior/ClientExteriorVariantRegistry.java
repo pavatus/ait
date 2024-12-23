@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
+import loqor.ait.core.AITItems;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
@@ -37,6 +38,7 @@ import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
+import loqor.ait.data.schema.exterior.variant.present.client.ClientPresentDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeTronVariant;
@@ -185,6 +187,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
     //public static ClientExteriorVariantSchema JAKE_DEFAULT;
+    public static ClientExteriorVariantSchema PRESENT_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -265,6 +268,10 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         // Jake
         //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
+
+        // Present
+        if (AITItems.isUnlockedAdvent2024(5))
+            PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
     }
 
     @Override
