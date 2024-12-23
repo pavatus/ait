@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl;
 
+import static loqor.ait.core.AITItems.isUnlockedAfterAdvent2024;
+
 import java.util.Random;
 
 import dev.pavatus.register.datapack.SimpleDatapackRegistry;
@@ -52,6 +54,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     public static ExteriorCategorySchema GEOMETRIC;
     public static ExteriorCategorySchema STALLION;
     public static ExteriorCategorySchema ADAPTIVE;
+    public static ExteriorCategorySchema DALEK_MOD;
     //public static ExteriorCategorySchema JAKE;
 
     @Override
@@ -70,6 +73,9 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
+        if (isUnlockedAfterAdvent2024()) {
+            DALEK_MOD = register(new DalekModCategory());
+        }
         //JAKE = register(new JakeCategory());
     }
 }

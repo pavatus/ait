@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl.exterior;
 
+import static loqor.ait.core.AITItems.isUnlockedAfterAdvent2024;
+
 import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -25,6 +27,7 @@ import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleDefaul
 import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.client.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.client.*;
 import loqor.ait.data.schema.exterior.variant.doom.client.ClientDoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.client.ClientEasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.client.ClientEasterHeadFireVariant;
@@ -184,6 +187,11 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
+    public static ClientExteriorVariantSchema DALEK_MOD_1963;
+    public static ClientExteriorVariantSchema DALEK_MOD_1967;
+    public static ClientExteriorVariantSchema DALEK_MOD_1970;
+    public static ClientExteriorVariantSchema DALEK_MOD_1976;
+    public static ClientExteriorVariantSchema DALEK_MOD_1980;
     //public static ClientExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
@@ -262,6 +270,15 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_STEEL = register(new ClientStallionSteelVariant());
 
         ADAPTIVE = register(new ClientAdaptiveVariant());
+
+        // Dalek Mod
+        if (isUnlockedAfterAdvent2024()) {
+            DALEK_MOD_1963 = register(new ClientDalekMod1963Varient());
+            DALEK_MOD_1967 = register(new ClientDalekMod1967Varient());
+            DALEK_MOD_1970 = register(new ClientDalekMod1970Varient());
+            DALEK_MOD_1976 = register(new ClientDalekMod1976Varient());
+            DALEK_MOD_1980 = register(new ClientDalekMod1980Varient());
+        }
 
         // Jake
         //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());

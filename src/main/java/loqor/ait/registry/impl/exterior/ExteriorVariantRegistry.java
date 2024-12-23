@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl.exterior;
 
+import static loqor.ait.core.AITItems.isUnlockedAfterAdvent2024;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +28,8 @@ import loqor.ait.data.schema.exterior.variant.capsule.CapsuleDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.client.*;
 import loqor.ait.data.schema.exterior.variant.doom.DoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadFireVariant;
@@ -178,6 +182,11 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
     public static ExteriorVariantSchema ADAPTIVE;
+    public static ExteriorVariantSchema DALEK_MOD_1963;
+    public static ExteriorVariantSchema DALEK_MOD_1967;
+    public static ExteriorVariantSchema DALEK_MOD_1970;
+    public static ExteriorVariantSchema DALEK_MOD_1976;
+    public static ExteriorVariantSchema DALEK_MOD_1980;
     //public static ExteriorVariantSchema JAKE_DEFAULT;
 
     @Override
@@ -258,6 +267,15 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Adaptive
         ADAPTIVE = register(new AdaptiveVariant());
+
+        // Dalek Mod
+        if (isUnlockedAfterAdvent2024()) {
+            DALEK_MOD_1963 = register(new DalekMod1963Varient());
+            DALEK_MOD_1967 = register(new DalekMod1967Varient());
+            DALEK_MOD_1970 = register(new DalekMod1970Varient());
+            DALEK_MOD_1976 = register(new DalekMod1976Varient());
+            DALEK_MOD_1980 = register(new DalekMod1980Varient());
+        }
 
         // Jake
         //JAKE_DEFAULT = register(new JakeDefaultVariant());
