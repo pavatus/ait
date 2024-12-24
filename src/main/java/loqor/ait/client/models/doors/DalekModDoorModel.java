@@ -24,10 +24,10 @@ public class DalekModDoorModel extends DoorModel {
         ModelPartData Doors = dalekmod.addChild("Doors", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 2.0F, 2.0F));
 
         ModelPartData right_door = Doors.addChild("right_door", ModelPartBuilder.create().uv(48, 141).cuboid(0.0F, -17.0F, 0.0F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F))
-        .uv(144, 128).cuboid(0.0F, -18.0F, 0.0F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-8.0F, -16.0F, -10.0F));
+        .uv(144, 128).cuboid(0.0F, -18.0F, 0.0F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-8.0F, -16.0F, -9.0F));
 
         ModelPartData left_door = Doors.addChild("left_door", ModelPartBuilder.create().uv(68, 162).cuboid(-8.0F, -17.0F, 0.0F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F))
-        .uv(88, 162).cuboid(-8.0F, -18.0F, 0.0F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, -16.0F, -10.0F));
+        .uv(88, 162).cuboid(-8.0F, -18.0F, 0.0F, 8.0F, 32.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, -16.0F, -9.0F));
         return TexturedModelData.of(modelData, 256, 256);
     }
     @Override
@@ -41,9 +41,9 @@ public class DalekModDoorModel extends DoorModel {
                                      VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         DoorHandler door = doorEntity.tardis().get().door();
 
-        this.dalekmod.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+        this.dalekmod.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5.0f : 0.0F;
         this.dalekmod.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? 5F
+                ? 5.0f
                 : 0.0F;
 
         matrices.push();

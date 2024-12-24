@@ -199,9 +199,6 @@ public class AITItems implements ItemRegistryContainer {
         }
         /*if (isUnlockedAdvent2024(4)) {
             // TODO SONIC CANDY CANE
-        }
-        if (isUnlockedAdvent2024(6)) {
-            // TODO DALEK MOD EXTERIOR CROSSOVER
         }*/
     }
 
@@ -213,7 +210,7 @@ public class AITItems implements ItemRegistryContainer {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
 
-        return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, day, 6) || year >= 2024;
+        return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, day, 6) || year > 2024;
     }
 
     public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
