@@ -1,5 +1,8 @@
 package loqor.ait.datagen.datagen_providers;
 
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
+import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
@@ -40,7 +43,11 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 
         getOrCreateTagBuilder(AITTags.Items.FULL_RESPIRATORS).add(AITItems.RESPIRATOR);
 
-        getOrCreateTagBuilder(AITTags.Items.HALF_RESPIRATORS).add(AITItems.FACELESS_RESPIRATOR).add(AITItems.SANTA_HAT);
+        getOrCreateTagBuilder(AITTags.Items.HALF_RESPIRATORS).add(AITItems.FACELESS_RESPIRATOR);
+
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
+            getOrCreateTagBuilder(AITTags.Items.HALF_RESPIRATORS).add(AITItems.SANTA_HAT);
+        }
 
         getOrCreateTagBuilder(AITTags.Items.KEY).add(AITItems.IRON_KEY, AITItems.GOLD_KEY, AITItems.CLASSIC_KEY,
                 AITItems.NETHERITE_KEY, AITItems.SKELETON_KEY);
