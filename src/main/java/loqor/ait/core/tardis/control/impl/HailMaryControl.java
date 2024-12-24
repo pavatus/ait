@@ -5,6 +5,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 
@@ -30,5 +31,10 @@ public class HailMaryControl extends Control {
                 : Text.translatable("tardis.message.control.hail_mary.disengaged"), true);
 
         return true;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.DESPERATION;
     }
 }

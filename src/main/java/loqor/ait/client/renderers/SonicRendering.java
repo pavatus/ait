@@ -16,15 +16,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.engine.DurableSubSystem;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.block.SubSystemBlockEntity;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 public class SonicRendering {
     private static final Identifier SELECTED = new Identifier(AITMod.MOD_ID, "textures/marker/landing.png");
@@ -59,7 +63,7 @@ public class SonicRendering {
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180f));
-        matrices.translate(transform.x + 0.5f, transform.y + 0.05f, transform.z - 0.5f);
+        matrices.translate(transform.x - 0.5f, transform.y + 0.05f, transform.z - 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
 
         if (spinning) {
@@ -100,7 +104,10 @@ public class SonicRendering {
         worldProfiler.push("sonic");
         worldProfiler.push("world");
 
-        if (isPlayerHoldingSonicOf(SonicItem.Mode.TARDIS))
+        if (client.player == null)
+            return;
+
+        if (isPlayerHoldingSonicOf(SonicItem.Mode.TARDIS) && !TardisDimension.isTardisDimension(client.player.getWorld()))
             renderSelectedBlock(context);
 
         worldProfiler.pop();
@@ -110,15 +117,12 @@ public class SonicRendering {
         Profiler worldProfiler = context.profiler();
         worldProfiler.push("target");
 
-        HitResult crosshair = client.crosshairTarget;
-        if (crosshair == null) {
+        if (!(client.crosshairTarget instanceof BlockHitResult crosshair)) {
             profiler.pop();
             profiler.pop();
             return;
         }
-        Vec3d targetVec = crosshair.getPos(); // todo - seems to be weird
-        boolean isOverworld = client.world.getRegistryKey().equals(World.OVERWORLD);
-        BlockPos targetPos = new BlockPos((int) targetVec.x + ((isOverworld) ? 0 : -1), (int) targetVec.y, (int) targetVec.z + (isOverworld ? 1 : 0));
+        BlockPos targetPos = crosshair.getBlockPos();
         BlockState state = client.world.getBlockState(targetPos.down());
         if (state.isAir()) {
             profiler.pop();
@@ -137,19 +141,19 @@ public class SonicRendering {
         profiler.swap("sonic");
         profiler.push("gui");
 
-        profiler.push("target");
-        HitResult crosshair = client.crosshairTarget;
-        if (crosshair == null) {
+        profiler.push("target");;
+        if (!(client.crosshairTarget instanceof BlockHitResult crosshair)) {
             profiler.pop();
             profiler.pop();
             return;
         }
-        Vec3d targetVec = crosshair.getPos();
-        BlockPos targetPos = new BlockPos((int) targetVec.x, (int) targetVec.y, (int) targetVec.z);
+        BlockPos targetPos = crosshair.getBlockPos();
         BlockState state = client.world.getBlockState(targetPos);
 
         profiler.swap("redstone");
         renderRedstone(context, state, targetPos);
+        profiler.swap("durability");
+        renderDurability(context, targetPos);
 
         profiler.pop();
         profiler.pop();
@@ -164,6 +168,22 @@ public class SonicRendering {
         if (power == 0) return;
 
         context.drawCenteredTextWithShadow(client.textRenderer, "" + power, getCentreX(), (int) (getMaxY() * 0.4), Colors.WHITE);
+    }
+    private void renderDurability(DrawContext context, BlockPos pos) {
+        if (!(client.world.getBlockEntity(pos) instanceof SubSystemBlockEntity be)) return;
+
+        String text = "";
+
+        SubSystem system = be.system();
+        if (system == null) return;
+        if (system instanceof DurableSubSystem) {
+            text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 100";
+        }
+        if (!system.isEnabled() && !(system instanceof EngineSystem)) {
+            text = "LINK TO ENGINE VIA FLUID LINKS";
+        }
+
+        context.drawCenteredTextWithShadow(client.textRenderer, text, getCentreX(), (int) (getMaxY() * 0.42), Colors.WHITE);
     }
 
 

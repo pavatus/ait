@@ -4,6 +4,8 @@ import static loqor.ait.AITMod.LOGGER;
 
 import java.util.function.Consumer;
 
+import dev.pavatus.register.unlockable.UnlockableRegistry;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -12,7 +14,6 @@ import loqor.ait.client.AITModClient;
 import loqor.ait.data.datapack.DatapackSonic;
 import loqor.ait.data.schema.sonic.BuiltinSonic;
 import loqor.ait.data.schema.sonic.SonicSchema;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
 
@@ -50,6 +51,8 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
         register(BuiltinSonic.create("renaissance"));
         register(BuiltinSonic.create("crystalline"));
         register(BuiltinSonic.create("song"));
+        register(BuiltinSonic.create("singularity"));
+        register(BuiltinSonic.create("candy_cane"));
     }
 
     public static SonicRegistry getInstance() {

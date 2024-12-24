@@ -1,5 +1,7 @@
 package loqor.ait.data.schema.console.variant.copper.client;
 
+import org.joml.Vector3f;
+
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -31,5 +33,15 @@ public class ClientCopperVariant extends ClientConsoleVariantSchema {
     @Override
     public ConsoleModel model() {
         return new CopperConsoleModel(CopperConsoleModel.getTexturedModelData().createModel());
+    }
+
+    @Override
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(1.55f, 1.05f, 1.105f);
+    }
+
+    @Override
+    public float[] sonicItemRotations() {
+        return new float[]{-60f, -12.5f};
     }
 }

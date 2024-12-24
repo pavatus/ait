@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -23,6 +24,8 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
 import loqor.ait.data.Exclude;
@@ -64,6 +67,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
         ClientLoginConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
     }
 
     private void remove(PacketByteBuf buf) {
@@ -166,6 +170,16 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
         id.set(tardis, component);
         TardisComponent.init(component, tardis, TardisComponent.InitContext.deserialize());
     }
+    private void syncSubsystem(ClientTardis tardis, PacketByteBuf buf) {
+        String rawId = buf.readString();
+
+        SubSystem.IdLike id = SubSystemRegistry.getInstance().get(rawId);
+        SubSystem component = this.networkGson.fromJson(buf.readString(), id.clazz());
+
+        id.set(tardis, component);
+        SubSystem.init(component, tardis, TardisComponent.InitContext.deserialize());
+    }
+
 
     private void syncDelta(PacketByteBuf buf) {
         UUID id = buf.readUuid();

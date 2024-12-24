@@ -15,12 +15,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
-import loqor.ait.registry.impl.BlueprintRegistry;
+import loqor.ait.core.AITItems;
 
 public class BlueprintItem extends Item {
 
     public BlueprintItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class BlueprintItem extends Item {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putString("id", BlueprintRegistry.getRandomEntry().id().toString());
+        nbt.putString("Blueprint", BlueprintRegistry.getInstance().getRandom().id().toString());
         return stack;
     }
 
@@ -36,27 +36,50 @@ public class BlueprintItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        NbtCompound nbt = stack.getOrCreateNbt();
-        NbtElement element = nbt.get("id");
+        BlueprintSchema blueprint = getSchema(stack);
+        if (blueprint == null) return;
 
-        if (element == null)
-            return;
+        tooltip.add(Text.translatable("ait.blueprint.tooltip").formatted(Formatting.BLUE)
+                .append(blueprint.text().copy().formatted(Formatting.GRAY)));
+    }
+
+    public static BlueprintSchema getSchema(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        NbtElement element = nbt.get("Blueprint");
+
+        if (element == null) {
+            BlueprintSchema schema = BlueprintRegistry.getInstance().getRandom();
+            nbt.putString("Blueprint", schema.id().toString());
+            return schema;
+        }
 
         Identifier id = Identifier.tryParse(element.asString());
 
         if (id == null) {
             AITMod.LOGGER.warn("Couldn't parse blueprint id: '{}'", element.asString());
-            return;
+            return null;
         }
 
-        BlueprintType blueprint = BlueprintRegistry.REGISTRY.get(new Identifier(element.asString()));
+        BlueprintSchema schema = BlueprintRegistry.getInstance().get(id);
 
-        if (blueprint == null) {
+        if (schema == null) {
             AITMod.LOGGER.warn("Couldn't find blueprint with id: '{}'!", id);
-            return;
+            return null;
         }
 
-        tooltip.add(Text.translatable("ait.blueprint.tooltip").formatted(Formatting.BLUE)
-                .append(blueprint.text().copy().formatted(Formatting.GRAY)));
+        return schema;
+    }
+
+    public static ItemStack createStack(BlueprintSchema schema) {
+        ItemStack stack = new ItemStack(AITItems.BLUEPRINT);
+
+        setSchema(stack, schema);
+
+        return stack;
+    }
+    public static ItemStack setSchema(ItemStack stack, BlueprintSchema schema) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putString("Blueprint", schema.id().toString());
+        return stack;
     }
 }

@@ -22,7 +22,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.AITSounds;
 
 public class AITRadioBlockEntity extends BlockEntity {
 
@@ -102,7 +101,7 @@ public class AITRadioBlockEntity extends BlockEntity {
                 this.tickRotT = this.tickRotT + 22.5F * ((float) Math.PI / 180f);
             else if (this.tickRotT >= (360F - 22.5F) * ((float) Math.PI / 180f))
                 this.tickRotT = 0;
-            System.out.println(this.tickRotT + " ?=? " + 360F * ((float) Math.PI / 180f));
+            //System.out.println(this.tickRotT + " ?=? " + 360F * ((float) Math.PI / 180f));
             if (player != null)
                 player.sendMessage(Text.literal("Changing Frequency..."), true);
             world.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 0.1F,
@@ -131,7 +130,7 @@ public class AITRadioBlockEntity extends BlockEntity {
         // Loqor
         // @Creativious
         if (((int) (Math.nextUp(this.getTickRot("volume") * (180 / Math.PI) * 11) / 360) + 1) == 10) {
-            world.playSound(null, pos, AITSounds.SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
+            // world.playSound(null, pos, AITSounds.SECRET_MUSIC, SoundCategory.MASTER, 1F, 1F);
         }
 
         if (this.isRadioOn()) {

@@ -1,6 +1,5 @@
 package loqor.ait.client.util;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;

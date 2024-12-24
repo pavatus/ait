@@ -1,22 +1,30 @@
 package loqor.ait.datagen;
 
-import static net.minecraft.data.server.recipe.RecipeProvider.conditionsFromItem;
-import static net.minecraft.data.server.recipe.RecipeProvider.hasItem;
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+import static net.minecraft.data.server.recipe.RecipeProvider.*;
+import static net.minecraft.data.server.recipe.RecipeProvider.createSlabRecipe;
 
+import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.PlanetBlocks;
+import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
+import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SmithingTransformRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.*;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -26,8 +34,10 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.datagen.datagen_providers.*;
 import loqor.ait.datagen.datagen_providers.lang.LanguageType;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
+import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
-public class AITModDataGenerator implements DataGeneratorEntrypoint {
+public class
+AITModDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
@@ -40,6 +50,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         generateSoundData(pack);
         generateAdvancements(pack);
         generateLoot(pack);
+        generateWorldFeatures(pack);
     }
 
     public void generateLoot(FabricDataGenerator.Pack pack) {
@@ -50,9 +61,25 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(AITAchievementProvider::new);
     }
 
+    private void generateWorldFeatures(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITWorldGeneratorProvider::new);
+    }
+
+    @Override
+    public void buildRegistry(RegistryBuilder registryBuilder) {
+        registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, PlanetConfiguredFeatures::bootstrap);
+        registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, PlanetPlacedFeatures::boostrap);
+    }
+
     public void generateRecipes(FabricDataGenerator.Pack pack) {
         pack.addProvider((((output, registriesFuture) -> {
             AITRecipeProvider provider = new AITRecipeProvider(output);
+
+            ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(dataGenerator -> {
+                dataGenerator.recipes(provider);
+            }));
+
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_KEY, 1)
                     .pattern(" N ").pattern("IEI").pattern("IRI").input('N', Items.IRON_NUGGET)
                     .input('I', Items.IRON_INGOT).input('E', Items.ENDER_PEARL).input('R', Items.REDSTONE)
@@ -143,13 +170,6 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .criterion(hasItem(AITBlocks.CONSOLE_GENERATOR), conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder
-                    .create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ENGINE_CORE_BLOCK, 1).pattern("GHG")
-                    .pattern("HCH").pattern("GHG").input('G', Items.GLASS).input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
-                    .input('C', Items.CONDUIT).criterion(hasItem(Items.GLASS), conditionsFromItem(Items.GLASS))
-                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL),
-                            conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
-                    .criterion(hasItem(Items.CONDUIT), conditionsFromItem(Items.CONDUIT)));
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1).pattern("GSG")
                             .pattern("SBS").pattern("GSG").input('G', Items.GOLD_NUGGET).input('S', Items.SPRUCE_SLAB)
@@ -251,8 +271,34 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
                             .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                             .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
-                            .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS))
-                            );
+                            .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS)));
+
+            if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
+                provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.COMBAT, AITItems.COBBLED_SNOWBALL)
+                        .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                        .input(Items.SNOWBALL).criterion(hasItem(Items.SNOWBALL), conditionsFromItem(Items.SNOWBALL)));
+            }
+
+            if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
+                provider.addShapedRecipe(
+                        ShapedRecipeJsonBuilder.create(RecipeCategory.FOOD, AITItems.MUG, 1)
+                                .pattern(" CC")
+                                .pattern("P C")
+                                .pattern(" CC")
+                                .input('P', Items.FLOWER_POT)
+                                .input('C', Items.CLAY_BALL)
+                                .criterion(hasItem(Items.FLOWER_POT), conditionsFromItem(Items.FLOWER_POT))
+                                .criterion(hasItem(Items.CLAY_BALL), conditionsFromItem(Items.CLAY_BALL)));
+                provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, AITItems.HOT_CHOCOLATE_POWDER)
+                        .input(Items.COCOA_BEANS).criterion(hasItem(Items.COCOA_BEANS), conditionsFromItem(Items.COCOA_BEANS))
+                        .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                        .input(AITItems.ZEITON_DUST).criterion(hasItem(AITItems.ZEITON_DUST), conditionsFromItem(AITItems.ZEITON_DUST)));
+                provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, AITItems.HOT_CHOCOLATE)
+                        .input(AITItems.HOT_CHOCOLATE_POWDER).criterion(hasItem(AITItems.HOT_CHOCOLATE_POWDER), conditionsFromItem(AITItems.HOT_CHOCOLATE_POWDER))
+                        .input(AITItems.MUG).criterion(hasItem(AITItems.MUG), conditionsFromItem(AITItems.MUG))
+                        .input(Items.MILK_BUCKET).criterion(hasItem(Items.MILK_BUCKET), conditionsFromItem(Items.MILK_BUCKET)));
+            }
+
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HYPERCUBE)
                     .pattern("BBB").pattern("BEB").pattern("BBB").input('B', AITItems.ZEITON_SHARD)
@@ -274,6 +320,44 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('E', Items.ENDER_EYE).criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
                     .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .input('R', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.ZEITON_CAGE)
+                    .pattern("OZO").pattern("ZEZ").pattern("OZO")
+                    .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .input('E', Items.END_CRYSTAL).criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL)));
+//
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITBlocks.CABLE_BLOCK, 8)
+                    .pattern("DDD").pattern("CZC").pattern("DDD")
+                    .input('D', Blocks.POLISHED_DEEPSLATE).criterion(hasItem(Blocks.POLISHED_DEEPSLATE), conditionsFromItem(Blocks.POLISHED_DEEPSLATE))
+                    .input('C', Items.COPPER_INGOT).criterion(hasItem(Items.COPPER_INGOT), conditionsFromItem(Items.COPPER_INGOT))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITItems.INDUCTOR)
+                    .pattern("BCB")
+                    .input('B', Items.BLACKSTONE).criterion(hasItem(Items.BLACKSTONE), conditionsFromItem(Items.BLACKSTONE))
+                    .input('C', Items.COPPER_INGOT).criterion(hasItem(Items.COPPER_INGOT), conditionsFromItem(Items.COPPER_INGOT)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AITItems.MANIPULATOR)
+                    .pattern("III").pattern("IZI").pattern("III")
+                    .input('I', Items.IRON_INGOT).criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE,AITBlocks.FABRICATOR)
+                    .pattern(" O ").pattern("OZO").pattern("OZO")
+                    .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
+                    .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
+                    .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                    .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
+                    .input(AITBlocks.ZEITON_COBBLE).criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
+                    .input(AITItems.CHARGED_ZEITON_CRYSTAL).criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL)));
+
+
+            createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
+            createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
 
             generateSmithingRecipes(provider);
             return provider;
@@ -320,79 +404,9 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider((((output, registriesFuture) -> {
             AITSoundProvider provider = new AITSoundProvider(output);
 
-            // MUSIC
-            provider.addSound("music/secret_music", AITSounds.SECRET_MUSIC);
-            provider.addSound("music/even_more_secret_music", AITSounds.EVEN_MORE_SECRET_MUSIC);
-            provider.addSound("music/drifting_by_radio", AITSounds.DRIFTING_MUSIC);
-            provider.addSound("music/mercury_by_nitrogenesis", AITSounds.MERCURY_MUSIC);
-
-            // TARDIS
-            provider.addSound("tardis/demat", AITSounds.DEMAT);
-            provider.addSound("tardis/mat", AITSounds.MAT);
-            provider.addSound("tardis/hop_demat", AITSounds.HOP_DEMAT);
-            provider.addSound("tardis/hop_land", AITSounds.HOP_MAT);
-            provider.addSound("tardis/land_thud", AITSounds.LAND_THUD);
-            provider.addSound("tardis/fail_takeoff", AITSounds.FAIL_DEMAT);
-            provider.addSound("tardis/fail_land", AITSounds.FAIL_MAT);
-            provider.addSound("tardis/emergency_mat", AITSounds.EMERG_MAT);
-            provider.addSound("tardis/flight_loop", AITSounds.FLIGHT_LOOP);
-            provider.addSound("tardis/unstable_flight_loop", AITSounds.UNSTABLE_FLIGHT_LOOP);
-            provider.addSound("tardis/console_shutdown", AITSounds.SHUTDOWN);
-            provider.addSound("tardis/console_powerup", AITSounds.POWERUP);
-            provider.addSound("tardis/siege_enable", AITSounds.SIEGE_ENABLE);
-            provider.addSound("tardis/siege_disable", AITSounds.SIEGE_DISABLE);
-            provider.addSound("tardis/eighth_demat", AITSounds.EIGHT_DEMAT);
-            provider.addSound("tardis/eighth_mat", AITSounds.EIGHT_MAT);
-            provider.addSound("tardis/ghost_mat", AITSounds.GHOST_MAT);
-            provider.addSound("tardis/waypoint_activate", AITSounds.WAYPOINT_ACTIVATE);
-
-            // Controls
-            provider.addSound("controls/demat_lever_pull", AITSounds.DEMAT_LEVER_PULL);
-            provider.addSound("controls/handbrake_lever_pull", AITSounds.HANDBRAKE_LEVER_PULL);
-            provider.addSound("controls/handbrake_up", AITSounds.HANDBRAKE_UP);
-            provider.addSound("controls/handbrake_down", AITSounds.HANDBRAKE_DOWN);
-            provider.addSound("controls/crank", AITSounds.CRANK);
-            provider.addSound("controls/knock", AITSounds.KNOCK);
-            provider.addSound("controls/snap", AITSounds.SNAP);
-            provider.addSound("controls/bweep", AITSounds.BWEEP);
-
-            // Tools
-            provider.addSound("tools/goes_ding", AITSounds.DING);
-
-            // Hums
-            provider.addSound("tardis/hums/toyota_hum", AITSounds.TOYOTA_HUM);
-            provider.addSound("tardis/hums/coral_hum", AITSounds.CORAL_HUM);
-            provider.addSound("tardis/hums/eight_hum", AITSounds.EIGHT_HUM);
-            provider.addSound("tardis/hums/copper_hum", AITSounds.COPPER_HUM);
-            provider.addSound("tardis/hums/exile_hum", AITSounds.EXILE_HUM);
-            provider.addSound("tardis/hums/prime_hum", AITSounds.PRIME_HUM);
-            provider.addSound("tardis/hums/tokamak_hum", AITSounds.TOKAMAK_HUM);
-
-            // Creaks
-            provider.addSound("tardis/creaks/creak_one", AITSounds.CREAK_ONE);
-            provider.addSound("tardis/creaks/creak_two", AITSounds.CREAK_TWO);
-            provider.addSound("tardis/creaks/creak_three", AITSounds.CREAK_THREE);
-            provider.addSound("tardis/creaks/creak_four", AITSounds.CREAK_FOUR);
-            provider.addSound("tardis/creaks/creak_five", AITSounds.CREAK_FIVE);
-            provider.addSound("tardis/creaks/creak_six", AITSounds.CREAK_SIX);
-            provider.addSound("tardis/creaks/creak_seven", AITSounds.CREAK_SEVEN);
-            provider.addSound("tardis/creaks/whisper", AITSounds.WHISPER);
-
-            // Secret
-            provider.addSound("tardis/secret/doom_door_open", AITSounds.DOOM_DOOR_OPEN);
-            provider.addSound("tardis/secret/doom_door_close", AITSounds.DOOM_DOOR_CLOSE);
-
-            // Sonic
-            provider.addSound("sonic/use", AITSounds.SONIC_USE);
-            provider.addSound("sonic/switch", AITSounds.SONIC_SWITCH);
-
-            // Other
-            provider.addSound("tardis/vortex_sound", AITSounds.VORTEX_SOUND);
-            provider.addSound("tardis/exterior/rain", AITSounds.RAIN);
-            provider.addSound("tardis/exterior/thunder", AITSounds.THUNDER);
-
-            provider.addSound("tardis/cloister", AITSounds.CLOISTER);
-            provider.addSound("tardis/groan", AITSounds.GROAN);
+            for (SoundEvent sound : AITSounds.getSounds(AITMod.MOD_ID)) {
+                provider.addSound(sound.getId().getPath(), sound);
+            }
 
             return provider;
         })));
@@ -408,15 +422,12 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generateBlockModels(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> {
-            AITModelProvider aitModelProvider = new AITModelProvider(output);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CONSOLE_GENERATOR);
-            aitModelProvider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.FABRICATOR);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.CORAL_PLANT);
-            aitModelProvider.registerDirectionalBlock(AITBlocks.ARTRON_COLLECTOR_BLOCK);
-            return aitModelProvider;
+            AITModelProvider provider = new AITModelProvider(output);
+            provider.registerDirectionalBlock(AITBlocks.CONSOLE);
+            provider.registerSimpleBlock(AITBlocks.EXTERIOR_BLOCK);
+            provider.registerDirectionalBlock(AITBlocks.FABRICATOR);
+            provider.registerDirectionalBlock(AITBlocks.DOOR_BLOCK);
+            return provider;
         }));
     }
 
@@ -447,53 +458,58 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     /**
      * Adds English translations to the language file.
      *
-     * @param output
-     *            The data generator output.
-     * @param registriesFuture
-     *            The registries future.
-     * @param languageType
-     *            The language type.
+     * @param output           The data generator output.
+     * @param registriesFuture The registries future.
+     * @param languageType     The language type.
      * @return The AITLanguageProvider.
      */
+
     public AITLanguageProvider addEnglishTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
 
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
+
+        // Tabs
         provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
 
+        // Config
+        provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
+        provider.addTranslation("text.config.aitconfig.option.GHOST_MONUMENT", "Allow Ghost Monument");
+        provider.addTranslation("text.config.aitconfig.option.LOCK_DIMENSIONS", "Lock Dimensions");
+        provider.addTranslation("text.config.aitconfig.option.WORLDS_BLACKLIST", "Blacklist Dimensions");
+        provider.addTranslation("text.config.aitconfig.option.TRAVEL_PER_TICK", "TARDIS travel per tick");
+        provider.addTranslation("text.config.aitconfig.option.SEND_BULK", "Send Bulk");
+        provider.addTranslation("text.config.aitconfig.option.MAX_TARDISES", "Max TARDISES (-1 = Infinite)");
+
+        provider.addTranslation("text.config.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
+        provider.addTranslation("text.config.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
+        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
+        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
+        provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
+        provider.addTranslation("text.config.aitconfig.option.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
+
+        provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
+        provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
+        provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
+
+        provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
+
+        // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-        provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
-        provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
-        provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
-        provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
-        provider.addTranslation(AITItems.SKELETON_KEY, "Skeleton Key");
         provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
         provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
-        provider.addTranslation(AITItems.RIFT_SCANNER, "Rift Scanner");
-        provider.addTranslation(AITItems.CHARGED_ZEITON_CRYSTAL, "Charged Zeiton Crystal");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
+        provider.addTranslation(AITItems.WONDERFUL_TIME_IN_SPACE_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
+        provider.addTranslation(AITItems.WONDERFUL_TIME_IN_SPACE_MUSIC_DISC.getTranslationKey() + ".desc", "Dian - Wonderful Time in Space");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
-        provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
-        provider.addTranslation(AITItems.BLUEPRINT, "Blueprint");
-        provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
-        provider.addTranslation(AITItems.HAMMER, "Hammer");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        provider.addTranslation(AITItems.WAYPOINT_CARTRIDGE, "Waypoint Cartridge");
-        provider.addTranslation(AITItems.ZEITON_SHARD, "Zeiton Shard");
-        provider.addTranslation(AITItems.ZEITON_DUST, "Zeiton Dust");
-        provider.addTranslation(AITItems.RESPIRATOR, "Respirator");
-        provider.addTranslation(AITItems.FACELESS_RESPIRATOR, "Faceless Respirator");
-        provider.addTranslation(AITItems.HYPERCUBE, "Hypercube");
-        provider.addTranslation(AITItems.HAZANDRA, "Hazandra");
-        provider.addTranslation(AITItems.SPACESUIT_HELMET, "Spacesuit Helmet");
-        provider.addTranslation(AITItems.SPACESUIT_CHESTPLATE, "Spacesuit Chestplate");
-        provider.addTranslation(AITItems.SPACESUIT_LEGGINGS, "Spacesuit Leggings");
-        provider.addTranslation(AITItems.SPACESUIT_BOOTS, "Spacesuit Boots");
+        provider.addTranslation(AITItems.GALLIFREY_FALLS_PAINTING, "Painting");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");
@@ -508,6 +524,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.bookshelf", "Bookshelf");
         provider.addTranslation("exterior.ait.classic", "Classic");
         provider.addTranslation("exterior.ait.stallion", "Stallion");
+        provider.addTranslation("exterior.ait.jake", "Jake");
+        provider.addTranslation("exterior.ait.dalek_mod", "Dalek Mod");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
@@ -554,8 +572,10 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.copper", "Copper");
         provider.addTranslation("sonic.ait.mechanical", "Mechanical");
         provider.addTranslation("sonic.ait.song", "Song");
+        provider.addTranslation("sonic.ait.singularity", "Singularity");
+        provider.addTranslation("sonic.ait.candy_cane", "Candy Cane");
 
-        provider.addTranslation(AITBlocks.WAYPOINT_BANK, "Waypoint Bank");
+        // Blocks
         provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
         provider.addTranslation(AITBlocks.DETECTOR_BLOCK, "Interior Detector Block");
         provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
@@ -563,29 +583,31 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.MONITOR_BLOCK, "Monitor");
         provider.addTranslation(AITBlocks.ARTRON_COLLECTOR_BLOCK, "Artron Collector");
         provider.addTranslation(AITBlocks.ZEITON_BLOCK, "Block of Zeiton");
-        provider.addTranslation(AITBlocks.ZEITON_CLUSTER, "Zeiton Cluster");
-        provider.addTranslation(AITBlocks.BUDDING_ZEITON, "Budding Zeiton");
-        provider.addTranslation(AITBlocks.LARGE_ZEITON_BUD, "Large Zeiton Bud");
-        provider.addTranslation(AITBlocks.MEDIUM_ZEITON_BUD, "Medium Zeiton Bud");
-        provider.addTranslation(AITBlocks.SMALL_ZEITON_BUD, "Small Zeiton Bud");
         provider.addTranslation(AITBlocks.PLAQUE_BLOCK, "TARDIS Plaque");
         provider.addTranslation(AITBlocks.WALL_MONITOR_BLOCK, "Wall Monitor");
-        provider.addTranslation(AITBlocks.ENVIRONMENT_PROJECTOR, "Environment Projector");
         provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
-        provider.addTranslation(AITBlocks.CONSOLE_GENERATOR, "Console Generator");
-        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Engine Core");
-        // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
+        provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
+        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
+        provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
+        provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
+        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core"); // todo improve name
 
+        // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
+
+        // Galifrayan Falls Painting
 
         provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
+        provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 
+        // TARDIS Control Actionbar Title
+        provider.addTranslation("tardis.message.protocol_813.travel", "Hail Mary: Protocol 813 is active, please prepare for departure.");
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.engaged", "Protocol 813: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.disengaged", "Protocol 813: DISENGAGED");
@@ -619,20 +641,77 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.control.telepathic.choosing", "The TARDIS is choosing...");
         provider.addTranslation("tardis.message.interiorchange.success", "%s has grown to %d");
         provider.addTranslation("tardis.message.landingpad.adjust", "Adjusting to landing pad..");
+        provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
+        provider.addTranslation("message.ait.landing_code", "Landing Code...");
+        provider.addTranslation("message.ait.enter_landing_code", "Enter Landing Code...");
+        provider.addTranslation("message.ait.date_created", "Date Created:");
+        provider.addTranslation("message.ait.unlocked", "unlocked");
+        provider.addTranslation("screen.ait.sonic_casing", "Sonic Casing");
+        provider.addTranslation("screen.ait.current_au", "Current AU");
+        provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
         provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Search: ENGAGED");
         provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Search: DISENGAGED");
+        provider.addTranslation("tardis.message.engine.phasing", "ENGINES PHASING");
+        provider.addTranslation("message.ait.cage.full", "It calls for the void..");
+        provider.addTranslation("message.ait.cage.void_hint", "(Throw this into the END void)");
+        provider.addTranslation("message.ait.cage.empty", "(Place this in a rift chunk)");
 
+        // Achivement
+        provider.addTranslation("achievement.ait.title.root", "Adventures in Time");
+        provider.addTranslation("achievement.ait.description.root", "Discover the wonders of time and space.");
+        provider.addTranslation("achievement.ait.title.place_coral", "Gardening Guru");
+        provider.addTranslation("achievement.ait.description.place_coral", "Plant the TARDIS Coral, the seed of time itself.");
+        provider.addTranslation("achievement.ait.title.enter_tardis", "How Does It Fit?");
+        provider.addTranslation("achievement.ait.description.enter_tardis", "Enter the TARDIS for the first time.");
+        provider.addTranslation("achievement.ait.title.iron_key", "More than Just a Piece of Metal");
+        provider.addTranslation("achievement.ait.description.iron_key", "Gain an Iron Key.");
+        provider.addTranslation("achievement.ait.title.gold_key", "Golden Gatekeeper");
+        provider.addTranslation("achievement.ait.description.gold_key", "Gain an Golden Key.");
+        provider.addTranslation("achievement.ait.title.netherite_key", "Forged in Fire");
+        provider.addTranslation("achievement.ait.description.netherite_key", "Gain a Netherite Key.");
+        provider.addTranslation("achievement.ait.title.classic_key", "Time Traveler's Apprentice");
+        provider.addTranslation("achievement.ait.description.classic_key", "Gain a Classic Key.");
+        provider.addTranslation("achievement.ait.title.first_demat", "Maiden Voyage");
+        provider.addTranslation("achievement.ait.description.first_demat", "Successfully initiate the takeoff sequence and experience your first journey through time and space with your TARDIS.");
+        provider.addTranslation("achievement.ait.title.first_crash", "Temporal Turbulence");
+        provider.addTranslation("achievement.ait.description.first_crash", "Embrace the chaos of time and space by unintentionally crashing your TARDIS for the first time.");
+        provider.addTranslation("achievement.ait.title.break_growth", "Temporal Gardener");
+        provider.addTranslation("achievement.ait.description.break_growth", "Tend to the temporal vines and foliage clinging to your TARDIS by breaking off vegetation.");
+        provider.addTranslation("achievement.ait.title.redecorate", "I Don't Like It.");
+        provider.addTranslation("achievement.ait.description.redecorate", "Redecorate your TARDIS desktop.");
+        provider.addTranslation("achievement.ait.title.ultimate_counter", "It Doesn't Do Wood!");
+        provider.addTranslation("achievement.ait.description.ultimate_counter", "Attempt to use the sonic screwdriver on wood.");
+        provider.addTranslation("achievement.ait.title.forced_entry", "That Won't Have Consequences...");
+        provider.addTranslation("achievement.ait.description.forced_entry", "Forcefully enter a TARDIS.");
+        provider.addTranslation("achievement.ait.title.pui", "Seriously, piloting under the influence?");
+        provider.addTranslation("achievement.ait.description.pui", "Consume Zeiton Dust while the TARDIS is in flight.");
+        provider.addTranslation("achievement.ait.title.bonding", "I think it's starting to trust you.");
+        provider.addTranslation("achievement.ait.description.bonding", "Reach 'Pilot' loyalty for the first time.");
+        provider.addTranslation("achievement.ait.title.owner_ship", "But hey it trusts you now worth it right?");
+        provider.addTranslation("achievement.ait.description.owner_ship", "Reach 'Owner' loyalty for the first time.");
+        provider.addTranslation("achievement.ait.title.enable_subsystem", "Time-Space Engineer");
+        provider.addTranslation("achievement.ait.description.enable_subsystem", "Enable a subsystem.");
+        provider.addTranslation("achievement.ait.title.repair_subsystem", "Handyman!");
+        provider.addTranslation("achievement.ait.description.repair_subsystem", "Repair a broken subsystem");
+        provider.addTranslation("achievement.ait.title.engines_phase", "Technical Problems");
+        provider.addTranslation("achievement.ait.description.engines_phase", "ENGINES PHASING! That doesnt sound good.");
+
+
+        // Commands
+        // Fuel
         provider.addTranslation("message.ait.fuel.add", "Added %s fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.remove", "Removed %s fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.set", "Set fuel for %s; total: [%sau]");
         provider.addTranslation("message.ait.fuel.get", "Fuel of %s is: [%sau]");
         provider.addTranslation("message.ait.fuel.max", "TARDIS fuel is at max!");
 
+        // Get TARDIS ID
         provider.addTranslation("message.ait.id", "TARDIS id: ");
         provider.addTranslation("message.ait.click_to_copy", "Click to copy");
 
+        // Sonic (TARDIS Mode)
         provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
         provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
         provider.addTranslation("message.ait.sonic.handbrakedisengaged",
@@ -643,10 +722,34 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.sonic.currenttype", "Current Casing: ");
         provider.addTranslation("message.ait.remoteitem.warning4",
                 "Target has been reset and updated, the device is now pointing towards your new target");
+
+        // Sonic Modes
+        provider.addTranslation("sonic.ait.mode.inactive", "INACTIVE");
+        provider.addTranslation("sonic.ait.mode.tardis", "TARDIS");
+        provider.addTranslation("sonic.ait.mode.interaction", "INTERACTION");
+        provider.addTranslation("sonic.ait.mode.overload", "OVERLOAD");
+        provider.addTranslation("sonic.ait.mode.scanning", "SCANNING");
+
+
+        // Key tooltips
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
+        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type."); // todo - improve message
+
+        // Item tooltips
+        provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
+        provider.addTranslation("message.ait.tooltips.artron_units", "Artron Units: ");
+        provider.addTranslation("message.ait.ammo", "Ammo: %s");
+        provider.addTranslation("tooltip.ait.position", "Position: ");
+        provider.addTranslation("message.ait.artron_units2", " AU");
+
+
+        // Environment Projector
         provider.addTranslation("message.ait.projector.skybox", "Now projecting: %s");
+
+        // Rift Scanner
         provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
         provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
         provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
@@ -659,13 +762,18 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.success2", "Activated refueler and handbrake");
         provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
         provider.addTranslation("message.ait.version", "ᴠᴇʀꜱɪᴏɴ");
+        provider.addTranslation("message.ait.max_tardises", "SERVER has reached the maximum amount of TARDISes");
 
         provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
         provider.addTranslation("tooltip.ait.remoteitem.notardis", "Remote does not identify with any TARDIS");
         provider.addTranslation("tooltip.ait.distresscall.source", "SOURCE");
 
+        //Monitor
+        provider.addTranslation("screen.ait.monitor.on", "ON");
+        provider.addTranslation("screen.ait.monitor.off", "OFF");
         provider.addTranslation("screen.ait.monitor.apply", "Apply");
+        provider.addTranslation("screen.ait.monitor.gear_icon", "⚙");
         provider.addTranslation("screen.ait.monitor.fuel", "Fuel");
         provider.addTranslation("screen.ait.monitor.traveltime", "Travel Time");
         provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
@@ -674,6 +782,26 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
         provider.addTranslation("screen.ait.interiorsettings.cacheconsole", "> Cache Console");
 
+        //TARDIS Flight Sequences
+        provider.addTranslation("sequence.ait.avoid_debris", "Debris incoming!");
+        provider.addTranslation("sequence.ait.dimensional_breach", "DIMENSION BREACH: SECURE DOORS");
+        provider.addTranslation("sequence.ait.energy_drain", "Artron drain detected!");
+        provider.addTranslation("sequence.ait.power_drain_imminent", "Power drain imminent!");
+        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship computer offline! Crash imminent!");
+        provider.addTranslation("sequence.ait.anti_gravity_error", "Gravity miscalculation!");
+        provider.addTranslation("sequence.ait.dimensional_drift_x", "Drifting off course X!");
+        provider.addTranslation("sequence.ait.dimensional_drift_y", "Drifting off course Y!");
+        provider.addTranslation("sequence.ait.dimensional_drift_z", "Drifting off course Z!");
+        provider.addTranslation("sequence.ait.cloak_to_avoid_vortex_trapped_mobs", "Immediate cloaking necessary!");
+        provider.addTranslation("sequence.ait.directional_error", "Directional error!");
+        provider.addTranslation("sequence.ait.speed_up_to_avoid_drifting_out_of_vortex", "Vortex drift: acceleration necessary!");
+        provider.addTranslation("sequence.ait.course_correct", "TARDIS off course!");
+        provider.addTranslation("sequence.ait.ground_unstable", "Unstable landing position!");
+        provider.addTranslation("sequence.ait.increment_scale_recalculation_necessary", "Increment scale error! Recalculation necessary!");
+        provider.addTranslation("sequence.ait.small_debris_field", "Small debris field!");
+
+
+        // Hums
         provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
         provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
         provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
@@ -684,7 +812,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
-        // Exterior translations
+        // Exterior Variant translations
 
         // All
         provider.addTranslation("exterior.ait.adaptive", "Adaptive");
@@ -699,6 +827,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.coral", "Coral");
         provider.addTranslation("exterior.ait.futuristic", "Futuristic");
         provider.addTranslation("exterior.ait.cherrywood", "Cherrywood");
+        provider.addTranslation("exterior.ait.yard", "73 Yards");
 
         // Classic specific
         provider.addTranslation("exterior.ait.definitive", "Definitive");
@@ -713,13 +842,19 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         // Renegade specific
         provider.addTranslation("exterior.ait.cabinet", "Cabinet");
         provider.addTranslation("exterior.ait.tron", "Tron");
+        provider.addTranslation("exterior.ait.rotestor", "Rotestor");
 
         // Booth specific
         provider.addTranslation("exterior.ait.blue", "Blue");
         provider.addTranslation("exterior.ait.vintage", "Vintage");
         provider.addTranslation("exterior.ait.white", "White");
 
-        // frooploof
+        // Stallion
+        provider.addTranslation("exterior.ait.bt", "BT");
+        provider.addTranslation("exterior.ait.stallion_pristine", "Pristine");
+        provider.addTranslation("exterior.ait.stallion_green", "Green");
+
+        // Frooploof Police Box
         provider.addTranslation("exterior.frooploof.copper", "Copper");
         provider.addTranslation("exterior.frooploof.eleven_toyota", "Toyota (1)");
         provider.addTranslation("exterior.frooploof.eleven_toyota_alternate", "Toyota (2)");
@@ -730,6 +865,17 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.frooploof.coral_war", "War");
         provider.addTranslation("exterior.frooploof.tokamak_eotd", "Tokamak (EOTD)");
 
+        // Dalek Mod
+
+        provider.addTranslation("exterior.ait.1963", "1963");
+        provider.addTranslation("exterior.ait.1967", "1967");
+        provider.addTranslation("exterior.ait.1970", "1970");
+        provider.addTranslation("exterior.ait.1976", "1976");
+        provider.addTranslation("exterior.ait.1980", "1980");
+
+
+
+        // Security Settings Menu
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
         provider.addTranslation("screen.ait.sonicsettings.back", "Back");
         provider.addTranslation("screen.ait.gravity", "> Gravity: %s");
@@ -742,8 +888,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
+        provider.addTranslation("tardis.message.interiorchange.subsystems_enabled",
+                "TARDIS has %s subsystems enabled. Are you sure you want to do this?");
+
+        // Landing Pad
         provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");
 
+        // Commands
         provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
         provider.addTranslation("command.ait.riftchunk.cannotsetlevel",
                 "This chunk is not a rift chunk, so you can't set the artron levels of it");
@@ -756,12 +907,14 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("command.ait.data.fail",
                 "Can't get value of a property named %s, because component %s is not keyed!");
 
+        // Rift Chunk Tracking
         provider.addTranslation("riftchunk.ait.tracking", "Rift Tracking");
         provider.addTranslation("riftchunk.ait.cooldown", "Rift tracking is on cooldown");
         provider.addTranslation("waypoint.position.tooltip", "Position");
         provider.addTranslation("waypoint.dimension.tooltip", "Dimension");
         provider.addTranslation("waypoint.direction.tooltip", "Direction");
 
+        // Blueprint Item
         provider.addTranslation("ait.blueprint.tooltip", "Blueprint: ");
 
         // directions
@@ -774,6 +927,26 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("direction.east", "East");
         provider.addTranslation("direction.west", "West");
 
+        // keybinds
+        provider.addTranslation("category.ait.main", "Adventures in Time");
+        provider.addTranslation("key.ait.snap", "Snap");
+
+        // effects
+        provider.addTranslation("effect.ait.zeiton_high", "Zeiton High");
+        provider.addTranslation("effect.ait.lunar_regolith", "Lunar Regolith Poisoned");
+        provider.addTranslation("effect.ait.oxygenated", "Oxygenator Field");
+
+        // automatic english for items
+        AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {
+            if (var instanceof BlockItem) return;
+
+            provider.addTranslation(var, fixupTranslationKey(var.getTranslationKey()));
+        });
+
+        // automatic english for blocks
+        AITBlockLootTables.filterBlocksWithAnnotation(AITBlocks.get(), NoEnglish.class, true).forEach(block -> {
+            provider.addTranslation(block, fixupTranslationKey(block.getTranslationKey()));
+        });
 
         return provider;
     }
@@ -781,16 +954,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     /**
      * Adds French translations to the language file.
      *
-     * @param output
-     *            The data generator output.
-     * @param registriesFuture
-     *            The registries future.
-     * @param languageType
-     *            The language type.
+     * @param output           The data generator output.
+     * @param registriesFuture The registries future.
+     * @param languageType     The language type.
      * @return The AITLanguageProvider.
      */
     public AITLanguageProvider addFrenchTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                     CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
         aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
@@ -897,16 +1067,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     /**
      * Adds Spanish translations to the language file.
      *
-     * @param output
-     *            The data generator output.
-     * @param registriesFuture
-     *            The registries future.
-     * @param languageType
-     *            The language type.
+     * @param output           The data generator output.
+     * @param registriesFuture The registries future.
+     * @param languageType     The language type.
      * @return The AITLanguageProvider.
      */
     public AITLanguageProvider addSpanishTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
         aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
@@ -997,7 +1164,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public AITLanguageProvider addGermanTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                     CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
         aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Abenteuer in der Zeit");
@@ -1096,7 +1263,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public AITLanguageProvider addPortugueseTranslations(FabricDataOutput output,
-            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+                                                         CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
         return provider;
     }
@@ -1104,136 +1271,136 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
     public void generate_DE_AT_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_AT))); // de_at
-                                                                                                                        // (German
-                                                                                                                        // Austria)
+        // (German
+        // Austria)
     }
 
     public void generate_DE_CH_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_CH))); // de_ch
-                                                                                                                        // (German
-                                                                                                                        // Switzerland)
+        // (German
+        // Switzerland)
     }
 
     public void generate_DE_DE_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.DE_DE))); // de_de
-                                                                                                                        // (German
-                                                                                                                        // Germany)
+        // (German
+        // Germany)
     }
 
     public void generate_NDS_DE_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addGermanTranslations(output, registriesFuture, LanguageType.NDS_DE))); // nds_de
-                                                                                                                        // (Nordic
-                                                                                                                        // German)
+        // (Nordic
+        // German)
     }
 
     public void generate_EN_US_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_US))); // en_us
-                                                                                                                        // (English
-                                                                                                                        // US)
+        // (English
+        // US)
     }
 
     public void generate_EN_UK_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_UK))); // en_uk
-                                                                                                                        // (English
-                                                                                                                        // UK)
+        // (English
+        // UK)
     }
 
     public void generate_FR_CA_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addFrenchTranslations(output, registriesFuture, LanguageType.FR_CA)))); // fr_ca
-                                                                                                                        // (French
-                                                                                                                        // Canadian)
+        // (French
+        // Canadian)
     }
 
     public void generate_FR_FR_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addFrenchTranslations(output, registriesFuture, LanguageType.FR_FR)))); // fr_fr
-                                                                                                                        // (French
-                                                                                                                        // France)
+        // (French
+        // France)
     }
 
     public void generate_ES_AR_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_AR)))); // es_ar
-                                                                                                                            // (Spanish
-                                                                                                                            // Argentina)
+        // (Spanish
+        // Argentina)
     }
 
     public void generate_ES_CL_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_CL)))); // es_cl
-                                                                                                                            // (Spanish
-                                                                                                                            // Chile)
+        // (Spanish
+        // Chile)
     }
 
     public void generate_ES_EC_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_EC)))); // es_ec
-                                                                                                                            // (Spanish
-                                                                                                                            // Ecuador)
+        // (Spanish
+        // Ecuador)
     }
 
     public void generate_ES_ES_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_ES)))); // es_es
-                                                                                                                            // (Spanish
-                                                                                                                            // Spain)
+        // (Spanish
+        // Spain)
     }
 
     public void generate_ES_MX_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_MX)))); // es_mx
-                                                                                                                            // (Spanish
-                                                                                                                            // Mexico)
+        // (Spanish
+        // Mexico)
     }
 
     public void generate_ES_UY_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_UY)))); // es_uy
-                                                                                                                            // (Spanish
-                                                                                                                            // Uruguay)
+        // (Spanish
+        // Uruguay)
     }
 
     public void generate_ES_VE_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 (((output, registriesFuture) -> addSpanishTranslations(output, registriesFuture, LanguageType.ES_VE)))); // es_ve
-                                                                                                                            // (Spanish
-                                                                                                                            // Venezuela)
+        // (Spanish
+        // Venezuela)
     }
 
     public void generate_EN_AU_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_AU))); // en_au
-                                                                                                                        // (English
-                                                                                                                        // Australia)
+        // (English
+        // Australia)
     }
 
     public void generate_EN_CA_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_CA))); // en_ca
-                                                                                                                        // (English
-                                                                                                                        // Canada)
+        // (English
+        // Canada)
     }
 
     public void generate_EN_GB_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_GB))); // en_gb
-                                                                                                                        // (English
-                                                                                                                        // Great
-                                                                                                                        // Britain)
+        // (English
+        // Great
+        // Britain)
     }
 
     public void generate_EN_NZ_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(
                 ((output, registriesFuture) -> addEnglishTranslations(output, registriesFuture, LanguageType.EN_NZ))); // en_nz
-                                                                                                                        // (English
-                                                                                                                        // New
-                                                                                                                        // Zealand)
+        // (English
+        // New
+        // Zealand)
     }
 
     public void generate_PT_BR_Language(FabricDataGenerator.Pack pack) {
@@ -1243,13 +1410,38 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru
-                                                                                                                // (Russian
-                                                                                                                // Russia)
+        // (Russian
+        // Russia)
     }
 
     public void generate_UK_UA_Language(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
-                                                                                                                // (Ukrainian
-                                                                                                                // Ukraine)
+        // (Ukrainian
+        // Ukraine)
+    }
+
+    public static String fixupTranslationKey(String key) {
+        // seperate at last .
+        int lastDot = key.lastIndexOf('.');
+        if (lastDot == -1) {
+            return key;
+        }
+        String suffix = key.substring(lastDot + 1);
+
+        // split at _
+        String[] parts = suffix.split("_");
+
+        // capitalise beginning of each string and join with space
+        StringBuilder builder = new StringBuilder();
+        for (String part : parts) {
+            builder.append(part.substring(0, 1).toUpperCase());
+            builder.append(part.substring(1));
+            builder.append(" ");
+        }
+
+        // remove last space
+        builder.deleteCharAt(builder.length() - 1);
+
+        return builder.toString();
     }
 }

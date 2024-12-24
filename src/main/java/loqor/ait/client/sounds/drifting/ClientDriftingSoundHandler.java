@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.sounds.PlayerFollowingSound;
 import loqor.ait.client.sounds.SoundHandler;
 import loqor.ait.client.tardis.ClientTardis;
@@ -24,7 +25,7 @@ public class ClientDriftingSoundHandler extends SoundHandler {
     }
 
     private SoundInstance createAlarmSound() {
-        return new PlayerFollowingSound(AITSounds.DRIFTING_MUSIC, SoundCategory.AMBIENT, 1f);
+        return new PlayerFollowingSound(AITSounds.DRIFTING_MUSIC, SoundCategory.MUSIC, 0.15f);
     }
 
     public static ClientDriftingSoundHandler create() {
@@ -42,7 +43,7 @@ public class ClientDriftingSoundHandler extends SoundHandler {
     }
 
     private boolean shouldPlaySound(ClientTardis tardis) {
-        return tardis != null && !tardis.engine().hasPower();
+        return tardis != null && !tardis.fuel().hasPower();
     }
 
     public void tick(MinecraftClient client) {
@@ -50,14 +51,17 @@ public class ClientDriftingSoundHandler extends SoundHandler {
         ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
         // check the ticks every 2 minutes
-        if (client.player == null || this.counter % 2 * 60 * 20 != 0)
+        if (client.player == null && this.counter % (120 * 20) != 0)
             return;
 
         if (this.sounds == null)
             this.generate();
 
         if (this.shouldPlaySound(tardis)) {
-            this.startIfNotPlaying(this.getDrifting());
+            if (AITMod.RANDOM.nextBoolean()) {
+                this.startIfNotPlaying(this.getDrifting());
+            }
+            client.getMusicTracker().stop();
         } else {
             this.counter = 0;
             this.stopSounds();

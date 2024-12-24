@@ -56,6 +56,8 @@ public class EnumMap<K extends Ordered, V> {
     }
 
     public boolean containsKey(K k) {
+        if ((this.size() - 1) < k.index()) return false;
+
         return this.values[k.index()] != null;
     }
 

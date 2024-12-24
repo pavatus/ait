@@ -3,6 +3,10 @@ package loqor.ait.core.tardis;
 import java.util.Objects;
 import java.util.UUID;
 
+import dev.pavatus.register.unlockable.Unlockable;
+
+import net.minecraft.world.World;
+
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
@@ -14,7 +18,6 @@ import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
 
@@ -231,4 +234,17 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public LandingPadHandler landingPad() {
         return this.handler(TardisComponent.Id.LANDING_PAD);
     }
+
+    public SelfDestructHandler selfDestruct() {
+        return this.handler(TardisComponent.Id.SELF_DESTRUCT);
+    }
+
+    public OpinionHandler opinions() {
+        return this.handler(TardisComponent.Id.OPINION);
+    }
+    public SubSystemHandler subsystems() {
+        return this.handler(TardisComponent.Id.SUBSYSTEM);
+    }
+
+    public abstract World getInteriorWorld();
 }

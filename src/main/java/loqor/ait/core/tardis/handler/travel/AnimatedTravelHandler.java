@@ -21,7 +21,7 @@ public abstract class AnimatedTravelHandler extends ProgressiveTravelHandler {
     }
 
     private void tickAnimationProgress(State state) {
-        if (this.animationTicks++ < state.effect().length())
+        if (this.animationTicks++ < tardis.stats().getTravelEffects().get(state).length())
             return;
 
         this.animationTicks = 0;
@@ -35,6 +35,6 @@ public abstract class AnimatedTravelHandler extends ProgressiveTravelHandler {
     }
 
     public int getMaxAnimTicks() {
-        return this.getState().effect().length();
+        return tardis.stats().getTravelEffects().get(this.getState()).length();
     }
 }

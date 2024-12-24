@@ -5,7 +5,7 @@
   "ore_veins_enabled": true,
   "legacy_random_source": false,
   "default_block": {
-    "Name": "minecraft:end_stone"
+    "Name": "ait:anorthosite"
   },
   "default_fluid": {
     "Name": "minecraft:lava",
@@ -309,7 +309,7 @@
         "then_run": {
           "type": "minecraft:block",
           "result_state": {
-            "Name": "minecraft:end_stone"
+            "Name": "ait:anorthosite"
           }
         }
       },

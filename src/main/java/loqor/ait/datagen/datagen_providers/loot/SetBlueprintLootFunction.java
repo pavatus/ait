@@ -1,4 +1,6 @@
+
 package loqor.ait.datagen.datagen_providers.loot;
+
 
 import java.util.Random;
 
@@ -16,14 +18,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.item.blueprint.BlueprintType;
-import loqor.ait.registry.impl.BlueprintRegistry;
-
+import loqor.ait.core.item.blueprint.BlueprintItem;
+import loqor.ait.core.item.blueprint.BlueprintRegistry;
+import loqor.ait.core.item.blueprint.BlueprintSchema;
 public class SetBlueprintLootFunction extends ConditionalLootFunction {
-    final BlueprintType blueprint;
+    final BlueprintSchema blueprint;
     public Random random = AITMod.RANDOM;
 
-    SetBlueprintLootFunction(LootCondition[] conditions, BlueprintType blueprint) {
+    SetBlueprintLootFunction(LootCondition[] conditions, BlueprintSchema blueprint) {
         super(conditions);
         this.blueprint = blueprint;
     }
@@ -35,11 +37,11 @@ public class SetBlueprintLootFunction extends ConditionalLootFunction {
 
     @Override
     public ItemStack process(ItemStack stack, LootContext context) {
-        BlueprintRegistry.setBlueprint(stack, this.blueprint);
+        BlueprintItem.setSchema(stack, this.blueprint);
         return stack;
     }
 
-    public static ConditionalLootFunction.Builder<?> builder(BlueprintType blueprint) {
+    public static ConditionalLootFunction.Builder<?> builder(BlueprintSchema blueprint) {
         return SetBlueprintLootFunction
                 .builder((LootCondition[] conditions) -> new SetBlueprintLootFunction(conditions, blueprint));
     }
@@ -50,14 +52,14 @@ public class SetBlueprintLootFunction extends ConditionalLootFunction {
                 JsonSerializationContext jsonSerializationContext) {
             super.toJson(jsonObject, setBlueprintLootFunction, jsonSerializationContext);
             jsonObject.addProperty("id",
-                    BlueprintRegistry.REGISTRY.getId(setBlueprintLootFunction.blueprint).toString());
+                    setBlueprintLootFunction.blueprint.id().toString());
         }
 
         @Override
         public SetBlueprintLootFunction fromJson(JsonObject jsonObject,
-                JsonDeserializationContext jsonDeserializationContext, LootCondition[] lootConditions) {
+                                                 JsonDeserializationContext jsonDeserializationContext, LootCondition[] lootConditions) {
             String string = JsonHelper.getString(jsonObject, "id");
-            BlueprintType blueprint = BlueprintRegistry.REGISTRY.getOrEmpty(Identifier.tryParse(string))
+            BlueprintSchema blueprint = BlueprintRegistry.getInstance().getOptional(Identifier.tryParse(string))
                     .orElseThrow(() -> new JsonSyntaxException("Unknown blueprint '" + string + "'"));
             return new SetBlueprintLootFunction(lootConditions, blueprint);
         }
