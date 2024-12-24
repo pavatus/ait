@@ -79,6 +79,8 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
             DALEK_MOD = register(new DalekModCategory());
         }
         //JAKE = register(new JakeCategory());
-        PRESENT = register(new PresentCategory());
+        if (isUnlockedAdvent2024(5)) {
+            PRESENT = register(new PresentCategory());
+        }
     }
 }

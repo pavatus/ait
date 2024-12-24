@@ -210,7 +210,13 @@ public class AITItems implements ItemRegistryContainer {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
 
-        return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, day, 6) || year > 2024;
+        // Check if the year is 2024 and the date is within December 26th to January 6th
+        if (year == 2024) {
+            return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, 26, 6);
+        } else {
+            // If the year is greater than 2024, always return true
+            return true;
+        }
     }
 
     public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
