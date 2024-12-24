@@ -234,13 +234,15 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
     }
 
     private boolean isCircular(IFluidLink link) {
-        IFluidLink current = this;
+        // TODO MAKE THIS LESS LAGGY SINCE IT CRASHES THE GAME SUPER OFTEN - Loqor
+        /*IFluidLink current = this;
         while (current != null) {
             if (current == link) {
                 return true;
             }
             current = current.last();
         }
+        return false;*/
         return false;
     }
 
