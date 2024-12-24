@@ -276,11 +276,11 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         // Dalek Mod
         if (isUnlockedAdvent2024(6)) {
-            DALEK_MOD_1963 = register(new ClientDalekMod1963Varient());
-            DALEK_MOD_1967 = register(new ClientDalekMod1967Varient());
-            DALEK_MOD_1970 = register(new ClientDalekMod1970Varient());
-            DALEK_MOD_1976 = register(new ClientDalekMod1976Varient());
-            DALEK_MOD_1980 = register(new ClientDalekMod1980Varient());
+            DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
+            DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
+            DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
+            DALEK_MOD_1976 = register(new ClientDalekMod1976Variant());
+            DALEK_MOD_1980 = register(new ClientDalekMod1980Variant());
         }
 
         // Jake

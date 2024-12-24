@@ -18,7 +18,7 @@ public abstract class DalekModVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/dalek_mod/dalek_mod_";
 
     protected DalekModVariant(Integer number) {
-        super(DalekModCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/dalek_mod/" + Integer.toString(number)),
+        super(DalekModCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/dalek_mod/" + number),
                 new Loyalty(Loyalty.Type.OWNER));
     }
 

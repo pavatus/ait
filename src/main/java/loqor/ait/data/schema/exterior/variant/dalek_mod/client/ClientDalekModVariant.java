@@ -11,7 +11,7 @@ import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 
-public abstract class ClientDalekModVarient extends ClientExteriorVariantSchema {
+public abstract class ClientDalekModVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/dalek_mod";
     protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
@@ -21,7 +21,7 @@ public abstract class ClientDalekModVarient extends ClientExteriorVariantSchema 
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
 
 
-    protected ClientDalekModVarient(String name) {
+    protected ClientDalekModVariant(String name) {
         super(new Identifier(AITMod.MOD_ID, "exterior/dalek_mod/" + name));
 
         this.name = name;
@@ -39,7 +39,7 @@ public abstract class ClientDalekModVarient extends ClientExteriorVariantSchema 
 
     @Override
     public Identifier emission() {
-        return null;
+        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
     }
 
     @Override

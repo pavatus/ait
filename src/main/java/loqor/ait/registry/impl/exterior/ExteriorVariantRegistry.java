@@ -29,7 +29,6 @@ import loqor.ait.data.schema.exterior.variant.capsule.CapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.*;
 import loqor.ait.data.schema.exterior.variant.dalek_mod.*;
-import loqor.ait.data.schema.exterior.variant.dalek_mod.client.*;
 import loqor.ait.data.schema.exterior.variant.doom.DoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadFireVariant;
@@ -272,11 +271,11 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Dalek Mod
         if (isUnlockedAdvent2024(6)) {
-            DALEK_MOD_1963 = register(new DalekMod1963Varient());
-            DALEK_MOD_1967 = register(new DalekMod1967Varient());
-            DALEK_MOD_1970 = register(new DalekMod1970Varient());
-            DALEK_MOD_1976 = register(new DalekMod1976Varient());
-            DALEK_MOD_1980 = register(new DalekMod1980Varient());
+            DALEK_MOD_1963 = register(new DalekMod1963Variant());
+            DALEK_MOD_1967 = register(new DalekMod1967Variant());
+            DALEK_MOD_1970 = register(new DalekMod1970Variant());
+            DALEK_MOD_1976 = register(new DalekMod1976Variant());
+            DALEK_MOD_1980 = register(new DalekMod1980Variant());
         }
 
         // Jake

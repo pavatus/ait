@@ -812,7 +812,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
-        // Exterior Varients translations
+        // Exterior Variant translations
 
         // All
         provider.addTranslation("exterior.ait.adaptive", "Adaptive");
