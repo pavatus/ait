@@ -2,11 +2,13 @@ name: Feature request
 description: Suggest an idea for Adventures In Time
 title: "[IDEA] Name here"
 labels: enhancement
-assignees: Loqor
+assignees: 
+- Loqor
 body:
 - type: markdown
   attributes:
-
+  value: |
+  Thanks for taking the time to fill out this feature request!
 - type: textarea
   attributes:
   label: Is your feature request related to a problem? Please describe.

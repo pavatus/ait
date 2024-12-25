@@ -6,7 +6,8 @@ assignees: Loqor
 body:
 - type: markdown
   attributes:
-
+  value: |
+  Thanks for taking the time to fill out this bug report!
 - type: textarea
   attributes:
   label: Describe the bug
