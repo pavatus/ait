@@ -1,30 +1,56 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
+_name: Bug report
+description: Create a report to help us improve
+title: ""
 labels: bug
 assignees: Loqor
+body:
+- type: markdown
+  attributes:
 
----
+- type: textarea
+  attributes:
+  label: Describe the bug
+  description: A clear and concise description of what the bug is.
+  validations:
+  required: true
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+- type: textarea
+  attributes:
+  label: To Reproduce
+  description: Steps to reproduce the behavior:
+  placeholder: |
+  1. Go to '...'
+  2. Click on '....'
+  3. Scroll down to '....'
+  4. See error
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+- type: input
+  attributes:
+  label: Screenshots / Logs
+  description: If applicable, add screenshots or logs to help explain your problem.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+- type: dropdown
+  id: ait-version
+  attributes:
+  label: AIT Version
+  description: Provide the version of AIT this is on:
+  options:
+  - 1.2.0
+  - 1.1.0
+  - 1.0.0
+  - Beta-Release (List which version in Additional context)
+  - 
+- type: checkboxes
+    id: git-issue
+    attributes:
+    label: Github Issue
+    description: Is there a problem on the Github Repo?
+    options:
+    - label: Yes
+    - label: No
+  
+- type: textarea
+  attributes:
+  label: Additional context
+  description: Add any other context about the problem here -  eg other mods you were playing with._
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**AIT Version:**
-Provide the version of AIT this is on
-
-**Additional context**
-Add any other context about the problem here -  eg other mods you were playing with.
