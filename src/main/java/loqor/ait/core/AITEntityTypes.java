@@ -26,7 +26,7 @@ public class AITEntityTypes implements AutoRegistryContainer<EntityType<?>> {
             .build();
 
     public static final EntityType<GallifreyFallsPaintingEntity> GALLIFREY_FALLS_PAINTING_TYPE = FabricEntityTypeBuilder
-            .create(SpawnGroup.MISC, GallifreyFallsPaintingEntity::new)
+            .<GallifreyFallsPaintingEntity>create(SpawnGroup.MISC, GallifreyFallsPaintingEntity::new)
             .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
 
     public static final EntityType<CobbledSnowballEntity> COBBLED_SNOWBALL_TYPE = FabricEntityTypeBuilder
