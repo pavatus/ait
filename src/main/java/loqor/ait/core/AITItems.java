@@ -179,7 +179,7 @@ public class AITItems {
     //TODO: Find another way to register AIT Items automatically, Minecraft Made it worse so we can't register like we used to since they are deprecated in owolib +
     // .registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(AITMod.MOD_ID, "<item>"))) has to be added every item (way to do automatically?)
 
-    //TODO: Owo depricated the Owo.ItemSettings but theres a replacement for it so we can do .group() buttttttt i'm not gonna do it rn
+    //TODO: Owo depricated the OwoItemSettings but theres a replacement for it with somthing like OwoItemSettingExtention or somthing so we can do .group() buttttttt i'm not gonna do it rn
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(AITMod.MOD_ID, name), item);
