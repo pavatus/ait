@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl.exterior;
 
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +28,7 @@ import loqor.ait.data.schema.exterior.variant.capsule.CapsuleDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.*;
 import loqor.ait.data.schema.exterior.variant.doom.DoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadFireVariant;
@@ -35,10 +38,10 @@ import loqor.ait.data.schema.exterior.variant.geometric.GeometricFireVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
-import loqor.ait.data.schema.exterior.variant.jake.JakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
+import loqor.ait.data.schema.exterior.variant.present.PresentDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeCabinetVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeTronVariant;
@@ -179,7 +182,13 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
     public static ExteriorVariantSchema ADAPTIVE;
-    public static ExteriorVariantSchema JAKE_DEFAULT;
+    public static ExteriorVariantSchema DALEK_MOD_1963;
+    public static ExteriorVariantSchema DALEK_MOD_1967;
+    public static ExteriorVariantSchema DALEK_MOD_1970;
+    public static ExteriorVariantSchema DALEK_MOD_1976;
+    public static ExteriorVariantSchema DALEK_MOD_1980;
+    //public static ExteriorVariantSchema JAKE_DEFAULT;
+    public static ExteriorVariantSchema PRESENT_DEFAULT;
 
     @Override
     protected void defaults() {
@@ -260,7 +269,20 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         // Adaptive
         ADAPTIVE = register(new AdaptiveVariant());
 
+        // Dalek Mod
+        if (isUnlockedAdvent2024(6)) {
+            DALEK_MOD_1963 = register(new DalekMod1963Variant());
+            DALEK_MOD_1967 = register(new DalekMod1967Variant());
+            DALEK_MOD_1970 = register(new DalekMod1970Variant());
+            DALEK_MOD_1976 = register(new DalekMod1976Variant());
+            DALEK_MOD_1980 = register(new DalekMod1980Variant());
+        }
+
         // Jake
-        JAKE_DEFAULT = register(new JakeDefaultVariant());
+        //JAKE_DEFAULT = register(new JakeDefaultVariant());
+
+        // Present
+        if (isUnlockedAdvent2024(5))
+            PRESENT_DEFAULT = register(new PresentDefaultVariant());
     }
 }

@@ -1,8 +1,10 @@
 package loqor.ait.datagen;
 
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 import static net.minecraft.data.server.recipe.RecipeProvider.*;
 import static net.minecraft.data.server.recipe.RecipeProvider.createSlabRecipe;
 
+import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
@@ -34,7 +36,8 @@ import loqor.ait.datagen.datagen_providers.lang.LanguageType;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
-public class AITModDataGenerator implements DataGeneratorEntrypoint {
+public class
+AITModDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
@@ -268,8 +271,34 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
                             .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                             .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
-                            .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS))
-            );
+                            .criterion(hasItem(Items.COMPASS), conditionsFromItem(Items.COMPASS)));
+
+            if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
+                provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.COMBAT, AITItems.COBBLED_SNOWBALL)
+                        .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                        .input(Items.SNOWBALL).criterion(hasItem(Items.SNOWBALL), conditionsFromItem(Items.SNOWBALL)));
+            }
+
+            if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
+                provider.addShapedRecipe(
+                        ShapedRecipeJsonBuilder.create(RecipeCategory.FOOD, AITItems.MUG, 1)
+                                .pattern(" CC")
+                                .pattern("P C")
+                                .pattern(" CC")
+                                .input('P', Items.FLOWER_POT)
+                                .input('C', Items.CLAY_BALL)
+                                .criterion(hasItem(Items.FLOWER_POT), conditionsFromItem(Items.FLOWER_POT))
+                                .criterion(hasItem(Items.CLAY_BALL), conditionsFromItem(Items.CLAY_BALL)));
+                provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, AITItems.HOT_CHOCOLATE_POWDER)
+                        .input(Items.COCOA_BEANS).criterion(hasItem(Items.COCOA_BEANS), conditionsFromItem(Items.COCOA_BEANS))
+                        .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                        .input(AITItems.ZEITON_DUST).criterion(hasItem(AITItems.ZEITON_DUST), conditionsFromItem(AITItems.ZEITON_DUST)));
+                provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, AITItems.HOT_CHOCOLATE)
+                        .input(AITItems.HOT_CHOCOLATE_POWDER).criterion(hasItem(AITItems.HOT_CHOCOLATE_POWDER), conditionsFromItem(AITItems.HOT_CHOCOLATE_POWDER))
+                        .input(AITItems.MUG).criterion(hasItem(AITItems.MUG), conditionsFromItem(AITItems.MUG))
+                        .input(Items.MILK_BUCKET).criterion(hasItem(Items.MILK_BUCKET), conditionsFromItem(Items.MILK_BUCKET)));
+            }
+
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HYPERCUBE)
                     .pattern("BBB").pattern("BEB").pattern("BBB").input('B', AITItems.ZEITON_SHARD)
@@ -472,12 +501,15 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector Unit");
         provider.addTranslation(AITItems.SIEGE_ITEM, "TARDIS");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC, "Music Disc");
+        provider.addTranslation(AITItems.WONDERFUL_TIME_IN_SPACE_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
+        provider.addTranslation(AITItems.WONDERFUL_TIME_IN_SPACE_MUSIC_DISC.getTranslationKey() + ".desc", "Dian - Wonderful Time in Space");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+        provider.addTranslation(AITItems.GALLIFREY_FALLS_PAINTING, "Painting");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");
@@ -493,6 +525,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.classic", "Classic");
         provider.addTranslation("exterior.ait.stallion", "Stallion");
         provider.addTranslation("exterior.ait.jake", "Jake");
+        provider.addTranslation("exterior.ait.dalek_mod", "Dalek Mod");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
@@ -539,6 +572,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.copper", "Copper");
         provider.addTranslation("sonic.ait.mechanical", "Mechanical");
         provider.addTranslation("sonic.ait.song", "Song");
+        provider.addTranslation("sonic.ait.singularity", "Singularity");
+        provider.addTranslation("sonic.ait.candy_cane", "Candy Cane");
 
         // Blocks
         provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
@@ -564,6 +599,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
 
         // Galifrayan Falls Painting
+
         provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
@@ -571,6 +607,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 
         // TARDIS Control Actionbar Title
+        provider.addTranslation("tardis.message.protocol_813.travel", "Hail Mary: Protocol 813 is active, please prepare for departure.");
         provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.engaged", "Protocol 813: ENGAGED");
         provider.addTranslation("tardis.message.control.hail_mary.disengaged", "Protocol 813: DISENGAGED");
@@ -699,7 +736,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the subsystem block to set its type"); // todo - improve message
+        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type."); // todo - improve message
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
@@ -775,7 +812,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
-        // Exterior translations
+        // Exterior Variant translations
 
         // All
         provider.addTranslation("exterior.ait.adaptive", "Adaptive");
@@ -817,7 +854,7 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.stallion_pristine", "Pristine");
         provider.addTranslation("exterior.ait.stallion_green", "Green");
 
-        // frooploof
+        // Frooploof Police Box
         provider.addTranslation("exterior.frooploof.copper", "Copper");
         provider.addTranslation("exterior.frooploof.eleven_toyota", "Toyota (1)");
         provider.addTranslation("exterior.frooploof.eleven_toyota_alternate", "Toyota (2)");
@@ -827,6 +864,16 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.frooploof.coral_bad_wolf", "Coral (Bad Wolf)");
         provider.addTranslation("exterior.frooploof.coral_war", "War");
         provider.addTranslation("exterior.frooploof.tokamak_eotd", "Tokamak (EOTD)");
+
+        // Dalek Mod
+
+        provider.addTranslation("exterior.ait.1963", "1963");
+        provider.addTranslation("exterior.ait.1967", "1967");
+        provider.addTranslation("exterior.ait.1970", "1970");
+        provider.addTranslation("exterior.ait.1976", "1976");
+        provider.addTranslation("exterior.ait.1980", "1980");
+
+
 
         // Security Settings Menu
         provider.addTranslation("screen.ait.sonic.button", "> Sonic Settings");
@@ -886,6 +933,8 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // effects
         provider.addTranslation("effect.ait.zeiton_high", "Zeiton High");
+        provider.addTranslation("effect.ait.lunar_regolith", "Lunar Regolith Poisoned");
+        provider.addTranslation("effect.ait.oxygenated", "Oxygenator Field");
 
         // automatic english for items
         AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {

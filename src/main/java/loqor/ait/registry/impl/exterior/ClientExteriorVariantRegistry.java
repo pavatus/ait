@@ -1,5 +1,8 @@
 package loqor.ait.registry.impl.exterior;
 
+
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
+
 import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -25,6 +28,7 @@ import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleDefaul
 import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.client.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.client.*;
 import loqor.ait.data.schema.exterior.variant.doom.client.ClientDoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.client.ClientEasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.client.ClientEasterHeadFireVariant;
@@ -34,10 +38,10 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
-import loqor.ait.data.schema.exterior.variant.jake.client.ClientJakeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
+import loqor.ait.data.schema.exterior.variant.present.client.ClientPresentDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeTronVariant;
@@ -185,7 +189,13 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
-    public static ClientExteriorVariantSchema JAKE_DEFAULT;
+    public static ClientExteriorVariantSchema DALEK_MOD_1963;
+    public static ClientExteriorVariantSchema DALEK_MOD_1967;
+    public static ClientExteriorVariantSchema DALEK_MOD_1970;
+    public static ClientExteriorVariantSchema DALEK_MOD_1976;
+    public static ClientExteriorVariantSchema DALEK_MOD_1980;
+    //public static ClientExteriorVariantSchema JAKE_DEFAULT;
+    public static ClientExteriorVariantSchema PRESENT_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -264,8 +274,21 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         ADAPTIVE = register(new ClientAdaptiveVariant());
 
+        // Dalek Mod
+        if (isUnlockedAdvent2024(6)) {
+            DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
+            DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
+            DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
+            DALEK_MOD_1976 = register(new ClientDalekMod1976Variant());
+            DALEK_MOD_1980 = register(new ClientDalekMod1980Variant());
+        }
+
         // Jake
-        JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
+        //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
+
+        // Present
+        if (isUnlockedAdvent2024(5))
+            PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
     }
 
     @Override

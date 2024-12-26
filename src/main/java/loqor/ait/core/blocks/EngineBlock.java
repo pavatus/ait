@@ -5,8 +5,12 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -19,6 +23,7 @@ import loqor.ait.core.engine.block.SubSystemBlock;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 
 public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
             -16.0, 0.0, -16.0,
             32.0, 48.0, 32.0
@@ -27,6 +32,8 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
 
     public EngineBlock(Settings settings) {
         super(settings, SubSystem.Id.ENGINE);
+
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -37,6 +44,16 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return Y_SHAPE;
+    }
+
+    @Nullable @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
     @Override

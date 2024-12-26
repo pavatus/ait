@@ -1,5 +1,11 @@
 package loqor.ait.core;
 
+
+
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
+import java.util.Calendar;
+
 import dev.pavatus.planet.core.PlanetBlocks;
 import io.wispforest.owo.registration.reflect.BlockEntityRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -13,6 +19,7 @@ import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
 public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
+    public static BlockEntityType<SnowGlobeBlockEntity> SNOW_GLOBE_BLOCK_ENTITY_TYPE;
 
     public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(ExteriorBlockEntity::new, AITBlocks.EXTERIOR_BLOCK).build();
@@ -40,8 +47,6 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(EngineCoreBlockEntity::new, AITBlocks.ENGINE_CORE_BLOCK).build();
     public static BlockEntityType<MachineCasingBlockEntity> MACHINE_CASING_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(MachineCasingBlockEntity::new, AITBlocks.MACHINE_CASING).build();
-    public static BlockEntityType<PlugBoardBlockEntity> PLUGBOARD_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(PlugBoardBlockEntity::new, AITBlocks.PLUGBOARD).build();
     public static BlockEntityType<FabricatorBlockEntity> FABRICATOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(FabricatorBlockEntity::new, AITBlocks.FABRICATOR).build();
     public static BlockEntityType<EnvironmentProjectorBlockEntity> ENVIRONMENT_PROJECTOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
@@ -64,4 +69,12 @@ public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
             .create(PowerConverterBlock.BlockEntity::new, AITBlocks.POWER_CONVERTER).build();
     public static BlockEntityType<GenericStructureSystemBlockEntity> GENERIC_SUBSYSTEM_BLOCK_TYPE = FabricBlockEntityTypeBuilder
             .create(GenericStructureSystemBlockEntity::new, AITBlocks.GENERIC_SUBSYSTEM).build();
+
+    // TODO ADVENT might have to make this work like the block as well
+    static {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            SNOW_GLOBE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+                    .create(SnowGlobeBlockEntity::new, AITBlocks.SNOW_GLOBE).build();
+        }
+    }
 }

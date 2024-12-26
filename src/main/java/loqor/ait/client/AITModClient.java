@@ -1,7 +1,9 @@
 package loqor.ait.client;
 
 import static loqor.ait.AITMod.*;
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
@@ -22,6 +24,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -36,6 +39,7 @@ import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
 import loqor.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import loqor.ait.client.renderers.decoration.PlaqueRenderer;
+import loqor.ait.client.renderers.decoration.SnowGlobeRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
@@ -88,6 +92,7 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         hammerPredicate();
         siegeItemPredicate();
+        adventItemPredicates();
 
         // TODO make skybox renderer for mars so we dont have to render the moon
         // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
@@ -330,6 +335,56 @@ public class AITModClient implements ClientModInitializer {
                 });
     }
 
+    public static void adventItemPredicates() {
+        ModelPredicateProviderRegistry.register(AITItems.HYPERCUBE, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof HypercubeItem) {
+                        return isUnlockedOnThisDay(Calendar.JANUARY, 1) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.HAZANDRA, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof InteriorTeleporterItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 28) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.IRON_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.GOLD_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.NETHERITE_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.CLASSIC_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+    }
+
     public static void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE,
@@ -346,7 +401,6 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE,
                 EngineCoreBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE,
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
@@ -358,12 +412,19 @@ public class AITModClient implements ClientModInitializer {
                 GenericSubSystemRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE,
                 PowerConverterRenderer::new);
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            BlockEntityRendererFactories.register(AITBlockEntityTypes.SNOW_GLOBE_BLOCK_ENTITY_TYPE,
+                    SnowGlobeRenderer::new);
+        }
     }
 
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
+            EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
+        }
     }
 
     public static void setupBlockRendering() {
@@ -380,5 +441,8 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.WAYPOINT_BANK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.ENGINE_CORE_BLOCK, RenderLayer.getCutout());
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
+        }
     }
 }

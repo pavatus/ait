@@ -1,5 +1,8 @@
 package loqor.ait.registry.impl;
 
+
+import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
+
 import java.util.Random;
 
 import dev.pavatus.register.datapack.SimpleDatapackRegistry;
@@ -52,7 +55,9 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     public static ExteriorCategorySchema GEOMETRIC;
     public static ExteriorCategorySchema STALLION;
     public static ExteriorCategorySchema ADAPTIVE;
-    public static ExteriorCategorySchema JAKE;
+    public static ExteriorCategorySchema DALEK_MOD;
+    //public static ExteriorCategorySchema JAKE;
+    public static ExteriorCategorySchema PRESENT;
 
     @Override
     protected void defaults() {
@@ -70,6 +75,12 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
-        JAKE = register(new JakeCategory());
+        if (isUnlockedAdvent2024(6)) {
+            DALEK_MOD = register(new DalekModCategory());
+        }
+        //JAKE = register(new JakeCategory());
+        if (isUnlockedAdvent2024(5)) {
+            PRESENT = register(new PresentCategory());
+        }
     }
 }

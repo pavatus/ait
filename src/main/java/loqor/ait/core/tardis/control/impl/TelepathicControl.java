@@ -1,8 +1,10 @@
 package loqor.ait.core.tardis.control.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -26,6 +28,7 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
@@ -67,6 +70,11 @@ public class TelepathicControl extends Control {
         if (type == Items.BRICK) {
             tardis.siege().texture().set(SiegeHandler.BRICK_TEXTURE);
             return false;
+        }
+
+        if (AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 31) && (type == Blocks.SNOW.asItem() || type == Blocks.SNOW_BLOCK.asItem() || type == Blocks.POWDER_SNOW.asItem())) {
+            //TODO DUZO PLEASE DO THIS - locate a snow biome nearby!
+            return true;
         }
 
         if (type == Items.STONE) {

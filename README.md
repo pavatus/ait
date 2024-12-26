@@ -1,4 +1,4 @@
-![Title](https://github.com/M-D-Team/ait-fabric-1.20.1/blob/main/src/main/resources/assets/ait/textures/gui/title/main_ait_logo.png?raw=true)
+![AIT Logo](https://github.com/pavatus/ait/blob/main/src/main/resources/assets/ait_logo.png?raw=true)
 
 ![GitHub Release](https://img.shields.io/github/v/release/M-D-Team/ait-fabric-1.20.1?include_prereleases)
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/ait?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait%2Fversions)
@@ -48,31 +48,27 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - [Loqor](https://loqor.dev/)
 - [duzo](https://duzo.is-a.dev/)
 - [Dr. Theo](https://theo.is-a.dev/)
-- Nitrogenesis
+- Maketendo
 
 ---
 
 ### Artists:
-- Tright (Modeler)
-- b2bmrww2 (Modeler)
-- classic_account (Builder)
-- Monsterwaill (Animator)
+- Westankrang
+- Tright
+- b2
+- Ouro
 
 ---
 
 ### Sound Design:
+- Dian
 - [Radio](https://im-radio.bandcamp.com/album/ait-mod-music-disc-drifting)
 - TARDISSFX (the YouTube channel)
 
 ---
 
 ## Thank You's:
-- [MagicMan(?)](https://magicmaan.github.io/) (Help with modeling)
-- Bug1312 (Help with code)
 - DocArcane (Credit for the Steampunk console design)
-- Creativious (Help with code)
-- [Jeryn](https://craig.software) (Suff) (Help with code)
-- Maggie (Help with texturing)
 
 
 ## Links

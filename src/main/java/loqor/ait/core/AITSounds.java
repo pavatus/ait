@@ -14,6 +14,7 @@ public class AITSounds {
     public static final SoundEvent EVEN_MORE_SECRET_MUSIC = register("music/even_more_secret_music");
     public static final SoundEvent DRIFTING_MUSIC = register("music/drifting_by_radio");
     // public static final SoundEvent MERCURY_MUSIC = register("music/mercury_by_nitrogenesis"); // removed for its large size - if you bring it back, COMPRESS IT
+    public static final SoundEvent WONDERFUL_TIME_IN_SPACE = register("music/wonderful_time_in_space");
 
     // TARDIS
     public static final SoundEvent DEMAT = register("tardis/demat");
@@ -59,6 +60,7 @@ public class AITSounds {
     // Hums
     public static final SoundEvent TOYOTA_HUM = register("tardis/hums/toyota_hum");
     public static final SoundEvent CORAL_HUM = register("tardis/hums/coral_hum");
+    public static final SoundEvent CHRISTMAS_HUM = register("tardis/hums/advent/christmas_hum");
     public static final SoundEvent EIGHT_HUM = register("tardis/hums/eight_hum");
     public static final SoundEvent COPPER_HUM = register("tardis/hums/copper_hum");
     public static final SoundEvent EXILE_HUM = register("tardis/hums/exile_hum");

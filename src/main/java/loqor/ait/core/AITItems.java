@@ -1,6 +1,7 @@
 package loqor.ait.core;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -34,6 +35,13 @@ import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
 
 public class AITItems implements ItemRegistryContainer {
+
+    // TODO ADVENT ITEMS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
+    public static Item COBBLED_SNOWBALL;
+    public static Item HOT_CHOCOLATE_POWDER;
+    public static Item HOT_CHOCOLATE;
+    public static Item MUG;
+    public static Item SANTA_HAT;
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
@@ -59,7 +67,7 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item HAMMER = new HammerItem(3, -2.4F,
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(600));
     public static final Item RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);;
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
     public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
             ArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
             true);
@@ -142,7 +150,8 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item LIFE_SUPPORT = new SubSystemItem(
             new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.LIFE_SUPPORT);
 
-
+    @NoEnglish
+    public static final Item GALLIFREY_FALLS_PAINTING = new AITDecorationItem(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
@@ -158,6 +167,10 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 169);
 
     @NoEnglish
+    public static final Item WONDERFUL_TIME_IN_SPACE_MUSIC_DISC = new MusicDiscItem(1, AITSounds.WONDERFUL_TIME_IN_SPACE,
+            new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 73);
+
+    @NoEnglish
     public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.ERROR,
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
 
@@ -168,6 +181,61 @@ public class AITItems implements ItemRegistryContainer {
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
 
+     // TODO ADVENT STUFF
+
+    static {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
+            SANTA_HAT = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
+            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
+        }
+
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
+            COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
+        }
+       if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
+            HOT_CHOCOLATE_POWDER = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
+            HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            MUG = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+        }
+        /*if (isUnlockedAdvent2024(4)) {
+            // TODO SONIC CANDY CANE
+        }*/
+    }
+
+    public static boolean isUnlockedOnThisDay(int month, int day) {
+        return getAdventDates(month, Calendar.JANUARY, day, 6);
+    }
+
+    public static boolean isUnlockedAdvent2024(int day) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+
+        // Check if the year is 2024 and the date is within December 26th to January 6th
+        if (year == 2024) {
+            return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, 26, 6);
+        } else {
+            // If the year is greater than 2024, always return true
+            return true;
+        }
+    }
+
+    public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Handle the case where the date range spans across two years
+        if (monthBegin == Calendar.DECEMBER && monthEnd == Calendar.JANUARY) {
+            return (currentMonth == Calendar.DECEMBER && currentDay >= dayBegin) || (currentMonth == Calendar.JANUARY && currentDay <= dayEnd);
+        } else {
+            return currentMonth >= monthBegin && currentMonth <= monthEnd && currentDay >= dayBegin && currentDay <= dayEnd;
+        }
+    }
+
+    public static boolean isInAdvent() {
+
+        return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, 26, 6);
+    }
 
     public static List<Item> get() {
         List<Item> list = new ArrayList<>();

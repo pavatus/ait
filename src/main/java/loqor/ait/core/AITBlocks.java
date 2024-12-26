@@ -1,6 +1,10 @@
 package loqor.ait.core;
 
+
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -24,7 +28,11 @@ import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
+
 public class AITBlocks implements BlockRegistryContainer {
+
+    // TODO ADVENT BLOCKS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
+    public static Block SNOW_GLOBE;
 
     @NoBlockItem
     @NoBlockDrop
@@ -136,10 +144,6 @@ public class AITBlocks implements BlockRegistryContainer {
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     @NoBlockItem
-    public static final Block PLUGBOARD = new PlugBoardBlock(
-            FabricBlockSettings.create().solid().noCollision().strength(1.0f));
-
-    @NoBlockItem
     public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
 
     // Machines
@@ -158,20 +162,12 @@ public class AITBlocks implements BlockRegistryContainer {
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
 
-    // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
-    /*
-     * public static final Block CONSOLE_ROOM_PORT_BLOCK = new
-     * ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-     * .addItemSettings(new NeptuneItemSettings().group(() ->
-     * AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F,
-     * 6.0F)); public static final Block ENGINE_ROOM_PORT_BLOCK = new
-     * EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-     * .addItemSettings(new NeptuneItemSettings().group(() ->
-     * AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F,
-     * 6.0F));
-     */
-
-    // Decoration
+    // TODO ADVENT
+    static {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            SNOW_GLOBE = new SnowGlobeBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
+        }
+    }
 
 
     @NoEnglish
