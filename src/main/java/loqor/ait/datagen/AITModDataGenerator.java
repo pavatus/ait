@@ -78,8 +78,13 @@ public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_KEY, 1)
-                    .pattern(" N ").pattern("IEI").pattern("IRI").input('N', Items.IRON_NUGGET)
-                    .input('I', Items.IRON_INGOT).input('E', Items.ENDER_PEARL).input('R', Items.REDSTONE)
+                    .pattern(" N ")
+                    .pattern("IEI")
+                    .pattern("IRI")
+                    .input('N', Items.IRON_NUGGET)
+                    .input('I', Items.IRON_INGOT)
+                    .input('E', Items.ENDER_PEARL)
+                    .input('R', Items.REDSTONE)
                     .criterion(hasItem(Items.IRON_NUGGET), conditionsFromItem(Items.IRON_NUGGET))
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Items.ENDER_PEARL), conditionsFromItem(Items.ENDER_PEARL))

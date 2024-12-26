@@ -46,8 +46,8 @@ public class DefaultLogoMixin {
 
     @Inject(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At("TAIL"))
     private void renderWarningMessage(DrawContext context, int screenWidth, float alpha, int y, CallbackInfo ci) {
-        if (AITMod.isUnsafeBranch()) {
-            String warningMessage = "Warning: You are using an experimental version (" + AITMod.BRANCH + "), please be cautious when testing!";
+        if (AITMod.isUnsafeVersion()) {
+            String warningMessage = "Warning: You are using an experimental version (" + AITMod.VERSION + "), please be cautious when testing!";
             screenWidth = this.client.getWindow().getScaledWidth();
             int textWidth = this.client.textRenderer.getWidth(warningMessage);
 

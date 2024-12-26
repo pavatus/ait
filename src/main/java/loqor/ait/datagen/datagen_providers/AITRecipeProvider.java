@@ -9,9 +9,10 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 
 import net.minecraft.block.Block;
-import net.minecraft.data.server.recipe.*;
+import net.minecraft.data.recipe.*;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -83,5 +84,15 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     }
     private String fixupBlockKey(String key) {
         return key.substring(key.lastIndexOf(".") + 1);
+    }
+
+    @Override
+    protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registryLookup, RecipeExporter exporter) {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return "AIT's Recipes";
     }
 }

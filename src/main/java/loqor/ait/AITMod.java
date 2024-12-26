@@ -24,7 +24,6 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -56,7 +54,6 @@ import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
 import loqor.ait.core.likes.ItemOpinionRegistry;
 import loqor.ait.core.lock.LockedDimensionRegistry;
-import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.sounds.flight.FlightSoundRegistry;
 import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
@@ -101,24 +98,17 @@ public class AITMod implements ModInitializer {
 
     public static final Crater CRATER = new Crater(ProbabilityConfig.CODEC);
 
-    public static final ScreenHandlerType<EngineScreenHandler> ENGINE_SCREEN_HANDLER;
-
-    static {
-        ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"),
-                EngineScreenHandler::new);
-    }
-
-    public static final String BRANCH;
+    public static final String VERSION;
 
     static {
         // ait-1.x.x.xxx-1.20.1-xxxx-xxxx
         String version = FabricLoader.getInstance().getModContainer(MOD_ID).get().getMetadata().getVersion().getFriendlyString();
         // get the last part of the version string after the -
-        BRANCH = version.substring(version.lastIndexOf("-") + 1);
+        VERSION = version.substring(version.lastIndexOf("-") + 1);
     }
 
-    public static boolean isUnsafeBranch() {
-        return !BRANCH.equals("release");
+    public static boolean isUnsafeVersion() {
+        return !VERSION.equals("release");
     }
 
     @Override
