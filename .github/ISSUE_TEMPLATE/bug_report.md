@@ -1,13 +1,16 @@
 name: Bug report
 description: Create a report to help us improve
-title: ""
+title: "[BUG] <title>"
 labels: bug
-assignees: Loqor
+assignees: 'Loqor'
 body:
-- type: markdown
+- type: checkboxes
   attributes:
-  value: |
-  Thanks for taking the time to fill out this bug report!
+  label: Is there an existing issue for this?
+  description: Please search to see if an issue already exists for the bug you encountered.
+  options:
+  - label: I have searched the existing issues
+    required: true
 - type: textarea
   attributes:
   label: Describe the bug
@@ -40,7 +43,7 @@ body:
     - 1.1.0
     - 1.0.0
     - Beta-Release (List which version in Additional context)
-    -
+
 - type: checkboxes
   id: git-issue
   attributes:
@@ -53,4 +56,6 @@ body:
 - type: textarea
   attributes:
   label: Additional context
-  description: Add any other context about the problem here -  eg other mods you were playing with._
+  description:  Add any other context about the problem here -  eg other mods you were playing with.
+    
+  

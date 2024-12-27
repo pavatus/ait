@@ -114,6 +114,8 @@ public class BOTI {
 
     public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
 
+        if (!variant.parent().hasPortals()) return;
+
         if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
             return;
         }
