@@ -29,6 +29,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItemGroups;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.datagen.datagen_providers.*;
@@ -474,7 +475,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
 
         // Tabs
-        provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
+        provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
+        provider.addTranslation(AITItemGroups.FABRICATOR, "AIT: Fabrication");
 
         // Config
         provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
@@ -967,7 +969,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Porte");
         aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
@@ -1080,7 +1082,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                                                       CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
@@ -1171,7 +1173,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Abenteuer in der Zeit");
+        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Abenteuer in der Zeit");
         aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Tür");
         aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Konsole");

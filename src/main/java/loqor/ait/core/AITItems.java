@@ -51,107 +51,107 @@ public class AITItems implements ItemRegistryContainer {
     // TARDIS
     @NoEnglish
     public static final Item TARDIS_ITEM = new TardisItemBuilder(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).fireproof().maxCount(1));
+            new OwoItemSettings().group(AITItemGroups.MAIN).fireproof().maxCount(1));
     @NoEnglish
     public static final Item SIEGE_ITEM = new SiegeTardisItem(new OwoItemSettings().fireproof());
 
     // Functional Items
     @NoEnglish
     public static final Item REMOTE_ITEM = new RemoteItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1));
     @NoEnglish
     public static final Item ARTRON_COLLECTOR = new ArtronCollectorItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1));
     public static final Item RIFT_SCANNER = new RiftScannerItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1));
     public static final Item HAMMER = new HammerItem(3, -2.4F,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(600));
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(600));
     public static final Item RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(80), true);
     public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
-            ArmorItem.Type.HELMET, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80),
+            ArmorItem.Type.HELMET, new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(80),
             true);
-    public static final Item HYPERCUBE = new HypercubeItem(new OwoItemSettings().maxCount(1).group(AITMod.AIT_ITEM_GROUP));
-    public static final Item HAZANDRA = new InteriorTeleporterItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item HYPERCUBE = new HypercubeItem(new OwoItemSettings().maxCount(1).group(AITItemGroups.MAIN));
+    public static final Item HAZANDRA = new InteriorTeleporterItem(new OwoItemSettings().group(AITItemGroups.MAIN));
 
     // Keys/Key Templates
-    public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item IRON_KEY = new KeyItem(new OwoItemSettings().group(AITItemGroups.MAIN));
     public static final Item GOLD_KEY = new KeyItem(
-            new OwoItemSettings().rarity(Rarity.UNCOMMON).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP);
+            new OwoItemSettings().rarity(Rarity.UNCOMMON).group(AITItemGroups.MAIN), KeyItem.Protocols.SNAP);
     public static final Item NETHERITE_KEY = new KeyItem(
-            new OwoItemSettings().rarity(Rarity.RARE).group(AITMod.AIT_ITEM_GROUP).fireproof(), KeyItem.Protocols.SNAP,
+            new OwoItemSettings().rarity(Rarity.RARE).group(AITItemGroups.MAIN).fireproof(), KeyItem.Protocols.SNAP,
             KeyItem.Protocols.HAIL);
     public static final Item CLASSIC_KEY = new KeyItem(
-            new OwoItemSettings().rarity(Rarity.EPIC).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SNAP,
+            new OwoItemSettings().rarity(Rarity.EPIC).group(AITItemGroups.MAIN), KeyItem.Protocols.SNAP,
             KeyItem.Protocols.HAIL);
 
     // Creative only skeleton key
     public static final Item SKELETON_KEY = new KeyItem(
-            new OwoItemSettings().rarity(Rarity.EPIC).group(AITMod.AIT_ITEM_GROUP), KeyItem.Protocols.SKELETON,
+            new OwoItemSettings().rarity(Rarity.EPIC).group(AITItemGroups.MAIN), KeyItem.Protocols.SKELETON,
             KeyItem.Protocols.HAIL, KeyItem.Protocols.SNAP);
     @NoEnglish
     public static final Item GOLD_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Gold Key", "Gold Nugget");
+            new OwoItemSettings().group(AITItemGroups.MAIN), "Gold Key", "Gold Nugget");
     @NoEnglish
     public static final Item NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Netherite Key", "Netherite Scrap");
+            new OwoItemSettings().group(AITItemGroups.MAIN), "Netherite Key", "Netherite Scrap");
     @NoEnglish
     public static final Item CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), "Classic Key", "Amethyst Shard");
-    public static final Item SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.MAIN), "Classic Key", "Amethyst Shard");
+    public static final Item SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITItemGroups.MAIN));
 
     // Crafting items
-    public static final Item ZEITON_SHARD = new ZeitonShardItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item ZEITON_SHARD = new ZeitonShardItem(new OwoItemSettings().group(AITItemGroups.MAIN));
     public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1));
     public static final Item ZEITON_DUST = new Item(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
+            new OwoItemSettings().group(AITItemGroups.MAIN).food(ZEITON_DUST_FOOD));
 
     // Machine parts
     public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
     public static final Item DATA_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.DATA,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
     public static final Item VORTEX_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.VORTEX,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
 
     public static final Item ARTRON_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.ARTRON,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
     public static final Item DATA_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.DATA,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
     public static final Item VORTEX_MERCURIAL_LINK = new MercurialLinkItem(AbstractLinkItem.Type.VORTEX,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
 
     public static final Item CONDENSER = new MachinePartItem(MachinePartItem.Type.CONDENSER,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
     public static final Item MANIPULATOR = new MachinePartItem(MachinePartItem.Type.MANIPULATOR,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
     public static final Item BULB = new MachinePartItem(MachinePartItem.Type.BULB,
-            new OwoItemSettings() .group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings() .group(AITItemGroups.FABRICATOR));
     public static final Item INDUCTOR = new MachinePartItem(MachinePartItem.Type.INDUCTOR,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR));
 
     // Components
     public static final Item DEMATERIALIZATION_CIRCUIT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DEMAT);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.DEMAT);
 
     public static final Item SHIELDS_CIRCUIT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.SHIELDS);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.SHIELDS);
     public static final Item BACKUP_CIRCUIT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.EMERGENCY_POWER);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.EMERGENCY_POWER);
     public static final Item GRAVITATIONAL_CIRCUIT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.GRAVITATIONAL);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.GRAVITATIONAL);
     public static final Item CHAMELEON_CIRCUIT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.CHAMELEON);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.CHAMELEON);
     public static final Item DESPERATION_CIRCUIT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.DESPERATION);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.DESPERATION);
     public static final Item STABILISERS = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.STABILISERS);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.STABILISERS);
     public static final Item LIFE_SUPPORT = new SubSystemItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP), SubSystem.Id.LIFE_SUPPORT);
+            new OwoItemSettings().group(AITItemGroups.FABRICATOR), SubSystem.Id.LIFE_SUPPORT);
 
     @NoEnglish
-    public static final Item GALLIFREY_FALLS_PAINTING = new AITDecorationItem(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public static final Item GALLIFREY_FALLS_PAINTING = new AITDecorationItem(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, new OwoItemSettings().group(AITItemGroups.MAIN));
 
     // Blueprint
     public static final Item BLUEPRINT = new BlueprintItem(
@@ -159,7 +159,7 @@ public class AITItems implements ItemRegistryContainer {
 
     // Waypoint-related
     public static final Item WAYPOINT_CARTRIDGE = new WaypointItem(
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1));
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1));
 
     // Music discs
     @NoEnglish
@@ -179,23 +179,23 @@ public class AITItems implements ItemRegistryContainer {
 
      public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
-     OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+     OwoItemSettings().group(AITItemGroups.MAIN));
 
      // TODO ADVENT STUFF
 
     static {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
             SANTA_HAT = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(1).maxDamage(80), true);
+            new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(80), true);
         }
 
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
-            COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).maxCount(16));
+            COBBLED_SNOWBALL = new CobbledSnowballItem(new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(16));
         }
        if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
-            HOT_CHOCOLATE_POWDER = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP).food(ZEITON_DUST_FOOD));
-            HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
-            MUG = new Item(new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+            HOT_CHOCOLATE_POWDER = new Item(new OwoItemSettings().group(AITItemGroups.MAIN).food(ZEITON_DUST_FOOD));
+            HOT_CHOCOLATE = new HotChocolateItem(new OwoItemSettings().group(AITItemGroups.MAIN));
+            MUG = new Item(new OwoItemSettings().group(AITItemGroups.MAIN));
         }
         /*if (isUnlockedAdvent2024(4)) {
             // TODO SONIC CANDY CANE
@@ -255,7 +255,7 @@ public class AITItems implements ItemRegistryContainer {
             entries.addAfter(DRIFTING_MUSIC_DISC, WONDERFUL_TIME_IN_SPACE_MUSIC_DISC);
         });
 
-        ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, AITMod.AIT_ITEM_GROUP.id())).register(entries -> {
+        ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, AITItemGroups.FABRICATOR.id())).register(entries -> {
             for (BlueprintSchema schema : BlueprintRegistry.getInstance().toList()) {
                 entries.add(BlueprintItem.createStack(schema));
             }

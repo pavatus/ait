@@ -188,6 +188,11 @@ public class AITBlocks implements BlockRegistryContainer {
 
     @Override
     public BlockItem createBlockItem(Block block, String identifier) {
-        return new BlockItem(block, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+        // hard coded because im lazy rn
+        if (block == FABRICATOR || block == GENERIC_SUBSYSTEM || block == POWER_CONVERTER || block == ENGINE_CORE_BLOCK || block == ENGINE_BLOCK || block == CABLE_BLOCK) {
+            return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.FABRICATOR));
+        }
+
+        return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.MAIN));
     }
 }
