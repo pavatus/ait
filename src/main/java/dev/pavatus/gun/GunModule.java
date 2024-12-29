@@ -37,6 +37,7 @@ public class GunModule extends Module {
 
     @Override
     public void init() {
+        // getItemGroup().initialize();
 
         FieldRegistrationHandler.register(GunItems.class, AITMod.MOD_ID, false);
         FieldRegistrationHandler.register(GunEntityTypes.class, AITMod.MOD_ID, false);
@@ -91,7 +92,7 @@ public class GunModule extends Module {
         return Optional.of(new DataGenerator() {
             @Override
             public void lang(AITLanguageProvider provider) {
-                provider.addTranslation(getItemGroup(), "AIT: Cult Weaponry");
+                // provider.addTranslation(getItemGroup(), "AIT: Combat");
             }
 
             @Override

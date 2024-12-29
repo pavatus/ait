@@ -1,8 +1,9 @@
 package loqor.ait.registry.impl.exterior;
 
-import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -270,7 +271,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         ADAPTIVE = register(new AdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedAdvent2024(6)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
             DALEK_MOD_1963 = register(new DalekMod1963Variant());
             DALEK_MOD_1967 = register(new DalekMod1967Variant());
             DALEK_MOD_1970 = register(new DalekMod1970Variant());
@@ -282,7 +283,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         //JAKE_DEFAULT = register(new JakeDefaultVariant());
 
         // Present
-        if (isUnlockedAdvent2024(5))
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 5))
             PRESENT_DEFAULT = register(new PresentDefaultVariant());
     }
 }

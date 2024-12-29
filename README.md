@@ -1,4 +1,4 @@
-![Title](https://github.com/M-D-Team/ait-fabric-1.20.1/blob/main/src/main/resources/assets/ait/textures/gui/title/main_ait_logo.png?raw=true)
+![AIT Logo](https://github.com/pavatus/ait/blob/main/src/main/resources/assets/ait_logo.png?raw=true)
 
 ![GitHub Release](https://img.shields.io/github/v/release/M-D-Team/ait-fabric-1.20.1?include_prereleases)
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/ait?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait%2Fversions)

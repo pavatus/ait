@@ -8,12 +8,14 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
+import net.minecraft.entity.decoration.painting.PaintingVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,6 +37,11 @@ public class GallifreyFallsPaintingEntity extends AbstractDecorationEntity {
         super(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, world, pos);
     }
 
+    public GallifreyFallsPaintingEntity(World world, BlockPos pos, Direction direction, RegistryEntry<PaintingVariant> variant) {
+        this(world, pos);
+        this.setFacing(direction);
+    }
+
     public static Optional<GallifreyFallsPaintingEntity> placePainting(World world, BlockPos pos, Direction facing) {
         GallifreyFallsPaintingEntity paintingEntity = new GallifreyFallsPaintingEntity(world, pos);
 
@@ -47,12 +54,10 @@ public class GallifreyFallsPaintingEntity extends AbstractDecorationEntity {
         }
     }
 
+
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        nbt.putByte("facing", (byte)this.facing.getHorizontal());
-        nbt.putByte("facing", (byte)this.facing.getHorizontal());
-
-
         nbt.putByte("facing", (byte)this.facing.getHorizontal());
         super.writeCustomDataToNbt(nbt);
     }

@@ -10,8 +10,6 @@ import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.register.Registries;
 import dev.pavatus.register.api.RegistryEvents;
-import io.wispforest.owo.itemgroup.Icon;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -69,6 +67,7 @@ import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
+import loqor.ait.core.util.CustomTrades;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -94,11 +93,6 @@ public class AITMod implements ModInitializer {
     public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
     public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
             GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
-
-    //Creative Inventory Tabs
-    public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
-            .builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.TARDIS_ITEM))
-            .disableDynamicTitle().build();
 
 
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
@@ -168,6 +162,8 @@ public class AITMod implements ModInitializer {
         Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
         AITStatusEffects.init();
+        AITVillagers.init();
+        CustomTrades.registerCustomTrades();
 
         // ServerVortexDataHandler.init();
         ServerLifecycleHooks.init();
@@ -281,7 +277,8 @@ public class AITMod implements ModInitializer {
 
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
-        AIT_ITEM_GROUP.initialize();
+        AITItemGroups.MAIN.initialize();
+        AITItemGroups.FABRICATOR.initialize();
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (source.isBuiltin()

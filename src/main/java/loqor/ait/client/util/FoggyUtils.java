@@ -13,7 +13,12 @@ import loqor.ait.core.tardis.Tardis;
 
 public class FoggyUtils {
     public static void overrideFog() {
-        if (ClientTardisUtil.isPlayerInATardis()
+        Tardis tardis = ClientTardisUtil.getCurrentTardis();
+
+        if (tardis == null || tardis.getExterior() == null)
+            return;
+
+        if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()
                 && ClientTardisUtil.getAlarmDelta() != ClientTardisUtil.MAX_ALARM_DELTA_TICKS) {
             RenderSystem.setShaderFogStart(MathHelper.lerp(ClientTardisUtil.getAlarmDeltaForLerp(), -8, 10));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(ClientTardisUtil.getAlarmDeltaForLerp(), 11, 32));
@@ -21,11 +26,6 @@ public class FoggyUtils {
             RenderSystem.setShaderFogColor(0.5f, 0, 0, 0.5f);
             MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType();
         }
-
-        Tardis tardis = ClientTardisUtil.getCurrentTardis();
-
-        if (tardis == null || tardis.getExterior() == null)
-            return;
 
         if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()
                 && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {

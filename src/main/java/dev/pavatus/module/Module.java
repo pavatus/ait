@@ -12,7 +12,6 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.BlockItem;
@@ -24,6 +23,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
+import loqor.ait.core.AITItemGroups;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
@@ -62,7 +62,7 @@ public abstract class Module implements Identifiable {
     }
 
     public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+        return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.MAIN));
     }
 
     public Optional<Class<?>> getBlockRegistry() {
