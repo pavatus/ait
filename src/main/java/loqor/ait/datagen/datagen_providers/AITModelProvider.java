@@ -10,11 +10,11 @@ import java.util.Optional;
 
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetItems;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 
 import net.minecraft.block.Block;
-import net.minecraft.data.client.*;
+import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -35,7 +35,6 @@ public class AITModelProvider extends FabricModelProvider {
         super(output);
         this.output = output;
     }
-
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator generator) {
         filterBlocksWithAnnotation(AITBlocks.get(), AutomaticModel.class, false).forEach(generator::registerSimpleCubeAll);
@@ -90,7 +89,7 @@ public class AITModelProvider extends FabricModelProvider {
     }
 
     private static Model item(String modid, String parent, TextureKey... requiredTextureKeys) {
-        return new Model(Optional.of(new Identifier(modid, "item/" + parent)), Optional.empty(), requiredTextureKeys);
+        return new Model(Optional.of(new Identifier.of(modid, "item/" + parent)), Optional.empty(), requiredTextureKeys);
     }
     private static Model item(String parent, TextureKey... requiredTextureKeys) {
         return item(AITMod.MOD_ID, parent, requiredTextureKeys);
@@ -106,9 +105,9 @@ public class AITModelProvider extends FabricModelProvider {
         model.upload(ModelIds.getItemModelId(item), createTextureMap(item, modid), generator.writer);
     }
     private TextureMap createTextureMap(Item item, String modid) {
-        Identifier texture = new Identifier(modid, "item/" + getItemName(item));
+        Identifier texture = new Identifier.of(modid, "item/" + getItemName(item));
         if (!(doesTextureExist(texture))) {
-            texture = new Identifier(AITMod.MOD_ID, "item/error");
+            texture = new Identifier.of(AITMod.MOD_ID, "item/error");
         }
 
         return new TextureMap().put(TextureKey.LAYER0, texture);

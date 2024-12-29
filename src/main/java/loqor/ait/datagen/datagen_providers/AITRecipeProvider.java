@@ -24,7 +24,15 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     public HashMap<ShapelessRecipeJsonBuilder, Identifier> shapelessRecipesWithNameHashMap = new HashMap<>();
     public HashMap<SingleItemRecipeJsonBuilder, Identifier> stonecutting = new HashMap<>();
 
+    @Override
+    protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup wrapperLookup, RecipeExporter recipeExporter) {
+        return new RecipeGenerator(wrapperLookup, recipeExporter) {
+            @Override
+            public void generate() {
 
+            }
+        };
+    }
     public AITRecipeProvider(FabricDataOutput output) {
         super(output);
     }

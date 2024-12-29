@@ -1,7 +1,5 @@
 package dev.pavatus.planet;
 
-import static net.minecraft.data.server.recipe.RecipeProvider.*;
-
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -15,7 +13,7 @@ import dev.pavatus.planet.core.util.PlanetCustomTrades;
 import dev.pavatus.register.api.RegistryEvents;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.owo.itemgroup.OwoItemSettingsExtension;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,11 +23,10 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
 import net.minecraft.block.Block;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.server.recipe.*;
-import net.minecraft.item.ArmorItem;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.render.entity.equipment.EquipmentModel;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -82,7 +79,7 @@ public class PlanetModule extends Module {
 
     @Override
     public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(this.getItemGroup()));
+        return new BlockItem(block, new OwoItemSettingsExtension().group(this.getItemGroup()));
     }
 
     @Override
@@ -343,23 +340,15 @@ public class PlanetModule extends Module {
 
             @Override
             public void generateItemModels(ItemModelGenerator generator) {
-                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
-                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
-                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
-                generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_HELMET);
 
-                generator.register(PlanetItems.MARTIAN_STONE_SWORD, Models.HANDHELD);
-                generator.register(PlanetItems.MARTIAN_STONE_SHOVEL, Models.HANDHELD);
-                generator.register(PlanetItems.MARTIAN_STONE_PICKAXE, Models.HANDHELD);
-                generator.register(PlanetItems.MARTIAN_STONE_HOE, Models.HANDHELD);
-                generator.register(PlanetItems.MARTIAN_STONE_AXE, Models.HANDHELD);
-
-                generator.register(PlanetItems.ANORTHOSITE_SWORD, Models.HANDHELD);
-                generator.register(PlanetItems.ANORTHOSITE_SHOVEL, Models.HANDHELD);
-                generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
-                generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
-                generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
-
+                generator.registerArmor(PlanetItems.SPACESUIT_HELMET, Identifier.of(AITMod.MOD_ID, "spacesuit_helmet"),
+                        EquipmentModel.builder().addHumanoidLayers(Identifier.of(AITMod.MOD_ID, "spacesuit_helmet")).build(), EquipmentSlot.HEAD);
+                generator.registerArmor( PlanetItems.SPACESUIT_CHESTPLATE, Identifier.of(AITMod.MOD_ID, "spacesuit_chestplate"),
+                        EquipmentModel.builder().addHumanoidLayers(Identifier.of(AITMod.MOD_ID, "spacesuit_chestplate")).build(), EquipmentSlot.CHEST);
+                generator.registerArmor( PlanetItems.SPACESUIT_LEGGINGS, Identifier.of(AITMod.MOD_ID, "spacesuit_leggings"),
+                        EquipmentModel.builder().addHumanoidLayers(Identifier.of(AITMod.MOD_ID, "spacesuit_leggings")).build(), EquipmentSlot.LEGS);
+                generator.registerArmor( PlanetItems.SPACESUIT_BOOTS, Identifier.of(AITMod.MOD_ID, "spacesuit_boots"),
+                        EquipmentModel.builder().addHumanoidLayers(Identifier.of(AITMod.MOD_ID, "spacesuit_boots")).build(), EquipmentSlot.FEET);
             }
 
             @Override

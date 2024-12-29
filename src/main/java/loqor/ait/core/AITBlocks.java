@@ -3,8 +3,6 @@ package loqor.ait.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.wispforest.owo.itemgroup.OwoItemSettingsExtension;
-
 import net.minecraft.block.*;
 import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.block.piston.PistonBehavior;
@@ -29,135 +27,135 @@ import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 public class AITBlocks {
 
-    @NoBlockItem
+//    @NoBlockItem
     @NoBlockDrop
     @NoEnglish
-    public static final Block EXTERIOR_BLOCK = registerBlock("pink_garnet_fence", new ExteriorBlock(
-            AbstractBlock.Settings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
+    public static final Block EXTERIOR_BLOCK = registerBlock("exterior_block", new ExteriorBlock(
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "exterior_block"))).nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(ExteriorBlock.STATE_TO_LUMINANCE)));
 
     @PickaxeMineable
     @NoEnglish
-    public static final Block DOOR_BLOCK = registerBlock("door_block", new DoorBlock(AbstractBlock.Settings.create().nonOpaque().noCollision()
+    public static final Block DOOR_BLOCK = registerBlock("door_block", new DoorBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "door_block"))).nonOpaque().noCollision()
             .instrument(NoteBlockInstrument.BASEDRUM).requiresTool().strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)));
     @NoBlockDrop
     @NoEnglish
     public static final Block CONSOLE = registerBlock("console", new ConsoleBlock(
-            AbstractBlock.Settings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "console"))).nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
                     .instrument(NoteBlockInstrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE)));
 
     @NoBlockDrop
     public static final Block WAYPOINT_BANK = registerBlock("waypoint_bank", new WaypointBankBlock(
-            AbstractBlock.Settings.create().nonOpaque().requiresTool().instrument(NoteBlockInstrument.BASEDRUM).strength(0.5F, 6.0F)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "waypoint_bank"))).nonOpaque().requiresTool().instrument(NoteBlockInstrument.BASEDRUM).strength(0.5F, 6.0F)
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3)));
 
 //    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
 //    @NoEnglish
-//    public static final Block LANDING_PAD = registerBlock("landing_padd", new LandingPadBlock(AbstractBlock.Settings.create().nonOpaque().requiresTool()
+//    public static final Block LANDING_PAD = registerBlock("landing_pad", new LandingPadBlock(AbstractBlock.Settings.create().nonOpaque().requiresTool()
 //            .instrument(NoteBlockInstrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)));
 
     @NoEnglish
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
-    public static final Block ENGINE_BLOCK = registerBlock("engine_block", new EngineBlock(AbstractBlock.Settings.create().requiresTool()
+    public static final Block ENGINE_BLOCK = registerBlock("engine_block", new EngineBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "engine_block"))).requiresTool()
             .instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)));
     @NoEnglish
     public static final Block ENGINE_CORE_BLOCK = registerBlock("engine_core_block", new EngineCoreBlock(
-            AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(NoteBlockInstrument.HAT)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "engine_core_block"))).mapColor(MapColor.DIAMOND_BLUE).solid().instrument(NoteBlockInstrument.HAT)
                     .strength(3.0F).luminance((state) -> 15).nonOpaque()));
     @PickaxeMineable
     public static final Block CONSOLE_GENERATOR = registerBlock("console_generator", new ConsoleGeneratorBlock(
-            AbstractBlock.Settings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "console_generator"))).nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(NoteBlockInstrument.COW_BELL).pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable
     @NoEnglish
     public static final Block ARTRON_COLLECTOR_BLOCK = registerBlock("artron_collector_block", new ArtronCollectorBlock(
-            AbstractBlock.Settings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "artron_collector_block"))).nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(NoteBlockInstrument.BANJO).pistonBehavior(PistonBehavior.IGNORE)));
     @NoEnglish
-    public static final Block CORAL_PLANT = registerBlock("coral_plant", new CoralPlantBlock(AbstractBlock.Settings.create().ticksRandomly().nonOpaque()
+    public static final Block CORAL_PLANT = registerBlock("coral_plant", new CoralPlantBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "coral_plant"))).ticksRandomly().nonOpaque()
             .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @NoEnglish
-    public static final Block MONITOR_BLOCK = registerBlock("monitor_block", new MonitorBlock(AbstractBlock.Settings.create().nonOpaque().requiresTool()
+    public static final Block MONITOR_BLOCK = registerBlock("monitor_block", new MonitorBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "monitor_block"))).nonOpaque().requiresTool()
             .instrument(NoteBlockInstrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
     @NoEnglish
     public static final Block PLAQUE_BLOCK = registerBlock("plaque_block", new PlaqueBlock(
-            AbstractBlock.Settings.create().nonOpaque().noBlockBreakParticles().instrument(NoteBlockInstrument.COW_BELL)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "plaque_block"))).nonOpaque().noBlockBreakParticles().instrument(NoteBlockInstrument.COW_BELL)
                     .strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
     @NoEnglish
     public static final Block WALL_MONITOR_BLOCK = registerBlock("wall_monitor_block", new WallMonitorBlock(
-            AbstractBlock.Settings.create().nonOpaque().noBlockBreakParticles().instrument(NoteBlockInstrument.COW_BELL)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "wall_monitor_block"))).nonOpaque().noBlockBreakParticles().instrument(NoteBlockInstrument.COW_BELL)
                     .strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
     @NoEnglish
-    public static final Block DETECTOR_BLOCK = registerBlock("detector_block", new DetectorBlock(AbstractBlock.Settings.create().nonOpaque()
+    public static final Block DETECTOR_BLOCK = registerBlock("detector_block", new DetectorBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "detector_block"))).nonOpaque()
             .instrument(NoteBlockInstrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.NORMAL)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
-    public static final Block ZEITON_BLOCK = registerBlock("zeiton_block", new AmethystBlock(AbstractBlock.Settings.create().mapColor(MapColor.DARK_AQUA)
+    public static final Block ZEITON_BLOCK = registerBlock("zeiton_block", new AmethystBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "zeiton_block"))).mapColor(MapColor.DARK_AQUA)
             .strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool()));
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block BUDDING_ZEITON = registerBlock("budding_zeiton", new BuddingZeitonBlock(
-            AbstractBlock.Settings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F)
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "budding_zeiton"))).mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F)
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY)));
     @NoBlockDrop
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block ZEITON_CLUSTER = registerBlock("zeiton_cluster", new AmethystClusterBlock(7, 3,
-            AbstractBlock.Settings.create().mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly()
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "zeiton_cluster"))).mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly()
                     .sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F).luminance((state) -> 5)
                     .pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block LARGE_ZEITON_BUD = registerBlock("large_zeiton_bud", new AmethystClusterBlock(5, 3,
-            AbstractBlock.Settings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid()
+            AbstractBlock.Settings.copy(ZEITON_CLUSTER).registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "large_zeiton_bud"))).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid()
                     .luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block MEDIUM_ZEITON_BUD = registerBlock("medium_zeiton_bud", new AmethystClusterBlock(4, 3,
-            AbstractBlock.Settings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid()
+            AbstractBlock.Settings.copy(ZEITON_CLUSTER).registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "medium_zeiton_bud"))).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid()
                     .luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block SMALL_ZEITON_BUD = registerBlock("small_zeiton_bud", new AmethystClusterBlock(3, 4,
-            AbstractBlock.Settings.copy(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
+            AbstractBlock.Settings.copy(ZEITON_CLUSTER).registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "small_zeiton_bud"))).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
                     .luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @AutomaticModel
-    public static final Block COMPACT_ZEITON = registerBlock("compact_zeiton", new Block(AbstractBlock.Settings.copy(ZEITON_BLOCK)));
+    public static final Block COMPACT_ZEITON = registerBlock("compact_zeiton", new Block(AbstractBlock.Settings.copy(ZEITON_BLOCK).registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "compact_zeiton")))));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @AutomaticModel
-    public static final Block ZEITON_COBBLE = registerBlock("zeiton_cobble", new Block(AbstractBlock.Settings.copy(ZEITON_BLOCK)));
+    public static final Block ZEITON_COBBLE = registerBlock("zeiton_cobble", new Block(AbstractBlock.Settings.copy(ZEITON_BLOCK).registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "zeiton_cobble")))));
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
-    public static final Block ZEITON_CAGE = registerBlock("zeiton_cage", new ZeitonCageBlock(AbstractBlock.Settings.create().nonOpaque().requiresTool()
+    public static final Block ZEITON_CAGE = registerBlock("zeiton_cage", new ZeitonCageBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "zeiton_cage"))).nonOpaque().requiresTool()
             .instrument(NoteBlockInstrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
             .luminance(light -> 15)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @AutomaticModel(justItem = true)
-    public static final Block POWER_CONVERTER = registerBlock("power_converter", new PowerConverterBlock(AbstractBlock.Settings.create().nonOpaque()
+    public static final Block POWER_CONVERTER = registerBlock("power_converter", new PowerConverterBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "power_converter"))).nonOpaque()
             .requiresTool().instrument(NoteBlockInstrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
-    public static final Block GENERIC_SUBSYSTEM = registerBlock("generic_subsystem", new GenericSubSystemBlock(AbstractBlock.Settings.create().nonOpaque()
+    public static final Block GENERIC_SUBSYSTEM = registerBlock("generic_subsystem", new GenericSubSystemBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "generic_subsystem"))).nonOpaque()
             .requiresTool().instrument(NoteBlockInstrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
 
 
-    @NoBlockItem
-    public static final Block RADIO = registerBlock("radio", new RadioBlock(AbstractBlock.Settings.create().nonOpaque()));
+//    @NoBlockItem
+    public static final Block RADIO = registerBlock("radio", new RadioBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "radio"))).nonOpaque()));
 
     // Machines
-    @NoBlockItem
-    public static final Block MACHINE_CASING = registerBlock("machine_casing", new MachineCasingBlock(AbstractBlock.Settings.create().nonOpaque()
+//    @NoBlockItem
+    public static final Block MACHINE_CASING = registerBlock("machine_casing", new MachineCasingBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "machine_casing"))).nonOpaque()
             .requiresTool().instrument(NoteBlockInstrument.COW_BELL).strength(1.5F, 6.0F)));
 
-    @NoBlockItem
-    public static final Block FABRICATOR = registerBlock("fabricator", new FabricatorBlock(AbstractBlock.Settings.create().nonOpaque().requiresTool()
+//    @NoBlockItem
+    public static final Block FABRICATOR = registerBlock("fabricator", new FabricatorBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "fabricator"))).nonOpaque().requiresTool()
             .instrument(NoteBlockInstrument.COW_BELL).strength(1.5F, 6.0F)));
 
     // Control Blocks
-    @NoBlockItem
+//    @NoBlockItem
     @NoEnglish
     public static final Block REDSTONE_CONTROL_BLOCK = registerBlock("redstone_control_block", new RedstoneControlBlock(
-            AbstractBlock.Settings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
+            AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "redstone_control_block"))).nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY)));
 
-    public static final Block ENVIRONMENT_PROJECTOR = registerBlock("environment_projector", new EnvironmentProjectorBlock(AbstractBlock.Settings.create()));
+    public static final Block ENVIRONMENT_PROJECTOR = registerBlock("environment_projector", new EnvironmentProjectorBlock(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AITMod.MOD_ID, "environment_projector")))));
 
     @NoEnglish
     public static final Block CABLE_BLOCK = registerBlock("cable_block", new CableBlock(
@@ -186,8 +184,8 @@ public class AITBlocks {
                         .registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(AITMod.MOD_ID, name))).useBlockPrefixedTranslationKey()));
     }
 
-    @Override
-    public BlockItem createBlockItem(Block block, String identifier) {
-        return new BlockItem(block, new OwoItemSettingsExtension().group(AITMod.AIT_ITEM_GROUP));
-    }
+//    @Override
+//    public BlockItem createBlockItem(Block block, String identifier) {
+//        return new BlockItem(block, new OwoItemSettingsExtension().group(AITMod.AIT_ITEM_GROUP));
+//    }
 }

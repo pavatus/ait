@@ -87,6 +87,8 @@ public class AITMod implements ModInitializer {
     public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
             GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
+
+
     //Creative Inventory Tabs
     public static final OwoItemGroup AIT_ITEM_GROUP = OwoItemGroup
             .builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.TARDIS_ITEM))

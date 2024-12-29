@@ -1,6 +1,7 @@
 package dev.pavatus.gun.core.entity;
 
 import dev.pavatus.gun.core.item.GunItems;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -26,26 +27,27 @@ import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
 
+
 public class StaserBoltEntity extends PersistentProjectileEntity {
     public StaserBoltEntity(EntityType<? extends StaserBoltEntity> entityType, World world) {
-        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, world);
+        super(entityType, world);
     }
 
-    private StaserBoltEntity(World world, double x, double y, double z) {
-        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, x, y, z, world);
+    public StaserBoltEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
+        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, x, y, z, world, stack, shotFrom);
     }
 
-    private StaserBoltEntity(World world, LivingEntity shooter) {
-        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, shooter, world);
-    }
-
-    // this exists because I forgot how to do the constructors so the registry doesn't scream at me - Loqor
-    public StaserBoltEntity createFromConstructor(World world, LivingEntity shooter) {
-        return new StaserBoltEntity(world, shooter);
+    public StaserBoltEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
+        super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, owner, world, stack, shotFrom);
     }
 
     @Override
     protected ItemStack asItemStack() {
+        return new ItemStack(GunItems.STASER_BOLT_MAGAZINE);
+    }
+
+    @Override
+    protected ItemStack getDefaultItemStack() {
         return new ItemStack(GunItems.STASER_BOLT_MAGAZINE);
     }
 
@@ -64,7 +66,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockHitResult result = (BlockHitResult) hitResult;
             Block block = this.getWorld().getBlockState(result.getBlockPos()).getBlock();
-            if (block instanceof IceBlock || block instanceof LanternBlock || block instanceof TorchBlock || this.getWorld().getBlockState(result.getBlockPos()).isReplaceable() || block instanceof GlassBlock || block instanceof PaneBlock || block instanceof StainedGlassBlock) {
+            if (block instanceof IceBlock || block instanceof LanternBlock || block instanceof TorchBlock || this.getWorld().getBlockState(result.getBlockPos()).isReplaceable() || block instanceof PaneBlock || block instanceof StainedGlassBlock) {
                 this.getWorld().breakBlock(result.getBlockPos(), false);
             }
             this.getWorld().playSound(null, result.getBlockPos(), AITSounds.STASER, SoundCategory.BLOCKS, 1.0f, 0.5f);
@@ -100,7 +102,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
             vec3d2 = this.getPos();
             for (Box box : voxelShape.getBoundingBoxes()) {
                 if (!box.offset(blockPos).contains(vec3d2)) continue;
-                this.inGround = true;
+                //this.inGround = true;
                 break;
             }
         }
@@ -156,7 +158,7 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
             this.setVelocity(vec3d4.x, vec3d4.y - (double)0.05f, vec3d4.z);
         }
         this.setPosition(h, j, k);
-        this.checkBlockCollision();
+        //this.checkBlockCollision();
 
         if (this.age > 100) {
             this.discard();
@@ -166,5 +168,15 @@ public class StaserBoltEntity extends PersistentProjectileEntity {
     @Override
     protected SoundEvent getHitSound() {
         return SoundEvents.BLOCK_CANDLE_EXTINGUISH;
+    }
+
+
+    protected void setStack(ItemStack stack) {
+        super.setStack(stack);
+    }
+
+    protected void onHit(LivingEntity target) {
+        super.onHit(target);
+        Entity entity = this.getEffectCause();
     }
 }
