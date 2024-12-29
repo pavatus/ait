@@ -453,6 +453,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         generate_NDS_DE_Language(pack); // nds_de (Nordic German)
         generate_PT_BR_Language(pack); // pt_br (Portuguese Brazil)
         generate_RU_RU_Language(pack); // ru_ru (Russian Russia)
+        generate_UK_UA_Language(pack); // uk_ua (Ukrainian Ukraine)
     }
 
     /**
@@ -505,7 +506,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
         provider.addTranslation(AITItems.WONDERFUL_TIME_IN_SPACE_MUSIC_DISC.getTranslationKey() + ".desc", "Dian - Wonderful Time in Space");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
-        provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
+        provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "nitrogenez - Mercury");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
