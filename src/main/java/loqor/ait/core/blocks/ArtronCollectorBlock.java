@@ -1,5 +1,7 @@
 package loqor.ait.core.blocks;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,8 +12,12 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -68,5 +74,12 @@ public class ArtronCollectorBlock extends HorizontalDirectionalBlock implements 
             artronCollectorBlockEntity.useOn(world, player.isSneaking(), player);
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+
+        tooltip.add(Text.translatable("block.ait.artron_collector_block.tooltip.use").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }

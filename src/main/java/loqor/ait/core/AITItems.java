@@ -101,11 +101,11 @@ public class AITItems implements ItemRegistryContainer {
     public static final Item SONIC_SCREWDRIVER = new SonicItem(new OwoItemSettings().group(AITItemGroups.MAIN));
 
     // Crafting items
-    public static final Item ZEITON_SHARD = new ZeitonShardItem(new OwoItemSettings().group(AITItemGroups.MAIN));
+    public static final Item ZEITON_SHARD = new ZeitonShardItem(new OwoItemSettings());
     public static final Item CHARGED_ZEITON_CRYSTAL = new ChargedZeitonCrystalItem(
             new OwoItemSettings().group(AITItemGroups.MAIN).maxCount(1));
     public static final Item ZEITON_DUST = new Item(
-            new OwoItemSettings().group(AITItemGroups.MAIN).food(ZEITON_DUST_FOOD));
+            new OwoItemSettings().food(ZEITON_DUST_FOOD));
 
     // Machine parts
     public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON,
@@ -181,7 +181,7 @@ public class AITItems implements ItemRegistryContainer {
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      OwoItemSettings().group(AITItemGroups.MAIN));
 
-     // TODO ADVENT STUFF
+     // Advent Items
 
     static {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
@@ -252,7 +252,8 @@ public class AITItems implements ItemRegistryContainer {
     static {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
-            entries.addAfter(DRIFTING_MUSIC_DISC, WONDERFUL_TIME_IN_SPACE_MUSIC_DISC);
+            entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
+            entries.addAfter(MERCURY_MUSIC_DISC, WONDERFUL_TIME_IN_SPACE_MUSIC_DISC);
         });
 
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, AITItemGroups.FABRICATOR.id())).register(entries -> {

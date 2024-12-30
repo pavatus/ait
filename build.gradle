@@ -49,7 +49,6 @@ repositories {
     }
 
     maven { url = 'https://maven.nucleoid.xyz/' }
-    maven { url 'https://maven.blamejared.com' }
 }
 
 loom {
@@ -114,7 +113,6 @@ dependencies {
     modCompileOnlyApi "curse.maven:forge-config-api-port-fabric-547434:4583000"
 
     modCompileOnlyApi "maven.modrinth:k9-mod:${project.k9_version}"
-    modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
 }
 
 processResources {

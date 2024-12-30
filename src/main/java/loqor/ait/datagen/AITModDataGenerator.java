@@ -352,6 +352,19 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
                     .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITItems.GALLIFREY_FALLS_PAINTING)
+                    .pattern("OBO")
+                    .pattern("BSB")
+                    .pattern("OP0")
+                    .input('O', Blocks.ORANGE_WOOL)
+                    .criterion(hasItem(Blocks.ORANGE_WOOL), conditionsFromItem(Blocks.ORANGE_WOOL))
+                    .input('S', Items.NETHER_STAR)
+                    .criterion(hasItem(Items.NETHER_STAR), conditionsFromItem(Items.NETHER_STAR))
+                    .input('P', Items.PAINTING)
+                    .criterion(hasItem(Items.PAINTING), conditionsFromItem(Items.PAINTING))
+                    .input('B', Blocks.BLACK_WOOL)
+                    .criterion(hasItem(Blocks.BLACK_WOOL), conditionsFromItem(Blocks.BLACK_WOOL)));
+
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
                     .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
                     .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
@@ -598,7 +611,12 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
         provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
-        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core"); // todo improve name
+        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core");
+
+        // Block Tooltips
+        provider.addTranslation("block.ait.fabricator.tooltip.use", "(Place on top of a Smithing Table)");
+        provider.addTranslation("block.ait.environment_projector.tooltip.use", "(Place inside a TARDIS)");
+        provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -743,7 +761,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type."); // todo - improve message
+        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type.");
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");

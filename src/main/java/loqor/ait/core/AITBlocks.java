@@ -1,7 +1,7 @@
 package loqor.ait.core;
 
 
-import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+import static loqor.ait.core.AITItems.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,12 +9,15 @@ import java.util.List;
 
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.BlockSoundGroup;
 
@@ -96,10 +99,14 @@ public class AITBlocks implements BlockRegistryContainer {
     @NoEnglish
     public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.NORMAL));
+
+    // Zeiton Blocks
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA)
             .strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block BUDDING_ZEITON = new BuddingZeitonBlock(
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F)
@@ -110,21 +117,26 @@ public class AITBlocks implements BlockRegistryContainer {
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly()
                     .sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F).luminance((state) -> 5)
                     .pistonBehavior(PistonBehavior.DESTROY));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block LARGE_ZEITON_BUD = new AmethystClusterBlock(5, 3,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid()
                     .luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid()
                     .luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
                     .luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @AutomaticModel
     public static final Block COMPACT_ZEITON = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @AutomaticModel
     public static final Block ZEITON_COBBLE = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
@@ -134,10 +146,12 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block ZEITON_CAGE = new ZeitonCageBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
             .luminance(light -> 15));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @AutomaticModel(justItem = true)
     public static final Block POWER_CONVERTER = new PowerConverterBlock(FabricBlockSettings.create().nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
     public static final Block GENERIC_SUBSYSTEM = new GenericSubSystemBlock(FabricBlockSettings.create().nonOpaque()
@@ -169,6 +183,30 @@ public class AITBlocks implements BlockRegistryContainer {
         }
     }
 
+    static {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
+            entries.addAfter(Items.AMETHYST_CLUSTER, ZEITON_BLOCK);
+            entries.addAfter(ZEITON_BLOCK, BUDDING_ZEITON);
+            entries.addAfter(BUDDING_ZEITON, SMALL_ZEITON_BUD);
+            entries.addAfter(SMALL_ZEITON_BUD, MEDIUM_ZEITON_BUD);
+            entries.addAfter(MEDIUM_ZEITON_BUD, LARGE_ZEITON_BUD);
+            entries.addAfter(LARGE_ZEITON_BUD, ZEITON_CLUSTER);
+            entries.addAfter(ZEITON_CLUSTER, CHARGED_ZEITON_CRYSTAL);
+
+            entries.addAfter(Items.RAW_GOLD, COMPACT_ZEITON);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+            entries.addAfter(Items.AMETHYST_SHARD, ZEITON_SHARD);
+            entries.addAfter(Items.SUGAR, ZEITON_DUST);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
+            entries.addAfter(Items.COBBLESTONE, ZEITON_COBBLE);
+        });
+
+    }
+
 
     @NoEnglish
     public static final Block CABLE_BLOCK = new CableBlock(
@@ -191,6 +229,10 @@ public class AITBlocks implements BlockRegistryContainer {
         // hard coded because im lazy rn
         if (block == FABRICATOR || block == GENERIC_SUBSYSTEM || block == POWER_CONVERTER || block == ENGINE_CORE_BLOCK || block == ENGINE_BLOCK || block == CABLE_BLOCK) {
             return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.FABRICATOR));
+        }
+
+        if (block == ZEITON_BLOCK || block == ZEITON_CLUSTER || block == SMALL_ZEITON_BUD || block == LARGE_ZEITON_BUD || block == MEDIUM_ZEITON_BUD || block == COMPACT_ZEITON || block == ZEITON_COBBLE || block == BUDDING_ZEITON) {
+            return new BlockItem(block, new OwoItemSettings());
         }
 
         return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.MAIN));
