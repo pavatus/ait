@@ -171,7 +171,7 @@ public class AITItems implements ItemRegistryContainer {
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 73);
 
     @NoEnglish
-    public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.ERROR,
+    public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC,
             new OwoItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
 
 
