@@ -53,8 +53,6 @@ public class VortexUtil {
         time += MinecraftClient.getInstance().getTickDelta() / 360f;
 
         matrixStack.push();
-        //RenderSystem.enableBlend();
-        //RenderSystem.enableCull();
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
 
@@ -98,10 +96,6 @@ public class VortexUtil {
         }
 
         tessellator.draw();
-
-
-        //RenderSystem.disableCull();
-        //RenderSystem.disableBlend();
         matrixStack.pop();
     }
 

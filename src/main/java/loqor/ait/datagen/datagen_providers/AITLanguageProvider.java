@@ -2,12 +2,12 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.HashMap;
 
+import io.wispforest.owo.itemgroup.OwoItemGroup;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 
 import loqor.ait.AITMod;
 import loqor.ait.datagen.datagen_providers.lang.LanguageType;
@@ -63,7 +63,7 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      * @param translation
      *            The translation.
      */
-    public void addTranslation(ItemGroup itemGroup, String translation) {
+    public void addTranslation(OwoItemGroup itemGroup, String translation) {
         translations.put(getTranslationKeyForItemGroup(itemGroup), translation);
     }
 
@@ -98,7 +98,7 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      *            The item group to get the translation key for
      * @return The translation key for the item group
      */
-    private String getTranslationKeyForItemGroup(ItemGroup itemGroup) {
-        return itemGroup.getDisplayName().getString();
+    private String getTranslationKeyForItemGroup(OwoItemGroup itemGroup) {
+        return "itemGroup." + itemGroup.id().getNamespace() + "." + itemGroup.id().getPath();
     }
 }

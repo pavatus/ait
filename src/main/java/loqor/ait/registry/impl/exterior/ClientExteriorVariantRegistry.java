@@ -1,7 +1,9 @@
 package loqor.ait.registry.impl.exterior;
 
 
-import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
+import java.util.Calendar;
 
 import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -275,7 +277,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         ADAPTIVE = register(new ClientAdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedAdvent2024(6)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
             DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
             DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
             DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
@@ -287,7 +289,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
 
         // Present
-        if (isUnlockedAdvent2024(5))
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 5))
             PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
     }
 

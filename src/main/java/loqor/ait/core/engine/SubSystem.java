@@ -88,6 +88,7 @@ public abstract class SubSystem extends Initializable<SubSystem.InitContext> imp
         List<ItemStack> stacks = new ArrayList<>();
 
         if (this instanceof StructureHolder holder) {
+            if (holder.getStructure() == null || holder.getStructure().isEmpty()) return stacks;
             stacks.addAll(holder.getStructure().toStacks());
         }
         stacks.add(AITBlocks.GENERIC_SUBSYSTEM.asItem().getDefaultStack());

@@ -114,6 +114,8 @@ public class BOTI {
 
     public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
 
+        if (!variant.parent().hasPortals()) return;
+
         if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
             return;
         }
@@ -174,6 +176,7 @@ public class BOTI {
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         //stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
         stack.translate(0, 0, 500);
+        stack.scale(1.5f, 1.5f, 1.5f);
         VortexUtil util = door.tardis().get().stats().getVortexEffects().toUtil();
         if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
             util.renderVortex(stack);

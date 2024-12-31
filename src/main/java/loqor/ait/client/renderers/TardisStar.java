@@ -23,8 +23,8 @@ public class TardisStar {
     private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0) / 2.0);
 
     public static void render(WorldRenderContext context, Tardis tardis) {
-        renderStar(context, tardis);
         renderShine(context, tardis);
+        renderStar(context, tardis);
     }
 
     public static void renderStar(WorldRenderContext context, Tardis tardis) {

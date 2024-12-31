@@ -29,6 +29,7 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITItemGroups;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.datagen.datagen_providers.*;
@@ -50,11 +51,16 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         generateSoundData(pack);
         generateAdvancements(pack);
         generateLoot(pack);
+        generatePoi(pack);
         generateWorldFeatures(pack);
     }
 
     public void generateLoot(FabricDataGenerator.Pack pack) {
         pack.addProvider(AITBlockLootTables::new);
+    }
+
+    public void generatePoi(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITPoiTagProvider::new);
     }
 
     private void generateAdvancements(FabricDataGenerator.Pack pack) {
@@ -260,8 +266,6 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             .input('S', Blocks.SEA_LANTERN)
                             .criterion(hasItem(Blocks.SEA_LANTERN), conditionsFromItem(Blocks.SEA_LANTERN)));
 
-            // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
-
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.LANDING_PAD, 1)
                             .pattern(" E ")
@@ -347,6 +351,19 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .pattern(" O ").pattern("OZO").pattern("OZO")
                     .input('O', Blocks.OBSIDIAN).criterion(hasItem(Blocks.OBSIDIAN), conditionsFromItem(Blocks.OBSIDIAN))
                     .input('Z', AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITItems.GALLIFREY_FALLS_PAINTING)
+                    .pattern("OBO")
+                    .pattern("BSB")
+                    .pattern("OPO")
+                    .input('O', Blocks.ORANGE_WOOL)
+                    .criterion(hasItem(Blocks.ORANGE_WOOL), conditionsFromItem(Blocks.ORANGE_WOOL))
+                    .input('S', Items.NETHER_STAR)
+                    .criterion(hasItem(Items.NETHER_STAR), conditionsFromItem(Items.NETHER_STAR))
+                    .input('P', Items.PAINTING)
+                    .criterion(hasItem(Items.PAINTING), conditionsFromItem(Items.PAINTING))
+                    .input('B', Blocks.BLACK_WOOL)
+                    .criterion(hasItem(Blocks.BLACK_WOOL), conditionsFromItem(Blocks.BLACK_WOOL)));
 
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
                     .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
@@ -453,6 +470,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         generate_NDS_DE_Language(pack); // nds_de (Nordic German)
         generate_PT_BR_Language(pack); // pt_br (Portuguese Brazil)
         generate_RU_RU_Language(pack); // ru_ru (Russian Russia)
+        generate_UK_UA_Language(pack); // uk_ua (Ukrainian Ukraine)
     }
 
     /**
@@ -471,7 +489,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
 
         // Tabs
-        provider.addTranslation("itemGroup.ait.item_group", "Adventures In Time");
+        provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
+        provider.addTranslation(AITItemGroups.FABRICATOR, "AIT: Fabrication");
 
         // Config
         provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
@@ -494,6 +513,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
 
         provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
+        provider.addTranslation("entity.minecraft.villager.fabricator_engineer", "Fabricator Engineer");
 
         // Items
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
@@ -505,7 +525,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.DRIFTING_MUSIC_DISC.getTranslationKey() + ".desc", "Radio - Drifting");
         provider.addTranslation(AITItems.WONDERFUL_TIME_IN_SPACE_MUSIC_DISC.getTranslationKey() + ".desc", "Dian - Wonderful Time in Space");
         provider.addTranslation(AITItems.MERCURY_MUSIC_DISC, "Music Disc");
-        provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "Nitrogenesis - Mercury");
+        provider.addTranslation(AITItems.MERCURY_MUSIC_DISC.getTranslationKey() + ".desc", "nitrogenez - Mercury");
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
@@ -592,7 +612,12 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
         provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
-        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core"); // todo improve name
+        provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core");
+
+        // Block Tooltips
+        provider.addTranslation("block.ait.fabricator.tooltip.use", "(Place on top of a Smithing Table)");
+        provider.addTranslation("tooltip.ait.use_in_tardis", "(Place inside a TARDIS)");
+        provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
@@ -642,6 +667,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.success", "%s has grown to %d");
         provider.addTranslation("tardis.message.landingpad.adjust", "Adjusting to landing pad..");
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
+        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal to bootstrap...");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
@@ -736,7 +762,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type."); // todo - improve message
+        provider.addTranslation("tooltip.ait.subsystem_item", "(Use this on the Generic Subsytem Block to set it to this type)");
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
@@ -963,7 +989,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Porte");
         aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
@@ -1076,7 +1102,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                                                       CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Adventures In Time");
+        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
         aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
@@ -1167,7 +1193,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
         AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITMod.AIT_ITEM_GROUP, "Abenteuer in der Zeit");
+        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Abenteuer in der Zeit");
         aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
         aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Tür");
         aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Konsole");

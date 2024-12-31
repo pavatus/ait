@@ -117,6 +117,6 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
 
-        tooltip.add(Text.literal("Place on top of a smithing table").formatted(Formatting.DARK_AQUA, Formatting.ITALIC)); // todo translatable
+        tooltip.add(Text.translatable("block.ait.fabricator.tooltip.use").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }
