@@ -63,5 +63,26 @@ public class CustomTrades {
                 });
         // Level 3
 
+        TradeOfferHelper.registerVillagerOffers(AITVillagers.FABRICATOR_ENGINEER, 3,
+                factories -> {
+                    factories.add((entity, random) -> new TradeOffer(
+                            new ItemStack(Items.GOLD_INGOT, 6),
+                            new ItemStack(AITItems.BLUEPRINT, 1),
+                            4, 3, 0.025f));
+                });
+        TradeOfferHelper.registerVillagerOffers(AITVillagers.FABRICATOR_ENGINEER, 3,
+                factories -> {
+                    factories.add((entity, random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, 1),
+                            new ItemStack(AITItems.BLUEPRINT, 1),
+                            3, 4, 0.095f));
+                });
+        TradeOfferHelper.registerVillagerOffers(AITVillagers.FABRICATOR_ENGINEER, 3,
+                factories -> {
+                    factories.add((entity, random) -> new TradeOffer(
+                            new ItemStack(AITItems.INDUCTOR, 8),
+                            new ItemStack(AITItems.BLUEPRINT, 1),
+                            4, 2, 0.075f));
+                });
     }
 }
