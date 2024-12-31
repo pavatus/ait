@@ -116,6 +116,6 @@ public class EnvironmentProjectorBlock extends Block implements BlockEntityProvi
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
 
-        tooltip.add(Text.translatable("block.ait.environment_projector.tooltip.use").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
+        tooltip.add(Text.translatable("tooltip.ait.use_in_tardis").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }

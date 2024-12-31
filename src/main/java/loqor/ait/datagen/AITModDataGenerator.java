@@ -355,7 +355,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITItems.GALLIFREY_FALLS_PAINTING)
                     .pattern("OBO")
                     .pattern("BSB")
-                    .pattern("OP0")
+                    .pattern("OPO")
                     .input('O', Blocks.ORANGE_WOOL)
                     .criterion(hasItem(Blocks.ORANGE_WOOL), conditionsFromItem(Blocks.ORANGE_WOOL))
                     .input('S', Items.NETHER_STAR)
@@ -616,7 +616,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Block Tooltips
         provider.addTranslation("block.ait.fabricator.tooltip.use", "(Place on top of a Smithing Table)");
-        provider.addTranslation("block.ait.environment_projector.tooltip.use", "(Place inside a TARDIS)");
+        provider.addTranslation("tooltip.ait.use_in_tardis", "(Place inside a TARDIS)");
         provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
 
         // ????
@@ -667,7 +667,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.success", "%s has grown to %d");
         provider.addTranslation("tardis.message.landingpad.adjust", "Adjusting to landing pad..");
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
-        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal to bootstrap");
+        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal to bootstrap...");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
@@ -762,7 +762,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "Use this on the Generic Subsytem Block to set it to this type.");
+        provider.addTranslation("tooltip.ait.subsystem_item", "(Use this on the Generic Subsytem Block to set it to this type)");
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
