@@ -15,7 +15,7 @@ public class AITStatusEffects {
     public static StatusEffect ZEITON_HIGH = register(new ZeitonHighEffect(), "zeiton_high");
 
     public static StatusEffect OXYGENATED = register(new OxygenatedEffect(), "oxygenated");
-    public static StatusEffect LUNAR_REGOLITH = register(new LunarRegolithEffect(), "lunar_regolith");
+    public static StatusEffect LUNAR_SICKNESS = register(new LunarRegolithEffect(), "lunar_sickness");
 
     public static void init() {
 
