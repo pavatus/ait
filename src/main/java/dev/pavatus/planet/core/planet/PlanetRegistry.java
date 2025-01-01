@@ -15,11 +15,13 @@ public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
 
     public static Planet OVERWORLD;
     public static Planet THE_NETHER;
+    public static Planet THE_END;
 
     @Override
     protected void defaults() {
         OVERWORLD = register(new Planet(DimensionTypes.OVERWORLD_ID, -1, true, 288, true));
-        THE_NETHER = register(new Planet(DimensionTypes.THE_NETHER_ID, -1, true, 548, false)); // -1f means dont change gravity btw
+        THE_NETHER = register(new Planet(DimensionTypes.THE_NETHER_ID, -1, true, 548, false));
+        THE_END = register(new Planet(DimensionTypes.THE_END_ID, -1, true, 100, false));// -1f means dont change gravity btw
     }
 
     @Override
