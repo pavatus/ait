@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.entities;
 
+import loqor.ait.registry.impl.ControlRegistry;
+import loqor.ait.registry.impl.console.ConsoleRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.joml.Matrix4f;
@@ -57,8 +59,11 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (d > 4096.0)
             return;
 
+        Text name = Text.translatable(new Identifier(AITMod.MOD_ID, text.getString())
+                .toTranslationKey("control"));
+
         TextRenderer textRenderer = this.getTextRenderer();
-        float h = (float) -textRenderer.getWidth(text) / 2;
+        float h = (float) -textRenderer.getWidth(name) / 2;
         float f = entity.getNameLabelHeight() - 0.3f;
 
         Tardis tardis = entity.tardis().get();
@@ -76,10 +81,11 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
 
         if (hitresult != null) {
             boolean isPlayerLookingWithSonic = isPlayerLookingAtControlWithSonic(hitresult, entity);
-            OrderedText orderedText = Text.of(text.getString().toUpperCase().replace("_", " ")).asOrderedText();
+//            OrderedText orderedText = Text.of(name.getString().toUpperCase().replace("_", " ")).asOrderedText();
+            OrderedText orderedText = name.asOrderedText();
 
             if (isPlayerLookingWithSonic) {
-                textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000,
+                textRenderer.drawWithOutline(orderedText, h, (float) name.getString().length(), 0xF0F0F0, 0x000000,
                         matrix4f, vertexConsumers, 0xFF);
             }
         }

@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.control;
 
+import loqor.ait.registry.impl.console.ConsoleRegistry;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
