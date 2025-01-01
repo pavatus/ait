@@ -39,7 +39,7 @@ public class MultiDim implements ModInitializer {
     static {
         ServerTickEvents.START_SERVER_TICK.register(server -> MultiDim.get(server).tick());
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> MultiDim.get(server).onServerStopping());
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> MultiDim.get(server).onServerStarting());
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> MultiDim.get(server).onServerStarting());
     }
 
     public static MultiDim get(MinecraftServer server) {
