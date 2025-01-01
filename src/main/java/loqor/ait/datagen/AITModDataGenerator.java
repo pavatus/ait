@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetBlocks;
+import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
 import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -207,6 +208,15 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('B', Blocks.IRON_BARS)
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Blocks.IRON_BARS), conditionsFromItem(Blocks.IRON_BARS)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, PlanetItems.FABRIC, 1)
+                    .pattern("SSS")
+                    .pattern("SPS")
+                    .pattern("SSS")
+                    .input('S', Items.STRING)
+                    .input('P', Items.PAPER)
+                    .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                    .criterion(hasItem(Items.PAPER), conditionsFromItem(Items.PAPER)));
 
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetBlocks.OXYGENATOR_BLOCK, 1)
