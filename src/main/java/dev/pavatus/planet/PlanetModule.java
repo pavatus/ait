@@ -5,6 +5,8 @@ import static net.minecraft.data.server.recipe.RecipeProvider.*;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.client.SpaceSuitOverlay;
@@ -13,10 +15,6 @@ import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import dev.pavatus.planet.core.util.PlanetCustomTrades;
 import dev.pavatus.register.api.RegistryEvents;
-import io.wispforest.owo.itemgroup.Icon;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -24,13 +22,12 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.advancement.criterion.ChangedDimensionCriterion;
-import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.ArmorItem;
-import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKey;
@@ -54,19 +51,19 @@ public class PlanetModule extends Module {
 
     @Override
     public void init() {
-        this.getItemGroup().initialize();
         PlanetCustomTrades.registerCustomTrades();
         RegistryEvents.SUBSCRIBE.register((registries, env) -> {
             env.init(PlanetRegistry.getInstance());
         });
 
-        FieldRegistrationHandler.register(PlanetItems.class, AITMod.MOD_ID, false);
-        FieldRegistrationHandler.register(PlanetBlocks.class, AITMod.MOD_ID, false);
+        RegistryContainer.register(PlanetItems.class, AITMod.MOD_ID);
+        RegistryContainer.register(PlanetBlocks.class, AITMod.MOD_ID);
     }
 
     @Override
-    protected OwoItemGroup.Builder buildItemGroup() {
-        return OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()), () -> Icon.of(PlanetItems.SPACESUIT_HELMET));
+    protected AItemGroup.Builder buildItemGroup() {
+        return AItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()))
+                .icon(() -> new ItemStack(PlanetItems.SPACESUIT_HELMET));
     }
 
     @Environment(EnvType.CLIENT)
@@ -80,10 +77,6 @@ public class PlanetModule extends Module {
         return ID;
     }
 
-    @Override
-    public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(this.getItemGroup()));
-    }
 
     @Override
     public Optional<Class<?>> getBlockRegistry() {

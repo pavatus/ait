@@ -6,17 +6,17 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.pavatus.config.AITConfig;
+import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.register.Registries;
 import dev.pavatus.register.api.RegistryEvents;
-import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -51,7 +51,6 @@ import loqor.ait.api.AITModInitializer;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
-import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.item.blueprint.BlueprintRegistry;
@@ -81,8 +80,6 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-
-
 
 public class AITMod implements ModInitializer {
 
@@ -171,11 +168,13 @@ public class AITMod implements ModInitializer {
         AITArgumentTypes.register();
 
         AITSounds.init();
-        FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITPaintings.class, MOD_ID, false);
+
+        RegistryContainer.register(AITItemGroups.class, MOD_ID);
+        RegistryContainer.register(AITItems.class, MOD_ID);
+        RegistryContainer.register(AITBlocks.class, MOD_ID);
+        RegistryContainer.register(AITBlockEntityTypes.class, MOD_ID);
+        RegistryContainer.register(AITEntityTypes.class, MOD_ID);
+        RegistryContainer.register(AITPaintings.class, MOD_ID);
 
         WorldUtil.init();
         TardisUtil.init();
@@ -270,15 +269,7 @@ public class AITMod implements ModInitializer {
                     });
                 });
 
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            AIT_CONFIG.save();
-            AsyncLocatorUtil.shutdownExecutorService();
-        });
-
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
-
-        AITItemGroups.MAIN.initialize();
-        AITItemGroups.FABRICATOR.initialize();
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (source.isBuiltin()

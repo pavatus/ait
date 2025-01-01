@@ -1,24 +1,25 @@
-package loqor.ait.core.config;
+package dev.pavatus.config;
 
 import java.util.List;
 
-import io.wispforest.owo.config.annotation.*;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 
-@SuppressWarnings("unused")
-@Modmenu(modId = AITMod.MOD_ID)
-@Config(name = "aitconfig", wrapperName = "AITConfig")
-public class AITConfigModel {
+@Config(name = "aitconfig")
+public class AITConfig implements ConfigData {
 
-    @SectionHeader("Server")
+    @ConfigEntry.Category("server")
     public boolean MINIFY_JSON = false;
 
     public boolean GHOST_MONUMENT = true;
     public boolean LOCK_DIMENSIONS = true;
 
-    @Expanded @RestartRequired
+    @ConfigEntry.Gui.RequiresRestart
     public List<String> WORLDS_BLACKLIST = List.of(
             AITDimensions.TIME_VORTEX_WORLD.getValue().toString());
 
@@ -27,7 +28,7 @@ public class AITConfigModel {
     public boolean SEND_BULK = true;
     public int MAX_TARDISES = -1;
 
-    @SectionHeader("Client")
+    @ConfigEntry.Category("client")
     public float INTERIOR_HUM_VOLUME = 0.2f;
 
     public boolean CUSTOM_MENU = true;
@@ -36,11 +37,18 @@ public class AITConfigModel {
     public boolean DISABLE_LOYALTY_FOG = false;
     public boolean DISABLE_LOYALTY_SLEEPING_ACTIONBAR = false;
     public boolean ENABLE_TARDIS_BOTI = false;
+    public boolean I_HATE_GL = true;
 
     public TemperatureType TEMPERATURE_TYPE = TemperatureType.CELCIUS;
+
     public enum TemperatureType {
         CELCIUS,
         FAHRENHEIT,
         KELVIN;
+    }
+
+    public static AITConfig createAndLoad() {
+        AutoConfig.register(AITConfig.class, JanksonConfigSerializer::new);
+        return AutoConfig.getConfigHolder(AITConfig.class).getConfig();
     }
 }

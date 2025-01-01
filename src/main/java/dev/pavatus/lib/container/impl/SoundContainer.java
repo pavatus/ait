@@ -1,12 +1,12 @@
-package dev.pavatus.register.auto;
+package dev.pavatus.lib.container.impl;
 
-import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import dev.pavatus.lib.container.RegistryContainer;
 
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 
-public interface SoundRegistryContainer extends AutoRegistryContainer<SoundEvent> {
+public interface SoundContainer extends RegistryContainer<SoundEvent> {
 
     @Override
     default Registry<SoundEvent> getRegistry() {
@@ -14,7 +14,7 @@ public interface SoundRegistryContainer extends AutoRegistryContainer<SoundEvent
     }
 
     @Override
-    default Class<SoundEvent> getTargetFieldType() {
+    default Class<SoundEvent> getTargetClass() {
         return SoundEvent.class;
     }
 }

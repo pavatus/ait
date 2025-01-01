@@ -4,11 +4,8 @@ import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRe
 import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer.PAINTING_TEXTURE;
 
 import com.mojang.blaze3d.platform.GlConst;
-import com.mojang.blaze3d.platform.GlDebugInfo;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
@@ -31,6 +28,7 @@ import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.renderers.VortexUtil;
+import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -39,15 +37,13 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class BOTI {
 
-    private static boolean sendNvidiaWarning = false;
+    private static boolean warningSent = false;
     public static BOTIHandler BOTI_HANDLER = new BOTIHandler();
     public static AITBufferBuilderStorage AIT_BUF_BUILDER_STORAGE = new AITBufferBuilderStorage();
 
     public static void renderGallifreyFallsPainting(MatrixStack stack, SinglePartEntityModel singlePartEntityModel, int light, VertexConsumerProvider provider) {
-        if (!isNvidiaVideocard()) {
-            sendNvidiaWarning();
+        if (!checkBoti())
             return;
-        }
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -113,18 +109,10 @@ public class BOTI {
     }
 
     public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
-
         if (!variant.parent().hasPortals()) return;
 
-        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
+        if (!checkTardisBoti())
             return;
-        }
-
-        if (!isNvidiaVideocard()) {
-            sendNvidiaWarning();
-            return;
-        }
-
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -209,16 +197,8 @@ public class BOTI {
     }
 
     public static void renderExteriorBoti(ExteriorBlockEntity exterior, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
-
-        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
+        if (!checkTardisBoti())
             return;
-        }
-
-        if (!isNvidiaVideocard()) {
-            sendNvidiaWarning();
-            return;
-        }
-
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -308,14 +288,24 @@ public class BOTI {
         GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT, GlConst.GL_NEAREST);
     }
 
-    // copied from immersive portals
-    @Environment(EnvType.CLIENT)
-    public static boolean isNvidiaVideocard() {
-        return GlDebugInfo.getVendor().toLowerCase().contains("nvidia");
+    private static boolean checkTardisBoti() {
+        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI)
+            return false;
+
+        return checkBoti();
     }
+
+    private static boolean checkBoti() {
+        if (DependencyChecker.hasNvidiaCard() || !AITMod.AIT_CONFIG.I_HATE_GL)
+            return true;
+
+        sendNvidiaWarning();
+        return false;
+    }
+
     private static void sendNvidiaWarning() {
-        if (!sendNvidiaWarning) {
-            sendNvidiaWarning = true;
+        if (!warningSent) {
+            warningSent = true;
 
             MinecraftClient.getInstance().player.sendMessage(Text.literal("A Nvidia Videocard is required for BOTI effects, please disable BOTI in the Config.").formatted(Formatting.RED), false);
             MinecraftClient.getInstance().player.sendMessage(Text.literal("NAG LOQOR IN THE DISCORD TO FIX BOTI !!!").formatted(Formatting.RED), false);

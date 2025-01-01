@@ -2,7 +2,6 @@ package loqor.ait.core.tardis;
 
 import java.util.Optional;
 
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -59,7 +58,7 @@ public class TardisExterior extends TardisComponent {
             tardis.getExterior().setVariant(variant);
 
         DirectedGlobalPos.Cached cached = tardis.travel().position();
-        WorldOps.updateIfOnServer(cached.getWorld(), cached.getPos());
+        cached.getWorld().getChunkManager().markForUpdate(cached.getPos());
 
         TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
         return true;

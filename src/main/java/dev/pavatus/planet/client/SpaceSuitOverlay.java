@@ -2,6 +2,7 @@ package dev.pavatus.planet.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.pavatus.config.AITConfig;
 import dev.pavatus.planet.core.item.SpacesuitItem;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
@@ -25,7 +26,6 @@ import net.minecraft.util.hit.HitResult;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.item.SonicItem;
 
 public class SpaceSuitOverlay implements HudRenderCallback {
@@ -117,11 +117,9 @@ public class SpaceSuitOverlay implements HudRenderCallback {
     }
 
     public String getTemperatureType(AITConfig config, Planet planet) {
-        String c = "" + planet.celcius();
-        String f = "" + planet.fahrenheit();
-        return switch(config.TEMPERATURE_TYPE()) {
-            default -> c.substring(0, 5) + "°C";
-            case FAHRENHEIT -> f.substring(0, 5) + "°F";
+        return switch(config.TEMPERATURE_TYPE) {
+            case CELCIUS -> ("" + planet.fahrenheit()).substring(0, 5) + "°C";
+            case FAHRENHEIT -> ("" + planet.fahrenheit()).substring(0, 5) + "°F";
             case KELVIN -> planet.kelvin() + "K";
         };
     }

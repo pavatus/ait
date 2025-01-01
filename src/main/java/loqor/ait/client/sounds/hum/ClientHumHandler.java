@@ -102,7 +102,7 @@ public class ClientHumHandler extends SoundHandler {
 
         for (Hum sound : HumRegistry.getInstance().toList()) {
             list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT,
-                    AIT_CONFIG.INTERIOR_HUM_VOLUME()));
+                    AIT_CONFIG.INTERIOR_HUM_VOLUME));
         }
 
         return list;

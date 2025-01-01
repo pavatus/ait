@@ -42,7 +42,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     static {
         TardisEvents.FINISH_FLIGHT.register(tardis -> { // ghost monument
-            if (!AITMod.AIT_CONFIG.GHOST_MONUMENT())
+            if (!AITMod.AIT_CONFIG.GHOST_MONUMENT)
                 return TardisEvents.Interaction.PASS;
 
             TravelHandler travel = tardis.travel();
@@ -52,7 +52,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.MAT.register(tardis -> { // end check - wait, shouldn't this be done in the other locked method? this confuses me
-            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS())
+            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS)
                 return TardisEvents.Interaction.PASS;
 
             boolean isEnd = tardis.travel().destination().getDimension().equals(World.END);
@@ -61,8 +61,9 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             return WorldUtil.isEndDragonDead() ? TardisEvents.Interaction.PASS : TardisEvents.Interaction.FAIL;
         });
 
-        TardisEvents.MAT.register((tardis -> {
-            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return TardisEvents.Interaction.PASS;
+        TardisEvents.MAT.register(tardis -> {
+            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS)
+                return TardisEvents.Interaction.PASS;
 
             LockedDimension dim = LockedDimensionRegistry.getInstance().get(tardis.travel().destination().getWorld());
             boolean success = dim == null || tardis.isUnlocked(dim);
@@ -70,10 +71,10 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             if (!success) return TardisEvents.Interaction.FAIL;
 
             return TardisEvents.Interaction.PASS;
-        }));
+        });
 
         TardisEvents.LANDED.register(tardis -> {
-            if (AITMod.AIT_CONFIG.GHOST_MONUMENT())
+            if (AITMod.AIT_CONFIG.GHOST_MONUMENT)
                 tardis.travel().tryFly();
         });
     }

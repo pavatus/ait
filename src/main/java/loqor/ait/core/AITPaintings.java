@@ -1,10 +1,12 @@
 package loqor.ait.core;
 
-import dev.pavatus.register.auto.PaintingRegistryContainer;
 
+import dev.pavatus.lib.container.impl.PaintingContainer;
 
-public class AITPaintings implements PaintingRegistryContainer {
+import net.minecraft.entity.decoration.painting.PaintingVariant;
 
-    //public static final PaintingVariant CRAB_THROWER = new PaintingVariant(48, 32);
-    //public static final PaintingVariant PEANUT = new PaintingVariant(16, 16);
+public class AITPaintings implements PaintingContainer {
+
+    public static final PaintingVariant CRAB_THROWER = new PaintingVariant(48, 32);
+    public static final PaintingVariant PEANUT = new PaintingVariant(16, 16);
 }

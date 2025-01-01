@@ -5,7 +5,6 @@ import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
 
 import java.util.Optional;
 
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +19,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -129,28 +129,29 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 
     public void setConsoleSchema(Identifier type) {
         this.type = type;
-        markDirty();
+
+        this.markDirty();
         this.syncType();
-        if (this.getWorld() == null)
-            return;
-        WorldOps.updateIfOnServer(this.getWorld(), this.pos);
+
+        if (this.getWorld() instanceof ServerWorld serverWorld)
+            serverWorld.getChunkManager().markForUpdate(this.pos);
     }
 
     public ConsoleVariantSchema getConsoleVariant() {
-        if (variant == null) {
+        if (this.variant == null)
             this.variant = this.getConsoleSchema().getDefaultVariant().id();
-        }
 
         return ConsoleVariantRegistry.getInstance().get(this.variant);
     }
 
     public void setVariant(Identifier variant) {
         this.variant = variant;
-        markDirty();
+
+        this.markDirty();
         this.syncVariant();
-        if (this.getWorld() == null)
-            return;
-        WorldOps.updateIfOnServer(this.getWorld(), this.pos);
+
+        if (this.getWorld() instanceof ServerWorld serverWorld)
+            serverWorld.getChunkManager().markForUpdate(this.pos);
     }
 
     public void changeConsole(ConsoleTypeSchema schema) {

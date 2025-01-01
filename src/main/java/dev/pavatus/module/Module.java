@@ -3,18 +3,15 @@ package dev.pavatus.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import io.wispforest.owo.itemgroup.OwoItemGroup;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
+import dev.pavatus.lib.itemgroup.AItemGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.advancement.Advancement;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -23,28 +20,19 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
-import loqor.ait.core.AITItemGroups;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
 import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 public abstract class Module implements Identifiable {
-    private OwoItemGroup group;
+    private AItemGroup group;
 
     public abstract void init();
 
     @Environment(EnvType.CLIENT)
     public abstract void initClient();
 
-    protected Block register(Block block, Identifier id, boolean withItem) {
-        Registry.register(Registries.BLOCK, id, block);
-        if (withItem) {
-            register(createBlockItem(block, id.getPath()), id);
-        }
-
-        return block;
-    }
     protected Item register(Item item, Identifier id) {
         Registry.register(Registries.ITEM, id, item);
         return item;
@@ -61,10 +49,6 @@ public abstract class Module implements Identifiable {
         return type;
     }
 
-    public BlockItem createBlockItem(Block block, String id) {
-        return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.MAIN));
-    }
-
     public Optional<Class<?>> getBlockRegistry() {
         return Optional.empty();
     }
@@ -76,17 +60,20 @@ public abstract class Module implements Identifiable {
         return true;
     }
 
-    protected OwoItemGroup.Builder buildItemGroup() {
+    protected AItemGroup.Builder buildItemGroup() {
         return null;
     }
-    public OwoItemGroup getItemGroup() {
-        OwoItemGroup.Builder builder = buildItemGroup();
+
+    public AItemGroup getItemGroup() {
+        AItemGroup.Builder builder = buildItemGroup();
 
         if (builder == null) throw new UnsupportedOperationException("Item Group for module " + this + " is not defined");
         if (!(this.shouldRegister())) throw new UnsupportedOperationException("Tried to access item group for module " + this + " but it is not registered");
 
         if (group == null) {
             group = builder.build();
+
+            Registry.register(Registries.ITEM_GROUP, group.id(), group);
         }
 
         return group;

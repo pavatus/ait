@@ -38,8 +38,7 @@ public class DefaultLogoMixin {
             currentLogo = AIT_LOGO;
         }
 
-
-        if (!AITMod.AIT_CONFIG.CUSTOM_MENU()) {
+        if (!AITMod.AIT_CONFIG.CUSTOM_MENU) {
             context.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
             return;
         }
@@ -56,7 +55,7 @@ public class DefaultLogoMixin {
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1))
     private void ait$skipEdition(DrawContext context, Identifier texture, int x, int y, float u, float v, int width,
                                  int height, int textureWidth, int textureHeight) {
-        if (!AITMod.AIT_CONFIG.CUSTOM_MENU()) {
+        if (!AITMod.AIT_CONFIG.CUSTOM_MENU) {
             context.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
         }
     }
