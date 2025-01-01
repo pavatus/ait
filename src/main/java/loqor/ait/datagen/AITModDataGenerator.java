@@ -488,6 +488,40 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
         ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
 
+        // Control entities
+        provider.addTranslation("control.ait.antigravs", "Antigravs");
+        provider.addTranslation("control.ait.protocol_116", "Protocol 116");
+        provider.addTranslation("control.ait.protocol_3", "Protocol 3");
+        provider.addTranslation("control.ait.dimension", "Dimension");
+        provider.addTranslation("control.ait.direction", "Direction");
+        provider.addTranslation("control.ait.door_control", "Door Control");
+        provider.addTranslation("control.ait.door_lock", "Door Lock");
+        provider.addTranslation("control.ait.fast_return", "Fast Return");
+        provider.addTranslation("control.ait.alarms", "Alarms");
+        provider.addTranslation("control.ait.protocol_813", "Protocol 813");
+        provider.addTranslation("control.ait.handbrake", "Handbrake");
+        provider.addTranslation("control.ait.land_type", "Land Type");
+        provider.addTranslation("control.ait.monitor", "Monitor");
+        provider.addTranslation("control.ait.power", "Power");
+        provider.addTranslation("control.ait.randomiser", "Randomiser");
+        provider.addTranslation("control.ait.refueler", "Refueler");
+        provider.addTranslation("control.ait.protocol_19", "Protocol 19");
+        provider.addTranslation("control.ait.protocol_1913", "Protocol 1913");
+        provider.addTranslation("control.ait.sonic_port", "Sonic Port");
+        provider.addTranslation("control.ait.telepathic_circuit", "Telepathic Circuit");
+        provider.addTranslation("control.ait.throttle", "Throttle");
+        provider.addTranslation("control.ait.visualiser", "Visualiser");
+        provider.addTranslation("control.ait.eject_waypoint", "Eject Waypoint");
+        provider.addTranslation("control.ait.goto_waypoint", "Goto Waypoint");
+        provider.addTranslation("control.ait.load_waypoint", "Load Waypoint");
+        provider.addTranslation("control.ait.mark_waypoint", "Mark Waypoint");
+        provider.addTranslation("control.ait.set_waypoint", "Set Waypoint");
+        provider.addTranslation("control.ait.increment", "Increment");
+        provider.addTranslation("control.ait.x", "X");
+        provider.addTranslation("control.ait.y", "Y");
+        provider.addTranslation("control.ait.z", "Z");
+        provider.addTranslation("control.ait.shields", "Shields");
+
         // Tabs
         provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         provider.addTranslation(AITItemGroups.FABRICATOR, "AIT: Fabrication");
