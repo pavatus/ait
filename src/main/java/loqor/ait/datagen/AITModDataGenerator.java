@@ -829,11 +829,11 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.description.ultimate_counter", "Attempt to use the sonic screwdriver on wood.");
         provider.addTranslation("achievement.ait.title.forced_entry", "That Won't Have Consequences...");
         provider.addTranslation("achievement.ait.description.forced_entry", "Forcefully enter a TARDIS.");
-        provider.addTranslation("achievement.ait.title.pui", "Seriously, piloting under the influence?");
+        provider.addTranslation("achievement.ait.title.pui", "Piloting under the influence");
         provider.addTranslation("achievement.ait.description.pui", "Consume Zeiton Dust while the TARDIS is in flight.");
         provider.addTranslation("achievement.ait.title.bonding", "I think it's starting to trust you.");
         provider.addTranslation("achievement.ait.description.bonding", "Reach 'Pilot' loyalty for the first time.");
-        provider.addTranslation("achievement.ait.title.owner_ship", "But hey it trusts you now worth it right?");
+        provider.addTranslation("achievement.ait.title.owner_ship", "It trusts you now worth it right?");
         provider.addTranslation("achievement.ait.description.owner_ship", "Reach 'Owner' loyalty for the first time.");
         provider.addTranslation("achievement.ait.title.enable_subsystem", "Time-Space Engineer");
         provider.addTranslation("achievement.ait.description.enable_subsystem", "Enable a subsystem.");
@@ -880,7 +880,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "(Use this on the Generic Subsytem Block to set it to this type)");
+        provider.addTranslation("tooltip.ait.subsystem_item", "(Use this on the Generalised Subsytem Core to set it to this type)");
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
