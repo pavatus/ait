@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.pavatus.multidim.MultiDim;
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -38,6 +37,7 @@ import loqor.ait.core.tardis.manager.TardisFileManager;
 import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
@@ -156,7 +156,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         } else {
             TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
                 DirectedGlobalPos.Cached cached = tardis.travel().destination();
-                WorldOps.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos());
+                WorldUtil.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos(), 0, 0);
             });
         }
 

@@ -1,20 +1,21 @@
 package dev.pavatus.planet.core;
 
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.item.AItemSettings;
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.block.OxygenatorBlock;
-import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 
 import loqor.ait.core.blocks.FlagBlock;
 import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
-public class PlanetBlocks implements BlockRegistryContainer {
+public class PlanetBlocks extends BlockContainer {
 
     public static final Block FLAG = new FlagBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
@@ -402,9 +403,8 @@ public class PlanetBlocks implements BlockRegistryContainer {
     public static final Block CRACKED_ANORTHOSITE_BRICKS = new Block(
             AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
 
-
     @Override
-    public BlockItem createBlockItem(Block block, String identifier) {
-        return PlanetModule.instance().createBlockItem(block, identifier);
+    public Item.Settings createBlockItemSettings(Block block) {
+        return new AItemSettings().group(PlanetModule.instance().getItemGroup());
     }
 }

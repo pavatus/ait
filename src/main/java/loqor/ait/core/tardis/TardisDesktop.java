@@ -23,7 +23,6 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.DesktopGenerator;
-import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
@@ -38,7 +37,14 @@ public class TardisDesktop extends TardisComponent {
     private final Corners corners;
     private final Set<BlockPos> consolePos;
 
+    private static final int RADIUS = 500;
+
+    private static final Corners CORNERS;
+
     static {
+        BlockPos first = new BlockPos(RADIUS, 0, RADIUS);
+        CORNERS = new Corners(first.multiply(-1), first);
+
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
                     BlockPos console = buf.readBlockPos();
@@ -56,7 +62,7 @@ public class TardisDesktop extends TardisComponent {
         super(Id.DESKTOP);
         this.schema = schema;
 
-        this.corners = TardisUtil.findInteriorSpot();
+        this.corners = CORNERS;
         this.consolePos = new HashSet<>();
     }
 

@@ -1,13 +1,11 @@
 package loqor.ait.core.tardis.control.impl;
 
-import io.wispforest.owo.ops.WorldOps;
-
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
@@ -27,15 +25,14 @@ public class AntiGravsControl extends Control {
             return false;
         }
 
-        tardis.travel().antigravs().flatMap(value -> !value);
+        tardis.travel().antigravs().toggle();
 
         DirectedGlobalPos.Cached globalPos = tardis.travel().position();
-        World targetWorld = globalPos.getWorld();
+        ServerWorld targetWorld = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
-        WorldOps.updateIfOnServer(targetWorld, pos);
-        world.scheduleBlockTick(pos, targetWorld.getBlockState(pos).getBlock(), 2);
-
+        targetWorld.getChunkManager().markForUpdate(pos);
+        world.scheduleBlockTick(pos, AITBlocks.EXTERIOR_BLOCK, 2);
         return true;
     }
 

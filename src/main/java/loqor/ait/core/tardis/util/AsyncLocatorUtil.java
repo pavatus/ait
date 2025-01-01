@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.registry.entry.RegistryEntry;
@@ -26,6 +27,11 @@ import loqor.ait.AITMod;
 public class AsyncLocatorUtil {
 
     public static ExecutorService LOCATING_EXECUTOR_SERVICE = null;
+
+    static {
+        ServerLifecycleEvents.SERVER_STOPPING.register(
+                (server) -> AsyncLocatorUtil.shutdownExecutorService());
+    }
 
     public static void setupExecutorService() {
         shutdownExecutorService();

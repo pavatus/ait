@@ -4,7 +4,6 @@ import java.util.List;
 
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -17,6 +16,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.core.item.RenderableArmorItem;
+import loqor.ait.core.tardis.dim.TardisDimension;
 
 
 public class SpacesuitItem extends RenderableArmorItem {

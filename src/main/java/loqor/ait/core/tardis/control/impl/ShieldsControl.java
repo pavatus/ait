@@ -1,7 +1,5 @@
 package loqor.ait.core.tardis.control.impl;
 
-import io.wispforest.owo.ops.WorldOps;
-
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -21,6 +19,7 @@ public class ShieldsControl extends Control {
     public ShieldsControl() {
         super("shields");
     }
+
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
@@ -41,10 +40,6 @@ public class ShieldsControl extends Control {
         }
 
         this.soundEvent = leftClick ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
-
-        if (tardis.travel().position().getPos() != null)
-            WorldOps.updateIfOnServer(world, tardis.travel().position().getPos());
-
         return true;
     }
 

@@ -627,24 +627,23 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItemGroups.FABRICATOR, "AIT: Fabrication");
 
         // Config
-        provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
-        provider.addTranslation("text.config.aitconfig.option.GHOST_MONUMENT", "Allow Ghost Monument");
-        provider.addTranslation("text.config.aitconfig.option.LOCK_DIMENSIONS", "Lock Dimensions");
-        provider.addTranslation("text.config.aitconfig.option.WORLDS_BLACKLIST", "Blacklist Dimensions");
-        provider.addTranslation("text.config.aitconfig.option.TRAVEL_PER_TICK", "TARDIS travel per tick");
-        provider.addTranslation("text.config.aitconfig.option.SEND_BULK", "Send Bulk");
-        provider.addTranslation("text.config.aitconfig.option.MAX_TARDISES", "Max TARDISES (-1 = Infinite)");
+        provider.addTranslation("text.autoconfig.aitconfig.category.server", "Server");
+        provider.addTranslation("text.autoconfig.aitconfig.option.MINIFY_JSON", "Minify JSON");
+        provider.addTranslation("text.autoconfig.aitconfig.option.GHOST_MONUMENT", "Allow Ghost Monument");
+        provider.addTranslation("text.autoconfig.aitconfig.option.LOCK_DIMENSIONS", "Lock Dimensions");
+        provider.addTranslation("text.autoconfig.aitconfig.option.WORLDS_BLACKLIST", "Blacklist Dimensions");
+        provider.addTranslation("text.autoconfig.aitconfig.option.TRAVEL_PER_TICK", "TARDIS travel per tick");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SEND_BULK", "Send Bulk");
+        provider.addTranslation("text.autoconfig.aitconfig.option.MAX_TARDISES", "Max TARDISES (-1 = Infinite)");
 
-        provider.addTranslation("text.config.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
-        provider.addTranslation("text.config.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
-        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
-        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
-        provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
-        provider.addTranslation("text.config.aitconfig.option.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
-
-        provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
-        provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
-        provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
+        provider.addTranslation("text.autoconfig.aitconfig.category.client", "Client");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
+        provider.addTranslation("text.autoconfig.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
+        provider.addTranslation("text.autoconfig.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
+        provider.addTranslation("text.autoconfig.aitconfig.option.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
+        provider.addTranslation("text.autoconfig.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
+        provider.addTranslation("text.autoconfig.aitconfig.option.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
+        provider.addTranslation("text.autoconfig.aitconfig.option.I_HATE_GL", "I HATE GL");
 
         provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
         provider.addTranslation("entity.minecraft.villager.fabricator_engineer", "Fabricator Engineer");

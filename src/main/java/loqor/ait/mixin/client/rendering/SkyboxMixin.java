@@ -101,7 +101,7 @@ public abstract class SkyboxMixin {
 
     @Unique private void renderSkyDynamically(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera,
             Runnable fogCallback, CallbackInfo ci) {
-        if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR() || context == null) {
+        if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR || context == null) {
             SkyboxUtil.renderTardisSky(matrices);
             ci.cancel();
 

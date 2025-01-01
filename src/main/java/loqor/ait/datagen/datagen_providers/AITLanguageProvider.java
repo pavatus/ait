@@ -2,12 +2,13 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.HashMap;
 
-import io.wispforest.owo.itemgroup.OwoItemGroup;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.text.TranslatableTextContent;
 
 import loqor.ait.AITMod;
 import loqor.ait.datagen.datagen_providers.lang.LanguageType;
@@ -63,8 +64,11 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      * @param translation
      *            The translation.
      */
-    public void addTranslation(OwoItemGroup itemGroup, String translation) {
-        translations.put(getTranslationKeyForItemGroup(itemGroup), translation);
+    public void addTranslation(ItemGroup itemGroup, String translation) {
+        if (!(itemGroup.getDisplayName().getContent() instanceof TranslatableTextContent translatable))
+            return;
+
+        translations.put(translatable.getKey(), translation);
     }
 
     /**
@@ -89,16 +93,5 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      */
     public void addTranslation(Block block, String translation) {
         translations.put(block.getTranslationKey(), translation);
-    }
-
-    /**
-     * Get the translation key for the OwoItemGroup
-     *
-     * @param itemGroup
-     *            The item group to get the translation key for
-     * @return The translation key for the item group
-     */
-    private String getTranslationKeyForItemGroup(OwoItemGroup itemGroup) {
-        return "itemGroup." + itemGroup.id().getNamespace() + "." + itemGroup.id().getPath();
     }
 }

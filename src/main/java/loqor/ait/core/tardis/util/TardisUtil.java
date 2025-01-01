@@ -3,7 +3,6 @@ package loqor.ait.core.tardis.util;
 import java.util.*;
 import java.util.function.Predicate;
 
-import io.wispforest.owo.ops.WorldOps;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +44,7 @@ import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.Corners;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
@@ -131,18 +130,6 @@ public class TardisUtil {
         return a.minX < b.maxX && a.maxX > b.minX && a.minZ < b.maxZ && a.maxZ > b.minZ;
     }
 
-    public static Corners findInteriorSpot() {
-        BlockPos first = findRandomPlace();
-
-        return new Corners(first, first.add(500, 0, 500));
-    }
-
-    // @TODO remove this its unnecessary since we have the dimensions
-    public static BlockPos findRandomPlace() {
-        //return new BlockPos(AITMod.RANDOM.nextInt(100_000), 0, AITMod.RANDOM.nextInt(100_000));
-        return new BlockPos(-500, 0, -500);
-    }
-
     public static Vec3d offsetInteriorDoorPosition(Tardis tardis) {
         return TardisUtil.offsetInteriorDoorPosition(tardis.getDesktop());
     }
@@ -200,8 +187,9 @@ public class TardisUtil {
         if (entity instanceof ServerPlayerEntity player) {
             TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
 
-            WorldOps.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
+            WorldUtil.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
                     new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
+
             player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
         }
     }
@@ -220,7 +208,7 @@ public class TardisUtil {
                 PortalAPI.teleportEntity(entity, world, vec);
             } else {
                 if (entity instanceof ServerPlayerEntity player) {
-                    WorldOps.teleportToWorld(player, world, vec,
+                    WorldUtil.teleportToWorld(player, world, vec,
                             RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
                             player.getPitch());
 
