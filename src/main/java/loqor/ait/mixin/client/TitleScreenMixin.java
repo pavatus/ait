@@ -35,7 +35,8 @@ public abstract class TitleScreenMixin extends Screen {
     // This modifies the panorama in the background
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/RotatingCubeMapRenderer;render(FF)V", ordinal = 0))
     private void something(RotatingCubeMapRenderer instance, float delta, float alpha) {
-        boolean isConfigEnabled = AITMod.CONFIG.CUSTOM_MENU;
+        boolean isConfigEnabled = AITMod.CONFIG.CLIENT.CUSTOM_MENU;
+
         if (isConfigEnabled)
             NEWPANO.render(delta, alpha);
         else
