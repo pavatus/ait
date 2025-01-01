@@ -4,6 +4,7 @@ import java.util.List;
 
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
+import loqor.ait.core.tardis.dim.TardisDimension;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -54,7 +55,7 @@ public class SpacesuitItem extends RenderableArmorItem {
 
         if (planet == null) return;
 
-        if (planet.hasOxygen() && compound.getDouble(OXYGEN_KEY) < MAX_OXYGEN) {
+        if ((TardisDimension.isTardisDimension(world) || planet.hasOxygen()) && compound.getDouble(OXYGEN_KEY) < MAX_OXYGEN) {
             // compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.0035D));
             compound.putDouble(OXYGEN_KEY, Math.min(MAX_OXYGEN, compound.getDouble(OXYGEN_KEY) + 0.2D));
         } else if (compound.getDouble(OXYGEN_KEY) > 0.0D) {
