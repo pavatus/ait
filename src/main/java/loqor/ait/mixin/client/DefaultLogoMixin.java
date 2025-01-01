@@ -21,11 +21,8 @@ public class DefaultLogoMixin {
 
     @Unique private static final Identifier AIT_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_logo.png");
     @Unique private static final Identifier AIT_CHRISTMAS_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_christmas_logo.png");
-    @Unique private static final Identifier AIT_EDITION = new Identifier(AITMod.MOD_ID, "textures/gui/title/edition.png");
     @Unique private final MinecraftClient client = MinecraftClient.getInstance();
     @Unique boolean isChristmas = isInAdvent();
-
-
 
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 0))
     private void ait$drawCustomLogo(DrawContext context, Identifier texture, int x, int y, float u, float v, int width,
@@ -38,7 +35,7 @@ public class DefaultLogoMixin {
             currentLogo = AIT_LOGO;
         }
 
-        if (!AITMod.AIT_CONFIG.CUSTOM_MENU) {
+        if (!AITMod.CONFIG.CLIENT.CUSTOM_MENU) {
             context.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
             return;
         }
@@ -55,9 +52,8 @@ public class DefaultLogoMixin {
     @Redirect(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V", ordinal = 1))
     private void ait$skipEdition(DrawContext context, Identifier texture, int x, int y, float u, float v, int width,
                                  int height, int textureWidth, int textureHeight) {
-        if (!AITMod.AIT_CONFIG.CUSTOM_MENU) {
+        if (!AITMod.CONFIG.CLIENT.CUSTOM_MENU)
             context.drawTexture(texture, x, y, u, v, width, height, textureWidth, textureHeight);
-        }
     }
 
     @Inject(method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V", at = @At("TAIL"))

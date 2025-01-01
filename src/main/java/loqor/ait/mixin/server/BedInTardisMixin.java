@@ -38,7 +38,7 @@ public class BedInTardisMixin {
     @Unique @Environment(EnvType.CLIENT)
     private void onClientSleep(PlayerEntity player) {
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
-        if (tardis == null || AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR) return;
+        if (tardis == null || AITMod.CONFIG.CLIENT.DISABLE_LOYALTY_SLEEPING_ACTIONBAR) return;
 
         Loyalty loyalty = tardis.loyalty().get(player);
 

@@ -196,7 +196,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
         }
 
         if (server.getTicks() % (this.maxSpeed.get() - this.speed() + 1) == 0)
-            this.setFlightTicks(this.getFlightTicks() + AITMod.AIT_CONFIG.TRAVEL_PER_TICK);
+            this.setFlightTicks(this.getFlightTicks() + AITMod.CONFIG.SERVER.TRAVEL_PER_TICK);
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {

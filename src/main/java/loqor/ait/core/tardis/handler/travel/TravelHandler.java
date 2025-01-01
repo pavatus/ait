@@ -42,7 +42,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     static {
         TardisEvents.FINISH_FLIGHT.register(tardis -> { // ghost monument
-            if (!AITMod.AIT_CONFIG.GHOST_MONUMENT)
+            if (!AITMod.CONFIG.SERVER.GHOST_MONUMENT)
                 return TardisEvents.Interaction.PASS;
 
             TravelHandler travel = tardis.travel();
@@ -52,7 +52,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.MAT.register(tardis -> { // end check - wait, shouldn't this be done in the other locked method? this confuses me
-            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS)
+            if (!AITMod.CONFIG.SERVER.LOCK_DIMENSIONS)
                 return TardisEvents.Interaction.PASS;
 
             boolean isEnd = tardis.travel().destination().getDimension().equals(World.END);
@@ -62,7 +62,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.MAT.register(tardis -> {
-            if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS)
+            if (!AITMod.CONFIG.SERVER.LOCK_DIMENSIONS)
                 return TardisEvents.Interaction.PASS;
 
             LockedDimension dim = LockedDimensionRegistry.getInstance().get(tardis.travel().destination().getWorld());
@@ -74,7 +74,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.LANDED.register(tardis -> {
-            if (AITMod.AIT_CONFIG.GHOST_MONUMENT)
+            if (AITMod.CONFIG.SERVER.GHOST_MONUMENT)
                 tardis.travel().tryFly();
         });
     }

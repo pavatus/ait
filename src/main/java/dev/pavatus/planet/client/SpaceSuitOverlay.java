@@ -44,7 +44,7 @@ public class SpaceSuitOverlay implements HudRenderCallback {
             stack.push();
             stack.scale(1.5f, 1.5f, 1.5f);
             drawContext.drawTextWithShadow(textRenderer,
-                    Text.literal(this.getTemperatureType(AITMod.AIT_CONFIG, planet)),
+                    Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)),
                     0, 0, 0xFFFFFF);
             stack.pop();
             stack.push();
@@ -117,7 +117,7 @@ public class SpaceSuitOverlay implements HudRenderCallback {
     }
 
     public String getTemperatureType(AITConfig config, Planet planet) {
-        return switch(config.TEMPERATURE_TYPE) {
+        return switch(config.CLIENT.TEMPERATURE_TYPE) {
             case CELCIUS -> ("" + planet.fahrenheit()).substring(0, 5) + "°C";
             case FAHRENHEIT -> ("" + planet.fahrenheit()).substring(0, 5) + "°F";
             case KELVIN -> planet.kelvin() + "K";

@@ -123,7 +123,7 @@ public abstract class TardisManager<T extends Tardis, C> {
     }
 
     protected GsonBuilder getFileGson(GsonBuilder builder) {
-        if (!AITMod.AIT_CONFIG.MINIFY_JSON)
+        if (!AITMod.CONFIG.SERVER.MINIFY_JSON)
             builder.setPrettyPrinting();
 
         return builder.registerTypeAdapter(Value.class, Value.serializer())

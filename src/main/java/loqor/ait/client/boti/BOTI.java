@@ -290,14 +290,14 @@ public class BOTI {
     }
 
     private static boolean checkTardisBoti() {
-        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI)
+        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             return false;
 
         return checkBoti();
     }
 
     private static boolean checkBoti() {
-        if (DependencyChecker.hasNvidiaCard() || !AITMod.AIT_CONFIG.I_HATE_GL)
+        if (DependencyChecker.hasNvidiaCard() || !AITMod.CONFIG.CLIENT.I_HATE_GL)
             return true;
 
         sendNvidiaWarning();

@@ -52,7 +52,7 @@ public class WorldUtil {
     private static ServerWorld TIME_VORTEX;
 
     public static void init() {
-        for (String id : AITMod.AIT_CONFIG.WORLDS_BLACKLIST) {
+        for (String id : AITMod.CONFIG.SERVER.WORLDS_BLACKLIST) {
             blacklisted.add(Identifier.tryParse(id));
         }
 
