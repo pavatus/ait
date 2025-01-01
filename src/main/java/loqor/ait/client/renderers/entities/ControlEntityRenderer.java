@@ -1,7 +1,5 @@
 package loqor.ait.client.renderers.entities;
 
-import loqor.ait.registry.impl.ControlRegistry;
-import loqor.ait.registry.impl.console.ConsoleRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.joml.Matrix4f;
@@ -81,7 +79,6 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
 
         if (hitresult != null) {
             boolean isPlayerLookingWithSonic = isPlayerLookingAtControlWithSonic(hitresult, entity);
-//            OrderedText orderedText = Text.of(name.getString().toUpperCase().replace("_", " ")).asOrderedText();
             OrderedText orderedText = name.asOrderedText();
 
             if (isPlayerLookingWithSonic) {

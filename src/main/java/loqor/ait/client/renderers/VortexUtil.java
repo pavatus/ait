@@ -1,7 +1,6 @@
 package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Matrix4f;
 

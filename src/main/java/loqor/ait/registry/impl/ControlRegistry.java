@@ -1,6 +1,5 @@
 package loqor.ait.registry.impl;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -8,7 +7,6 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
