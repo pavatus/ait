@@ -874,6 +874,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.mode.overload", "OVERLOAD");
         provider.addTranslation("sonic.ait.mode.scanning", "SCANNING");
 
+        // Effects
+        provider.addTranslation("effect.air.lunar_sickness", "Lunar Sickness");
+
 
         // Key tooltips
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");

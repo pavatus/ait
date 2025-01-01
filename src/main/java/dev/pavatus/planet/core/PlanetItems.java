@@ -1,6 +1,7 @@
 package dev.pavatus.planet.core;
 
 import dev.pavatus.planet.PlanetModule;
+import dev.pavatus.planet.core.item.AnorthositeSwordItem;
 import dev.pavatus.planet.core.item.PlanetToolMaterial;
 import dev.pavatus.planet.core.item.SpacesuitItem;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -33,7 +34,7 @@ public class PlanetItems implements ItemRegistryContainer {
     public static final Item MARTIAN_STONE_AXE = new AxeItem(PlanetToolMaterial.MARTIAN_STONE, 3, 1f, new OwoItemSettings());
     public static final Item MARTIAN_STONE_HOE = new HoeItem(PlanetToolMaterial.MARTIAN_STONE, 1, 2f, new OwoItemSettings());
 
-    public static final Item ANORTHOSITE_SWORD = new SwordItem(PlanetToolMaterial.ANORTHOSITE, 5, 3f, new OwoItemSettings());
+    public static final Item ANORTHOSITE_SWORD = new AnorthositeSwordItem(PlanetToolMaterial.ANORTHOSITE, 5, 3f, new OwoItemSettings());
     public static final Item ANORTHOSITE_SHOVEL = new ShovelItem(PlanetToolMaterial.ANORTHOSITE, 0, 0f, new OwoItemSettings());
     public static final Item ANORTHOSITE_PICKAXE = new PickaxeItem(PlanetToolMaterial.ANORTHOSITE, 2, 2f, new OwoItemSettings());
     public static final Item ANORTHOSITE_AXE = new AxeItem(PlanetToolMaterial.ANORTHOSITE, 3, 1f, new OwoItemSettings());
