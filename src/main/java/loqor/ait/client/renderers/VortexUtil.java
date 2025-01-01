@@ -11,7 +11,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.data.vortex.VortexNode;
 
 
 /**
@@ -217,26 +216,26 @@ public class VortexUtil {
         this.distortionSeparationFactor) * this.distortionFactor) / 8;
     }
 
-    public void renderVortexNodes(WorldRenderContext context, VortexNode node) {
-        MatrixStack stack = context.matrixStack();
-        Matrix4f positionMatrix = stack.peek().getPositionMatrix();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        stack.push();
-        stack.translate(node.getPos().x, node.getPos().y, node.getPos().z);
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
-        buffer.vertex(positionMatrix, 20, 20, 0).color(1f, 1f, 1f, 1f).texture(0, 0).next();
-        buffer.vertex(positionMatrix, 20, 60, 0).color(1f, 0f, 0f, 1f).texture(0, 1f).next();
-        buffer.vertex(positionMatrix, 60, 60, 0).color(0f, 1f, 0f, 1f).texture(1f, 1f).next();
-        buffer.vertex(positionMatrix, 0, 20, 0).color(0f, 0f, 1f, 1f).texture(1f, 0).next();
-
-        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
-        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        tessellator.draw();
-
-        stack.pop();
-    }
+//    public void renderVortexNodes(WorldRenderContext context, VortexNode node) {
+//        MatrixStack stack = context.matrixStack();
+//        Matrix4f positionMatrix = stack.peek().getPositionMatrix();
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder buffer = tessellator.getBuffer();
+//
+//        stack.push();
+//        stack.translate(node.getPos().x, node.getPos().y, node.getPos().z);
+//        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+//        buffer.vertex(positionMatrix, 20, 20, 0).color(1f, 1f, 1f, 1f).texture(0, 0).next();
+//        buffer.vertex(positionMatrix, 20, 60, 0).color(1f, 0f, 0f, 1f).texture(0, 1f).next();
+//        buffer.vertex(positionMatrix, 60, 60, 0).color(0f, 1f, 0f, 1f).texture(1f, 1f).next();
+//        buffer.vertex(positionMatrix, 0, 20, 0).color(0f, 0f, 1f, 1f).texture(1f, 0).next();
+//
+//        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
+//        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
+//        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+//
+//        tessellator.draw();
+//
+//        stack.pop();
+//    }
 }
