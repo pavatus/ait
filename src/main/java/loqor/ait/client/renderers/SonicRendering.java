@@ -47,6 +47,7 @@ public class SonicRendering {
     public static void renderFloorTexture(BlockPos pos, Identifier texture, @Nullable Identifier previous, boolean spinning) {
         renderFloorTexture(new Vec3d(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1), texture, previous, spinning);
     }
+
     public static void renderFloorTexture(Vec3d target, Identifier texture, @Nullable Identifier previous, boolean spinning) {
         Profiler profiler = MinecraftClient.getInstance().world.getProfiler();
 

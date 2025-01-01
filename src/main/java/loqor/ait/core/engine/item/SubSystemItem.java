@@ -2,7 +2,6 @@ package loqor.ait.core.engine.item;
 
 import java.util.List;
 
-import net.minecraft.text.OrderedText;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
