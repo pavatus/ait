@@ -20,7 +20,7 @@ import loqor.ait.core.item.RenderableArmorItem;
 
 public class SpacesuitItem extends RenderableArmorItem {
     public static final String OXYGEN_KEY = "oxygen";
-    public static final double MAX_OXYGEN = 4.2D; // 20 minutes worth of oxygen in LITERS.
+    public static final double MAX_OXYGEN = 5.2D;
 
     public SpacesuitItem(ArmorMaterial material, Type type, Settings settings, boolean hasCustomRendering) {
         super(material, type, settings, hasCustomRendering);
