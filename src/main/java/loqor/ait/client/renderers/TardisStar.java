@@ -32,6 +32,7 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = camera.getPos();
+        if (tardis.getDesktop() == null) return;
         BlockPos pos = tardis.getDesktop().getConsolePos().stream().findFirst().orElse(null);
         if (pos == null) return;
         int x = pos.getX();

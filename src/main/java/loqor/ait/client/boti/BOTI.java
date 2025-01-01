@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.GlDebugInfo;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import loqor.ait.core.tardis.Tardis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL11;
@@ -129,6 +130,8 @@ public class BOTI {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
 
+        Tardis tardis = door.tardis().get();
+
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
 
@@ -159,7 +162,6 @@ public class BOTI {
         botiProvider.draw();
         stack.pop();
         copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
-        // RenderSystem.depthMask(false);
 
         BOTI_HANDLER.afbo.beginWrite(false);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -168,17 +170,16 @@ public class BOTI {
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
         stack.push();
-        if (!door.tardis().get().travel().autopilot() && door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
-            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 360f));
-        if (!door.tardis().get().crash().isNormal())
+        if (!tardis.travel().autopilot() && tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / tardis.travel().speed()) * 360f));
+        if (!tardis.crash().isNormal())
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        //stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
         stack.translate(0, 0, 500);
         stack.scale(1.5f, 1.5f, 1.5f);
-        VortexUtil util = door.tardis().get().stats().getVortexEffects().toUtil();
-        if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
+        VortexUtil util = tardis.stats().getVortexEffects().toUtil();
+        if (!tardis.travel().isLanded())
             util.renderVortex(stack);
         botiProvider.draw();
         stack.pop();
