@@ -15,6 +15,7 @@ import dev.pavatus.register.api.RegistryEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
@@ -217,6 +218,9 @@ public class AITMod implements ModInitializer {
             DebugCommand.register(dispatcher);
         }));
 
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            ConfigCommand.register(dispatcher);
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,
                 (server, player, handler, buf, responseSender) -> {

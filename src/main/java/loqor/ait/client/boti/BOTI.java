@@ -6,7 +6,6 @@ import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRe
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import loqor.ait.core.tardis.Tardis;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
@@ -32,6 +31,7 @@ import loqor.ait.client.renderers.VortexUtil;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
