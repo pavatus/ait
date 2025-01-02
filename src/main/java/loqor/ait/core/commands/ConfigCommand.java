@@ -16,10 +16,11 @@ import loqor.ait.AITMod;
 public class ConfigCommand {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(
-                literal(AITMod.MOD_ID + "-config").executes(context -> {
-                            MinecraftClient.getInstance().setScreen(AutoConfig.getConfigScreen(AITConfig.class, null).get());
-                            return Command.SINGLE_SUCCESS;
-                        }));
+        dispatcher.register(literal(AITMod.MOD_ID + "-config").executes(context -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+
+            client.setScreen(AutoConfig.getConfigScreen(AITConfig.class, client.currentScreen).get());
+            return Command.SINGLE_SUCCESS;
+        }));
     }
 }
