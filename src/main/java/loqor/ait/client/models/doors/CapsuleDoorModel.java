@@ -7,9 +7,9 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
-import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class CapsuleDoorModel extends DoorModel {
@@ -118,7 +118,7 @@ public class CapsuleDoorModel extends DoorModel {
                 ? 5F
                 : 0.0F;
 
-        if (DependencyChecker.hasPortals())
+        if (AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             this.getPart().getChild("middle").getChild("back").visible = false;
 
         super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
