@@ -22,11 +22,18 @@ public class PlanetBiomeSelectors {
     public static final RegistryKey<DimensionOptions> MOON_DIMENSION_OPTIONS =
             RegistryKey.of(DIMENSION_KEY, AITDimensions.MOON.getValue());
 
+    public static final RegistryKey<DimensionOptions> SPACE_DIMENSION_OPTIONS =
+            RegistryKey.of(DIMENSION_KEY, AITDimensions.SPACE.getValue());
+
     public static Predicate<BiomeSelectionContext> foundInMars() {
         return context -> context.canGenerateIn(MARS_DIMENSION_OPTIONS);
     }
 
     public static Predicate<BiomeSelectionContext> foundInMoon() {
         return context -> context.canGenerateIn(MOON_DIMENSION_OPTIONS);
+    }
+
+    public static Predicate<BiomeSelectionContext> foundInSpace() {
+        return context -> context.canGenerateIn(SPACE_DIMENSION_OPTIONS);
     }
 }

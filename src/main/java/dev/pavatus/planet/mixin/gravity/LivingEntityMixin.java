@@ -23,7 +23,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -56,8 +55,6 @@ public abstract class LivingEntityMixin extends Entity {
             if (player.getAbilities().flying) return;
         }
         if (entity.getType() == EntityType.BOAT || entity.getType() == EntityType.CHEST_BOAT) { return;}
-
-
 
         Vec3d movement = this.getVelocity();
         this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
@@ -113,10 +110,10 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity.getServer() == null) return;
 
         // TODO this might be like, crazy laggy but oh well
-        hitDimensionThreshold(entity, 725, AITDimensions.MOON, entity.getServer().getOverworld());
+        hitDimensionThreshold(entity, 725, AITDimensions.MOON, AITDimensions.SPACE);
         hitDimensionThreshold(entity, 725, 256,
-                entity.getServer().getOverworld().getRegistryKey(), entity.getServer().getWorld(AITDimensions.MOON));
-        hitDimensionThreshold(entity, 500, AITDimensions.MARS, entity.getServer().getOverworld());
+                entity.getServer().getOverworld().getRegistryKey(), AITDimensions.SPACE);
+        hitDimensionThreshold(entity, 500, AITDimensions.MARS, AITDimensions.SPACE);
     }
 
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
@@ -129,15 +126,16 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleport,
-                                                RegistryKey<World> dimFrom, ServerWorld dimTo) {
+                                                RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
         hitDimensionThreshold(entity, heightForTeleport, heightForTeleport, dimFrom, dimTo);
     }
 
     @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleportFrom, int heightForTeleportTo,
-                                                RegistryKey<World> dimFrom, ServerWorld dimTo) {
+                                                RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
+        if (entity.getServer() == null) return;
         if (entity.getWorld().getRegistryKey() == dimFrom) {
             if (entity.getY() >= heightForTeleportFrom) {
-                entity.teleport(dimTo, entity.getX(), heightForTeleportTo, entity.getZ(),
+                entity.teleport(entity.getServer().getWorld(dimTo), entity.getX(), heightForTeleportTo, entity.getZ(),
                         Set.of(),
                         entity.getYaw(),
                         entity.getPitch());
