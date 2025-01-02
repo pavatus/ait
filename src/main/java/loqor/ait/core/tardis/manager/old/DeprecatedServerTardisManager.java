@@ -34,7 +34,6 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.tardis.manager.TardisFileManager;
-import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -134,6 +133,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     }
 
     public void remove(MinecraftServer server, ServerTardis tardis) {
+        tardis.getDesktop().clearOldInterior();
         tardis.setRemoved(true);
 
         ServerWorld tardisWorld = tardis.getInteriorWorld();
@@ -173,9 +173,6 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
             tardisWorld.removeBlock(interiorDoor, false);
             tardisWorld.removeBlockEntity(interiorDoor);
         }
-
-        // Remove the interior
-        DesktopGenerator.clearArea(tardisWorld, tardis.getDesktop().getCorners());
 
         this.fileManager.delete(server, tardis.getUuid());
         this.lookup.remove(tardis.getUuid());

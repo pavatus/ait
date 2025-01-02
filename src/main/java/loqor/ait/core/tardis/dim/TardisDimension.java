@@ -67,6 +67,7 @@ public class TardisDimension {
         UUID uuid;
 
         try {
+            // FIXME THEO: this stuff stinks
             uuid = UUID.fromString(world.getRegistryKey().getValue().getPath());
         } catch (Exception e) {
             return Optional.empty();
