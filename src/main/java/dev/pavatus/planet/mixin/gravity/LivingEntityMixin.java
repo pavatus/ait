@@ -39,6 +39,7 @@ public abstract class LivingEntityMixin extends Entity {
     public void ait$tickMovement(CallbackInfo ci) {
         if (!(PlanetModule.isLoaded())) return;
 
+
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
         if (planet == null) return;
         if (!planet.hasGravityModifier()) return;
@@ -48,6 +49,8 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity instanceof PlayerEntity player) {
             if (player.getAbilities().flying) return;
         }
+        if (entity.getType() == EntityType.BOAT || entity.getType() == EntityType.CHEST_BOAT) { return;}
+
 
 
         Vec3d movement = this.getVelocity();
@@ -71,7 +74,10 @@ public abstract class LivingEntityMixin extends Entity {
         if (planet == null) return;
 
         if (planet.isFreezing() &&  !Planet.hasFullSuit(entity) && !entity.hasStatusEffect(AITStatusEffects.OXYGENATED)) {
-            // freeze effect on cold planets
+            if (entity.getType() == EntityType.ENDERMAN) {
+                return;
+            }
+
             if (entity.getFrozenTicks() < entity.getMinFreezeDamageTicks()) {
                 entity.setFrozenTicks(entity.getMinFreezeDamageTicks() + 20);
             }
