@@ -1,4 +1,4 @@
-package loqor.ait.core.commands;
+package loqor.ait.client.commands;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 
 import loqor.ait.AITMod;
+import net.minecraft.client.gui.screen.Screen;
 
 
 public class ConfigCommand {
@@ -19,7 +20,8 @@ public class ConfigCommand {
         dispatcher.register(literal(AITMod.MOD_ID + "-config").executes(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
 
-            client.setScreen(AutoConfig.getConfigScreen(AITConfig.class, client.currentScreen).get());
+            Screen screen = AutoConfig.getConfigScreen(AITConfig.class, client.currentScreen).get();
+            client.send(() -> client.setScreen(screen));
             return Command.SINGLE_SUCCESS;
         }));
     }

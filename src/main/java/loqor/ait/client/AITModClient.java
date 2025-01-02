@@ -58,7 +58,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.commands.ConfigCommand;
+import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
