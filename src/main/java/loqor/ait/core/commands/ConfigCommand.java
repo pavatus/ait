@@ -17,10 +17,9 @@ public class ConfigCommand {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(
-                literal(AITMod.MOD_ID).then(
-                        literal("config").executes(context -> {
+                literal(AITMod.MOD_ID + "-config").executes(context -> {
                             MinecraftClient.getInstance().setScreen(AutoConfig.getConfigScreen(AITConfig.class, null).get());
                             return Command.SINGLE_SUCCESS;
-                        })));
+                        }));
     }
 }
