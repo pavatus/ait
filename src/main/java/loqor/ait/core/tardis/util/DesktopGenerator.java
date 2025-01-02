@@ -9,11 +9,14 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.Clearable;
 import loqor.ait.api.Structure;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
@@ -44,14 +47,13 @@ public class DesktopGenerator {
                 BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, level.getRandom(), Block.FORCE_STATE);
     }
 
-    public static void clearArea(ServerWorld level, Corners corners/*, ChunkPos[] chunks*/) {
-        /*for (ChunkPos chunkPos : chunks) {
+    public static void clearArea(ServerWorld level, Corners corners, ChunkPos[] chunks) {
+        for (ChunkPos chunkPos : chunks) {
             Chunk chunk = level.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
 
             if (chunk instanceof Clearable clearable)
                 clearable.ait$clear();
-        }*/
-        WorldUtil.fuckingEraseIt(level, corners.getFirst(), corners.getSecond());
+        }
 
         // FIXME THEO: gross
         TardisUtil.getEntitiesInBox(ItemFrameEntity.class, level, corners.getBox(), frame -> true)

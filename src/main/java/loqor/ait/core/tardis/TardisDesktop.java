@@ -11,6 +11,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
@@ -40,18 +41,14 @@ public class TardisDesktop extends TardisComponent {
     private static final int RADIUS = 500;
 
     private static final Corners CORNERS;
-    //private static final ChunkPos[] CORNER_CHUNKS;
+    private static final ChunkPos[] CORNER_CHUNKS;
 
     static {
         BlockPos first = new BlockPos(RADIUS, 0, RADIUS);
-
-        CORNERS = new Corners(
-                first.multiply(-1).withY(256),
-                first.withY(-64)
-        );
+        CORNERS = new Corners(first.multiply(-1), first);
 
         // FIXME THEO: incredibly inefficient. Should replace with some math but i dont care atm.
-        /*Set<ChunkPos> chunkPos = new HashSet<>();
+        Set<ChunkPos> chunkPos = new HashSet<>();
 
         for (BlockPos pos : BlockPos.iterate(
                 CORNERS.getFirst().add(0, 256, 0),
@@ -60,7 +57,7 @@ public class TardisDesktop extends TardisComponent {
             chunkPos.add(new ChunkPos(pos));
         }
 
-        CORNER_CHUNKS = chunkPos.toArray(new ChunkPos[0]);*/
+        CORNER_CHUNKS = chunkPos.toArray(new ChunkPos[0]);
 
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
@@ -145,7 +142,7 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public void clearOldInterior() {
-        DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners/*, CORNER_CHUNKS*/);
+        DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners, CORNER_CHUNKS);
     }
 
     public void cacheConsole(BlockPos consolePos) {

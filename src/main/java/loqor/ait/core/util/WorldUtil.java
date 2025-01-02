@@ -33,8 +33,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
@@ -367,28 +365,4 @@ public class WorldUtil {
                 new EntityStatusEffectS2CPacket(player.getId(), effect)));
     }
 
-    public static void fuckingEraseIt(ServerWorld world, BlockPos from, BlockPos to) {
-        BlockState state = Blocks.AIR.getDefaultState();
-
-        for (BlockPos pos : BlockPos.iterate(from, to)) {
-            Chunk worldChunk = world.getChunk(
-                    ChunkSectionPos.getSectionCoord(pos.getX()),
-                    ChunkSectionPos.getSectionCoord(pos.getZ()),
-                    ChunkStatus.FULL, false
-            );
-
-            if (worldChunk == null)
-                continue;
-
-            BlockState blockState = worldChunk.setBlockState(pos, state, false);
-
-            if (blockState != null) {
-                BlockState blockState2 = world.getBlockState(pos);
-
-                if (blockState2 == state) {
-                    world.onBlockChanged(pos, blockState, blockState2);
-                }
-            }
-        }
-    }
 }
