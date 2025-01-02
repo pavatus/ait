@@ -1,15 +1,17 @@
 package loqor.ait.client.commands;
 
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.pavatus.config.AITConfig;
-import loqor.ait.AITMod;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import loqor.ait.AITMod;
 
 
 public class ConfigCommand {
