@@ -1,5 +1,7 @@
 package loqor.ait.mixin.server;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,8 +19,6 @@ import net.minecraft.world.chunk.*;
 import net.minecraft.world.gen.chunk.BlendingData;
 
 import loqor.ait.api.Clearable;
-
-import java.util.Map;
 
 @Mixin(WorldChunk.class)
 public abstract class WorldChunkMixin extends Chunk implements Clearable {
