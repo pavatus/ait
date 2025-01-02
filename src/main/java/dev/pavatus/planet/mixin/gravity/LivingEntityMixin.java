@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.core.AITStatusEffects;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -84,9 +84,10 @@ public abstract class LivingEntityMixin extends Entity {
             return;
         }
 
-        if (TardisDimension.isTardisDimension(entity.getWorld())) {
+        if (entity.getWorld() instanceof TardisServerWorld tardisWorld) {
             ItemStack stack = entity.getEquippedStack(EquipmentSlot.HEAD);
-            if (!TardisDimension.get(entity.getWorld()).get().subsystems().lifeSupport().isEnabled() &&
+
+            if (!tardisWorld.getTardis().subsystems().lifeSupport().isEnabled() &&
                     (!stack.isIn(AITTags.Items.FULL_RESPIRATORS) || !stack.isIn(AITTags.Items.HALF_RESPIRATORS))) {
                 entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
                         200, false, false));

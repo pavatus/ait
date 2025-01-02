@@ -36,11 +36,11 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -132,7 +132,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             return false;
         }
 
-        if (TardisDimension.isTardisDimension(world)) {
+        if (TardisServerWorld.isTardisDimension(world)) {
             this.createConsole(world, pos);
             return true;
         }
@@ -171,7 +171,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
                 || (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos)
-                        && !TardisDimension.isTardisDimension((ServerWorld) world))) {
+                        && !TardisServerWorld.isTardisDimension((ServerWorld) world))) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
         }

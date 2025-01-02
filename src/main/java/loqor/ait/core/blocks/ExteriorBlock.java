@@ -33,7 +33,6 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -45,7 +44,6 @@ import net.minecraft.world.WorldAccess;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
-import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
@@ -305,14 +303,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof ExteriorBlockEntity exterior) {
-            if (world.isClient()) {
-                if (exterior.tardis() == null || exterior.tardis().isEmpty()) {
-                    ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
-                    return ActionResult.FAIL;
-                }
-
+            if (world.isClient())
                 return ActionResult.SUCCESS;
-            }
 
             if (exterior.tardis().isEmpty())
                 return ActionResult.FAIL;

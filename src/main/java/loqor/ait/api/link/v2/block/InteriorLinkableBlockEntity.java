@@ -5,8 +5,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockEntity {
 
@@ -21,11 +20,7 @@ public abstract class InteriorLinkableBlockEntity extends AbstractLinkableBlockE
         if (this.ref != null)
             return;
 
-        Tardis tardis = TardisDimension.get(world).orElse(null);
-
-        if (tardis == null)
-            return;
-
-        this.link(tardis);
+        if (world instanceof TardisServerWorld tardisWorld)
+            this.link(tardisWorld.getTardis());
     }
 }

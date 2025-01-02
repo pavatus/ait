@@ -19,7 +19,7 @@ import net.minecraft.util.math.*;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.AngleInterpolator;
 import loqor.ait.core.item.RiftScannerItem;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class RiftScannerModel extends Model {
 
@@ -133,7 +133,7 @@ public class RiftScannerModel extends Model {
     }
 
     private boolean canPointTo(Entity entity, @Nullable BlockPos pos, @Nullable ClientWorld world) {
-        return world != null && !TardisDimension.isTardisDimension(world) &&
+        return world != null && !TardisServerWorld.isTardisDimension(world) &&
                 pos != null && !(pos.getSquaredDistance(entity.getPos()) < 9.999999747378752E-6);
     }
 

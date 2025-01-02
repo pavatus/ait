@@ -32,7 +32,7 @@ public class ClientHumHandler extends SoundHandler {
     private LoopingSound current;
 
     static {
-        ClientWorldEvents.CHANGE_WORLD.register(() -> {
+        ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
             ClientHumHandler handler = ClientSoundManager.getHum();
             handler.stopSounds();
             handler.current = null;

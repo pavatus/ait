@@ -27,7 +27,7 @@ import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blocks.EnvironmentProjectorBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.properties.Value;
 
 public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity {
@@ -97,16 +97,16 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
     }
 
     public void switchSkybox(Tardis tardis, BlockState state, PlayerEntity player) {
-        RegistryKey<World> next = findNext(world.getServer(), this.current);
+        ServerWorld next = findNext(world.getServer(), this.current);
 
-        while (TardisDimension.isTardisDimension(next)) {
-            next = findNext(world.getServer(), next);
+        while (TardisServerWorld.isTardisDimension(next)) {
+            next = findNext(world.getServer(), next.getRegistryKey());
         }
 
-        player.sendMessage(Text.translatable("message.ait.projector.skybox", next.getValue().toString()));
+        player.sendMessage(Text.translatable("message.ait.projector.skybox", next.getRegistryKey().getValue().toString()));
         AITMod.LOGGER.debug("Last: {}, next: {}", this.current, next);
 
-        this.current = next;
+        this.current = next.getRegistryKey();
 
         if (state.get(EnvironmentProjectorBlock.ENABLED))
             this.apply(tardis);
@@ -131,7 +131,7 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
             value.set(DEFAULT);
     }
 
-    private static RegistryKey<World> findNext(MinecraftServer server, RegistryKey<World> last) {
+    private static ServerWorld findNext(MinecraftServer server, RegistryKey<World> last) {
         Iterator<ServerWorld> iter = server.getWorlds().iterator();
 
         ServerWorld first = iter.next();
@@ -142,13 +142,13 @@ public class EnvironmentProjectorBlockEntity extends InteriorLinkableBlockEntity
                 if (!iter.hasNext())
                     break;
 
-                return iter.next().getRegistryKey();
+                return iter.next();
             }
 
             found = iter.next();
         }
 
-        return first.getRegistryKey();
+        return first;
     }
 
     private static boolean same(RegistryKey<World> a, RegistryKey<World> b) {

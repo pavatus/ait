@@ -5,17 +5,20 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
+
 @Environment(EnvType.CLIENT)
 public class ClientWorldEvents {
     public static final Event<ChangeWorld> CHANGE_WORLD = EventFactory.createArrayBacked(ChangeWorld.class,
-            callbacks -> () -> {
+            callbacks -> (client, world) -> {
                 for (ChangeWorld callback : callbacks) {
-                    callback.onChange();
+                    callback.onChange(client, world);
                 }
             });
 
     @FunctionalInterface
     public interface ChangeWorld {
-        void onChange();
+        void onChange(MinecraftClient client, ClientWorld world);
     }
 }

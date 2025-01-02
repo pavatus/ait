@@ -43,11 +43,11 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.landing.LandingPadRegion;
@@ -485,12 +485,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (!TardisDimension.isTardisDimension(world)) {
+                if (!TardisServerWorld.isTardisDimension(world)) {
                     sendRiftInfo(tardis, world, pos, player, stack);
                     return;
                 }
 
-                if (TardisDimension.isTardisDimension(world))
+                if (TardisServerWorld.isTardisDimension(world))
                     sendTardisInfo(tardis, world, pos, player, stack);
             }
 
@@ -571,7 +571,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (TardisDimension.isTardisDimension(world)) {
+                if (TardisServerWorld.isTardisDimension(world)) {
                     if (player.getPitch() == -90 && !tardis.travel().handbrake()) {
                         player.sendMessage(Text.translatable("message.ait.remoteitem.success1"), true);
                         tardis.travel().dematerialize();

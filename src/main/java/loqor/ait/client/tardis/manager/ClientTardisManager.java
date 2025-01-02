@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.GlobalPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
@@ -113,17 +112,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
     public void getTardis(UUID uuid, Consumer<ClientTardis> consumer) {
         this.getTardis(MinecraftClient.getInstance(), uuid, consumer);
-    }
-
-    /**
-     * Asks the server for a tardis at an exterior position
-     */
-    @Deprecated(forRemoval = true)
-    public void askTardis(GlobalPos pos) {
-        PacketByteBuf data = PacketByteBufs.create();
-        data.writeGlobalPos(pos);
-
-        ClientPlayNetworking.send(ASK_POS, data);
     }
 
     private void syncTardis(UUID uuid, String json) {
