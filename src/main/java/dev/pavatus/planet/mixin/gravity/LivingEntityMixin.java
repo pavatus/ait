@@ -71,7 +71,10 @@ public abstract class LivingEntityMixin extends Entity {
         if (planet == null) return;
 
         if (planet.isFreezing() &&  !Planet.hasFullSuit(entity) && !entity.hasStatusEffect(AITStatusEffects.OXYGENATED)) {
-            // freeze effect on cold planets
+            if (entity.getType() == EntityType.ENDERMAN) {
+                return;
+            }
+
             if (entity.getFrozenTicks() < entity.getMinFreezeDamageTicks()) {
                 entity.setFrozenTicks(entity.getMinFreezeDamageTicks() + 20);
             }

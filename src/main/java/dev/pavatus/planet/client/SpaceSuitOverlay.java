@@ -18,6 +18,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,6 +28,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.item.SonicItem;
+import net.minecraft.world.World;
 
 public class SpaceSuitOverlay implements HudRenderCallback {
 
@@ -43,9 +45,17 @@ public class SpaceSuitOverlay implements HudRenderCallback {
             MatrixStack stack = drawContext.getMatrices();
             stack.push();
             stack.scale(1.5f, 1.5f, 1.5f);
-            drawContext.drawTextWithShadow(textRenderer,
-                    Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)),
-                    0, 0, 0xFFFFFF);
+
+            if (mc.world != null && mc.world.getRegistryKey() == World.END) {
+                drawContext.drawTextWithShadow(textRenderer,
+                        Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)).setStyle(Style.EMPTY.withObfuscated(true)),
+                        0, 0, 0xFFFFFF);
+            } else {
+                drawContext.drawTextWithShadow(textRenderer,
+                        Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)),
+                        0, 0, 0xFFFFFF);
+            }
+
             stack.pop();
             stack.push();
             stack.scale(1.5f, 1.5f, 1.5f);
