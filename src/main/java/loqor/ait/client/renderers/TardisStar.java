@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 
@@ -25,6 +26,8 @@ public class TardisStar {
     public static void render(WorldRenderContext context, Tardis tardis) {
         renderShine(context, tardis);
         renderStar(context, tardis);
+        if (!tardis.isGrowth() && !tardis.alarm().enabled().get() && tardis.fuel().hasPower())
+            RenderSystem.setShaderFogColor(1, 1, 1, 0);
     }
 
     public static void renderStar(WorldRenderContext context, Tardis tardis) {

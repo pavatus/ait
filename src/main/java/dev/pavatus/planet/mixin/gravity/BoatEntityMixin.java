@@ -31,6 +31,7 @@ public abstract class BoatEntityMixin extends Entity {
         if (!planet.hasGravityModifier()) return;
 
         Vec3d movement = this.getVelocity();
-        this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
+        // temp fix because im lazy :))))
+        this.setVelocity(movement.x, movement.y/* + planet.gravity()*/, movement.z);
     }
 }

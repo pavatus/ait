@@ -88,9 +88,9 @@ public class VortexUtil {
         // targetPosition.z, (float) position.x, (float) position.y, (float)
         // position.z);
 
-        for (int i = 0; i < 64; ++i) {
-            this.renderSection(buffer, i, (MinecraftClient.getInstance().player.age / 200.0f) * -this.speed, (float) Math.sin(i * Math.PI / 64),
-                    (float) Math.sin((i + 1) * Math.PI / 64), matrixStack.peek().getPositionMatrix());
+        for (int i = 0; i < 16; ++i) {
+            this.renderSection(buffer, i, (MinecraftClient.getInstance().player.age / 200.0f) * -this.speed, (float) Math.sin(i * Math.PI / 16),
+                    (float) Math.sin((i + 1) * Math.PI / 16), matrixStack.peek().getPositionMatrix());
         }
 
         tessellator.draw();

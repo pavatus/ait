@@ -206,7 +206,8 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         cached = border.contains(pos) ? cached : cached.pos(border.clamp(pos.getX(), pos.getY(), pos.getZ()));
 
-        cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
+        // TODO what is the point of this? the only time this should be done is on landing - unless it gets optimized enough to run here. - Loqor
+        //cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
 
         this.forceDestination(cached);
     }
@@ -318,7 +319,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         MEDIAN {
             @Override
             public GroundSearch next() {
-                return FLOOR;
+                return NONE;
             }
         };
 

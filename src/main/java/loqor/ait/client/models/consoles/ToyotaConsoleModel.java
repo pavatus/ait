@@ -1845,13 +1845,13 @@ public class ToyotaConsoleModel extends ConsoleModel {
         matrices.scale(0.015f, 0.015f, 0.015f);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(120f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-72.5f));
-        matrices.translate(-5f, 62, -48);
         String progressText = tardis.travel().getState() == TravelHandlerBase.State.LANDED
                 ? "0%"
                 : tardis.travel().getDurationAsPercentage() + "%";
+        matrices.translate(0, 62, -49);
         /*renderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 0, 0x00FF0F, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);*/
-        renderer.drawWithOutline(Text.of(progressText).asOrderedText(), 0, 0, 0xFFFFFF, 0x000000,
+        renderer.drawWithOutline(Text.of(progressText).asOrderedText(), 0 - renderer.getWidth(progressText) / 2, 0, 0xFFFFFF, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         matrices.pop();
     }

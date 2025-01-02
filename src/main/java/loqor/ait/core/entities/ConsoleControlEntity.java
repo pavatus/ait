@@ -5,10 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -189,6 +186,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+
+        if (source.getAttacker() instanceof TntEntity tnt) {
+            return false;
+        }
+
         if (source.getAttacker() instanceof PlayerEntity player) {
             if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);

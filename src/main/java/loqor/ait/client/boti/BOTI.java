@@ -145,8 +145,9 @@ public class BOTI {
         stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight(), 1f);
         if (door.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED)
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEndGateway()), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
-        else
+        else {
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+        }
         botiProvider.draw();
         stack.pop();
         copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
@@ -163,7 +164,7 @@ public class BOTI {
         if (!tardis.crash().isNormal())
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
-        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0));
         stack.translate(0, 0, 500);
         stack.scale(1.5f, 1.5f, 1.5f);
         VortexUtil util = tardis.stats().getVortexEffects().toUtil();
