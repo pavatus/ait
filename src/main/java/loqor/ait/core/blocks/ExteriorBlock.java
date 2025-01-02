@@ -3,6 +3,8 @@ package loqor.ait.core.blocks;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 
+import dev.pavatus.planet.core.planet.Planet;
+import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -374,6 +376,10 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
             return;
+
+        Planet planet = PlanetRegistry.getInstance().get(tardis.travel().position().getWorld());
+
+        if (planet != null && planet.gravity() <= 0) return;
 
         FallingTardisEntity.spawnFromBlock(world, pos, state);
 

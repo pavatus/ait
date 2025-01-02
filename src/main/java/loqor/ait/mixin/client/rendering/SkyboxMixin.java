@@ -97,6 +97,11 @@ public abstract class SkyboxMixin {
             SkyboxUtil.renderMoonSky(matrices);
             ci.cancel();
         }
+
+        if (this.world.getRegistryKey() == AITDimensions.SPACE) {
+            SkyboxUtil.renderMoonSky(matrices);
+            ci.cancel();
+        }
     }
 
     @Unique private void renderSkyDynamically(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera,

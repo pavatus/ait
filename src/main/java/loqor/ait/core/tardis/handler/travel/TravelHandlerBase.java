@@ -319,7 +319,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         MEDIAN {
             @Override
             public GroundSearch next() {
-                return FLOOR;
+                return NONE;
             }
         };
 
