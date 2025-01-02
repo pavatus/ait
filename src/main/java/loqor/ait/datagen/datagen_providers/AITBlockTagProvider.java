@@ -59,6 +59,8 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
         getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
 
+        getOrCreateTagBuilder(AITTags.Blocks.FLUID_LINK_CAN_CONNECT).add(Blocks.JUKEBOX);
+
         ModuleRegistry.instance().iterator().forEachRemaining(module -> {
             module.getDataGenerator().ifPresent(generator -> {
                 generator.blockTags(this);

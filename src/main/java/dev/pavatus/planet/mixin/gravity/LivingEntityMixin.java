@@ -1,10 +1,13 @@
 package dev.pavatus.planet.mixin.gravity;
 
+import java.util.Set;
+
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,9 +22,12 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITStatusEffects;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.dim.TardisDimension;
@@ -103,6 +109,14 @@ public abstract class LivingEntityMixin extends Entity {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
                     200, 1, false, false));
         }
+
+        if (entity.getServer() == null) return;
+
+        // TODO this might be like, crazy laggy but oh well
+        hitDimensionThreshold(entity, 725, AITDimensions.MOON, entity.getServer().getOverworld());
+        hitDimensionThreshold(entity, 725, 256,
+                entity.getServer().getOverworld().getRegistryKey(), entity.getServer().getWorld(AITDimensions.MOON));
+        hitDimensionThreshold(entity, 500, AITDimensions.MARS, entity.getServer().getOverworld());
     }
 
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
@@ -111,6 +125,23 @@ public abstract class LivingEntityMixin extends Entity {
         if (planet == null) return;
         if (planet.hasNoFallDamage()) {
             cir.setReturnValue(false);
+        }
+    }
+
+    @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleport,
+                                                RegistryKey<World> dimFrom, ServerWorld dimTo) {
+        hitDimensionThreshold(entity, heightForTeleport, heightForTeleport, dimFrom, dimTo);
+    }
+
+    @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleportFrom, int heightForTeleportTo,
+                                                RegistryKey<World> dimFrom, ServerWorld dimTo) {
+        if (entity.getWorld().getRegistryKey() == dimFrom) {
+            if (entity.getY() >= heightForTeleportFrom) {
+                entity.teleport(dimTo, entity.getX(), heightForTeleportTo, entity.getZ(),
+                        Set.of(),
+                        entity.getYaw(),
+                        entity.getPitch());
+            }
         }
     }
 }
