@@ -1,36 +1,9 @@
 package loqor.ait.client;
 
-import static loqor.ait.AITMod.*;
-import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
-
-import java.util.Calendar;
-import java.util.UUID;
-
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-
 import loqor.ait.api.ClientWorldEvents;
+import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.SonicRendering;
@@ -58,7 +31,6 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
@@ -71,6 +43,35 @@ import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Calendar;
+import java.util.UUID;
+
+import static loqor.ait.AITMod.*;
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
