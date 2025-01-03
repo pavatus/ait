@@ -22,7 +22,9 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -30,6 +32,7 @@ import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITStatusEffects;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.util.WorldUtil;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -135,10 +138,19 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity.getServer() == null) return;
         if (entity.getWorld().getRegistryKey() == dimFrom) {
             if (entity.getY() >= heightForTeleportFrom) {
-                entity.teleport(entity.getServer().getWorld(dimTo), entity.getX(), heightForTeleportTo, entity.getZ(),
-                        Set.of(),
-                        entity.getYaw(),
-                        entity.getPitch());
+                if (entity instanceof ServerPlayerEntity player) {
+                    Vec3d vec = new Vec3d(entity.getX(), heightForTeleportTo, entity.getZ());
+                    WorldUtil.teleportToWorld(player, entity.getServer().getWorld(dimTo), vec,
+                            player.getYaw(),
+                            player.getPitch());
+
+                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                } else {
+                    entity.teleport(entity.getServer().getWorld(dimTo), entity.getX(), heightForTeleportTo, entity.getZ(),
+                            Set.of(),
+                            entity.getYaw(),
+                            entity.getPitch());
+                }
             }
         }
     }
