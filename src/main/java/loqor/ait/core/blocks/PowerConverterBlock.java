@@ -20,8 +20,17 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.engine.link.block.FluidLinkBlock;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
-public class PowerConverterBlock extends FluidLinkBlock  {
+
+import java.util.List;
+
+public class PowerConverterBlock extends FluidLinkBlock {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
@@ -85,6 +94,14 @@ public class PowerConverterBlock extends FluidLinkBlock  {
     public static class BlockEntity extends FluidLinkBlockEntity {
         public BlockEntity(BlockPos pos, BlockState state) {
             super(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE, pos, state);
+
         }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+
+        tooltip.add(Text.translatable("(Convert zeiton shards into artron)").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }
