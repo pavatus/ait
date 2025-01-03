@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.dimension.DimensionOptions;
 
 import loqor.ait.AITMod;
@@ -14,7 +13,7 @@ import loqor.ait.core.AITDimensions;
 
 public class PlanetBiomeSelectors {
     private static final RegistryKey<Registry<DimensionOptions>> DIMENSION_KEY =
-            RegistryKey.ofRegistry(new Identifier(AITMod.MOD_ID, "dimension"));
+            RegistryKey.ofRegistry(AITMod.id("dimension"));
 
     public static final RegistryKey<DimensionOptions> MARS_DIMENSION_OPTIONS =
             RegistryKey.of(DIMENSION_KEY, AITDimensions.MARS.getValue());

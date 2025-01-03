@@ -77,7 +77,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
     private void renderDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         profiler.push("boti");
-        BOTI.renderInteriorDoorBoti(door, variant, matrices, new Identifier(AITMod.MOD_ID, "textures/environment/tardis_sky.png"), model, BotiPortalModel.getTexturedModelData().createModel(), light);
+        BOTI.renderInteriorDoorBoti(door, variant, matrices, AITMod.id("textures/environment/tardis_sky.png"), model, BotiPortalModel.getTexturedModelData().createModel(), light);
         profiler.pop();
     }
 

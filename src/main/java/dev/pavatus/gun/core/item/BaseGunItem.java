@@ -42,7 +42,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITStatusEffects;
 
 public class BaseGunItem extends RangedWeaponItem {
-    public static final Identifier SHOOT = new Identifier(AITMod.MOD_ID, "shoot_gun");
+    public static final Identifier SHOOT = AITMod.id("shoot_gun");
     public static final Predicate<ItemStack> GUN_PROJECTILES = itemStack -> itemStack.isOf(GunItems.STASER_BOLT_MAGAZINE);
     public static final double MAX_AMMO = 2000;
     public static final String AMMO_KEY = "ammo";

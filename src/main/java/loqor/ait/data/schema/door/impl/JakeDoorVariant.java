@@ -10,7 +10,7 @@ import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
 
 public class JakeDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/jake");
+    public static final Identifier REFERENCE = AITMod.id("door/jake");
 
     public JakeDoorVariant() {
         super(REFERENCE);

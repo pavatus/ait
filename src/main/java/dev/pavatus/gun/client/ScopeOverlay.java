@@ -12,7 +12,8 @@ import net.minecraft.util.math.MathHelper;
 import loqor.ait.AITMod;
 
 public class ScopeOverlay implements HudRenderCallback {
-    private static final Identifier SPYGLASS_SCOPE = new Identifier(AITMod.MOD_ID, "textures/gui/overlay/scope.png");
+
+    private static final Identifier SPYGLASS_SCOPE = AITMod.id("textures/gui/overlay/scope.png");
     private int scaledWidth, scaledHeight;
     private float spyglassScale;
 

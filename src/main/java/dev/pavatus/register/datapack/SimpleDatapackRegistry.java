@@ -42,7 +42,7 @@ public abstract class SimpleDatapackRegistry<T extends Identifiable> extends Dat
 
     protected SimpleDatapackRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name,
             boolean sync) {
-        this(deserializer, codec, new Identifier(AITMod.MOD_ID, "sync_" + packet), new Identifier(AITMod.MOD_ID, name),
+        this(deserializer, codec, AITMod.id("sync_" + packet), AITMod.id(name),
                 sync);
     }
 

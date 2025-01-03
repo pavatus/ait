@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketType;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
@@ -21,7 +20,7 @@ import loqor.ait.data.properties.Value;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public class SyncPropertyC2SPacket implements FabricPacket {
-    public static final PacketType<SyncPropertyC2SPacket> TYPE = PacketType.create(new Identifier(AITMod.MOD_ID, "send_property"), SyncPropertyC2SPacket::new);
+    public static final PacketType<SyncPropertyC2SPacket> TYPE = PacketType.create(AITMod.id("send_property"), SyncPropertyC2SPacket::new);
 
     private final UUID tardisId;
     private final String data;

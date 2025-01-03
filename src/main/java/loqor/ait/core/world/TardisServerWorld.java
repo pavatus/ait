@@ -39,16 +39,16 @@ import loqor.ait.core.util.WorldUtil;
 
 public class TardisServerWorld extends MultiDimServerWorld {
 
-    private static final RegistryKey<Biome> TARDIS_BIOME = RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"));
+    private static final RegistryKey<Biome> TARDIS_BIOME = RegistryKey.of(RegistryKeys.BIOME, AITMod.id("tardis"));
     private static final String NAMESPACE = AITMod.MOD_ID + "-tardis";
     private static final WorldBlueprint BLUEPRINT;
 
     static {
         ServerWorld overworld = WorldUtil.getOverworld();
 
-        BLUEPRINT = new WorldBlueprint(new Identifier(AITMod.MOD_ID, "tardis"))
+        BLUEPRINT = new WorldBlueprint(AITMod.id("tardis"))
                 .setPersistent(true).shouldTickTime(false).withCreator(TardisServerWorld::new)
-                .withType(new Identifier(AITMod.MOD_ID, "tardis_dimension_type")).withSeed(overworld.getSeed())
+                .withType(AITMod.id("tardis_dimension_type")).withSeed(overworld.getSeed())
                 .withGenerator(new VoidChunkGenerator(overworld.getRegistryManager().get(RegistryKeys.BIOME), TARDIS_BIOME));
     }
 

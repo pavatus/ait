@@ -38,8 +38,8 @@ import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
-    public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");
-    public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_gen_variant");
+    public static final Identifier SYNC_TYPE = AITMod.id("sync_gen_type");
+    public static final Identifier SYNC_VARIANT = AITMod.id("sync_gen_variant");
     private Identifier type;
     private Identifier variant;
 

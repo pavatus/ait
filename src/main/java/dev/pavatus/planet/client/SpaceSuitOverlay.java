@@ -70,7 +70,7 @@ public class SpaceSuitOverlay implements HudRenderCallback {
                 || mc.player.getEquippedStack(EquipmentSlot.OFFHAND).getItem() == AITItems.SONIC_SCREWDRIVER)
                 && playerIsLookingAtSonicInteractable(mc.crosshairTarget, mc.player)) {
             this.renderOverlay(drawContext,
-                    new Identifier(AITMod.MOD_ID, "textures/gui/overlay/sonic_can_interact.png"), 1.0F);
+                    AITMod.id("textures/gui/overlay/sonic_can_interact.png"), 1.0F);
         }
     }
 

@@ -11,7 +11,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class RenegadeDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/renegade");
+    public static final Identifier REFERENCE = AITMod.id("door/renegade");
 
     public RenegadeDoorVariant() {
         super(REFERENCE);

@@ -20,7 +20,7 @@ public abstract class ClientPresentVariant extends ClientExteriorVariantSchema {
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
 
     protected ClientPresentVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/present/" + name));
+        super(AITMod.id("exterior/present/" + name));
 
         this.name = name;
     }
@@ -32,7 +32,7 @@ public abstract class ClientPresentVariant extends ClientExteriorVariantSchema {
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override

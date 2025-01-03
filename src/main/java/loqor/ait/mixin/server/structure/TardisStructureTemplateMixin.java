@@ -10,12 +10,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.StructureTemplate;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Structure;
+import loqor.ait.api.TardisStructure;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 
 @Mixin(StructureTemplate.class)
-public class StructureTemplateMixin implements Structure {
+public class TardisStructureTemplateMixin implements TardisStructure {
 
     @Unique private Tardis tardis;
 
@@ -29,10 +29,10 @@ public class StructureTemplateMixin implements Structure {
         if (blockEntity instanceof InteriorLinkableBlockEntity linkable) {
             AITMod.LOGGER.debug("Linked {} to {}", linkable, tardis);
 
-            // It's faster to remove the tardis from the nbt than make it do id -> string ->
-            // map ->
-            // string
-            // -> id
+            /*
+             It's faster to remove the tardis from the nbt
+             than make it do id -> string -> map -> string -> id
+             */
             nbt.remove("tardis");
             linkable.link(tardis);
         }

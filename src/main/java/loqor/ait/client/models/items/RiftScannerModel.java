@@ -23,7 +23,7 @@ import loqor.ait.core.world.TardisServerWorld;
 
 public class RiftScannerModel extends Model {
 
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/items/rift_scanner.png");
+    public static final Identifier TEXTURE = AITMod.id("textures/blockentities/items/rift_scanner.png");
 
     private static final float MULTIPLIER = (float) (360 * Math.PI / 180);
 

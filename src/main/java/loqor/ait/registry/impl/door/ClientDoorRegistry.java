@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.ClientDoorSchema;
@@ -16,7 +15,7 @@ import loqor.ait.data.schema.door.impl.*;
 
 public class ClientDoorRegistry {
     public static final SimpleRegistry<ClientDoorSchema> REGISTRY = FabricRegistryBuilder
-            .createSimple(RegistryKey.<ClientDoorSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "client_door")))
+            .createSimple(RegistryKey.<ClientDoorSchema>ofRegistry(AITMod.id("client_door")))
             .buildAndRegister();
 
     public static ClientDoorSchema register(ClientDoorSchema schema) {

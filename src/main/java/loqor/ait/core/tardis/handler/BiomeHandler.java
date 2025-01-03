@@ -94,7 +94,7 @@ public class BiomeHandler extends KeyedTardisComponent {
             TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class, ChorusPlantFeature.class
     );
 
-    private static final Identifier CACTUS = new Identifier(AITMod.MOD_ID, "cactus");
+    private static final Identifier CACTUS = AITMod.id("cactus");
 
     private List<ConfiguredFeature<?, ?>> findTrees(ServerWorld world, RegistryEntry<Biome> biome) {
         if (this.type.get() == BiomeType.SANDY && world.random.nextInt(5) != 0)
@@ -210,7 +210,7 @@ public class BiomeHandler extends KeyedTardisComponent {
                 return texture;
 
             String path = texture.getPath();
-            return new Identifier(AITMod.MOD_ID, path.substring(0, path.length() - 4) + this.suffix + ".png");
+            return AITMod.id(path.substring(0, path.length() - 4) + this.suffix + ".png");
         };
 
         public Identifier get(BiomeOverrides overrides) {

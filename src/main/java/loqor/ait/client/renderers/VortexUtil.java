@@ -43,7 +43,7 @@ public class VortexUtil {
     @ApiStatus.Internal
     @Deprecated(forRemoval = true)
     public VortexUtil(String name) {
-        this(new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png"));
+        this(AITMod.id("textures/vortex/" + name + ".png"));
     }
 
     public void renderVortex(MatrixStack matrixStack) {

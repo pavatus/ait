@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.tardim;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -19,7 +18,7 @@ public abstract class TardimVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/tardim/tardim_";
 
     protected TardimVariant(String name) {
-        super(TardimCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/tardim/" + name),
+        super(TardimCategory.REFERENCE, AITMod.id("exterior/tardim/" + name),
                 new Loyalty(Loyalty.Type.OWNER));
     }
 

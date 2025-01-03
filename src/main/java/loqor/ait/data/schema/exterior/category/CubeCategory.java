@@ -6,7 +6,7 @@ import loqor.ait.AITMod;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 
 public class CubeCategory extends ExteriorCategorySchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/cube");
+    public static final Identifier REFERENCE = AITMod.id("exterior/cube");
 
     public CubeCategory() {
         super(REFERENCE, "cube");

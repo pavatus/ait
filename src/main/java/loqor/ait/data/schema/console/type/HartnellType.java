@@ -20,7 +20,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class HartnellType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hartnell");
+    public static final Identifier REFERENCE = AITMod.id("console/hartnell");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.12499998f, 0.099999994f),
                     new Vector3f(-0.37109375f, 0.4999998565763235f, 0.9755859375f)), // 0

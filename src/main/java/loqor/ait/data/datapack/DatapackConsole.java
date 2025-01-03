@@ -28,7 +28,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 }
  */
 public class DatapackConsole extends ConsoleVariantSchema {
-    public static final Identifier EMPTY = new Identifier(AITMod.MOD_ID, "intentionally_empty");
+    public static final Identifier EMPTY = AITMod.id("intentionally_empty");
 
     protected final Identifier texture;
     protected final Identifier emission;

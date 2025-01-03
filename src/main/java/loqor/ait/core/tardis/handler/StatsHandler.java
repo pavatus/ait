@@ -40,7 +40,7 @@ import loqor.ait.registry.impl.DesktopRegistry;
 
 public class StatsHandler extends KeyedTardisComponent {
 
-    private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
+    private static final Identifier NAME_PATH = AITMod.id("tardis_names.json");
     private static List<String> NAME_CACHE;
 
     private static final Property<String> NAME = new Property<>(Property.Type.STR, "name", "");

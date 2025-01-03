@@ -7,7 +7,6 @@ import net.minecraft.data.server.tag.TagProvider;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.PointOfInterestTypeTags;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.poi.PointOfInterestType;
 
 import loqor.ait.AITMod;
@@ -21,6 +20,6 @@ public class AITPoiTagProvider extends TagProvider<PointOfInterestType> {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup lookup) {
         this.getOrCreateTagBuilder(PointOfInterestTypeTags.ACQUIRABLE_JOB_SITE)
-                .addOptional(new Identifier(AITMod.MOD_ID, "fabricator_engineer_poi"));
+                .addOptional(AITMod.id("fabricator_engineer_poi"));
     }
 }

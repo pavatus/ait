@@ -26,7 +26,6 @@ import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
@@ -502,7 +501,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.IRON_KEY), conditionsFromItem(AITItems.IRON_KEY))
                         .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET))
                         .criterion(hasItem(AITItems.GOLD_KEY), conditionsFromItem(AITItems.GOLD_KEY)),
-                new Identifier(AITMod.MOD_ID, "gold_key_smithing"));
+                AITMod.id("gold_key_smithing"));
         provider.addSmithingTransformRecipe(
                 SmithingTransformRecipeJsonBuilder
                         .create(Ingredient.ofItems(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
@@ -513,7 +512,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.GOLD_KEY), conditionsFromItem(AITItems.GOLD_KEY))
                         .criterion(hasItem(Items.NETHERITE_SCRAP), conditionsFromItem(Items.NETHERITE_SCRAP))
                         .criterion(hasItem(AITItems.NETHERITE_KEY), conditionsFromItem(AITItems.NETHERITE_KEY)),
-                new Identifier(AITMod.MOD_ID, "netherite_key_smithing"));
+                AITMod.id("netherite_key_smithing"));
         provider.addSmithingTransformRecipe(
                 SmithingTransformRecipeJsonBuilder
                         .create(Ingredient.ofItems(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
@@ -524,7 +523,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.NETHERITE_KEY), conditionsFromItem(AITItems.NETHERITE_KEY))
                         .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
                         .criterion(hasItem(AITItems.CLASSIC_KEY), conditionsFromItem(AITItems.CLASSIC_KEY)),
-                new Identifier(AITMod.MOD_ID, "classic_key_smithing"));
+                AITMod.id("classic_key_smithing"));
     }
 
     public void generateSoundData(FabricDataGenerator.Pack pack) {

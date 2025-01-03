@@ -2,8 +2,6 @@ package loqor.ait.core.sounds.travel;
 
 import dev.pavatus.register.datapack.SimpleDatapackRegistry;
 
-import net.minecraft.util.Identifier;
-
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.sounds.travel.map.TravelSoundMap;
@@ -28,9 +26,9 @@ public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
 
     @Override
     protected void defaults() {
-        EMPTY = register(new TravelSound(TravelHandlerBase.State.FLIGHT, new Identifier(AITMod.MOD_ID, "empty"), AITSounds.VORTEX_SOUND.getId(), 0, 0, 0, 0, 0, 0));
-        DEFAULT_DEMAT = register(new TravelSound(TravelHandlerBase.State.DEMAT, new Identifier(AITMod.MOD_ID, "default_demat"), AITSounds.DEMAT.getId(), 240, 240, 240, 210, 0.2f, 0.4f));
-        DEFAULT_MAT = register(new TravelSound(TravelHandlerBase.State.MAT, new Identifier(AITMod.MOD_ID, "default_mat"), AITSounds.MAT.getId(), 460, 240, 240, 400, 0.2f, 0.4f));
+        EMPTY = register(new TravelSound(TravelHandlerBase.State.FLIGHT, AITMod.id("empty"), AITSounds.VORTEX_SOUND.getId(), 0, 0, 0, 0, 0, 0));
+        DEFAULT_DEMAT = register(new TravelSound(TravelHandlerBase.State.DEMAT, AITMod.id("default_demat"), AITSounds.DEMAT.getId(), 240, 240, 240, 210, 0.2f, 0.4f));
+        DEFAULT_MAT = register(new TravelSound(TravelHandlerBase.State.MAT, AITMod.id("default_mat"), AITSounds.MAT.getId(), 460, 240, 240, 400, 0.2f, 0.4f));
         DEFAULT = new TravelSoundMap().of(TravelHandlerBase.State.DEMAT, DEFAULT_DEMAT).of(TravelHandlerBase.State.MAT, DEFAULT_MAT);
         PHASING_DEMAT = register(new TravelSound(TravelHandlerBase.State.DEMAT, AITMod.id("phasing_demat"), AITSounds.PHASING_DEMAT.getId(), 240, 240, 240, 210, 0.2f, 0.4f));
     }

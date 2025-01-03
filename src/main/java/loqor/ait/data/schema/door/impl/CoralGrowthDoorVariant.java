@@ -11,7 +11,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class CoralGrowthDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/coral_growth");
+    public static final Identifier REFERENCE = AITMod.id("door/coral_growth");
 
     public CoralGrowthDoorVariant() {
         super(REFERENCE);
