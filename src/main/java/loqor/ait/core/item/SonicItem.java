@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -427,6 +428,18 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 Block block = world.getBlockState(pos).getBlock();
 
+                if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_PANES)) {
+                    world.breakBlock(pos, false);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+                    return;
+                }
+
+                if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_BLOCKS)) {
+                    world.breakBlock(pos, false);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+                    return;
+                }
+
                 if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
                     return;
 
@@ -437,6 +450,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     return;
                 }
+
 
                 if (block instanceof RedstoneLampBlock) {
                     world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,

@@ -20,6 +20,7 @@ import loqor.ait.core.AITTags;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
+
 public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     public AITBlockTagProvider(FabricDataOutput output,
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
@@ -53,6 +54,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.REDSTONE_LAMP).add(AITBlocks.EXTERIOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR)
                 .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE)
                 .add(AITBlocks.MACHINE_CASING);
+
 
         getOrCreateTagBuilder(BlockTags.DIRT).add(PlanetBlocks.MARTIAN_SAND).add(PlanetBlocks.REGOLITH);
 
