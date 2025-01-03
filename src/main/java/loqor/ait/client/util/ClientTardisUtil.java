@@ -150,10 +150,10 @@ public class ClientTardisUtil {
             return;
         }
 
-        if (tardis.fuel().hasPower() && getPowerDelta() > 0) {
-            powerDeltaTick--;
-        } else if (!tardis.fuel().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
+        if (tardis.fuel().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
             powerDeltaTick++;
+        } else if (!tardis.fuel().hasPower() && getPowerDelta() > 0) {
+            powerDeltaTick--;
         }
     }
 

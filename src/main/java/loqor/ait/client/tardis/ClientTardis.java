@@ -61,7 +61,7 @@ public class ClientTardis extends Tardis implements Disposable {
     @Override
     public <T extends TardisComponent> T handler(TardisComponent.IdLike type) {
         if (this.handlers == null) {
-            AITMod.LOGGER.error("Asked for a handler too early on {}", this);
+            AITMod.LOGGER.error("Asked for a handler too early on {}, aged? {}", this, this.aged);
             return null;
         }
 

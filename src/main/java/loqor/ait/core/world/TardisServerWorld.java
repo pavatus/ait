@@ -99,8 +99,8 @@ public class TardisServerWorld extends MultiDimServerWorld {
     }
 
     @Nullable @Environment(EnvType.CLIENT)
-    public static UUID getClientTardisId(ClientWorld world) {
-        if (!isTardisDimension(world))
+    public static UUID getClientTardisId(@Nullable ClientWorld world) {
+        if (world == null || !isTardisDimension(world))
             return null;
 
         return UUID.fromString(world.getRegistryKey().getValue().getPath());

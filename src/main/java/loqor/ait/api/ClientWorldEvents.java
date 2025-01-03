@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class ClientWorldEvents {
@@ -19,6 +20,6 @@ public class ClientWorldEvents {
 
     @FunctionalInterface
     public interface ChangeWorld {
-        void onChange(MinecraftClient client, ClientWorld world);
+        void onChange(MinecraftClient client, @Nullable ClientWorld world);
     }
 }

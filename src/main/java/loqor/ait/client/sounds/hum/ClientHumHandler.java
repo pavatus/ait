@@ -33,12 +33,17 @@ public class ClientHumHandler extends SoundHandler {
 
     static {
         ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
+            if (world == null)
+                return;
+
             ClientHumHandler handler = ClientSoundManager.getHum();
             handler.stopSounds();
             handler.current = null;
 
             ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
-            if ((tardis == null)) return;
+
+            if (tardis == null)
+                return;
 
             handler.getHum(tardis);
         });
