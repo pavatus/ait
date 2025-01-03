@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -474,7 +475,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
 
-                if (block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE) {
+                if (block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE || block == PlanetBlocks.ANORTHOSITE_IRON_ORE || block == PlanetBlocks.MARTIAN_IRON_ORE) {
                     world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
                             new ItemStack(Items.IRON_INGOT)));
                     world.setBlockState(pos, Blocks.AIR.getDefaultState(),
@@ -482,7 +483,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
 
-                if (block == Blocks.GOLD_ORE || block == Blocks.DEEPSLATE_GOLD_ORE || block == Blocks.NETHER_GOLD_ORE) {
+                if (block == Blocks.GOLD_ORE || block == Blocks.DEEPSLATE_GOLD_ORE || block == Blocks.NETHER_GOLD_ORE || block == PlanetBlocks.ANORTHOSITE_GOLD_ORE || block == PlanetBlocks.MARTIAN_GOLD_ORE) {
                     world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
                             new ItemStack(Items.GOLD_INGOT)));
                     world.setBlockState(pos, Blocks.AIR.getDefaultState(),
