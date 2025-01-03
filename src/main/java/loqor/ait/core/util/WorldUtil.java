@@ -36,8 +36,8 @@ import net.minecraft.world.WorldEvents;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.mixin.server.EnderDragonFightAccessor;
 
@@ -81,7 +81,7 @@ public class WorldUtil {
 
             // blacklist all tardises
             for (ServerWorld world : getDimensions(server)) {
-                if (TardisDimension.isTardisDimension(world)) blacklist(world);
+                if (TardisServerWorld.isTardisDimension(world)) blacklist(world);
             }
         });
 

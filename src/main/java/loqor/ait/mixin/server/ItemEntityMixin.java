@@ -13,8 +13,8 @@ import net.minecraft.server.world.ServerWorld;
 import loqor.ait.core.blocks.ZeitonCageBlock;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 
 // mmm mixin i love mixin
@@ -41,14 +41,8 @@ public abstract class ItemEntityMixin {
         }
 
         // if entity is in tardis and y is less than -100 save them
-        if (entity.getY() <= -100 && TardisDimension.isTardisDimension(entity.getWorld())) {
-            Tardis found = TardisDimension.get(entity.getWorld()).orElse(null);
-
-            if (found == null)
-                return;
-
-            TardisUtil.teleportInside(found, entity);
-        }
+        if (entity.getY() <= -100 && entity.getWorld() instanceof TardisServerWorld tardisWorld)
+            TardisUtil.teleportInside(tardisWorld.getTardis(), entity);
 
         // if entity is zeiton cage and y is less than -100 give it back :(
         if (entity.getY() <= -60 && ZeitonCageBlock.isCageItem(stack)) {

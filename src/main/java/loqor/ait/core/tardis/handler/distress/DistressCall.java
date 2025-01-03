@@ -28,11 +28,11 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 
 public record DistressCall(Sender sender, String message, int lifetime, int creationTime, boolean isSourceCall) {
@@ -287,10 +287,8 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
                     (byte)0
             );
 
-            if (TardisDimension.isTardisDimension(this.player().getWorld())) {
-                Tardis found = TardisDimension.get(this.player().getWorld()).orElse(null);
-                if (found != null) return found.travel().position();
-            }
+            if (this.player().getWorld() instanceof TardisServerWorld tardisWorld)
+                return tardisWorld.getTardis().travel().position();
 
             return DirectedGlobalPos.Cached.create(
                     (ServerWorld) this.player().getWorld(),

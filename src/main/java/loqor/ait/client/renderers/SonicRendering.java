@@ -28,7 +28,7 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class SonicRendering {
     private static final Identifier SELECTED = new Identifier(AITMod.MOD_ID, "textures/marker/landing.png");
@@ -108,7 +108,7 @@ public class SonicRendering {
         if (client.player == null)
             return;
 
-        if (isPlayerHoldingSonicOf(SonicItem.Mode.TARDIS) && !TardisDimension.isTardisDimension(client.player.getWorld()))
+        if (isPlayerHoldingSonicOf(SonicItem.Mode.TARDIS) && !TardisServerWorld.isTardisDimension(client.player.getWorld()))
             renderSelectedBlock(context);
 
         worldProfiler.pop();

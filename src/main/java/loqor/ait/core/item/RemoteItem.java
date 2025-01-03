@@ -26,9 +26,9 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class RemoteItem extends LinkableItem {
@@ -74,7 +74,7 @@ public class RemoteItem extends LinkableItem {
                     if (currentPosition.getPos().equals(pos))
                         return;
 
-                    if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
+                    if (!TardisServerWorld.isTardisDimension((ServerWorld) world)) {
                         world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
 
                         BlockPos temp = pos.up();

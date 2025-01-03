@@ -168,7 +168,7 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category, float volume, float pitch) {
-        this.getConsolePos().forEach(consolePos -> playSoundAtConsole(this.tardis.getInteriorWorld(), consolePos, sound, category, volume, pitch));
+        this.getConsolePos().forEach(consolePos -> playSoundAtConsole(this.tardis.asServer().getInteriorWorld(), consolePos, sound, category, volume, pitch));
     }
 
     public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category) {

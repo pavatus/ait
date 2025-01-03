@@ -47,8 +47,8 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         Identifier consoleTexture = ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id())
                 .texture();
 
-        if (entity.findTardis().isPresent()) {
-            Tardis tardis = entity.findTardis().get();
+        if (entity.tardis().isPresent()) {
+            Tardis tardis = entity.tardis().get();
             if (!tardis.isUnlocked(entity.getConsoleVariant())) {
                 matrices.push();
 
@@ -78,8 +78,8 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         matrices.translate(0.5f, -1.5f + entity.getWorld().random.nextFloat() * 0.02, -0.5f);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
 
-        if (entity.findTardis().isPresent()) {
-            Tardis tardis = entity.findTardis().get();
+        if (entity.tardis().isPresent()) {
+            Tardis tardis = entity.tardis().get();
 
             if (tardis.isUnlocked(entity.getConsoleVariant())) {
                 ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(console::render), consoleTexture,

@@ -22,17 +22,14 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITStatusEffects;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.tardis.dim.TardisDimension;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.world.TardisServerWorld;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -90,9 +87,10 @@ public abstract class LivingEntityMixin extends Entity {
             return;
         }
 
-        if (TardisDimension.isTardisDimension(entity.getWorld())) {
+        if (entity.getWorld() instanceof TardisServerWorld tardisWorld) {
             ItemStack stack = entity.getEquippedStack(EquipmentSlot.HEAD);
-            if (!TardisDimension.get(entity.getWorld()).get().subsystems().lifeSupport().isEnabled() &&
+
+            if (!tardisWorld.getTardis().subsystems().lifeSupport().isEnabled() &&
                     (!stack.isIn(AITTags.Items.FULL_RESPIRATORS) || !stack.isIn(AITTags.Items.HALF_RESPIRATORS))) {
                 entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
                         200, false, false));
@@ -138,19 +136,10 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity.getServer() == null) return;
         if (entity.getWorld().getRegistryKey() == dimFrom) {
             if (entity.getY() >= heightForTeleportFrom) {
-                if (entity instanceof ServerPlayerEntity player) {
-                    Vec3d vec = new Vec3d(entity.getX(), heightForTeleportTo, entity.getZ());
-                    WorldUtil.teleportToWorld(player, entity.getServer().getWorld(dimTo), vec,
-                            player.getYaw(),
-                            player.getPitch());
-
-                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
-                } else {
-                    entity.teleport(entity.getServer().getWorld(dimTo), entity.getX(), heightForTeleportTo, entity.getZ(),
-                            Set.of(),
-                            entity.getYaw(),
-                            entity.getPitch());
-                }
+                entity.teleport(entity.getServer().getWorld(dimTo), entity.getX(), heightForTeleportTo, entity.getZ(),
+                        Set.of(),
+                        entity.getYaw(),
+                        entity.getPitch());
             }
         }
     }
