@@ -164,7 +164,7 @@ public class BOTI {
         if (!tardis.crash().isNormal())
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
-        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0));
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         stack.translate(0, 0, 500);
         stack.scale(1.5f, 1.5f, 1.5f);
         VortexUtil util = tardis.stats().getVortexEffects().toUtil();
