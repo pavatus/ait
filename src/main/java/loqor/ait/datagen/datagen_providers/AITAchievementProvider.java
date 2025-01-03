@@ -19,6 +19,7 @@ import loqor.ait.core.AITItems;
 import loqor.ait.core.advancement.*;
 
 public class AITAchievementProvider extends FabricAdvancementProvider {
+    public static Advancement FIRST_ENTER;
     public AITAchievementProvider(FabricDataOutput output) {
         super(output);
     }
@@ -44,7 +45,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .criterion("place_coral", TardisCriterions.PLACE_CORAL.conditions())
                 .build(consumer, AITMod.MOD_ID + "/place_coral");
 
-        Advancement firstEnter = Advancement.Builder.create().parent(placeCoral)
+        FIRST_ENTER = Advancement.Builder.create().parent(placeCoral)
                 .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.enter_tardis"),
                         Text.translatable("achievement.ait.description.enter_tardis"), null, AdvancementFrame.CHALLENGE, true,
                         true, false)
@@ -54,7 +55,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
         // one
         // that shows
 
-        Advancement ironKey = Advancement.Builder.create().parent(firstEnter)
+        Advancement ironKey = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(AITItems.IRON_KEY, Text.translatable("achievement.ait.title.iron_key"),
                         Text.translatable("achievement.ait.description.iron_key"), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("iron_key", InventoryChangedCriterion.Conditions.items(AITItems.IRON_KEY))
@@ -78,7 +79,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .criterion("classic_key", InventoryChangedCriterion.Conditions.items(AITItems.CLASSIC_KEY))
                 .build(consumer, AITMod.MOD_ID + "/classic_key");
 
-        Advancement firstDemat = Advancement.Builder.create().parent(firstEnter)
+        Advancement firstDemat = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(Items.ENDER_EYE, Text.translatable("achievement.ait.title.first_demat"), Text.translatable(
                         "achievement.ait.description.first_demat"),
                         null, AdvancementFrame.CHALLENGE, true, true, true)
@@ -92,14 +93,14 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .criterion("first_crash", TardisCriterions.CRASH.conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_crash");
 
-        Advancement breakGrowth = Advancement.Builder.create().parent(firstEnter)
+        Advancement breakGrowth = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(Items.OAK_LEAVES, Text.translatable("achievement.ait.title.break_growth"), Text.translatable(
                         "achievement.ait.description.break_growth"),
                         null, AdvancementFrame.TASK, true, false, true)
                 .criterion("break_growth", TardisCriterions.VEGETATION.conditions())
                 .build(consumer, AITMod.MOD_ID + "/break_growth");
 
-        Advancement redecoration = Advancement.Builder.create().parent(firstEnter)
+        Advancement redecoration = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(Items.PAINTING , Text.translatable("achievement.ait.title.redecorate"),
                         Text.translatable("achievement.ait.description.redecorate"), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("redecorate", TardisCriterions.REDECORATE.conditions())
@@ -111,7 +112,7 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .criterion("ultimate_counter", TardisCriterions.SONIC_WOOD.conditions())
                 .build(consumer, AITMod.MOD_ID + "/ultimate_counter");
 
-        Advancement axeTardis = Advancement.Builder.create().parent(firstEnter)
+        Advancement axeTardis = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(Items.IRON_AXE, Text.translatable("achievement.ait.title.forced_entry"),
                         Text.translatable("achievement.ait.description.forced_entry"), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("forced_entry", TardisCriterions.FORCED_ENTRY.conditions())
@@ -123,24 +124,24 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
                 .criterion("pui", TardisCriterions.PILOT_HIGH.conditions())
                 .build(consumer, AITMod.MOD_ID + "/pui");
 
-        Advancement reachPilot = Advancement.Builder.create().parent(firstEnter)
+        Advancement reachPilot = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(AITBlocks.CORAL_PLANT, Text.translatable("achievement.ait.title.bonding"),
                         Text.translatable("achievement.ait.description.bonding"), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("bonding", TardisCriterions.REACH_PILOT.conditions())
                 .build(consumer, AITMod.MOD_ID + "/bonding");
 
-        Advancement reachOwner = Advancement.Builder.create().parent(firstEnter)
+        Advancement reachOwner = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.owner_ship"),
                         Text.translatable("achievement.ait.description.owner_ship"), null, AdvancementFrame.CHALLENGE, true, true, true)
                 .criterion("owner_ship", TardisCriterions.REACH_OWNER.conditions())
                 .build(consumer, AITMod.MOD_ID + "/owner_ship");
 
-        Advancement enableSubsystem = Advancement.Builder.create().parent(firstEnter)
+        Advancement enableSubsystem = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(AITBlocks.GENERIC_SUBSYSTEM, Text.translatable("achievement.ait.title.enable_subsystem"),
                         Text.translatable("achievement.ait.description.enable_subsystem"), null, AdvancementFrame.CHALLENGE, true, true, true)
                 .criterion("enable_subsystem", TardisCriterions.ENABLE_SUBSYSTEM.conditions())
                 .build(consumer, AITMod.MOD_ID + "/enable_subsystem");
-        Advancement repairSubsystem = Advancement.Builder.create().parent(firstEnter)
+        Advancement repairSubsystem = Advancement.Builder.create().parent(FIRST_ENTER)
                 .display(AITItems.HAMMER, Text.translatable("achievement.ait.title.repair_subsystem"),
                         Text.translatable("achievement.ait.description.repair_subsystem"), null, AdvancementFrame.TASK, true, true, true)
                 .criterion("repair_subsystem", TardisCriterions.REPAIR_SUBSYSTEM.conditions())

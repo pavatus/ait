@@ -3,12 +3,15 @@ package loqor.ait.core.advancement;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.datagen.datagen_providers.AITAchievementProvider;
 
 public class TardisCriterions {
     public static SimpleCriterion ROOT = SimpleCriterion.create("root").register();;
@@ -51,6 +54,10 @@ public class TardisCriterions {
         TardisEvents.ENTER_TARDIS.register((tardis, entity) -> {
             if (!(entity instanceof ServerPlayerEntity player)) return;
 
+            if (player.getAdvancementTracker().getProgress(AITAchievementProvider.FIRST_ENTER).isDone()) {
+                player.getWorld().playSound(null, player.getBlockPos(), AITSounds.WONDERFUL_TIME_IN_SPACE,
+                        SoundCategory.PLAYERS, 0.6f, 1.0f);
+            }
             TardisCriterions.ENTER_TARDIS.trigger(player);
         });
 
