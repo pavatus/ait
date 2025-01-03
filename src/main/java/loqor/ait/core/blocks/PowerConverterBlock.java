@@ -102,6 +102,6 @@ public class PowerConverterBlock extends FluidLinkBlock {
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
 
-        tooltip.add(Text.translatable("(Convert zeiton shards into artron)").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
+        tooltip.add(Text.translatable("tooltip.ait.power_converter").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }
