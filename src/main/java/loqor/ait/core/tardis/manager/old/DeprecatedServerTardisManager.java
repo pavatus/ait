@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.pavatus.multidim.Multidim;
+import dev.pavatus.multidim.MultiDim;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -160,7 +160,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
             });
         }
 
-        Multidim.get(server).remove(tardisWorld.getRegistryKey());
+        MultiDim.get(server).remove(tardisWorld.getRegistryKey());
 
         this.sendTardisRemoval(server, tardis);
 

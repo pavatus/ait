@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.mojang.serialization.Lifecycle;
 import dev.pavatus.multidim.api.MultiDimServer;
-import dev.pavatus.multidim.api.MultidimServerWorld;
+import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.MutableRegistry;
 import dev.pavatus.multidim.api.WorldBlueprint;
 import dev.pavatus.multidim.impl.SimpleWorldProgressListener;
@@ -30,9 +30,9 @@ import net.minecraft.world.level.storage.LevelStorage;
 
 import loqor.ait.AITMod;
 
-public class Multidim {
+public class MultiDim {
 
-    private static Multidim instance;
+    private static MultiDim instance;
 
     private final Map<Identifier, WorldBlueprint> blueprints = new HashMap<>();
     private final MinecraftServer server;
@@ -41,12 +41,12 @@ public class Multidim {
     private final Set<ServerWorld> toUnload = new ReferenceOpenHashSet<>();
 
     public static void init() {
-        MultidimFileManager.init();
+        MultiDimFileManager.init();
 
-        ServerTickEvents.START_SERVER_TICK.register(server -> Multidim.get(server).tick());
+        ServerTickEvents.START_SERVER_TICK.register(server -> MultiDim.get(server).tick());
     }
 
-    private Multidim(MinecraftServer server) {
+    private MultiDim(MinecraftServer server) {
         this.server = server;
     }
 
@@ -106,38 +106,38 @@ public class Multidim {
         this.blueprints.put(blueprint.id(), blueprint);
     }
 
-    public static Multidim get(MinecraftServer server) {
+    public static MultiDim get(MinecraftServer server) {
         if (instance == null || instance.server != server)
-            instance = new Multidim(server);
+            instance = new MultiDim(server);
 
         return instance;
     }
 
-    public MultidimServerWorld add(WorldBlueprint blueprint, Identifier id) {
+    public MultiDimServerWorld add(WorldBlueprint blueprint, Identifier id) {
         return addOrLoad(blueprint, id, true);
     }
 
-    public MultidimServerWorld load(WorldBlueprint blueprint, Identifier id) {
+    public MultiDimServerWorld load(WorldBlueprint blueprint, Identifier id) {
         return addOrLoad(blueprint, id, false);
     }
 
-    public MultidimServerWorld addOrLoad(WorldBlueprint blueprint, Identifier id, boolean created) {
+    public MultiDimServerWorld addOrLoad(WorldBlueprint blueprint, Identifier id, boolean created) {
         return this.addOrLoad(blueprint, RegistryKey.of(RegistryKeys.WORLD, id), created);
     }
 
-    public MultidimServerWorld add(WorldBlueprint blueprint, RegistryKey<World> id) {
+    public MultiDimServerWorld add(WorldBlueprint blueprint, RegistryKey<World> id) {
         return addOrLoad(blueprint, id, true);
     }
 
-    public MultidimServerWorld load(WorldBlueprint blueprint, RegistryKey<World> id) {
+    public MultiDimServerWorld load(WorldBlueprint blueprint, RegistryKey<World> id) {
         return addOrLoad(blueprint, id, false);
     }
 
-    public MultidimServerWorld addOrLoad(WorldBlueprint blueprint, RegistryKey<World> id, boolean created) {
+    public MultiDimServerWorld addOrLoad(WorldBlueprint blueprint, RegistryKey<World> id, boolean created) {
         ServerWorld existing = this.server.getWorld(id);
 
         if (existing != null)
-            return (MultidimServerWorld) existing;
+            return (MultiDimServerWorld) existing;
 
         MutableRegistry<DimensionOptions> dimensionsRegistry = MultiDimUtil.getMutableDimensionsRegistry(this.server);
         boolean wasFrozen = dimensionsRegistry.multidim$isFrozen();
@@ -155,7 +155,7 @@ public class Multidim {
         if (wasFrozen)
             dimensionsRegistry.multidim$freeze();
 
-        MultidimServerWorld world = blueprint.createWorld(this.server, id, options, created);
+        MultiDimServerWorld world = blueprint.createWorld(this.server, id, options, created);
         this.load(world);
 
         return world;
@@ -174,7 +174,7 @@ public class Multidim {
         }), true, false);
     }
 
-    public void remove(MultidimServerWorld world) {
+    public void remove(MultiDimServerWorld world) {
         this.remove(world.getRegistryKey());
     }
 
@@ -197,7 +197,7 @@ public class Multidim {
         try {
             FileUtils.deleteDirectory(worldDirectory);
         } catch (IOException e) {
-            MultidimMod.LOGGER.warn("Failed to delete world directory", e);
+            MultiDimMod.LOGGER.warn("Failed to delete world directory", e);
 
             try {
                 FileUtils.forceDeleteOnExit(worldDirectory);
@@ -205,7 +205,7 @@ public class Multidim {
         }
     }
 
-    private void load(MultidimServerWorld world) {
+    private void load(MultiDimServerWorld world) {
         AITMod.LOGGER.info("Loading world {}", world.getRegistryKey().getValue());
 
         if (((MultiDimServer) this.server).multidim$hasWorld(world.getRegistryKey())) {

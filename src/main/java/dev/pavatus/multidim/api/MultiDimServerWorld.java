@@ -16,11 +16,11 @@ import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.spawner.Spawner;
 
-public class MultidimServerWorld extends ServerWorld {
+public class MultiDimServerWorld extends ServerWorld {
 
     private final WorldBlueprint blueprint;
 
-    public MultidimServerWorld(WorldBlueprint blueprint, MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, List<Spawner> spawners, @Nullable RandomSequencesState randomSequencesState, boolean created) {
+    public MultiDimServerWorld(WorldBlueprint blueprint, MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, List<Spawner> spawners, @Nullable RandomSequencesState randomSequencesState, boolean created) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, false, blueprint.seed(), spawners, blueprint.shouldTickTime(), randomSequencesState);
 
         this.blueprint = blueprint;

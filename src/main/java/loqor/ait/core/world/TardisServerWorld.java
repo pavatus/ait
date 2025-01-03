@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
-import dev.pavatus.multidim.Multidim;
-import dev.pavatus.multidim.api.MultidimServerWorld;
+import dev.pavatus.multidim.MultiDim;
+import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.VoidChunkGenerator;
 import dev.pavatus.multidim.api.WorldBlueprint;
 import net.fabricmc.api.EnvType;
@@ -35,7 +35,7 @@ import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
 
 
-public class TardisServerWorld extends MultidimServerWorld {
+public class TardisServerWorld extends MultiDimServerWorld {
 
     private static final RegistryKey<Biome> TARDIS_BIOME = RegistryKey.of(RegistryKeys.BIOME, new Identifier(AITMod.MOD_ID, "tardis"));
 
@@ -70,7 +70,7 @@ public class TardisServerWorld extends MultidimServerWorld {
 
     private static ServerWorld create(ServerTardis tardis) {
         AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
-        TardisServerWorld created = (TardisServerWorld) Multidim.get(ServerLifecycleHooks.get())
+        TardisServerWorld created = (TardisServerWorld) MultiDim.get(ServerLifecycleHooks.get())
                 .add(BLUEPRINT, new Identifier(AITMod.MOD_ID, tardis.getUuid().toString()));
 
         created.setTardis(tardis);

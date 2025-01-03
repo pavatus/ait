@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.pavatus.multidim.api.MultidimServerWorld;
+import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.WorldBlueprint;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
 
-public class MultidimFileManager {
+public class MultiDimFileManager {
 
     private static final Gson gson = new Gson();
 
@@ -38,14 +38,14 @@ public class MultidimFileManager {
 
     public static void init() {
         ServerWorldEvents.UNLOAD.register((server, world) -> {
-            if (world instanceof MultidimServerWorld msw && msw.getBlueprint().persistent())
+            if (world instanceof MultiDimServerWorld msw && msw.getBlueprint().persistent())
                 write(server, msw);
         });
 
-        ServerLifecycleEvents.SERVER_STARTING.register(MultidimFileManager::readAll);
+        ServerLifecycleEvents.SERVER_STARTING.register(MultiDimFileManager::readAll);
     }
 
-    private static void write(MinecraftServer server, MultidimServerWorld world) {
+    private static void write(MinecraftServer server, MultiDimServerWorld world) {
         RegistryKey<World> key = world.getRegistryKey();
         Path file = getSavePath(server, key.getValue());
 
@@ -60,7 +60,7 @@ public class MultidimFileManager {
 
             Files.writeString(file, gson.toJson(root));
         } catch (IOException e) {
-            MultidimMod.LOGGER.warn("Couldn't create world file! {}", key.getValue(), e);
+            MultiDimMod.LOGGER.warn("Couldn't create world file! {}", key.getValue(), e);
         }
     }
 
@@ -73,7 +73,7 @@ public class MultidimFileManager {
 
             return new Saved(blueprint, RegistryKey.of(RegistryKeys.WORLD, id)/*, options*/);
         } catch (Throwable e) {
-            MultidimMod.LOGGER.warn("Couldn't read world file! {}", id, e);
+            MultiDimMod.LOGGER.warn("Couldn't read world file! {}", id, e);
             return null;
         }
     }
@@ -100,7 +100,7 @@ public class MultidimFileManager {
     }
 
     private static void readNamespace(MinecraftServer server, Path namespace) {
-        Multidim multidim = Multidim.get(server);
+        MultiDim multidim = MultiDim.get(server);
 
         try (Stream<Path> stream = Files.list(namespace)) {
             stream.forEach(file -> {

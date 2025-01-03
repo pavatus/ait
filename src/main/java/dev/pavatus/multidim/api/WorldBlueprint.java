@@ -38,7 +38,7 @@ public class WorldBlueprint {
     private Identifier typeId;
     private DimensionType type;
 
-    private WorldCreator creator = MultidimServerWorld::new;
+    private WorldCreator creator = MultiDimServerWorld::new;
     private ChunkGenerator generator;
 
     private boolean persistent = true;
@@ -104,7 +104,7 @@ public class WorldBlueprint {
         return this.persistent;
     }
 
-    public MultidimServerWorld createWorld(MinecraftServer server, RegistryKey<World> key, DimensionOptions options, boolean created) {
+    public MultiDimServerWorld createWorld(MinecraftServer server, RegistryKey<World> key, DimensionOptions options, boolean created) {
         SaveProperties saveProps = server.getSaveProperties();
 
         return this.creator.create(
@@ -150,6 +150,6 @@ public class WorldBlueprint {
     }
 
     public interface WorldCreator {
-        MultidimServerWorld create(WorldBlueprint blueprint, MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, List<Spawner> spawners, @Nullable RandomSequencesState randomSequencesState, boolean created);
+        MultiDimServerWorld create(WorldBlueprint blueprint, MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, List<Spawner> spawners, @Nullable RandomSequencesState randomSequencesState, boolean created);
     }
 }
