@@ -1,26 +1,34 @@
 package dev.pavatus.multidim.api;
 
+import java.util.List;
+import java.util.concurrent.Executor;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Lifecycle;
 import dev.pavatus.multidim.impl.AbstractWorldGenListener;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.random.RandomSequencesState;
 import net.minecraft.world.SaveProperties;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.UnmodifiableLevelProperties;
+import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.world.spawner.Spawner;
 
-public class WorldBuilder {
+public class WorldBlueprint {
 
     private final Identifier id;
 
@@ -30,74 +38,79 @@ public class WorldBuilder {
     private Identifier typeId;
     private DimensionType type;
 
+    private WorldCreator creator = MultiDimServerWorld::new;
     private ChunkGenerator generator;
 
-    private boolean loadOnStartup = true;
+    private boolean persistent = true;
     private DimensionOptions options;
 
-    public WorldBuilder(Identifier id) {
+    public WorldBlueprint(Identifier id) {
         this.id = id;
     }
 
-    public WorldBuilder withSeed(long seed) {
-        this.seed = seed;
+    public WorldBlueprint withSeed(long seed) {
+        this.seed = BiomeAccess.hashSeed(seed);
         return this;
     }
 
-    public WorldBuilder tickTime() {
-        this.tickTime = true;
+    public long seed() {
+        return this.seed;
+    }
+
+    public WorldBlueprint withCreator(WorldCreator creator) {
+        this.creator = creator;
         return this;
     }
 
-    public WorldBuilder dontTickTime() {
-        this.tickTime = false;
+    public WorldBlueprint shouldTickTime(boolean tickTime) {
+        this.tickTime = tickTime;
         return this;
     }
 
-    public WorldBuilder withType(Identifier id) {
+    public boolean shouldTickTime() {
+        return this.tickTime;
+    }
+
+    public WorldBlueprint withType(Identifier id) {
         this.typeId = id;
         return this;
     }
 
-    public WorldBuilder withType(DimensionType type) {
+    public WorldBlueprint withType(DimensionType type) {
         return this.withType(null, type);
     }
 
-    public WorldBuilder withType(Identifier id, DimensionType type) {
+    public WorldBlueprint withType(Identifier id, DimensionType type) {
         this.typeId = id;
         this.type = type;
         return this;
     }
 
-    public WorldBuilder withGenerator(ChunkGenerator generator) {
+    public WorldBlueprint withGenerator(ChunkGenerator generator) {
         this.generator = generator;
-        return this;
-    }
-    public WorldBuilder loadOnStartup(boolean val) {
-        this.loadOnStartup = val;
-        return this;
-    }
-    public boolean loadOnStartup() {
-        return this.loadOnStartup;
-    }
-    public WorldBuilder withOptions(DimensionOptions options) {
-        this.options = options;
         return this;
     }
 
     public Identifier id() {
-        return id;
+        return this.id;
     }
 
-    public ServerWorld build(MinecraftServer server, DimensionOptions options) {
-        SaveProperties saveProps = server.getSaveProperties();
-        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, this.id);
+    public WorldBlueprint setPersistent(boolean persistent) {
+        this.persistent = persistent;
+        return this;
+    }
 
-        return new ServerWorld(
-                server, Util.getMainWorkerExecutor(), ((MultiDimServer) server).multidim$getSession(),
-                new UnmodifiableLevelProperties(saveProps, saveProps.getMainWorldProperties()), worldKey,
-                options, new AbstractWorldGenListener(), false, BiomeAccess.hashSeed(this.seed),
-                ImmutableList.of(), this.tickTime, null
+    public boolean persistent() {
+        return this.persistent;
+    }
+
+    public MultiDimServerWorld createWorld(MinecraftServer server, RegistryKey<World> key, DimensionOptions options, boolean created) {
+        SaveProperties saveProps = server.getSaveProperties();
+
+        return this.creator.create(
+                this, server, Util.getMainWorkerExecutor(), ((MultiDimServer) server).multidim$getSession(),
+                new UnmodifiableLevelProperties(saveProps, saveProps.getMainWorldProperties()), key, options,
+                new AbstractWorldGenListener(), ImmutableList.of(), null, created
         );
     }
 
@@ -125,7 +138,7 @@ public class WorldBuilder {
         return typeRegistry.getEntry(typeKey).orElse(null);
     }
 
-    public DimensionOptions buildOptions(MinecraftServer server) {
+    public DimensionOptions createOptions(MinecraftServer server) {
         if (this.options != null) return this.options;
 
         RegistryEntry<DimensionType> typeEntry = this.resolveType(server);
@@ -134,5 +147,9 @@ public class WorldBuilder {
             throw new IllegalArgumentException("Dimension type is required to create dimension options!");
 
         return new DimensionOptions(typeEntry, this.generator);
+    }
+
+    public interface WorldCreator {
+        MultiDimServerWorld create(WorldBlueprint blueprint, MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, List<Spawner> spawners, @Nullable RandomSequencesState randomSequencesState, boolean created);
     }
 }

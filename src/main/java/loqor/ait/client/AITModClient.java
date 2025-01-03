@@ -65,7 +65,6 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.schedule.Scheduler;
@@ -126,9 +125,6 @@ public class AITModClient implements ClientModInitializer {
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
-            if (!ClientTardisUtil.isPlayerInATardis())
-                return;
-
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
             if (tardis == null)
@@ -178,7 +174,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
+                    if (client.world == null)
                         return;
 
                     String id = buf.readString();
@@ -191,7 +187,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
+                    if (client.world == null)
                         return;
 
                     Identifier id = Identifier.tryParse(buf.readString());
@@ -238,7 +234,8 @@ public class AITModClient implements ClientModInitializer {
             client.getSoundManager().stopSounds(tardis.stats().getTravelEffects().get(TravelHandlerBase.State.DEMAT).soundId(), SoundCategory.BLOCKS);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange());
+        // TODO: replace this.
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange(client, client.world));
 
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));

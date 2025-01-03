@@ -14,8 +14,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class RiftScannerItem extends Item {
     private static final int MAX_ITERATIONS = 32;
@@ -29,7 +29,7 @@ public class RiftScannerItem extends Item {
         if (!(world instanceof ServerWorld serverWorld))
             return TypedActionResult.pass(user.getStackInHand(hand));
 
-        if (TardisDimension.isTardisDimension(serverWorld))
+        if (TardisServerWorld.isTardisDimension(serverWorld))
             return TypedActionResult.fail(user.getStackInHand(hand));
 
         user.getItemCooldownManager().set(this, 100);

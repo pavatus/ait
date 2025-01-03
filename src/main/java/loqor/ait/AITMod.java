@@ -268,6 +268,7 @@ public class AITMod implements ModInitializer {
                     });
                 });
 
+        // TODO: replace this.
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {

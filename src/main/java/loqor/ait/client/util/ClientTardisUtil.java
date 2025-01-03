@@ -4,7 +4,6 @@ import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
 
 import java.util.UUID;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -14,10 +13,11 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.api.ClientWorldEvents;
 import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisExterior;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.data.schema.sonic.SonicSchema;
 
@@ -31,16 +31,15 @@ public class ClientTardisUtil {
     private static ClientTardis currentTardis;
 
     static {
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            if (client.world == null || client.player == null)
+        ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
+            UUID id;
+            try {
+                id = UUID.fromString(world.getRegistryKey().getValue().getPath());
+            } catch(Exception e) {
+                currentTardis = null;
                 return;
-
-            ClientTardis newTardis = null;
-
-            if (isPlayerInATardis(client))
-                newTardis = (ClientTardis) TardisDimension.get(client.world).orElse(null);
-
-            currentTardis = newTardis;
+            }
+            ClientTardisManager.getInstance().getTardis(id, clientTardis -> currentTardis = clientTardis);
         });
     }
 
@@ -77,11 +76,7 @@ public class ClientTardisUtil {
     }
 
     public static boolean isPlayerInATardis() {
-        return isPlayerInATardis(MinecraftClient.getInstance());
-    }
-
-    private static boolean isPlayerInATardis(MinecraftClient client) {
-        return client.world != null && TardisDimension.isTardisDimension(client.world);
+        return currentTardis != null;
     }
 
     /**

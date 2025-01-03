@@ -16,10 +16,10 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.impl.EmergencyPower;
 import loqor.ait.core.engine.impl.EngineSystem;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
@@ -129,7 +129,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
             double toAdd = 7;
 
-            if (manager.getArtron(chunk) > 0 && !TardisDimension.isTardisDimension(world)) {
+            if (manager.getArtron(chunk) > 0 && !TardisServerWorld.isTardisDimension(world)) {
                 manager.removeFuel(chunk, 2);
                 toAdd += 2;
             }

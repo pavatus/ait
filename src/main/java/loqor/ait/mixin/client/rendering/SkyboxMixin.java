@@ -33,7 +33,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 @Mixin(WorldRenderer.class)
 public abstract class SkyboxMixin {
@@ -83,7 +83,7 @@ public abstract class SkyboxMixin {
         if (this.world == null)
             return;
 
-        if (TardisDimension.isTardisDimension(this.world)) {
+        if (TardisServerWorld.isTardisDimension(this.world)) {
             this.renderSkyDynamically(matrices, projectionMatrix, tickDelta, camera, fogCallback, ci);
             this.world.getProfiler().swap("projector");
         }
@@ -94,6 +94,11 @@ public abstract class SkyboxMixin {
         }
 
         if (this.world.getRegistryKey() == AITDimensions.MOON) {
+            SkyboxUtil.renderMoonSky(matrices);
+            ci.cancel();
+        }
+
+        if (this.world.getRegistryKey() == AITDimensions.SPACE) {
             SkyboxUtil.renderMoonSky(matrices);
             ci.cancel();
         }
