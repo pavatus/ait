@@ -7,7 +7,6 @@ import java.util.concurrent.Executor;
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.WorldBlueprint;
-import loqor.ait.core.AITDimensions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +26,7 @@ import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.spawner.Spawner;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
