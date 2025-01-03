@@ -98,7 +98,7 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = new Identifier(AITMod.MOD_ID, "capsule_default");
+                id = AITMod.id("capsule_default");
             }
 
             return ClientExteriorVariantRegistry.getInstance().get(id);

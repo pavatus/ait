@@ -250,7 +250,7 @@ public class BOTI {
 
         variant.getDoor().model().renderWithAnimations(exterior, variant.getDoor().model().getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
 
-        //MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(new Identifier(AITMod.MOD_ID, "interiors/coral")), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
+        //MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(AITMod.id("interiors/coral")), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
         /*ChunkRendererRegionBuilder builder = new ChunkRendererRegionBuilder();
         ChunkRendererRegion region = builder.build(TardisDimension.get(exterior.tardis().get().asServer()).get(), new BlockPos(0, 0, 0),  new BlockPos(30, 30, 30), 0);*/
         botiProvider.draw();

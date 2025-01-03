@@ -295,7 +295,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier(AITMod.MOD_ID, "client_exterior");
+        return AITMod.id("client_exterior");
     }
 
     @Override

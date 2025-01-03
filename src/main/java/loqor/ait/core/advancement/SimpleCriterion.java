@@ -56,7 +56,7 @@ public class SimpleCriterion extends AbstractCriterion<SimpleCriterion.Condition
     }
     @ApiStatus.Internal
     public static SimpleCriterion create(String name) {
-        return new SimpleCriterion(new Identifier(AITMod.MOD_ID, name));
+        return new SimpleCriterion(AITMod.id(name));
     }
 
     public static class Conditions extends AbstractCriterionConditions {

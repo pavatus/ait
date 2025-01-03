@@ -8,7 +8,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.HartnellType;
 
 public class MintHartnellVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hartnell_mint");
+    public static final Identifier REFERENCE = AITMod.id("console/hartnell_mint");
 
     public MintHartnellVariant() {
         super(HartnellType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));

@@ -14,7 +14,7 @@ import loqor.ait.data.schema.exterior.category.GrowthCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
 
 public class CoralGrowthVariant extends ExteriorVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/coral_growth");
+    public static final Identifier REFERENCE = AITMod.id("exterior/coral_growth");
 
     public CoralGrowthVariant() {
         super(GrowthCategory.REFERENCE, REFERENCE);

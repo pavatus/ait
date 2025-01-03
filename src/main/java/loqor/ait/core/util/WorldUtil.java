@@ -85,7 +85,7 @@ public class WorldUtil {
             }
         });
 
-        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(AITMod.MOD_ID, "void"), VoidChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, AITMod.id("void"), VoidChunkGenerator.CODEC);
     }
 
     public static ServerWorld getOverworld() {

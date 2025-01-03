@@ -38,7 +38,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
     private boolean travelCooldown;
 
-    public static final Identifier CANCEL_DEMAT_SOUND = new Identifier(AITMod.MOD_ID, "cancel_demat_sound");
+    public static final Identifier CANCEL_DEMAT_SOUND = AITMod.id("cancel_demat_sound");
 
     static {
         TardisEvents.FINISH_FLIGHT.register(tardis -> { // ghost monument

@@ -20,7 +20,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class SteamType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/steam");
+    public static final Identifier REFERENCE = AITMod.id("console/steam");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.18749999f, 0.25000003f),
                     new Vector3f(0.23046875f, 0.3875000001862645f, -0.798828125f)),

@@ -31,7 +31,7 @@ import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.world.TardisServerWorld;
 
 public class SonicRendering {
-    private static final Identifier SELECTED = new Identifier(AITMod.MOD_ID, "textures/marker/landing.png");
+    private static final Identifier SELECTED = AITMod.id("textures/marker/landing.png");
 
     private final MinecraftClient client;
     private final Profiler profiler;

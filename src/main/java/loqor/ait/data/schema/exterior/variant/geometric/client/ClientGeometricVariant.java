@@ -19,7 +19,7 @@ public abstract class ClientGeometricVariant extends ClientExteriorVariantSchema
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/geometric_";
 
     protected ClientGeometricVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/geometric/" + name));
+        super(AITMod.id("exterior/geometric/" + name));
 
         this.name = name;
     }
@@ -31,12 +31,12 @@ public abstract class ClientGeometricVariant extends ClientExteriorVariantSchema
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission.png");
+        return AITMod.id(TEXTURE_PATH + name + "_emission.png");
     }
 
     @Override

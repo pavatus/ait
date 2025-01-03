@@ -7,7 +7,6 @@ import dev.pavatus.register.datapack.SimpleDatapackRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 
@@ -23,7 +22,7 @@ public class ItemOpinionRegistry extends SimpleDatapackRegistry<ItemOpinion> {
 
     @Override
     protected void defaults() {
-        LIKES_ENDER_EYE = register(new ItemOpinion(new Identifier(AITMod.MOD_ID, "likes_ender_eye"), Items.ENDER_EYE.getDefaultStack(), 10));
+        LIKES_ENDER_EYE = register(new ItemOpinion(AITMod.id("likes_ender_eye"), Items.ENDER_EYE.getDefaultStack(), 10));
     }
 
     @Override

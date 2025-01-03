@@ -24,7 +24,7 @@ import loqor.ait.data.properties.Value;
 
 public class SonicHandler extends KeyedTardisComponent implements ArtronHolderItem, TardisTickable {
 
-    public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
+    public static final Identifier CHANGE_SONIC = AITMod.id("change_sonic");
 
     private static final Property<ItemStack> CONSOLE_SONIC = new Property<>(Property.Type.ITEM_STACK, "console_sonic",
             (ItemStack) null);

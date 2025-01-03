@@ -76,8 +76,7 @@ public class GunModule extends Module {
 
     @Override
     protected AItemGroup.Builder buildItemGroup() {
-        return AItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()))
-                .icon(() -> new ItemStack(GunItems.CULT_STASER));
+        return AItemGroup.builder(id()).icon(() -> new ItemStack(GunItems.CULT_STASER));
     }
 
     @Override

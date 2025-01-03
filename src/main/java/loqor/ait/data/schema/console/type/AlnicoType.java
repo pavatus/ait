@@ -20,7 +20,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class AlnicoType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/alnico");
+    public static final Identifier REFERENCE = AITMod.id("console/alnico");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.2375f, 0.5374998f),
                     new Vector3f(-0.7960937507450581f, 0.27500009536743164f, 1.3906250018626451f)),

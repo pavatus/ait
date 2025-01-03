@@ -54,14 +54,14 @@ import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public abstract class TardisManager<T extends Tardis, C> {
 
-    public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
+    public static final Identifier ASK = AITMod.id("ask_tardis");
 
-    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "tardis/send");
-    public static final Identifier SEND_BULK = new Identifier(AITMod.MOD_ID, "tardis/send_bulk");
+    public static final Identifier SEND = AITMod.id("tardis/send");
+    public static final Identifier SEND_BULK = AITMod.id("tardis/send_bulk");
 
-    public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "tardis/remove");
+    public static final Identifier REMOVE = AITMod.id("tardis/remove");
 
-    public static final Identifier SEND_COMPONENT = new Identifier(AITMod.MOD_ID, "tardis/send_component");
+    public static final Identifier SEND_COMPONENT = AITMod.id("tardis/send_component");
 
     public static final boolean DEMENTIA = false;
 

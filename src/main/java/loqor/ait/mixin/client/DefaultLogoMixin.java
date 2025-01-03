@@ -19,8 +19,8 @@ import loqor.ait.AITMod;
 @Mixin(LogoDrawer.class)
 public class DefaultLogoMixin {
 
-    @Unique private static final Identifier AIT_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_logo.png");
-    @Unique private static final Identifier AIT_CHRISTMAS_LOGO = new Identifier(AITMod.MOD_ID, "textures/gui/title/ait_christmas_logo.png");
+    @Unique private static final Identifier AIT_LOGO = AITMod.id("textures/gui/title/ait_logo.png");
+    @Unique private static final Identifier AIT_CHRISTMAS_LOGO = AITMod.id("textures/gui/title/ait_christmas_logo.png");
     @Unique private final MinecraftClient client = MinecraftClient.getInstance();
     @Unique boolean isChristmas = isInAdvent();
 

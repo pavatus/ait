@@ -15,8 +15,8 @@ import loqor.ait.data.hum.Hum;
 import loqor.ait.registry.impl.HumRegistry;
 
 public class ServerHumHandler extends TardisComponent {
-    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
-    public static final Identifier RECEIVE = new Identifier(AITMod.MOD_ID, "receive_hum");
+    public static final Identifier SEND = AITMod.id("send_hum");
+    public static final Identifier RECEIVE = AITMod.id("receive_hum");
     private Hum current;
 
     static {

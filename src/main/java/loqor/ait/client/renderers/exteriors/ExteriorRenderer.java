@@ -38,7 +38,7 @@ import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 
-    private static final Identifier SHIELDS = new Identifier(AITMod.MOD_ID, "textures/environment/shields.png");
+    private static final Identifier SHIELDS = AITMod.id("textures/environment/shields.png");
 
     private static final SiegeModeModel SIEGE_MODEL = new SiegeModeModel(
             SiegeModeModel.getTexturedModelData().createModel());

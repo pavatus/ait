@@ -21,7 +21,7 @@ public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchem
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
 
     protected ClientEasterHeadVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/easter_head/" + name));
+        super(AITMod.id("exterior/easter_head/" + name));
 
         this.name = name;
     }
@@ -33,7 +33,7 @@ public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchem
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override

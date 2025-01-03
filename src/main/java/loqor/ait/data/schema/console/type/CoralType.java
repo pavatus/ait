@@ -20,7 +20,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class CoralType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/coral");
+    public static final Identifier REFERENCE = AITMod.id("console/coral");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.18749999f, 0.16250001f),
                     new Vector3f(0.016406255774199963f, 0.7500000037252903f, -0.6609375244006515f)),

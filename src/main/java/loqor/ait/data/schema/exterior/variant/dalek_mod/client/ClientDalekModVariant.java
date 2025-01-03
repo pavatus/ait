@@ -22,7 +22,7 @@ public abstract class ClientDalekModVariant extends ClientExteriorVariantSchema 
 
 
     protected ClientDalekModVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/dalek_mod/" + name));
+        super(AITMod.id("exterior/dalek_mod/" + name));
 
         this.name = name;
     }
@@ -34,12 +34,12 @@ public abstract class ClientDalekModVariant extends ClientExteriorVariantSchema 
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+        return AITMod.id(TEXTURE_PATH + name + "_emission" + ".png");
     }
 
     @Override

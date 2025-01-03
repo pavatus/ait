@@ -61,8 +61,7 @@ public class PlanetModule extends Module {
 
     @Override
     protected AItemGroup.Builder buildItemGroup() {
-        return AItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()))
-                .icon(() -> new ItemStack(PlanetItems.SPACESUIT_HELMET));
+        return AItemGroup.builder(id()).icon(() -> new ItemStack(PlanetItems.SPACESUIT_HELMET));
     }
 
     @Environment(EnvType.CLIENT)
@@ -476,7 +475,7 @@ public class PlanetModule extends Module {
                                 PlanetItems.SPACESUIT_HELMET,
                                 Text.translatable("achievements.ait.title.planet_root"),
                                 Text.translatable("achievements.ait.description.planet_root"),
-                                new Identifier(AITMod.MOD_ID, "textures/block/martian_stone.png"),
+                                AITMod.id("textures/block/martian_stone.png"),
                                 AdvancementFrame.TASK,
                                 false,
                                 false,
@@ -501,7 +500,7 @@ public class PlanetModule extends Module {
                                 ChangedDimensionCriterion.Conditions.to(
                                         RegistryKey.of(
                                                 RegistryKeys.WORLD,
-                                                new Identifier(AITMod.MOD_ID, "mars")
+                                                AITMod.id("mars")
                                         )
                                 )
                         )
@@ -523,7 +522,7 @@ public class PlanetModule extends Module {
                                 ChangedDimensionCriterion.Conditions.to(
                                         RegistryKey.of(
                                                 RegistryKeys.WORLD,
-                                                new Identifier(AITMod.MOD_ID, "moon")
+                                                AITMod.id("moon")
                                         )
                                 )
                         )

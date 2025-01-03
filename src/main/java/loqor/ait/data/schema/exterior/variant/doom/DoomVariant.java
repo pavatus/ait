@@ -13,7 +13,7 @@ import loqor.ait.data.schema.exterior.category.DoomCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
 
 public class DoomVariant extends ExteriorVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/doom");
+    public static final Identifier REFERENCE = AITMod.id("exterior/doom");
 
     public DoomVariant() {
         super(DoomCategory.REFERENCE, REFERENCE);

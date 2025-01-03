@@ -9,7 +9,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class EasterHeadCategory extends ExteriorCategorySchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/easter_head");
+    public static final Identifier REFERENCE = AITMod.id("exterior/easter_head");
 
     public EasterHeadCategory() {
         super(REFERENCE, "easter_head");

@@ -19,7 +19,8 @@ import loqor.ait.client.models.entities.projectiles.StaserBoltEntityModel;
 @Environment(value=EnvType.CLIENT)
 public class StaserBoltEntityRenderer
         extends EntityRenderer<StaserBoltEntity> {
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/entity/projectiles/staser_bolt.png");
+
+    public static final Identifier TEXTURE = AITMod.id("textures/entity/projectiles/staser_bolt.png");
     public StaserBoltEntityModel model = new StaserBoltEntityModel(StaserBoltEntityModel.getTexturedModelData().createModel());
 
     public StaserBoltEntityRenderer(EntityRendererFactory.Context context) {

@@ -1,6 +1,5 @@
 package loqor.ait.core.engine.impl;
 
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
@@ -29,7 +28,7 @@ public class ShieldsCircuit extends DurableSubSystem implements StructureHolder 
     @Override
     public MultiBlockStructure getStructure() {
         if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/shield"));
+            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/shield"));
         }
 
         return STRUCTURE;

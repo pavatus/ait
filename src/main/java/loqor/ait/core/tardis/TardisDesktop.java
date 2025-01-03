@@ -29,7 +29,7 @@ import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class TardisDesktop extends TardisComponent {
 
-    public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
+    public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
 
     private TardisDesktopSchema schema;
     private DirectedBlockPos doorPos;

@@ -11,7 +11,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class PlinthDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/plinth");
+    public static final Identifier REFERENCE = AITMod.id("door/plinth");
 
     public PlinthDoorVariant() {
         super(REFERENCE);

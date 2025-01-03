@@ -31,7 +31,7 @@ import loqor.ait.core.tardis.Tardis;
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
 
-    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/entity/control/sequenced.png");
+    private static final Identifier TEXTURE = AITMod.id("textures/entity/control/sequenced.png");
 
     ControlModel model = new ControlModel(ControlModel.getTexturedModelData().createModel());
 
@@ -57,7 +57,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (d > 4096.0)
             return;
 
-        Text name = Text.translatable(new Identifier(AITMod.MOD_ID, text.getString())
+        Text name = Text.translatable(AITMod.id(text.getString())
                 .toTranslationKey("control"));
 
         TextRenderer textRenderer = this.getTextRenderer();

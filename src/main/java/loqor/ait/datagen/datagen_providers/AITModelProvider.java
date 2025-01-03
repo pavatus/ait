@@ -108,7 +108,7 @@ public class AITModelProvider extends FabricModelProvider {
     private TextureMap createTextureMap(Item item, String modid) {
         Identifier texture = new Identifier(modid, "item/" + getItemName(item));
         if (!(doesTextureExist(texture))) {
-            texture = new Identifier(AITMod.MOD_ID, "item/error");
+            texture = AITMod.id("item/error");
         }
 
         return new TextureMap().put(TextureKey.LAYER0, texture);

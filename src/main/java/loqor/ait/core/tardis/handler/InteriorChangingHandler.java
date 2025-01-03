@@ -47,7 +47,7 @@ import loqor.ait.registry.impl.DesktopRegistry;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
 
-    public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
+    public static final Identifier CHANGE_DESKTOP = AITMod.id("change_desktop");
 
     private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "queued_interior", new Identifier(""));
     private static final BoolProperty QUEUED = new BoolProperty("queued");

@@ -27,7 +27,7 @@ public class SpacesuitFeatureRenderer<T extends LivingEntity, M extends PlayerEn
         extends
             FeatureRenderer<T, M> {
 
-    public static final Identifier BLANK_SPACESUIT = new Identifier(AITMod.MOD_ID,
+    public static final Identifier BLANK_SPACESUIT = AITMod.id(
             "textures/entity/wearables/spacesuit/nasa/blank_spacesuit.png");
     private final SpacesuitModel model;
 

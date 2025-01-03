@@ -111,7 +111,7 @@ public class AITSounds {
 
     }
     private static SoundEvent register(String name) {
-        return register(new Identifier(AITMod.MOD_ID, name));
+        return register(AITMod.id(name));
     }
     private static SoundEvent register(Identifier id) {
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));

@@ -12,7 +12,6 @@ import net.minecraft.client.gui.RotatingCubeMapRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 
@@ -27,8 +26,8 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Unique private static final RotatingCubeMapRenderer NEWPANO = new RotatingCubeMapRenderer(
             isChristmas
-                    ? new CubeMapRenderer(new Identifier(AITMod.MOD_ID, "textures/gui/title/background/advent/panorama"))
-                    : new CubeMapRenderer(new Identifier(AITMod.MOD_ID, "textures/gui/title/background/panorama"))
+                    ? new CubeMapRenderer(AITMod.id("textures/gui/title/background/advent/panorama"))
+                    : new CubeMapRenderer(AITMod.id("textures/gui/title/background/panorama"))
     );
 
 

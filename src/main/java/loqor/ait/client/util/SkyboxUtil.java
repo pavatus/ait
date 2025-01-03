@@ -14,9 +14,9 @@ import loqor.ait.AITMod;
 
 public class SkyboxUtil {
 
-    private static final Identifier TARDIS_SKY = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_sky.png");
-    private static final Identifier MOON_SKY = new Identifier(AITMod.MOD_ID, "textures/environment/tardis_sky.png");
-    private static final Identifier EARTH = new Identifier(AITMod.MOD_ID, "textures/environment/earth.png");
+    private static final Identifier TARDIS_SKY = AITMod.id("textures/environment/tardis_sky.png");
+    private static final Identifier MOON_SKY = AITMod.id("textures/environment/tardis_sky.png");
+    private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
 
     private static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
             RotationAxis.POSITIVE_X.rotationDegrees(-90.0f), RotationAxis.POSITIVE_X.rotationDegrees(180.0f),

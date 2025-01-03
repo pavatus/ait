@@ -29,7 +29,7 @@ import loqor.ait.data.landing.LandingPadRegion;
 public class LandingPadManager {
 
     private static final AttachmentType<LandingPadRegion> PERSISTENT = AttachmentRegistry.createPersistent(
-            new Identifier(AITMod.MOD_ID, "landing_pads"), LandingPadRegion.CODEC
+            AITMod.id("landing_pads"), LandingPadRegion.CODEC
     );
 
     public static void init() {
@@ -94,8 +94,8 @@ public class LandingPadManager {
 
     public static class Network {
 
-        public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "landingpad_sync");
-        public static final Identifier REQUEST = new Identifier(AITMod.MOD_ID, "landingpad_request");
+        public static final Identifier SYNC = AITMod.id("landingpad_sync");
+        public static final Identifier REQUEST = AITMod.id("landingpad_request");
 
         public static void syncForPlayer(Action action, ServerPlayerEntity player) {
             ServerWorld world = player.getServerWorld();

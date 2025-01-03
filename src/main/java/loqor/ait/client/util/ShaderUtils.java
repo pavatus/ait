@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.PostEffectProcessor;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 
@@ -17,7 +16,7 @@ public class ShaderUtils {
         try {
             // "values": [ 0.3, 0.59, 0.11 ]
             return new PostEffectProcessor(client.getTextureManager(), client.getResourceManager(),
-                    client.getFramebuffer(), new Identifier(AITMod.MOD_ID, "shaders/post/red_tinted.json"));
+                    client.getFramebuffer(), AITMod.id("shaders/post/red_tinted.json"));
         } catch (IOException e) {
             return null;
         }
