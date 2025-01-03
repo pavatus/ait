@@ -54,7 +54,7 @@ public class TardisCriterions {
         TardisEvents.ENTER_TARDIS.register((tardis, entity) -> {
             if (!(entity instanceof ServerPlayerEntity player)) return;
 
-            if (player.getAdvancementTracker().getProgress(AITAchievementProvider.FIRST_ENTER).isDone()) {
+            if (!player.getAdvancementTracker().getProgress(AITAchievementProvider.FIRST_ENTER).isDone()) {
                 player.getWorld().playSound(null, player.getBlockPos(), AITSounds.WONDERFUL_TIME_IN_SPACE,
                         SoundCategory.PLAYERS, 0.6f, 1.0f);
             }
