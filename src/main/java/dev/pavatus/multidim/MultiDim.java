@@ -145,20 +145,24 @@ public class MultiDim {
         if (wasFrozen)
             dimensionsRegistry.multidim$unfreeze();
 
-        DimensionOptions options = blueprint.createOptions(this.server);
-        RegistryKey<DimensionOptions> key = RegistryKey.of(RegistryKeys.DIMENSION, options.dimensionTypeEntry()
-                .getKey().map(RegistryKey::getValue).orElse(blueprint.id()));
+        // TODO im going to kill Theo.
+        if (blueprint != null) {
+            DimensionOptions options = blueprint.createOptions(this.server);
+            RegistryKey<DimensionOptions> key = RegistryKey.of(RegistryKeys.DIMENSION, options.dimensionTypeEntry()
+                    .getKey().map(RegistryKey::getValue).orElse(blueprint.id()));
 
-        if (!dimensionsRegistry.multidim$contains(key))
-            dimensionsRegistry.multidim$add(key, options, Lifecycle.stable());
+            if (!dimensionsRegistry.multidim$contains(key))
+                dimensionsRegistry.multidim$add(key, options, Lifecycle.stable());
 
-        if (wasFrozen)
-            dimensionsRegistry.multidim$freeze();
+            if (wasFrozen)
+                dimensionsRegistry.multidim$freeze();
 
-        MultiDimServerWorld world = blueprint.createWorld(this.server, id, options, created);
-        this.load(world);
+            MultiDimServerWorld world = blueprint.createWorld(this.server, id, options, created);
+            this.load(world);
 
-        return world;
+            return world;
+        }
+        return null;
     }
 
     @SuppressWarnings("resource")
