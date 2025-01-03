@@ -83,7 +83,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public void remove(RemovalReason reason) {
         AITMod.LOGGER.debug("Control entity discarded as {}", reason);
-        super.remove(reason);
+        this.setRemoved(reason);
     }
 
     @Override

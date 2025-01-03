@@ -7,7 +7,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.world.World;
 
 import loqor.ait.api.link.v2.TardisRef;
@@ -69,7 +71,25 @@ public abstract class LinkableDummyLivingEntity extends DummyLivingEntity implem
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+        nbt.putFloat("Health", this.getHealth());
+        nbt.putShort("HurtTime", (short)this.hurtTime);
+        nbt.putInt("HurtByTimestamp", this.getLastAttackedTime());
+        nbt.putShort("DeathTime", (short)this.deathTime);
+        nbt.putFloat("AbsorptionAmount", this.getAbsorptionAmount());
+        nbt.put("Attributes", this.getAttributes().toNbt());
+        if (!this.getActiveStatusEffects().isEmpty()) {
+            NbtList nbtList = new NbtList();
+            for (StatusEffectInstance statusEffectInstance : this.getActiveStatusEffects().values()) {
+                nbtList.add(statusEffectInstance.writeNbt(new NbtCompound()));
+            }
+            nbt.put("ActiveEffects", nbtList);
+        }
+        nbt.putBoolean("FallFlying", this.isFallFlying());
+        this.getSleepingPosition().ifPresent(pos -> {
+            nbt.putInt("SleepingX", pos.getX());
+            nbt.putInt("SleepingY", pos.getY());
+            nbt.putInt("SleepingZ", pos.getZ());
+        });
         AbstractLinkableEntity.super.writeCustomDataToNbt(nbt);
     }
 }
