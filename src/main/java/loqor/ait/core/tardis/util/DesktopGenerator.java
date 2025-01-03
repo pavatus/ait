@@ -9,7 +9,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 
@@ -47,12 +46,16 @@ public class DesktopGenerator {
                 BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, level.getRandom(), Block.FORCE_STATE);
     }
 
-    public static void clearArea(ServerWorld level, Corners corners, ChunkPos[] chunks) {
-        for (ChunkPos chunkPos : chunks) {
-            Chunk chunk = level.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
+    public static void clearArea(ServerWorld level, Corners corners, int radius) {
+        int chunkRadius = (int) Math.floor(radius / 16d);
 
-            if (chunk instanceof Clearable clearable)
-                clearable.ait$clear();
+        for (int x = -chunkRadius; x < chunkRadius + 1; x++) {
+            for (int z = -chunkRadius; z < chunkRadius + 1; z++) {
+                Chunk chunk = level.getChunk(x, z, ChunkStatus.FULL, false);
+
+                if (chunk instanceof Clearable clearable)
+                    clearable.ait$clear();
+            }
         }
 
         // FIXME THEO: gross

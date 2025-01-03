@@ -32,6 +32,7 @@
     "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.ItemRendererMixin",
+    "client.MinecraftClientMixin",
     "client.TitleScreenMixin",
     "client.experimental_screen.CreateWorldScreenMixin",
     "client.experimental_screen.WorldOpenFlowsMixin",

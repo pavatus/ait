@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
-import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.client.SpaceSuitOverlay;
 import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.PlanetItems;
@@ -538,8 +537,5 @@ public class PlanetModule extends Module {
 
     public static PlanetModule instance() {
         return INSTANCE;
-    }
-    public static boolean isLoaded() {
-        return ModuleRegistry.instance().get(ID) != null;
     }
 }

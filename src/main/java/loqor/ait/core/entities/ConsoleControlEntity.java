@@ -2,10 +2,12 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
+import com.mojang.serialization.Dynamic;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -407,6 +409,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
                         + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY()
                         + "f, " + centered.getZ() + "f)),"));
         }
+    }
+
+    @Override
+    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
+        return null;
     }
 
     @Override

@@ -17,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.AITMod;
@@ -41,7 +43,12 @@ public class LandingPadManager {
     }
 
     public @Nullable LandingPadRegion getRegion(ChunkPos pos) {
-        return this.world.getChunk(pos.x, pos.z).getAttached(PERSISTENT);
+        Chunk chunk = this.world.getChunk(pos.x, pos.z, ChunkStatus.FULL, false);
+
+        if (chunk == null)
+            return null;
+
+        return chunk.getAttached(PERSISTENT);
     }
 
     public @Nullable LandingPadRegion getRegion(long pos) {

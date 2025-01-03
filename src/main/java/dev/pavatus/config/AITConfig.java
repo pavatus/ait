@@ -52,6 +52,7 @@ public class AITConfig implements ConfigData {
         public boolean DISABLE_LOYALTY_SLEEPING_ACTIONBAR = false;
         public boolean ENABLE_TARDIS_BOTI = false;
         public boolean I_HATE_GL = true;
+        public boolean ANIMATE_CONSOLE = true;
 
         public TemperatureType TEMPERATURE_TYPE = TemperatureType.CELCIUS;
     }

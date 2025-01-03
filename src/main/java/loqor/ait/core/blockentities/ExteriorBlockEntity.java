@@ -185,13 +185,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         TravelHandlerBase.State state = travel.getState();
 
         if (!world.isClient()) {
-            if (tardis.travel().isLanded()) {
-                world.scheduleBlockTick(this.getPos(), this.getCachedState().getBlock(), 2);
-            }
-        }
+            if (tardis.travel().isLanded())
+                world.scheduleBlockTick(this.getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
 
-        if (!world.isClient())
             return;
+        }
 
         if (state.animated())
             this.getAnimation().tick(tardis);

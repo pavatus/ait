@@ -1,7 +1,6 @@
 package dev.pavatus.planet.mixin.gravity;
 
 
-import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,12 +42,13 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "tickMovement", at = @At("TAIL"))
     public void ait$tickMovement(CallbackInfo ci) {
-        if (!(PlanetModule.isLoaded())) return;
-
-
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
-        if (planet == null) return;
-        if (!planet.hasGravityModifier()) return;
+
+        if (planet == null)
+            return;
+
+        if (!planet.hasGravityModifier())
+            return;
 
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.isSwimming() || entity.hasNoGravity() || entity.isFallFlying() || entity.isSpectator()) return;

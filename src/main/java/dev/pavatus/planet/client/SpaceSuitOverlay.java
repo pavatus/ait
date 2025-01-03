@@ -18,12 +18,10 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
@@ -34,26 +32,30 @@ public class SpaceSuitOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, float v) {
-
         MinecraftClient mc = MinecraftClient.getInstance();
+
+        if (mc.player == null || mc.world == null)
+            return;
+
+        Planet planet = PlanetRegistry.getInstance().get(mc.world);
+
+        if (planet == null)
+            return;
+
+        if (!mc.options.getPerspective().isFirstPerson())
+            return;
+
         TextRenderer textRenderer = mc.textRenderer;
 
-        Planet planet = PlanetRegistry.getInstance().get(mc.player.getWorld());
-
-        if(mc.player == null || planet == null) return;
-        if(mc.player.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SpacesuitItem && mc.options.getPerspective().isFirstPerson()) {
+        if (mc.player.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SpacesuitItem) {
             MatrixStack stack = drawContext.getMatrices();
             stack.push();
             stack.scale(1.5f, 1.5f, 1.5f);
-            if (mc.world != null && mc.world.getRegistryKey() == World.END) {
-                drawContext.drawTextWithShadow(textRenderer,
-                        Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)).setStyle(Style.EMPTY.withObfuscated(true)),
-                        0, 0, 0xFFFFFF);
-            } else {
-                drawContext.drawTextWithShadow(textRenderer,
-                        Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)),
-                        0, 0, 0xFFFFFF);
-            }
+
+            drawContext.drawTextWithShadow(textRenderer,
+                    Text.literal(this.getTemperatureType(AITMod.CONFIG, planet)),
+                    0, 0, 0xFFFFFF);
+
             stack.pop();
             stack.push();
             stack.scale(1.5f, 1.5f, 1.5f);
@@ -63,12 +65,10 @@ public class SpaceSuitOverlay implements HudRenderCallback {
             stack.pop();
         }
 
-        if (mc.player == null)
-            return;
+        // TODO move this to a separate class OR generalize this class
         if ((mc.player.getEquippedStack(EquipmentSlot.MAINHAND).getItem() == AITItems.SONIC_SCREWDRIVER
                 || mc.player.getEquippedStack(EquipmentSlot.OFFHAND).getItem() == AITItems.SONIC_SCREWDRIVER)
-                && playerIsLookingAtSonicInteractable(mc.crosshairTarget, mc.player)
-                && mc.options.getPerspective().isFirstPerson()) {
+                && playerIsLookingAtSonicInteractable(mc.crosshairTarget, mc.player)) {
             this.renderOverlay(drawContext,
                     new Identifier(AITMod.MOD_ID, "textures/gui/overlay/sonic_can_interact.png"), 1.0F);
         }

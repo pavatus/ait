@@ -10,7 +10,6 @@ import dev.pavatus.gun.core.item.GunItems;
 import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
-import dev.pavatus.module.ModuleRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
@@ -128,8 +127,5 @@ public class GunModule extends Module {
 
     public static GunModule instance() {
         return INSTANCE;
-    }
-    public static boolean isLoaded() {
-        return ModuleRegistry.instance().get(ID) != null;
     }
 }

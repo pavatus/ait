@@ -16,7 +16,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -268,9 +267,6 @@ public class AITMod implements ModInitializer {
                     });
                 });
 
-        // TODO: replace this.
-        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
-
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (source.isBuiltin()
                     && (id.equals(LootTables.NETHER_BRIDGE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
@@ -295,12 +291,6 @@ public class AITMod implements ModInitializer {
     public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
     public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
 
-    public static void openScreen(ServerPlayerEntity player, int id) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(id);
-        ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
-    }
-
     public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(id);
@@ -316,6 +306,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
     }
+
     public static Identifier id(String path) {
         return new Identifier(MOD_ID, path);
     }

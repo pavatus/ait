@@ -644,6 +644,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.TEMPERATURE_TYPE", "Temperature Type");
         provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
         provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.I_HATE_GL", "I HATE GL");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ANIMATE_CONSOLE", "Animate Console?");
 
         provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
         provider.addTranslation("entity.minecraft.villager.fabricator_engineer", "Fabricator Engineer");
@@ -752,15 +753,14 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.use_in_tardis", "(Place inside a TARDIS)");
         provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
 
-        // ????
+        // Painting
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
-
-        // Galifrayan Falls Painting
 
         provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
+        // Death
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 

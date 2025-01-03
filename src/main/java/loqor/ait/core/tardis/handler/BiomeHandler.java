@@ -145,6 +145,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         return this.type.get();
     }
 
+    // FIXME(PERFORMANCE)
     private static BiomeType getTagForBiome(RegistryEntry<Biome> biome) {
         if (biome.isIn(ConventionalBiomeTags.SNOWY) || biome.isIn(ConventionalBiomeTags.SNOWY_PLAINS)
                 || biome.isIn(ConventionalBiomeTags.ICY))

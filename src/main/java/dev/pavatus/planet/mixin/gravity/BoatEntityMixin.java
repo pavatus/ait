@@ -1,6 +1,5 @@
 package dev.pavatus.planet.mixin.gravity;
 
-import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,14 +23,17 @@ public abstract class BoatEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void ait$tick(CallbackInfo ci) {
-        if (!(PlanetModule.isLoaded())) return;
-
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
-        if (planet == null) return;
-        if (!planet.hasGravityModifier()) return;
+
+        if (planet == null)
+            return;
+
+        if (!planet.hasGravityModifier())
+            return;
 
         Vec3d movement = this.getVelocity();
-        // temp fix because im lazy :))))
+
+        // FIXME temp fix because im lazy :))))
         this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
     }
 }

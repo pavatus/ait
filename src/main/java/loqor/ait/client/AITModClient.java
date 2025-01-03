@@ -33,7 +33,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import loqor.ait.api.ClientWorldEvents;
 import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.CustomItemRendering;
@@ -233,9 +232,6 @@ public class AITModClient implements ClientModInitializer {
 
             client.getSoundManager().stopSounds(tardis.stats().getTravelEffects().get(TravelHandlerBase.State.DEMAT).soundId(), SoundCategory.BLOCKS);
         });
-
-        // TODO: replace this.
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange(client, client.world));
 
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));

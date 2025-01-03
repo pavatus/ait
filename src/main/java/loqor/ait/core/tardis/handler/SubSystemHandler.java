@@ -62,14 +62,17 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         this.sync();
         return system;
     }
+
     private SubSystem remove(SubSystem.IdLike id) {
         SubSystem found = this.systems.remove(id);
         this.sync();
         return found;
     }
+
     public @NotNull Iterator<SubSystem> iterator() {
         return Arrays.stream(this.systems.getValues()).iterator();
     }
+
     public void forEach(Consumer<? super SubSystem> consumer) {
         for (SubSystem system : this.systems.getValues()) {
             if (system == null)
@@ -157,6 +160,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public EngineSystem engine() {
         return this.get(SubSystem.Id.ENGINE);
     }
+
     public DematCircuit demat() {
         return this.get(SubSystem.Id.DEMAT);
     }
@@ -168,12 +172,15 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
     public ShieldsCircuit shields() {
         return this.get(SubSystem.Id.SHIELDS);
     }
+
     public EmergencyPower emergency() {
         return this.get(SubSystem.Id.EMERGENCY_POWER);
     }
+
     public Stabilisers stabilisers() {
         return this.get(SubSystem.Id.STABILISERS);
     }
+
     public ChameleonCircuit chameleon() {
         return this.get(SubSystem.Id.CHAMELEON);
     }
@@ -211,7 +218,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
                 try {
                     manager.set(context.deserialize(element, id.clazz()));
                 } catch (Throwable e) {
-                    AITMod.LOGGER.error("Failed to deserialize subsystem " + id, e);
+                    AITMod.LOGGER.error("Failed to deserialize subsystem {}", id, e);
                 }
             }
 
