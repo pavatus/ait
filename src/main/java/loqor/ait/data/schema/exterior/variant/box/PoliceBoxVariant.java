@@ -19,7 +19,7 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
 
     protected PoliceBoxVariant(String name) { // idk why i added the modid bit i dont use it later lol
         super(PoliceBoxCategory.REFERENCE, AITMod.id("exterior/police_box/" + name),
-                new Loyalty(Loyalty.Type.PILOT));
+                new Loyalty(Loyalty.Type.OWNER));
     }
 
     @Override

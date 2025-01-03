@@ -11,7 +11,7 @@ public class DevDesktop extends TardisDesktopSchema {
         super(AITMod.id("dev"),
                 new DesktopPreviewTexture(DesktopPreviewTexture.pathFromDesktopId(AITMod.id("dev")),
                         800, 800),
-                new Loyalty(Loyalty.Type.PILOT));
+                new Loyalty(Loyalty.Type.OWNER));
     }
 
     @Override

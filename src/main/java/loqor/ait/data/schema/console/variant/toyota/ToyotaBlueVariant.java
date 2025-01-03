@@ -11,6 +11,6 @@ public class ToyotaBlueVariant extends ConsoleVariantSchema {
     public static final Identifier REFERENCE = AITMod.id("console/toyota_blue");
 
     public ToyotaBlueVariant() {
-        super(ToyotaType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));
+        super(ToyotaType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.OWNER));
     }
 }

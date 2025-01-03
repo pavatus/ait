@@ -18,7 +18,7 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
 
     protected EasterHeadVariant(String name) {
         super(EasterHeadCategory.REFERENCE, AITMod.id("exterior/easter_head/" + name),
-                new Loyalty(Loyalty.Type.PILOT));
+                new Loyalty(Loyalty.Type.COMPANION));
     }
 
     @Override
