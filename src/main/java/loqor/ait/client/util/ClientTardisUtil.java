@@ -146,7 +146,7 @@ public class ClientTardisUtil {
         Tardis tardis = getCurrentTardis();
 
         if (tardis == null) {
-            powerDeltaTick = 0;
+            powerDeltaTick = MAX_POWER_DELTA_TICKS;
             return;
         }
 
@@ -169,7 +169,7 @@ public class ClientTardisUtil {
         Tardis tardis = getCurrentTardis();
 
         if (tardis == null || !tardis.alarm().enabled().get()) {
-            alarmDeltaTick = 0;
+            alarmDeltaTick = MAX_ALARM_DELTA_TICKS;
             return;
         }
 
