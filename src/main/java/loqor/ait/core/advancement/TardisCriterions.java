@@ -2,8 +2,10 @@ package loqor.ait.core.advancement;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
+import net.minecraft.advancement.Advancement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
@@ -11,7 +13,9 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.datagen.datagen_providers.AITAchievementProvider;
+import loqor.ait.core.util.schedule.Scheduler;
+import loqor.ait.core.world.TardisServerWorld;
+import loqor.ait.data.TimeUnit;
 
 public class TardisCriterions {
     public static SimpleCriterion ROOT = SimpleCriterion.create("root").register();;
@@ -53,10 +57,12 @@ public class TardisCriterions {
 
         TardisEvents.ENTER_TARDIS.register((tardis, entity) -> {
             if (!(entity instanceof ServerPlayerEntity player)) return;
+            if (player.getServer() == null) return;
 
-            if (!player.getAdvancementTracker().getProgress(AITAchievementProvider.FIRST_ENTER).isDone()) {
-                player.getWorld().playSound(null, player.getBlockPos(), AITSounds.WONDERFUL_TIME_IN_SPACE,
-                        SoundCategory.PLAYERS, 0.6f, 1.0f);
+            Advancement advancement = player.getServer().getAdvancementLoader().get(new Identifier("ait/enter_tardis"));
+            if (player.getWorld() instanceof TardisServerWorld && !player.getAdvancementTracker().getProgress(advancement).isDone()) {
+                Scheduler.runTaskLater(() -> tardis.asServer().getInteriorWorld().playSound(null, player.getBlockPos(), AITSounds.WONDERFUL_TIME_IN_SPACE,
+                        SoundCategory.PLAYERS, 0.6f, 1.0f), TimeUnit.MILLISECONDS, 2000);
             }
             TardisCriterions.ENTER_TARDIS.trigger(player);
         });
