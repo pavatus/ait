@@ -1,6 +1,5 @@
 package dev.pavatus.planet.mixin.gravity;
 
-import java.util.Set;
 
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.planet.Planet;
@@ -22,16 +21,15 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITStatusEffects;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.world.TardisServerWorld;
 
 @Mixin(LivingEntity.class)
@@ -111,12 +109,11 @@ public abstract class LivingEntityMixin extends Entity {
                     200, 1, false, false));
         }
 
-        if (entity.getServer() == null) return;
+        if (entity.getWorld().isClient()) return;
 
         // TODO this might be like, crazy laggy but oh well
-        hitDimensionThreshold(entity, 725, AITDimensions.MOON, AITDimensions.SPACE);
-        hitDimensionThreshold(entity, 725, 256,
-                entity.getServer().getOverworld().getRegistryKey(), AITDimensions.SPACE);
+        hitDimensionThreshold(entity, 600, AITDimensions.MOON, AITDimensions.SPACE);
+        hitDimensionThreshold(entity, 600, 256, World.OVERWORLD, AITDimensions.SPACE);
         hitDimensionThreshold(entity, 500, AITDimensions.MARS, AITDimensions.SPACE);
     }
 
@@ -129,30 +126,33 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleport,
-                                                RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
+    @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleport, RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
         hitDimensionThreshold(entity, heightForTeleport, heightForTeleport, dimFrom, dimTo);
     }
 
-    @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleportFrom, int heightForTeleportTo,
-                                                      RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
-        if (entity.getServer() == null) return;
-        if (entity.getWorld().getRegistryKey() == dimFrom) {
+    @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleportFrom, int heightForTeleportTo, RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
+        ServerWorld entityWorld = (ServerWorld) entity.getWorld();
+        MinecraftServer server = entityWorld.getServer();
+        ServerWorld destinationWorld = server.getWorld(dimTo);
+        /*if (entity.getWorld().getRegistryKey() == dimFrom) {
             if (entity.getY() >= heightForTeleportFrom) {
                 if (entity instanceof ServerPlayerEntity player) {
                     Vec3d vec = new Vec3d(entity.getX(), heightForTeleportTo, entity.getZ());
-                    WorldUtil.teleportToWorld(player, entity.getServer().getWorld(dimTo), vec,
+                    WorldUtil.teleportToWorld(player, destinationWorld, vec,
                             player.getYaw(),
                             player.getPitch());
-
                     player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
                 } else {
-                    entity.teleport(entity.getServer().getWorld(dimTo), entity.getX(), heightForTeleportTo, entity.getZ(),
+                    entity.teleport(destinationWorld, entity.getX(), heightForTeleportTo, entity.getZ(),
                             Set.of(),
                             entity.getYaw(),
                             entity.getPitch());
                 }
             }
+        }*/
+        if (entity.getBlockY() >= heightForTeleportFrom && entityWorld.getRegistryKey() == dimFrom) {
+            System.out.println(entity.getBlockPos() + " | teleporting to | " + destinationWorld);
+            entity.moveToWorld(destinationWorld);
         }
     }
 }

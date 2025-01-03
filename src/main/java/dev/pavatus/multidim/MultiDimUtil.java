@@ -1,12 +1,19 @@
 package dev.pavatus.multidim;
 
 import dev.pavatus.multidim.api.MutableRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.dimension.DimensionOptions;
+
+import loqor.ait.AITMod;
 
 public class MultiDimUtil {
 
@@ -17,5 +24,10 @@ public class MultiDimUtil {
 
     public static MutableRegistry<DimensionOptions> getMutableDimensionsRegistry(MinecraftServer server) {
         return (MutableRegistry<DimensionOptions>) getDimensionsRegistry(server);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static boolean isTardisDimension(ClientWorld world) {
+        return world.getBiome(MinecraftClient.getInstance().player.getBlockPos()).matchesId(new Identifier(AITMod.MOD_ID, "tardis"));
     }
 }

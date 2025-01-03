@@ -4,6 +4,8 @@ import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
 
 import java.util.UUID;
 
+import dev.pavatus.multidim.MultiDimUtil;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -13,7 +15,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import loqor.ait.api.ClientWorldEvents;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
@@ -31,9 +32,19 @@ public class ClientTardisUtil {
     private static ClientTardis currentTardis;
 
     static {
-        ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
+        // TODO Theo, once again, the fool. This is bullshit and needs to be fixed. It isn't optimized if it doesn't FUCKING WORK. - Loqor
+        /*ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
             UUID id = UUID.fromString(world.getRegistryKey().getValue().getPath());
             ClientTardisManager.getInstance().getTardis(id, clientTardis -> currentTardis = clientTardis);
+        });*/
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            if (client.world == null || client.player == null)
+                return;
+
+            if (MultiDimUtil.isTardisDimension(client.world)) {
+                UUID id = UUID.fromString(client.world.getRegistryKey().getValue().getPath());
+                ClientTardisManager.getInstance().getTardis(id, clientTardis -> currentTardis = clientTardis);
+            }
         });
     }
 
