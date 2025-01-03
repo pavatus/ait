@@ -25,9 +25,4 @@ public class MultiDimUtil {
     public static MutableRegistry<DimensionOptions> getMutableDimensionsRegistry(MinecraftServer server) {
         return (MutableRegistry<DimensionOptions>) getDimensionsRegistry(server);
     }
-
-    @Environment(EnvType.CLIENT)
-    public static boolean isTardisDimension(ClientWorld world) {
-        return world.getBiome(MinecraftClient.getInstance().player.getBlockPos()).matchesId(new Identifier(AITMod.MOD_ID, "tardis"));
-    }
 }

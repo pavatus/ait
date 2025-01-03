@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import loqor.ait.core.world.TardisServerWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
@@ -19,6 +20,7 @@ import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import net.minecraft.server.world.ServerWorld;
 
 public class TardisBuilder {
 
@@ -89,8 +91,12 @@ public class TardisBuilder {
         this.validate();
 
         ServerTardis tardis = new ServerTardis(this.uuid, this.desktop, this.exterior);
+
+        long worldStart = System.currentTimeMillis();
+        ServerWorld world = TardisServerWorld.create(tardis);
+        AITMod.LOGGER.info("Created world {} in {}ms", world, System.currentTimeMillis() - worldStart);
+
         Tardis.init(tardis, TardisComponent.InitContext.createdAt(this.pos));
-        tardis.getInteriorWorld();
 
         for (Consumer<ServerTardis> consumer : this.postInit) {
             consumer.accept(tardis);

@@ -63,19 +63,16 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void ait$tick(CallbackInfo ci) {
-
         LivingEntity entity = (LivingEntity) (Object) this;
 
-        if (entity instanceof PlayerEntity player) {
-            if (player.isCreative()) return;
-        }
-
-        if (entity instanceof PlayerEntity player) {
-            if (player.isSpectator()) return;
-        }
+        if (entity instanceof PlayerEntity player
+                && (player.isCreative() || player.isSpectator()))
+             return;
 
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
-        if (planet == null) return;
+
+        if (planet == null)
+            return;
 
         if (planet.isFreezing() &&  !Planet.hasFullSuit(entity) && !entity.hasStatusEffect(AITStatusEffects.OXYGENATED)) {
             if (entity.getType() == EntityType.ENDERMAN) {

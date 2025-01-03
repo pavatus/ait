@@ -27,7 +27,7 @@ public class ClientShakeUtil {
         shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / MAX_DISTANCE));
     }
 
-    public static void ShakeFromEverywhere() {
+    public static void shakeFromEverywhere() {
         shake(0.1f);
     }
 

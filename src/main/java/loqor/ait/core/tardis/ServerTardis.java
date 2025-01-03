@@ -89,7 +89,7 @@ public class ServerTardis extends Tardis {
 
     public ServerWorld getInteriorWorld() {
         if (this.world == null)
-            this.world = TardisServerWorld.getOrCreate(this);
+            this.world = TardisServerWorld.get(this);
 
         return this.world;
     }

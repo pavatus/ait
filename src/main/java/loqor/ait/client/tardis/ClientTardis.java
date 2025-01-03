@@ -47,20 +47,17 @@ public class ClientTardis extends Tardis implements Disposable {
         // referencing client stuff where it COULD be server causes problems
         if (ClientShakeUtil.shouldShake(this)) {
             if (this.flight().falling().get()) {
-                ClientShakeUtil.ShakeFromEverywhere();
+                ClientShakeUtil.shakeFromEverywhere();
             }
             ClientShakeUtil.shakeFromConsole();
         }
 
-        if (ClientTardisUtil.getCurrentTardis() == null) return;
+        if (ClientTardisUtil.getCurrentTardis() != this)
+            return;
 
-        // this is borked.
-
-        if (this.getUuid().equals(ClientTardisUtil.getCurrentTardis().getUuid())) {
-            ClientTardisUtil.tickPowerDelta();
-            ClientTardisUtil.tickAlarmDelta();
-            ticks++;
-        }
+        ClientTardisUtil.tickPowerDelta();
+        ClientTardisUtil.tickAlarmDelta();
+        ticks++;
     }
 
     @Override

@@ -4,6 +4,7 @@ import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
 
 import java.util.UUID;
 
+import loqor.ait.core.world.TardisServerWorld;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -32,14 +33,7 @@ public class ClientTardisUtil {
 
     static {
         ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
-            UUID id;
-            try {
-                id = UUID.fromString(world.getRegistryKey().getValue().getPath());
-            } catch(Exception e) {
-                currentTardis = null;
-                return;
-            }
-            ClientTardisManager.getInstance().getTardis(id, clientTardis -> currentTardis = clientTardis);
+            TardisServerWorld.getClientTardis(world, tardis -> currentTardis = tardis);
         });
     }
 
