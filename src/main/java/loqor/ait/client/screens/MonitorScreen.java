@@ -147,7 +147,7 @@ public class MonitorScreen extends ConsoleScreen {
     public static void sendExteriorPacket(ClientTardis tardis, ExteriorCategorySchema category,
             ClientExteriorVariantSchema variant) {
         if (category != tardis.getExterior().getCategory() || variant.parent() != tardis.getExterior().getVariant()) {
-            ClientTardisUtil.changeExteriorWithScreen(tardis, category.id(), variant.id(),
+            ClientTardisUtil.changeExteriorWithScreen(tardis, variant.id(),
                     variant.parent() != tardis.getExterior().getVariant());
         }
     }

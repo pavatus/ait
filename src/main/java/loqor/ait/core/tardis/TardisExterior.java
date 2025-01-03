@@ -73,7 +73,7 @@ public class TardisExterior extends TardisComponent {
 
     private void setMissing() {
         if (this.tardis instanceof ClientTardis clientTardis)
-            ClientTardisUtil.changeExteriorWithScreen(clientTardis, MISSING_CATEGORY.id(), MISSING_VARIANT.id(), true);
+            ClientTardisUtil.changeExteriorWithScreen(clientTardis, MISSING_VARIANT.id(), true);
 
         this.category = MISSING_CATEGORY;
         this.variant = MISSING_VARIANT;

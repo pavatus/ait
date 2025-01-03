@@ -19,7 +19,7 @@ public class FoggyUtils {
             return;
 
         if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()
-                && ClientTardisUtil.getAlarmDelta() != ClientTardisUtil.MAX_ALARM_DELTA_TICKS) {
+                && ClientTardisUtil.getAlarmDelta() != 0) {
             RenderSystem.setShaderFogStart(MathHelper.lerp(ClientTardisUtil.getAlarmDeltaForLerp(), -8, 10));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(ClientTardisUtil.getAlarmDeltaForLerp(), 11, 32));
             RenderSystem.setShaderFogShape(FogShape.SPHERE);
@@ -28,7 +28,7 @@ public class FoggyUtils {
         }
 
         if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()
-                && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {
+                && ClientTardisUtil.getPowerDelta() != 0) {
             RenderSystem.setShaderFogStart(MathHelper.lerp(ClientTardisUtil.getPowerDeltaForLerp(), -8, 24));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(ClientTardisUtil.getPowerDeltaForLerp(), 11, 32));
             RenderSystem.setShaderFogShape(FogShape.SPHERE);

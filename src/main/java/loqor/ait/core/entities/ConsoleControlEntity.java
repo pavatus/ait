@@ -30,6 +30,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
@@ -114,7 +115,10 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+        TardisRef ref = this.asRef();
+
+        if (ref != null && ref.getId() != null)
+            nbt.putUuid("tardis", ref.getId());
 
         if (consoleBlockPos != null)
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));

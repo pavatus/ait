@@ -25,9 +25,6 @@ public class ClientTardis extends Tardis implements Disposable {
     @Exclude
     private boolean aged = false;
 
-    @Exclude
-    public int ticks = 0;
-
     private ClientTardis(UUID check) {
         super();
         this.check = check;
@@ -47,17 +44,18 @@ public class ClientTardis extends Tardis implements Disposable {
         if (ClientTardisUtil.getCurrentTardis() != this)
             return;
 
-        // referencing client stuff where it COULD be server causes problems
-        if (ClientShakeUtil.shouldShake(this)) {
-            if (this.flight().falling().get())
-                ClientShakeUtil.shakeFromEverywhere();
-
-            ClientShakeUtil.shakeFromConsole();
-        }
-
         ClientTardisUtil.tickPowerDelta();
         ClientTardisUtil.tickAlarmDelta();
-        this.ticks++;
+
+        // referencing client stuff where it COULD be server causes problems
+        if (!ClientShakeUtil.shouldShake(this))
+            return;
+
+        if (this.flight().falling().get()) {
+            ClientShakeUtil.shakeFromEverywhere();
+        } else {
+            ClientShakeUtil.shakeFromConsole();
+        }
     }
 
     @Override

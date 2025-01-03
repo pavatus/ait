@@ -3,7 +3,6 @@ package loqor.ait.core.world;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
 
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.MultiDimServerWorld;
@@ -29,8 +28,6 @@ import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.spawner.Spawner;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
@@ -102,16 +99,11 @@ public class TardisServerWorld extends MultiDimServerWorld {
     }
 
     @Nullable @Environment(EnvType.CLIENT)
-    public static ClientTardis getClientTardis(ClientWorld world, Consumer<ClientTardis> consumer) {
+    public static UUID getClientTardisId(ClientWorld world) {
         if (!isTardisDimension(world))
             return null;
 
-        try {
-            UUID id = UUID.fromString(world.getRegistryKey().getValue().getPath());
-            ClientTardisManager.getInstance().getTardis(id, consumer);
-        } catch(Exception ignored) { }
-
-        return null;
+        return UUID.fromString(world.getRegistryKey().getValue().getPath());
     }
 
     @Environment(EnvType.CLIENT)

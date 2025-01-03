@@ -13,10 +13,13 @@ public class ClientShakeUtil {
     private static final int MAX_DISTANCE = 16; // The radius from the console where the player will feel the shake
 
     public static boolean shouldShake(Tardis tardis) {
-        return ClientTardisUtil.getCurrentTardis() == tardis
-                && ((tardis.travel().getState() != TravelHandlerBase.State.LANDED
-                && ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE && !tardis.travel().autopilot())
-                || tardis.flight().falling().get());
+        if (ClientTardisUtil.getCurrentTardis() != tardis)
+            return false;
+
+        if (tardis.flight().falling().get())
+            return true;
+
+        return !tardis.travel().autopilot() && tardis.travel().getState() != TravelHandlerBase.State.LANDED;
     }
 
     /**

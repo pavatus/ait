@@ -23,8 +23,6 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.core.engine.SubSystem;
-import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
 import loqor.ait.data.Exclude;
@@ -88,10 +86,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
             this.subscribers.put(uuid, consumer);
 
         MinecraftClient.getInstance().executeTask(() -> ClientPlayNetworking.send(ASK, data));
-    }
-
-    public void loadTardis(UUID uuid, @Nullable Consumer<ClientTardis> consumer) {
-        this.loadTardis(MinecraftClient.getInstance(), uuid, consumer);
     }
 
     @Override
@@ -158,16 +152,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
         id.set(tardis, component);
         TardisComponent.init(component, tardis, TardisComponent.InitContext.deserialize());
     }
-    private void syncSubsystem(ClientTardis tardis, PacketByteBuf buf) {
-        String rawId = buf.readString();
-
-        SubSystem.IdLike id = SubSystemRegistry.getInstance().get(rawId);
-        SubSystem component = this.networkGson.fromJson(buf.readString(), id.clazz());
-
-        id.set(tardis, component);
-        SubSystem.init(component, tardis, TardisComponent.InitContext.deserialize());
-    }
-
 
     private void syncDelta(PacketByteBuf buf) {
         UUID id = buf.readUuid();
@@ -186,7 +170,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
     @Override
     protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
         return super.createGsonBuilder(strategy)
-                .registerTypeAdapter(Tardis.class, ClientTardis.creator());
+                .registerTypeAdapter(ClientTardis.class, ClientTardis.creator());
     }
 
     @Override

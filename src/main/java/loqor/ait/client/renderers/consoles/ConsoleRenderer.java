@@ -13,7 +13,6 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
 
-import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
@@ -70,10 +69,8 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-        if (AITMod.CONFIG.CLIENT.ANIMATE_CONSOLE) {
-            profiler.swap("animate");
-            model.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
-        }
+        profiler.swap("animate");
+        model.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
 
         profiler.swap("render");
         model.renderWithAnimations(entity, model.getPart(), matrices,
