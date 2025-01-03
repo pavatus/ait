@@ -38,7 +38,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 getOrCreateTagBuilder(annotation.tool().tag).add(entry.getKey());
             }
         }
-
+//someone figure out how to add the leafs to this
         getOrCreateTagBuilder(AITTags.Blocks.SONIC_INTERACTABLE).add(Blocks.IRON_DOOR).add(Blocks.IRON_TRAPDOOR)
                 .add(Blocks.TNT).add(Blocks.CAMPFIRE).add(Blocks.CANDLE).add(Blocks.CANDLE_CAKE)
                 .add(Blocks.WHITE_CANDLE).add(Blocks.ORANGE_CANDLE).add(Blocks.MAGENTA_CANDLE)
@@ -53,6 +53,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.GREEN_CANDLE_CAKE).add(Blocks.RED_CANDLE_CAKE).add(Blocks.BLACK_CANDLE_CAKE)
                 .add(Blocks.REDSTONE_LAMP).add(AITBlocks.EXTERIOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR)
                 .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE)
+                .add(Blocks.BRICKS)
                 .add(AITBlocks.MACHINE_CASING);
 
 
