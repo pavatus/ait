@@ -53,8 +53,9 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.GREEN_CANDLE_CAKE).add(Blocks.RED_CANDLE_CAKE).add(Blocks.BLACK_CANDLE_CAKE)
                 .add(Blocks.REDSTONE_LAMP).add(AITBlocks.EXTERIOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR)
                 .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE)
-                .add(Blocks.BRICKS, PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE)
-                .add(AITBlocks.MACHINE_CASING);
+                .add(Blocks.BRICKS)
+                .add(PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE)
+                .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE);
 
 
         getOrCreateTagBuilder(BlockTags.DIRT).add(PlanetBlocks.MARTIAN_SAND).add(PlanetBlocks.REGOLITH);

@@ -441,6 +441,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
+                if (block == AITBlocks.CONSOLE)  {
+                    world.breakBlock(pos, true);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+                    return;
+                }
+
                 if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_BLOCKS)) {
                     world.breakBlock(pos, false);
                     world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
