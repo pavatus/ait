@@ -112,7 +112,7 @@ public class TardisDesktop extends TardisComponent {
 
     // FIXME(PERFORMANCE)
     public void changeInterior(TardisDesktopSchema schema, boolean sendEvent) {
-        long currentTime = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         this.schema = schema;
 
         if (sendEvent)
@@ -124,7 +124,7 @@ public class TardisDesktop extends TardisComponent {
         if (!success)
             AITMod.LOGGER.error("Failed to generate interior for {}", this.tardis.getUuid());
 
-        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
+        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - start);
     }
 
     public void clearOldInterior() {

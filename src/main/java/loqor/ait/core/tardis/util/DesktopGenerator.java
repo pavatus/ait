@@ -14,14 +14,14 @@ import net.minecraft.world.chunk.ChunkStatus;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Clearable;
-import loqor.ait.api.Structure;
+import loqor.ait.api.TardisStructure;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.Corners;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class DesktopGenerator {
 
-    private static final StructurePlacementData SETTINGS = new StructurePlacementData();
+    private static final StructurePlacementData SETTINGS = new StructurePlacementData().setUpdateNeighbors(false);
 
     private final TardisDesktopSchema schema;
 
@@ -39,7 +39,7 @@ public class DesktopGenerator {
 
         StructureTemplate template = optional.get();
 
-        if (template instanceof Structure structure)
+        if (template instanceof TardisStructure structure)
             structure.ait$setTardis(tardis);
 
         return template.place(level, BlockPos.ofFloored(corners.getBox().getCenter()),
