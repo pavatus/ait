@@ -470,7 +470,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
                     .input(AITBlocks.ZEITON_COBBLE).criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
-                    .input(AITItems.CHARGED_ZEITON_CRYSTAL).criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL)));
+                    .input(AITBlocks.ZEITON_BLOCK).criterion(hasItem(AITBlocks.ZEITON_BLOCK), conditionsFromItem(AITBlocks.ZEITON_BLOCK)));
 
 
             createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
