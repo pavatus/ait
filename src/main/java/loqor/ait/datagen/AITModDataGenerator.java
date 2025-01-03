@@ -751,7 +751,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("block.ait.fabricator.tooltip.use", "(Place on top of a Smithing Table)");
         provider.addTranslation("tooltip.ait.use_in_tardis", "(Place inside a TARDIS)");
         provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
-        provider.addTranslation("tooltip.ait.power_converter", "(Convert Zeiton Shards into Artron.");
+        provider.addTranslation("tooltip.ait.power_converter", "(Convert Zeiton Shards into Artron)");
 
         // ????
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
