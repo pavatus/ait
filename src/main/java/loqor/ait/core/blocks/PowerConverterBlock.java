@@ -1,13 +1,21 @@
 package loqor.ait.core.blocks;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -20,15 +28,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.engine.link.block.FluidLinkBlock;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-
-
-import java.util.List;
 
 public class PowerConverterBlock extends FluidLinkBlock {
 

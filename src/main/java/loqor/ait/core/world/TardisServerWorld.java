@@ -9,8 +9,6 @@ import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.VoidChunkGenerator;
 import dev.pavatus.multidim.api.WorldBlueprint;
-import loqor.ait.client.tardis.ClientTardis;
-import loqor.ait.client.tardis.manager.ClientTardisManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -31,6 +29,8 @@ import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.spawner.Spawner;
 
 import loqor.ait.AITMod;
+import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
@@ -101,8 +101,7 @@ public class TardisServerWorld extends MultiDimServerWorld {
         return world instanceof TardisServerWorld;
     }
 
-    @Nullable
-    @Environment(EnvType.CLIENT)
+    @Nullable @Environment(EnvType.CLIENT)
     public static ClientTardis getClientTardis(ClientWorld world, Consumer<ClientTardis> consumer) {
         if (!isTardisDimension(world))
             return null;

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import loqor.ait.core.world.TardisServerWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
@@ -14,13 +14,13 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.LoyaltyHandler;
 import loqor.ait.core.tardis.handler.StatsHandler;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import net.minecraft.server.world.ServerWorld;
 
 public class TardisBuilder {
 
