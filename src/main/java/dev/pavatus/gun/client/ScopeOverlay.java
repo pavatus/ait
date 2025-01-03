@@ -24,6 +24,7 @@ public class ScopeOverlay implements HudRenderCallback {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if(mc.player == null) return;
+
         if(mc.player.getMainHandStack().getItem() instanceof StaserRifleItem && mc.options.getPerspective().isFirstPerson()) {
             if (mc.options.useKey.isPressed()) {
                 float f = MinecraftClient.getInstance().getLastFrameDuration();
