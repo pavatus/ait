@@ -52,7 +52,11 @@ public class ClientTardis extends Tardis implements Disposable {
             ClientShakeUtil.shakeFromConsole();
         }
 
-        if (this.equals(ClientTardisUtil.getCurrentTardis())) {
+        if (ClientTardisUtil.getCurrentTardis() == null) return;
+
+        // this is borked.
+
+        if (this.getUuid().equals(ClientTardisUtil.getCurrentTardis().getUuid())) {
             ClientTardisUtil.tickPowerDelta();
             ClientTardisUtil.tickAlarmDelta();
             ticks++;
