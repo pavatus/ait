@@ -20,7 +20,7 @@ public abstract class StallionVariant extends ExteriorVariantSchema {
 
     protected StallionVariant(String name, String modId) {
         super(StallionCategory.REFERENCE, new Identifier(modId, "exterior/stallion/" + name),
-                new Loyalty(Loyalty.Type.PILOT));
+                new Loyalty(Loyalty.Type.COMPANION));
     }
 
     protected StallionVariant(String name) {
