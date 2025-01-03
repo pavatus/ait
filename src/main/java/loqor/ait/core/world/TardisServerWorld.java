@@ -6,8 +6,8 @@ import java.util.concurrent.Executor;
 
 import dev.pavatus.multidim.MultiDim;
 import dev.pavatus.multidim.api.MultiDimServerWorld;
-import dev.pavatus.multidim.api.VoidChunkGenerator;
 import dev.pavatus.multidim.api.WorldBlueprint;
+import loqor.ait.core.AITDimensions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.RandomSequencesState;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
@@ -33,21 +32,9 @@ import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
 
-
 public class TardisServerWorld extends MultiDimServerWorld {
 
-    private static final RegistryKey<Biome> TARDIS_BIOME = RegistryKey.of(RegistryKeys.BIOME, AITMod.id("tardis"));
     private static final String NAMESPACE = AITMod.MOD_ID + "-tardis";
-    private static final WorldBlueprint BLUEPRINT;
-
-    static {
-        ServerWorld overworld = WorldUtil.getOverworld();
-
-        BLUEPRINT = new WorldBlueprint(AITMod.id("tardis"))
-                .setPersistent(true).shouldTickTime(false).withCreator(TardisServerWorld::new)
-                .withType(AITMod.id("tardis_dimension_type")).withSeed(overworld.getSeed())
-                .withGenerator(new VoidChunkGenerator(overworld.getRegistryManager().get(RegistryKeys.BIOME), TARDIS_BIOME));
-    }
 
     private ServerTardis tardis;
 
@@ -70,7 +57,7 @@ public class TardisServerWorld extends MultiDimServerWorld {
     public static ServerWorld create(ServerTardis tardis) {
         AITMod.LOGGER.info("Creating Tardis Dimension for Tardis {}", tardis.getUuid());
         TardisServerWorld created = (TardisServerWorld) MultiDim.get(ServerLifecycleHooks.get())
-                .add(BLUEPRINT, idForTardis(tardis));
+                .add(AITDimensions.TARDIS_WORLD_BLUEPRINT, idForTardis(tardis));
 
         created.setTardis(tardis);
 

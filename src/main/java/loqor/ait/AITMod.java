@@ -118,6 +118,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ServerLifecycleHooks.init();
         NetworkUtil.init();
         Scheduler.init();
         AsyncLocatorUtil.setupExecutorService();
@@ -157,16 +158,14 @@ public class AITMod implements ModInitializer {
 
         Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
+
         AITStatusEffects.init();
         AITVillagers.init();
-        CustomTrades.registerCustomTrades();
-
-        // ServerVortexDataHandler.init();
-        ServerLifecycleHooks.init();
-
         AITArgumentTypes.register();
-
         AITSounds.init();
+        AITDimensions.init();
+
+        CustomTrades.registerCustomTrades();
 
         RegistryContainer.register(AITItemGroups.class, MOD_ID);
         RegistryContainer.register(AITItems.class, MOD_ID);

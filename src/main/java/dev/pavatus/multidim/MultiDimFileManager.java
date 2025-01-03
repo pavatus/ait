@@ -10,12 +10,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.WorldBlueprint;
+import loqor.ait.core.events.ServerCrashEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
@@ -37,12 +39,20 @@ public class MultiDimFileManager {
     }
 
     public static void init() {
-        ServerWorldEvents.UNLOAD.register((server, world) -> {
-            if (world instanceof MultiDimServerWorld msw && msw.getBlueprint().persistent())
-                write(server, msw);
+        ServerWorldEvents.UNLOAD.register(MultiDimFileManager::writeIfNeeded);
+
+        ServerCrashEvent.EVENT.register((server, report) -> {
+            for (ServerWorld world : server.getWorlds()) {
+                writeIfNeeded(server, world);
+            }
         });
 
-        ServerLifecycleEvents.SERVER_STARTING.register(MultiDimFileManager::readAll);
+        ServerLifecycleEvents.SERVER_STARTED.register(MultiDimFileManager::readAll);
+    }
+
+    private static void writeIfNeeded(MinecraftServer server, ServerWorld world) {
+        if (world instanceof MultiDimServerWorld msw && msw.getBlueprint().persistent())
+            write(server, msw);
     }
 
     private static void write(MinecraftServer server, MultiDimServerWorld world) {
@@ -71,7 +81,7 @@ public class MultiDimFileManager {
             JsonObject element = JsonParser.parseString(Files.readString(file)).getAsJsonObject();
             Identifier blueprint = Identifier.tryParse(element.get("blueprint").getAsString());
 
-            return new Saved(blueprint, RegistryKey.of(RegistryKeys.WORLD, id)/*, options*/);
+            return new Saved(blueprint, RegistryKey.of(RegistryKeys.WORLD, id));
         } catch (Throwable e) {
             MultiDimMod.LOGGER.warn("Couldn't read world file! {}", id, e);
             return null;
