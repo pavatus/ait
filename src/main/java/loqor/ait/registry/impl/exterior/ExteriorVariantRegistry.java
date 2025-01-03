@@ -271,7 +271,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         ADAPTIVE = register(new AdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 4)) {
             DALEK_MOD_1963 = register(new DalekMod1963Variant());
             DALEK_MOD_1967 = register(new DalekMod1967Variant());
             DALEK_MOD_1970 = register(new DalekMod1970Variant());
@@ -283,7 +283,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         //JAKE_DEFAULT = register(new JakeDefaultVariant());
 
         // Present
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 5))
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 3))
             PRESENT_DEFAULT = register(new PresentDefaultVariant());
     }
 }

@@ -277,7 +277,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         ADAPTIVE = register(new ClientAdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 4)) {
             DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
             DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
             DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
@@ -289,7 +289,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
 
         // Present
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 5))
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 3))
             PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
     }
 

@@ -76,11 +76,11 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 4)) {
             DALEK_MOD = register(new DalekModCategory());
         }
         //JAKE = register(new JakeCategory());
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 5)) {
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 3)) {
             PRESENT = register(new PresentCategory());
         }
     }
