@@ -1,7 +1,5 @@
 package loqor.ait.mixin.client.rendering;
 
-import loqor.ait.api.AITUseActions;
-import net.minecraft.util.UseAction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +15,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.UseAction;
 
+import loqor.ait.api.AITUseActions;
 import loqor.ait.core.AITTags;
 
 @Mixin(HeldItemRenderer.class)
@@ -51,8 +51,7 @@ public class HeldItemRendererMixin {
                 ? UseAction.NONE : result;
     }
 
-    @Unique
-    private static boolean noBop(ItemStack stack) {
+    @Unique private static boolean noBop(ItemStack stack) {
         return stack.getRegistryEntry().isIn(AITTags.Items.NO_BOP);
     }
 }

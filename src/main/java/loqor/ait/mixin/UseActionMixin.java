@@ -1,14 +1,14 @@
 package loqor.ait.mixin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import net.minecraft.util.UseAction;
 
 import loqor.ait.api.AITUseActions;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(UseAction.class)
 public class UseActionMixin implements AITUseActions {
@@ -30,8 +30,7 @@ public class UseActionMixin implements AITUseActions {
         return SONIC;
     }
 
-    @Unique
-    private static UseAction register(String name) {
+    @Unique private static UseAction register(String name) {
         UseAction result = init(name, UseAction.values().length);
 
         List<UseAction> actions = new ArrayList<>(List.of(field_8948));

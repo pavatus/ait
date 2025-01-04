@@ -1,7 +1,8 @@
 package loqor.ait.core.item.sonic;
 
-import loqor.ait.data.schema.sonic.SonicSchema;
 import net.minecraft.util.Identifier;
+
+import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class InteractionSonicMode extends SonicMode {
 

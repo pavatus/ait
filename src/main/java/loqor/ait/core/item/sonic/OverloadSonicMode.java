@@ -1,6 +1,5 @@
 package loqor.ait.core.item.sonic;
 
-import loqor.ait.AITMod;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import org.jetbrains.annotations.Nullable;
 
