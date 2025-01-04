@@ -435,10 +435,36 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (block == Blocks.BRICKS)  {
-                    world.breakBlock(pos, false);
-                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-                    return;
+                if (block == Blocks.BRICKS || block == Blocks.BRICK_WALL)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.BRICK)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.NETHER_BRICKS || block == Blocks.RED_NETHER_BRICKS || block == Blocks.NETHER_BRICK_WALL || block == Blocks.RED_NETHER_BRICK_WALL)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.NETHER_BRICK)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.ICE || block == Blocks.BLUE_ICE || block == Blocks.FROSTED_ICE || block == Blocks.PACKED_ICE)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Blocks.AIR)));
+                    world.setBlockState(pos, Blocks.WATER.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.SNOW || block == Blocks.SNOW_BLOCK || block == Blocks.POWDER_SNOW)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.SNOWBALL)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
 
                 if (block == AITBlocks.CONSOLE)  {
@@ -456,6 +482,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                 if (block instanceof LeavesBlock) {
                     world.breakBlock(pos, false);
                     world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+
                     return;
                 }
 
