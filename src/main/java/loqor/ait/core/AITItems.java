@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import dev.pavatus.lib.container.AssignedName;
 import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -100,7 +101,8 @@ public class AITItems extends ItemContainer {
     @NoEnglish
     public static final Item CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new AItemSettings().group(AITItemGroups.MAIN), "Classic Key", "Amethyst Shard");
-    public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
+    //public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item SONIC_SCREWDRIVER = new SonicItem2(new AItemSettings().group(AITItemGroups.MAIN));
 
     // Crafting items
     public static final Item ZEITON_SHARD = new ZeitonShardItem(new AItemSettings());

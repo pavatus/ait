@@ -9,8 +9,10 @@ import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
@@ -19,6 +21,7 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
+import net.minecraft.util.Identifier;
 
 
 public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -53,11 +56,11 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.GREEN_CANDLE_CAKE).add(Blocks.RED_CANDLE_CAKE).add(Blocks.BLACK_CANDLE_CAKE)
                 .add(Blocks.REDSTONE_LAMP).add(AITBlocks.EXTERIOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR)
                 .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE, Blocks.LAPIS_ORE,Blocks.DEEPSLATE_LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE, Blocks.DEEPSLATE_COAL_ORE, Blocks.COAL_ORE, Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE)
-                .add(Blocks.SAND)
+                .addTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "ores")))
+                .addTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")))
+                .addTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks")))
+                .addTag(BlockTags.ICE).addTag(BlockTags.SNOW).addTag(BlockTags.SAND).addTag(BlockTags.LEAVES)
                 .add(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS, Blocks.NETHER_BRICK_WALL, Blocks.RED_NETHER_BRICK_WALL)
-                .add(Blocks.BIRCH_LEAVES)
-                .add(Blocks.SNOW, Blocks.SNOW_BLOCK, Blocks.POWDER_SNOW)
-                .add(Blocks.ICE, Blocks.BLUE_ICE, Blocks.FROSTED_ICE, Blocks.PACKED_ICE)
                 .add(PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE, PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE, PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE, PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE, PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE)
                 .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE);
 

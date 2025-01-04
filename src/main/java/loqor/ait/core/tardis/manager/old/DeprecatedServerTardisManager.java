@@ -184,10 +184,10 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
 
         for (ServerTardis tardis : this.lookup.values()) {
             if (clean) {
-
                 if (tardis == null)
                     continue;
 
+                // TODO move this into some method like #dispose
                 ForcedChunkUtil.stopForceLoading(tardis.travel().position());
                 TravelHandlerBase.State state = tardis.travel().getState();
 
@@ -198,6 +198,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
                 }
 
                 tardis.door().closeDoors();
+                tardis.interiorChangingHandler().queued().set(false);
             }
 
             this.fileManager.saveTardis(server, this, tardis);

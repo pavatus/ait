@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
+import loqor.ait.core.item.sonic.SonicMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -281,16 +282,12 @@ public class AITModClient implements ClientModInitializer {
 
         CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"),
                 (model, stack, world, entity, seed) -> {
-                    SonicItem.Mode mode = SonicItem.findMode(stack);
                     SonicSchema.Models models = SonicItem.findSchema(stack).models();
 
-                    return switch (mode) {
-                        case INACTIVE -> models.inactive();
-                        case INTERACTION -> models.interaction();
-                        case OVERLOAD -> models.overload();
-                        case SCANNING -> models.scanning();
-                        case TARDIS -> models.tardis();
-                    };
+                    if (entity == null || !(entity.getActiveItem() == stack && entity.isUsingItem()))
+                        return models.inactive();
+
+                    return SonicItem2.mode(stack).model(models);
                 });
     }
 

@@ -430,7 +430,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         tardis.flight().falling().set(false);
 
         DoorHandler.lockTardis(
-                tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isQueued(), tardis, null,
+                tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().queued().get(), tardis, null,
                 false);
 
         TardisEvents.LANDED.invoker().onLanded(tardis);

@@ -1,11 +1,11 @@
 package loqor.ait.core.item.sonic;
 
-import dev.pavatus.planet.core.PlanetBlocks;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.block.*;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,6 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -31,6 +30,10 @@ public class OverloadSonicMode extends SonicMode {
 
     private static final ItemStack TOOL = new ItemStack(Items.DIAMOND_PICKAXE);
 
+    static {
+        TOOL.addEnchantment(Enchantments.FORTUNE, 5);
+    }
+
     protected OverloadSonicMode(int index) {
         super(index);
     }
@@ -43,300 +46,101 @@ public class OverloadSonicMode extends SonicMode {
         HitResult hitResult = SonicMode.getHitResult(user);
 
         if (hitResult instanceof BlockHitResult blockHit)
-            this.overloadBlock(blockHit.getBlockPos(), stack, serverWorld, user, ticks);
+            this.overloadBlock(blockHit.getBlockPos(), serverWorld, user, ticks);
     }
 
-    private void overloadBlock(BlockPos pos, ItemStack stack, ServerWorld world, LivingEntity user, int ticks) {
+    private void overloadBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-
-        if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_PANES)) {
-            world.breakBlock(pos, false);
-            world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-            return;
-        }
-
-        if (block == Blocks.BRICKS || block == Blocks.BRICK_WALL)  {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.BRICK, 4)));
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == Blocks.NETHER_BRICKS || block == Blocks.RED_NETHER_BRICKS || block == Blocks.NETHER_BRICK_WALL || block == Blocks.RED_NETHER_BRICK_WALL)  {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.NETHER_BRICK, 4)));
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == Blocks.ICE || block == Blocks.BLUE_ICE || block == Blocks.FROSTED_ICE || block == Blocks.PACKED_ICE)  {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Blocks.AIR)));
-            world.setBlockState(pos, Blocks.WATER.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-
-
-        if (block == AITBlocks.CONSOLE)  {
-            world.breakBlock(pos, true);
-            world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-            return;
-        }
-
-        if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_BLOCKS)) {
-            world.breakBlock(pos, false);
-            world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-            return;
-        }
-
-        if (block instanceof LeavesBlock) {
-            world.breakBlock(pos, false);
-            world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-
-            return;
-        }
 
         if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-        if (block instanceof TntBlock) {
+        if (canLit(ticks)
+                && block instanceof TntBlock) {
             TntBlock.primeTnt(world, pos);
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+            world.removeBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
             return;
         }
 
+        if (canLit(ticks)
+                && block.getDefaultState().contains(RedstoneTorchBlock.LIT)) {
+            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
 
-        if (block instanceof SandBlock) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.GLASS)));
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+            world.setBlockState(pos, state.cycle(RedstoneTorchBlock.LIT));
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
         }
 
-//God forgive me for what i did to this code
-
-        if (block == Blocks.COAL_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.COAL)));
-            world.setBlockState(pos, Blocks.STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+        if (canShatter(ticks)
+                && (block == AITBlocks.CONSOLE
+                || state.isIn(ConventionalBlockTags.GLASS_PANES)
+                || state.isIn(ConventionalBlockTags.GLASS_BLOCKS)
+                || state.isIn(BlockTags.LEAVES)))  {
+            world.breakBlock(pos, true);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
         }
 
-        if (block == Blocks.DEEPSLATE_COAL_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.COAL)));
-            world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+        if (canMelt(ticks)
+                && (state.isIn(BlockTags.ICE) || state.isIn(BlockTags.SNOW))) {
+            world.breakBlock(pos, false);
+            world.setBlockState(pos, Blocks.WATER.getDefaultState());
 
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
         }
 
-        if (block == PlanetBlocks.MARTIAN_COAL_ORE) {
+        if (canDisassemble(ticks)
+                && state.isIn(BlockTags.STONE_BRICKS)) {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.COAL)));
-            world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    new ItemStack(Items.STONE, 4)));
+
+            world.breakBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
         }
 
-        if (block == PlanetBlocks.ANORTHOSITE_COAL_ORE) {
+        if (canDisassemble(ticks)
+                && (block == Blocks.BRICKS || block == Blocks.BRICK_WALL))  {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.COAL)));
-            world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    new ItemStack(Items.BRICK, 4)));
 
+            world.breakBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
         }
 
-        if (block == Blocks.LAPIS_ORE) {
+        if (canDisassemble(ticks)
+                && (block == Blocks.NETHER_BRICKS
+                || block == Blocks.RED_NETHER_BRICKS
+                || block == Blocks.NETHER_BRICK_WALL
+                || block == Blocks.RED_NETHER_BRICK_WALL))  {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.LAPIS_LAZULI)));
-            world.setBlockState(pos, Blocks.STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    new ItemStack(Items.NETHER_BRICK, 4)));
+
+            world.breakBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
         }
 
-        if (block == Blocks.DEEPSLATE_LAPIS_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.LAPIS_LAZULI)));
-            world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+        if (canSmelt(ticks)
+                && state.isIn(BlockTags.SAND)) {
+            world.playSound(user, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,
+                    1f, world.getRandom().nextFloat() * 0.4f + 0.8f);
 
+            dropItem(pos, new ItemStack(Items.GLASS), world);
+
+            world.removeBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
         }
 
-        if (block == PlanetBlocks.MARTIAN_LAPIS_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.LAPIS_LAZULI)));
-            world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == PlanetBlocks.ANORTHOSITE_LAPIS_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.LAPIS_LAZULI)));
-            world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == Blocks.DIAMOND_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.DIAMOND)));
-            world.setBlockState(pos, Blocks.STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == Blocks.DEEPSLATE_DIAMOND_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.DIAMOND)));
-            world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == PlanetBlocks.MARTIAN_DIAMOND_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.DIAMOND)));
-            world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == PlanetBlocks.ANORTHOSITE_DIAMOND_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.DIAMOND)));
-            world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == Blocks.IRON_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_IRON)));
-            world.setBlockState(pos, Blocks.STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == Blocks.DEEPSLATE_IRON_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_IRON)));
-            world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == PlanetBlocks.MARTIAN_IRON_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_IRON)));
-            world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == PlanetBlocks.ANORTHOSITE_IRON_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_IRON)));
-            world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == Blocks.GOLD_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_GOLD)));
-            world.setBlockState(pos, Blocks.STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == Blocks.DEEPSLATE_GOLD_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_GOLD)));
-            world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == PlanetBlocks.MARTIAN_GOLD_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_GOLD)));
-            world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == PlanetBlocks.ANORTHOSITE_GOLD_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_GOLD)));
-            world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == Blocks.NETHER_GOLD_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_GOLD)));
-            world.setBlockState(pos, Blocks.NETHERRACK.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == Blocks.COPPER_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_COPPER)));
-            world.setBlockState(pos, Blocks.STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == Blocks.DEEPSLATE_COPPER_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_COPPER)));
-            world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (block == PlanetBlocks.MARTIAN_COPPER_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_COPPER)));
-            world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        }
-
-        if (block == PlanetBlocks.ANORTHOSITE_COPPER_ORE) {
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.RAW_COPPER)));
-            world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
-                    Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-
-        }
-
-        if (state.isIn(ConventionalBlockTags.ORES)) {
+        if (canExtract(ticks)
+                && state.isIn(ConventionalBlockTags.ORES)) {
             BlockState newState = this.guessOreBase(block);
 
             if (newState == null)
@@ -352,18 +156,43 @@ public class OverloadSonicMode extends SonicMode {
                     .add(LootContextParameters.TOOL, TOOL);
 
             for (ItemStack dropped : state.getDroppedStacks(builder)) {
-                world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, dropped));
+                dropItem(pos, dropped, world);
             }
+
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
         }
+    }
 
-        if (block.getDefaultState().contains(RedstoneTorchBlock.LIT)) {
-            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+    private void dropItem(BlockPos pos, ItemStack stack, World world) {
+        world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, stack));
+    }
 
-            world.setBlockState(pos, state.cycle(RedstoneTorchBlock.LIT));
-        }
+    private static boolean canResonateConcrete(int ticks) {
+        return ticks >= 300; // 15s
+    }
 
-        world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+    private static boolean canSmelt(int ticks) {
+        return ticks >= 40;
+    }
+
+    private static boolean canExtract(int ticks) {
+        return ticks >= 50;
+    }
+
+    private static boolean canDisassemble(int ticks) {
+        return ticks >= 40;
+    }
+
+    private static boolean canMelt(int ticks) {
+        return ticks >= 30;
+    }
+
+    private static boolean canShatter(int ticks) {
+        return ticks >= 20;
+    }
+
+    private static boolean canLit(int ticks) {
+        return ticks >= 10;
     }
 
     @Nullable
