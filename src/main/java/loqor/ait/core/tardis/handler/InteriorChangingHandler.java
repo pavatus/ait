@@ -72,7 +72,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     static {
         TardisEvents.DEMAT.register(tardis -> {
             if (tardis.isGrowth()
-                    || tardis.interiorChangingHandler().isQueued())
+                    || tardis.interiorChangingHandler().queued().get())
                 return TardisEvents.Interaction.FAIL;
 
             return TardisEvents.Interaction.PASS;
