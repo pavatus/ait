@@ -227,14 +227,12 @@ public class OverloadSonicMode extends SonicMode {
         ore = i == -1 ? "stone" : ore.substring(0, i);
         id = id.withPath(ore);
 
-        AITMod.LOGGER.info("Testing for id {}", id);
         BlockState newState = Registries.BLOCK.get(id).getDefaultState();
 
         if (newState.isAir()) {
             id = id.withSuffixedPath("_stone");
             newState = Registries.BLOCK.get(id).getDefaultState();
 
-            AITMod.LOGGER.info("Testing for id {}", id);
             if (newState.isAir())
                 return null;
         }
