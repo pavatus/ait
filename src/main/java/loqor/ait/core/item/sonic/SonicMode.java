@@ -20,10 +20,10 @@ public abstract class SonicMode implements Ordered {
         public static final SonicMode[] VALUES = new SonicMode[4];
         private static int lastIndex = 0;
 
-        public static final SonicMode INTERACTION = register(OverloadSonicMode::new);
+        public static final SonicMode INTERACTION = register(InteractionSonicMode::new);
         public static final SonicMode OVERLOAD = register(OverloadSonicMode::new);
-        public static final SonicMode SCANNING = register(OverloadSonicMode::new);
-        public static final SonicMode TARDIS = register(OverloadSonicMode::new);
+        public static final SonicMode SCANNING = register(ScanningSonicMode::new);
+        public static final SonicMode TARDIS = register(TardisSonicMode::new);
 
         public static SonicMode register(Function<Integer, SonicMode> consumer) {
             SonicMode mode = consumer.apply(lastIndex);
