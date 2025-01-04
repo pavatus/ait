@@ -470,6 +470,30 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
+                if (block == Blocks.COAL_ORE || block == Blocks.DEEPSLATE_COAL_ORE || block == PlanetBlocks.ANORTHOSITE_COAL_ORE || block == PlanetBlocks.MARTIAN_COAL_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.COAL)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.LAPIS_ORE || block == Blocks.DEEPSLATE_LAPIS_ORE || block == PlanetBlocks.ANORTHOSITE_LAPIS_ORE || block == PlanetBlocks.MARTIAN_LAPIS_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.LAPIS_LAZULI)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DIAMOND_ORE || block == Blocks.DEEPSLATE_DIAMOND_ORE || block == PlanetBlocks.ANORTHOSITE_DIAMOND_ORE || block == PlanetBlocks.MARTIAN_DIAMOND_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.DIAMOND)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
 
                 if (block instanceof RedstoneLampBlock) {
                     world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
