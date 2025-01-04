@@ -437,7 +437,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                 if (block == Blocks.BRICKS || block == Blocks.BRICK_WALL)  {
                     world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                            new ItemStack(Items.BRICK)));
+                            new ItemStack(Items.BRICK, 4)));
                     world.setBlockState(pos, Blocks.AIR.getDefaultState(),
                             Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
@@ -445,7 +445,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
 
                 if (block == Blocks.NETHER_BRICKS || block == Blocks.RED_NETHER_BRICKS || block == Blocks.NETHER_BRICK_WALL || block == Blocks.RED_NETHER_BRICK_WALL)  {
                     world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                            new ItemStack(Items.NETHER_BRICK)));
+                            new ItemStack(Items.NETHER_BRICK, 4)));
                     world.setBlockState(pos, Blocks.AIR.getDefaultState(),
                             Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
