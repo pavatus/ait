@@ -19,4 +19,5 @@ public class InteractionSonicMode extends SonicMode {
     public Identifier model(SonicSchema.Models models) {
         return models.interaction();
     }
+
 }
