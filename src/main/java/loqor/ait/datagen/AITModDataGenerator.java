@@ -810,7 +810,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.success", "%s has grown to %d");
         provider.addTranslation("tardis.message.landingpad.adjust", "Adjusting to landing pad..");
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
-        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal to bootstrap...");
+        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal or nether star to bootstrap...");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
@@ -929,6 +929,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS is out of fuel and cannot dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning2",
                 "The TARDIS is refueling and is unable to dematerialise");
+        provider.addTranslation("message.ait.remoteitem.cancel.refuel",
+                "Refuling process halted, TARDIS dematerializing");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("message.ait.remoteitem.success1", "Dematerialized TARDIS");
         provider.addTranslation("message.ait.remoteitem.success2", "Activated refueler and handbrake");
@@ -959,7 +961,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sequence.ait.dimensional_breach", "DIMENSION BREACH: SECURE DOORS");
         provider.addTranslation("sequence.ait.energy_drain", "Artron drain detected!");
         provider.addTranslation("sequence.ait.power_drain_imminent", "Power drain imminent!");
-        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship computer offline! Crash imminent!");
+        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship requires re-stabilization!");
         provider.addTranslation("sequence.ait.anti_gravity_error", "Gravity miscalculation!");
         provider.addTranslation("sequence.ait.dimensional_drift_x", "Drifting off course X!");
         provider.addTranslation("sequence.ait.dimensional_drift_y", "Drifting off course Y!");

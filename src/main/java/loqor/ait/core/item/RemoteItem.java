@@ -65,7 +65,10 @@ public class RemoteItem extends LinkableItem {
                         player.sendMessage(Text.translatable("message.ait.remoteitem.warning1"));
 
                     if (tardis.isRefueling())
-                        player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
+                        player.sendMessage(Text.translatable("message.ait.remoteitem.cancel.refuel"));
+
+                        //It was dematting before anyway so as a lazy fix its a feature now!!
+                        //player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
 
                     // Check if the Tardis is already present at this location before moving
                     // it there
