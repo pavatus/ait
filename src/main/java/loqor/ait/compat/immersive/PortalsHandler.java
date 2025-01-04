@@ -3,26 +3,19 @@ package loqor.ait.compat.immersive;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.pavatus.multidim.api.WorldBuilder;
 import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.PortalManipulation;
-import qouteall.q_misc_util.api.DimensionAPI;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
@@ -174,12 +167,12 @@ public class PortalsHandler extends KeyedTardisComponent {
                 RotationPropertyHelper.toDirection(directed.getRotation()).get());
     }
 
-    public static ServerWorld addWorld(WorldBuilder builder) {
+    /*public static ServerWorld addWorld(WorldBuilder builder) {
         DimensionAPI.addDimensionDynamically(builder.id(), builder.buildOptions(ServerLifecycleHooks.get()));
 
         RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, builder.id());
         DimensionAPI.saveDimensionConfiguration(key);
 
         return ServerLifecycleHooks.get().getWorld(key);
-    }
+    }*/
 }

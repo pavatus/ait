@@ -1,12 +1,17 @@
 package loqor.ait.registry.impl;
 
+
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
+
+import java.util.Calendar;
 import java.util.Random;
+
+import dev.pavatus.register.datapack.SimpleDatapackRegistry;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.datapack.DatapackCategory;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.category.*;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySchema> {
 
@@ -51,6 +56,9 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     public static ExteriorCategorySchema GEOMETRIC;
     public static ExteriorCategorySchema STALLION;
     public static ExteriorCategorySchema ADAPTIVE;
+    public static ExteriorCategorySchema DALEK_MOD;
+    //public static ExteriorCategorySchema JAKE;
+    public static ExteriorCategorySchema PRESENT;
 
     @Override
     protected void defaults() {
@@ -68,5 +76,12 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 4)) {
+            DALEK_MOD = register(new DalekModCategory());
+        }
+        //JAKE = register(new JakeCategory());
+        if (isUnlockedOnThisDay(Calendar.JANUARY, 3)) {
+            PRESENT = register(new PresentCategory());
+        }
     }
 }

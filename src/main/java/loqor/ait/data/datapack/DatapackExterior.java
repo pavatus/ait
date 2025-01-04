@@ -1,5 +1,7 @@
 package loqor.ait.data.datapack;
 
+import static loqor.ait.data.datapack.DatapackConsole.EMPTY;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
@@ -42,7 +44,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     Identifier.CODEC.fieldOf("category").forGetter(ExteriorVariantSchema::categoryId),
                     Identifier.CODEC.fieldOf("parent").forGetter(DatapackExterior::getParentId),
                     Identifier.CODEC.fieldOf("texture").forGetter(DatapackExterior::texture),
-                    Identifier.CODEC.fieldOf("emission").forGetter(DatapackExterior::emission),
+                    Identifier.CODEC.optionalFieldOf("emission", EMPTY).forGetter(DatapackExterior::emission),
                     Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
                     BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),

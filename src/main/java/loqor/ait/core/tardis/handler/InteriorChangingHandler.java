@@ -1,13 +1,20 @@
 package loqor.ait.core.tardis.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -18,11 +25,16 @@ import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.advancement.TardisCriterions;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.item.ChargedZeitonCrystalItem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.Scheduler;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.schedule.Scheduler;
+import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.TimeUnit;
 import loqor.ait.data.properties.Property;
@@ -35,7 +47,7 @@ import loqor.ait.registry.impl.DesktopRegistry;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
 
-    public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
+    public static final Identifier CHANGE_DESKTOP = AITMod.id("change_desktop");
 
     private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "queued_interior", new Identifier(""));
     private static final BoolProperty QUEUED = new BoolProperty("queued");
@@ -44,6 +56,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     private final Value<Identifier> queuedInterior = QUEUED_INTERIOR_PROPERTY.create(this);
     private final BoolValue queued = QUEUED.create(this);
     private final BoolValue regenerating = REGENERATING.create(this);
+    private List<ItemStack> restorationChestContents;
 
     public InteriorChangingHandler() {
         super(Id.INTERIOR);
@@ -72,6 +85,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             tardis.getExterior().setType(CategoryRegistry.CAPSULE);
             return TardisEvents.Interaction.SUCCESS; // force mat even if checks fail
         });
+
+        TardisEvents.LOSE_POWER.register(tardis -> tardis.interiorChangingHandler().queued.set(false));
 
         ServerPlayNetworking.registerGlobalReceiver(InteriorChangingHandler.CHANGE_DESKTOP,
                 ServerTardisManager.receiveTardis(((tardis, server, player, handler, buf, responseSender) -> {
@@ -108,6 +123,12 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                 return;
             }
         }
+        if (tardis.subsystems().isEnabled()) {
+            for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
+                player.sendMessage(
+                        Text.translatable("tardis.message.interiorchange.subsystems_enabled", tardis.subsystems().countEnabled()).formatted(Formatting.RED), false);
+            }
+        }
 
         AITMod.LOGGER.info("Queueing interior change for {} to {}", this.tardis, schema);
 
@@ -124,6 +145,13 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
         if (travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
             travel.crash();
+
+        restorationChestContents = new ArrayList<>();
+        for (SubSystem system : tardis.subsystems().getEnabled()) {
+            if (system == null) continue;
+            restorationChestContents.addAll(system.toStacks());
+            AITMod.LOGGER.debug("Storing Subsystem, {} ({}) => {}", system.getId(), system.isEnabled(), system.toStacks());
+        }
     }
 
     private void complete() {
@@ -147,12 +175,46 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         }
 
         TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
+
+        createChestAtInteriorDoor(restorationChestContents);
     }
 
     private void warnPlayers() {
-        for (PlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             player.sendMessage(Text.translatable("tardis.message.interiorchange.warning").formatted(Formatting.RED),
                     true);
+            if (!tardis.isGrowth())
+                TardisCriterions.REDECORATE.trigger(player);
+        }
+    }
+
+    private void createChestAtInteriorDoor(List<ItemStack> contents) {
+        if (contents == null || contents.isEmpty()) {
+            AITMod.LOGGER.debug("No contents to save in recovery chest for {}", this.tardis());
+            return;
+        }
+
+        DirectedBlockPos door = this.tardis.getDesktop().doorPos();
+        DirectedGlobalPos.Cached safe = WorldUtil.locateSafe(DirectedGlobalPos.Cached.create(this.tardis.asServer().getInteriorWorld(), door.getPos().offset(door.toMinecraftDirection(), 2), door.getRotation()), TravelHandlerBase.GroundSearch.MEDIAN, true);
+
+        // set block to chest
+        if (!(safe.getWorld().getBlockState(safe.getPos()).isAir())) {
+            AITMod.LOGGER.error("Failed to create recovery chest at {} for {}", safe, this.tardis());
+            return;
+        }
+        safe.getWorld().setBlockState(safe.getPos(), Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, door.toMinecraftDirection().getOpposite()), 3);
+
+        // set chest contents
+        ChestBlockEntity chest = (ChestBlockEntity) safe.getWorld().getBlockEntity(safe.getPos());
+        List<ItemStack> overflow = new ArrayList<>(contents);
+        for (int i = 0; i < 27 && !overflow.isEmpty(); i++) {
+            chest.setStack(i, overflow.remove(0));
+        }
+
+        AITMod.LOGGER.debug("Created recovery chest at {} for {}", safe, this.tardis());
+
+        if (!overflow.isEmpty()) {
+            createChestAtInteriorDoor(overflow);
         }
     }
 
@@ -237,6 +299,6 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     }
 
     private boolean canQueue() {
-        return tardis.isGrowth() || tardis.engine().hasPower() || tardis.crash().isToxic();
+        return tardis.isGrowth() || tardis.fuel().hasPower() || tardis.crash().isToxic();
     }
 }

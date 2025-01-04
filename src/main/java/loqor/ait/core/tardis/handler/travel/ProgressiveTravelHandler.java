@@ -158,6 +158,8 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     @Override
     protected int clampSpeed(int value) {
         int max = this.autopilot() ? 1 : this.maxSpeed.get();
+        if (!this.tardis.subsystems().stabilisers().isEnabled()) max = 3;
+
         return MathHelper.clamp(value, 0, max);
     }
 
@@ -194,7 +196,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
         }
 
         if (server.getTicks() % (this.maxSpeed.get() - this.speed() + 1) == 0)
-            this.setFlightTicks(this.getFlightTicks() + AITMod.AIT_CONFIG.TRAVEL_PER_TICK());
+            this.setFlightTicks(this.getFlightTicks() + AITMod.CONFIG.SERVER.TRAVEL_PER_TICK);
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {

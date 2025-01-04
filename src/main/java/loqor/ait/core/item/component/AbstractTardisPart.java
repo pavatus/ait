@@ -25,9 +25,9 @@ import loqor.ait.data.schema.MachineRecipeSchema;
 
 public class AbstractTardisPart extends Item {
 
-    public static final Identifier DISASSEMBLE = new Identifier(AITMod.MOD_ID, "part_disassemble");
-    public static final Identifier ATTACH = new Identifier(AITMod.MOD_ID, "link_attach");
-    public static final Identifier UNATTACH = new Identifier(AITMod.MOD_ID, "link_unattach");
+    public static final Identifier DISASSEMBLE = AITMod.id("part_disassemble");
+    public static final Identifier ATTACH = AITMod.id("link_attach");
+    public static final Identifier UNATTACH = AITMod.id("link_unattach");
 
     private final AbstractLinkItem.Type[] slots;
 

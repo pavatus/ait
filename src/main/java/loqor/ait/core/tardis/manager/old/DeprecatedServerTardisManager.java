@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.pavatus.multidim.MultiDim;
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -35,9 +34,9 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.tardis.manager.TardisFileManager;
-import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
@@ -127,7 +126,14 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
     }
 
+    public void loadAll(MinecraftServer server, @Nullable Consumer<ServerTardis> consumer) {
+        for (UUID id : this.fileManager.getTardisList(server)) {
+            this.getTardis(server, id, consumer);
+        }
+    }
+
     public void remove(MinecraftServer server, ServerTardis tardis) {
+        tardis.getDesktop().clearOldInterior();
         tardis.setRemoved(true);
 
         ServerWorld tardisWorld = tardis.getInteriorWorld();
@@ -141,12 +147,16 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
             World world = exteriorPos.getWorld();
             BlockPos pos = exteriorPos.getPos();
 
+            ForcedChunkUtil.keepChunkLoaded(exteriorPos);
+
             world.removeBlock(pos, false);
             world.removeBlockEntity(pos);
+
+            ForcedChunkUtil.stopForceLoading(exteriorPos);
         } else {
             TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
                 DirectedGlobalPos.Cached cached = tardis.travel().destination();
-                WorldOps.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos());
+                WorldUtil.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos(), 0, 0);
             });
         }
 
@@ -163,9 +173,6 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
             tardisWorld.removeBlock(interiorDoor, false);
             tardisWorld.removeBlockEntity(interiorDoor);
         }
-
-        // Remove the interior
-        DesktopGenerator.clearArea(tardisWorld, tardis.getDesktop().getCorners());
 
         this.fileManager.delete(server, tardis.getUuid());
         this.lookup.remove(tardis.getUuid());

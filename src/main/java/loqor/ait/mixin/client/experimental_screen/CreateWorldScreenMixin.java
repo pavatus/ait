@@ -35,7 +35,7 @@ public abstract class CreateWorldScreenMixin {
         if (this.recreated)
             return;
 
-        if (!AITMod.AIT_CONFIG.SHOW_EXPERIMENTAL_WARNING()) {
+        if (!AITMod.CONFIG.CLIENT.SHOW_EXPERIMENTAL_WARNING) {
             this.startServer(config.specialWorldProperty(), registries, lifecycle3);
             ci.cancel();
         }

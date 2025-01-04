@@ -15,7 +15,7 @@ import loqor.ait.core.tardis.control.impl.pos.ZControl;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 
 public class BorealisType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/borealis");
+    public static final Identifier REFERENCE = AITMod.id("console/borealis");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.275f, 0.275f),
                     new Vector3f(0.625f, 0.5250015258789062f, 0.34999999962747097f)), // 0

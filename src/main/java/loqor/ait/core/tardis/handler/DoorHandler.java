@@ -13,7 +13,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.api.KeyedTardisComponent;
@@ -91,8 +90,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                     BlockPos pos = directed.getPos();
 
                     Vec3d motion = pos
-                            .offset(RotationPropertyHelper.toDirection(directed.getRotation()).get().getOpposite())
-                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.075);
+                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
 
                     // Apply the motion to the entity
                     entity.setVelocity(entity.getVelocity().add(motion));
@@ -108,7 +106,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
 
         return tardis.travel().getState() != TravelHandlerBase.State.LANDED && this.isOpen()
-                && tardis.travel().getState() != TravelHandlerBase.State.MAT && !tardis.areShieldsActive()
+                && !tardis.areShieldsActive()
+                && !tardis.travel().autopilot()
                 && tardis.asServer().getInteriorWorld().getBlockEntity(directed.getPos()) instanceof DoorBlockEntity;
     }
 
@@ -256,7 +255,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
         }
 
-        if (!tardis.engine().hasPower() && tardis.getLockedTardis()) {
+        if (!tardis.fuel().hasPower() && tardis.getLockedTardis()) {
             // Bro cant escape
             if (player == null)
                 return false;
@@ -290,6 +289,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 lockTardis(false, tardis, player, true); // forcefully unlock the tardis
                 tardis.door().openDoors();
 
+                TardisEvents.FORCED_ENTRY.invoker().onForcedEntry(tardis, player);
+
                 return true;
             }
 
@@ -303,7 +304,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
         }
 
-        if (tardis.getLockedTardis() || tardis.sonic().getExteriorSonic() != null) {
+        if (tardis.getLockedTardis()) {
             if (player != null && pos != null) {
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f,
@@ -311,7 +312,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 interior.playSound(null, tardis.getDesktop().doorPos().getPos(), AITSounds.KNOCK,
                         SoundCategory.BLOCKS, 3f, world.getRandom().nextBoolean() ? 0.5f : 0.3f);
             }
-
             return false;
         }
 

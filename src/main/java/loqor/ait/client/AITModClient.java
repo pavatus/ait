@@ -1,15 +1,24 @@
 package loqor.ait.client;
 
 import static loqor.ait.AITMod.*;
+import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
+import java.util.Calendar;
 import java.util.UUID;
 
+import dev.pavatus.gun.core.item.BaseGunItem;
+import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -19,11 +28,12 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import loqor.ait.api.ClientWorldEvents;
+import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.SonicRendering;
@@ -31,7 +41,9 @@ import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
 import loqor.ait.client.renderers.consoles.ConsoleRenderer;
 import loqor.ait.client.renderers.coral.CoralRenderer;
+import loqor.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import loqor.ait.client.renderers.decoration.PlaqueRenderer;
+import loqor.ait.client.renderers.decoration.SnowGlobeRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
@@ -40,10 +52,9 @@ import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
-import loqor.ait.client.renderers.wearables.AITHudOverlay;
+import loqor.ait.client.screens.BlueprintFabricatorScreen;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
-import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.client.util.ClientTardisUtil;
@@ -53,12 +64,11 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
-import loqor.ait.registry.Registries;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
@@ -68,6 +78,8 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Scheduler.Client.init();
+
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         // TODO move to Registries
@@ -82,6 +94,11 @@ public class AITModClient implements ClientModInitializer {
         waypointPredicate();
         hammerPredicate();
         siegeItemPredicate();
+        adventItemPredicates();
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            ConfigCommand.register(dispatcher);
+        });
 
         // TODO make skybox renderer for mars so we dont have to render the moon
         // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
@@ -90,7 +107,6 @@ public class AITModClient implements ClientModInitializer {
         AITKeyBinds.init();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
-        HudRenderCallback.EVENT.register(new AITHudOverlay());
 
         ClientLandingManager.init();
 
@@ -105,11 +121,9 @@ public class AITModClient implements ClientModInitializer {
          * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
          * vortex.renderVortexNodes(context, node); } } } });
          */
+        ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
-            if (!ClientTardisUtil.isPlayerInATardis())
-                return;
-
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
             if (tardis == null)
@@ -159,7 +173,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
+                    if (client.world == null)
                         return;
 
                     String id = buf.readString();
@@ -172,7 +186,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
+                    if (client.world == null)
                         return;
 
                     Identifier id = Identifier.tryParse(buf.readString());
@@ -210,9 +224,14 @@ public class AITModClient implements ClientModInitializer {
         // somewhere else it can go
         // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
-                responseSender) -> client.getSoundManager().stopSounds(AITSounds.DEMAT.getId(), SoundCategory.BLOCKS));
+                responseSender) -> {
+            ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange());
+            if (tardis == null)
+                return;
+
+            client.getSoundManager().stopSounds(tardis.stats().getTravelEffects().get(TravelHandlerBase.State.DEMAT).soundId(), SoundCategory.BLOCKS);
+        });
 
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
@@ -231,10 +250,9 @@ public class AITModClient implements ClientModInitializer {
 
     public static Screen screenFromId(int id, @Nullable ClientTardis tardis, @Nullable BlockPos console) {
         return switch (id) {
-            default -> null;
             case 0 -> new MonitorScreen(tardis, console);
-            // case 1 -> new EngineScreen(tardis);
-            case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
+            case 1 -> new BlueprintFabricatorScreen();
+            default -> null;
         };
     }
 
@@ -317,6 +335,56 @@ public class AITModClient implements ClientModInitializer {
                 });
     }
 
+    public static void adventItemPredicates() {
+        ModelPredicateProviderRegistry.register(AITItems.HYPERCUBE, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof HypercubeItem) {
+                        return isUnlockedOnThisDay(Calendar.JANUARY, 1) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.HAZANDRA, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof InteriorTeleporterItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 28) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.IRON_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.GOLD_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.NETHERITE_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+
+        ModelPredicateProviderRegistry.register(AITItems.CLASSIC_KEY, new Identifier("advent"),
+                (itemStack, clientWorld, livingEntity, integer) -> {
+                    if (itemStack.getItem() instanceof KeyItem) {
+                        return isUnlockedOnThisDay(Calendar.DECEMBER, 26) ? 1.0F : 0.0F;
+                    }
+                    return 0.0F;
+                });
+    }
+
     public static void blockEntityRendererRegister() {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE,
@@ -333,17 +401,30 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE,
                 EngineCoreBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.PLUGBOARD_ENTITY_TYPE, PlugBoardRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE,
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
                 WaypointBankBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.FLAG_BLOCK_ENTITY_TYPE, FlagBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.ZEITON_CAGE_BLOCK_ENTITY_TYPE,
+                ZeitonCageRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.GENERIC_SUBSYSTEM_BLOCK_TYPE,
+                GenericSubSystemRenderer::new);
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE,
+                PowerConverterRenderer::new);
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            BlockEntityRendererFactories.register(AITBlockEntityTypes.SNOW_GLOBE_BLOCK_ENTITY_TYPE,
+                    SnowGlobeRenderer::new);
+        }
     }
 
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
+            EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
+        }
     }
 
     public static void setupBlockRendering() {
@@ -360,5 +441,8 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.WAYPOINT_BANK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.ENGINE_CORE_BLOCK, RenderLayer.getCutout());
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
+        }
     }
 }

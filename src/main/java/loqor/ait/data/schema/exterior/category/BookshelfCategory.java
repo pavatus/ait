@@ -8,7 +8,7 @@ import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class BookshelfCategory extends ExteriorCategorySchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/bookshelf");
+    public static final Identifier REFERENCE = AITMod.id("exterior/bookshelf");
 
     public BookshelfCategory() {
         super(REFERENCE, "bookshelf");

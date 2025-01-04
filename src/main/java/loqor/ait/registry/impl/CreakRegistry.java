@@ -8,7 +8,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;
@@ -18,7 +17,7 @@ import loqor.ait.data.CreakSound;
 // TODO replace this with sound tags perhaps?
 public class CreakRegistry {
     public static final SimpleRegistry<CreakSound> REGISTRY = FabricRegistryBuilder
-            .createSimple(RegistryKey.<CreakSound>ofRegistry(new Identifier(AITMod.MOD_ID, "creak")))
+            .createSimple(RegistryKey.<CreakSound>ofRegistry(AITMod.id("creak")))
             .buildAndRegister();
 
     public static CreakSound register(CreakSound schema) {

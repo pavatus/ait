@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.*;
@@ -23,7 +22,7 @@ public class AITArgumentTypes {
     }
 
     private static <T extends ArgumentType<?>> void register(String name, Class<T> t, Supplier<T> supplier) {
-        ArgumentTypeRegistry.registerArgumentType(new Identifier(AITMod.MOD_ID, name), t,
+        ArgumentTypeRegistry.registerArgumentType(AITMod.id(name), t,
                 ConstantArgumentSerializer.of(supplier));
     }
 }

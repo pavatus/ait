@@ -6,12 +6,13 @@ import java.util.Set;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
@@ -22,14 +23,13 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.DesktopGenerator;
-import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class TardisDesktop extends TardisComponent {
 
-    public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
+    public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
 
     private TardisDesktopSchema schema;
     private DirectedBlockPos doorPos;
@@ -37,7 +37,13 @@ public class TardisDesktop extends TardisComponent {
     private final Corners corners;
     private final Set<BlockPos> consolePos;
 
+    private static final int RADIUS = 500;
+    private static final Corners CORNERS;
+
     static {
+        BlockPos first = new BlockPos(RADIUS, 0, RADIUS);
+        CORNERS = new Corners(first.multiply(-1), first);
+
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
                     BlockPos console = buf.readBlockPos();
@@ -55,7 +61,7 @@ public class TardisDesktop extends TardisComponent {
         super(Id.DESKTOP);
         this.schema = schema;
 
-        this.corners = TardisUtil.findInteriorSpot();
+        this.corners = CORNERS;
         this.consolePos = new HashSet<>();
     }
 
@@ -80,7 +86,17 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public DirectedBlockPos doorPos() {
+        if (!this.hasDoorPosition()) {
+            if (!this.consolePos.isEmpty())
+                return DirectedBlockPos.create(this.consolePos.stream().findAny().orElseThrow().up(), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+
+            return DirectedBlockPos.create(BlockPos.ofFloored(this.corners.getBox().getCenter()), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+        }
+
         return doorPos;
+    }
+    public boolean hasDoorPosition() {
+        return doorPos != null;
     }
 
     public void setInteriorDoorPos(DirectedBlockPos pos) {
@@ -89,26 +105,30 @@ public class TardisDesktop extends TardisComponent {
     }
 
     // TODO this is strictly for clearing the interior now
-    //@Deprecated(forRemoval = true, since = "1.1.0")
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public Corners getCorners() {
         return corners;
     }
 
+    // FIXME(PERFORMANCE)
     public void changeInterior(TardisDesktopSchema schema, boolean sendEvent) {
-        long currentTime = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         this.schema = schema;
 
         if (sendEvent)
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
         DesktopGenerator generator = new DesktopGenerator(this.schema);
-        generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+        boolean success = generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
 
-        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
+        if (!success)
+            AITMod.LOGGER.error("Failed to generate interior for {}", this.tardis.getUuid());
+
+        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - start);
     }
 
     public void clearOldInterior() {
-        DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners);
+        DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners, RADIUS);
     }
 
     public void cacheConsole(BlockPos consolePos) {
@@ -128,7 +148,7 @@ public class TardisDesktop extends TardisComponent {
         dim.addBlockEntity(generator);
     }
 
-    public static void playSoundAtConsole(ServerWorld dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
+    public static void playSoundAtConsole(World dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
             float pitch) {
         dim.playSound(null, console, sound, category, volume, pitch);
     }

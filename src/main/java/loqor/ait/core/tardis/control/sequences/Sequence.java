@@ -16,7 +16,7 @@ import loqor.ait.core.tardis.control.Control;
 // should this be an interface? - No :)
 public class Sequence {
     public Identifier id() {
-        return new Identifier(AITMod.MOD_ID, "sequence");
+        return AITMod.id("sequence");
     }
 
     /**

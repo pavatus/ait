@@ -8,7 +8,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.HartnellType;
 
 public class KeltHartnellVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hartnell_kelt");
+    public static final Identifier REFERENCE = AITMod.id("console/hartnell_kelt");
 
     public KeltHartnellVariant() {
         super(HartnellType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.COMPANION));

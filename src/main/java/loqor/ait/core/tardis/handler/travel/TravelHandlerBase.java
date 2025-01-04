@@ -3,22 +3,26 @@ package loqor.ait.core.tardis.handler.travel;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
-import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.TimeUnit;
+import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -202,9 +206,8 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         cached = border.contains(pos) ? cached : cached.pos(border.clamp(pos.getX(), pos.getY(), pos.getZ()));
 
-        if (!this.antigravs.get()) {
-            cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
-        }
+        // TODO what is the point of this? the only time this should be done is on landing - unless it gets optimized enough to run here. - Loqor
+        //cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
 
         this.forceDestination(cached);
     }
@@ -239,11 +242,19 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return WorldUtil.getOverworld().getServer();
     }
 
-    public enum State {
-        LANDED, DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat), FLIGHT(AITSounds.FLIGHT_ANIM), MAT(
-                AITSounds.MAT_ANIM, TravelHandler::finishRemat);
+    public enum State implements Ordered {
+        LANDED, DEMAT(null, TravelHandler::finishDemat), FLIGHT(), MAT(
+                null, TravelHandler::finishRemat);
 
-        private final MatSound sound;
+        public static final Codec<State> CODEC = Codecs.NON_EMPTY_STRING.flatXmap(s -> {
+            try {
+                return DataResult.success(State.valueOf(s.toUpperCase()));
+            } catch (Exception e) {
+                return DataResult.error(() -> "Invalid state: " + s + "! | " + e.getMessage());
+            }
+        }, var -> DataResult.success(var.toString()));
+
+        private final TravelSound sound;
         private final boolean animated;
 
         private final Consumer<TravelHandler> finish;
@@ -252,22 +263,23 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
             this(null);
         }
 
-        State(MatSound sound) {
+        State(TravelSound sound) {
             this(sound, null, false);
         }
 
-        State(MatSound sound, Consumer<TravelHandler> finish) {
+        State(TravelSound sound, Consumer<TravelHandler> finish) {
             this(sound, finish, true);
         }
 
-        State(MatSound sound, Consumer<TravelHandler> finish, boolean animated) {
+        State(TravelSound sound, Consumer<TravelHandler> finish, boolean animated) {
             this.sound = sound;
             this.animated = animated;
 
             this.finish = finish;
         }
 
-        public MatSound effect() {
+        @Deprecated(forRemoval = true, since = "1.2.0")
+        public TravelSound effect() {
             return this.sound;
         }
 
@@ -277,6 +289,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         public void finish(TravelHandler handler) {
             this.finish.accept(handler);
+        }
+
+        @Override
+        public int index() {
+            return ordinal();
         }
     }
 
@@ -302,7 +319,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         MEDIAN {
             @Override
             public GroundSearch next() {
-                return FLOOR;
+                return NONE;
             }
         };
 

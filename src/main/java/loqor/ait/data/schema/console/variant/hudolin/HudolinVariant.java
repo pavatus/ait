@@ -8,7 +8,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.HudolinType;
 
 public class HudolinVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/hudolin");
+    public static final Identifier REFERENCE = AITMod.id("console/hudolin");
 
     public HudolinVariant() {
         super(HudolinType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.OWNER));

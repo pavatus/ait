@@ -8,6 +8,7 @@ import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.dimension.DimensionOptions;
 
+
 public class MultiDimUtil {
 
     public static SimpleRegistry<DimensionOptions> getDimensionsRegistry(MinecraftServer server) {

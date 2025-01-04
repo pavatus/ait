@@ -3,7 +3,6 @@ package loqor.ait.core.tardis.util;
 import java.util.*;
 import java.util.function.Predicate;
 
-import io.wispforest.owo.ops.WorldOps;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -40,12 +39,12 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.Corners;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
@@ -57,9 +56,9 @@ import loqor.ait.mixin.lookup.WorldInvoker;
 @SuppressWarnings("unused")
 public class TardisUtil {
 
-    public static final Identifier REGION_LANDING_CODE = new Identifier(AITMod.MOD_ID, "region_landing_code");
-    public static final Identifier SNAP = new Identifier(AITMod.MOD_ID, "snap");
-    public static final Identifier FIND_PLAYER = new Identifier(AITMod.MOD_ID, "find_player");
+    public static final Identifier REGION_LANDING_CODE = AITMod.id("region_landing_code");
+    public static final Identifier SNAP = AITMod.id("snap");
+    public static final Identifier FIND_PLAYER = AITMod.id("find_player");
 
     public static void init() {
         ServerPlayNetworking.registerGlobalReceiver(SNAP, (server, player, handler, buf, responseSender) -> {
@@ -77,7 +76,7 @@ public class TardisUtil {
 
                 BlockPos exteriorPos = tardis.travel().position().getPos();
 
-                BlockPos pos = TardisDimension.isTardisDimension(player.getServerWorld())
+                BlockPos pos = TardisServerWorld.isTardisDimension(player.getServerWorld())
                         ? tardis.getDesktop().doorPos().getPos()
                         : exteriorPos;
 
@@ -129,18 +128,6 @@ public class TardisUtil {
 
     public static boolean inBox(Box a, Box b) {
         return a.minX < b.maxX && a.maxX > b.minX && a.minZ < b.maxZ && a.maxZ > b.minZ;
-    }
-
-    public static Corners findInteriorSpot() {
-        BlockPos first = findRandomPlace();
-
-        return new Corners(first, first.add(500, 0, 500));
-    }
-
-    // @TODO remove this its unnecessary since we have the dimensions
-    public static BlockPos findRandomPlace() {
-        //return new BlockPos(AITMod.RANDOM.nextInt(100_000), 0, AITMod.RANDOM.nextInt(100_000));
-        return new BlockPos(-500, 0, -500);
     }
 
     public static Vec3d offsetInteriorDoorPosition(Tardis tardis) {
@@ -200,8 +187,9 @@ public class TardisUtil {
         if (entity instanceof ServerPlayerEntity player) {
             TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
 
-            WorldOps.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
+            WorldUtil.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
                     new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
+
             player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
         }
     }
@@ -220,7 +208,7 @@ public class TardisUtil {
                 PortalAPI.teleportEntity(entity, world, vec);
             } else {
                 if (entity instanceof ServerPlayerEntity player) {
-                    WorldOps.teleportToWorld(player, world, vec,
+                    WorldUtil.teleportToWorld(player, world, vec,
                             RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
                             player.getPitch());
 
@@ -231,12 +219,12 @@ public class TardisUtil {
                         return;
 
                     if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
-                        entity.refreshPositionAndAngles(offset(vec, directed, 0.5f).x, vec.y,
-                                offset(vec, directed, 0.5f).z,
+                        entity.refreshPositionAndAngles(offset(vec, directed, -0.5f).x, vec.y,
+                                offset(vec, directed, -0.5f).z,
                                 RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
                                 entity.getPitch());
                     } else {
-                        entity.teleport(world, offset(vec, directed, 0.5f).x, vec.y, offset(vec, directed, 0.5f).z,
+                        entity.teleport(world, offset(vec, directed, -0.5f).x, vec.y, offset(vec, directed, -0.5f).z,
                                 Set.of(),
                                 RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
                                 entity.getPitch());
@@ -394,5 +382,22 @@ public class TardisUtil {
 
     public static void sendMessageToLinked(ServerTardis tardis, Text message) {
         NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
+    }
+
+    public static Optional<ServerPlayerEntity> findNearestPlayer(DirectedGlobalPos.Cached position) {
+        ServerWorld world = position.getWorld();
+        BlockPos pos = position.getPos();
+        ServerPlayerEntity nearestPlayer = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            double distance = player.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ());
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestPlayer = player;
+            }
+        }
+
+        return Optional.ofNullable(nearestPlayer);
     }
 }

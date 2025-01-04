@@ -21,7 +21,7 @@ public abstract class ClientPoliceBoxVariant extends ClientExteriorVariantSchema
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
 
     protected ClientPoliceBoxVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name));
+        super(AITMod.id("exterior/police_box/" + name));
 
         this.name = name;
     }
@@ -33,12 +33,12 @@ public abstract class ClientPoliceBoxVariant extends ClientExteriorVariantSchema
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+        return AITMod.id(TEXTURE_PATH + name + "_emission" + ".png");
     }
 
     @Override

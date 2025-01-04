@@ -38,7 +38,7 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
             if (this.fileManager.isLocked())
                 return;
 
-            if (AITMod.AIT_CONFIG.SEND_BULK() && tardisSet.size() >= 8) {
+            if (AITMod.CONFIG.SERVER.SEND_BULK && tardisSet.size() >= 8) {
                 this.sendTardisBulk(player, tardisSet);
                 return;
             }
@@ -85,6 +85,8 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
     @Override
     public ServerTardis create(TardisBuilder builder) {
+        if (this.isFull()) return null;
+
         ServerTardis result = super.create(builder);
         this.sendTardisAll(Set.of(result));
 
@@ -193,6 +195,13 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
     @Override
     public void markPropertyDirty(ServerTardis tardis, Value<?> value) {
         this.markComponentDirty(value.getHolder());
+    }
+
+    public boolean isFull() {
+        int max = AITMod.CONFIG.SERVER.MAX_TARDISES;
+        if (max <= 0) return false;
+
+        return this.lookup.size() >= max;
     }
 
     private static boolean isInvalid(ServerTardis tardis) {

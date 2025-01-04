@@ -9,12 +9,12 @@ import loqor.ait.AITMod;
 
 public class BlueprintFabricatorScreen extends Screen {
 
-    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/blueprinting_deck.png");
+    private static final Identifier TEXTURE = AITMod.id("textures/gui/blueprinting_deck.png");
     int backgroundHeight = 166;
     int backgroundWidth = 176;
 
-    public BlueprintFabricatorScreen(Text title) {
-        super(title);
+    public BlueprintFabricatorScreen() {
+        super(Text.literal("Blueprint Fabricator")); // todo translatable
     }
 
     protected void drawBackground(DrawContext context) {

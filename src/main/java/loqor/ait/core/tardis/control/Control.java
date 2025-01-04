@@ -8,6 +8,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
 
@@ -54,6 +55,9 @@ public class Control {
     public boolean requiresPower() {
         return true;
     }
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.ENGINE;
+    }
 
     public void runAnimation(Tardis tardis, ServerPlayerEntity player, ServerWorld world) {
         // no animation
@@ -81,13 +85,18 @@ public class Control {
     }
 
     public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-        if ((this.requiresPower() && !tardis.engine().hasPower()))
+        if ((this.requiresPower() && !tardis.fuel().hasPower()))
             return false;
 
         boolean security = tardis.stats().security().get();
 
         if (!this.ignoresSecurity() && security)
             return SecurityControl.hasMatchingKey(user, tardis);
+
+        SubSystem.IdLike dependent = this.requiredSubSystem();
+        if (dependent != null) {
+            return tardis.subsystems().get(dependent).isEnabled();
+        }
 
         return true;
     }

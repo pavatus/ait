@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 // fixme long permission
 
@@ -12,7 +13,7 @@ public class PlayerFollowingLoopingSound extends LoopingSound {
         super(soundEvent, soundCategory);
 
         ClientPlayerEntity client = MinecraftClient.getInstance().player;
-        this.setPosition(client.getBlockPos());
+        this.setPosition(client == null ? new BlockPos(0,0,0) : client.getBlockPos());
         this.setVolume(volume);
         this.setPitch(pitch);
         this.repeat = true;
@@ -34,7 +35,7 @@ public class PlayerFollowingLoopingSound extends LoopingSound {
 
     private void setCoordsToPlayerCoords() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player == null)
+        if (player == null || player.getBlockPos() == null)
             return;
         this.setPosition(player.getBlockPos());
     }
