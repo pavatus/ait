@@ -11,6 +11,6 @@ public class ToyotaVariant extends ConsoleVariantSchema {
     public static final Identifier REFERENCE = AITMod.id("console/toyota");
 
     public ToyotaVariant() {
-        super(ToyotaType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));
+        super(ToyotaType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.COMPANION));
     }
 }

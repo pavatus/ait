@@ -11,6 +11,6 @@ public class CoralVariant extends ConsoleVariantSchema {
     public static final Identifier REFERENCE = AITMod.id("console/coral");
 
     public CoralVariant() {
-        super(CoralType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));
+        super(CoralType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.COMPANION));
     }
 }
