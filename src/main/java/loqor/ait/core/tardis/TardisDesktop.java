@@ -128,7 +128,9 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public void clearOldInterior() {
+        long start = System.currentTimeMillis();
         DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners, RADIUS);
+        AITMod.LOGGER.warn("Time taken to clear interior: {}ms", System.currentTimeMillis() - start);
     }
 
     public void cacheConsole(BlockPos consolePos) {
