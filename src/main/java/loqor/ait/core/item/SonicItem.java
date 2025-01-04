@@ -470,6 +470,14 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
+                if (block == Blocks.SAND) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.GLASS)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
                 if (block == Blocks.COAL_ORE || block == Blocks.DEEPSLATE_COAL_ORE || block == PlanetBlocks.ANORTHOSITE_COAL_ORE || block == PlanetBlocks.MARTIAN_COAL_ORE) {
                     world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
                             new ItemStack(Items.COAL)));
@@ -494,17 +502,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
 
-
-                if (block instanceof RedstoneLampBlock) {
-                    world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
-                            world.getRandom().nextFloat() * 0.4f + 0.8f);
-                    world.setBlockState(pos,
-                            world.getBlockState(pos).with(Properties.LIT,
-                                    !world.getBlockState(pos).get(Properties.LIT)),
-                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                }
-
                 if (block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE || block == PlanetBlocks.ANORTHOSITE_IRON_ORE || block == PlanetBlocks.MARTIAN_IRON_ORE) {
                     world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
                             new ItemStack(Items.IRON_INGOT)));
@@ -520,6 +517,17 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                             Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
+
+                if (block instanceof RedstoneLampBlock) {
+                    world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                            world.getRandom().nextFloat() * 0.4f + 0.8f);
+                    world.setBlockState(pos,
+                            world.getBlockState(pos).with(Properties.LIT,
+                                    !world.getBlockState(pos).get(Properties.LIT)),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
             }
         },
         SCANNING(Formatting.AQUA) {
