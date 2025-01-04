@@ -395,7 +395,24 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         INTERACTION(Formatting.GREEN) {
             @Override
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                Block block = world.getBlockState(pos).getBlock();
                 BlockState blockState = world.getBlockState(pos);
+
+                if (block == Blocks.SNOW || block == Blocks.SNOW_BLOCK || block == Blocks.POWDER_SNOW)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.SNOWBALL)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block instanceof TntBlock) {
+                    TntBlock.primeTnt(world, pos);
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    return;
+                }
 
                 if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
                     return;
@@ -423,6 +440,9 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                         Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
+
+
+
         },
         OVERLOAD(Formatting.RED) {
             @Override
@@ -459,13 +479,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
 
-                if (block == Blocks.SNOW || block == Blocks.SNOW_BLOCK || block == Blocks.POWDER_SNOW)  {
-                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                            new ItemStack(Items.SNOWBALL)));
-                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                }
+
 
                 if (block == AITBlocks.CONSOLE)  {
                     world.breakBlock(pos, true);
