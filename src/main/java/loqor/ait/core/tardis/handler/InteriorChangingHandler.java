@@ -262,7 +262,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             DoorHandler.lockTardis(true, this.tardis(), null, true);
 
         if (!this.regenerating.get()) {
-            tardis.getDesktop().clearOldInterior();
+            Scheduler.runTaskLater(() -> tardis.getDesktop().clearOldInterior(), TimeUnit.SECONDS, 5);
             Scheduler.runTaskLater(this::complete, TimeUnit.SECONDS, 15);
 
             this.regenerating.set(true);
