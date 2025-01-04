@@ -220,7 +220,6 @@ public class MultiDim {
     }
 
     public WorldBlueprint getBlueprint(Identifier id) {
-        System.out.println("Trying to get blueprint by id " + id);
         return blueprints.get(id);
     }
 }

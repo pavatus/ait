@@ -1,11 +1,14 @@
 package loqor.ait.mixin.client.rendering;
 
+import loqor.ait.api.AITUseActions;
+import net.minecraft.util.UseAction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
@@ -17,9 +20,6 @@ import net.minecraft.util.Arm;
 
 import loqor.ait.core.AITTags;
 
-// TODO not entirely sure why Theo removed this - it was necessary for a reason.
-//  It removes that weird bopping for the sonic screwdriver and just makes it *that* much better of
-// a tool to use.
 @Mixin(HeldItemRenderer.class)
 public class HeldItemRendererMixin {
 
@@ -33,8 +33,9 @@ public class HeldItemRendererMixin {
             return;
 
         PlayerEntity player = this.client.player;
+        ItemStack stack = player.getActiveItem();
 
-        if (noBop(player.getMainHandStack()) || noBop(player.getOffHandStack())) {
+        if (noBop(stack)) {
             int i = arm == Arm.RIGHT ? 1 : -1;
             matrices.translate((float) i * 0.56F, -0.52F, -0.72F);
 
@@ -42,7 +43,16 @@ public class HeldItemRendererMixin {
         }
     }
 
-    @Unique private static boolean noBop(ItemStack stack) {
+    @Redirect(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getUseAction()Lnet/minecraft/util/UseAction;"))
+    private UseAction getUseAction(ItemStack instance) {
+        UseAction result = instance.getUseAction();
+
+        return result == ((AITUseActions) (Object) UseAction.NONE).ait$sonic()
+                ? UseAction.NONE : result;
+    }
+
+    @Unique
+    private static boolean noBop(ItemStack stack) {
         return stack.getRegistryEntry().isIn(AITTags.Items.NO_BOP);
     }
 }

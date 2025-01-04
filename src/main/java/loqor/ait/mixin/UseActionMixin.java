@@ -1,16 +1,24 @@
 package loqor.ait.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import net.minecraft.util.UseAction;
 
 import loqor.ait.api.AITUseActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(UseAction.class)
 public class UseActionMixin implements AITUseActions {
 
-    private static final UseAction SONIC = init("SONIC", UseAction.values().length);
+    @Shadow
+    @Final
+    @Mutable
+    private static UseAction[] field_8948;
+
+    private static final UseAction SONIC = register("SONIC");
 
     @Invoker("<init>")
     private static UseAction init(String name, int ordinal) {
@@ -20,5 +28,16 @@ public class UseActionMixin implements AITUseActions {
     @Override
     public UseAction ait$sonic() {
         return SONIC;
+    }
+
+    @Unique
+    private static UseAction register(String name) {
+        UseAction result = init(name, UseAction.values().length);
+
+        List<UseAction> actions = new ArrayList<>(List.of(field_8948));
+        actions.add(result);
+
+        field_8948 = actions.toArray(new UseAction[0]);
+        return result;
     }
 }

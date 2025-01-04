@@ -1,5 +1,6 @@
 package loqor.ait.core.item.sonic;
 
+import loqor.ait.AITMod;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,10 +46,22 @@ public class OverloadSonicMode extends SonicMode {
         if (!(world instanceof ServerWorld serverWorld))
             return;
 
+        this.process(serverWorld, user, ticks);
+    }
+
+    @Override
+    public void tick(ItemStack stack, World world, LivingEntity user, int ticks, int ticksLeft) {
+        if (!(world instanceof ServerWorld serverWorld) || ticks % 10 != 0)
+            return;
+
+        this.process(serverWorld, user, ticks);
+    }
+
+    private void process(ServerWorld world, LivingEntity user, int ticks) {
         HitResult hitResult = SonicMode.getHitResult(user);
 
         if (hitResult instanceof BlockHitResult blockHit)
-            this.overloadBlock(blockHit.getBlockPos(), serverWorld, user, ticks);
+            this.overloadBlock(blockHit.getBlockPos(), world, user, ticks);
     }
 
     private void overloadBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks) {
@@ -214,12 +227,14 @@ public class OverloadSonicMode extends SonicMode {
         ore = i == -1 ? "stone" : ore.substring(0, i);
         id = id.withPath(ore);
 
+        AITMod.LOGGER.info("Testing for id {}", id);
         BlockState newState = Registries.BLOCK.get(id).getDefaultState();
 
         if (newState.isAir()) {
             id = id.withSuffixedPath("_stone");
             newState = Registries.BLOCK.get(id).getDefaultState();
 
+            AITMod.LOGGER.info("Testing for id {}", id);
             if (newState.isAir())
                 return null;
         }
