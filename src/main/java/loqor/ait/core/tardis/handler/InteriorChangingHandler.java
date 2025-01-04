@@ -107,6 +107,10 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         return queued;
     }
 
+    public BoolValue regenerating() {
+        return regenerating;
+    }
+
     public TardisDesktopSchema getQueuedInterior() {
         return DesktopRegistry.getInstance().get(queuedInterior.get());
     }
