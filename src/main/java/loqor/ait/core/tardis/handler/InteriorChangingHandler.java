@@ -103,8 +103,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                 })));
     }
 
-    public boolean isQueued() {
-        return queued.get();
+    public BoolValue queued() {
+        return queued;
     }
 
     public TardisDesktopSchema getQueuedInterior() {
