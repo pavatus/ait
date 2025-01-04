@@ -17,7 +17,7 @@ import loqor.ait.data.schema.sonic.SonicSchema;
 public abstract class SonicMode implements Ordered {
 
     public static class Modes {
-        public static final SonicMode[] VALUES = new SonicMode[5];
+        public static final SonicMode[] VALUES = new SonicMode[4];
         private static int lastIndex = 0;
 
         public static final SonicMode INTERACTION = register(OverloadSonicMode::new);
