@@ -49,7 +49,7 @@ public class TardisServerWorld extends MultiDimServerWorld {
     public ServerTardis getTardis() {
         if (this.tardis == null)
             this.tardis = ServerTardisManager.getInstance().demandTardis(this.getServer(),
-                    UUID.fromString(this.getRegistryKey().getValue().toString()));
+                    UUID.fromString(this.getRegistryKey().getValue().getPath()));
 
         return tardis;
     }
