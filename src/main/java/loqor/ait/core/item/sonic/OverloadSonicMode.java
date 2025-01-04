@@ -1,9 +1,8 @@
 package loqor.ait.core.item.sonic;
 
-import loqor.ait.core.AITBlocks;
-import loqor.ait.core.AITTags;
-import loqor.ait.data.schema.sonic.SonicSchema;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
@@ -24,7 +23,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.Nullable;
+
+import loqor.ait.core.AITBlocks;
+import loqor.ait.core.AITTags;
+import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class OverloadSonicMode extends SonicMode {
 
@@ -195,8 +197,7 @@ public class OverloadSonicMode extends SonicMode {
         return ticks >= 10;
     }
 
-    @Nullable
-    private BlockState guessOreBase(Block block) {
+    @Nullable private BlockState guessOreBase(Block block) {
         if (block == Blocks.NETHER_GOLD_ORE || block == Blocks.NETHER_QUARTZ_ORE)
             return Blocks.NETHERRACK.getDefaultState();
 

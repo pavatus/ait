@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
-import loqor.ait.core.item.sonic.SonicMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

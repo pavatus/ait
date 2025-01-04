@@ -1,5 +1,12 @@
 package loqor.ait.core.item;
 
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
+
 import loqor.ait.api.AITUseActions;
 import loqor.ait.api.ArtronHolderItem;
 import loqor.ait.api.link.LinkableItem;
@@ -7,12 +14,6 @@ import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.*;
-import net.minecraft.world.World;
 
 public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 

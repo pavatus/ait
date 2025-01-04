@@ -22,7 +22,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
@@ -40,7 +39,6 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import loqor.ait.core.tardis.handler.InteriorChangingHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;

@@ -1,9 +1,7 @@
 package loqor.ait.core.item.sonic;
 
-import loqor.ait.data.enummap.Ordered;
-import loqor.ait.data.schema.sonic.SonicSchema;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import java.util.function.Function;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -13,7 +11,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
-import java.util.function.Function;
+import loqor.ait.data.enummap.Ordered;
+import loqor.ait.data.schema.sonic.SonicSchema;
 
 public abstract class SonicMode implements Ordered {
 

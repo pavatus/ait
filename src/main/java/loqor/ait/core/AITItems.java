@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import dev.pavatus.lib.container.AssignedName;
 import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
