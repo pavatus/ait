@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import loqor.ait.data.Exclude;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Blocks;
@@ -56,6 +57,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     private final Value<Identifier> queuedInterior = QUEUED_INTERIOR_PROPERTY.create(this);
     private final BoolValue queued = QUEUED.create(this);
     private final BoolValue regenerating = REGENERATING.create(this);
+
+    @Exclude
     private List<ItemStack> restorationChestContents;
 
     public InteriorChangingHandler() {
@@ -151,6 +154,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             travel.crash();
 
         restorationChestContents = new ArrayList<>();
+
         for (SubSystem system : tardis.subsystems().getEnabled()) {
             if (system == null) continue;
             restorationChestContents.addAll(system.toStacks());
