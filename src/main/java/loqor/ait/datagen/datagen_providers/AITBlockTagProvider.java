@@ -63,6 +63,14 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE, PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE, PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE, PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE, PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE)
                 .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE);
 
+        getOrCreateTagBuilder(BlockTags.COAL_ORES).add(PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE);
+        getOrCreateTagBuilder(BlockTags.COPPER_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
+        getOrCreateTagBuilder(BlockTags.IRON_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
+        getOrCreateTagBuilder(BlockTags.GOLD_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
+        getOrCreateTagBuilder(BlockTags.DIAMOND_ORES).add(PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE);
+        getOrCreateTagBuilder(BlockTags.EMERALD_ORES).add(PlanetBlocks.ANORTHOSITE_EMERALD_ORE, PlanetBlocks.MARTIAN_EMERALD_ORE);
+        getOrCreateTagBuilder(BlockTags.LAPIS_ORES).add(PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE);
+        getOrCreateTagBuilder(BlockTags.REDSTONE_ORES).add(PlanetBlocks.ANORTHOSITE_REDSTONE_ORE, PlanetBlocks.MARTIAN_REDSTONE_ORE);
 
         getOrCreateTagBuilder(BlockTags.DIRT).add(PlanetBlocks.MARTIAN_SAND).add(PlanetBlocks.REGOLITH);
 
