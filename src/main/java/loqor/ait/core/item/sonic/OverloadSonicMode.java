@@ -100,7 +100,7 @@ public class OverloadSonicMode extends SonicMode {
         }
 
         if (canMelt(ticks)
-                && (state.isIn(BlockTags.ICE) || state.isIn(BlockTags.ICE))) {
+                && (state.isIn(BlockTags.ICE))) {
             world.breakBlock(pos, false);
             world.setBlockState(pos, Blocks.WATER.getDefaultState());
 
@@ -129,9 +129,9 @@ public class OverloadSonicMode extends SonicMode {
         }
 
         if (canDisassemble(ticks)
-                && (block == Blocks.SNOW_BLOCK))  {
+                && state.isIn(BlockTags.SNOW))  {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.SNOWBALL, 4)));
+                    new ItemStack(Items.SNOWBALL, 2)));
 
             world.breakBlock(pos, false);
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
@@ -192,16 +192,8 @@ public class OverloadSonicMode extends SonicMode {
         world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, stack));
     }
 
-    private static boolean canResonateConcrete(int ticks) {
-        return ticks >= 300; // 15s
-    }
-
     private static boolean canSmelt(int ticks) {
         return ticks >= 40;
-    }
-
-    private static boolean canCrack(int ticks) {
-        return ticks >= 45;
     }
 
     private static boolean canExtract(int ticks) {
@@ -224,7 +216,8 @@ public class OverloadSonicMode extends SonicMode {
         return ticks >= 10;
     }
 
-    @Nullable private BlockState guessOreBase(Block block) {
+    @Nullable
+    private BlockState guessOreBase(Block block) {
         if (block == Blocks.NETHER_GOLD_ORE || block == Blocks.NETHER_QUARTZ_ORE)
             return Blocks.NETHERRACK.getDefaultState();
 
