@@ -1,10 +1,13 @@
 package loqor.ait.core.tardis;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import dev.drtheo.blockqueue.ActionQueue;
+import dev.drtheo.blockqueue.QueuedStructureTemplate;
 import dev.drtheo.blockqueue.util.ChunkEraser;
+import loqor.ait.core.world.QueuedTardisStructureTemplate;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
@@ -14,6 +17,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -28,7 +33,6 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
@@ -36,6 +40,7 @@ import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class TardisDesktop extends TardisComponent {
 
+    private static final StructurePlacementData SETTINGS = new StructurePlacementData().setUpdateNeighbors(false);
     public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
 
     private TardisDesktopSchema schema;
@@ -102,6 +107,7 @@ public class TardisDesktop extends TardisComponent {
 
         return doorPos;
     }
+
     public boolean hasDoorPosition() {
         return doorPos != null;
     }
@@ -117,7 +123,6 @@ public class TardisDesktop extends TardisComponent {
         return corners;
     }
 
-    // FIXME(PERFORMANCE)
     public void changeInterior(TardisDesktopSchema schema, boolean sendEvent) {
         long start = System.currentTimeMillis();
         this.schema = schema;
@@ -125,13 +130,26 @@ public class TardisDesktop extends TardisComponent {
         if (sendEvent)
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
-        DesktopGenerator generator = new DesktopGenerator(this.schema);
-        boolean success = generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+        ServerTardis tardis = this.tardis.asServer();
+        ServerWorld world = tardis.getInteriorWorld();
 
-        if (!success)
-            AITMod.LOGGER.error("Failed to generate interior for {}", this.tardis.getUuid());
+        Optional<StructureTemplate> optional = this.schema.findTemplate();
 
-        AITMod.LOGGER.warn("Time taken to generate interior: {}ms", System.currentTimeMillis() - start);
+        if (optional.isEmpty()) {
+            AITMod.LOGGER.error("Failed to find template for {}", this.schema.id());
+            return;
+        }
+
+        QueuedStructureTemplate template = new QueuedTardisStructureTemplate(optional.get(), tardis);
+
+        template.place(world, BlockPos.ofFloored(corners.getBox().getCenter()),
+                BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, world.getRandom(), Block.FORCE_STATE)
+                .ifPresentOrElse(queue -> queue.thenRun(
+                        () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
+                                System.currentTimeMillis() - start)).execute(),
+                        () -> AITMod.LOGGER.error("Failed to generate interior for {}",
+                                this.tardis.getUuid())
+                );
     }
 
     public ActionQueue createDesktopClearQueue() {

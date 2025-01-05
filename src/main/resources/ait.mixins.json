@@ -26,8 +26,7 @@
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
     "server.WorldChunkMixin",
-    "server.structure.StructureTemplateAccessor",
-    "server.structure.TardisStructureTemplateMixin"
+    "server.structure.StructureTemplateAccessor"
   ],
   "client": [
     "client.ClientPlayerInteractionManagerMixin",

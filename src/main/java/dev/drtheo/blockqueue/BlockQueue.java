@@ -29,7 +29,8 @@ public abstract class BlockQueue {
             if (block == null)
                 return true;
 
-            world.setBlockState(block.pos(), block.state(), flags);
+            int blockFlags = block.flags() == -1 ? flags : block.flags();
+            world.setBlockState(block.pos(), block.state(), blockFlags);
             return false;
         }, unit, period, maxTime);
     }
@@ -46,7 +47,11 @@ public abstract class BlockQueue {
         }
 
         public void set(BlockPos pos, BlockState state) {
-            this.blocks.add(new BlockData(state, pos));
+            this.set(pos, state, -1);
+        }
+
+        public void set(BlockPos pos, BlockState state, int flags) {
+            this.blocks.add(new BlockData(state, pos, flags));
         }
     }
 }
