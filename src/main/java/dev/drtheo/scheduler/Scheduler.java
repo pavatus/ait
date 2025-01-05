@@ -1,9 +1,7 @@
 package dev.drtheo.scheduler;
 
-import dev.pavatus.config.AITConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class Scheduler extends BaseScheduler {

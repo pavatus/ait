@@ -1,8 +1,6 @@
 package loqor.ait.core.item;
 
-import loqor.ait.client.sounds.ClientSoundManager;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -13,6 +11,7 @@ import net.minecraft.world.World;
 import loqor.ait.api.AITUseActions;
 import loqor.ait.api.ArtronHolderItem;
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.client.sounds.ClientSoundManager;
 import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.schema.sonic.SonicSchema;
