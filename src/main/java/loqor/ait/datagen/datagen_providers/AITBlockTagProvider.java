@@ -61,7 +61,8 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(BlockTags.ICE).forceAddTag(BlockTags.SNOW).forceAddTag(BlockTags.SAND).forceAddTag(BlockTags.LEAVES)
                 .add(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS, Blocks.NETHER_BRICK_WALL, Blocks.RED_NETHER_BRICK_WALL)
                 .add(PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE, PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE, PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE, PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE, PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE)
-                .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE);
+                .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE, Blocks.REDSTONE_TORCH).forceAddTag(BlockTags.STONE_BRICKS)
+                .add(Blocks.BRICKS, Blocks.BRICK_WALL);
 
         getOrCreateTagBuilder(BlockTags.COAL_ORES).add(PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE);
         getOrCreateTagBuilder(BlockTags.COPPER_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
