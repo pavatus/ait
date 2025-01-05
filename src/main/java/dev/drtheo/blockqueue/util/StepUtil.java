@@ -1,14 +1,19 @@
-package dev.drtheo.blockqueue.impl;
+package dev.drtheo.blockqueue.util;
 
 import java.util.function.Supplier;
 
+import dev.drtheo.blockqueue.api.Finishable;
 import dev.drtheo.blockqueue.data.TimeUnit;
 import dev.drtheo.scheduler.Scheduler;
+import org.jetbrains.annotations.Nullable;
 
-public class StepQueue {
+public class StepUtil {
 
-    // TODO: use completablefutures instead
-    public static void scheduleSteps(Step step, int period, int maxTime, Runnable finish) {
+    /**
+     * Schedules a task to run {@literal step} every {@literal period} of a {@literal unit}.
+     * Executes {@literal callback} when finishes.
+     */
+    public static void scheduleSteps(@Nullable Finishable callback, Step step, TimeUnit unit, int period, int maxTime) {
         Scheduler.get().runTaskTimer(t -> {
             boolean shouldContinue = true;
             long start = System.currentTimeMillis();
@@ -18,11 +23,14 @@ public class StepQueue {
 
                 if (step.get()) {
                     t.cancel();
-                    finish.run();
+
+                    if (callback != null)
+                        callback.finish();
+
                     return;
                 }
             }
-        }, TimeUnit.TICKS, period);
+        }, unit, period);
     }
 
     public interface Step extends Supplier<Boolean> { }

@@ -3,6 +3,7 @@ package loqor.ait.core.tardis;
 import java.util.HashSet;
 import java.util.Set;
 
+import dev.drtheo.blockqueue.ActionQueue;
 import dev.drtheo.blockqueue.util.ChunkEraser;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -133,16 +134,17 @@ public class TardisDesktop extends TardisComponent {
         AITMod.LOGGER.warn("Time taken to generate interior: {}ms", System.currentTimeMillis() - start);
     }
 
-    // TODO: use completablefutures instead
-    public void clearOldInterior(Runnable finish) {
+    public ActionQueue createDesktopClearQueue() {
         ServerWorld world = this.tardis.asServer().getInteriorWorld();
-
         int chunkRadius = ChunkSectionPos.getSectionCoord(RADIUS);
-        ChunkEraser.erase(finish, world, -chunkRadius, -chunkRadius, chunkRadius, chunkRadius, Block.FORCE_STATE, true);
 
         // FIXME THEO: gross
         TardisUtil.getEntitiesInBox(ItemFrameEntity.class, world, corners.getBox(), frame -> true)
                 .forEach(frame -> frame.remove(Entity.RemovalReason.DISCARDED));
+
+        return new ChunkEraser.Builder().build(
+                world, -chunkRadius, -chunkRadius, chunkRadius, chunkRadius
+        );
     }
 
     public void cacheConsole(BlockPos consolePos) {

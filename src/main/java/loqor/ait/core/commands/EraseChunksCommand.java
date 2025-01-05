@@ -29,8 +29,9 @@ public class EraseChunksCommand {
         ColumnPos from = ColumnPosArgumentType.getColumnPos(context, "from");
         ColumnPos to = ColumnPosArgumentType.getColumnPos(context, "to");
 
-        ChunkEraser.erase(() -> {}, context.getSource().getWorld(),
-                from.toChunkPos(), to.toChunkPos(), Block.FORCE_STATE | Block.REDRAW_ON_MAIN_THREAD, true);
+        new ChunkEraser.Builder()
+                .withFlags(Block.FORCE_STATE | Block.REDRAW_ON_MAIN_THREAD)
+                .build(context.getSource().getWorld(), from.toChunkPos(), to.toChunkPos());
 
         return Command.SINGLE_SUCCESS;
     }

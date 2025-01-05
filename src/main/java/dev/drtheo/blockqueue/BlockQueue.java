@@ -1,9 +1,13 @@
-package dev.drtheo.blockqueue.impl;
+package dev.drtheo.blockqueue;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import dev.drtheo.blockqueue.api.Finishable;
 import dev.drtheo.blockqueue.data.BlockData;
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.blockqueue.util.StepUtil;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +22,8 @@ public abstract class BlockQueue {
     /**
      * @param maxTime Max time (in ms) a single cycle can perform
      */
-    public void place(ServerWorld world, int maxTime, int flags, Runnable finish) {
-        StepQueue.scheduleSteps(() -> {
+    public void place(@Nullable Finishable callback, ServerWorld world, TimeUnit unit, int period, int maxTime, int flags) {
+        StepUtil.scheduleSteps(callback, () -> {
             BlockData block = this.pollBlock();
 
             if (block == null)
@@ -27,7 +31,7 @@ public abstract class BlockQueue {
 
             world.setBlockState(block.pos(), block.state(), flags);
             return false;
-        }, 1, maxTime, finish);
+        }, unit, period, maxTime);
     }
 
     protected abstract BlockData pollBlock();

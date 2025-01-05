@@ -133,7 +133,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     }
 
     public void remove(MinecraftServer server, ServerTardis tardis) {
-        tardis.getDesktop().clearOldInterior();
+        tardis.getDesktop().createDesktopClearQueue().execute();
         tardis.setRemoved(true);
 
         ServerWorld tardisWorld = tardis.getInteriorWorld();
