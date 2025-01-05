@@ -100,7 +100,7 @@ public class OverloadSonicMode extends SonicMode {
         }
 
         if (canMelt(ticks)
-                && (state.isIn(BlockTags.ICE) || state.isIn(BlockTags.SNOW))) {
+                && (state.isIn(BlockTags.ICE) || state.isIn(BlockTags.ICE))) {
             world.breakBlock(pos, false);
             world.setBlockState(pos, Blocks.WATER.getDefaultState());
 
@@ -129,6 +129,16 @@ public class OverloadSonicMode extends SonicMode {
         }
 
         if (canDisassemble(ticks)
+                && (block == Blocks.SNOW_BLOCK))  {
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                    new ItemStack(Items.SNOWBALL, 4)));
+
+            world.breakBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
+        }
+
+        if (canDisassemble(ticks)
                 && (block == Blocks.NETHER_BRICKS
                 || block == Blocks.RED_NETHER_BRICKS
                 || block == Blocks.NETHER_BRICK_WALL
@@ -140,6 +150,7 @@ public class OverloadSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
             return;
         }
+
 
         if (canSmelt(ticks)
                 && state.isIn(BlockTags.SAND)) {
