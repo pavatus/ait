@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.pavatus.multidim.api.MultiDimServerWorld;
 import dev.pavatus.multidim.api.WorldBlueprint;
+import loqor.ait.core.events.WorldSaveEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
@@ -40,14 +41,13 @@ public class MultiDimFileManager {
     }
 
     public static void init() {
-        ServerWorldEvents.UNLOAD.register(MultiDimFileManager::writeIfNeeded);
-
         ServerCrashEvent.EVENT.register((server, report) -> {
             for (ServerWorld world : server.getWorlds()) {
                 writeIfNeeded(server, world);
             }
         });
 
+        WorldSaveEvent.EVENT.register(world -> writeIfNeeded(world.getServer(), world));
         ServerLifecycleEvents.SERVER_STARTED.register(MultiDimFileManager::readAll);
     }
 

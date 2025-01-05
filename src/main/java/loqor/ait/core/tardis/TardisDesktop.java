@@ -79,7 +79,8 @@ public class TardisDesktop extends TardisComponent {
 
     @Override
     public void onCreate() {
-        this.changeInterior(schema, false);
+        // TODO: lock the door until the queue finishes.
+        this.createInteriorChangeQueue(schema, false).ifPresent(ActionQueue::execute);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class TardisDesktop extends TardisComponent {
         return corners;
     }
 
-    public void changeInterior(TardisDesktopSchema schema, boolean sendEvent) {
+    public Optional<ActionQueue> createInteriorChangeQueue(TardisDesktopSchema schema, boolean sendEvent) {
         long start = System.currentTimeMillis();
         this.schema = schema;
 
@@ -137,19 +138,22 @@ public class TardisDesktop extends TardisComponent {
 
         if (optional.isEmpty()) {
             AITMod.LOGGER.error("Failed to find template for {}", this.schema.id());
-            return;
+            return Optional.empty();
         }
 
         QueuedStructureTemplate template = new QueuedTardisStructureTemplate(optional.get(), tardis);
 
-        template.place(world, BlockPos.ofFloored(corners.getBox().getCenter()),
-                BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, world.getRandom(), Block.FORCE_STATE)
-                .ifPresentOrElse(queue -> queue.thenRun(
-                        () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
-                                System.currentTimeMillis() - start)).execute(),
-                        () -> AITMod.LOGGER.error("Failed to generate interior for {}",
-                                this.tardis.getUuid())
-                );
+        Optional<ActionQueue> optionalQueue = template.place(world, BlockPos.ofFloored(corners.getBox().getCenter()),
+                BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, world.getRandom(), Block.FORCE_STATE);
+
+        optionalQueue.ifPresentOrElse(queue -> queue.thenRun(
+                () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
+                        System.currentTimeMillis() - start)),
+                () -> AITMod.LOGGER.error("Failed to generate interior for {}",
+                        this.tardis.getUuid())
+        );
+
+        return optionalQueue;
     }
 
     public ActionQueue createDesktopClearQueue() {

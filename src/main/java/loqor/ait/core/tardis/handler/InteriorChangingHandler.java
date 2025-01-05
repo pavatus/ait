@@ -3,8 +3,6 @@ package loqor.ait.core.tardis.handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.drtheo.blockqueue.data.TimeUnit;
-import dev.drtheo.scheduler.Scheduler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Blocks;
@@ -160,29 +158,30 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     }
 
     private void complete() {
-        tardis.getDesktop().changeInterior(this.getQueuedInterior(), true);
-        tardis.alarm().enabled().set(false);
+        tardis.getDesktop().createInteriorChangeQueue(this.getQueuedInterior(), true).ifPresent(queue -> queue.thenRun(() -> {
+            tardis.alarm().enabled().set(false);
 
-        this.queued.set(false);
-        this.regenerating.set(false);
+            this.queued.set(false);
+            this.regenerating.set(false);
 
-        boolean previouslyLocked = tardis.door().previouslyLocked().get();
-        DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
+            boolean previouslyLocked = tardis.door().previouslyLocked().get();
+            DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
 
-        tardis.engine().unlinkEngine();
+            tardis.engine().unlinkEngine();
 
-        if (tardis.hasGrowthExterior()) {
-            TravelHandler travel = tardis.travel();
+            if (tardis.hasGrowthExterior()) {
+                TravelHandler travel = tardis.travel();
 
-            travel.autopilot(true);
-            travel.forceDemat();
-        } else {
-            tardis.removeFuel(5000 * tardis.travel().instability());
-        }
+                travel.autopilot(true);
+                travel.forceDemat();
+            } else {
+                tardis.removeFuel(5000 * tardis.travel().instability());
+            }
 
-        TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
+            TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
 
-        createChestAtInteriorDoor(restorationChestContents);
+            createChestAtInteriorDoor(restorationChestContents);
+        }).execute());
     }
 
     private void warnPlayers() {
@@ -260,10 +259,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             DoorHandler.lockTardis(true, this.tardis(), null, true);
 
         if (!this.regenerating.get()) {
-            tardis.getDesktop().createDesktopClearQueue().thenRun(
-                    () -> Scheduler.get().runTaskLater(
-                            this::complete, TimeUnit.SECONDS, 10)
-            ).execute();
+            tardis.getDesktop().createDesktopClearQueue().thenRun(this::complete).execute();
 
             this.regenerating.set(true);
         }

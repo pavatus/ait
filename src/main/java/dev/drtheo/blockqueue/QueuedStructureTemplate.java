@@ -86,7 +86,6 @@ public class QueuedStructureTemplate {
                 return true;
 
             StructureTemplate.StructureBlockInfo blockInfo = blockInfoIter.next();
-
             BlockPos blockPos = blockInfo.pos();
 
             if (blockBox != null && !blockBox.contains(blockPos))
