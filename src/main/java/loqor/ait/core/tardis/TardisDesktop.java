@@ -3,14 +3,19 @@ package loqor.ait.core.tardis;
 import java.util.HashSet;
 import java.util.Set;
 
+import dev.drtheo.blockqueue.util.ChunkEraser;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
@@ -23,6 +28,7 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.DesktopGenerator;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.Corners;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
@@ -124,13 +130,19 @@ public class TardisDesktop extends TardisComponent {
         if (!success)
             AITMod.LOGGER.error("Failed to generate interior for {}", this.tardis.getUuid());
 
-        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - start);
+        AITMod.LOGGER.warn("Time taken to generate interior: {}ms", System.currentTimeMillis() - start);
     }
 
-    public void clearOldInterior() {
-        long start = System.currentTimeMillis();
-        DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners, RADIUS);
-        AITMod.LOGGER.warn("Time taken to clear interior: {}ms", System.currentTimeMillis() - start);
+    // TODO: use completablefutures instead
+    public void clearOldInterior(Runnable finish) {
+        ServerWorld world = this.tardis.asServer().getInteriorWorld();
+
+        int chunkRadius = ChunkSectionPos.getSectionCoord(RADIUS);
+        ChunkEraser.erase(finish, world, -chunkRadius, -chunkRadius, chunkRadius, chunkRadius, Block.FORCE_STATE, true);
+
+        // FIXME THEO: gross
+        TardisUtil.getEntitiesInBox(ItemFrameEntity.class, world, corners.getBox(), frame -> true)
+                .forEach(frame -> frame.remove(Entity.RemovalReason.DISCARDED));
     }
 
     public void cacheConsole(BlockPos consolePos) {

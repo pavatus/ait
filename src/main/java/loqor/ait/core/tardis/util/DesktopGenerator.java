@@ -3,17 +3,12 @@ package loqor.ait.core.tardis.util;
 import java.util.Optional;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Clearable;
 import loqor.ait.api.TardisStructure;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.Corners;
@@ -44,22 +39,5 @@ public class DesktopGenerator {
 
         return template.place(level, BlockPos.ofFloored(corners.getBox().getCenter()),
                 BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, level.getRandom(), Block.FORCE_STATE);
-    }
-
-    public static void clearArea(ServerWorld level, Corners corners, int radius) {
-        int chunkRadius = (int) Math.floor(radius / 16d);
-
-        for (int x = -chunkRadius; x < chunkRadius + 1; x++) {
-            for (int z = -chunkRadius; z < chunkRadius + 1; z++) {
-                Chunk chunk = level.getChunk(x, z, ChunkStatus.FULL, false);
-
-                if (chunk instanceof Clearable clearable)
-                    clearable.ait$clear();
-            }
-        }
-
-        // FIXME THEO: gross
-        TardisUtil.getEntitiesInBox(ItemFrameEntity.class, level, corners.getBox(), frame -> true)
-                .forEach(frame -> frame.remove(Entity.RemovalReason.DISCARDED));
     }
 }

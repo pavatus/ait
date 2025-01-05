@@ -28,7 +28,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.vortex.reference.VortexReference;
 import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
-import loqor.ait.core.util.Cachable;
+import loqor.ait.core.util.Lazy;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
@@ -75,11 +75,11 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<Identifier> vortexId = VORTEX_FX.create(this);
 
     @Exclude
-    private Cachable<TravelSoundMap> travelFxCache;
+    private Lazy<TravelSoundMap> travelFxCache;
     @Exclude
-    private Cachable<FlightSound> flightFxCache;
+    private Lazy<FlightSound> flightFxCache;
     @Exclude
-    private Cachable<VortexReference> vortexFxCache;
+    private Lazy<VortexReference> vortexFxCache;
 
     public StatsHandler() {
         super(Id.STATS);
@@ -271,7 +271,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public TravelSoundMap getTravelEffects() {
         if (this.travelFxCache == null) {
-            this.travelFxCache = new Cachable<>(this::createTravelEffectsCache);
+            this.travelFxCache = new Lazy<>(this::createTravelEffectsCache);
         }
 
         return this.travelFxCache.get();
@@ -287,7 +287,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public FlightSound getFlightEffects() {
         if (this.flightFxCache == null) {
-            this.flightFxCache = new Cachable<>(this::createFlightEffectsCache);
+            this.flightFxCache = new Lazy<>(this::createFlightEffectsCache);
         }
 
         return this.flightFxCache.get();
@@ -298,7 +298,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public VortexReference getVortexEffects() {
         if (this.vortexFxCache == null) {
-            this.vortexFxCache = new Cachable<>(this::createVortexEffectsCache);
+            this.vortexFxCache = new Lazy<>(this::createVortexEffectsCache);
         }
 
         return this.vortexFxCache.get();

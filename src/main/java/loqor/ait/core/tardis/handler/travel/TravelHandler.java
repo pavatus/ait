@@ -1,5 +1,7 @@
 package loqor.ait.core.tardis.handler.travel;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
 import net.minecraft.block.BlockState;
@@ -30,9 +32,7 @@ import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.TimeUnit;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -217,7 +217,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     private void createCooldown() {
         this.travelCooldown = true;
 
-        Scheduler.runTaskLater(() -> this.travelCooldown = false, TimeUnit.SECONDS, 5);
+        Scheduler.get().runTaskLater(() -> this.travelCooldown = false, TimeUnit.SECONDS, 5);
     }
 
     public void dematerialize(TravelSound sound) {

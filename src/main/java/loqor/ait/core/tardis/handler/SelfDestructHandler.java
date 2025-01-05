@@ -1,5 +1,8 @@
 package loqor.ait.core.tardis.handler;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -14,9 +17,7 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
@@ -109,10 +110,12 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
 
         if (!tardis.door().locked())
             DoorHandler.lockTardis(true, this.tardis(), null, true);
-        if (tardis.asServer().isRemoved()) return;
+
+        if (tardis.asServer().isRemoved())
+            return;
 
         if (!(this.regenerating.get())) {
-            Scheduler.runAsyncTaskLater(this::complete, TimeUnit.SECONDS, 5);
+            Scheduler.get().runAsyncTaskLater(this::complete, TimeUnit.SECONDS, 5);
 
             this.regenerating.set(true);
         }

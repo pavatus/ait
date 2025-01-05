@@ -5,6 +5,8 @@ import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
@@ -18,10 +20,8 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
@@ -107,7 +107,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     protected void onInit(InitContext ctx) {
         super.onInit(ctx);
 
-        Scheduler.runTaskTimer(() -> {
+        Scheduler.get().runTaskTimer(task -> {
             if (this.hammerUses > 0)
                 this.hammerUses--;
         }, TimeUnit.TICKS, 200);

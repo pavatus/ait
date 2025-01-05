@@ -6,6 +6,7 @@ import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 import java.util.UUID;
 
+import dev.drtheo.scheduler.ClientScheduler;
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
@@ -66,7 +67,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
@@ -78,7 +78,7 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        Scheduler.Client.init();
+        ClientScheduler.init();
 
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 

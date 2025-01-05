@@ -1,5 +1,7 @@
 package loqor.ait.mixin.server;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.ClientScheduler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,9 +25,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.Loyalty;
-import loqor.ait.data.TimeUnit;
 
 @Mixin(BedBlock.class)
 public class BedInTardisMixin {
@@ -59,6 +59,6 @@ public class BedInTardisMixin {
             case REJECT -> AITSounds.TARDIS_REJECTION_SFX;
             default -> AITSounds.GROAN;
         };
-        Scheduler.Client.runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
+        ClientScheduler.get().runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
     }
 }

@@ -3,6 +3,8 @@ package loqor.ait.core.entities;
 import java.util.List;
 
 import com.mojang.serialization.Dynamic;
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -40,8 +42,6 @@ import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
-import loqor.ait.core.util.schedule.Scheduler;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 
 public class ConsoleControlEntity extends LinkableDummyLivingEntity {
@@ -355,7 +355,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
             this.dataTracker.set(ON_DELAY, true);
 
-            Scheduler.runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
+            Scheduler.get().runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
         }
 
         if (this.consoleBlockPos != null)

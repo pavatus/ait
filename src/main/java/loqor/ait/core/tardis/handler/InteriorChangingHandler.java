@@ -3,6 +3,8 @@ package loqor.ait.core.tardis.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Blocks;
@@ -33,11 +35,9 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -145,9 +145,6 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         tardis.alarm().enabled().set(true);
         tardis.getDesktop().getConsolePos().clear();
 
-        if (!tardis.hasGrowthDesktop())
-            tardis.removeFuel(5000 * tardis.travel().instability());
-
         TravelHandler travel = this.tardis().travel();
 
         if (travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
@@ -164,11 +161,10 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     private void complete() {
         tardis.getDesktop().changeInterior(this.getQueuedInterior(), true);
+        tardis.alarm().enabled().set(false);
 
         this.queued.set(false);
         this.regenerating.set(false);
-
-        tardis.alarm().enabled().set(false);
 
         boolean previouslyLocked = tardis.door().previouslyLocked().get();
         DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
@@ -180,6 +176,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
             travel.autopilot(true);
             travel.forceDemat();
+        } else {
+            tardis.removeFuel(5000 * tardis.travel().instability());
         }
 
         TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
@@ -262,8 +260,9 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             DoorHandler.lockTardis(true, this.tardis(), null, true);
 
         if (!this.regenerating.get()) {
-            Scheduler.runTaskLater(() -> tardis.getDesktop().clearOldInterior(), TimeUnit.SECONDS, 5);
-            Scheduler.runTaskLater(this::complete, TimeUnit.SECONDS, 15);
+            Scheduler.get().runTaskLater(() -> tardis.getDesktop().clearOldInterior(
+                    () -> Scheduler.get().runTaskLater(this::complete, TimeUnit.SECONDS, 5)
+            ), TimeUnit.SECONDS, 5);
 
             this.regenerating.set(true);
         }

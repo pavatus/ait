@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.drtheo.scheduler.Scheduler;
 import dev.pavatus.config.AITConfig;
 import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.module.ModuleRegistry;
@@ -69,7 +70,6 @@ import loqor.ait.core.util.CustomTrades;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.data.landing.LandingPadRegion;
@@ -213,6 +213,7 @@ public class AITMod implements ModInitializer {
             ListCommand.register(dispatcher);
             LoadCommand.register(dispatcher);
             DebugCommand.register(dispatcher);
+            EraseChunksCommand.register(dispatcher);
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,

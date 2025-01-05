@@ -1,4 +1,4 @@
-package loqor.ait.data;
+package dev.drtheo.blockqueue.data;
 
 public enum TimeUnit {
 
