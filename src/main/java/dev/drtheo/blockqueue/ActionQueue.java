@@ -1,11 +1,11 @@
 package dev.drtheo.blockqueue;
 
-import dev.drtheo.blockqueue.api.Finishable;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Consumer;
+
+import dev.drtheo.blockqueue.api.Finishable;
+import org.jetbrains.annotations.Nullable;
 
 public class ActionQueue implements Finishable {
 
