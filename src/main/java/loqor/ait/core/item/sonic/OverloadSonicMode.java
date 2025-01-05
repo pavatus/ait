@@ -200,6 +200,10 @@ public class OverloadSonicMode extends SonicMode {
         return ticks >= 40;
     }
 
+    private static boolean canCrack(int ticks) {
+        return ticks >= 45;
+    }
+
     private static boolean canExtract(int ticks) {
         return ticks >= 50;
     }
