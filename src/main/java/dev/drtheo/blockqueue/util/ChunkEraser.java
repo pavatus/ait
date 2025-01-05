@@ -19,7 +19,7 @@ import net.minecraft.world.chunk.ChunkStatus;
 public class ChunkEraser {
 
     private static ActionQueue erase(TimeUnit unit, int period, int maxTime, ServerWorld world, int chunkX1, int chunkZ1, int chunkX2, int chunkZ2, int flags, boolean loadChunks) {
-        BlockQueue.LOGGER.info("Erasing from ({},{}) to ({},{})",
+        BlockQueue.LOGGER.debug("Erasing from ({},{}) to ({},{})",
                 chunkX1, chunkZ1, chunkX2, chunkZ2);
 
         BlockQueue.Simple queue = new BlockQueue.Simple();
@@ -41,7 +41,7 @@ public class ChunkEraser {
                         if (chunk == null)
                             return false;
 
-                        BlockQueue.LOGGER.info("Processing chunk at ({},{})", x.value, z);
+                        BlockQueue.LOGGER.debug("Processing chunk at ({},{})", x.value, z);
 
                         for (int y = chunk.getSectionIndex(world.getBottomY()); y < chunk.getSectionIndex(world.getTopY()); y++) {
                             ChunkSection section = chunk.getSectionArray()[y];
@@ -66,7 +66,7 @@ public class ChunkEraser {
         int endZ = startZ + 16;
         int endY = startY + 16;
 
-        BlockQueue.LOGGER.info("Marking blocks from [{},{},{}] to [{},{},{}]",
+        BlockQueue.LOGGER.debug("Marking blocks from [{},{},{}] to [{},{},{}]",
                 startX, startY, startZ, endX, endY, endZ);
 
         for (int x = startX; x < endX; x++) {
