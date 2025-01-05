@@ -163,11 +163,10 @@ public class OverloadSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
             return;
         }
-
+//item drop is temp i want it to replace the block with the cracked varient, but idk how since theres no example for me to take after.
         if (canCrack(ticks)
                 && (block == Blocks.DEEPSLATE_BRICKS))  {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    //item drop is temp i want it to replace the block with the cracked varient, but idk how since theres no example for me to take after.
                     new ItemStack(Items.CRACKED_DEEPSLATE_BRICKS, 4)));
 
             world.breakBlock(pos, false);
@@ -228,7 +227,7 @@ public class OverloadSonicMode extends SonicMode {
     }
 
     private static boolean canCrack(int ticks) {
-        return ticks >= 25;
+        return ticks >= 20;
     }
 
     @Nullable private BlockState guessOreBase(Block block) {
