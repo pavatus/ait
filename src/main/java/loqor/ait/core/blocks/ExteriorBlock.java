@@ -236,6 +236,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         return VoxelShapes.empty();
     }
 
+    // TODO cache this.
     public VoxelShape getNormalShape(BlockState state, boolean ignorePortals) {
         Direction direction = RotationPropertyHelper.toDirection(state.get(ROTATION))
                 .orElse(null);

@@ -1,5 +1,8 @@
 package loqor.ait.core.item;
 
+import loqor.ait.client.sounds.ClientSoundManager;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -50,6 +53,9 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        if (user instanceof ClientPlayerEntity clientPlayer)
+            ClientSoundManager.getSonicSound().onUse(clientPlayer);
+
         SonicMode mode = mode(stack);
         int ticks = mode.maxTime() - remainingUseTicks;
 
@@ -61,12 +67,18 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        if (user instanceof ClientPlayerEntity clientPlayer)
+            ClientSoundManager.getSonicSound().onFinishUse(clientPlayer);
+
         SonicMode mode = mode(stack);
         mode.stopUsing(stack, world, user, mode.maxTime() - remainingUseTicks, remainingUseTicks);
     }
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        if (user instanceof ClientPlayerEntity clientPlayer)
+            ClientSoundManager.getSonicSound().onFinishUse(clientPlayer);
+
         mode(stack).finishUsing(stack, world, user);
         return stack;
     }

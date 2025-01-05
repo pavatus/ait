@@ -33,6 +33,7 @@ public class SonicSoundHandler {
     public void onUse(AbstractClientPlayerEntity user) {
         this.get(user).onUse();
     }
+
     public void onFinishUse(AbstractClientPlayerEntity user) {
         this.get(user).onFinishUse();
     }
