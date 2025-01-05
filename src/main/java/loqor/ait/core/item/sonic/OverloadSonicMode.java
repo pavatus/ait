@@ -164,6 +164,17 @@ public class OverloadSonicMode extends SonicMode {
             return;
         }
 
+        if (canCrack(ticks)
+                && (block == Blocks.DEEPSLATE_BRICKS))  {
+            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                    //item drop is temp i want it to replace the block with the cracked varient, but idk how since theres no example for me to take after.
+                    new ItemStack(Items.CRACKED_DEEPSLATE_BRICKS, 4)));
+
+            world.breakBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
+        }
+
         if (canExtract(ticks)
                 && state.isIn(ConventionalBlockTags.ORES)) {
             BlockState newState = this.guessOreBase(block);
@@ -216,8 +227,11 @@ public class OverloadSonicMode extends SonicMode {
         return ticks >= 10;
     }
 
-    @Nullable
-    private BlockState guessOreBase(Block block) {
+    private static boolean canCrack(int ticks) {
+        return ticks >= 25;
+    }
+
+    @Nullable private BlockState guessOreBase(Block block) {
         if (block == Blocks.NETHER_GOLD_ORE || block == Blocks.NETHER_QUARTZ_ORE)
             return Blocks.NETHERRACK.getDefaultState();
 
