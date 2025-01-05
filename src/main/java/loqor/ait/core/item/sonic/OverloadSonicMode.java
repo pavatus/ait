@@ -151,7 +151,6 @@ public class OverloadSonicMode extends SonicMode {
             return;
         }
 
-
         if (canSmelt(ticks)
                 && state.isIn(BlockTags.SAND)) {
             world.playSound(user, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,
@@ -230,7 +229,8 @@ public class OverloadSonicMode extends SonicMode {
         return ticks >= 20;
     }
 
-    @Nullable private BlockState guessOreBase(Block block) {
+    @Nullable
+    private BlockState guessOreBase(Block block) {
         if (block == Blocks.NETHER_GOLD_ORE || block == Blocks.NETHER_QUARTZ_ORE)
             return Blocks.NETHERRACK.getDefaultState();
 

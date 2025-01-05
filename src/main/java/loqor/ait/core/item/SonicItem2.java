@@ -53,8 +53,8 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (user instanceof ClientPlayerEntity clientPlayer)
-            ClientSoundManager.getSonicSound().onUse(clientPlayer);
+        if (world.isClient())
+            ClientSoundManager.getSonicSound().onUse((AbstractClientPlayerEntity) user);
 
         SonicMode mode = mode(stack);
         int ticks = mode.maxTime() - remainingUseTicks;
@@ -67,8 +67,8 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user instanceof ClientPlayerEntity clientPlayer)
-            ClientSoundManager.getSonicSound().onFinishUse(clientPlayer);
+        if (world.isClient())
+            ClientSoundManager.getSonicSound().onFinishUse((AbstractClientPlayerEntity) user);
 
         SonicMode mode = mode(stack);
         mode.stopUsing(stack, world, user, mode.maxTime() - remainingUseTicks, remainingUseTicks);
@@ -76,8 +76,8 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-        if (user instanceof ClientPlayerEntity clientPlayer)
-            ClientSoundManager.getSonicSound().onFinishUse(clientPlayer);
+        if (world.isClient())
+            ClientSoundManager.getSonicSound().onFinishUse((AbstractClientPlayerEntity) user);
 
         mode(stack).finishUsing(stack, world, user);
         return stack;
