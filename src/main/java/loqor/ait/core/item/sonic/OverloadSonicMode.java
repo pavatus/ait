@@ -162,16 +162,31 @@ public class OverloadSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
             return;
         }
-//item drop is temp i want it to replace the block with the cracked varient, but idk how since theres no example for me to take after.
-        if (canCrack(ticks)
-                && (block == Blocks.DEEPSLATE_BRICKS))  {
+
+        if (canResonateConcrete(ticks)
+                && (block == Blocks.BLACK_CONCRETE
+                || block == Blocks.CYAN_CONCRETE
+                || block == Blocks.BLUE_CONCRETE
+                || block == Blocks.BROWN_CONCRETE
+                || block == Blocks.GRAY_CONCRETE
+                || block == Blocks.GREEN_CONCRETE
+                || block == Blocks.MAGENTA_CONCRETE
+                || block == Blocks.ORANGE_CONCRETE
+                || block == Blocks.PINK_CONCRETE
+                || block == Blocks.RED_CONCRETE
+                || block == Blocks.WHITE_CONCRETE
+                || block == Blocks.PURPLE_CONCRETE
+                || block == Blocks.LIGHT_GRAY_CONCRETE
+                || block == Blocks.LIGHT_BLUE_CONCRETE
+                || block == Blocks.LIME_CONCRETE)) {
             world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(Items.CRACKED_DEEPSLATE_BRICKS, 4)));
+                    new ItemStack(Items.AIR, 4)));
 
             world.breakBlock(pos, false);
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
             return;
         }
+
 
         if (canExtract(ticks)
                 && state.isIn(ConventionalBlockTags.ORES)) {
@@ -226,7 +241,11 @@ public class OverloadSonicMode extends SonicMode {
     }
 
     private static boolean canCrack(int ticks) {
-        return ticks >= 20;
+        return ticks >= 80;
+    }
+
+    private static boolean canResonateConcrete(int ticks) {
+        return ticks >= 800;
     }
 
     @Nullable private BlockState guessOreBase(Block block) {
