@@ -1,12 +1,14 @@
 package loqor.ait.core.world;
 
 import dev.drtheo.blockqueue.QueuedStructureTemplate;
-import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
-import loqor.ait.core.tardis.ServerTardis;
+
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.math.random.Random;
+
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
+import loqor.ait.core.tardis.ServerTardis;
 
 public class QueuedTardisStructureTemplate extends QueuedStructureTemplate {
 

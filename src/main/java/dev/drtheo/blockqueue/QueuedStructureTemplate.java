@@ -1,10 +1,15 @@
 package dev.drtheo.blockqueue;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
 import com.mojang.datafixers.util.Pair;
 import dev.drtheo.blockqueue.data.TimeUnit;
 import dev.drtheo.blockqueue.util.StepUtil;
-import dev.drtheo.scheduler.Scheduler;
-import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidFillable;
@@ -27,12 +32,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.BitSetVoxelSet;
 import net.minecraft.world.ServerWorldAccess;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
 
 public class QueuedStructureTemplate {
 
@@ -41,7 +42,7 @@ public class QueuedStructureTemplate {
     private final List<StructureTemplate.PalettedBlockInfoList> blockInfoLists;
     private final List<StructureTemplate.StructureEntityInfo> entities;
     private final Vec3i size;
-    
+
     public QueuedStructureTemplate(StructureTemplate template) {
         this((StructureTemplateAccessor) template);
     }
@@ -51,11 +52,11 @@ public class QueuedStructureTemplate {
         this.entities = accessor.getEntities();
         this.size = accessor.getSize();
     }
-    
+
     public Optional<ActionQueue> place(ServerWorldAccess world, BlockPos pos, BlockPos pivot, StructurePlacementData placementData, Random random, int flags) {
         if (this.blockInfoLists.isEmpty())
             return Optional.empty();
-        
+
         List<StructureTemplate.StructureBlockInfo> randomBlocks = placementData.getRandomBlockInfos(this.blockInfoLists, pos).getAll();
 
         List<BlockPos> flowingFluid = new ArrayList<>(placementData.shouldPlaceFluids() ? randomBlocks.size() : 0);
@@ -63,7 +64,7 @@ public class QueuedStructureTemplate {
 
         if (randomBlocks.isEmpty() && (placementData.shouldIgnoreEntities() || this.entities.isEmpty()) || this.size.getX() < 1 || this.size.getY() < 1 || this.size.getZ() < 1)
             return Optional.empty();
-        
+
         BlockBox blockBox = placementData.getBoundingBox();
         List<Pair<BlockPos, NbtCompound>> nbtList = new ArrayList<>(randomBlocks.size());
 
