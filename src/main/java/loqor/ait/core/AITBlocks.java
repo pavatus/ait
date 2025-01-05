@@ -186,6 +186,8 @@ public class AITBlocks extends BlockContainer {
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
 
     @PickaxeMineable
+    @NoBlockItem
+    @NoBlockDrop
     public static final Block PEANUT = new PeanutBlock(FabricBlockSettings.copy(Blocks.OBSIDIAN));
 
     // TODO ADVENT

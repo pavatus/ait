@@ -42,9 +42,9 @@ public class PresentDoorModel extends DoorModel {
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         DoorHandler door = linkableBlockEntity.tardis().get().door();
 
-        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -8F : 0.0F;
+        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
         this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? 8F
+                ? -8F
                 : 0.0F;
 
         matrices.push();

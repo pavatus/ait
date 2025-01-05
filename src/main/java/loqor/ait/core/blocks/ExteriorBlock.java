@@ -359,8 +359,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         Planet planet = PlanetRegistry.getInstance().get(tardis.travel().position().getWorld());
 
-        if (planet != null && planet.gravity() <= 0) return;
-
         FallingTardisEntity.spawnFromBlock(world, pos, state);
 
         if (state.get(WATERLOGGED))

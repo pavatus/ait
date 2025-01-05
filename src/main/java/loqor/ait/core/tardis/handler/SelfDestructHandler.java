@@ -4,8 +4,10 @@ import dev.drtheo.blockqueue.data.TimeUnit;
 import dev.drtheo.scheduler.Scheduler;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +16,7 @@ import net.minecraft.world.World;
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
@@ -52,11 +55,13 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
 
         this.queued.set(false);
 
+        world.spawnParticles(ParticleTypes.CLOUD, pos.getX(), pos.getY(), pos.getZ(), 100, 1, 1, 1, 1);
+        world.playSound(null, pos, AITSounds.GROAN, SoundCategory.BLOCKS, 10f, 0.7f);
+        world.createExplosion(null, pos.getX(), pos.getY() + 2, pos.getZ(), 50, true,
+                World.ExplosionSourceType.MOB);
+
         AITMod.LOGGER.warn("Tardis {} has self destructed, expect lag.", tardis.getUuid());
         world.getServer().executeSync(() -> ServerTardisManager.getInstance().remove(ServerLifecycleHooks.get(), tardis.asServer()));
-
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
 
         // crash - Accessing LegacyRandomSource from multiple threads
         /*
