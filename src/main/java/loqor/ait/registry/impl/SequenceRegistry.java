@@ -249,7 +249,7 @@ public class SequenceRegistry {
                 .create(AITMod.id("slow_down_to_avoid_flying_out_of_vortex"), (finishedTardis -> {
                     finishedTardis.travel().decreaseFlightTime(240);
                 }), (missedTardis -> {
-                    missedTardis.travel().forceRemat();
+                    missedTardis.travel().rematerialize();
                 }), 80L, Text.translatable("sequence.ait.slow_down_to_avoid_flying_out_of_vortex").formatted(Formatting.ITALIC,
                         Formatting.YELLOW), new IncrementControl(), new HandBrakeControl(), new ThrottleControl()));
 
