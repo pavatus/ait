@@ -6,8 +6,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionTypes;
 
 public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
-    private static final PlanetRegistry instance = new PlanetRegistry();
 
+    private static final PlanetRegistry instance = new PlanetRegistry();
 
     public PlanetRegistry() {
         super(Planet::fromInputStream, Planet.CODEC, "planet", true);
@@ -30,7 +30,18 @@ public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
     }
 
     public Planet get(World world) {
-        return this.get(world.getRegistryKey().getValue());
+        // all worlds implement PlanetWorld
+        if (!(world instanceof PlanetWorld planetWorld))
+            return null;
+
+        if (planetWorld.ait_planet$isAPlanet())
+            return planetWorld.ait_planet$getPlanet();
+
+        Planet planet = this.get(world.getRegistryKey().getValue());
+
+        planetWorld.ait_planet$setPlanet(planet);
+        planetWorld.ait_planet$setIsAPlanet(planet != null);
+        return planet;
     }
 
     public static PlanetRegistry getInstance() {

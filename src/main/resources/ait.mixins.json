@@ -16,6 +16,8 @@
     "networking.ServerPlayerEntityMixin",
     "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
+    "planet.LivingEntityMixin",
+    "planet.WorldMixin",
     "server.BedInTardisMixin",
     "server.ChunkSectionMixin",
     "server.EnderDragonFightAccessor",
