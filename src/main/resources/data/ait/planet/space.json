@@ -1,6 +1,7 @@
 {
-  "dimension": "ait:moon",
-  "gravity": 0,
+  "dimension": "ait:space",
+  "gravity": 1,
   "has_oxygen": false,
-  "temperature": 2
+  "temperature": 2,
+  "has_clouds": false
 }

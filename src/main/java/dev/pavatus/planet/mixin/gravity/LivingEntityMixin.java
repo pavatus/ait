@@ -44,6 +44,8 @@ public abstract class LivingEntityMixin extends Entity {
     public void ait$tickMovement(CallbackInfo ci) {
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
 
+        //System.out.println(planet);
+
         if (planet == null)
             return;
 
@@ -55,10 +57,12 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity instanceof PlayerEntity player) {
             if (player.getAbilities().flying) return;
         }
-        if (entity.getType() == EntityType.BOAT || entity.getType() == EntityType.CHEST_BOAT) { return;}
+        if (entity.getType() == EntityType.BOAT || entity.getType() == EntityType.CHEST_BOAT) {
+            return;
+        }
 
-        Vec3d movement = this.getVelocity();
-        this.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
+        Vec3d movement = entity.getVelocity();
+        entity.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -106,8 +110,6 @@ public abstract class LivingEntityMixin extends Entity {
                     200, 1, false, false));
         }
 
-        if (entity.getWorld().isClient()) return;
-
         // TODO this might be like, crazy laggy but oh well
         hitDimensionThreshold(entity, 600, AITDimensions.MOON, AITDimensions.SPACE);
         hitDimensionThreshold(entity, 600, 256, World.OVERWORLD, AITDimensions.SPACE);
@@ -128,6 +130,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Unique private static void hitDimensionThreshold(Entity entity, int heightForTeleportFrom, int heightForTeleportTo, RegistryKey<World> dimFrom, RegistryKey<World> dimTo) {
+        if (entity.getWorld().isClient()) return;
         ServerWorld entityWorld = (ServerWorld) entity.getWorld();
         MinecraftServer server = entityWorld.getServer();
         ServerWorld destinationWorld = server.getWorld(dimTo);
