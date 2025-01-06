@@ -64,11 +64,8 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
         world.spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX(), pos.getY(), pos.getZ(), 10, 1, 1, 1, 1);
         world.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.getX(), pos.getY(), pos.getZ(), 500, 1, 1, 1, 1);
         world.playSound(null, pos, AITSounds.GROAN, SoundCategory.BLOCKS, 10f, 0.7f);
-        world.createExplosion(null, pos.getX(), pos.getY() + 2, pos.getZ(), 35, true,
-                World.ExplosionSourceType.MOB);
 
-        AITMod.LOGGER.warn("Tardis {} has self destructed, expect lag.", tardis.getUuid());
-        world.getServer().executeSync(() -> ServerTardisManager.getInstance().remove(ServerLifecycleHooks.get(), tardis.asServer()));
+        ServerTardisManager.getInstance().remove(world.getServer(), tardis.asServer());
     }
 
     public boolean isQueued() {
