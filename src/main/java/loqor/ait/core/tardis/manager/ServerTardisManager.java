@@ -85,11 +85,13 @@ public class ServerTardisManager extends DeprecatedServerTardisManager {
 
     @Override
     public ServerTardis create(TardisBuilder builder) {
-        if (this.isFull()) return null;
+        if (this.isFull())
+            return null;
 
         ServerTardis result = super.create(builder);
         this.sendTardisAll(Set.of(result));
 
+        TardisEvents.CREATE_TARDIS.invoker().onTardisCreate(result);
         return result;
     }
 

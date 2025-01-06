@@ -44,11 +44,13 @@
 	"entrypoints": {
 		"main": [
 			"loqor.ait.AITMod",
-          "dev.pavatus.multidim.MultiDimMod"
+			"dev.pavatus.multidim.MultiDimMod",
+			"dev.drtheo.stp.SeamlessTp"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
-			"loqor.ait.compat.Compat"
+			"loqor.ait.compat.Compat",
+			"dev.drtheo.stp.ClientSeamlessTp"
 		],
 		"fabric-datagen": [
 			"loqor.ait.datagen.AITModDataGenerator"
@@ -65,7 +67,8 @@
 		"gaslighter.mixins.json",
 		"multidim.mixins.json",
 		"planet.mixins.json",
-		"pavatuslib.mixins.json"
+		"pavatuslib.mixins.json",
+		"stp.mixins.json"
 	],
 	"accessWidener": "ait.accesswidener",
 	"depends": {

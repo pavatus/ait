@@ -4,9 +4,9 @@
   "package": "dev.pavatus.planet.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "LivingEntityMixin",
     "gravity.AssortedEntityMixin",
-    "gravity.BoatEntityMixin",
-    "gravity.LivingEntityMixin"
+    "gravity.BoatEntityMixin"
   ],
   "client": [
     "client.BipedEntityModelMixin",

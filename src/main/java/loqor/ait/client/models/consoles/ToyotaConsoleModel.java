@@ -22,7 +22,7 @@ import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class ToyotaConsoleModel extends ConsoleModel {
@@ -1808,10 +1808,10 @@ public class ToyotaConsoleModel extends ConsoleModel {
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(-60f));
         matrices.translate(-60f, -228, -188);
         String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
-        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
+        Text positionDimensionText = TextUtil.worldText(abpp.getDimension());
         String positionDirectionText = " " + DirectionControl.rotationToDirection(abpp.getRotation()).toUpperCase();
         String destinationPosText = " " + abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
+        Text destinationDimensionText = TextUtil.worldText(abpd.getDimension());
         String destinationDirectionText = " " + DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
         renderer.drawWithOutline(Text.of("❌").asOrderedText(), 0, 40, 0xF00F00, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);

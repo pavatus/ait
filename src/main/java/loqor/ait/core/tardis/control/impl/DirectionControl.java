@@ -9,7 +9,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class DirectionControl extends Control {
@@ -52,7 +52,7 @@ public class DirectionControl extends Control {
     }
 
     public static String rotationToDirection(int currentRot) {
-        return WorldUtil.rot2Text(currentRot).getString();
+        return TextUtil.rot2Text(currentRot).getString();
     }
 
     public static int getNextGeneralizedRotation(int rotation) {

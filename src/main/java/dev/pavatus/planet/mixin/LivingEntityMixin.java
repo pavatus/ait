@@ -1,5 +1,6 @@
-package loqor.ait.mixin.planet;
+package dev.pavatus.planet.mixin;
 
+import dev.drtheo.stp.SeamlessTp;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -122,10 +124,22 @@ public abstract class LivingEntityMixin extends Entity {
         ServerWorld worldA = server.getWorld(worldKeyA);
         ServerWorld worldB = server.getWorld(worldKeyB);
 
-        if (y >= tpHeightA && entityWorld == worldA) {
-            entity.moveToWorld(worldB);
-        } else if (y >= tpHeightB && entityWorld == worldB) {
-            entity.moveToWorld(worldA);
+        ServerWorld destination = null;
+
+        if (y >= tpHeightA && entityWorld == worldA)
+            destination = worldB;
+
+        if (y >= tpHeightB && entityWorld == worldB)
+            destination = worldA;
+
+        if (destination == null)
+            return;
+
+        if (entity instanceof ServerPlayerEntity player) {
+            SeamlessTp.moveToWorld(player, destination);
+            return;
         }
+
+        entity.moveToWorld(destination);
     }
 }

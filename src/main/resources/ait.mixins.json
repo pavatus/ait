@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "loqor.ait.compat.AITMixinPlugin",
   "mixins": [
+    "LivingEntityMixin",
     "UseActionMixin",
     "artron.ServerWorldMixin",
     "client.experimental_screen.LevelSummaryMixin",
@@ -16,7 +17,6 @@
     "networking.ServerPlayerEntityMixin",
     "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
-    "planet.LivingEntityMixin",
     "planet.WorldMixin",
     "server.BedInTardisMixin",
     "server.ChunkSectionMixin",

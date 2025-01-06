@@ -19,7 +19,7 @@ import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.WaypointBankBlockEntity;
 import loqor.ait.core.blocks.WaypointBankBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> implements BlockEntityRenderer<T> {
@@ -106,7 +106,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
         BlockPos abpdPos = abpd.getPos();
 
         String destPos = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        String destDim = WorldUtil.worldText(abpd.getDimension()).getString();
+        String destDim = TextUtil.worldText(abpd.getDimension()).getString();
 
         matrices.push();
         matrices.translate(0.5, 0.75, 0.5);
@@ -121,7 +121,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
         renderLabel(matrices, vertices, SEPARATOR, 46);
         renderLabel(matrices, vertices, destPos, 55);
 
-        renderLabel(matrices, vertices, WorldUtil.rot2Text(rotation).asOrderedText(), 67);
+        renderLabel(matrices, vertices, TextUtil.rot2Text(rotation).asOrderedText(), 67);
         renderLabel(matrices, vertices, destDim, 78);
 
         String which = (selectedIndex + 1) + "/" + WaypointBankBlock.MAX_COUNT;

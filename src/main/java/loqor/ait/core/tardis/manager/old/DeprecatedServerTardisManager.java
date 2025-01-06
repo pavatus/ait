@@ -1,6 +1,5 @@
 package loqor.ait.core.tardis.manager.old;
 
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -8,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.pavatus.multidim.MultiDim;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -187,7 +187,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
             return;
 
         for (ServerWorld world : server.getWorlds()) {
-            ((WorldWithTardis) world).ait$withLookup(HashMap::clear);
+            ((WorldWithTardis) world).ait$withLookup(Long2ObjectOpenHashMap::clear);
         }
     }
 

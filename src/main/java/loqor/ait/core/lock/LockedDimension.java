@@ -21,7 +21,7 @@ import net.minecraft.util.dynamic.Codecs;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.Nameable;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.data.Loyalty;
 
 public record LockedDimension(Identifier dimension, ItemStack stack) implements Unlockable, Nameable {
@@ -67,6 +67,6 @@ public record LockedDimension(Identifier dimension, ItemStack stack) implements 
 
     @Override
     public Text text() {
-        return WorldUtil.worldText(RegistryKey.of(RegistryKeys.WORLD, this.dimension()));
+        return TextUtil.worldText(RegistryKey.of(RegistryKeys.WORLD, this.dimension()));
     }
 }

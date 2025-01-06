@@ -15,6 +15,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
@@ -54,7 +55,7 @@ public class DimensionControl extends Control {
 
     private void messagePlayer(ServerPlayerEntity player, ServerWorld world, boolean unlocked) {
         MutableText message = Text.translatable("message.ait.tardis.control.dimension.info")
-                .append(WorldUtil.worldText(world.getRegistryKey())).formatted(unlocked ? Formatting.WHITE : Formatting.GRAY);
+                .append(TextUtil.worldText(world.getRegistryKey())).formatted(unlocked ? Formatting.WHITE : Formatting.GRAY);
 
         if (!(unlocked)) message.append(Text.literal(" \uD83D\uDD12"));
 

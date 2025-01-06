@@ -236,28 +236,39 @@ public final class TardisEvents {
                     callback.onBreak(system);
                 }
             });
+
     public static final Event<OnSubSystemRepair> SUBSYSTEM_REPAIR = EventFactory.createArrayBacked(OnSubSystemRepair.class,
             callbacks -> system -> {
                 for (OnSubSystemRepair callback : callbacks) {
                     callback.onRepair(system);
                 }
             });
+
     public static final Event<OnSubSystemEnable> SUBSYSTEM_ENABLE = EventFactory.createArrayBacked(OnSubSystemEnable.class,
             callbacks -> system -> {
                 for (OnSubSystemEnable callback : callbacks) {
                     callback.onEnable(system);
                 }
             });
+
     public static final Event<OnSubSystemDisable> SUBSYSTEM_DISABLE = EventFactory.createArrayBacked(OnSubSystemDisable.class,
             callbacks -> system -> {
                 for (OnSubSystemDisable callback : callbacks) {
                     callback.onDisable(system);
                 }
             });
+
     public static final Event<OnEnginesPhase> ENGINES_PHASE = EventFactory.createArrayBacked(OnEnginesPhase.class,
             callbacks -> system -> {
                 for (OnEnginesPhase callback : callbacks) {
                     callback.onPhase(system);
+                }
+            });
+
+    public static final Event<CreateTardis> CREATE_TARDIS = EventFactory.createArrayBacked(CreateTardis.class,
+            callbacks -> tardis -> {
+                for (CreateTardis callback : callbacks) {
+                    callback.onTardisCreate(tardis);
                 }
             });
 
@@ -483,21 +494,30 @@ public final class TardisEvents {
     public interface OnSubSystemBreak {
         void onBreak(DurableSubSystem system);
     }
+
     @FunctionalInterface
     public interface OnSubSystemRepair {
         void onRepair(DurableSubSystem system);
     }
+
     @FunctionalInterface
     public interface OnSubSystemEnable {
         void onEnable(SubSystem system);
     }
+
     @FunctionalInterface
     public interface OnSubSystemDisable {
         void onDisable(SubSystem system);
     }
+
     @FunctionalInterface
     public interface OnEnginesPhase {
         void onPhase(EngineSystem system);
+    }
+
+    @FunctionalInterface
+    public interface CreateTardis {
+        void onTardisCreate(ServerTardis tardis);
     }
 
 

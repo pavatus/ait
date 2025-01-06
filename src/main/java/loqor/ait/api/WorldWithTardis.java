@@ -1,9 +1,10 @@
 package loqor.ait.api;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.ChunkPos;
@@ -30,7 +31,7 @@ public interface WorldWithTardis {
 
             Set<ServerTardis> tardisSet = withTardis.ait$lookup().get(chunk.getPos());
 
-            if (tardisSet == null)
+            if (tardisSet == null || tardisSet.isEmpty())
                 return;
 
             consumer.accept(player, tardisSet);
@@ -44,7 +45,7 @@ public interface WorldWithTardis {
 
             Set<ServerTardis> tardisSet = withTardis.ait$lookup().get(chunk);
 
-            if (tardisSet == null)
+            if (tardisSet == null || tardisSet.isEmpty())
                 return;
 
             consumer.accept(player, tardisSet);
@@ -56,16 +57,24 @@ public interface WorldWithTardis {
         void accept(ServerPlayerEntity player, Set<ServerTardis> tardisSet);
     }
 
-    final class Lookup extends HashMap<ChunkPos, Set<ServerTardis>> {
+    final class Lookup extends Long2ObjectOpenHashMap<Set<ServerTardis>> {
 
         public void put(ChunkPos pos, ServerTardis tardis) {
-            this.computeIfAbsent(pos, chunkPos -> new HashSet<>()).add(tardis);
+            this.computeIfAbsent(pos.toLong(), chunkPos -> new HashSet<>()).add(tardis);
+        }
+
+        public Set<ServerTardis> get(ChunkPos pos) {
+            return this.get(pos.toLong());
         }
 
         public void remove(ChunkPos pos, ServerTardis tardis) {
+            this.remove(pos.toLong(), tardis);
+        }
+
+        public void remove(long pos, ServerTardis tardis) {
             Set<ServerTardis> set = this.get(pos);
 
-            if (set == null)
+            if (set == null || set.isEmpty())
                 return;
 
             set.remove(tardis);

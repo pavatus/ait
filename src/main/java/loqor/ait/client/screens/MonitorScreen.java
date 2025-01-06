@@ -31,7 +31,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
@@ -416,25 +416,25 @@ public class MonitorScreen extends ConsoleScreen {
         BlockPos abpdPos = abpd.getPos();
 
         String positionText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text dimensionText = WorldUtil.worldText(abpd.getDimension());
+        Text dimensionText = TextUtil.worldText(abpd.getDimension());
 
         BlockPos dabpdPos = dabpd.getPos();
 
         String destinationText = dabpdPos.getX() + ", " + dabpdPos.getY() + ", " + dabpdPos.getZ();
-        Text dDimensionText = WorldUtil.worldText(dabpd.getDimension());
+        Text dDimensionText = TextUtil.worldText(dabpd.getDimension());
 
         // position
         context.drawText(this.textRenderer, Text.literal(positionText), (width / 2 - 119), (height / 2 - 48), 0xFFFFFF,
                 true);
         context.drawText(this.textRenderer, dimensionText, (width / 2 - 119), (height / 2 - 38), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, WorldUtil.rot2Text(abpd.getRotation()).asOrderedText(), (width / 2 - 119), (height / 2 - 28), 0xFFFFFF,
+        context.drawText(this.textRenderer, TextUtil.rot2Text(abpd.getRotation()).asOrderedText(), (width / 2 - 119), (height / 2 - 28), 0xFFFFFF,
                 true);
 
         // destination
         context.drawText(this.textRenderer, Text.literal(destinationText), (width / 2 - 119), (height / 2 - 10),
                 0xFFFFFF, true);
         context.drawText(this.textRenderer, dDimensionText, (width / 2 - 119), (height / 2), 0xFFFFFF, true);
-        context.drawText(this.textRenderer, WorldUtil.rot2Text(dabpd.getRotation()).asOrderedText(), (width / 2 - 119), (height / 2 + 10),
+        context.drawText(this.textRenderer, TextUtil.rot2Text(dabpd.getRotation()).asOrderedText(), (width / 2 - 119), (height / 2 + 10),
                 0xFFFFFF, true);
     }
 

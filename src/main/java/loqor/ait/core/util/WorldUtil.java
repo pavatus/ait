@@ -3,9 +3,7 @@ package loqor.ait.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.pavatus.multidim.api.VoidChunkGenerator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.drtheo.stp.SeamlessTp;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
@@ -13,30 +11,28 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
+import net.minecraft.world.*;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.TardisEvents;
+import loqor.ait.api.WorldWithTardis;
 import loqor.ait.core.AITDimensions;
+import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.mixin.server.EnderDragonFightAccessor;
@@ -85,7 +81,27 @@ public class WorldUtil {
             }
         });
 
-        Registry.register(Registries.CHUNK_GENERATOR, AITMod.id("void"), VoidChunkGenerator.CODEC);
+        TardisEvents.SYNC_TARDIS.register(WorldWithTardis.forSync((player, tardisSet) -> {
+            for (ServerTardis tardis : tardisSet) {
+                BlockPos doorPos = tardis.getDesktop().doorPos().getPos();
+                SeamlessTp.preload(player, tardis.getInteriorWorld(), new ChunkPos(doorPos));
+            }
+        }));
+
+        TardisEvents.UNLOAD_TARDIS.register(WorldWithTardis.forDesync((player, tardisSet) -> {
+            for (ServerTardis tardis : tardisSet) {
+                SeamlessTp.unload(player, tardis.getInteriorWorld());
+            }
+        }));
+
+        // When a TARDIS exterior gets placed it doesn't trigger SYNC_TARDIS!
+        TardisEvents.CREATE_TARDIS.register(tardis -> {
+            ServerWorld world = tardis.getInteriorWorld();
+            ChunkPos doorPos = new ChunkPos(tardis.getDesktop().doorPos().getPos());
+
+            NetworkUtil.getSubscribedPlayers(tardis).forEach(player
+                    -> SeamlessTp.preload(player, world, doorPos));
+        });
     }
 
     public static ServerWorld getOverworld() {
@@ -115,9 +131,11 @@ public class WorldUtil {
 
         return true;
     }
+
     public static void blacklist(RegistryKey<World> world) {
         blacklisted.add(world.getValue());
     }
+
     public static void blacklist(World world) {
         blacklist(world.getRegistryKey());
     }
@@ -280,57 +298,6 @@ public class WorldUtil {
         return isSafe(curUp, aboveUp);
     }
 
-    @Environment(EnvType.CLIENT)
-    @SuppressWarnings("DataFlowIssue")
-    public static String getName(MinecraftClient client) {
-        if (client.isInSingleplayer()) {
-            return client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString();
-        }
-
-        return client.getCurrentServerEntry().address;
-    }
-
-    public static Text worldText(RegistryKey<World> key) {
-        return Text.translatableWithFallback(key.getValue().toTranslationKey("dimension"), fakeTranslate(key));
-    }
-
-    private static String fakeTranslate(RegistryKey<World> id) {
-        return fakeTranslate(id.getValue());
-    }
-
-    private static String fakeTranslate(Identifier id) {
-        return fakeTranslate(id.getPath());
-    }
-
-    private static String fakeTranslate(String path) {
-        // Split the string into words
-        String[] words = path.split("_");
-
-        // Capitalize the first letter of each word
-        for (int i = 0; i < words.length; i++) {
-            words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
-        }
-
-        // Join the words back together with spaces
-        return String.join(" ", words);
-    }
-
-    public static Text rot2Text(int rotation) {
-        String key = switch (rotation) {
-            case 0 -> "direction.north";
-            case 1, 2, 3 -> "direction.north_east";
-            case 4 -> "direction.east";
-            case 5, 6, 7 -> "direction.south_east";
-            case 8 -> "direction.south";
-            case 9, 10, 11 -> "direction.south_west";
-            case 12 -> "direction.west";
-            case 13, 14, 15 -> "direction.north_west";
-            default -> null;
-        };
-
-        return Text.translatable(key);
-    }
-
     public static void onBreakHalfInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         DoubleBlockHalf doubleBlockHalf = state.get(Properties.DOUBLE_BLOCK_HALF);
 
@@ -353,16 +320,19 @@ public class WorldUtil {
 
     public static boolean isEndDragonDead() {
         ServerWorld end = ServerLifecycleHooks.get().getWorld(World.END);
-        if (end == null) return true;
+
+        if (end == null)
+            return true;
+
         return ((EnderDragonFightAccessor) end.getEnderDragonFight()).getDragonKilled();
     }
 
     public static void teleportToWorld(ServerPlayerEntity player, ServerWorld target, Vec3d pos, float yaw, float pitch) {
-        player.teleport(target, pos.x, pos.y, pos.z, yaw, pitch);
+        //player.teleport(target, pos.x, pos.y, pos.z, yaw, pitch);
+        SeamlessTp.teleport(player, target, pos, yaw, pitch);
         player.addExperience(0);
 
         player.getStatusEffects().forEach(effect -> player.networkHandler.sendPacket(
                 new EntityStatusEffectS2CPacket(player.getId(), effect)));
     }
-
 }

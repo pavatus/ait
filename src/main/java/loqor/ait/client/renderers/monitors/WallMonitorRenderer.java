@@ -23,7 +23,7 @@ import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.WorldUtil;
+import loqor.ait.core.util.TextUtil;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements BlockEntityRenderer<T> {
@@ -87,12 +87,12 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         BlockPos abpdPos = abpd.getPos();
 
         String positionPosText = abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
-        Text positionDimensionText = Text.of(truncateDimensionName(WorldUtil.worldText(abpp.getDimension()).getString(), 16));
+        Text positionDimensionText = Text.of(truncateDimensionName(TextUtil.worldText(abpp.getDimension()).getString(), 16));
 
         String fuelText = Math.round((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 100) + "%";
 
         String destinationPosText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text destinationDimensionText = Text.of(truncateDimensionName(WorldUtil.worldText(abpd.getDimension()).getString(), 16));
+        Text destinationDimensionText = Text.of(truncateDimensionName(TextUtil.worldText(abpd.getDimension()).getString(), 16));
 
 
         float v = -20f;
