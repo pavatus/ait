@@ -154,37 +154,15 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             return;
         }
 
-        String name = tardis.stats().getName();
-        if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
-            matrices.translate(0, 1.25f, -0.7f);
-        }
-
-        if (name.equalsIgnoreCase("smallboi")) {
-            matrices.scale(0.7f, 0.7f, 0.7f);
-        }
-
-        if (name.equalsIgnoreCase("toy")) {
-            matrices.scale(0.3f, 0.3f, 0.3f);
-        }
-
-
-        if (name.equalsIgnoreCase("bigboi")) {
-            matrices.scale(1.1f, 1.1f, 1.1f);
-        }
-
-        if (name.equalsIgnoreCase("massiveboi")) {
-            matrices.scale(1.2f, 1.2f, 1.2f);
-        }
-        //This cant be obtained in survival as it bypasses the name tag limit, you'll need commands.
-        if (name.equalsIgnoreCase("SIZE_LEAK_DONT_NAME_YOUR_TARDIS_THIS_ITS_SPECIFICLY_FOR_A_TRENZALORE_BUILD_ON_THE_SERVER_AS_CLASSIC_ASKED_ME")) {
-            matrices.scale(10f, 10f, 10f);
-        }
+        this.applyNameTransforms(tardis, matrices, tardis.stats().getName());
 
         if (tardis.travel().antigravs().get() && tardis.flight().falling().get()) {
             float sinFunc = (float) Math.sin((MinecraftClient.getInstance().player.age / 400f * 220f) * 0.2f + 0.2f);
             matrices.translate(0, sinFunc, 0);
         }
+
+        if (tardis.selfDestruct().isQueued())
+            matrices.scale(0.7f, 0.7f, 0.7f);
 
         model.renderWithAnimations(entity, this.model.getPart(), matrices,
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
@@ -262,5 +240,28 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             this.variant = variant;
             this.model = variant.model();
         }
+    }
+
+    private void applyNameTransforms(Tardis tardis, MatrixStack matrices, String name) {
+        if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+            matrices.translate(0, 1.25f, -0.7f);
+        }
+
+        if (name.equalsIgnoreCase("smallboi"))
+            matrices.scale(0.7f, 0.7f, 0.7f);
+
+        if (name.equalsIgnoreCase("toy"))
+            matrices.scale(0.3f, 0.3f, 0.3f);
+
+        if (name.equalsIgnoreCase("bigboi"))
+            matrices.scale(1.1f, 1.1f, 1.1f);
+
+        if (name.equalsIgnoreCase("massiveboi"))
+            matrices.scale(1.2f, 1.2f, 1.2f);
+
+        //This cant be obtained in survival as it bypasses the name tag limit, you'll need commands.
+        if (name.equalsIgnoreCase("SIZE_LEAK_DONT_NAME_YOUR_TARDIS_THIS_ITS_SPECIFICLY_FOR_A_TRENZALORE_BUILD_ON_THE_SERVER_AS_CLASSIC_ASKED_ME"))
+            matrices.scale(10f, 10f, 10f);
     }
 }

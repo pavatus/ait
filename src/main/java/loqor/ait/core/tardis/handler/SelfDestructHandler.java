@@ -26,8 +26,8 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
 
     private static final BoolProperty QUEUED = new BoolProperty("queued");
     private final BoolValue queued = QUEUED.create(this);
-    private static final BoolProperty REGENERATING = new BoolProperty("regenerating");
-    private final BoolValue regenerating = REGENERATING.create(this);
+
+    private boolean destructing;
 
     public SelfDestructHandler() {
         super(Id.SELF_DESTRUCT);
@@ -36,7 +36,6 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
     @Override
     public void onLoaded() {
         queued.of(this, QUEUED);
-        regenerating.of(this, REGENERATING);
     }
 
     public void boom() {
@@ -100,13 +99,10 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
         if (!tardis.door().locked())
             DoorHandler.lockTardis(true, this.tardis, null, true);
 
-        if (tardis.asServer().isRemoved())
-            return;
-
-        if (!(this.regenerating.get())) {
+        if (!this.destructing) {
             Scheduler.get().runAsyncTaskLater(this::complete, TimeUnit.SECONDS, 5);
 
-            this.regenerating.set(true);
+            this.destructing = true;
         }
     }
 }
