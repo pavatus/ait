@@ -1,5 +1,7 @@
 package loqor.ait.core.tardis.handler;
 
+import loqor.ait.data.properties.Property;
+import loqor.ait.data.properties.Value;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.AxeItem;
@@ -32,20 +34,28 @@ import loqor.ait.data.properties.bool.BoolValue;
 import loqor.ait.data.schema.door.DoorSchema;
 
 public class DoorHandler extends KeyedTardisComponent implements TardisTickable {
-    private static final BoolProperty LOCKED_DOORS = new BoolProperty("locked", false);
-    private static final BoolProperty LEFT_DOOR = new BoolProperty("left_door", false);
-    private static final BoolProperty RIGHT_DOOR = new BoolProperty("right_door", false);
-    private static final BoolProperty PREVIOUSLY_LOCKED = new BoolProperty("previously_locked", false);
+
+    private static final BoolProperty LOCKED_DOORS = new BoolProperty("locked");
+    private static final BoolProperty PREVIOUSLY_LOCKED = new BoolProperty("previously_locked");
+    private static final BoolProperty DEADLOCKED = new BoolProperty("deadlocked");
+
+    private static final Property<DoorState> DOOR_STATE = Property.forEnum("door_state", DoorState.class, DoorState.CLOSED);
+    private static final Property<DoorState> TEMP_EXTERIOR_STATE = DOOR_STATE.copy("temp_interior_state");
+    private static final Property<DoorState> TEMP_INTERIOR_STATE = DOOR_STATE.copy("temp_exterior_state");
+
     private final BoolValue locked = LOCKED_DOORS.create(this);
-    private final BoolValue left = LEFT_DOOR.create(this);
-    private final BoolValue right = RIGHT_DOOR.create(this);
     private final BoolValue previouslyLocked = PREVIOUSLY_LOCKED.create(this);
-    private DoorStateEnum doorState = DoorStateEnum.CLOSED;
-    public DoorStateEnum tempExteriorState; // this is the previous state before it was changed, used for
-    // checking when
-    // the door has
-    // been changed so the animation can start. Set on server, used on client
-    public DoorStateEnum tempInteriorState;
+    private final BoolValue deadlocked = DEADLOCKED.create(this);
+
+    private final Value<DoorState> doorState = DOOR_STATE.create(this);
+
+    /*
+     this is the previous state before it was changed, used for
+     checking when the door has been changed so the animation can start.
+      Set on server, used on client
+     */
+    private final Value<DoorState> tempExteriorState = TEMP_EXTERIOR_STATE.create(this);
+    private final Value<DoorState> tempInteriorState = TEMP_INTERIOR_STATE.create(this);
 
     static {
         TardisEvents.DEMAT.register(tardis -> tardis.door().isOpen() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
@@ -58,21 +68,18 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     @Override
     public void onLoaded() {
         locked.of(this, LOCKED_DOORS);
-        left.of(this, LEFT_DOOR);
-        right.of(this, RIGHT_DOOR);
         previouslyLocked.of(this, PREVIOUSLY_LOCKED);
+        deadlocked.of(this, DEADLOCKED);
+
+        doorState.of(this, DOOR_STATE);
+        tempExteriorState.of(this, TEMP_EXTERIOR_STATE);
+        tempInteriorState.of(this, TEMP_INTERIOR_STATE);
     }
 
     @Override
     public void tick(MinecraftServer server) {
         if (this.shouldSucc())
             this.succ();
-
-        if (this.locked() && this.isOpen())
-            this.closeDoors();
-
-        if (this.tardis.siege().isActive() && !this.locked())
-            this.setLocked(true);
     }
 
     /**
@@ -105,41 +112,34 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         if (directed == null)
             return false;
 
-        return tardis.travel().getState() != TravelHandlerBase.State.LANDED && this.isOpen()
-                && !tardis.areShieldsActive()
-                && !tardis.travel().autopilot()
+        return !tardis.travel().isLanded() && this.isOpen()
+                && !tardis.areShieldsActive() && !tardis.travel().autopilot()
                 && tardis.asServer().getInteriorWorld().getBlockEntity(directed.getPos()) instanceof DoorBlockEntity;
     }
 
-    public void setLeftRot(boolean var) {
-        this.left.set(var);
-
-        if (this.left.get())
-            this.setDoorState(DoorStateEnum.FIRST);
-
-        this.sync();
-    }
-
-    public void setRightRot(boolean var) {
-        this.right.set(var);
-        if (this.right.get())
-            this.setDoorState(DoorStateEnum.SECOND);
-        this.sync();
-    }
-
     public boolean isRightOpen() {
-        return this.doorState == DoorStateEnum.SECOND || this.right.get();
+        return /*this.doorState.get() == DoorState.SECOND ||*/ this.doorState.get() == DoorState.BOTH;
     }
 
     public boolean isLeftOpen() {
-        return this.doorState == DoorStateEnum.FIRST || this.left.get();
+        return this.doorState.get() == DoorState.HALF || this.doorState.get() == DoorState.BOTH;
+    }
+
+    public void setDeadlocked(boolean deadlocked) {
+        this.deadlocked.set(deadlocked);
+
+        if (deadlocked)
+            this.setLocked(true);
     }
 
     public void setLocked(boolean locked) {
+        if (this.deadlocked.get() && !locked)
+            return;
+
         this.locked.set(locked);
 
         if (locked)
-            setDoorState(DoorStateEnum.CLOSED);
+            setDoorState(DoorState.CLOSED);
 
         this.sync();
     }
@@ -148,75 +148,61 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         return this.locked.get();
     }
 
-    public boolean isDoubleDoor() {
-        return tardis().getExterior().getVariant().door().isDouble();
+    public boolean hasDoubleDoor() {
+        return this.tardis.getExterior().getVariant().door().isDouble();
     }
 
     public boolean isOpen() {
-        return this.isLeftOpen() || this.isRightOpen();
+        return this.doorState.get() != DoorState.CLOSED;
     }
 
     public boolean isClosed() {
-        return !isOpen();
+        return this.doorState.get() == DoorState.CLOSED;
     }
 
     public boolean isBothOpen() {
-        return this.isRightOpen() && this.isLeftOpen();
-    }
-
-    public boolean isBothClosed() {
-        return !isBothOpen();
+        return this.doorState.get() == DoorState.BOTH;
     }
 
     public void openDoors() {
-        setLeftRot(true);
+        this.setDoorState(DoorState.HALF);
 
-        if (isDoubleDoor()) {
-            setRightRot(true);
-            this.setDoorState(DoorStateEnum.BOTH);
-        }
+        if (this.hasDoubleDoor())
+            this.setDoorState(DoorState.BOTH);
     }
 
     public void closeDoors() {
-        setLeftRot(false);
-        setRightRot(false);
-        this.setDoorState(DoorStateEnum.CLOSED);
+        this.setDoorState(DoorState.CLOSED);
     }
 
-    public void setDoorState(DoorStateEnum var) {
-        if (var != doorState) {
-            tempExteriorState = this.doorState;
-            tempInteriorState = this.doorState;
+    private void setDoorState(DoorState newState) {
+        if (this.locked())
+            return;
 
-            // if the last state ( doorState ) was closed and the new state ( var ) is open,
-            // fire
-            // the
-            // event
-            if (doorState == DoorStateEnum.CLOSED) {
+        DoorState oldState = this.doorState.get();
+
+        if (oldState != newState) {
+            this.tempExteriorState.set(oldState);
+            this.tempInteriorState.set(oldState);
+
+            if (oldState == DoorState.CLOSED)
                 TardisEvents.DOOR_OPEN.invoker().onOpen(tardis());
-            }
-            // if the last state was open and the new state is closed, fire the event
-            if (doorState != DoorStateEnum.CLOSED && var == DoorStateEnum.CLOSED) {
+
+            if (newState == DoorState.CLOSED)
                 TardisEvents.DOOR_CLOSE.invoker().onClose(tardis());
-            }
         }
 
-        this.doorState = var;
-        this.sync();
+        this.doorState.set(newState);
     }
 
-    public DoorStateEnum getDoorState() {
-        return doorState;
+    public DoorState getAnimationExteriorState() {
+        return tempExteriorState.get();
     }
 
-    public DoorStateEnum getAnimationExteriorState() {
-        return tempExteriorState;
+    public DoorState getDoorState() {
+        return doorState.get();
     }
 
-    // TODO predict the result of this on common side so the client doesnt have to
-    // wait for the
-    // server
-    // to answer
     public static boolean useDoor(Tardis tardis, ServerWorld world, @Nullable BlockPos pos,
                                   @Nullable ServerPlayerEntity player) {
         TardisEvents.USE_DOOR.invoker().onUseDoor(tardis, player);
@@ -304,7 +290,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return false;
         }
 
-        if (tardis.getLockedTardis()) {
+        if (tardis.door().locked()) {
             if (player != null && pos != null) {
                 player.sendMessage(Text.literal("\uD83D\uDD12"), true);
                 world.playSound(null, pos, AITSounds.KNOCK, SoundCategory.BLOCKS, 3f,
@@ -329,7 +315,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
         if (!doorSchema.isDouble()) {
-            door.setDoorState(door.getDoorState() == DoorStateEnum.FIRST ? DoorStateEnum.CLOSED : DoorStateEnum.FIRST);
+            door.setDoorState(door.getDoorState() == DoorState.FIRST ? DoorState.CLOSED : DoorState.FIRST);
             return true;
         }
 
@@ -338,7 +324,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         } else {
             if (door.isOpen() && player.isSneaking()) {
                 door.closeDoors();
-            } else if (door.isBothClosed() && player.isSneaking()) {
+            } else if (door.isClosed() && player.isSneaking()) {
                 door.openDoors();
             } else {
                 door.setDoorState(door.getDoorState().next());
@@ -369,7 +355,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         // meaning this false
         // is wrong fixme
 
-        door.setDoorState(DoorStateEnum.CLOSED);
+        door.setDoorState(DoorState.CLOSED);
 
         if (!forced)
             door.previouslyLocked().set(locked);
@@ -395,32 +381,20 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         return this.previouslyLocked;
     }
 
-    public enum DoorStateEnum {
-        CLOSED {
-            @Override
-            public DoorStateEnum next() {
-                return FIRST;
-            }
-        },
-        FIRST {
-            @Override
-            public DoorStateEnum next() {
-                return SECOND;
-            }
-        },
-        SECOND {
-            @Override
-            public DoorStateEnum next() {
-                return CLOSED;
-            }
-        },
-        BOTH {
-            @Override
-            public DoorStateEnum next() {
-                return CLOSED;
-            }
-        };
+    public enum DoorState {
+        CLOSED,
+        HALF,
+        BOTH;
 
-        public abstract DoorStateEnum next();
+        static final DoorState[] CACHED_VALUES = values();
+
+        public DoorState next() {
+            int nextIndex = this.ordinal() + 1;
+
+            if (nextIndex == CACHED_VALUES.length)
+                nextIndex = 0;
+
+            return CACHED_VALUES[nextIndex];
+        }
     }
 }

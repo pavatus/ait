@@ -60,7 +60,7 @@ public class PlinthDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorHandler.DoorState state) {
         return Animation.Builder.create(0).build();
     }
 }

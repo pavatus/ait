@@ -223,8 +223,8 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        DoorHandler.DoorStateEnum doorState = door.getDoorState();
-        DoorHandler.DoorStateEnum animState = door.getAnimationExteriorState();
+        DoorHandler.DoorState doorState = door.getDoorState();
+        DoorHandler.DoorState animState = door.getAnimationExteriorState();
 
         if (animState == null)
             return;

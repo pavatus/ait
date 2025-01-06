@@ -73,10 +73,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         return this.handler(TardisComponent.Id.SONIC);
     }
 
-    public boolean getLockedTardis() {
-        return this.door().locked();
-    }
-
     public TravelHandler travel() {
         return this.handler(TardisComponent.Id.TRAVEL);
     }

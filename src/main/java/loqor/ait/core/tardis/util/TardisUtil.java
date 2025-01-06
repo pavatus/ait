@@ -85,10 +85,10 @@ public class TardisUtil {
                     if (!player.isSneaking()) {
                         // annoying bad code
 
-                        DoorHandler.DoorStateEnum state = tardis.door().getDoorState();
-                        if (state == DoorHandler.DoorStateEnum.CLOSED || state == DoorHandler.DoorStateEnum.FIRST) {
+                        DoorHandler.DoorState state = tardis.door().getDoorState();
+                        if (state == DoorHandler.DoorState.CLOSED || state == DoorHandler.DoorState.FIRST) {
                             server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
-                            if (tardis.door().isDoubleDoor()) {
+                            if (tardis.door().hasDoubleDoor()) {
                                 server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
                             }
                         } else {

@@ -40,5 +40,5 @@ public abstract class DoorModel extends SinglePartEntityModel {
             float headPitch) {
     }
 
-    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
+    public abstract Animation getAnimationForDoorState(DoorHandler.DoorState state);
 }
