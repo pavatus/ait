@@ -52,7 +52,7 @@ public class InteractionSonicMode extends SonicMode {
         if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-        if (canInteract2(ticks)
+        if (canInteract3(ticks)
                 && block instanceof TntBlock) {
             TntBlock.primeTnt(world, pos);
 
@@ -61,7 +61,7 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
-        if (canInteract1(ticks)
+        if (canInteract2(ticks)
                 && block.getDefaultState().contains(BarrelBlock.OPEN)) {
             world.setBlockState(pos, state.cycle(BarrelBlock.OPEN));
             world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
@@ -87,7 +87,7 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
         }
 
-        if (canInteract3(ticks)
+        if (canInteract1(ticks)
                 && state.contains(DaylightDetectorBlock.INVERTED)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -96,7 +96,7 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
         }
 
-        if (canInteract2(ticks)
+        if (canInteract1(ticks)
                 && block.getDefaultState().contains(RedstoneLampBlock.LIT)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
