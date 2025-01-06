@@ -58,12 +58,13 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forceAddTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "ores")))
                 .forceAddTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")))
                 .forceAddTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks")))
-                .forceAddTag(BlockTags.ICE).forceAddTag(BlockTags.SNOW).forceAddTag(BlockTags.SAND).forceAddTag(BlockTags.LEAVES)
+                .forceAddTag(BlockTags.ICE).forceAddTag(BlockTags.SNOW).forceAddTag(BlockTags.SAND).forceAddTag(BlockTags.LEAVES).forceAddTag(BlockTags.DOORS)
                 .add(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS, Blocks.NETHER_BRICK_WALL, Blocks.RED_NETHER_BRICK_WALL)
                 .add(PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE, PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE, PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE, PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE, PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE)
                 .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE).forceAddTag(BlockTags.STONE_BRICKS)
                 .add(Blocks.BLACK_CONCRETE,Blocks.CYAN_CONCRETE,Blocks.BLUE_CONCRETE,Blocks.BROWN_CONCRETE,Blocks.GRAY_CONCRETE,Blocks.GREEN_CONCRETE,Blocks.MAGENTA_CONCRETE,Blocks.ORANGE_CONCRETE,Blocks.PINK_CONCRETE,Blocks.RED_CONCRETE,Blocks.WHITE_CONCRETE,Blocks.PURPLE_CONCRETE,Blocks.LIGHT_GRAY_CONCRETE,Blocks.LIGHT_BLUE_CONCRETE,Blocks.LIME_CONCRETE)
-                .add(Blocks.BRICKS, Blocks.BRICK_WALL, Blocks.REDSTONE_TORCH, Blocks.DEEPSLATE_BRICKS);
+                .add(Blocks.BRICKS, Blocks.BRICK_WALL, Blocks.REDSTONE_TORCH, Blocks.DEEPSLATE_BRICKS)
+                .add(Blocks.BARREL, Blocks.REDSTONE_WIRE);
 
         getOrCreateTagBuilder(BlockTags.COAL_ORES).add(PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE);
         getOrCreateTagBuilder(BlockTags.COPPER_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);

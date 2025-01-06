@@ -160,6 +160,14 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             matrices.translate(0, 1.25f, -0.7f);
         }
 
+        if (name.equalsIgnoreCase("smallboi")) {
+            matrices.scale(0.7f, 0.7f, 0.7f);
+        }
+
+        if (name.equalsIgnoreCase("toy")) {
+            matrices.scale(0.3f, 0.3f, 0.3f);
+        }
+
         if (tardis.travel().antigravs().get() && tardis.flight().falling().get()) {
             float sinFunc = (float) Math.sin((MinecraftClient.getInstance().player.age / 400f * 220f) * 0.2f + 0.2f);
             matrices.translate(0, sinFunc, 0);
@@ -198,6 +206,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                         vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)),
                         light, overlay, 1, 1, 1, alpha);
             }
+
         }
 
         profiler.pop();
