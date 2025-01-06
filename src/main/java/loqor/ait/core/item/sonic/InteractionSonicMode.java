@@ -81,6 +81,17 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
+        if (canInteract(ticks)
+                && block.getDefaultState().contains(DoorBlock.OPEN)) {
+            world.playSound(user, pos, SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.cycle(DoorBlock.OPEN));
+            world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
+            return;
+        }
+
+
     }
 
     private void dropItem(BlockPos pos, ItemStack stack, World world) {
