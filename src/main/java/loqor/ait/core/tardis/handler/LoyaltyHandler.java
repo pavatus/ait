@@ -81,7 +81,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     }
 
     public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
-        ServerTardis tardis = (ServerTardis) this.tardis();
+        ServerTardis tardis = (ServerTardis) this.tardis;
 
         boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty,
                 schema -> this.playUnlockEffects(player, schema));

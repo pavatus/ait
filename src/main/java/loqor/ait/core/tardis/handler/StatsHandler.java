@@ -235,8 +235,6 @@ public class StatsHandler extends KeyedTardisComponent {
     }
 
     public Date getCreationDate() {
-        Tardis tardis = this.tardis();
-
         if (creationDate.get() == null) {
             AITMod.LOGGER.error("{} was missing creation date! Resetting to now", tardis.getUuid().toString());
             markCreationDate();

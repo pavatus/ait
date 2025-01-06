@@ -56,7 +56,7 @@ public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTi
     @Override
     public void tick(MinecraftServer server) {
         if (server.getTicks() % 20 == 0 && !this.enabled().get() && this.hostilePresence().get()) {
-            for (Entity entity : TardisUtil.getEntitiesInInterior(tardis(), 200)) {
+            for (Entity entity : TardisUtil.getEntitiesInInterior(tardis, 200)) {
                 if ((entity instanceof HostileEntity && !entity.hasCustomName())
                         || entity instanceof ServerPlayerEntity player
                                 && tardis.loyalty().get(player).level() == Loyalty.Type.REJECT.level) {

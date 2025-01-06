@@ -46,7 +46,7 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
         if ((this.isQueued()) || !this.canSelfDestruct()) return;
 
         this.queued.set(true);
-        tardis().alarm().enabled().set(true);
+        this.tardis.alarm().enabled().set(true);
     }
 
     private void complete() {
@@ -101,7 +101,7 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
         }
 
         if (!tardis.door().locked())
-            DoorHandler.lockTardis(true, this.tardis(), null, true);
+            DoorHandler.lockTardis(true, this.tardis, null, true);
 
         if (tardis.asServer().isRemoved())
             return;

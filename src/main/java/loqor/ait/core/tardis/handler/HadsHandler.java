@@ -77,8 +77,6 @@ public class HadsHandler extends KeyedTardisComponent implements TardisTickable 
     }
 
     public void dematerialiseWhenInDanger() {
-        ServerTardis tardis = (ServerTardis) tardis();
-
         TravelHandler travel = tardis.travel();
         TravelHandlerBase.State state = travel.getState();
 

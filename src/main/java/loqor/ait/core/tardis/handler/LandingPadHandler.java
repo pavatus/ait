@@ -54,18 +54,24 @@ public class LandingPadHandler extends KeyedTardisComponent {
     public void postInit(InitContext ctx) {
         super.postInit(ctx);
 
-        if (!(this.tardis() instanceof ServerTardis)) return;
+        if (!(this.tardis instanceof ServerTardis))
+            return;
 
         // find old spot and claim
-        DirectedGlobalPos.Cached pos = this.tardis().travel().position();
-        if (pos.getWorld() == null) return; // nice
+        DirectedGlobalPos.Cached pos = this.tardis.travel().position();
+
+        if (pos.getWorld() == null)
+            return; // nice
 
         LandingPadRegion region = LandingPadManager.getInstance(pos.getWorld()).getRegionAt(pos.getPos());
-        if (region == null) return;
+
+        if (region == null)
+            return;
 
         LandingPadSpot found = region.getSpotAt(pos.getPos()).orElse(null);
 
-        if (found == null) return;
+        if (found == null)
+            return;
 
         this.claim(found);
     }
@@ -82,7 +88,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
     }
 
     private DirectedGlobalPos.Cached update(DirectedGlobalPos.Cached pos) {
-        TravelHandler travel = this.tardis().travel();
+        TravelHandler travel = this.tardis.travel();
         DirectedGlobalPos.Cached destination = travel.destination();
         ServerWorld world = destination.getWorld();
 
@@ -91,7 +97,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
         if (spot == null)
             return null;
 
-        BoolValue hSearch = this.tardis().travel().horizontalSearch();
+        BoolValue hSearch = this.tardis.travel().horizontalSearch();
         boolean old = hSearch.get();
         hSearch.set(false);
 
@@ -102,8 +108,8 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
         this.claim(spot);
 
-        TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis(), this.current);
-        TardisUtil.sendMessageToInterior(this.tardis().asServer(), Text.translatable("message.ait.landingpad.adjust"));
+        TardisEvents.LANDING_PAD_ADJUST.invoker().onLandingPadAdjust(this.tardis, this.current);
+        TardisUtil.sendMessageToInterior(this.tardis.asServer(), Text.translatable("message.ait.landingpad.adjust"));
 
         return destination;
     }
@@ -150,14 +156,13 @@ public class LandingPadHandler extends KeyedTardisComponent {
 
     public void claim(LandingPadSpot spot) {
         this.current = spot;
-        this.current.claim(this.tardis());
+        this.current.claim(this.tardis);
 
         this.syncSpot();
     }
 
     private void syncSpot() {
-        DirectedGlobalPos.Cached cached = this.tardis().travel().position();
-
+        DirectedGlobalPos.Cached cached = this.tardis.travel().position();
         LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, cached.getWorld(), new ChunkPos(cached.getPos()));
     }
 }

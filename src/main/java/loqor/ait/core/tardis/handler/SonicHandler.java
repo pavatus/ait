@@ -123,7 +123,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
                 return;
 
             // Safe to get as ^ that method runs the check for us
-            ServerTardis tardis = (ServerTardis) this.tardis();
+            ServerTardis tardis = this.tardis.asServer();
 
             if (!tardis.fuel().hasPower())
                 return;
@@ -133,7 +133,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
         }
 
         if (exteriorSonic != null) {
-            ServerTardis tardis = (ServerTardis) this.tardis();
+            ServerTardis tardis = this.tardis.asServer();
 
             TardisCrashHandler crash = tardis.crash();
             boolean isToxic = crash.isToxic();

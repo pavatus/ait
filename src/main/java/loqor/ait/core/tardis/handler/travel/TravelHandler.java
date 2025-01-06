@@ -302,7 +302,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.deleteExterior();
 
         if (tardis.stats().security().get())
-            SecurityControl.runSecurityProtocols(this.tardis());
+            SecurityControl.runSecurityProtocols(this.tardis);
     }
 
     public void cancelDemat() {

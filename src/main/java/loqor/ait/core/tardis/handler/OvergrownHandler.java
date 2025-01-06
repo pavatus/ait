@@ -82,18 +82,17 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
 
     @Override
     public void tick(MinecraftServer server) {
-
-        if (tardis().isGrowth())
+        if (tardis.isGrowth())
             return;
 
-        if (this.isOvergrown() && (this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
-                || this.tardis().travel().getState() == TravelHandlerBase.State.MAT)) {
+        if (this.isOvergrown() && (this.tardis.travel().getState() == TravelHandlerBase.State.FLIGHT
+                || this.tardis.travel().getState() == TravelHandlerBase.State.MAT)) {
             this.setOvergrown(false);
             this.setTicks(0);
             return;
         }
 
-        if (this.isOvergrown() || this.tardis().travel().getState() != TravelHandlerBase.State.LANDED)
+        if (this.isOvergrown() || this.tardis.travel().getState() != TravelHandlerBase.State.LANDED)
             return;
 
         // We know the tardis is landed so we can start ticking away

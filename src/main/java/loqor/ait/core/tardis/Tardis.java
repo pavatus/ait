@@ -175,11 +175,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         return unlockable.freebie() || this.stats().isUnlocked(unlockable);
     }
 
-    // for now this just checks that the exterior is the coral growth, which is bad.
-    // but its fine
-    // for
-    // first beta
-    // this should stop basic features of the tardis from happening
+    // FIXME: this needs to be changed.
     public boolean isGrowth() {
         return hasGrowthExterior() || hasGrowthDesktop();
     }

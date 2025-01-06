@@ -89,7 +89,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
             return;
 
         this.moodEvent = moodEvent;
-        TardisUtil.getPlayersInsideInterior(this.tardis().asServer()).forEach(player -> player
+        TardisUtil.getPlayersInsideInterior(this.tardis.asServer()).forEach(player -> player
                 .sendMessage(Text.literal(this.moodEvent.id().getPath()).formatted(Formatting.BOLD), true));
 
         raceMoods();

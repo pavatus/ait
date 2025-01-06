@@ -53,7 +53,7 @@ public class ServerHumHandler extends TardisComponent {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.sound().getId());
 
-        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis().asServer())) {
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             ServerPlayNetworking.send(player, SEND, buf);
         }
     }

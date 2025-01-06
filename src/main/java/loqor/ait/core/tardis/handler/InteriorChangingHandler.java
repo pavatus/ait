@@ -143,7 +143,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         tardis.alarm().enabled().set(true);
         tardis.getDesktop().getConsolePos().clear();
 
-        TravelHandler travel = this.tardis().travel();
+        TravelHandler travel = this.tardis.travel();
 
         if (travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
             travel.crash();
@@ -195,7 +195,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     private void createChestAtInteriorDoor(List<ItemStack> contents) {
         if (contents == null || contents.isEmpty()) {
-            AITMod.LOGGER.debug("No contents to save in recovery chest for {}", this.tardis());
+            AITMod.LOGGER.debug("No contents to save in recovery chest for {}", this.tardis);
             return;
         }
 
@@ -204,7 +204,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
         // set block to chest
         if (!(safe.getWorld().getBlockState(safe.getPos()).isAir())) {
-            AITMod.LOGGER.error("Failed to create recovery chest at {} for {}", safe, this.tardis());
+            AITMod.LOGGER.error("Failed to create recovery chest at {} for {}", safe, this.tardis);
             return;
         }
         safe.getWorld().setBlockState(safe.getPos(), Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, door.toMinecraftDirection().getOpposite()), 3);
@@ -216,7 +216,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             chest.setStack(i, overflow.remove(0));
         }
 
-        AITMod.LOGGER.debug("Created recovery chest at {} for {}", safe, this.tardis());
+        AITMod.LOGGER.debug("Created recovery chest at {} for {}", safe, this.tardis);
 
         if (!overflow.isEmpty()) {
             createChestAtInteriorDoor(overflow);
@@ -256,7 +256,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         }
 
         if (!tardis.door().locked())
-            DoorHandler.lockTardis(true, this.tardis(), null, true);
+            DoorHandler.lockTardis(true, this.tardis, null, true);
 
         if (!this.regenerating.get()) {
             tardis.getDesktop().createDesktopClearQueue().thenRun(this::complete).execute();

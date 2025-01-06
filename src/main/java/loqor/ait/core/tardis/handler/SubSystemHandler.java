@@ -50,7 +50,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     public <T extends SubSystem> T get(SubSystem.IdLike id) {
         if (!(this.systems.containsKey(id))) {
-            AITMod.LOGGER.info("Creating subsystem: {} | {}", id, tardis());
+            AITMod.LOGGER.info("Creating subsystem: {} | {}", id, tardis);
             this.add(this.create(id));
         }
 
