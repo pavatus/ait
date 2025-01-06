@@ -1,6 +1,5 @@
 package loqor.ait.core.item.sonic;
 
-
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
@@ -21,12 +20,6 @@ import loqor.ait.core.AITTags;
 import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class InteractionSonicMode extends SonicMode {
-
-    private static final ItemStack TOOL = new ItemStack(Items.DIAMOND_PICKAXE);
-
-    static {
-        TOOL.addEnchantment(Enchantments.FORTUNE, 5);
-    }
 
     protected InteractionSonicMode(int index) {
         super(index);
@@ -90,22 +83,15 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
             return;
         }
-//theo pls fix
+
         if (canInteract(ticks)
-                && block.getDefaultState().contains(RedstoneWireBlock.POWER)) {
+                && state.contains(RedstoneWireBlock.POWER)) {
             world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
 
             world.setBlockState(pos, state.with(RedstoneWireBlock.POWER, 15));
             world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-            return;
         }
-
-
-    }
-
-    private void dropItem(BlockPos pos, ItemStack stack, World world) {
-        world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f, stack));
     }
 
     private static boolean canInteract(int ticks) {
