@@ -81,11 +81,11 @@ public class OverloadSonicMode extends SonicMode {
 
         if (canLit(ticks)
                 && block.getDefaultState().contains(RedstoneTorchBlock.LIT)) {
-            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+            world.playSound(null, pos, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
 
-            world.setBlockState(pos, state.cycle(RedstoneTorchBlock.LIT));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            world.breakBlock(pos, true);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
             return;
         }
 
@@ -153,7 +153,7 @@ public class OverloadSonicMode extends SonicMode {
 
         if (canSmelt(ticks)
                 && state.isIn(BlockTags.SAND)) {
-            world.playSound(user, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,
+            world.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,
                     1f, world.getRandom().nextFloat() * 0.4f + 0.8f);
 
             dropItem(pos, new ItemStack(Items.GLASS), world);
