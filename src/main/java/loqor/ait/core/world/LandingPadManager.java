@@ -42,8 +42,7 @@ public class LandingPadManager {
         this.world = world;
     }
 
-    @Nullable
-    public LandingPadRegion getRegion(ChunkPos pos) {
+    @Nullable public LandingPadRegion getRegion(ChunkPos pos) {
         Chunk chunk = this.world.getChunk(pos.x, pos.z, ChunkStatus.FULL, false);
 
         if (chunk == null)
@@ -52,13 +51,11 @@ public class LandingPadManager {
         return chunk.getAttached(PERSISTENT);
     }
 
-    @Nullable
-    public LandingPadRegion getRegion(long pos) {
+    @Nullable public LandingPadRegion getRegion(long pos) {
         return this.getRegion(new ChunkPos(pos));
     }
 
-    @Nullable
-    public LandingPadRegion getRegionAt(BlockPos pos) {
+    @Nullable public LandingPadRegion getRegionAt(BlockPos pos) {
         return this.getRegion(new ChunkPos(pos));
     }
 
