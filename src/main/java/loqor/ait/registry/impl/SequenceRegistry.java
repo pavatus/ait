@@ -195,7 +195,7 @@ public class SequenceRegistry {
                     rewardForCloaking.setPosition(doorPos.toCenterPos());
 
                     rewardForCloaking.setStack(
-                            random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
+                            random.nextBoolean() ? Items.COOKIE.getDefaultStack() : Items.POPPY.getDefaultStack());
                             interior.spawnEntity(rewardForCloaking);
                 }), (missedTardis -> {
                     DirectedBlockPos directedDoorPos = missedTardis.getDesktop().doorPos();
