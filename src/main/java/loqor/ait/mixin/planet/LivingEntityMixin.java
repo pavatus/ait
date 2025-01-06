@@ -62,9 +62,6 @@ public abstract class LivingEntityMixin extends Entity {
     public void ait$tick(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
-        if (this.age % 10 != 0)
-            return;
-
         if (entity instanceof PlayerEntity player
                 && (player.isCreative() || player.isSpectator()))
              return;
