@@ -135,6 +135,8 @@ public abstract class LivingEntityMixin extends Entity {
         if (destination == null)
             return;
 
+        entity.setPos(entity.getX() - 1, 200, entity.getZ() - 1);
+
         if (entity instanceof ServerPlayerEntity player) {
             SeamlessTp.moveToWorld(player, destination);
             return;

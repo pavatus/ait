@@ -7,6 +7,7 @@ import dev.drtheo.stp.mixin.ClientWorldInvoker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,6 +104,8 @@ public class ClientSeamlessTp implements ClientModInitializer {
             if (set != null)
                 set.clear();
         });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> MAP.clear());
     }
 
     private static void tryLoadCache(ClientWorld world) {

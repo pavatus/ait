@@ -6,6 +6,8 @@ import dev.drtheo.stp.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -25,11 +27,24 @@ import net.minecraft.world.chunk.WorldChunk;
 
 public class SeamlessTp implements ModInitializer {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger("stp");
+
     public static final Identifier PRELOAD = new Identifier("stp", "preload");
     public static final Identifier UNLOAD = new Identifier("stp", "unload");
     public static final Identifier TP = new Identifier("stp", "tp");
 
+    public static void preloadAll(ServerPlayerEntity player, ServerWorld world, ChunkPos origin) {
+        final int radius = 2;
+        for (int offsetX = -radius; offsetX < radius + 1; offsetX++) {
+            for (int offsetZ = -radius; offsetZ < radius + 1; offsetZ++) {
+                preload(player, world, new ChunkPos(origin.x + offsetX, origin.z + offsetZ));
+            }
+        }
+    }
+
     public static void preload(ServerPlayerEntity player, ServerWorld world, ChunkPos pos) {
+        LOGGER.info("Preloading ({},{}) in {} for {}", pos.x, pos.z, world.getRegistryKey().getValue(), player.getName());
+
         WorldChunk chunk = world.getChunk(pos.x, pos.z);
         ServerLightingProvider provider = ((ThreadedAnvilChunkStorageAccessor) world.getChunkManager()
                 .threadedAnvilChunkStorage).getLightingProvider();
@@ -42,6 +57,8 @@ public class SeamlessTp implements ModInitializer {
     }
 
     public static void unload(ServerPlayerEntity player, ServerWorld world) {
+        LOGGER.info("Cancelling preload for {}", world.getRegistryKey().getValue());
+
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(world.getRegistryKey().getValue());
 
@@ -49,6 +66,7 @@ public class SeamlessTp implements ModInitializer {
     }
 
     public static void moveToWorld(ServerPlayerEntity player, ServerWorld destination) {
+        LOGGER.info("Moving to world {} player {}", destination.getRegistryKey().getValue(), player.getName());
         ((ServerPlayerEntityInvoker) player).setInTeleportationState(true);
 
         ServerWorld serverWorld = player.getServerWorld();
@@ -103,6 +121,8 @@ public class SeamlessTp implements ModInitializer {
             player.teleport(targetWorld, pos.getX(), pos.getY(), pos.getZ(), yaw, pitch);
             return;
         }
+
+        LOGGER.info("Teleporting {} to world {} at {}", player.getName(), targetWorld.getRegistryKey().getValue(), pos);
 
         player.setCameraEntity(player);
         player.stopRiding();

@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.api.PortalAPI;
@@ -61,6 +62,14 @@ public class TardisUtil {
     public static final Identifier FIND_PLAYER = AITMod.id("find_player");
 
     public static void init() {
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+            if (destination instanceof TardisServerWorld tardisWorld)
+                TardisEvents.ENTER_TARDIS.invoker().onEnter(tardisWorld.getTardis(), player);
+
+            if (origin instanceof TardisServerWorld tardisWorld)
+                TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardisWorld.getTardis(), player);
+        });
+
         ServerPlayNetworking.registerGlobalReceiver(SNAP, (server, player, handler, buf, responseSender) -> {
             UUID uuid = buf.readUuid();
             ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
@@ -165,28 +174,22 @@ public class TardisUtil {
     }
 
     public static void teleportOutside(Tardis tardis, Entity entity) {
-        TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
         TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity,
                 tardis.travel().position().toPos());
     }
 
     public static void dropOutside(Tardis tardis, Entity entity) {
-        TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
-
         DirectedGlobalPos.Cached percentageOfDestination = tardis.travel().getProgress();
         TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
                 percentageOfDestination.toPos());
     }
 
     public static void teleportInside(Tardis tardis, Entity entity) {
-        TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
         TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().doorPos());
     }
 
     public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
         if (entity instanceof ServerPlayerEntity player) {
-            TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-
             WorldUtil.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
                     new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
 

@@ -83,8 +83,11 @@ public class WorldUtil {
 
         TardisEvents.SYNC_TARDIS.register(WorldWithTardis.forSync((player, tardisSet) -> {
             for (ServerTardis tardis : tardisSet) {
+                if (player.getServerWorld() == tardis.getInteriorWorld())
+                    continue;
+
                 BlockPos doorPos = tardis.getDesktop().doorPos().getPos();
-                SeamlessTp.preload(player, tardis.getInteriorWorld(), new ChunkPos(doorPos));
+                SeamlessTp.preloadAll(player, tardis.getInteriorWorld(), new ChunkPos(doorPos));
             }
         }));
 
@@ -94,13 +97,21 @@ public class WorldUtil {
             }
         }));
 
+        TardisEvents.ENTER_TARDIS.register((tardis, entity) -> {
+            if (!(entity instanceof ServerPlayerEntity player) || !tardis.travel().isLanded())
+                return;
+
+            DirectedGlobalPos.Cached cached = tardis.travel().position();
+            SeamlessTp.preloadAll(player, cached.getWorld(), new ChunkPos(cached.getPos()));
+        });
+
         // When a TARDIS exterior gets placed it doesn't trigger SYNC_TARDIS!
         TardisEvents.CREATE_TARDIS.register(tardis -> {
             ServerWorld world = tardis.getInteriorWorld();
             ChunkPos doorPos = new ChunkPos(tardis.getDesktop().doorPos().getPos());
 
             NetworkUtil.getSubscribedPlayers(tardis).forEach(player
-                    -> SeamlessTp.preload(player, world, doorPos));
+                    -> SeamlessTp.preloadAll(player, world, doorPos));
         });
     }
 
