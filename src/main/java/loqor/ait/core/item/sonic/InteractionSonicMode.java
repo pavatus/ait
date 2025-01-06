@@ -108,6 +108,26 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
             return;
         }
+
+        if (canInteract3(ticks)
+                && block.getDefaultState().contains(ComparatorBlock.MODE)) {
+            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.cycle(ComparatorBlock.POWERED));
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
+        }
+
+        if (canInteract3(ticks)
+                && block.getDefaultState().contains(RepeaterBlock.POWERED)) {
+            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.cycle(RepeaterBlock.POWERED));
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
+        }
     }
 
     private static boolean canInteract1(int ticks) {
