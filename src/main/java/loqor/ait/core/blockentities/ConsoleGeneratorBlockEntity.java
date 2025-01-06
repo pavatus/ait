@@ -30,7 +30,7 @@ import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.item.SonicItem2;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
@@ -54,17 +54,15 @@ public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
 
         ItemStack stack = player.getMainHandStack();
 
-        if (stack.getItem() instanceof SonicItem2) {
-
+        if (stack.getItem() == AITItems.SONIC_SCREWDRIVER) {
             this.createConsole(player);
-
             return;
-        } else if (stack.isOf(Items.BLAZE_POWDER)) {
+        }
 
-            this.createConsole(player);
-
+        if (stack.isOf(Items.BLAZE_POWDER)) {
             stack.decrement(1);
 
+            this.createConsole(player);
             return;
         }
 

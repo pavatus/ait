@@ -36,8 +36,6 @@ import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.tardis.manager.TardisFileManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Value;
@@ -133,49 +131,29 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     }
 
     public void remove(MinecraftServer server, ServerTardis tardis) {
-        tardis.getDesktop().createDesktopClearQueue().execute();
         tardis.setRemoved(true);
 
-        ServerWorld tardisWorld = tardis.getInteriorWorld();
+        TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> TardisUtil.teleportOutside(tardis, player));
 
-        // Remove the exterior if it exists
+        ServerWorld tardisWorld = tardis.getInteriorWorld();
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
         if (exteriorPos != null) {
-            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> TardisUtil.teleportOutside(tardis, player));
-
             World world = exteriorPos.getWorld();
             BlockPos pos = exteriorPos.getPos();
-
-            ForcedChunkUtil.keepChunkLoaded(exteriorPos);
 
             world.removeBlock(pos, false);
             world.removeBlockEntity(pos);
 
             ForcedChunkUtil.stopForceLoading(exteriorPos);
-        } else {
-            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
-                DirectedGlobalPos.Cached cached = tardis.travel().destination();
-                WorldUtil.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos(), 0, 0);
-            });
         }
 
         MultiDim.get(server).remove(tardisWorld.getRegistryKey());
 
         this.sendTardisRemoval(server, tardis);
 
-        // Remove the interior door
-        DirectedBlockPos interiorDorPos = tardis.getDesktop().doorPos();
-
-        if (interiorDorPos != null) {
-            BlockPos interiorDoor = interiorDorPos.getPos();
-
-            tardisWorld.removeBlock(interiorDoor, false);
-            tardisWorld.removeBlockEntity(interiorDoor);
-        }
-
-        this.fileManager.delete(server, tardis.getUuid());
         this.lookup.remove(tardis.getUuid());
+        this.fileManager.delete(server, tardis.getUuid());
     }
 
     private void save(MinecraftServer server, boolean clean) {

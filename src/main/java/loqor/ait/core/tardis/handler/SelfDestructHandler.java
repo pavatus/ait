@@ -26,11 +26,11 @@ import loqor.ait.data.properties.bool.BoolValue;
 
 
 public class SelfDestructHandler extends KeyedTardisComponent implements TardisTickable {
+
     private static final BoolProperty QUEUED = new BoolProperty("queued");
     private final BoolValue queued = QUEUED.create(this);
     private static final BoolProperty REGENERATING = new BoolProperty("regenerating");
     private final BoolValue regenerating = REGENERATING.create(this);
-
 
     public SelfDestructHandler() {
         super(Id.SELF_DESTRUCT);
@@ -48,6 +48,7 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
         this.queued.set(true);
         tardis().alarm().enabled().set(true);
     }
+
     private void complete() {
         DirectedGlobalPos.Cached exterior = tardis.travel().position();
         ServerWorld world = exterior.getWorld();
@@ -68,29 +69,12 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
 
         AITMod.LOGGER.warn("Tardis {} has self destructed, expect lag.", tardis.getUuid());
         world.getServer().executeSync(() -> ServerTardisManager.getInstance().remove(ServerLifecycleHooks.get(), tardis.asServer()));
-
-        // crash - Accessing LegacyRandomSource from multiple threads
-        /*
-        world.createExplosion(null, pos.getX(), pos.getY() - 20, pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX() + 20, pos.getY(), pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX() - 20, pos.getY(), pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ() + 20, 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ() - 20, 50, true,
-                World.ExplosionSourceType.MOB);
-        */
     }
 
     public boolean isQueued() {
         return queued.get();
     }
+
     private boolean canSelfDestruct() {
         return tardis.travel().isLanded();
     }
