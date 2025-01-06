@@ -90,6 +90,16 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
             return;
         }
+//theo pls fix
+        if (canInteract(ticks)
+                && block.getDefaultState().contains(RedstoneWireBlock.POWER)) {
+            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.with(RedstoneWireBlock.POWER, 15));
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
+        }
 
 
     }
