@@ -60,12 +60,10 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void ait$tick(CallbackInfo ci) {
+        if (this.age % 10 != 0)
+            return;
+
         LivingEntity entity = (LivingEntity) (Object) this;
-
-        if (entity instanceof PlayerEntity player
-                && (player.isCreative() || player.isSpectator()))
-             return;
-
         Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
 
         if (planet == null)
@@ -74,6 +72,10 @@ public abstract class LivingEntityMixin extends Entity {
         hitDimensionThreshold(entity, 600, AITDimensions.MOON, AITDimensions.SPACE);
         hitDimensionThreshold(entity, World.OVERWORLD, 600, AITDimensions.SPACE, 256);
         hitDimensionThreshold(entity, 500, AITDimensions.MARS, AITDimensions.SPACE);
+
+        if (entity instanceof PlayerEntity player
+                && (player.isCreative() || player.isSpectator()))
+            return;
 
         boolean oxygenated = entity.hasStatusEffect(AITStatusEffects.OXYGENATED);
 
