@@ -170,11 +170,15 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 
         if (name.equalsIgnoreCase("bigboi")) {
-            matrices.scale(1.2f, 1.2f, 1.2f);
+            matrices.scale(1.1f, 1.1f, 1.1f);
         }
 
         if (name.equalsIgnoreCase("massiveboi")) {
-            matrices.scale(1.35f, 1.35f, 1.35f);
+            matrices.scale(1.2f, 1.2f, 1.2f);
+        }
+        //This cant be obtained in survival as it bypasses the name tag limit, you'll need commands.
+        if (name.equalsIgnoreCase("SIZE_LEAK_DONT_NAME_YOUR_TARDIS_THIS_ITS_SPECIFICLY_FOR_A_TRENZALORE_BUILD_ON_THE_SERVER_AS_CLASSIC_ASKED_ME")) {
+            matrices.scale(10f, 10f, 10f);
         }
 
         if (tardis.travel().antigravs().get() && tardis.flight().falling().get()) {

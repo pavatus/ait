@@ -52,7 +52,7 @@ public class InteractionSonicMode extends SonicMode {
         if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-        if (canInteract(ticks)
+        if (canInteract2(ticks)
                 && block instanceof TntBlock) {
             TntBlock.primeTnt(world, pos);
 
@@ -61,7 +61,7 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
-        if (canInteract(ticks)
+        if (canInteract1(ticks)
                 && block.getDefaultState().contains(BarrelBlock.OPEN)) {
             world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -71,7 +71,7 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
-        if (canInteract(ticks)
+        if (canInteract1(ticks)
                 && block.getDefaultState().contains(DoorBlock.OPEN)) {
             world.playSound(user, pos, SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -80,8 +80,8 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
             return;
         }
-
-        if (canInteract(ticks)
+//TODO make this work
+        if (canInteract3(ticks)
                 && state.contains(RedstoneWireBlock.POWER)) {
             world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -89,10 +89,37 @@ public class InteractionSonicMode extends SonicMode {
             world.setBlockState(pos, state.with(RedstoneWireBlock.POWER, 15));
             world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
         }
+
+        if (canInteract3(ticks)
+                && state.contains(DaylightDetectorBlock.INVERTED)) {
+            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.with(DaylightDetectorBlock.POWER, 15));
+            world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
+        }
+
+        if (canInteract2(ticks)
+                && block.getDefaultState().contains(RedstoneLampBlock.LIT)) {
+            world.playSound(user, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.cycle(RedstoneLampBlock.LIT));
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
+        }
     }
 
-    private static boolean canInteract(int ticks) {
-        return ticks >= 40;
+    private static boolean canInteract1(int ticks) {
+        return ticks >= 10;
+    }
+
+    private static boolean canInteract2(int ticks) {
+        return ticks >= 20;
+    }
+
+    private static boolean canInteract3(int ticks) {
+        return ticks >= 30;
     }
 
     @Override
