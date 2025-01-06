@@ -170,11 +170,11 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
 
         if (name.equalsIgnoreCase("bigboi")) {
-            matrices.scale(2f, 2f, 2f);
+            matrices.scale(1.2f, 1.2f, 1.2f);
         }
 
         if (name.equalsIgnoreCase("massiveboi")) {
-            matrices.scale(5f, 5f, 5f);
+            matrices.scale(1.35f, 1.35f, 1.35f);
         }
 
         if (tardis.travel().antigravs().get() && tardis.flight().falling().get()) {
