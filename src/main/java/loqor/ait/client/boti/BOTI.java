@@ -309,8 +309,8 @@ public class BOTI {
         if (!warningSent) {
             warningSent = true;
 
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("A Nvidia Videocard is required for BOTI effects, please disable BOTI in the Config.").formatted(Formatting.RED), false);
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("NAG LOQOR IN THE DISCORD TO FIX BOTI !!!").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("A Nvidia Videocard is HIGHLY reccomended for the BOTI effect, the BOTI effect is very picky and sometimes will just not work with certain video cards.").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("MACS DO NOT WORK AS THEY DROPPED THAT SUPPORT IN FAVOR OF METAL").formatted(Formatting.RED), false);
         }
     }
 }
