@@ -32,7 +32,6 @@ import net.minecraft.world.entity.EntityTrackingSection;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
-import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.ServerTardis;

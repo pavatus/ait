@@ -2,12 +2,13 @@ package loqor.ait.client.boti;
 
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 
-import loqor.ait.AITMod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gl.Framebuffer;
+
+import loqor.ait.AITMod;
 
 public class AITRenderHelper {
 
