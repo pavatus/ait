@@ -2,12 +2,12 @@ package loqor.ait.client.models.exteriors; // Made with Blockbench 4.10.1
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 
-import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;

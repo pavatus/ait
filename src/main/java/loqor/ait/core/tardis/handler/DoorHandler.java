@@ -1,6 +1,5 @@
 package loqor.ait.core.tardis.handler;
 
-import loqor.ait.AITMod;
 import net.fabricmc.fabric.api.util.TriState;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;

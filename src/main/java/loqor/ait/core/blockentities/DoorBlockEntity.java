@@ -3,16 +3,14 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.AITMod;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.AnimationState;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -31,6 +29,7 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
@@ -41,6 +40,7 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;

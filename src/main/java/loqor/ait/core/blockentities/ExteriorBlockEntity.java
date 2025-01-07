@@ -3,8 +3,6 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
-import loqor.ait.AITMod;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -24,6 +22,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
