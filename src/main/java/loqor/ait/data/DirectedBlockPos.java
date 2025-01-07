@@ -71,6 +71,7 @@ public class DirectedBlockPos {
             case 13, 14, 15 -> Direction.NORTH.getVector().add(Direction.SOUTH.getVector());
         };
     }
+
     public Direction toMinecraftDirection() {
         return switch (this.rotation) {
             case 1, 2, 3, 4 -> Direction.EAST;

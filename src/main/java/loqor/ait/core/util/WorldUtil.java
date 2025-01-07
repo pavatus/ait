@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.drtheo.stp.SeamlessTp;
+import dev.pavatus.config.AITConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
@@ -80,6 +81,9 @@ public class WorldUtil {
                 if (TardisServerWorld.isTardisDimension(world)) blacklist(world);
             }
         });
+
+        if (!AITMod.CONFIG.SERVER.STP_PRELOADING)
+            return;
 
         TardisEvents.SYNC_TARDIS.register(WorldWithTardis.forSync((player, tardisSet) -> {
             for (ServerTardis tardis : tardisSet) {

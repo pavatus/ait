@@ -175,17 +175,18 @@ public class TardisUtil {
 
     public static void teleportOutside(Tardis tardis, Entity entity) {
         TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity,
-                tardis.travel().position().toPos());
+                tardis.travel().position().toPos(), tardis.getDesktop().doorPos());
     }
 
     public static void dropOutside(Tardis tardis, Entity entity) {
         DirectedGlobalPos.Cached percentageOfDestination = tardis.travel().getProgress();
         TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
-                percentageOfDestination.toPos());
+                percentageOfDestination.toPos(), tardis.getDesktop().doorPos());
     }
 
     public static void teleportInside(Tardis tardis, Entity entity) {
-        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().doorPos());
+        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity,
+                tardis.getDesktop().doorPos(), tardis.travel().position().toPos());
     }
 
     public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
@@ -197,23 +198,35 @@ public class TardisUtil {
         }
     }
 
-    private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos directed) {
-        BlockPos pos = directed.getPos();
+    private static float getYaw(float yaw, int doorRot, int exteriorRot) {
+        float rot = RotationPropertyHelper.toDegrees(doorRot) + yaw
+                - RotationPropertyHelper.toDegrees(exteriorRot);
 
+        if (rot >= 180)
+            rot -= 360;
+
+        return rot;
+    }
+
+    private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos doorPos, DirectedBlockPos other) {
+        BlockPos pos = doorPos.getPos();
         boolean isDoor = world.getBlockEntity(pos) instanceof DoorBlockEntity;
 
         Vec3d vec = isDoor
-                ? TardisUtil.offsetInteriorDoorPos(directed)
-                : TardisUtil.offsetDoorPosition(directed).add(0, 0.125, 0);
+                ? TardisUtil.offsetInteriorDoorPos(doorPos)
+                : TardisUtil.offsetDoorPosition(doorPos).add(0, 0.125, 0);
+
+        float yaw = getYaw(entity.getYaw(), doorPos.getRotation(), other.getRotation());
 
         world.getServer().execute(() -> {
             if (DependencyChecker.hasPortals()) {
                 PortalAPI.teleportEntity(entity, world, vec);
             } else {
                 if (entity instanceof ServerPlayerEntity player) {
-                    WorldUtil.teleportToWorld(player, world, vec,
-                            RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
-                            player.getPitch());
+                    WorldUtil.teleportToWorld(
+                            player, world, vec,
+                            yaw, player.getPitch()
+                    );
 
                     player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
                 } else {
@@ -221,16 +234,15 @@ public class TardisUtil {
                             || entity instanceof WitherEntity || entity instanceof WardenEntity)
                         return;
 
+                    Vec3d offset = offset(vec, doorPos, -0.5f);
+
                     if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
-                        entity.refreshPositionAndAngles(offset(vec, directed, -0.5f).x, vec.y,
-                                offset(vec, directed, -0.5f).z,
-                                RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
-                                entity.getPitch());
+                        entity.refreshPositionAndAngles(
+                                offset.x, vec.y, offset.z,
+                                yaw, entity.getPitch());
                     } else {
-                        entity.teleport(world, offset(vec, directed, -0.5f).x, vec.y, offset(vec, directed, -0.5f).z,
-                                Set.of(),
-                                RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
-                                entity.getPitch());
+                        entity.teleport(world, offset.x, vec.y, offset.z, Set.of(),
+                                yaw, entity.getPitch());
                     }
                 }
             }
@@ -240,7 +252,8 @@ public class TardisUtil {
     public static Vec3d offset(Vec3d vec, DirectedBlockPos direction, double value) {
         Vec3i vec3i = direction.getVector();
 
-        return new Vec3d(vec.x + value * (double) vec3i.getX(), vec.y + value * (double) vec3i.getY(),
+        return new Vec3d(vec.x + value * (double) vec3i.getX(),
+                vec.y + value * (double) vec3i.getY(),
                 vec.z + value * (double) vec3i.getZ());
     }
 

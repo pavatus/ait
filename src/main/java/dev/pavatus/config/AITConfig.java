@@ -40,6 +40,9 @@ public class AITConfig implements ConfigData {
 
         public boolean SEND_BULK = true;
         public int MAX_TARDISES = -1;
+
+        @ConfigEntry.Gui.RequiresRestart
+        public boolean STP_PRELOADING = false;
     }
 
     public static class Client {
