@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.handler;
 import dev.drtheo.blockqueue.data.TimeUnit;
 import dev.drtheo.scheduler.Scheduler;
 
+import loqor.ait.AITMod;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -20,6 +21,7 @@ import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
+import net.minecraft.world.World;
 
 public class SelfDestructHandler extends KeyedTardisComponent implements TardisTickable {
 
@@ -53,7 +55,7 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
         this.queued.set(false);
 
         AITMod.LOGGER.warn("Tardis {} has self destructed, expect lag.", tardis.getUuid());
-        world.getServer().executeSync(() -> ServerTardisManager.getInstance().remove(ServerLifecycleHooks.get(), tardis.asServer()));
+        world.getServer().executeSync(() -> ServerTardisManager.getInstance().remove(world.getServer(), tardis.asServer()));
 
         world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 50, true,
                 World.ExplosionSourceType.MOB);
