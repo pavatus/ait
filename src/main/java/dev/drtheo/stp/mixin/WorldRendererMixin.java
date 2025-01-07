@@ -128,15 +128,15 @@ public abstract class WorldRendererMixin implements STPWorldRenderer {
 
         ArrayDeque<WorldRenderer.ChunkInfo> queue = Queues.newArrayDeque();
         this.enqueueChunksInViewDistance(camera, queue);
-
         WorldRenderer.RenderableChunks renderableChunks = new WorldRenderer.RenderableChunks(this.chunks.chunks.length);
-
         this.collectRenderableChunks(renderableChunks.chunks, renderableChunks.chunkInfoList, vec3d, queue, bl);
-
         this.renderableChunks.set(renderableChunks);
         this.updateFinished.set(true);
 
+        this.chunkInfos.clear();
         this.chunkInfos.addAll(renderableChunks.chunks);
+
+
         this.updateChunks(camera);
     }
 }

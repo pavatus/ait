@@ -109,11 +109,11 @@ public class ClientSeamlessTp implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> MAP.clear());
     }
 
-    private static void tryLoadCache(ClientWorld world) {
+    private static boolean tryLoadCache(ClientWorld world) {
         Set<CompleteChunkData> set = MAP.remove(world.getRegistryKey().getValue());
 
         if (set == null)
-            return;
+            return false;
 
         for (CompleteChunkData complete : set) {
             int x = complete.x();
@@ -164,6 +164,8 @@ public class ClientSeamlessTp implements ClientModInitializer {
             // WorldRenderer#setupTerrain -> collectRenderableChunks
             // WorldRenderer#compileChunks
         }
+
+        return true;
     }
 
     private static void updateLighting(ClientWorld world, int chunkX, int chunkZ, LightingProvider provider, LightType type, BitSet inited, BitSet uninited, Iterator<byte[]> nibbles) {
@@ -208,7 +210,6 @@ public class ClientSeamlessTp implements ClientModInitializer {
             world.setScoreboard(scoreboard);
             ((ClientWorldInvoker) world).stp$putMapStates(map);
 
-            tryLoadCache(world);
             ((STPMinecraftClient) client).stp$joinWorld(world);
         }
 
@@ -259,6 +260,10 @@ public class ClientSeamlessTp implements ClientModInitializer {
         client.interactionManager.setGameModes(gameMode, previousGameMode);
         //tryLoadCache(world);
 
-        ((STPWorldRenderer) client.worldRenderer).stp$setWorld(world);
+        if (tryLoadCache(world)) {
+            ((STPWorldRenderer) client.worldRenderer).stp$setWorld(world);
+        } else {
+            client.worldRenderer.setWorld(world);
+        }
     }
 }
