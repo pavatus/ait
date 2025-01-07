@@ -51,6 +51,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     private ExteriorAnimation animation;
 
     public int animationTimer = 0;
+    private DoorHandler.AnimationDoorState prevAnimState;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -222,11 +223,10 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         DoorHandler door = tardis.door();
 
         DoorHandler.DoorState doorState = door.getDoorState();
-        DoorHandler.AnimationDoorState animState = DoorHandler.AnimationDoorState.match(doorState);
 
-        if (door.tempExteriorState != animState) {
+        if (this.prevAnimState != door.tempExteriorState.get()) {
             DOOR_STATE.start(animationTimer);
-            door.tempExteriorState = DoorHandler.AnimationDoorState.match(doorState);
+            this.prevAnimState = door.tempExteriorState.get();
         }
     }
 

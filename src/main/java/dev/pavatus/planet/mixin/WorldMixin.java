@@ -1,4 +1,4 @@
-package loqor.ait.mixin.planet;
+package dev.pavatus.planet.mixin;
 
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetWorld;

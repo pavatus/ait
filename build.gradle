@@ -96,7 +96,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi("com.terraformersmc:modmenu:7.0.1")
+    modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     modCompileOnlyApi "maven.modrinth:k9-mod:${project.k9_version}"
 }
