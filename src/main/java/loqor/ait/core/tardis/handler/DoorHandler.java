@@ -124,25 +124,17 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
     public void setDeadlocked(boolean deadlocked) {
         this.deadlocked.set(deadlocked);
-
-        if (deadlocked)
-            this.setLocked(true);
     }
 
     public void setLocked(boolean locked) {
-        if (this.deadlocked.get() && !locked)
-            return;
-
         this.locked.set(locked);
 
         if (locked)
-            setDoorState(DoorState.CLOSED);
-
-        this.sync();
+            this.setDoorState(DoorState.CLOSED);
     }
 
     public boolean locked() {
-        return this.locked.get();
+        return this.locked.get() || this.deadlocked.get();
     }
 
     public boolean hasDoubleDoor() {
@@ -173,7 +165,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     }
 
     private void setDoorState(DoorState newState) {
-        if (this.locked())
+        if (this.locked() && newState != DoorState.CLOSED)
             return;
 
         DoorState oldState = this.doorState.get();
