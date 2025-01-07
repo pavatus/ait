@@ -28,7 +28,6 @@ public abstract class MinecraftServerMixin implements MultiDimServer {
     @Override
     public void multidim$addWorld(ServerWorld world) {
         // use read-copy-update to avoid concurrency issues
-        // from immersive portals
         LinkedHashMap<RegistryKey<World>, ServerWorld> newMap =
                 Maps.newLinkedHashMap();
 
@@ -48,7 +47,6 @@ public abstract class MinecraftServerMixin implements MultiDimServer {
     @Override
     public ServerWorld multidim$removeWorld(RegistryKey<World> key) {
         // use read-copy-update to avoid concurrency issues
-        // from immersive portals
         LinkedHashMap<RegistryKey<World>, ServerWorld> newMap =
                 Maps.newLinkedHashMap();
 

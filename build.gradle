@@ -88,15 +88,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    // change to modImplementation to play with ip, modCompileOnlyApi to not play with ip
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${project.ip_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${project.ip_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
     modCompileOnlyApi("com.github.qouteall:GravityChanger:${project.gravity_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
