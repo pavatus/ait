@@ -973,6 +973,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sequence.ait.ground_unstable", "Unstable landing position!");
         provider.addTranslation("sequence.ait.increment_scale_recalculation_necessary", "Increment scale error! Recalculation necessary!");
         provider.addTranslation("sequence.ait.small_debris_field", "Small debris field!");
+        provider.addTranslation("sequence.ait.slow_down_to_avoid_flying_out_of_vortex", "Vortex drift: de-acceleration necessary!");
 
 
         // Hums

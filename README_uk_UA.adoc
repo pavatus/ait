@@ -32,10 +32,6 @@ Adventures in Time додає TARDIS з серіалу "Доктор Хто". В
 для серверу.
 
 == Сумісність
-=== Якщо в Вас є https://modrinth.com/mod/immersiveportals[Immersive Portals]
-- Твоя TARDIS справді буде _Більше Всередині_
-- Якщо відкрити двери з інтер'єру ти побачиш те, що ззовні, й навпаки
-
 === Якщо в Вас є https://modrinth.com/mod/gravity-api-fork/version[Gravity Changer (qouteall)]
 - Ви зможете контролювати ґравітацію інтер'єра TARDIS через https://loqor.dev/ait/Monitor/[Монітор].
 

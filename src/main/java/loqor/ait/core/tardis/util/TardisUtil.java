@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
-import qouteall.imm_ptl.core.api.PortalAPI;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -197,31 +196,27 @@ public class TardisUtil {
                 : TardisUtil.offsetDoorPosition(directed).add(0, 0.125, 0);
 
         world.getServer().execute(() -> {
-            if (DependencyChecker.hasPortals()) {
-                PortalAPI.teleportEntity(entity, world, vec);
+            if (entity instanceof ServerPlayerEntity player) {
+                WorldUtil.teleportToWorld(player, world, vec,
+                        RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
+                        player.getPitch());
+
+                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
             } else {
-                if (entity instanceof ServerPlayerEntity player) {
-                    WorldUtil.teleportToWorld(player, world, vec,
+                if (entity instanceof EnderDragonEntity || entity instanceof EnderDragonPart
+                        || entity instanceof WitherEntity || entity instanceof WardenEntity)
+                    return;
+
+                if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
+                    entity.refreshPositionAndAngles(offset(vec, directed, -0.5f).x, vec.y,
+                            offset(vec, directed, -0.5f).z,
                             RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
-                            player.getPitch());
-
-                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                            entity.getPitch());
                 } else {
-                    if (entity instanceof EnderDragonEntity || entity instanceof EnderDragonPart
-                            || entity instanceof WitherEntity || entity instanceof WardenEntity)
-                        return;
-
-                    if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
-                        entity.refreshPositionAndAngles(offset(vec, directed, -0.5f).x, vec.y,
-                                offset(vec, directed, -0.5f).z,
-                                RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
-                                entity.getPitch());
-                    } else {
-                        entity.teleport(world, offset(vec, directed, -0.5f).x, vec.y, offset(vec, directed, -0.5f).z,
-                                Set.of(),
-                                RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
-                                entity.getPitch());
-                    }
+                    entity.teleport(world, offset(vec, directed, -0.5f).x, vec.y, offset(vec, directed, -0.5f).z,
+                            Set.of(),
+                            RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
+                            entity.getPitch());
                 }
             }
         });
