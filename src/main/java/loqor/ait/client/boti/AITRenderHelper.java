@@ -2,10 +2,10 @@ package loqor.ait.client.boti;
 
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 
+import loqor.ait.AITMod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL11;
-import qouteall.q_misc_util.Helper;
 
 import net.minecraft.client.gl.Framebuffer;
 
@@ -14,7 +14,7 @@ public class AITRenderHelper {
     public static void checkGlError() {
         int errorCode = GL11.glGetError();
         if (errorCode != GL_NO_ERROR) {
-            Helper.err("OpenGL Error" + errorCode);
+            AITMod.LOGGER.warn("OpenGL Error" + errorCode);
             new Throwable().printStackTrace();
         }
     }
