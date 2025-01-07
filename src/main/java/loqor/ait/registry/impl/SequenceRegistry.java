@@ -178,7 +178,7 @@ public class SequenceRegistry {
         CLOAK_TO_AVOID_VORTEX_TRAPPED_MOBS = register(Sequence.Builder
                 .create(AITMod.id("cloak_to_avoid_vortex_trapped_mobs"), (finishedTardis -> {
                     finishedTardis.travel().decreaseFlightTime(180);
-                    DirectedBlockPos directedDoorPos = finishedTardis.getDesktop().doorPos();
+                    DirectedBlockPos directedDoorPos = finishedTardis.getDesktop().getDoorPos();
 
                     if (directedDoorPos == null)
                         return;
@@ -197,7 +197,7 @@ public class SequenceRegistry {
                             random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
                             interior.spawnEntity(rewardForCloaking);
                 }), (missedTardis -> {
-                    DirectedBlockPos directedDoorPos = missedTardis.getDesktop().doorPos();
+                    DirectedBlockPos directedDoorPos = missedTardis.getDesktop().getDoorPos();
 
                     if (directedDoorPos == null)
                         return;

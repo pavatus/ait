@@ -53,7 +53,6 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.BiomeHandler;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
@@ -430,8 +429,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         tardis.flight().falling().set(false);
 
-        DoorHandler.lockTardis(
-                tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().queued().get(), tardis, null,
+        tardis.door().interactLock(
+                tardis.door().previouslyLocked().get(),null,
                 false);
 
         TardisEvents.LANDED.invoker().onLanded(tardis);

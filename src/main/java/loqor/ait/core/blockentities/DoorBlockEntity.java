@@ -26,7 +26,6 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import loqor.ait.api.TardisEvents;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
@@ -37,8 +36,6 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisDesktop;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -49,14 +46,13 @@ import loqor.ait.data.DirectedGlobalPos;
 
 public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
+    private DirectedBlockPos directedPos;
+
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
     }
 
     public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState blockState, T tDoor) {
-        if (Objects.equals(world.getRegistryKey(), World.OVERWORLD))
-            return;
-
         DoorBlockEntity door = (DoorBlockEntity) tDoor;
 
         if (!door.isLinked())
@@ -76,6 +72,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
         if (blockState.getBlock() instanceof DoorBlock && !tardis.areShieldsActive()) {
             boolean waterlogged = blockState.get(Properties.WATERLOGGED);
+
             if (waterlogged && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
                 for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
                     tardis.loyalty().subLevel(player, 1);
@@ -102,17 +99,17 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
         Tardis tardis = this.tardis().get();
 
-        if (tardis.isGrowth() && tardis.hasGrowthExterior())
+        if (tardis.hasGrowthExterior())
             return;
 
-        this.checkDesktopDoor(tardis.getDesktop());
+        tardis.getDesktop().setDoorPos(this);
 
         if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()) {
             ItemStack key = player.getMainHandStack();
             UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
 
             if (key.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
-                DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
+                tardis.door().interactToggleLock((ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.translatable("tardis.key.identity_error"), true); // TARDIS does not identify
@@ -129,10 +126,11 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
                 world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
                         0.2F);
             }
+
             return;
         }
 
-        DoorHandler.useDoor(tardis, (ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
+        tardis.door().interact((ServerWorld) world, this.getPos(), (ServerPlayerEntity) player);
     }
 
     public Direction getFacing() {
@@ -156,12 +154,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         if (tardis.door().isClosed())
             return;
 
-        if (tardis.getLockedTardis())
-            return;
-
-        if (tardis.flight().falling().get())
-            return;
-
         if (DependencyChecker.hasPortals() && tardis.getExterior().getVariant().hasPortals())
             return;
 
@@ -176,41 +168,25 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         TardisUtil.teleportOutside(tardis, entity);
-
-        this.checkDesktopDoor(tardis.getDesktop());
-    }
-
-    private void checkDesktopDoor(TardisDesktop desktop) {
-        if (desktop.hasDoorPosition()) return;
-        desktop.setInteriorDoorPos(DirectedBlockPos.create(this.pos, (byte) RotationPropertyHelper.fromDirection(this.getFacing())));
-    }
-
-
-    @Override
-    public void onLinked() {
-
-        if (Objects.equals(this.getWorld().getRegistryKey(), World.OVERWORLD))
-            return;
-
-        if (this.tardis().isEmpty())
-            return;
-
-        this.tardis().get().getDesktop().setInteriorDoorPos(
-                DirectedBlockPos.create(this.pos, (byte) RotationPropertyHelper.fromDirection(this.getFacing())));
     }
 
     public void onBreak() {
-        if (!this.isLinked() || this.tardis().isEmpty()) return;
+        if (!this.isLinked())
+            return;
 
         Tardis tardis = this.tardis().get();
         tardis.door().closeDoors();
 
-        TardisEvents.BREAK_DOOR.invoker().onBreak(tardis, this.getPos());
+        tardis.getDesktop().removeDoor(this);
+    }
 
-        // if main door set to null so another door can set it
-        TardisDesktop desktop = tardis.getDesktop();
-        if (desktop.doorPos().getPos().equals(this.getPos())) {
-            desktop.setInteriorDoorPos(null);
-        }
+    public DirectedBlockPos getDirectedPos() {
+        if (this.directedPos != null)
+            return this.directedPos;
+
+        this.directedPos = DirectedBlockPos.create(this.getPos(), (byte)
+                RotationPropertyHelper.fromDirection(this.getFacing()));
+
+        return this.directedPos;
     }
 }

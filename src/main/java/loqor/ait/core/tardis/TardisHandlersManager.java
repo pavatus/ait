@@ -33,6 +33,10 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     @Override
     protected void onInit(InitContext ctx) {
         this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
+    }
+
+    @Override
+    public void postInit(InitContext ctx) {
         this.forEach(component -> component.postInit(ctx));
     }
 

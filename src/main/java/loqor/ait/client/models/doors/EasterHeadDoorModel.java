@@ -57,7 +57,7 @@ public class EasterHeadDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorState state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimatonDoorState state) {
         return switch (state) {
             case CLOSED -> EasterHeadAnimations.EASTER_HEAD_INTERIOR_DOOR_CLOSE_ANIMATION;
             case FIRST -> EasterHeadAnimations.EASTER_HEAD_INTERIOR_DOOR_OPEN_ANIMATION;

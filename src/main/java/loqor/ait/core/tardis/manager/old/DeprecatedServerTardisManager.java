@@ -165,7 +165,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         this.sendTardisRemoval(server, tardis);
 
         // Remove the interior door
-        DirectedBlockPos interiorDorPos = tardis.getDesktop().doorPos();
+        DirectedBlockPos interiorDorPos = tardis.getDesktop().getDoorPos();
 
         if (interiorDorPos != null) {
             BlockPos interiorDoor = interiorDorPos.getPos();

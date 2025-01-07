@@ -77,26 +77,19 @@ public class TardisUtil {
                 BlockPos exteriorPos = tardis.travel().position().getPos();
 
                 BlockPos pos = TardisServerWorld.isTardisDimension(player.getServerWorld())
-                        ? tardis.getDesktop().doorPos().getPos()
+                        ? tardis.getDesktop().getDoorPos().getPos()
                         : exteriorPos;
 
-                if ((player.squaredDistanceTo(exteriorPos.getX(), exteriorPos.getY(), exteriorPos.getZ())) <= 200
-                        || player.getWorld().equals(tardis.getInteriorWorld())) {
-                    if (!player.isSneaking()) {
-                        // annoying bad code
+                if ((player.squaredDistanceTo(exteriorPos.getX(), exteriorPos.getY(), exteriorPos.getZ())) > 200
+                        && !player.getWorld().equals(tardis.getInteriorWorld()))
+                    return;
 
-                        DoorHandler.DoorState state = tardis.door().getDoorState();
-                        if (state == DoorHandler.DoorState.CLOSED || state == DoorHandler.DoorState.FIRST) {
-                            server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
-                            if (tardis.door().hasDoubleDoor()) {
-                                server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
-                            }
-                        } else {
-                            server.execute(() -> DoorHandler.useDoor(tardis, player.getServerWorld(), null, player));
-                        }
-                    } else {
-                        server.execute(() -> DoorHandler.toggleLock(tardis, player));
-                    }
+                if (!player.isSneaking()) {
+                    DoorHandler.DoorState state = tardis.door().getDoorState();
+                    tardis.door().interact(player.getServerWorld(), null, player);
+                    tardis.door().openDoors();
+                } else {
+                    tardis.door().interactToggleLock(player);
                 }
             });
         });
@@ -135,7 +128,7 @@ public class TardisUtil {
     }
 
     public static Vec3d offsetInteriorDoorPosition(TardisDesktop desktop) {
-        return TardisUtil.offsetInteriorDoorPos(desktop.doorPos());
+        return TardisUtil.offsetInteriorDoorPos(desktop.getDoorPos());
     }
 
     public static Vec3d offsetDoorPosition(DirectedBlockPos directed) {
@@ -180,7 +173,7 @@ public class TardisUtil {
 
     public static void teleportInside(Tardis tardis, Entity entity) {
         TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().doorPos());
+        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().getDoorPos());
     }
 
     public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
@@ -348,14 +341,19 @@ public class TardisUtil {
     }
 
     public static List<LivingEntity> getLivingEntitiesInInterior(Tardis tardis, int area) {
-        BlockPos pos = tardis.getDesktop().doorPos().getPos();
+        DirectedBlockPos directedPos = tardis.getDesktop().getDoorPos();
+
+        if (directedPos == null)
+            return List.of();
+
+        BlockPos pos = tardis.getDesktop().getDoorPos().getPos();
 
         return tardis.asServer().getInteriorWorld().getEntitiesByClass(LivingEntity.class,
                 new Box(pos.north(area).east(area).up(area), pos.south(area).west(area).down(area)), (e) -> true);
     }
 
     public static List<Entity> getEntitiesInInterior(Tardis tardis, int area) {
-        DirectedBlockPos directedPos = tardis.getDesktop().doorPos();
+        DirectedBlockPos directedPos = tardis.getDesktop().getDoorPos();
 
         if (directedPos == null)
             return List.of();

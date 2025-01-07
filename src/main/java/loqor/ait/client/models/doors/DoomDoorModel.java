@@ -47,7 +47,7 @@ public class DoomDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorState state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimatonDoorState state) {
         return Animation.Builder.create(0).build();
     }
 

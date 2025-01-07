@@ -41,7 +41,7 @@ public class PortalsHandler extends KeyedTardisComponent {
             PortalsHandler.createPortals(tardis);
         });
 
-        TardisEvents.DOOR_MOVE.register(((tardis, previous) -> PortalsHandler.removePortals(tardis)));
+        TardisEvents.DOOR_MOVE.register(((tardis, newPos, previous) -> PortalsHandler.removePortals(tardis)));
     }
 
     public PortalsHandler() {
@@ -82,7 +82,7 @@ public class PortalsHandler extends KeyedTardisComponent {
     }
 
     private static TardisPortal createExteriorPortal(Tardis tardis) {
-        DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
+        DirectedBlockPos doorPos = tardis.getDesktop().getDoorPos();
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
                 ? tardis.travel().position()
                 : tardis.travel().getProgress();
@@ -119,7 +119,7 @@ public class PortalsHandler extends KeyedTardisComponent {
     }
 
     private static TardisPortal createInteriorPortal(Tardis tardis) {
-        DirectedBlockPos doorPos = tardis.getDesktop().doorPos();
+        DirectedBlockPos doorPos = tardis.getDesktop().getDoorPos();
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().getState() == TravelHandlerBase.State.LANDED
                 ? tardis.travel().position()
                 : tardis.travel().getProgress();

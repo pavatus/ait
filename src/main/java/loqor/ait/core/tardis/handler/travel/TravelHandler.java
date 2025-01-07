@@ -26,7 +26,6 @@ import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
 import loqor.ait.core.tardis.handler.BiomeHandler;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
@@ -370,7 +369,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.state.set(State.LANDED);
         this.resetFlight();
 
-        DoorHandler.lockTardis(tardis.door().previouslyLocked().get(), this.tardis, null, false);
+        tardis.door().interactLock(tardis.door().previouslyLocked().get(), null, false);
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
 

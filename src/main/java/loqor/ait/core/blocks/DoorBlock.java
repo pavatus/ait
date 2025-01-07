@@ -64,7 +64,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         if (ServerLifecycleHooks.get() == null) return; // beautiful jank
 
         World world = tardis.asServer().getInteriorWorld();
-        BlockPos pos = tardis.getDesktop().doorPos().getPos();
+        BlockPos pos = tardis.getDesktop().getDoorPos().getPos();
 
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof DoorBlock))
@@ -162,8 +162,11 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
 
-        if (world.isClient()) return;
-        if (!(world.getBlockEntity(pos) instanceof DoorBlockEntity door)) return;
+        if (world.isClient())
+            return;
+
+        if (!(world.getBlockEntity(pos) instanceof DoorBlockEntity door))
+            return;
 
         door.onBreak();
     }

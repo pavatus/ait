@@ -187,7 +187,7 @@ public class BookshelfExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorState state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimatonDoorState state) {
         return switch (state) {
             case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;

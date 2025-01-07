@@ -25,11 +25,11 @@ public class ClientThunderSoundHandler extends SoundHandler {
     }
 
     private LoopingSound createThunderSound(ClientTardis tardis) {
-        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().getDoorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(AITSounds.THUNDER, SoundCategory.WEATHER,
-                tardis.getDesktop().doorPos().getPos(), 0.3f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.3f);
     }
 
     public static ClientThunderSoundHandler create() {

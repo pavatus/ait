@@ -21,13 +21,13 @@ import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
-
 public class SelfDestructHandler extends KeyedTardisComponent implements TardisTickable {
-    private static final BoolProperty QUEUED = new BoolProperty("queued");
-    private final BoolValue queued = QUEUED.create(this);
-    private static final BoolProperty REGENERATING = new BoolProperty("regenerating");
-    private final BoolValue regenerating = REGENERATING.create(this);
 
+    private static final BoolProperty QUEUED = new BoolProperty("queued");
+    private static final BoolProperty REGENERATING = new BoolProperty("regenerating");
+
+    private final BoolValue queued = QUEUED.create(this);
+    private final BoolValue regenerating = REGENERATING.create(this);
 
     public SelfDestructHandler() {
         super(Id.SELF_DESTRUCT);
@@ -40,11 +40,12 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
     }
 
     public void boom() {
-        if ((this.isQueued()) || !this.canSelfDestruct()) return;
+        if (this.isQueued() || !this.canSelfDestruct())
+            return;
 
         this.queued.set(true);
-        tardis().alarm().enabled().set(true);
     }
+
     private void complete() {
         DirectedGlobalPos.Cached exterior = tardis.travel().position();
         ServerWorld world = exterior.getWorld();
@@ -57,29 +58,12 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
 
         world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 50, true,
                 World.ExplosionSourceType.MOB);
-
-        // crash - Accessing LegacyRandomSource from multiple threads
-        /*
-        world.createExplosion(null, pos.getX(), pos.getY() - 20, pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX() + 20, pos.getY(), pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX() - 20, pos.getY(), pos.getZ(), 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ() + 20, 50, true,
-                World.ExplosionSourceType.MOB);
-
-        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ() - 20, 50, true,
-                World.ExplosionSourceType.MOB);
-        */
     }
 
     public boolean isQueued() {
         return queued.get();
     }
+
     private boolean canSelfDestruct() {
         return tardis.travel().isLanded();
     }
@@ -108,14 +92,12 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
             return;
         }
 
-        if (!tardis.door().locked())
-            DoorHandler.lockTardis(true, this.tardis(), null, true);
-
         if (tardis.asServer().isRemoved())
             return;
 
         if (!(this.regenerating.get())) {
-            Scheduler.get().runAsyncTaskLater(this::complete, TimeUnit.SECONDS, 5);
+            tardis.getDesktop().startQueue(true);
+            Scheduler.get().runTaskLater(this::complete, TimeUnit.SECONDS, 5);
 
             this.regenerating.set(true);
         }

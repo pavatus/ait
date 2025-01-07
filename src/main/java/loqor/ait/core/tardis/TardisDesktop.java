@@ -1,8 +1,6 @@
 package loqor.ait.core.tardis;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import dev.drtheo.blockqueue.ActionQueue;
 import dev.drtheo.blockqueue.QueuedStructureTemplate;
@@ -21,8 +19,6 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
@@ -31,6 +27,7 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.QueuedTardisStructureTemplate;
@@ -44,6 +41,7 @@ public class TardisDesktop extends TardisComponent {
     public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
 
     private TardisDesktopSchema schema;
+
     private DirectedBlockPos doorPos;
 
     private final Corners corners;
@@ -78,9 +76,12 @@ public class TardisDesktop extends TardisComponent {
     }
 
     @Override
-    public void onCreate() {
-        // TODO: lock the door until the queue finishes.
-        this.createInteriorChangeQueue(schema, false).ifPresent(ActionQueue::execute);
+    public void postInit(InitContext ctx) {
+        if (!ctx.created())
+            return;
+
+        // must be done in postInit, because it accesses door and alarm handlers
+        this.changeInterior(schema, false, false).execute();
     }
 
     @Override
@@ -98,24 +99,39 @@ public class TardisDesktop extends TardisComponent {
         return schema;
     }
 
-    public DirectedBlockPos doorPos() {
-        if (!this.hasDoorPosition()) {
-            if (!this.consolePos.isEmpty())
-                return DirectedBlockPos.create(this.consolePos.stream().findAny().orElseThrow().up(), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+    public void setDoorPos(DoorBlockEntity door) {
+        if (door == null)
+            return;
 
-            return DirectedBlockPos.create(BlockPos.ofFloored(this.corners.getBox().getCenter()), (byte) RotationPropertyHelper.fromDirection(Direction.NORTH));
+        DirectedBlockPos pos = door.getDirectedPos();
+
+        if (this.doorPos != null && this.doorPos.equals(pos))
+            return;
+
+        this.doorPos = pos;
+        TardisEvents.DOOR_MOVE.invoker().onMove(tardis.asServer(), pos, this.doorPos);
+    }
+
+    public void removeDoor(DoorBlockEntity door) {
+        if (this.doorPos == null)
+            return;
+
+        if (!this.doorPos.equals(door.getDirectedPos()))
+            return;
+
+        this.doorPos = null;
+        TardisEvents.BREAK_DOOR.invoker().onBreak(this.tardis, doorPos);
+    }
+
+    public DirectedBlockPos getDoorPos() {
+        if (this.doorPos == null) {
+            // womp womp
+            for (BlockPos consolePos : this.consolePos) {
+                return DirectedBlockPos.create(consolePos, (byte) 0);
+            }
         }
 
         return doorPos;
-    }
-
-    public boolean hasDoorPosition() {
-        return doorPos != null;
-    }
-
-    public void setInteriorDoorPos(DirectedBlockPos pos) {
-        TardisEvents.DOOR_MOVE.invoker().onMove(this.tardis, pos);
-        this.doorPos = pos;
     }
 
     // TODO this is strictly for clearing the interior now
@@ -166,7 +182,37 @@ public class TardisDesktop extends TardisComponent {
 
         return new ChunkEraser.Builder().build(
                 world, -chunkRadius, -chunkRadius, chunkRadius, chunkRadius
-        );
+        ).thenRun(() -> {
+            this.consolePos.clear();
+            this.doorPos = null;
+        });
+    }
+
+    public void startQueue(boolean interact) {
+        if (interact) // we use this for the SFX
+            this.tardis.door().interactLock(true, null, false);
+
+        this.tardis.door().setDeadlocked(true);
+        this.tardis.alarm().enabled().set(true);
+    }
+
+    private void completeQueue() {
+        this.tardis.door().setDeadlocked(false);
+        this.tardis.alarm().enabled().set(false);
+
+        this.tardis.door().interactLock(tardis.door()
+                .previouslyLocked().get(), null, false);
+    }
+
+    public ActionQueue changeInterior(TardisDesktopSchema schema, boolean clear, boolean sendEvent) {
+        ActionQueue queue = new ActionQueue()
+                .thenRun(() -> this.startQueue(sendEvent));
+
+        if (clear)
+            queue.thenRun(this.createDesktopClearQueue());
+
+        return queue.thenRun(createInteriorChangeQueue(schema, sendEvent))
+                .thenRun(this::completeQueue);
     }
 
     public void cacheConsole(BlockPos consolePos) {

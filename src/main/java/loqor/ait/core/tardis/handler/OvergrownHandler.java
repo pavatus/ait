@@ -5,11 +5,16 @@ import java.util.Random;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -26,6 +31,27 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
     private int ticks; // same as usual
+
+    static {
+        TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
+            if (!tardis.overgrown().isOvergrown() || player == null)
+                return DoorHandler.InteractionResult.CONTINUE;
+
+            // if holding an axe then break off the vegetation
+            ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+
+            if (stack.getItem() instanceof AxeItem) {
+                player.swingHand(Hand.MAIN_HAND);
+                tardis.overgrown().removeVegetation();
+                stack.setDamage(stack.getDamage() - 1);
+
+                TardisCriterions.VEGETATION.trigger(player);
+                return DoorHandler.InteractionResult.BANG;
+            }
+
+            return DoorHandler.InteractionResult.KNOCK;
+        });
+    }
 
     public OvergrownHandler() {
         super(Id.OVERGROWN);

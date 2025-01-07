@@ -1,7 +1,5 @@
 package loqor.ait.core.tardis.control.impl;
 
-import static loqor.ait.core.tardis.handler.DoorHandler.toggleLock;
-
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -23,7 +21,7 @@ public class DoorLockControl extends Control {
             return false;
         }
 
-        toggleLock(tardis, player);
+        tardis.door().interactToggleLock(player);
         return true;
     }
 
