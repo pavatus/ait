@@ -67,7 +67,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (tardis.isGrowth())
             return;
 
-
         SonicHandler handler = tardis.sonic();
 
         ItemStack hand = player.getMainHandStack();
@@ -79,7 +78,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             UUID keyId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
 
             if (hand.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
-                DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
+                tardis.door().interactToggleLock((ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.translatable("tardis.key.identity_error"), true); // TARDIS does not identify
@@ -140,7 +139,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (!tardis.travel().isLanded())
             return;
 
-        DoorHandler.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+        tardis.door().interact((ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
     }
 
     public void onEntityCollision(Entity entity) {
@@ -152,7 +151,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (ref.isEmpty())
             return;
 
-
         Tardis tardis = ref.get();
         TravelHandler travel = tardis.travel();
 
@@ -162,10 +160,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 && travel.getAnimTicks() >= 0.9 * travel.getMaxAnimTicks())
             TardisUtil.teleportInside(tardis, entity);
 
-        if (tardis.door().isClosed())
-            return;
-
-        if (!tardis.getLockedTardis()
+        if (!tardis.door().isClosed()
                 && (!DependencyChecker.hasPortals() || !tardis.getExterior().getVariant().hasPortals()))
             TardisUtil.teleportInside(tardis, entity);
     }
@@ -223,15 +218,15 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        DoorHandler.DoorStateEnum doorState = door.getDoorState();
-        DoorHandler.DoorStateEnum animState = door.getAnimationExteriorState();
+        DoorHandler.DoorState doorState = door.getDoorState();
+        DoorHandler.AnimatonDoorState animState = door.animationExteriorState().get();
 
         if (animState == null)
             return;
 
-        if (animState != doorState) {
+        if (!animState.is(doorState)) {
             DOOR_STATE.start(animationTimer);
-            door.tempExteriorState = doorState;
+            door.animationExteriorState().set(DoorHandler.AnimatonDoorState.match(doorState));
         }
     }
 

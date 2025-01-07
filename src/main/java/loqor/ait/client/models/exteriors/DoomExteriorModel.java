@@ -59,7 +59,7 @@ public class DoomExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimatonDoorState state) {
         return Animation.Builder.create(0).build();
     }
 }

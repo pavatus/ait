@@ -25,11 +25,11 @@ public class ClientLavaSoundHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createLavaSound(ClientTardis tardis) {
-        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().getDoorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.BLOCKS,
-                tardis.getDesktop().doorPos().getPos(), 0.2f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.2f);
     }
 
     public static ClientLavaSoundHandler create() {

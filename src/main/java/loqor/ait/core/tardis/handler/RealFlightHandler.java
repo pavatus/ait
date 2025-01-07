@@ -29,7 +29,7 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     @Override
     public void tick(MinecraftServer server) {
         if (this.falling.get())
-            DoorHandler.lockTardis(true, this.tardis, null, true);
+            this.tardis.door().setLocked(true);
     }
 
     public BoolValue falling() {

@@ -187,7 +187,6 @@ public class OverloadSonicMode extends SonicMode {
             return;
         }
 
-
         if (canExtract(ticks)
                 && state.isIn(ConventionalBlockTags.ORES)) {
             BlockState newState = this.guessOreBase(block);
@@ -248,7 +247,8 @@ public class OverloadSonicMode extends SonicMode {
         return ticks >= 800;
     }
 
-    @Nullable private BlockState guessOreBase(Block block) {
+    @Nullable
+    private BlockState guessOreBase(Block block) {
         if (block == Blocks.NETHER_GOLD_ORE || block == Blocks.NETHER_QUARTZ_ORE)
             return Blocks.NETHERRACK.getDefaultState();
 

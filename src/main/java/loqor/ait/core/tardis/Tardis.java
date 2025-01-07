@@ -39,6 +39,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         TardisComponent.init(desktop, this, ctx);
         TardisComponent.init(exterior, this, ctx);
         TardisComponent.init(handlers, this, ctx);
+
+        TardisComponent.postInit(desktop, ctx);
+        TardisComponent.postInit(exterior, ctx);
+        TardisComponent.postInit(handlers, ctx);
     }
 
     public static void init(Tardis tardis, TardisComponent.InitContext ctx) {
@@ -71,10 +75,6 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
 
     public SonicHandler sonic() {
         return this.handler(TardisComponent.Id.SONIC);
-    }
-
-    public boolean getLockedTardis() {
-        return this.door().locked();
     }
 
     public TravelHandler travel() {

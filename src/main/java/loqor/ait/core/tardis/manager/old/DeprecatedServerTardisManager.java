@@ -133,12 +133,12 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
     public void remove(MinecraftServer server, ServerTardis tardis) {
         tardis.setRemoved(true);
 
-        TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> TardisUtil.teleportOutside(tardis, player));
-
         ServerWorld tardisWorld = tardis.getInteriorWorld();
         DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
         if (exteriorPos != null) {
+            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> TardisUtil.teleportOutside(tardis, player));
+
             World world = exteriorPos.getWorld();
             BlockPos pos = exteriorPos.getPos();
 

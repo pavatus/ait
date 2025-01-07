@@ -138,8 +138,8 @@ public class MoodEventPoolRegistry {
                     tardis.door().setLocked(false);
                     tardis.door().openDoors();
 
-                    if (tardis.getDesktop().doorPos() != null)
-                        tardis.getInteriorWorld().playSound(null, tardis.getDesktop().doorPos().getPos(),
+                    if (tardis.getDesktop().getDoorPos() != null)
+                        tardis.getInteriorWorld().playSound(null, tardis.getDesktop().getDoorPos().getPos(),
                                 SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
 
                     if (tardis.travel().position() != null)
@@ -193,8 +193,8 @@ public class MoodEventPoolRegistry {
         // TODO: should make this happen when a low loyalty player approaches the TARDIS
         LOCK_DOORS = register(MoodDictatedEvent.Builder.create(AITMod.id("lock_doors"), tardis -> {
             tardis.door().setLocked(true);
-            if (tardis.getDesktop().doorPos() != null)
-                tardis.getInteriorWorld().playSound(null, tardis.getDesktop().doorPos().getPos(),
+            if (tardis.getDesktop().getDoorPos() != null)
+                tardis.getInteriorWorld().playSound(null, tardis.getDesktop().getDoorPos().getPos(),
                         SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.BLOCKS, 1f, 1f);
 
             DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();

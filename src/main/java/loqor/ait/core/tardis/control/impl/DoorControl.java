@@ -1,7 +1,5 @@
 package loqor.ait.core.tardis.control.impl;
 
-import static loqor.ait.core.tardis.handler.DoorHandler.useDoor;
-
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -29,7 +27,8 @@ public class DoorControl extends Control {
         this.soundEvent = !tardis.door().isOpen()
                 ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON
                 : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
-        useDoor(tardis, world, player.getBlockPos(), player);
+
+        tardis.door().interact(world, player.getBlockPos(), player);
         return true;
     }
 

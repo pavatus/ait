@@ -21,7 +21,6 @@ import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
-
 public class SelfDestructHandler extends KeyedTardisComponent implements TardisTickable {
 
     private static final BoolProperty QUEUED = new BoolProperty("queued");
@@ -39,7 +38,8 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
     }
 
     public void boom() {
-        if ((this.isQueued()) || !this.canSelfDestruct()) return;
+        if (this.isQueued() || !this.canSelfDestruct())
+            return;
 
         this.queued.set(true);
         this.tardis.alarm().enabled().set(true);
@@ -52,6 +52,11 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
 
         this.queued.set(false);
 
+        AITMod.LOGGER.warn("Tardis {} has self destructed, expect lag.", tardis.getUuid());
+        world.getServer().executeSync(() -> ServerTardisManager.getInstance().remove(ServerLifecycleHooks.get(), tardis.asServer()));
+
+        world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 50, true,
+                World.ExplosionSourceType.MOB);
         world.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, pos.getX(), pos.getY(), pos.getZ(), 10, 1, 1, 1, 1);
         world.spawnParticles(ParticleTypes.CLOUD, pos.getX(), pos.getY(), pos.getZ(), 100, 1, 1, 1, 1);
         world.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX(), pos.getY(), pos.getZ(), 250, 1, 1, 1, 1);
@@ -96,11 +101,9 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
             return;
         }
 
-        if (!tardis.door().locked())
-            DoorHandler.lockTardis(true, this.tardis, null, true);
-
         if (!this.destructing) {
-            Scheduler.get().runAsyncTaskLater(this::complete, TimeUnit.SECONDS, 5);
+            tardis.getDesktop().startQueue(true);
+            Scheduler.get().runTaskLater(this::complete, TimeUnit.SECONDS, 5);
 
             this.destructing = true;
         }

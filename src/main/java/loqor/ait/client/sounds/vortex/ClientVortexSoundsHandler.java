@@ -25,7 +25,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
 
     private void validateVortexSound(ClientTardis tardis) {
         boolean valid = Objects.equals(
-                tardis.getDesktop().doorPos().getPos(),
+                tardis.getDesktop().getDoorPos().getPos(),
                 this.getVortexSound(tardis).getPosition()
         );
 
@@ -36,11 +36,11 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createVortexSound(ClientTardis tardis) {
-        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().getDoorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(AITSounds.VORTEX_SOUND, SoundCategory.AMBIENT,
-                tardis.getDesktop().doorPos().getPos(), 0.1f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.1f);
     }
 
     public static ClientVortexSoundsHandler create() {

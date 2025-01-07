@@ -59,8 +59,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public void onLinked() {
-        if (this.getWorld().getRegistryKey().equals(World.OVERWORLD)) return;
-
         if (this.tardis().isEmpty())
             return;
 
