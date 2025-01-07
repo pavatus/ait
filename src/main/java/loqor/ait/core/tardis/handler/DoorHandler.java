@@ -49,8 +49,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
      checking when the door has been changed so the animation can start.
       Set on server, used on client
      */
-    @Exclude(strategy = Exclude.Strategy.FILE)
-    private final Value<AnimationDoorState> tempExteriorState = TEMP_EXTERIOR_STATE.create(this);
+    @Exclude
+    public AnimationDoorState tempExteriorState = AnimationDoorState.CLOSED;
 
     @Exclude(strategy = Exclude.Strategy.FILE)
     private final Value<AnimationDoorState> tempInteriorState = TEMP_INTERIOR_STATE.create(this);
@@ -70,7 +70,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         deadlocked.of(this, DEADLOCKED);
 
         doorState.of(this, DOOR_STATE);
-        tempExteriorState.of(this, TEMP_EXTERIOR_STATE);
+        //tempExteriorState.of(this, TEMP_EXTERIOR_STATE);
         tempInteriorState.of(this, TEMP_INTERIOR_STATE);
     }
 
@@ -173,7 +173,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         if (oldState != newState) {
             AnimationDoorState animState = AnimationDoorState.match(newState, oldState);
 
-            this.tempExteriorState.set(animState);
+            //this.tempExteriorState.set(animState);
             this.tempInteriorState.set(animState);
 
             if (oldState == DoorState.CLOSED)
@@ -184,10 +184,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         }
 
         this.doorState.set(newState);
-    }
-
-    public Value<AnimationDoorState> animationExteriorState() {
-        return tempExteriorState;
     }
 
     public DoorState getDoorState() {

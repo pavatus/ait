@@ -40,7 +40,8 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
 
         if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
-            this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(state), exterior.animationTimer);
+            this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(
+                    state), exterior.animationTimer);
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,

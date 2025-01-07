@@ -3,6 +3,7 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -221,14 +222,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         DoorHandler door = tardis.door();
 
         DoorHandler.DoorState doorState = door.getDoorState();
-        DoorHandler.AnimationDoorState animState = door.animationExteriorState().get();
+        DoorHandler.AnimationDoorState animState = DoorHandler.AnimationDoorState.match(doorState);
 
-        if (animState == null)
-            return;
-
-        if (!animState.is(doorState)) {
+        if (door.tempExteriorState != animState) {
             DOOR_STATE.start(animationTimer);
-            door.animationExteriorState().set(DoorHandler.AnimationDoorState.match(doorState));
+            door.tempExteriorState = DoorHandler.AnimationDoorState.match(doorState);
         }
     }
 
