@@ -1,5 +1,6 @@
 package loqor.ait.client.models.doors;
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -68,10 +69,12 @@ public class TardimDoorModel extends DoorModel {
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
-        DoorHandler handler = linkableBlockEntity.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler handler = linkableBlockEntity.tardis().get().door();
 
-        this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
-        this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
+            this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
+            this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
+        }
 
         super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();

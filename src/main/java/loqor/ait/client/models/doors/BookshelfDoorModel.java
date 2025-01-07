@@ -1,5 +1,6 @@
 package loqor.ait.client.models.doors;
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -45,10 +46,12 @@ public class BookshelfDoorModel extends DoorModel {
     @Override
     public void renderWithAnimations(AbstractLinkableBlockEntity doorEntity, ModelPart root, MatrixStack matrices,
                                      VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        DoorHandler door = doorEntity.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = doorEntity.tardis().get().door();
 
-        this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 4.75F : 0.0F;
-        this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? -4.75F : 0.0F;
+            this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 4.75F : 0.0F;
+            this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? -4.75F : 0.0F;
+        }
 
         matrices.push();
         matrices.scale(1F, 1F, 1F);

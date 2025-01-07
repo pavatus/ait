@@ -2,6 +2,7 @@ package loqor.ait.client.models.exteriors; // Made with Blockbench 4.10.1
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -159,16 +160,12 @@ public class BookshelfExteriorModel extends ExteriorModel {
         matrices.scale(1F, 1F, 1F);
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = exterior.tardis().get().door();
 
-        this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
-        this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
-
-        // hide the doors if we have portals to stop the dupe
-        // if (DependencyChecker.hasPortals())
-        // this.TARDIS.getChild("Doors").visible =
-        // exterior.getTardis().get().getDoor().getDoorState() ==
-        // DoorData.DoorStateEnum.CLOSED;
+            this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
+            this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? 4.75F : 0.0F;
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

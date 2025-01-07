@@ -36,15 +36,12 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         super(function);
     }
 
-    public void animateBlockEntity(ExteriorBlockEntity exterior, DoorHandler.AnimationDoorState state) {
+    public void animateBlockEntity(ExteriorBlockEntity exterior) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
 
-        if (state == null)
-            AITMod.LOGGER.info("Failed to do SHIT with the door animations cause the state is NULL");
-
-        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS && state != null)
+        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
             this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(
-                    state), exterior.animationTimer);
+                    exterior.prevAnimState), exterior.animationTimer);
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,

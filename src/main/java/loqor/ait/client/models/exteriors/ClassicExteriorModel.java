@@ -1,5 +1,6 @@
 package loqor.ait.client.models.exteriors;
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -139,11 +140,14 @@ public class ClassicExteriorModel extends ExteriorModel {
         matrices.scale(0.64F, 0.64F, 0.64F);
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().get().door();
-        this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-        this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? 5F
-                : 0.0F;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = exterior.tardis().get().door();
+
+            this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+            this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+                    ? 5F
+                    : 0.0F;
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

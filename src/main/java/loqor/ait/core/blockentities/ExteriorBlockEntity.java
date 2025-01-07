@@ -3,6 +3,7 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.AITMod;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,11 +48,12 @@ import loqor.ait.core.tardis.util.TardisUtil;
 
 public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
 
-    public final AnimationState DOOR_STATE = new AnimationState();
     private ExteriorAnimation animation;
 
+    public final AnimationState DOOR_STATE = new AnimationState();
+
     public int animationTimer = 0;
-    private DoorHandler.AnimationDoorState prevAnimState;
+    public DoorHandler.AnimationDoorState prevAnimState;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -215,16 +217,15 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
     @Environment(EnvType.CLIENT)
     private void checkAnimations() {
-        animationTimer++;
+        this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
+
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        /*DoorHandler.DoorState doorState = door.getDoorState();
-
-        if (this.prevAnimState != door.tempExteriorState.get()) {*/
-            DOOR_STATE.startIfNotRunning(animationTimer);
-        /*    this.prevAnimState = door.tempExteriorState.get();
-        }*/
+        if (this.prevAnimState != door.tempExteriorState.get()) {
+            DOOR_STATE.start(animationTimer);
+            this.prevAnimState = door.tempExteriorState.get();
+        }
     }
 
     public ExteriorAnimation getAnimation() {

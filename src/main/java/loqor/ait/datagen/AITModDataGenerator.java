@@ -654,6 +654,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
         provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.I_HATE_GL", "I HATE GL");
         provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ANIMATE_CONSOLE", "Animate Console?");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ANIMATE_DOORS", "Animate Doors?");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.DOOR_ANIMATION_SPEED", "Door Animation Speed");
 
         provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
         provider.addTranslation("entity.minecraft.villager.fabricator_engineer", "Fabricator Engineer");

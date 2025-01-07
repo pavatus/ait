@@ -1,5 +1,6 @@
 package loqor.ait.client.models.exteriors.advent;
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -108,12 +109,14 @@ public class DalekModExteriorModel extends ExteriorModel {
         matrices.scale(0.945F, 0.945F, 0.945F);
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = exterior.tardis().get().door();
 
-        this.dalekmod.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-        this.dalekmod.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? 5F
-                : 0.0F;
+            this.dalekmod.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+            this.dalekmod.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+                    ? 5F
+                    : 0.0F;
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();

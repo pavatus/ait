@@ -3,6 +3,11 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.tardis.handler.DoorHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.AnimationState;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -48,6 +53,11 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
     private DirectedBlockPos directedPos;
 
+    public final AnimationState DOOR_STATE = new AnimationState();
+
+    public int animationTimer = 0;
+    public DoorHandler.AnimationDoorState prevAnimState;
+
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
     }
@@ -61,8 +71,10 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         Tardis tardis = door.tardis().get();
         DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
-        if (world.isClient())
+        if (world.isClient()) {
+            door.checkAnimations();
             return;
+        }
 
         BlockPos exteriorPos = globalExteriorPos.getPos();
         World exteriorWorld = globalExteriorPos.getWorld();
@@ -90,6 +102,19 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
             world.scheduleFluidTick(pos, blockState.getFluidState().getFluid(),
                     blockState.getFluidState().getFluid().getTickRate(world));
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void checkAnimations() {
+        this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
+
+        Tardis tardis = this.tardis().get();
+        DoorHandler door = tardis.door();
+
+        if (this.prevAnimState != door.tempExteriorState.get()) {
+            DOOR_STATE.start(animationTimer);
+            this.prevAnimState = door.tempExteriorState.get();
         }
     }
 

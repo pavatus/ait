@@ -1,5 +1,6 @@
 package loqor.ait.client.models.exteriors;
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -43,12 +44,14 @@ public class PresentExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = exterior.tardis().get().door();
 
-        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
-        this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? -8F
-                : 0.0F;
+            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+                    ? -8F
+                    : 0.0F;
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
@@ -63,12 +66,14 @@ public class PresentExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = falling.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = falling.tardis().get().door();
 
-        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 9F : 0.0F;
-        this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? -9F
-                : 0.0F;
+            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 9F : 0.0F;
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+                    ? -9F
+                    : 0.0F;
+        }
 
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();

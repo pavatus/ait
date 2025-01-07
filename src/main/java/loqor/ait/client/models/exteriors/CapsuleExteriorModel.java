@@ -1,5 +1,6 @@
 package loqor.ait.client.models.exteriors;
 
+import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -134,15 +135,14 @@ public class CapsuleExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        if (exterior.tardis().get() == null)
-            return;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler handler = exterior.tardis().get().door();
 
-        DoorHandler handler = exterior.tardis().get().door();
-
-        this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
-        this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen())
-                ? 5F
-                : 0.0F;
+            this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
+            this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen())
+                    ? 5F
+                    : 0.0F;
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();

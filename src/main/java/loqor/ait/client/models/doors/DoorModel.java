@@ -2,6 +2,8 @@ package loqor.ait.client.models.doors;
 
 import java.util.function.Function;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.DoorBlockEntity;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -25,6 +27,14 @@ public abstract class DoorModel extends SinglePartEntityModel {
 
     public DoorModel(Function<Identifier, RenderLayer> function) {
         super(function);
+    }
+
+    public void animateBlockEntity(DoorBlockEntity door) {
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+
+        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.updateAnimation(door.DOOR_STATE, this.getAnimationForDoorState(
+                    door.prevAnimState), door.animationTimer);
     }
 
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,

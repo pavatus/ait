@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler;
 
+import loqor.ait.AITMod;
 import net.fabricmc.fabric.api.util.TriState;
 import org.jetbrains.annotations.Nullable;
 
@@ -381,6 +382,11 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
             if (oldState == DoorState.CLOSED && newState == DoorState.HALF)
                 animState = AnimationDoorState.FIRST;
+
+            if (animState == null) {
+                AITMod.LOGGER.info("Couldn't predict door animation state for {}->{}", oldState, newState);
+                animState = CLOSED;
+            }
 
             return animState;
         }
