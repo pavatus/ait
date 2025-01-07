@@ -11,7 +11,8 @@
   "client": [
     "ClientPlayNetworkHandlerAccessor",
     "ClientWorldInvoker",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

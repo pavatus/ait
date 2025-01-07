@@ -4,6 +4,7 @@ import java.util.*;
 
 import dev.drtheo.stp.mixin.ClientPlayNetworkHandlerAccessor;
 import dev.drtheo.stp.mixin.ClientWorldInvoker;
+import loqor.ait.client.util.SkyboxUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -159,6 +160,9 @@ public class ClientSeamlessTp implements ClientModInitializer {
                     }
                 }
             });
+
+            // WorldRenderer#setupTerrain -> collectRenderableChunks
+            // WorldRenderer#compileChunks
         }
     }
 
@@ -203,6 +207,8 @@ public class ClientSeamlessTp implements ClientModInitializer {
 
             world.setScoreboard(scoreboard);
             ((ClientWorldInvoker) world).stp$putMapStates(map);
+
+            tryLoadCache(world);
             ((STPMinecraftClient) client).stp$joinWorld(world);
         }
 
@@ -251,6 +257,8 @@ public class ClientSeamlessTp implements ClientModInitializer {
             client.setScreen(null);
 
         client.interactionManager.setGameModes(gameMode, previousGameMode);
-        tryLoadCache(world);
+        //tryLoadCache(world);
+
+        ((STPWorldRenderer) client.worldRenderer).stp$setWorld(world);
     }
 }

@@ -4,6 +4,10 @@ import java.io.File;
 
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import dev.drtheo.stp.STPMinecraftClient;
+import dev.drtheo.stp.STPWorldRenderer;
+import loqor.ait.api.ClientWorldEvents;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,14 +32,24 @@ public abstract class MinecraftClientMixin implements STPMinecraftClient {
 
     @Shadow @Final public File runDirectory;
 
+    @Shadow @Final public ParticleManager particleManager;
+
+    @Shadow @Final private BlockEntityRenderDispatcher blockEntityRenderDispatcher;
+
+    @Shadow public abstract void updateWindowTitle();
+
     @Override
     public void stp$joinWorld(ClientWorld world) {
         this.world = world;
-        this.setWorld(world);
+
+        MinecraftClient client = (MinecraftClient) (Object) this;
+        this.particleManager.setWorld(world);
+        this.blockEntityRenderDispatcher.setWorld(world);
+        this.updateWindowTitle();
+
+        ClientWorldEvents.CHANGE_WORLD.invoker().onChange(client, world);
 
         if (!this.integratedServerRunning) {
-            MinecraftClient client = (MinecraftClient) (Object) this;
-
             ApiServices apiServices = ApiServices.create(this.authenticationService, this.runDirectory);
             apiServices.userCache().setExecutor(client);
 
