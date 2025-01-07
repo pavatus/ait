@@ -331,19 +331,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        Tardis tardis = this.findTardis(world, pos);
-
-        if (tardis == null || tardis.travel().getState() == TravelHandlerBase.State.LANDED)
-            this.tryFall(state, world, pos);
-    }
-
-    @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        world.scheduleBlockTick(pos, this, 2);
-    }
-
-    public void tryFall(BlockState state, ServerWorld world, BlockPos pos) {
         if (!canFallThrough(world, pos.down()))
+            return;
+
+        Planet planet = PlanetRegistry.getInstance().get(world);
+
+        if (planet != null && planet.zeroGravity())
             return;
 
         Tardis tardis = this.findTardis(world, pos);
@@ -357,12 +350,15 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
             return;
 
-        Planet planet = PlanetRegistry.getInstance().get(tardis.travel().position().getWorld());
-
         FallingTardisEntity.spawnFromBlock(world, pos, state);
 
         if (state.get(WATERLOGGED))
             state.with(WATERLOGGED, false);
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        world.scheduleBlockTick(pos, this, 2);
     }
 
     @Override

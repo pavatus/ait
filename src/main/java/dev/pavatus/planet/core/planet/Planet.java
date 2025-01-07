@@ -83,6 +83,7 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
     public float fahrenheit() {
         return celcius() * 1.8f + 32f;
     }
+
     public boolean isFreezing() {
         return this.celcius() <= 0;
     }
@@ -90,9 +91,11 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
     public boolean zeroGravity() {
         return this.gravity() == 0; // exploding head emoji
     }
+
     public boolean hasGravityModifier() {
         return this.gravity() >= 0;
     }
+
     public boolean hasNoFallDamage() {
         return this.hasGravityModifier() && this.gravity() < 1;
     }

@@ -175,18 +175,18 @@ public class TardisUtil {
 
     public static void teleportOutside(Tardis tardis, Entity entity) {
         TardisUtil.teleportWithDoorOffset(tardis.travel().position().getWorld(), entity,
-                tardis.travel().position().toPos(), tardis.getDesktop().doorPos());
+                tardis.travel().position().toPos(), tardis.getDesktop().doorPos(), false);
     }
 
     public static void dropOutside(Tardis tardis, Entity entity) {
         DirectedGlobalPos.Cached percentageOfDestination = tardis.travel().getProgress();
         TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
-                percentageOfDestination.toPos(), tardis.getDesktop().doorPos());
+                percentageOfDestination.toPos(), tardis.getDesktop().doorPos(), false);
     }
 
     public static void teleportInside(Tardis tardis, Entity entity) {
         TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity,
-                tardis.getDesktop().doorPos(), tardis.travel().position().toPos());
+                tardis.getDesktop().doorPos(), tardis.travel().position().toPos(), true);
     }
 
     public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
@@ -208,11 +208,8 @@ public class TardisUtil {
         return rot;
     }
 
-    private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos doorPos, DirectedBlockPos other) {
-        BlockPos pos = doorPos.getPos();
-        boolean isDoor = world.getBlockEntity(pos) instanceof DoorBlockEntity;
-
-        Vec3d vec = isDoor
+    private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos doorPos, DirectedBlockPos other, boolean entering) {
+        Vec3d vec = entering
                 ? TardisUtil.offsetInteriorDoorPos(doorPos)
                 : TardisUtil.offsetDoorPosition(doorPos).add(0, 0.125, 0);
 
