@@ -76,7 +76,6 @@
 		"cloth-config": "*"
 	},
 	"suggests": {
-		"immersiveportals": "*",
 		"k9-mod": "*"
 	},
 	"custom": {
