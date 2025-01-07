@@ -214,10 +214,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     }
 
     @Environment(EnvType.CLIENT)
-    public void checkAnimations() {
-        if (this.tardis().isEmpty())
-            return;
-
+    private void checkAnimations() {
         animationTimer++;
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
