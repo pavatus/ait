@@ -80,7 +80,7 @@ public class PresentExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.AnimatonDoorState state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return switch (state) {
             case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
