@@ -4,6 +4,9 @@ import static loqor.ait.core.tardis.animation.ExteriorAnimation.*;
 
 import java.util.function.Function;
 
+import loqor.ait.AITMod;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -31,6 +34,13 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
     public ExteriorModel(Function<Identifier, RenderLayer> function) {
         super(function);
+    }
+
+    public void animateBlockEntity(ExteriorBlockEntity exterior, DoorHandler.AnimationDoorState state) {
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+
+        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(state), exterior.animationTimer);
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,

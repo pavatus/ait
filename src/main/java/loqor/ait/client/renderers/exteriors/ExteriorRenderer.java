@@ -64,6 +64,10 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             return;
 
         Tardis tardis = optionalTardis.get();
+
+        profiler.swap("animate");
+        model.animateBlockEntity(entity, tardis.door().animationExteriorState().get());
+
         profiler.swap("render");
 
         if (entity.getAlpha() > 0 || !tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get())
