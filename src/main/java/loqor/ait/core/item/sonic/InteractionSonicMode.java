@@ -77,15 +77,7 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
             return;
         }
-//TODO make this work
-        if (canInteract3(ticks)
-                && state.contains(RedstoneWireBlock.POWER)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
 
-            world.setBlockState(pos, state.with(RedstoneWireBlock.POWER, 15));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-        }
 
         if (canInteract1(ticks)
                 && state.contains(DaylightDetectorBlock.INVERTED)) {
