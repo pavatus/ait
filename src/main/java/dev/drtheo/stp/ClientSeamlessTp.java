@@ -4,7 +4,6 @@ import java.util.*;
 
 import dev.drtheo.stp.mixin.ClientPlayNetworkHandlerAccessor;
 import dev.drtheo.stp.mixin.ClientWorldInvoker;
-import loqor.ait.client.util.SkyboxUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -261,6 +260,7 @@ public class ClientSeamlessTp implements ClientModInitializer {
         //tryLoadCache(world);
 
         if (tryLoadCache(world)) {
+            // TODO: look into WorldRenderer#updateChunks and ChunkBuilder.
             ((STPWorldRenderer) client.worldRenderer).stp$setWorld(world);
         } else {
             client.worldRenderer.setWorld(world);

@@ -36,7 +36,6 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;

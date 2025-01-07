@@ -4,10 +4,6 @@ import java.io.File;
 
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import dev.drtheo.stp.STPMinecraftClient;
-import dev.drtheo.stp.STPWorldRenderer;
-import loqor.ait.api.ClientWorldEvents;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,9 +11,13 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.block.entity.SkullBlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ApiServices;
 import net.minecraft.util.UserCache;
+
+import loqor.ait.api.ClientWorldEvents;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin implements STPMinecraftClient {

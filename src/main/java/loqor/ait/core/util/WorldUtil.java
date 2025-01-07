@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.drtheo.stp.SeamlessTp;
-import dev.pavatus.config.AITConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-
 import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
