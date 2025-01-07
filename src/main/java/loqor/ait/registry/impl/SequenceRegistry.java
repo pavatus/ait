@@ -61,6 +61,7 @@ public class SequenceRegistry {
     public static Sequence DIRECTIONAL_ERROR;
     // public static Sequence RANDOM_LOCATION_IDENTIFIED;
     public static Sequence SPEED_UP_TO_AVOID_DRIFTING_OUT_OF_VORTEX;
+    public static Sequence SLOW_DOWN_TO_AVOID_FLYING_OUT_OF_VORTEX;
     public static Sequence COURSE_CORRECT;
     public static Sequence GROUND_UNSTABLE;
     public static Sequence INCREMENT_SCALE_RECALCULATION_NECESSARY;
@@ -194,7 +195,7 @@ public class SequenceRegistry {
                     rewardForCloaking.setPosition(doorPos.toCenterPos());
 
                     rewardForCloaking.setStack(
-                            random.nextBoolean() ? Items.GOLD_NUGGET.getDefaultStack() : Items.POPPY.getDefaultStack());
+                            random.nextBoolean() ? Items.COOKIE.getDefaultStack() : Items.POPPY.getDefaultStack());
                             interior.spawnEntity(rewardForCloaking);
                 }), (missedTardis -> {
                     DirectedBlockPos directedDoorPos = missedTardis.getDesktop().doorPos();
@@ -243,6 +244,15 @@ public class SequenceRegistry {
                     missedTardis.removeFuel(random.nextBetween(45, 125));
                 }), 80L, Text.translatable("sequence.ait.speed_up_to_avoid_drifting_out_of_vortex").formatted(Formatting.ITALIC,
                         Formatting.YELLOW), new IncrementControl(), new ThrottleControl()));
+
+        SLOW_DOWN_TO_AVOID_FLYING_OUT_OF_VORTEX = register(Sequence.Builder
+                .create(AITMod.id("slow_down_to_avoid_flying_out_of_vortex"), (finishedTardis -> {
+                    finishedTardis.travel().decreaseFlightTime(240);
+                }), (missedTardis -> {
+                    missedTardis.travel().rematerialize();
+                }), 80L, Text.translatable("sequence.ait.slow_down_to_avoid_flying_out_of_vortex").formatted(Formatting.ITALIC,
+                        Formatting.YELLOW), new IncrementControl(), new HandBrakeControl(), new ThrottleControl()));
+
 
         COURSE_CORRECT = register(
                 Sequence.Builder.create(AITMod.id("course_correct"), (finishedTardis -> {
