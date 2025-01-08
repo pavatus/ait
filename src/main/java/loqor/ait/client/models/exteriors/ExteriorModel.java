@@ -4,7 +4,6 @@ import static loqor.ait.core.tardis.animation.ExteriorAnimation.*;
 
 import java.util.function.Function;
 
-import loqor.ait.core.entities.FlightTardisEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -20,6 +19,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.entities.FallingTardisEntity;
+import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.data.Loyalty;

@@ -35,7 +35,6 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.TardisEvents;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;

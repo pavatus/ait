@@ -41,6 +41,8 @@ public class ClientTardis extends Tardis implements Disposable {
     }
 
     public void tick(MinecraftClient client) {
+        this.getHandlers().tick(client);
+
         if (ClientTardisUtil.getCurrentTardis() != this)
             return;
 

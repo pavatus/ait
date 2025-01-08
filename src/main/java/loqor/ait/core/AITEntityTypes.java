@@ -2,12 +2,13 @@ package loqor.ait.core;
 
 import dev.pavatus.lib.container.AssignedName;
 import dev.pavatus.lib.container.impl.EntityContainer;
-import loqor.ait.core.entities.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+
+import loqor.ait.core.entities.*;
 
 public class AITEntityTypes implements EntityContainer {
 

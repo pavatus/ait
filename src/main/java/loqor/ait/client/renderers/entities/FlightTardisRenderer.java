@@ -1,19 +1,5 @@
 package loqor.ait.client.renderers.entities;
 
-import loqor.ait.api.TardisComponent;
-import loqor.ait.client.models.exteriors.ExteriorModel;
-import loqor.ait.client.models.exteriors.SiegeModeModel;
-import loqor.ait.client.models.machines.ShieldsModel;
-import loqor.ait.client.renderers.AITRenderLayers;
-import loqor.ait.core.blocks.ExteriorBlock;
-import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.FlightTardisEntity;
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisExterior;
-import loqor.ait.core.tardis.handler.BiomeHandler;
-import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -23,6 +9,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
+
+import loqor.ait.api.TardisComponent;
+import loqor.ait.client.models.exteriors.ExteriorModel;
+import loqor.ait.client.models.machines.ShieldsModel;
+import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.core.entities.FlightTardisEntity;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisExterior;
+import loqor.ait.core.tardis.handler.BiomeHandler;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
@@ -46,12 +42,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         if (exteriorVariant == null)
             return;
 
-        Class<? extends ExteriorModel> modelClass = exteriorVariant.model().getClass();
-
-        if (model != null && !model.getClass().isInstance(modelClass))
-            model = null;
-
-        if (this.getModel(tardis) == null || entity.getControllingPassenger() == null)
+        if (this.getModel(tardis) == null)
             return;
 
         Vec3d vec3d = entity.getRotationVec(tickDelta);
@@ -68,7 +59,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) v));
         }
 
-        if (!entity.isOnGround()) {
+        if (entity.getPlayer() != null && !entity.getPlayer().isOnGround()) {
             if (!tardis.door().isOpen()) {
                 this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));

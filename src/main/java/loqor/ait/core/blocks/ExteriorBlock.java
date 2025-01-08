@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -44,19 +43,15 @@ import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.ICantBreak;
 import loqor.ait.api.TardisComponent;
-import loqor.ait.api.TardisEvents;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
-import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 @SuppressWarnings("deprecation")

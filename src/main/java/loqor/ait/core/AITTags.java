@@ -1,6 +1,7 @@
 package loqor.ait.core;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -32,6 +33,16 @@ public class AITTags {
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, AITMod.id(name));
+        }
+    }
+
+    public static class EntityTypes {
+
+        public static final TagKey<EntityType<?>> BOSS = createTag("boss");
+        public static final TagKey<EntityType<?>> NON_DISMOUNTABLE = createTag("non_dismountable");
+
+        private static TagKey<EntityType<?>> createTag(String name) {
+            return TagKey.of(RegistryKeys.ENTITY_TYPE, AITMod.id(name));
         }
     }
 }

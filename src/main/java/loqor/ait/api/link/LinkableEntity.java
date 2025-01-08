@@ -1,9 +1,8 @@
 package loqor.ait.api.link;
 
-import loqor.ait.api.link.v2.TardisRef;
-import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisManager;
+import java.util.Optional;
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -13,9 +12,9 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
 
 public abstract class LinkableEntity extends Entity {
 
