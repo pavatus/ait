@@ -2,7 +2,6 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
-import loqor.ait.api.link.v2.TardisRef;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.*;
