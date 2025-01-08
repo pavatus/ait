@@ -360,14 +360,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             return (this == BOTH || this == SECOND) && doorState == DoorState.BOTH;
         }
 
-        public static AnimationDoorState match(DoorState state) {
-            return switch (state) {
-                case BOTH -> AnimationDoorState.BOTH;
-                case HALF -> AnimationDoorState.FIRST;
-                case CLOSED -> AnimationDoorState.CLOSED;
-            };
-        }
-
         public static AnimationDoorState match(DoorState newState, DoorState oldState) {
             AnimationDoorState animState = null;
 
