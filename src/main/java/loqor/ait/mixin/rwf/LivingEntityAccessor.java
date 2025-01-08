@@ -7,6 +7,7 @@ import net.minecraft.entity.LivingEntity;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
+
     @Accessor
     boolean getJumping();
 }

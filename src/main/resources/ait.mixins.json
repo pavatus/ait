@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "loqor.ait.compat.AITMixinPlugin",
   "mixins": [
-    "rwf.DismountEntityMixin",
     "LivingEntityMixin",
     "UseActionMixin",
     "artron.ServerWorldMixin",
@@ -18,6 +17,8 @@
     "networking.ServerPlayerEntityMixin",
     "networking.ServerWorldMixin",
     "networking.ThreadedAnvilChunkStorageMixin",
+    "rwf.DismountEntityMixin",
+    "rwf.LivingEntityAccessor",
     "server.BedInTardisMixin",
     "server.ChunkSectionMixin",
     "server.EnderDragonFightAccessor",
