@@ -137,8 +137,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
                 tardis.door().interactToggleLock((ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
-                player.sendMessage(Text.translatable("tardis.key.identity_error"), true); // TARDIS does not identify
-                                                                                            // with key
+                player.sendMessage(Text.translatable("tardis.key.identity_error"), true); // TARDIS does not identify with key
             }
 
             return;
@@ -193,6 +192,11 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         TardisUtil.teleportOutside(tardis, entity);
+    }
+
+    @Override
+    public void onLinked() {
+        this.tardis().ifPresent(tardis -> tardis.getDesktop().setDoorPos(this));
     }
 
     public void onBreak() {
