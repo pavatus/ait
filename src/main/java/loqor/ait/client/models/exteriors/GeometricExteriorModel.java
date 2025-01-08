@@ -2,16 +2,16 @@ package loqor.ait.client.models.exteriors; // Made with Blockbench 4.10.1
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 
-import loqor.ait.api.link.v2.Linkable;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import net.minecraft.entity.Entity;
 
 public class GeometricExteriorModel extends ExteriorModel {
     private final ModelPart geometric;

@@ -4,17 +4,12 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
-import loqor.ait.core.AITTags;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.WardenEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,6 +29,7 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.AITTags;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;

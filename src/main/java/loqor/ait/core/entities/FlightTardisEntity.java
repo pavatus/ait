@@ -2,7 +2,6 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
-import loqor.ait.mixin.rwf.LivingEntityAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.*;
@@ -27,6 +26,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.mixin.rwf.LivingEntityAccessor;
 
 public class FlightTardisEntity extends LinkableLivingEntity implements JumpingMount {
 

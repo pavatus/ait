@@ -1,17 +1,17 @@
 package loqor.ait.client.models.exteriors;
 
-import loqor.ait.api.link.v2.Linkable;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import net.minecraft.entity.Entity;
 
 public class PoliceBoxCoralModel extends ExteriorModel {
     private final ModelPart TARDIS;
