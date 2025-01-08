@@ -47,6 +47,7 @@ public abstract class LinkableLivingEntity extends LivingEntity {
 
     @Override
     protected void initDataTracker() {
+        super.initDataTracker();
         this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
     }
 
