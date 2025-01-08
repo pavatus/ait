@@ -52,7 +52,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     public final AnimationState DOOR_STATE = new AnimationState();
 
     public int animationTimer = 0;
-    public DoorHandler.AnimationDoorState prevAnimState;
+    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
