@@ -17,6 +17,7 @@ public class AITSounds {
     public static final SoundEvent WONDERFUL_TIME_IN_SPACE = register("music/wonderful_time_in_space");
 
     // TARDIS
+
     public static final SoundEvent DEMAT = register("tardis/demat");
     public static final SoundEvent MAT = register("tardis/mat");
     public static final SoundEvent HOP_DEMAT = register("tardis/hop_takeoff");
@@ -42,6 +43,12 @@ public class AITSounds {
 
     // TARDIS SFX
     public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
+    public static final SoundEvent MOODY1 = register("tardis/moody/moody1");
+    public static final SoundEvent MOODY2 = register("tardis/moody/moody2");
+    public static final SoundEvent MOODY3 = register("tardis/moody/moody3");
+    public static final SoundEvent MOODY4 = register("tardis/moody/moody4");
+    public static final SoundEvent MOODY5 = register("tardis/moody/moody5");
+
 
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = register("controls/demat_lever_pull");
