@@ -84,9 +84,6 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);
-
-        tardis.flight().falling().set(true);
-        TardisEvents.START_FALLING.invoker().onStartFall(tardis);
     }
 
     @Override
@@ -187,7 +184,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
             this.state = this.state.with(Properties.WATERLOGGED, true);
 
         if (block instanceof ExteriorBlock exterior)
-            exterior.onLanding(tardis, this.getWorld(), blockPos);
+            exterior.onLanding(tardis, (ServerWorld) this.getWorld(), blockPos);
 
         travel.placeExterior(false);
         this.discard();

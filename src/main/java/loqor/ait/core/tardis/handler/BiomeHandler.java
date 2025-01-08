@@ -40,6 +40,10 @@ public class BiomeHandler extends KeyedTardisComponent {
     private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
     private final Value<BiomeType> type = TYPE.create(this);
 
+    static {
+        TardisEvents.LANDED.register(tardis -> tardis.<BiomeHandler>handler(Id.BIOME).update());
+    }
+
     public BiomeHandler() {
         super(Id.BIOME);
     }

@@ -13,6 +13,7 @@ import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.register.Registries;
 import dev.pavatus.register.api.RegistryEvents;
+import loqor.ait.core.entities.FlightTardisEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -214,6 +215,7 @@ public class AITMod implements ModInitializer {
             LoadCommand.register(dispatcher);
             DebugCommand.register(dispatcher);
             EraseChunksCommand.register(dispatcher);
+            FlightCommand.register(dispatcher);
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,
@@ -285,6 +287,9 @@ public class AITMod implements ModInitializer {
     public void entityAttributeRegister() {
         FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE,
                 ConsoleControlEntity.createDummyAttributes());
+
+        FabricDefaultAttributeRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE,
+                FlightTardisEntity.createDummyAttributes());
     }
 
     public static final Identifier OPEN_SCREEN = AITMod.id("open_screen");

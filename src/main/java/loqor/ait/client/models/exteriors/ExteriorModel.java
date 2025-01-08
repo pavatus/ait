@@ -4,6 +4,7 @@ import static loqor.ait.core.tardis.animation.ExteriorAnimation.*;
 
 import java.util.function.Function;
 
+import loqor.ait.core.entities.FlightTardisEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -76,6 +77,11 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
             VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    public void renderFlight(FlightTardisEntity falling, ModelPart root, MatrixStack matrices,
+                             VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 

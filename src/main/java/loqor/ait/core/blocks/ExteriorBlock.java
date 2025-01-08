@@ -353,12 +353,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (tardis.travel().getState() != TravelHandlerBase.State.LANDED)
             return;
 
-        if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
+        Planet planet = PlanetRegistry.getInstance().get(world);
+
+        if (planet.zeroGravity())
             return;
 
-        Planet planet = PlanetRegistry.getInstance().get(tardis.travel().position().getWorld());
-
-        FallingTardisEntity.spawnFromBlock(world, pos, state);
+        tardis.flight().onStartFalling(world, state, pos);
 
         if (state.get(WATERLOGGED))
             state.with(WATERLOGGED, false);
@@ -413,25 +413,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         return null;
     }
 
-    public void onLanding(Tardis tardis, World world, BlockPos pos) {
+    public void onLanding(Tardis tardis, ServerWorld world, BlockPos pos) {
         if (tardis == null)
             return;
 
-        tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
-
-        world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-        tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
-
+        tardis.flight().onLanding(world, pos);
         world.scheduleBlockTick(pos, this, 2);
-        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
-
-        tardis.flight().falling().set(false);
-
-        tardis.door().interactLock(
-                tardis.door().previouslyLocked().get(),null,
-                false);
-
-        TardisEvents.LANDED.invoker().onLanded(tardis);
     }
 
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

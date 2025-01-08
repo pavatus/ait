@@ -9,6 +9,7 @@ import java.util.UUID;
 import dev.drtheo.scheduler.ClientScheduler;
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
+import loqor.ait.client.renderers.entities.FlightTardisRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -417,6 +418,7 @@ public class AITModClient implements ClientModInitializer {
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
+        EntityRendererRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE, FlightTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
             EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);

@@ -1,10 +1,10 @@
 package loqor.ait.api.link;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.tardis.ServerTardis;
+import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.TardisManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -13,19 +13,26 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisManager;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public abstract class LinkableLivingEntity extends LivingEntity {
+public abstract class LinkableEntity extends Entity {
 
     public static final TrackedData<Optional<UUID>> TARDIS_ID  = DataTracker.registerData(
-            LinkableLivingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+            LinkableEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     private TardisRef cache;
 
-    protected LinkableLivingEntity(EntityType<? extends LivingEntity> entityType, World world) {
+    protected LinkableEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    @Override
+    protected void readCustomDataFromNbt(NbtCompound nbt) { }
+
+    @Override
+    protected void writeCustomDataToNbt(NbtCompound nbt) { }
 
     public void link(ServerTardis tardis) {
         this.dataTracker.set(TARDIS_ID, Optional.of(tardis.getUuid()));

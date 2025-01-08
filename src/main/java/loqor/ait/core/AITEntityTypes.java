@@ -2,16 +2,12 @@ package loqor.ait.core;
 
 import dev.pavatus.lib.container.AssignedName;
 import dev.pavatus.lib.container.impl.EntityContainer;
+import loqor.ait.core.entities.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-
-import loqor.ait.core.entities.CobbledSnowballEntity;
-import loqor.ait.core.entities.ConsoleControlEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
 
 public class AITEntityTypes implements EntityContainer {
 
@@ -23,6 +19,11 @@ public class AITEntityTypes implements EntityContainer {
     @AssignedName("falling_tardis")
     public static final EntityType<FallingTardisEntity> FALLING_TARDIS_TYPE = FabricEntityTypeBuilder
             .create(SpawnGroup.MISC, FallingTardisEntity::new).dimensions(EntityDimensions.changing(0.98f, 0.98f))
+            .build();
+
+    @AssignedName("flight_tardis")
+    public static final EntityType<FlightTardisEntity> FLIGHT_TARDIS_TYPE = FabricEntityTypeBuilder
+            .create(SpawnGroup.MISC, FlightTardisEntity::new).dimensions(EntityDimensions.changing(0.98f, 0.98f))
             .build();
 
     public static final EntityType<GallifreyFallsPaintingEntity> GALLIFREY_FALLS_PAINTING_TYPE = FabricEntityTypeBuilder
