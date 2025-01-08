@@ -94,7 +94,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         if (tardis.door().isOpen()) {
             this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
-                    -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
+                    -> !entity.isSpectator() && entity != player && entity instanceof LivingEntity).forEach(
                     entity -> TardisUtil.teleportInside(tardis, entity)
             );
         }
