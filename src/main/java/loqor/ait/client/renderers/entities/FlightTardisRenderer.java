@@ -31,13 +31,10 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
     @Override
     public void render(FlightTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light) {
-        if (entity.tardis() == null)
+        if (!entity.isLinked())
             return;
 
         Tardis tardis = entity.tardis().get();
-
-        if (tardis == null)
-            return;
 
         TardisExterior exterior = tardis.getExterior();
         ClientExteriorVariantSchema exteriorVariant = exterior.getVariant().getClient();

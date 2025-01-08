@@ -3,6 +3,7 @@ package loqor.ait.api.link;
 import java.util.Optional;
 import java.util.UUID;
 
+import loqor.ait.core.tardis.Tardis;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -43,10 +44,12 @@ public abstract class LinkableLivingEntity extends LivingEntity implements Linka
         this.tardisId().ifPresent(id -> nbt.putUuid("Tardis", id));
     }
 
-    public void link(ServerTardis tardis) {
+    @Override
+    public void link(Tardis tardis) {
         this.link(tardis.getUuid());
     }
 
+    @Override
     public void link(UUID id) {
         this.dataTracker.set(TARDIS_ID, Optional.of(id));
         this.createCache(id);

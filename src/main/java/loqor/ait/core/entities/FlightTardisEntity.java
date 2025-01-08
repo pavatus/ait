@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
+import loqor.ait.api.link.v2.TardisRef;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.*;
@@ -83,10 +84,10 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         PlayerEntity player = this.getPlayer();
 
-        if (player == null)
+        if (player == null || !this.isLinked())
             return;
 
-        Tardis tardis = this.tardis();
+        Tardis tardis = this.tardis().get();
         boolean onGround = this.isOnGround();
 
         tardis.flight().tickFlight((ServerPlayerEntity) player);
