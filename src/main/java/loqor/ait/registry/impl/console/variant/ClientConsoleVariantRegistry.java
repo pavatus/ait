@@ -157,6 +157,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema CORAL_GREEN;
     public static ClientConsoleVariantSchema CORAL_BLUE;
     public static ClientConsoleVariantSchema CORAL_WHITE;
+    public static ClientConsoleVariantSchema CORAL_DECAYED;
+    public static ClientConsoleVariantSchema CORAL_SITH;
     public static ClientConsoleVariantSchema TOYOTA;
     public static ClientConsoleVariantSchema TOYOTA_BLUE;
     public static ClientConsoleVariantSchema TOYOTA_LEGACY;
@@ -166,9 +168,12 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema STEAM_CHERRY;
     public static ClientConsoleVariantSchema STEAM_STEEL;
     public static ClientConsoleVariantSchema STEAM_GILDED;
+    public static ClientConsoleVariantSchema STEAM_PLAYPAL;
+    public static ClientConsoleVariantSchema STEAM_COPPER;
     public static ClientConsoleVariantSchema HUDOLIN;
     public static ClientConsoleVariantSchema COPPER;
     public static ClientConsoleVariantSchema COPPER_TAIGA;
+
 
     @Override
     public void onClientInit() {
@@ -182,6 +187,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         CORAL_GREEN = register(new ClientGreenCoralVariant());
         CORAL_BLUE = register(new ClientBlueCoralVariant());
         CORAL_WHITE = register(new ClientWhiteCoralVariant());
+        CORAL_DECAYED = register(new ClientWhiteCoralVariant());
+        CORAL_SITH = register(new ClientWhiteCoralVariant());
 
         // Toyota variants
         TOYOTA = register(new ClientToyotaVariant());
@@ -197,6 +204,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         STEAM_CHERRY = register(new ClientSteamCherryVariant());
         STEAM_STEEL = register(new ClientSteamSteelVariant());
         STEAM_GILDED = register(new ClientSteamGildedVariant());
+        STEAM_COPPER = register(new ClientSteamGildedVariant());
+        STEAM_PLAYPAL = register(new ClientSteamGildedVariant());
 
         // Hudolin variants
         // HUDOLIN = register(new ClientHudolinVariant());
