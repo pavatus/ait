@@ -118,8 +118,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             DOOR_STATE.start(animationTimer);
             this.prevAnimState = state;
         }
-
-        // TODO STOP THE FUCKING DOOR_STATE ANIMATIONSTATE BECAUSE IT JUST TICKS OVER LIKE CRAZY - Loqor
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
