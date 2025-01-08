@@ -223,7 +223,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         DoorHandler.AnimationDoorState state = door.animationState.get();
 
-        if (this.prevAnimState != state && state != null) {
+        if (state != null && this.prevAnimState != state) {
             DOOR_STATE.start(animationTimer);
             this.prevAnimState = state;
         }

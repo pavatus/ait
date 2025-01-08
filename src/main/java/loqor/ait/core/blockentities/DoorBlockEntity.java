@@ -112,10 +112,14 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        if (this.prevAnimState != door.animationState.get()) {
+        DoorHandler.AnimationDoorState state = door.animationState.get();
+
+        if (state != null && this.prevAnimState != state) {
             DOOR_STATE.start(animationTimer);
-            this.prevAnimState = door.animationState.get();
+            this.prevAnimState = state;
         }
+
+        // TODO STOP THE FUCKING DOOR_STATE ANIMATIONSTATE BECAUSE IT JUST TICKS OVER LIKE CRAZY - Loqor
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
