@@ -36,8 +36,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     private static final BoolProperty DEADLOCKED = new BoolProperty("deadlocked");
 
     private static final Property<DoorState> DOOR_STATE = Property.forEnum("door_state", DoorState.class, DoorState.CLOSED);
-    private static final Property<AnimationDoorState> TEMP_EXTERIOR_STATE = Property.forEnum("temp_interior_state", AnimationDoorState.class, AnimationDoorState.CLOSED);
-    private static final Property<AnimationDoorState> TEMP_INTERIOR_STATE = Property.forEnum("temp_exterior_state", AnimationDoorState.class, AnimationDoorState.CLOSED);
+    private static final Property<AnimationDoorState> ANIMATION_STATE = Property.forEnum("animation_state", AnimationDoorState.class, AnimationDoorState.CLOSED);
 
     private final BoolValue locked = LOCKED_DOORS.create(this);
     private final BoolValue previouslyLocked = PREVIOUSLY_LOCKED.create(this);
@@ -51,10 +50,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
       Set on server, used on client
      */
     @Exclude(strategy = Exclude.Strategy.FILE)
-    public final Value<AnimationDoorState> tempExteriorState = TEMP_EXTERIOR_STATE.create(this);
-
-    @Exclude(strategy = Exclude.Strategy.FILE)
-    private final Value<AnimationDoorState> tempInteriorState = TEMP_INTERIOR_STATE.create(this);
+    public final Value<AnimationDoorState> animationState = ANIMATION_STATE.create(this);
 
     static {
         TardisEvents.DEMAT.register(tardis -> tardis.door().isOpen() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
@@ -71,8 +67,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         deadlocked.of(this, DEADLOCKED);
 
         doorState.of(this, DOOR_STATE);
-        tempExteriorState.of(this, TEMP_EXTERIOR_STATE);
-        tempInteriorState.of(this, TEMP_INTERIOR_STATE);
+        animationState.of(this, ANIMATION_STATE);
     }
 
     @Override
@@ -172,10 +167,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         DoorState oldState = this.doorState.get();
 
         if (oldState != newState) {
-            AnimationDoorState animState = AnimationDoorState.match(newState, oldState);
-
-            this.tempExteriorState.set(animState);
-            this.tempInteriorState.set(animState);
+            this.animationState.set(AnimationDoorState.match(newState, oldState));
 
             if (oldState == DoorState.CLOSED)
                 TardisEvents.DOOR_OPEN.invoker().onOpen(tardis());

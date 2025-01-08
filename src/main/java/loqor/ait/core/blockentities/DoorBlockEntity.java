@@ -112,9 +112,9 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        if (this.prevAnimState != door.tempExteriorState.get()) {
+        if (this.prevAnimState != door.animationState.get()) {
             DOOR_STATE.start(animationTimer);
-            this.prevAnimState = door.tempExteriorState.get();
+            this.prevAnimState = door.animationState.get();
         }
     }
 
