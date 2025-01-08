@@ -55,7 +55,7 @@ public class BedInTardisMixin {
         player.sendMessage(message, true);
 
         SoundEvent sound = switch(loyalty.type()) {
-            case PILOT -> AITSounds.GHOST_MAT;
+            case PILOT -> AITSounds.WHISPER;
             case REJECT -> AITSounds.TARDIS_REJECTION_SFX;
             default -> AITSounds.GROAN;
         };
