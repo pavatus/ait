@@ -61,7 +61,7 @@ public class TardisUtil {
             ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
                 PermissionHandler permissions = tardis.handler(TardisComponent.Id.PERMISSIONS);
 
-                if (tardis.loyalty().get(player).level() < Loyalty.Type.PILOT.level)
+                if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
                     return;
 
                 if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
@@ -80,9 +80,7 @@ public class TardisUtil {
                     return;
 
                 if (!player.isSneaking()) {
-                    DoorHandler.DoorState state = tardis.door().getDoorState();
                     tardis.door().interact(player.getServerWorld(), null, player);
-                    tardis.door().openDoors();
                 } else {
                     tardis.door().interactToggleLock(player);
                 }

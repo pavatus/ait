@@ -99,13 +99,14 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     }
 
     public void enterFlight(ServerPlayerEntity player) {
-        player.setInvisible(true);
-
         FlightTardisEntity entity = FlightTardisEntity.createAndSpawn(
                 player, this.tardis.asServer());
 
         TardisUtil.teleportOutside(tardis, player);
-        Scheduler.get().runTaskLater(() -> player.startRiding(entity), TimeUnit.TICKS, 2);
+        Scheduler.get().runTaskLater(() -> {
+            player.startRiding(entity);
+            player.setInvisible(true);
+        }, TimeUnit.TICKS, 2);
 
         this.sendEnterFlightPacket(player);
         tardis.travel().finishDemat();
