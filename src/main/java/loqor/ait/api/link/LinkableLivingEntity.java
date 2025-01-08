@@ -3,6 +3,7 @@ package loqor.ait.api.link;
 import java.util.Optional;
 import java.util.UUID;
 
+import loqor.ait.api.link.v2.Linkable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -15,7 +16,7 @@ import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 
-public abstract class LinkableLivingEntity extends LivingEntity {
+public abstract class LinkableLivingEntity extends LivingEntity implements Linkable {
 
     public static final TrackedData<Optional<UUID>> TARDIS_ID  = DataTracker.registerData(
             LinkableLivingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
@@ -79,12 +80,12 @@ public abstract class LinkableLivingEntity extends LivingEntity {
             this.reloadCache();
     }
 
-    public Tardis tardis() {
+    public TardisRef tardis() {
         if (this.cache != null)
-            return cache.get();
+            return cache;
 
         this.reloadCache();
-        return cache != null ? cache.get() : null;
+        return cache;
     }
 
     private Optional<UUID> tardisId() {

@@ -31,7 +31,10 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
     @Override
     public void render(FlightTardisEntity entity, float yaw, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light) {
-        Tardis tardis = entity.tardis();
+        if (entity.tardis() == null)
+            return;
+
+        Tardis tardis = entity.tardis().get();
 
         if (tardis == null)
             return;
@@ -75,19 +78,18 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
-        this.model.renderFlight(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+        this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
         if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {
             boolean alarms = tardis.alarm().enabled().get();
-            this.model.renderFlight(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(getEmission(tardis), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+            this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(getEmission(tardis), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
         }
 
         BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
         Identifier biomeTexture = biome.getBiomeKey().get(exteriorVariant.overrides());
 
-        if (biomeTexture != null && !this.getTexture(entity).equals(biomeTexture)) {
-            model.renderFlight(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
-        }
+        if (biomeTexture != null && !this.getTexture(entity).equals(biomeTexture))
+            model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
         int maxLight = 0xF000F0;
 
@@ -116,9 +118,9 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
     @Override
     public Identifier getTexture(FlightTardisEntity entity) {
-        if (entity.tardis() == null)
+        if (entity.tardis() == null || entity.tardis().isEmpty())
             return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
-        return entity.tardis().getExterior().getVariant().getClient().texture();
+        return entity.tardis().get().getExterior().getVariant().getClient().texture();
     }
 }

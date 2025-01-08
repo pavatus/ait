@@ -1,13 +1,14 @@
 package loqor.ait.client.models.exteriors;
 
+import loqor.ait.api.link.v2.Linkable;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
+import net.minecraft.entity.Entity;
 
 public class DoomExteriorModel extends ExteriorModel {
     private final ModelPart doom;
@@ -44,12 +45,12 @@ public class DoomExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         matrices.push();
         matrices.translate(0, -1.05f, 0);
         matrices.scale(0.7f, 0.7f, 0.7f);
-        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 

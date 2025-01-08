@@ -4,6 +4,7 @@ import static loqor.ait.core.tardis.animation.ExteriorAnimation.*;
 
 import java.util.function.Function;
 
+import loqor.ait.api.link.v2.Linkable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -18,8 +19,6 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.effects.ZeitonHighEffect;
-import loqor.ait.core.entities.FallingTardisEntity;
-import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.data.Loyalty;
@@ -75,13 +74,8 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         root.render(matrices, vertices, light, overlay, red, green, blue, newAlpha);
     }
 
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderFlight(FlightTardisEntity falling, ModelPart root, MatrixStack matrices,
-                             VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
