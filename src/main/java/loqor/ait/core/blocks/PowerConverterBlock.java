@@ -70,9 +70,9 @@ public class PowerConverterBlock extends FluidLinkBlock {
             if (!(be.isPowered())) return ActionResult.FAIL;
             if (!stack.isIn(AITTags.Items.IS_TARDIS_FUEL)) return ActionResult.FAIL;
 
-            be.source().addLevel(5);
+            be.source().addLevel(125);
             stack.decrement(1);
-            world.playSound(null, pos, AITSounds.BWEEP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, pos, AITSounds.POWER_CONVERT, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
             return ActionResult.SUCCESS;
         }

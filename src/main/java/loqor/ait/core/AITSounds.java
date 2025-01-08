@@ -114,6 +114,10 @@ public class AITSounds {
     // Engine
     public static final SoundEvent ENGINE_REFUEL = register("tardis/engine_refuel");
 
+    // Engine related stuff
+    public static final SoundEvent POWER_CONVERT = register("tardis/power_convert");
+
+
 
     public static void init() {
 
