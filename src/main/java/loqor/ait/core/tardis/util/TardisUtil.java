@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
+import loqor.ait.core.AITTags;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
 
@@ -202,8 +203,7 @@ public class TardisUtil {
 
                 player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
             } else {
-                if (entity instanceof EnderDragonEntity || entity instanceof EnderDragonPart
-                        || entity instanceof WitherEntity || entity instanceof WardenEntity)
+                if (entity.getType().isIn(AITTags.EntityTypes.BOSS))
                     return;
 
                 if (entity.getWorld().getRegistryKey() == world.getRegistryKey()) {
