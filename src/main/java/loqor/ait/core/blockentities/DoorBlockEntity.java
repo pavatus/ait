@@ -56,7 +56,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     public final AnimationState DOOR_STATE = new AnimationState();
 
     public int animationTimer = 0;
-    public DoorHandler.AnimationDoorState prevAnimState;
+    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -112,7 +112,9 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        if (this.prevAnimState != door.tempExteriorState.get()) {
+        DoorHandler.AnimationDoorState state = door.tempExteriorState.get();
+
+        if (state != null && this.prevAnimState != door.tempExteriorState.get()) {
             DOOR_STATE.start(animationTimer);
             this.prevAnimState = door.tempExteriorState.get();
         }
@@ -193,6 +195,11 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         TardisUtil.teleportOutside(tardis, entity);
+    }
+
+    @Override
+    public void onLinked() {
+        this.tardis().ifPresent(tardis -> tardis.getDesktop().setDoorPos(this));
     }
 
     public void onBreak() {
