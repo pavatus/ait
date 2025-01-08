@@ -92,6 +92,13 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         tardis.flight().tickFlight((ServerPlayerEntity) player);
 
+        if (tardis.door().isOpen()) {
+            this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
+                    -> !entity.isSpectator() && entity instanceof LivingEntity).forEach(
+                    entity -> TardisUtil.teleportInside(tardis, entity)
+            );
+        }
+
         if (player.isSneaking() && (onGround || tardis.travel().antigravs().get()))
             this.finishLand(tardis, player);
     }
