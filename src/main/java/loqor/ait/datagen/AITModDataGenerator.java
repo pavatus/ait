@@ -710,7 +710,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("desktop.ait.victorian", "Victorian");
         provider.addTranslation("desktop.ait.vintage", "Vintage");
         provider.addTranslation("desktop.ait.dev", "Dev");
-        provider.addTranslation("desktop.ait.tokamak", "Tokamak");
+        provider.addTranslation("desktop.ait.renaissance", "Renaissance");
         provider.addTranslation("desktop.ait.toyota", "Toyota");
         provider.addTranslation("desktop.ait.crystalline", "Crystalline");
         provider.addTranslation("desktop.ait.hourglass", "Hourglass");
@@ -988,7 +988,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.beacon", "Beacon");
         provider.addTranslation("screen.ait.interior.settings.copper", "Copper");
         provider.addTranslation("screen.ait.interior.settings.prime", "Prime");
-        provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
+        provider.addTranslation("screen.ait.interior.settings.renaissance", "Renaissance");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
         // Exterior Variant translations
@@ -1002,7 +1002,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.steel", "Steel");
 
         // Police box specific
-        provider.addTranslation("exterior.ait.tokamak", "Tokamak");
+        provider.addTranslation("exterior.ait.renaissance", "Renaissance");
         provider.addTranslation("exterior.ait.coral", "Coral");
         provider.addTranslation("exterior.ait.futuristic", "Futuristic");
         provider.addTranslation("exterior.ait.cherrywood", "Cherrywood");

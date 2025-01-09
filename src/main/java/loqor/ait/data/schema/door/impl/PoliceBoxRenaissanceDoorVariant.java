@@ -7,10 +7,10 @@ import net.minecraft.util.math.Vec3d;
 import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
 
-public class PoliceBoxTokamakDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = AITMod.id("door/police_box/tokamak");
+public class PoliceBoxRenaissanceDoorVariant extends DoorSchema {
+    public static final Identifier REFERENCE = AITMod.id("door/police_box/renaissance");
 
-    public PoliceBoxTokamakDoorVariant() {
+    public PoliceBoxRenaissanceDoorVariant() {
         super(REFERENCE);
     }
 

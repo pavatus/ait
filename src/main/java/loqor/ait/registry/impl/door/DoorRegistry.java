@@ -26,7 +26,7 @@ public class DoorRegistry {
     public static DoorSchema CAPSULE;
     public static DoorSchema BOX;
     public static DoorSchema BOX_CORAL;
-    public static DoorSchema BOX_TOKAMAK;
+    public static DoorSchema BOX_RENAISSANCE;
     public static DoorSchema HEAD;
     public static DoorSchema GROWTH;
     public static DoorSchema DOOM;
@@ -47,7 +47,7 @@ public class DoorRegistry {
         CAPSULE = register(new CapsuleDoorVariant());
         BOX = register(new PoliceBoxDoorVariant());
         BOX_CORAL = register(new PoliceBoxCoralDoorVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakDoorVariant());
+        BOX_RENAISSANCE = register(new PoliceBoxRenaissanceDoorVariant());
         HEAD = register(new EasterHeadDoorVariant());
         GROWTH = register(new CoralGrowthDoorVariant());
         DOOM = register(new DoomDoorVariant());

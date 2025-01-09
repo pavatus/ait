@@ -5,15 +5,15 @@ import org.joml.Vector3f;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 
-public class ClientPoliceBoxTokamakVariant extends ClientPoliceBoxVariant {
+public class ClientPoliceBoxRenaissanceVariant extends ClientPoliceBoxVariant {
 
     private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientPoliceBoxVariant.OVERRIDES)
             .with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.SNOWY, BiomeHandler.BiomeType.CHORUS,
                     BiomeHandler.BiomeType.SCULK)
             .build();
 
-    public ClientPoliceBoxTokamakVariant() {
-        super("tokamak");
+    public ClientPoliceBoxRenaissanceVariant() {
+        super("renaissance");
     }
 
     @Override

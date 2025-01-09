@@ -1,7 +1,7 @@
 {
   "id": "ait:yard",
   "category": "ait:exterior/police_box",
-  "parent": "ait:exterior/police_box/tokamak",
+  "parent": "ait:exterior/police_box/renaissance",
   "texture": "ait:textures/blockentities/exteriors/police_box/yard.png",
   "emission": "ait:textures/blockentities/exteriors/police_box/yard_emission.png",
   "overrides": {

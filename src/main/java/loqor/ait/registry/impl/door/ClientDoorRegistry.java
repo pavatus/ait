@@ -43,7 +43,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema CAPSULE;
     public static ClientDoorSchema BOX;
     public static ClientDoorSchema BOX_CORAL;
-    public static ClientDoorSchema BOX_TOKAMAK;
+    public static ClientDoorSchema BOX_RENAISSANCE;
     public static ClientDoorSchema HEAD;
     public static ClientDoorSchema GROWTH;
     public static ClientDoorSchema DOOM;
@@ -64,7 +64,7 @@ public class ClientDoorRegistry {
         CAPSULE = register(new ClientCapsuleDoorVariant());
         BOX = register(new ClientPoliceBoxDoorVariant());
         BOX_CORAL = register(new ClientPoliceBoxCoralDoorVariant());
-        BOX_TOKAMAK = register(new ClientPoliceBoxTokamakDoorVariant());
+        BOX_RENAISSANCE = register(new ClientPoliceBoxRenaissanceDoorVariant());
         HEAD = register(new ClientEasterHeadDoorVariant());
         GROWTH = register(new ClientGrowthDoorVariant());
         DOOM = register(new ClientDoomDoorVariant());

@@ -1,7 +1,7 @@
 {
     "id": "frooploof:copper",
     "category": "ait:exterior/police_box",
-    "parent": "ait:exterior/police_box/tokamak",
+    "parent": "ait:exterior/police_box/renaissance",
     "texture": "ait:textures/blockentities/exteriors/police_box/frooploof/police_box_copper.png",
     "emission": "ait:textures/blockentities/exteriors/police_box/frooploof/police_box_copper_emission.png",
     "overrides": {
