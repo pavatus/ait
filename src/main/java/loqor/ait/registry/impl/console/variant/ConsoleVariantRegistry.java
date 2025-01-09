@@ -20,17 +20,12 @@ import loqor.ait.data.schema.console.variant.alnico.AlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.BlueAlnicoVariant;
 import loqor.ait.data.schema.console.variant.copper.CopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.CopperVariant;
-import loqor.ait.data.schema.console.variant.coral.BlueCoralVariant;
-import loqor.ait.data.schema.console.variant.coral.CoralVariant;
-import loqor.ait.data.schema.console.variant.coral.WhiteCoralVariant;
+import loqor.ait.data.schema.console.variant.coral.*;
 import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.WoodenHartnellVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamCherryVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamGildedVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamSteelVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamVariant;
+import loqor.ait.data.schema.console.variant.steam.*;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaVariant;
@@ -117,6 +112,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema CORAL;
     public static ConsoleVariantSchema CORAL_BLUE;
     public static ConsoleVariantSchema CORAL_WHITE;
+    public static ConsoleVariantSchema CORAL_SITH;
+    public static ConsoleVariantSchema CORAL_DECAYED;
     public static ConsoleVariantSchema TOYOTA;
     public static ConsoleVariantSchema TOYOTA_BLUE;
     public static ConsoleVariantSchema TOYOTA_LEGACY;
@@ -126,6 +123,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema STEAM_CHERRY;
     public static ConsoleVariantSchema STEAM_STEEL;
     public static ConsoleVariantSchema STEAM_GILDED;
+    public static ConsoleVariantSchema STEAM_COPPER;
+    public static ConsoleVariantSchema STEAM_PLAYPAL;
     public static ConsoleVariantSchema HUDOLIN;
     public static ConsoleVariantSchema COPPER;
     public static ConsoleVariantSchema COPPER_TAIGA;
@@ -144,6 +143,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         CORAL = registerStatic(new CoralVariant());
         CORAL_BLUE = registerStatic(new BlueCoralVariant());
         CORAL_WHITE = registerStatic(new WhiteCoralVariant());
+        CORAL_SITH = registerStatic(new CoralSithVariant());
+        CORAL_DECAYED = registerStatic(new CoralDecayedVariant());
 
         // Toyota variants
         TOYOTA = registerStatic(new ToyotaVariant());
@@ -159,6 +160,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         STEAM_CHERRY = registerStatic(new SteamCherryVariant());
         STEAM_STEEL = registerStatic(new SteamSteelVariant());
         STEAM_GILDED = registerStatic(new SteamGildedVariant());
+        STEAM_PLAYPAL = registerStatic(new SteamPlaypalVariant());
+        STEAM_COPPER = registerStatic(new SteamCopperVariant());
 
         // Hudolin variants (why am i adding this???)
         // HUDOLIN = registerStatic(new HudolinVariant());

@@ -16,15 +16,15 @@ import loqor.ait.data.schema.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientBlueAlnicoVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
-import loqor.ait.data.schema.console.variant.coral.client.ClientBlueCoralVariant;
-import loqor.ait.data.schema.console.variant.coral.client.ClientGreenCoralVariant;
-import loqor.ait.data.schema.console.variant.coral.client.ClientWhiteCoralVariant;
+import loqor.ait.data.schema.console.variant.coral.client.*;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientWoodenHartnellVariant;
+import loqor.ait.data.schema.console.variant.steam.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamGildedVariant;
+import loqor.ait.data.schema.console.variant.steam.client.ClientSteamPlaypalVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamSteelVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaBlueVariant;
@@ -187,8 +187,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         CORAL_GREEN = register(new ClientGreenCoralVariant());
         CORAL_BLUE = register(new ClientBlueCoralVariant());
         CORAL_WHITE = register(new ClientWhiteCoralVariant());
-        CORAL_DECAYED = register(new ClientWhiteCoralVariant());
-        CORAL_SITH = register(new ClientWhiteCoralVariant());
+        CORAL_DECAYED = register(new ClientCoralDecayedVariant());
+        CORAL_SITH = register(new ClientCoralSithVariant());
 
         // Toyota variants
         TOYOTA = register(new ClientToyotaVariant());
@@ -204,8 +204,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         STEAM_CHERRY = register(new ClientSteamCherryVariant());
         STEAM_STEEL = register(new ClientSteamSteelVariant());
         STEAM_GILDED = register(new ClientSteamGildedVariant());
-        STEAM_COPPER = register(new ClientSteamGildedVariant());
-        STEAM_PLAYPAL = register(new ClientSteamGildedVariant());
+        STEAM_COPPER = register(new ClientSteamCopperVariant());
+        STEAM_PLAYPAL = register(new ClientSteamPlaypalVariant());
 
         // Hudolin variants
         // HUDOLIN = register(new ClientHudolinVariant());
