@@ -10,15 +10,14 @@ import loqor.ait.client.models.exteriors.PoliceBoxModel;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
-// a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class ClientPoliceBoxVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/police_box";
-    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
-            CATEGORY_PATH + "/police_box.png");
+    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/police_box.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/police_box.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/police_box_";
 
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
+    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(BIOME_IDENTIFIER));
 
     protected ClientPoliceBoxVariant(String name) {
         super(AITMod.id("exterior/police_box/" + name));
