@@ -3,17 +3,17 @@ package loqor.ait.data.schema.exterior.variant.box;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.data.schema.door.DoorSchema;
-import loqor.ait.data.schema.door.impl.PoliceBoxTokamakDoorVariant;
+import loqor.ait.data.schema.door.impl.PoliceBoxRenaissanceDoorVariant;
 import loqor.ait.registry.impl.door.DoorRegistry;
 
-public class PoliceBoxTokamakVariant extends PoliceBoxVariant {
-    public PoliceBoxTokamakVariant() {
-        super("tokamak");
+public class PoliceBoxRenaissanceVariant extends PoliceBoxVariant {
+    public PoliceBoxRenaissanceVariant() {
+        super("renaissance");
     }
 
     @Override
     public DoorSchema door() {
-        return DoorRegistry.REGISTRY.get(PoliceBoxTokamakDoorVariant.REFERENCE);
+        return DoorRegistry.REGISTRY.get(PoliceBoxRenaissanceDoorVariant.REFERENCE);
     }
 
     @Override

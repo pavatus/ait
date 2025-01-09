@@ -144,7 +144,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema BOX_SOUL;
     public static ExteriorVariantSchema BOX_FUTURE;
     public static ExteriorVariantSchema BOX_CORAL;
-    public static ExteriorVariantSchema BOX_TOKAMAK;
+    public static ExteriorVariantSchema BOX_RENAISSANCE;
     public static ExteriorVariantSchema BOX_CHERRY;
     public static ExteriorVariantSchema PRIME;
     public static ExteriorVariantSchema YETI;
@@ -206,7 +206,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         BOX_FIRE = register(new PoliceBoxFireVariant());
         BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
         BOX_CORAL = register(new PoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
+        BOX_RENAISSANCE = register(new PoliceBoxRenaissanceVariant());
         BOX_CHERRY = register(new PoliceBoxCherryVariant());
 
         // Classic Box

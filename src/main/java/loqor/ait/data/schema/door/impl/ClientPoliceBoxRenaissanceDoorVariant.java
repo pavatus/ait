@@ -4,9 +4,9 @@ import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.models.doors.PoliceBoxCoralDoorModel;
 import loqor.ait.data.schema.door.ClientDoorSchema;
 
-public class ClientPoliceBoxTokamakDoorVariant extends ClientDoorSchema {
-    public ClientPoliceBoxTokamakDoorVariant() {
-        super(PoliceBoxTokamakDoorVariant.REFERENCE);
+public class ClientPoliceBoxRenaissanceDoorVariant extends ClientDoorSchema {
+    public ClientPoliceBoxRenaissanceDoorVariant() {
+        super(PoliceBoxRenaissanceDoorVariant.REFERENCE);
     }
 
     @Override

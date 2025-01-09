@@ -73,7 +73,7 @@ public class AITSounds {
     public static final SoundEvent COPPER_HUM = register("tardis/hums/copper_hum");
     public static final SoundEvent EXILE_HUM = register("tardis/hums/exile_hum");
     public static final SoundEvent PRIME_HUM = register("tardis/hums/prime_hum");
-    public static final SoundEvent TOKAMAK_HUM = register("tardis/hums/tokamak_hum");
+    public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
     public static final SoundEvent CLOISTER = register("tardis/cloister");
     public static final SoundEvent GROAN = register("tardis/groan");
