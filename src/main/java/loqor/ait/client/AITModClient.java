@@ -36,6 +36,8 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.client.data.ClientLandingManager;
+import loqor.ait.client.overlays.FabricatorOverlay;
+import loqor.ait.client.overlays.SonicOverlay;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.client.renderers.TardisStar;
@@ -100,15 +102,14 @@ public class AITModClient implements ClientModInitializer {
             ConfigCommand.register(dispatcher);
         });
 
-        // TODO make skybox renderer for mars so we dont have to render the moon
-        // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
-        // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MOON.getValue(), new MoonSkyProperties());
-
         AITKeyBinds.init();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
 
         ClientLandingManager.init();
+
+        HudRenderCallback.EVENT.register(new SonicOverlay());
+        HudRenderCallback.EVENT.register(new FabricatorOverlay());
 
         /*
          * ClientVortexDataHandler.init(); WorldRenderEvents.END.register(context -> {
