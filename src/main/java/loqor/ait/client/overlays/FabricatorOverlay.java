@@ -30,6 +30,8 @@ public class FabricatorOverlay implements HudRenderCallback {
         if (!mc.options.getPerspective().isFirstPerson())
             return;
 
+        if (mc.crosshairTarget == null) return;
+
         if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
             Block block = mc.player.getWorld().getBlockState(((BlockHitResult) mc.crosshairTarget).getBlockPos())
                     .getBlock();
@@ -37,7 +39,7 @@ public class FabricatorOverlay implements HudRenderCallback {
                 BlockEntity entity = mc.player.getWorld().getBlockEntity(((BlockHitResult) mc.crosshairTarget).getBlockPos());
                 if (entity instanceof FabricatorBlockEntity fabricatorBlockEntity) {
                     stack.push();
-                    stack.translate((drawContext.getScaledWindowWidth() / 2), (drawContext.getScaledWindowHeight() / 2), -20);
+                    stack.translate(((float) drawContext.getScaledWindowWidth() / 2), ((float) drawContext.getScaledWindowHeight() / 2), -20);
                     stack.scale(0.75f, 0.75f, 0.75f);
                     stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(((float) mc.player.age / 200.0f) * 360f));
                     stack.translate(-((float) 83 / 2), -((float) 83 / 2), 0);
@@ -60,19 +62,19 @@ public class FabricatorOverlay implements HudRenderCallback {
                     double angleStep = 2 * Math.PI / fabricatorItemStack.getCount();
 
                     for (int i = 0; i < fabricatorItemStack.getCount(); i++) {
-                        double angle = i * angleStep - Math.PI / 2; // Start from the top
+                        double angle = i * angleStep - Math.PI / 2;
                         int x = (int) (centerX + Math.cos(angle) * 32);
                         int y = (int) (centerY + Math.sin(angle) * 32);
 
                         stack.push();
                         stack.translate(x, y, -10);
-                        RenderSystem.setShaderColor(0, 0, 0, 0.5f); // Set shadow color
+                        RenderSystem.setShaderColor(0, 0, 0, 0.5f);
                         stack.push();
                         stack.translate(0, 0, -12);
-                        drawContext.drawItem(fabricatorItemStack, 1, 1); // Draw shadow
+                        drawContext.drawItem(fabricatorItemStack, 1, 1);
                         stack.pop();
-                        RenderSystem.setShaderColor(1, 1, 1, 1); // Reset color
-                        drawContext.drawItem(fabricatorItemStack, 0, 0); // Draw item
+                        RenderSystem.setShaderColor(1, 1, 1, 1);
+                        drawContext.drawItem(fabricatorItemStack, 0, 0);
                         stack.pop();
                     }
                 }

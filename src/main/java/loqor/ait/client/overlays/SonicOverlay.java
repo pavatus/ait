@@ -36,7 +36,7 @@ public class SonicOverlay implements HudRenderCallback {
                 || mc.player.getEquippedStack(EquipmentSlot.OFFHAND).getItem() == AITItems.SONIC_SCREWDRIVER)
                 && playerIsLookingAtSonicInteractable(mc.crosshairTarget, mc.player)) {
             this.renderOverlay(drawContext,
-                    AITMod.id("textures/gui/overlay/sonic_can_interact.png"), 1.0F);
+                    AITMod.id("textures/gui/overlay/sonic_can_interact.png"));
         }
     }
 
@@ -75,10 +75,10 @@ public class SonicOverlay implements HudRenderCallback {
         return false;
     }
 
-    private void renderOverlay(DrawContext context, Identifier texture, float opacity) {
+    private void renderOverlay(DrawContext context, Identifier texture) {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
-        context.setShaderColor(1.0F, 1.0F, 1.0F, opacity);
+        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR,
                 GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE,
                 GlStateManager.DstFactor.ZERO);
