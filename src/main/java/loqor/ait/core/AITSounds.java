@@ -37,27 +37,44 @@ public class AITSounds {
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
 
+    //EIGHTH SOUNDS
     public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
     public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
     public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
+    //GHOST MAT
     public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
+    //GHOSTBUSTERS SOUNDS
     public static final SoundEvent GB_DEMAT = register("tardis/gb_demat");
     public static final SoundEvent GB_FLIGHT = register("tardis/gb_flight");
     public static final SoundEvent GB_MAT = register("tardis/gb_mat");
+    //PROTON SOUNDS
     public static final SoundEvent PROTON_FLIGHT = register("tardis/proton_flight");
     public static final SoundEvent PROTON_DEMAT = register("tardis/proton_demat");
     public static final SoundEvent PROTON_MAT = register("tardis/proton_mat");
+    //TYPE 70 SOUNDS
     public static final SoundEvent TYPE70_DEMAT = register("tardis/type70_demat");
     public static final SoundEvent TYPE70_MAT = register("tardis/type70_mat");
+    //CLASSIC SOUNDS
     public static final SoundEvent CLASSIC_DEMAT = register("tardis/classic_demat");
     public static final SoundEvent CLASSIC_MAT = register("tardis/classic_mat");
     public static final SoundEvent REGEN_DEMAT = register("tardis/regen_demat");
+    //DRUMLESS SOUND
     public static final SoundEvent DRUMLESS_DEMAT = register("tardis/drumless_demat");
+    //MINECART SOUNDS
     public static final SoundEvent MINECART_DEMAT = register("tardis/minecart_demat");
     public static final SoundEvent MINECART_FLIGHT = register("tardis/minecart_flight");
     public static final SoundEvent MINECART_MAT = register("tardis/minecart_mat");
+    //MASTER SOUNDS
     public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
     public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
+    //STYLE SOUNDS
+    public static final SoundEvent STYLE_DEMAT = register("tardis/style_demat");
+    public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
+    //ANTI-MASS SPECTROMETOR
+    //public static final SoundEvent AMS_DEMAT = register("tardis/ams_demat");
+    //public static final SoundEvent AMS_REMAT = register("tardis/ams_mat");
+    //public static final SoundEvent AMS_REMAT = register("tardis/ams_mat");
+
 
 
 
