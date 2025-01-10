@@ -62,7 +62,7 @@ public class TardisStar {
                             ? diff.z - .5
                             : tardis.getDesktop().getDoorPos().getPos().getX() - .5);
         }
-        matrixStack.scale(20f, 20f, 20f);
+        matrixStack.scale(40f, 40f, 40f);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y
                 .rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200.0f) * 360f));
@@ -117,9 +117,9 @@ public class TardisStar {
                             : tardis.getDesktop().getDoorPos().getPos().getX() - .5);
         }
         if (!tardis.isRefueling())
-            matrixStack.scale(4, 4, 4);
+            matrixStack.scale(8, 8, 8);
         else
-            matrixStack.scale(4 + sinFunc, 4 + sinFunc, 4 + sinFunc);
+            matrixStack.scale(8 + sinFunc, 8 + sinFunc, 8 + sinFunc);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y
                 .rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200f) * 360f));

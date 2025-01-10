@@ -1,6 +1,6 @@
 {
   "target": "mat",
-  "id": "ait:ghostbuster_mat",
+  "id": "ait:gb_mat",
   "sound": "ait:tardis/gb_mat",
   "timeLeft": 220,
   "maxTime": 220,
