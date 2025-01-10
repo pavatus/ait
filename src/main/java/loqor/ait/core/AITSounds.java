@@ -70,10 +70,15 @@ public class AITSounds {
     //STYLE SOUNDS
     public static final SoundEvent STYLE_DEMAT = register("tardis/style_demat");
     public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
-    //ANTI-MASS SPECTROMETOR
-    //public static final SoundEvent AMS_DEMAT = register("tardis/ams_demat");
-    //public static final SoundEvent AMS_REMAT = register("tardis/ams_mat");
-    //public static final SoundEvent AMS_REMAT = register("tardis/ams_mat");
+    //HALFLIFE
+    //public static final SoundEvent HALFLIFE_DEMAT = register("tardis/halflife_demat");
+    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //PORTAL
+    //public static final SoundEvent PORTAL_DEMAT = register("tardis/portal_demat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
+
 
 
 
