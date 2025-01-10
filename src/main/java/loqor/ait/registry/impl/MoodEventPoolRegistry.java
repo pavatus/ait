@@ -11,8 +11,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.TardisComponent;
-import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.mood.MoodDictatedEvent;
 import loqor.ait.core.tardis.handler.mood.TardisMood;
 import loqor.ait.core.tardis.util.TardisUtil;
@@ -89,9 +87,8 @@ public class MoodEventPoolRegistry {
         }, 1, TardisMood.Alignment.NEGATIVE));
 
         RANDOM_SIEGE = register(
-                MoodDictatedEvent.Builder.create(AITMod.id("random_siege"), tardis -> {
-                    tardis.<SiegeHandler>handler(TardisComponent.Id.SIEGE).setActive(true);
-                }, 1, TardisMood.Alignment.NEGATIVE));
+                MoodDictatedEvent.Builder.create(AITMod.id("random_siege"),
+                        tardis -> tardis.siege().setActive(true), 1, TardisMood.Alignment.NEGATIVE));
 
 
         RANDOM_POWER_OFF = register(
