@@ -64,7 +64,7 @@ public class HammerItem extends SwordItem {
                     1f, 1.0f);
             world.playSoundFromEntity(null, player, SoundEvents.ENTITY_DOLPHIN_HURT, SoundCategory.PLAYERS, 0.2f, 0.5f);
 
-            tardis.loyalty().subLevel((ServerPlayerEntity) player, 2); // safe cast since its on server already
+            tardis.loyalty().subLevel((ServerPlayerEntity) player, 35); // safe cast since its on server already
             return ActionResult.SUCCESS;
         }
 
