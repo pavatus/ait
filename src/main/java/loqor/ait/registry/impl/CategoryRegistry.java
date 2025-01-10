@@ -1,9 +1,7 @@
 package loqor.ait.registry.impl;
 
 
-import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
-import java.util.Calendar;
 import java.util.Random;
 
 import dev.pavatus.register.datapack.SimpleDatapackRegistry;
@@ -76,12 +74,8 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         GEOMETRIC = register(new GeometricCategory());
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 4)) {
-            DALEK_MOD = register(new DalekModCategory());
-        }
+        DALEK_MOD = register(new DalekModCategory());
         //JAKE = register(new JakeCategory());
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 3)) {
-            PRESENT = register(new PresentCategory());
-        }
+        PRESENT = register(new PresentCategory());
     }
 }
