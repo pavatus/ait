@@ -36,7 +36,7 @@ public class ItemRendererMixin {
         }
 
         if (stack.isOf(AITItems.GEIGER_COUNTER)) {
-            this.ait$handleRiftScannerRendering(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, world, light, overlay, seed, ci);
+            this.ait$handleGeigerCounterRendering(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, world, light, overlay, seed, ci);
         }
     }
 
@@ -49,7 +49,7 @@ public class ItemRendererMixin {
         }
 
         if (stack.isOf(AITItems.GEIGER_COUNTER)) {
-            this.ait$handleRiftScannerRendering(null, stack, renderMode, leftHanded, matrices, vertexConsumers, null, light, overlay, 0, ci);
+            this.ait$handleGeigerCounterRendering(null, stack, renderMode, leftHanded, matrices, vertexConsumers, null, light, overlay, 0, ci);
         }
     }
 

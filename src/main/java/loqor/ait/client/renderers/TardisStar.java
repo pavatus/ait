@@ -36,32 +36,16 @@ public class TardisStar {
 
         Vec3d cameraPos = camera.getPos();
         if (tardis.getDesktop() == null) return;
-        BlockPos pos = tardis.getDesktop().getConsolePos().stream().findFirst().orElse(null);
-        if (pos == null) return;
-        int x = pos.getX();
-        int y = pos.getY();
 
-        Vec3d targetPos = new Vec3d(x == 0 ? camera.getPos().getX() : x,
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), y == 0 ? camera.getPos().getZ() : y);
+        Vec3d targetPos = new Vec3d(camera.getPos().getX(),
+                context.world().getBottomY() - (tardis.isGrowth() ? 150 : 120), camera.getPos().getZ());
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
-        if (tardis.isGrowth()) {
-            matrixStack.translate(tardis.getDesktop().getDoorPos().getPos().getX(), diff.y,
-                    tardis.getDesktop().getDoorPos().getPos().getX());
-        } else {
-            matrixStack.translate(
-                    x != 0
-                            ? diff.x - .5
-                            : tardis.getDesktop().getDoorPos().getPos().getX() - .5,
-                    diff.y,
-                    y != 0
-                            ? diff.z - .5
-                            : tardis.getDesktop().getDoorPos().getPos().getX() - .5);
-        }
+        matrixStack.translate(0, diff.y, 0);
         matrixStack.scale(40f, 40f, 40f);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y

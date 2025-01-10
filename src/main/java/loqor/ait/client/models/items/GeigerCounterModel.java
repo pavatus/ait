@@ -26,6 +26,7 @@ import loqor.ait.core.world.TardisServerWorld;
 public class GeigerCounterModel extends Model {
 
     public static final Identifier TEXTURE = AITMod.id("textures/blockentities/items/geiger_counter.png");
+    public static final Identifier EMISSION = AITMod.id("textures/blockentities/items/geiger_counter_emission.png");
 
     private static final float MULTIPLIER = (float) (360 * Math.PI / 180);
 
@@ -35,7 +36,7 @@ public class GeigerCounterModel extends Model {
     private final ModelPart root;
 
     public GeigerCounterModel(ModelPart root) {
-        super(RenderLayer::getEntitySolid);
+        super(RenderLayer::getEntityCutout);
         this.root = root.getChild("root");
     }
 
@@ -100,7 +101,8 @@ public class GeigerCounterModel extends Model {
 
     public void render(@Nullable ClientWorld world, @Nullable LivingEntity entity, ItemStack stack, MatrixStack matrices, VertexConsumerProvider provider, int light, int overlay, int seed) {
         this.root.getChild("arrow").roll = this.unclampedCall(stack, world, entity, seed) * MULTIPLIER;
-        this.render(matrices, provider.getBuffer(this.getLayer(TEXTURE)), light, overlay, 1, 1, 1, 1);
+        this.render(matrices, provider.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, 1, 1, 1, 1);
+        this.render(matrices, provider.getBuffer(RenderLayer.getEntityCutout(EMISSION)), 0xf000f0, overlay, 1, 1, 1, 1);
     }
 
     public float unclampedCall(ItemStack stack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
