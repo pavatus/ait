@@ -48,6 +48,7 @@ public class AITSounds {
     public static final SoundEvent PROTON_DEMAT = register("tardis/proton_demat");
     public static final SoundEvent PROTON_MAT = register("tardis/proton_mat");
     public static final SoundEvent TYPE70_DEMAT = register("tardis/type70_demat");
+    public static final SoundEvent TYPE70_MAT = register("tardis/type70_mat");
     public static final SoundEvent CLASSIC_DEMAT = register("tardis/classic_demat");
     public static final SoundEvent CLASSIC_MAT = register("tardis/classic_mat");
 
