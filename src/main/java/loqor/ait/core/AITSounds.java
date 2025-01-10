@@ -41,6 +41,9 @@ public class AITSounds {
     public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
     public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
     public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
+    public static final SoundEvent GB_DEMAT = register("tardis/gb_demat");
+    public static final SoundEvent GB_FLIGHT = register("tardis/gb_flight");
+    public static final SoundEvent GB_REMAT = register("tardis/gb_mat");
 
     // TARDIS SFX
     public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
