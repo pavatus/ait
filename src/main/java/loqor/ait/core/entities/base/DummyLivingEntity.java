@@ -36,8 +36,12 @@ public abstract class DummyLivingEntity extends LivingEntity {
                     )
     )));
 
-    protected DummyLivingEntity(EntityType<? extends LivingEntity> entityType, World world) {
+    private boolean hasBrain;
+
+    protected DummyLivingEntity(EntityType<? extends LivingEntity> entityType, World world, boolean hasBrain) {
         super(entityType, world);
+
+        this.hasBrain = hasBrain;
     }
 
     @Override
@@ -111,6 +115,16 @@ public abstract class DummyLivingEntity extends LivingEntity {
 
     @Override
     protected void playBlockFallSound() {
+    }
+
+    @Override
+    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
+        return hasBrain ? super.deserializeBrain(dynamic) : null;
+    }
+
+    @Override
+    public Brain<?> getBrain() {
+        return hasBrain ? super.getBrain() : BRAIN;
     }
 
     public static DefaultAttributeContainer.Builder createDummyAttributes() {

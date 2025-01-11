@@ -69,7 +69,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     private Control control;
 
     public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
+        super(entityType, world, false);
     }
 
     private ConsoleControlEntity(World world, Tardis tardis) {
@@ -413,16 +413,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
                         + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY()
                         + "f, " + centered.getZ() + "f)),"));
         }
-    }
-
-    @Override
-    public Brain<?> getBrain() {
-        return BRAIN;
-    }
-
-    @Override
-    protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
-        return null;
     }
 
     @Override
