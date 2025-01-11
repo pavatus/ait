@@ -36,6 +36,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.pipe.client.ClientPipeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
@@ -194,6 +195,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema DALEK_MOD_1980;
     //public static ClientExteriorVariantSchema JAKE_DEFAULT;
     public static ClientExteriorVariantSchema PRESENT_DEFAULT;
+    public static ClientExteriorVariantSchema PIPE_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -284,6 +286,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         // Present
         PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
+        PIPE_DEFAULT = register(new ClientPipeDefaultVariant());
     }
 
     @Override

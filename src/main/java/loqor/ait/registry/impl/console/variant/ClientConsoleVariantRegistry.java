@@ -17,6 +17,7 @@ import loqor.ait.data.schema.console.variant.alnico.client.ClientBlueAlnicoVaria
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.data.schema.console.variant.coral.client.*;
+import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
@@ -173,6 +174,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema HUDOLIN;
     public static ClientConsoleVariantSchema COPPER;
     public static ClientConsoleVariantSchema COPPER_TAIGA;
+    public static ClientConsoleVariantSchema CRYSTALLINE;
 
 
     @Override
@@ -213,5 +215,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         // Copper variants
         COPPER = register(new ClientCopperVariant());
         COPPER_TAIGA = register(new ClientCopperTaigaVariant());
+
+        // Crystalline variants
+        CRYSTALLINE = register(new ClientCrystallineVariant());
     }
 }

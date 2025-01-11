@@ -21,6 +21,7 @@ import loqor.ait.data.schema.console.variant.alnico.BlueAlnicoVariant;
 import loqor.ait.data.schema.console.variant.copper.CopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.CopperVariant;
 import loqor.ait.data.schema.console.variant.coral.*;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineVariant;
 import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
@@ -129,6 +130,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema COPPER;
     public static ConsoleVariantSchema COPPER_TAIGA;
     public static ConsoleVariantSchema BOREALIS;
+    public static ConsoleVariantSchema CRYSTALLINE;
 
     @Override
     protected void defaults() {
@@ -172,5 +174,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 
         // Borealis variants
         // BOREALIS = registerStatic(new BorealisVariant());
+
+        // Crystalline variants
+        CRYSTALLINE = registerStatic(new CrystallineVariant());
     }
 }

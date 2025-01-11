@@ -338,7 +338,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         public DoorState next(boolean isDouble) {
             return switch (this) {
                 case CLOSED -> HALF;
-                case HALF -> isDouble ? BOTH : HALF;
+                case HALF -> isDouble ? BOTH : CLOSED;
                 case BOTH -> CLOSED;
             };
         }

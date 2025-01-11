@@ -25,7 +25,7 @@ public enum DefaultThemes {
     TOYOTA("toyota", "exterior/police_box/default", "toyota", "console/toyota"),
     RENAISSANCE("renaissance", "exterior/police_box/renaissance", "renaissance", "todo"),
     WAR(AITMod.id("war"), new Identifier("frooploof", "coral_war"), AITMod.id("coral"), AITMod.id("console/coral")),
-    CRYSTALLINE("crystalline", "exterior/police_box/renaissance", "renaissance", "todo"),
+    CRYSTALLINE("crystalline", "exterior/police_box/tokamak", "renaissance", "console/crystalline"),
     COPPER(AITMod.id("copper"), new Identifier("frooploof", "copper"), AITMod.id("copper"), AITMod.id("console/copper"));
     private final Identifier desktop;
     private final Identifier exterior;

@@ -37,6 +37,7 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineVariant;
 
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
@@ -164,6 +165,41 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
         if (world.getBlockEntity(pos) instanceof ConsoleBlockEntity console) {
             console.onBroken();
+        }
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
+
+            if (consoleBlockEntity.tardis().get() == null) return;
+
+            if (!consoleBlockEntity.tardis().get().fuel().hasPower()) return;
+
+            if (!(consoleBlockEntity.getVariant() instanceof CrystallineVariant)) return;
+
+            double d = pos.getX();
+            double e = pos.getY();
+            double f = pos.getZ();
+            for (int i = 0; i < random.nextInt(20) + 1; ++i) {
+                boolean bl = random.nextBoolean();
+                float particleSpeed = random.nextFloat() / 20.0f;
+                world.addParticle(ParticleTypes.SMOKE,
+                        (double)pos.getX() + 0.5,
+                        (double)pos.getY() + 2,
+                        (double)pos.getZ() + 0.5,
+                        bl ? particleSpeed : -particleSpeed,
+                        5.0E-5,
+                        bl ? particleSpeed : -particleSpeed);
+                world.addParticle(ParticleTypes.WARPED_SPORE,
+                        pos.getX() + 0.5,
+                        pos.getY() + 2,
+                        pos.getZ() + 0.5,
+                        0.0,
+                        1.0,
+                        0.0);
+            }
         }
     }
 

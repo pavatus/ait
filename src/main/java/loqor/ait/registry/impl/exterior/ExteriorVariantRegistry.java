@@ -36,6 +36,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.GeometricFireVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.pipe.PipeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
@@ -187,6 +188,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema DALEK_MOD_1980;
     //public static ExteriorVariantSchema JAKE_DEFAULT;
     public static ExteriorVariantSchema PRESENT_DEFAULT;
+    public static ExteriorVariantSchema PIPE_DEFAULT;
 
     @Override
     protected void defaults() {
@@ -279,5 +281,8 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Present
         PRESENT_DEFAULT = register(new PresentDefaultVariant());
+
+        // Pipe
+        PIPE_DEFAULT = register(new PipeDefaultVariant());
     }
 }
