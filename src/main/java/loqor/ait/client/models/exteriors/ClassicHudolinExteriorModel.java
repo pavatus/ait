@@ -139,9 +139,15 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
             DoorHandler door = exterior.tardis().get().door();
 
             this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-            this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+            this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
                     ? 5F
                     : 0.0F;
+        } else {
+            float maxRot = 90f;
+
+            DoorHandler door = exterior.tardis().get().door();
+            this.classic.getChild("Doors").getChild("left_door").yaw = -(float) Math.toRadians(maxRot * door.getLeftRot());
+            this.classic.getChild("Doors").getChild("right_door").yaw = (float) Math.toRadians(maxRot * door.getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -150,12 +156,7 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        return Animation.Builder.create(0).build();
     }
 
     @Override

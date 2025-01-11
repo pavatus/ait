@@ -27,6 +27,8 @@ import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.flt.FloatProperty;
+import loqor.ait.data.properties.flt.FloatValue;
 import loqor.ait.data.schema.door.DoorSchema;
 
 public class DoorHandler extends KeyedTardisComponent implements TardisTickable {
@@ -38,11 +40,19 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     private static final Property<DoorState> DOOR_STATE = Property.forEnum("door_state", DoorState.class, DoorState.CLOSED);
     private static final Property<AnimationDoorState> ANIMATION_STATE = Property.forEnum("animation_state", AnimationDoorState.class, AnimationDoorState.CLOSED);
 
+    // FIXME @THEO
+    private static final FloatProperty LEFT_DOOR_ROT = new FloatProperty("left_door_rot");
+    private static final FloatProperty RIGHT_DOOR_ROT = new FloatProperty("right_door_rot");
+
     private final BoolValue locked = LOCKED_DOORS.create(this);
     private final BoolValue previouslyLocked = PREVIOUSLY_LOCKED.create(this);
     private final BoolValue deadlocked = DEADLOCKED.create(this);
 
     private final Value<DoorState> doorState = DOOR_STATE.create(this);
+
+    // FIXME @THEO
+    private final FloatValue leftDoorRot = LEFT_DOOR_ROT.create(this);
+    private final FloatValue rightDoorRot = RIGHT_DOOR_ROT.create(this);
 
     /*
      this is the previous state before it was changed, used for
@@ -59,6 +69,13 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             if (!tardis.door().hasDoubleDoor() && tardis.door().getDoorState() == DoorState.BOTH)
                 tardis.door().setDoorState(DoorState.HALF);
         });
+
+        TardisEvents.MAT.register(tardis -> {
+            tardis.door().setDeadlocked(true);
+            return TardisEvents.Interaction.PASS;
+        });
+
+        TardisEvents.LANDED.register(tardis -> tardis.door().setDeadlocked(false));
     }
 
     public DoorHandler() {
@@ -73,12 +90,31 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
         doorState.of(this, DOOR_STATE);
         animationState.of(this, ANIMATION_STATE);
+
+        leftDoorRot.of(this, LEFT_DOOR_ROT);
+        rightDoorRot.of(this, RIGHT_DOOR_ROT);
     }
 
     @Override
     public void tick(MinecraftServer server) {
         if (this.shouldSucc())
             this.succ();
+
+        // FIXME @THEO
+        if (!this.isClosed()) {
+            leftDoorRot.set(calculateRotation(leftDoorRot.get(), this.getDoorState() == DoorState.HALF || this.getDoorState() == DoorState.BOTH));
+            rightDoorRot.set(calculateRotation(rightDoorRot.get(), this.getDoorState() == DoorState.BOTH));
+        }
+    }
+
+    public float calculateRotation(float currentRotation, boolean opening) {
+        if (opening) {
+            currentRotation = (float) Math.min(currentRotation + (0.1f - currentRotation * 0.1), 1.0f);
+        } else {
+            currentRotation = Math.max(currentRotation - 0.15f, 0.0f);
+        }
+
+        return currentRotation;
     }
 
     /**
@@ -147,11 +183,11 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     }
 
     public boolean isClosed() {
-        return this.doorState.get() == DoorState.CLOSED;
+        return rightDoorRot.get() <= 0 && leftDoorRot.get() <= 0 && this.doorState.get() == DoorState.CLOSED;
     }
 
-    public boolean isBothOpen() {
-        return this.doorState.get() == DoorState.BOTH;
+    public boolean areBothOpen() {
+        return rightDoorRot.get() <= 0 && this.doorState.get() == DoorState.BOTH;
     }
 
     public void openDoors() {
@@ -228,7 +264,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         }
 
         DoorSchema doorSchema = tardis.getExterior().getVariant().door();
-        SoundEvent sound = doorSchema.isDouble() && this.isBothOpen()
+        SoundEvent sound = this.getDoorState().next(doorSchema.isDouble()) == DoorState.CLOSED
                 ? doorSchema.closeSound()
                 : doorSchema.openSound();
 
@@ -290,6 +326,16 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
     public BoolValue previouslyLocked() {
         return this.previouslyLocked;
+    }
+
+    // FIXME @THEO
+    public float getLeftRot() {
+        return this.leftDoorRot.get();
+    }
+
+    // FIXME @THEO
+    public float getRightRot() {
+        return this.rightDoorRot.get();
     }
 
     public enum InteractionResult {
@@ -355,6 +401,14 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 return true;
 
             return (this == BOTH || this == SECOND) && doorState == DoorState.BOTH;
+        }
+
+        public static AnimationDoorState match(DoorState state) {
+            return switch (state) {
+                case BOTH -> AnimationDoorState.BOTH;
+                case HALF -> AnimationDoorState.FIRST;
+                case CLOSED -> AnimationDoorState.CLOSED;
+            };
         }
 
         public static AnimationDoorState match(DoorState newState, DoorState oldState) {

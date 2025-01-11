@@ -11,7 +11,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -32,9 +31,9 @@ public abstract class DoorModel extends SinglePartEntityModel {
     public void animateBlockEntity(DoorBlockEntity door) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
 
-        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+        /*if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
             this.updateAnimation(door.DOOR_STATE, this.getAnimationForDoorState(
-                    door.prevAnimState), door.animationTimer);
+                    door.prevAnimState), door.animationTimer);*/
     }
 
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,

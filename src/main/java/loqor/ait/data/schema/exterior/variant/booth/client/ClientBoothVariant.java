@@ -15,9 +15,10 @@ public abstract class ClientBoothVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/booth";
     protected static final Identifier CATEGORY_IDENTIFIER = AITMod.id(CATEGORY_PATH + "/booth.png");
+    protected static final Identifier BIOME_IDENTIFIER = AITMod.id(CATEGORY_PATH + "/biome" + "/booth.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/booth_";
 
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
+    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(BIOME_IDENTIFIER));
 
     protected ClientBoothVariant(String name) {
         super(AITMod.id("exterior/booth/" + name));

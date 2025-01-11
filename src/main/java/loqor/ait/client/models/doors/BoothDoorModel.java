@@ -7,8 +7,8 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class BoothDoorModel extends DoorModel {
@@ -65,18 +65,23 @@ public class BoothDoorModel extends DoorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.K2BOOTH_EXTERIOR_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.K2BOOTH_EXTERIOR_OPEN_ANIMATION;
             case SECOND, BOTH -> Animation.Builder.create(0).build();
-        };
+        };*/
     }
 
     @Override
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,
                                      VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
-        this.k2.getChild("Door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? 1.575F : 0.0F;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.k2.getChild("Door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? 1.575F : 0.0F;
+        else {
+            float maxRot = 90f;
+            this.k2.getChild("Door").yaw = (float) Math.toRadians(maxRot*linkableBlockEntity.tardis().get().door().getLeftRot());
+        }
 
         matrices.scale(1f, 1f, 1f);
         matrices.translate(0, -1.5f, 0);

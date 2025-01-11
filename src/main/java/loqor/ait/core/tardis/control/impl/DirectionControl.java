@@ -2,9 +2,11 @@ package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
@@ -88,5 +90,10 @@ public class DirectionControl extends Control {
 
     public static byte wrap(byte value, byte max) {
         return (byte) ((value % max + max) % max);
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.DIRECTION;
     }
 }

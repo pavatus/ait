@@ -41,7 +41,7 @@ import loqor.ait.data.TardisMap;
 import loqor.ait.data.gson.*;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.doubl3.DoubleValue;
+import loqor.ait.data.properties.dbl.DoubleValue;
 import loqor.ait.data.properties.integer.IntValue;
 import loqor.ait.data.properties.integer.ranged.RangedIntValue;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;

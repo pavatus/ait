@@ -29,7 +29,6 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
@@ -107,7 +106,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
     @Environment(EnvType.CLIENT)
     private void checkAnimations() {
-        this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
+        //this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
 
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();

@@ -27,6 +27,7 @@ public class ConsoleRegistry {
     public static ConsoleTypeSchema ALNICO;
     public static ConsoleTypeSchema STEAM;
     public static ConsoleTypeSchema HUDOLIN;
+    public static ConsoleTypeSchema CRYSTALLINE;
 
     public static void init() {
         HARTNELL = register(new HartnellType());
@@ -36,5 +37,6 @@ public class ConsoleRegistry {
         ALNICO = register(new AlnicoType());
         STEAM = register(new SteamType());
         // HUDOLIN = register(new HudolinType());
+        CRYSTALLINE = register(new CrystallineType());
     }
 }

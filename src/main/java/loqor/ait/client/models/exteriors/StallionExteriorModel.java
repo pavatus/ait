@@ -7,6 +7,7 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -111,8 +112,16 @@ public class StallionExteriorModel extends ExteriorModel {
         matrices.scale(0.95f, 0.95f, 0.95f);
         matrices.translate(0, -1.5f, 0);
 
-        body.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? -1.35f : 0f;
-        body.getChild("door").getChild("door_two").yaw = exterior.tardis().get().door().isOpen() ? 2.65f : 0f;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            body.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? -1.35f : 0f;
+            body.getChild("door").getChild("door_two").yaw = exterior.tardis().get().door().isOpen() ? 2.65f : 0f;
+        } else {
+            float maxRot = 90f;
+            float rightMaxRot = 170f;
+            body.getChild("door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+            body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(rightMaxRot * exterior.tardis().get().door().getLeftRot());
+        }
+
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }

@@ -1,6 +1,5 @@
 package loqor.ait.registry.impl.door;
 
-import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 
@@ -43,7 +42,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema CAPSULE;
     public static ClientDoorSchema BOX;
     public static ClientDoorSchema BOX_CORAL;
-    public static ClientDoorSchema BOX_TOKAMAK;
+    public static ClientDoorSchema BOX_RENAISSANCE;
     public static ClientDoorSchema HEAD;
     public static ClientDoorSchema GROWTH;
     public static ClientDoorSchema DOOM;
@@ -56,6 +55,7 @@ public class ClientDoorRegistry {
     public static ClientDoorSchema DALEK_MOD;
     //public static ClientDoorSchema JAKE;
     public static ClientDoorSchema PRESENT;
+    public static ClientDoorSchema PIPE;
 
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
@@ -64,7 +64,7 @@ public class ClientDoorRegistry {
         CAPSULE = register(new ClientCapsuleDoorVariant());
         BOX = register(new ClientPoliceBoxDoorVariant());
         BOX_CORAL = register(new ClientPoliceBoxCoralDoorVariant());
-        BOX_TOKAMAK = register(new ClientPoliceBoxTokamakDoorVariant());
+        BOX_RENAISSANCE = register(new ClientPoliceBoxRenaissanceDoorVariant());
         HEAD = register(new ClientEasterHeadDoorVariant());
         GROWTH = register(new ClientGrowthDoorVariant());
         DOOM = register(new ClientDoomDoorVariant());
@@ -74,10 +74,9 @@ public class ClientDoorRegistry {
         GEOMETRIC = register(new ClientGeometricDoorVariant());
         STALLION = register(new ClientStallionDoorVariant());
         ADAPTIVE = register(new ClientAdaptiveDoorVariant());
-        if (isUnlockedAdvent2024(6))
-            DALEK_MOD = register(new ClientDalekModDoorVariant());
+        DALEK_MOD = register(new ClientDalekModDoorVariant());
         //JAKE = register(new ClientJakeDoorVariant());
-        if (isUnlockedAdvent2024(5))
-            PRESENT = register(new ClientPresentDoorVariant());
+        PRESENT = register(new ClientPresentDoorVariant());
+        PIPE = register(new ClientPipeDoorVariant());
     }
 }

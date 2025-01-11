@@ -7,6 +7,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
@@ -48,7 +49,7 @@ public class AutoPilotControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return SoundEvents.BLOCK_LEVER_CLICK;
+        return AITSounds.PROTOCOL_116;
     }
 
     @Override

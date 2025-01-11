@@ -140,9 +140,13 @@ public class CapsuleExteriorModel extends ExteriorModel {
             DoorHandler handler = exterior.tardis().get().door();
 
             this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
-            this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen())
+            this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.areBothOpen())
                     ? 5F
                     : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.body.getChild("doors").getChild("left_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+            this.body.getChild("doors").getChild("right_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -152,7 +156,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
     @Override
     public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
                                                            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        if (falling.tardis() == null)
+        if (!falling.isLinked())
             return;
 
         matrices.push();
@@ -165,12 +169,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        return Animation.Builder.create(0).build();
     }
 
     @Override

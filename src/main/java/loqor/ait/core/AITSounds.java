@@ -33,14 +33,59 @@ public class AITSounds {
     public static final SoundEvent SHUTDOWN = register("tardis/console_shutdown");
     public static final SoundEvent POWERUP = register("tardis/console_powerup");
     public static final SoundEvent WAYPOINT_ACTIVATE = register("tardis/waypoint_activate");
+    public static final SoundEvent CLASSIC_DOOR_OPEN = register("tardis/classic_door_open");
+    public static final SoundEvent CLASSIC_DOOR_CLOSE = register("tardis/classic_door_close");
 
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
 
+
+
+    //EIGHTH SOUNDS
     public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
     public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
     public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
+    //GHOST MAT
     public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
+    //GHOSTBUSTERS SOUNDS
+    public static final SoundEvent GB_DEMAT = register("tardis/gb_demat");
+    public static final SoundEvent GB_FLIGHT = register("tardis/gb_flight");
+    public static final SoundEvent GB_MAT = register("tardis/gb_mat");
+    //PROTON SOUNDS
+    public static final SoundEvent PROTON_FLIGHT = register("tardis/proton_flight");
+    public static final SoundEvent PROTON_DEMAT = register("tardis/proton_demat");
+    public static final SoundEvent PROTON_MAT = register("tardis/proton_mat");
+    //TYPE 70 SOUNDS
+    public static final SoundEvent TYPE70_DEMAT = register("tardis/type70_demat");
+    public static final SoundEvent TYPE70_MAT = register("tardis/type70_mat");
+    //CLASSIC SOUNDS
+    public static final SoundEvent CLASSIC_DEMAT = register("tardis/classic_demat");
+    public static final SoundEvent CLASSIC_MAT = register("tardis/classic_mat");
+    public static final SoundEvent REGEN_DEMAT = register("tardis/regen_demat");
+    //DRUMLESS SOUND
+    public static final SoundEvent DRUMLESS_DEMAT = register("tardis/drumless_demat");
+    //MINECART SOUNDS
+    public static final SoundEvent MINECART_DEMAT = register("tardis/minecart_demat");
+    public static final SoundEvent MINECART_FLIGHT = register("tardis/minecart_flight");
+    public static final SoundEvent MINECART_MAT = register("tardis/minecart_mat");
+    //MASTER SOUNDS
+    public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
+    public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
+    //STYLE SOUNDS
+    public static final SoundEvent STYLE_DEMAT = register("tardis/style_demat");
+    public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
+    //HALFLIFE
+    //public static final SoundEvent HALFLIFE_DEMAT = register("tardis/halflife_demat");
+    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //PORTAL
+    //public static final SoundEvent PORTAL_DEMAT = register("tardis/portal_demat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
+
+
+
+
 
     // TARDIS SFX
     public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
@@ -60,6 +105,33 @@ public class AITSounds {
     public static final SoundEvent KNOCK = register("controls/knock");
     public static final SoundEvent SNAP = register("controls/snap");
     public static final SoundEvent BWEEP = register("controls/bweep");
+    public static final SoundEvent ENGINE_REFUEL_CRANK = register("controls/engine_refuel_crank");
+    public static final SoundEvent TELEPATHIC_CIRCUITS = register("controls/telepathic_circuits");
+    public static final SoundEvent PROTOCOL_3 = register("controls/protocol_3");
+    public static final SoundEvent PROTOCOL_3ALT = register("controls/protocol_3alt");
+    public static final SoundEvent LAND_TYPE = register("controls/land_type");
+    public static final SoundEvent DOOR_LOCK = register("controls/door_lock");
+    public static final SoundEvent MONITOR = register("controls/monitor");
+    public static final SoundEvent DOOR_CONTROL = register("controls/door_control");
+    public static final SoundEvent DOOR_CONTROLALT = register("controls/door_controlalt");
+    public static final SoundEvent POWER_FLICK = register("controls/power_flick");
+    public static final SoundEvent PROTOCOL_19 = register("controls/protocol_19");
+    public static final SoundEvent MARK_WAYPOINT = register("controls/mark_waypoint");
+    public static final SoundEvent ANTI_GRAVS = register("controls/anti_gravs");
+    public static final SoundEvent FAST_RETURN = register("controls/fast_return");
+    public static final SoundEvent PROTOCOL_116 = register("controls/protocol_116");
+    public static final SoundEvent SHIELDS = register("controls/shield");
+    public static final SoundEvent ALARM = register("controls/alarm_flick");
+    public static final SoundEvent SLOT_IN = register("controls/slot_in");
+    public static final SoundEvent HAIL_MARY = register("controls/hail_mary");
+    public static final SoundEvent SIEGE = register("controls/siege");
+    public static final SoundEvent DIRECTION = register("controls/direction");
+    public static final SoundEvent SET_WAYPOINT = register("controls/waypoint_set");
+    public static final SoundEvent XYZ = register("controls/xyz");
+    public static final SoundEvent RANDOMIZE = register("controls/randomize");
+    public static final SoundEvent INCREMENT = register("controls/increment");
+    public static final SoundEvent DIMENSION = register("controls/dimension");
+
 
     // Console
     public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");
@@ -73,7 +145,7 @@ public class AITSounds {
     public static final SoundEvent COPPER_HUM = register("tardis/hums/copper_hum");
     public static final SoundEvent EXILE_HUM = register("tardis/hums/exile_hum");
     public static final SoundEvent PRIME_HUM = register("tardis/hums/prime_hum");
-    public static final SoundEvent TOKAMAK_HUM = register("tardis/hums/tokamak_hum");
+    public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
     public static final SoundEvent CLOISTER = register("tardis/cloister");
     public static final SoundEvent GROAN = register("tardis/groan");

@@ -14,9 +14,11 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 public abstract class ClientGeometricVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/geometric";
-    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
-            CATEGORY_PATH + "/geometric.png");
+    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/geometric.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/geometric.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/geometric_";
+
+    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(BIOME_IDENTIFIER));
 
     protected ClientGeometricVariant(String name) {
         super(AITMod.id("exterior/geometric/" + name));
@@ -46,6 +48,6 @@ public abstract class ClientGeometricVariant extends ClientExteriorVariantSchema
 
     @Override
     public BiomeOverrides overrides() {
-        return null;
+        return OVERRIDES;
     }
 }

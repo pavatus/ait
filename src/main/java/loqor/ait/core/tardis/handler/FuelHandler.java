@@ -29,8 +29,8 @@ import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.doubl3.DoubleProperty;
-import loqor.ait.data.properties.doubl3.DoubleValue;
+import loqor.ait.data.properties.dbl.DoubleProperty;
+import loqor.ait.data.properties.dbl.DoubleValue;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
     public static final double TARDIS_MAX_FUEL = 50000;

@@ -3,7 +3,6 @@ package loqor.ait.core.tardis.control.impl;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.TardisComponent;
@@ -14,7 +13,7 @@ import loqor.ait.core.tardis.handler.ShieldHandler;
 
 public class ShieldsControl extends Control {
 
-    private SoundEvent soundEvent = AITSounds.HANDBRAKE_LEVER_PULL;
+    private SoundEvent soundEvent = AITSounds.SHIELDS;
 
     public ShieldsControl() {
         super("shields");
@@ -39,7 +38,7 @@ public class ShieldsControl extends Control {
                 shields.disableVisuals();
         }
 
-        this.soundEvent = leftClick ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : AITSounds.HANDBRAKE_LEVER_PULL;
+        this.soundEvent = leftClick ? AITSounds.SHIELDS : AITSounds.HANDBRAKE_LEVER_PULL;
         return true;
     }
 

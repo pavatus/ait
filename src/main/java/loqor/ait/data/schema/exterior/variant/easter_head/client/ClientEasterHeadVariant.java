@@ -14,11 +14,11 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 public abstract class ClientEasterHeadVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/easter_head";
-    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
-            CATEGORY_PATH + "/easter_head.png");
+    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/easter_head.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/easter_head.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/easter_head_";
 
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
+    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(BIOME_IDENTIFIER));
 
     protected ClientEasterHeadVariant(String name) {
         super(AITMod.id("exterior/easter_head/" + name));

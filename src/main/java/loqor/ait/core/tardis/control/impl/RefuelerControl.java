@@ -4,9 +4,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
@@ -32,8 +32,9 @@ public class RefuelerControl extends Control {
             tardis.setRefueling(!tardis.isRefueling());
 
             if (tardis.isRefueling())
-                TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, SoundEvents.BLOCK_CANDLE_EXTINGUISH, SoundCategory.BLOCKS, 10,
+                TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, AITSounds.ENGINE_REFUEL, SoundCategory.BLOCKS, 10,
                         1);
+
 
             return true;
         }
@@ -43,7 +44,7 @@ public class RefuelerControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return SoundEvents.BLOCK_LEVER_CLICK;
+        return AITSounds.ENGINE_REFUEL_CRANK;
     }
 
     @Override

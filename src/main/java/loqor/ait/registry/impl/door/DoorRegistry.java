@@ -1,6 +1,5 @@
 package loqor.ait.registry.impl.door;
 
-import static loqor.ait.core.AITItems.isUnlockedAdvent2024;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 
@@ -26,7 +25,7 @@ public class DoorRegistry {
     public static DoorSchema CAPSULE;
     public static DoorSchema BOX;
     public static DoorSchema BOX_CORAL;
-    public static DoorSchema BOX_TOKAMAK;
+    public static DoorSchema BOX_RENAISSANCE;
     public static DoorSchema HEAD;
     public static DoorSchema GROWTH;
     public static DoorSchema DOOM;
@@ -39,6 +38,7 @@ public class DoorRegistry {
     public static DoorSchema DALEK_MOD;
     //public static DoorSchema JAKE;
     public static DoorSchema PRESENT;
+    public static DoorSchema PIPE;
 
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
@@ -47,7 +47,7 @@ public class DoorRegistry {
         CAPSULE = register(new CapsuleDoorVariant());
         BOX = register(new PoliceBoxDoorVariant());
         BOX_CORAL = register(new PoliceBoxCoralDoorVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakDoorVariant());
+        BOX_RENAISSANCE = register(new PoliceBoxRenaissanceDoorVariant());
         HEAD = register(new EasterHeadDoorVariant());
         GROWTH = register(new CoralGrowthDoorVariant());
         DOOM = register(new DoomDoorVariant());
@@ -57,11 +57,9 @@ public class DoorRegistry {
         GEOMETRIC = register(new GeometricDoorVariant());
         STALLION = register(new StallionDoorVariant());
         ADAPTIVE = register(new AdaptiveDoorVariant());
-        if (isUnlockedAdvent2024(6)) {
-            DALEK_MOD = register(new DalekModDoorVariant());
-        }
+        DALEK_MOD = register(new DalekModDoorVariant());
         //JAKE = register(new JakeDoorVariant());
-        if (isUnlockedAdvent2024(5))
-            PRESENT = register(new PresentDoorVariant());
+        PRESENT = register(new PresentDoorVariant());
+        PIPE = register(new PipeDoorVariant());
     }
 }

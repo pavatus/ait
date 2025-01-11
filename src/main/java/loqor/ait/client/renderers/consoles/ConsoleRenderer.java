@@ -9,6 +9,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
@@ -20,6 +21,7 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
+import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
@@ -57,6 +59,46 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         Profiler profiler = entity.getWorld().getProfiler();
 
         this.renderConsole(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+        if (variant instanceof ClientCrystallineVariant) {
+            this.renderPanes(tardis, entity, matrices, vertexConsumers, light, overlay);
+        }
+    }
+
+    private void renderPanes(Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        if (!tardis.fuel().hasPower()) return;
+        matrices.push();
+        matrices.translate(1, 2 + entity.getWorld().random.nextFloat() * 0.02, 0.5);
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(30f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
+        matrices.translate(0.58, 0.1, -0.25);
+        matrices.scale(0.9f, 0.9f, 0.9f);
+
+        MinecraftClient.getInstance().getItemRenderer().
+                renderItem(new ItemStack(Items.LIGHT_BLUE_STAINED_GLASS_PANE),
+                        ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+        matrices.translate(0 + entity.getWorld().random.nextFloat() * 0.02, 0 + entity.getWorld().random.nextFloat() * 0.02, 0 + entity.getWorld().random.nextFloat() * 0.02);
+        MinecraftClient.getInstance().getItemRenderer().
+                renderItem(new ItemStack(Items.BLUE_STAINED_GLASS_PANE),
+                        ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+        matrices.pop();
+
+        matrices.push();
+        matrices.translate(-1, 2 + entity.getWorld().random.nextFloat() * 0.02, -0.5);
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(30f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
+        matrices.translate(0.78, 0.15, -0.11);
+        matrices.scale(0.9f, 0.9f, 0.9f);
+
+        MinecraftClient.getInstance().getItemRenderer().
+                renderItem(new ItemStack(Items.LIGHT_BLUE_STAINED_GLASS_PANE),
+                        ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+        matrices.translate(0 - entity.getWorld().random.nextFloat() * 0.02, 0 + entity.getWorld().random.nextFloat() * 0.02, 0 - entity.getWorld().random.nextFloat() * 0.02);
+        MinecraftClient.getInstance().getItemRenderer().
+                renderItem(new ItemStack(Items.BLUE_STAINED_GLASS_PANE),
+                        ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+        matrices.pop();
     }
 
     private void renderConsole(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices,

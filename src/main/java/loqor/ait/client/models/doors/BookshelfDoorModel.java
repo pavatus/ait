@@ -7,7 +7,6 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class BookshelfDoorModel extends DoorModel {
@@ -46,11 +45,19 @@ public class BookshelfDoorModel extends DoorModel {
     @Override
     public void renderWithAnimations(AbstractLinkableBlockEntity doorEntity, ModelPart root, MatrixStack matrices,
                                      VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        if (doorEntity.tardis().isEmpty())
+            return;
+
+        DoorHandler door = doorEntity.tardis().get().door();
+
         if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
-            DoorHandler door = doorEntity.tardis().get().door();
 
             this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 4.75F : 0.0F;
-            this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen()) ? -4.75F : 0.0F;
+            this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen()) ? -4.75F : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.bookshelf.getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getRightRot());
+            this.bookshelf.getChild("right_door").yaw = (float) -Math.toRadians(maxRot*door.getLeftRot());
         }
 
         matrices.push();
@@ -63,12 +70,12 @@ public class BookshelfDoorModel extends DoorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 
     @Override

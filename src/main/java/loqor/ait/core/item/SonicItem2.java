@@ -5,6 +5,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -12,10 +14,12 @@ import loqor.ait.api.AITUseActions;
 import loqor.ait.api.ArtronHolderItem;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.sounds.ClientSoundManager;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
+
 
 public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
 
@@ -28,13 +32,43 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
     }
 
     @Override
+    public ItemStack getDefaultStack() {
+        ItemStack stack = new ItemStack(this);
+        NbtCompound nbt = stack.getOrCreateNbt();
+
+        nbt.putInt(MODE_KEY, 0);
+        nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
+        if (SonicRegistry.DEFAULT != null)
+            nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
+
+        return stack;
+    }
+
+    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         SonicMode mode = mode(stack);
 
+        if (mode == null) return TypedActionResult.fail(stack);
+
         if (user.isSneaking()) {
+            world.playSound(user, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1F, 1F);
+            Text message = null;
+
+            if (mode.next() == SonicMode.Modes.INACTIVE) {
+                message = Text.translatable("sonic.ait.mode.inactive").formatted(Formatting.GRAY, Formatting.BOLD);
+            } else if (mode.next() == SonicMode.Modes.INTERACTION) {
+                message = Text.translatable("sonic.ait.mode.interaction").formatted(Formatting.GREEN,Formatting.BOLD);
+            } else if (mode.next() == SonicMode.Modes.OVERLOAD) {
+                message = Text.translatable("sonic.ait.mode.overload").formatted(Formatting.RED, Formatting.BOLD);
+            } else if (mode.next() == SonicMode.Modes.SCANNING) {
+                message = Text.translatable("sonic.ait.mode.scanning").formatted(Formatting.YELLOW, Formatting.BOLD);
+            } else if (mode.next() == SonicMode.Modes.TARDIS) {
+                message = Text.translatable("sonic.ait.mode.tardis").formatted(Formatting.BLUE, Formatting.BOLD);
+            }
+            user.sendMessage(message, true);
             setMode(stack, mode.next());
-            return TypedActionResult.success(stack);
+            return TypedActionResult.consume(stack);
         }
 
         if (mode.startUsing(stack, world, user, hand)) {

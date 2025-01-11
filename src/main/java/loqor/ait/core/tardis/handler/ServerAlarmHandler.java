@@ -1,6 +1,7 @@
 package loqor.ait.core.tardis.handler;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -57,7 +58,7 @@ public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTi
     public void tick(MinecraftServer server) {
         if (server.getTicks() % 20 == 0 && !this.enabled().get() && this.hostilePresence().get()) {
             for (Entity entity : TardisUtil.getEntitiesInInterior(tardis, 200)) {
-                if ((entity instanceof HostileEntity && !entity.hasCustomName())
+                if (entity instanceof TntEntity || (entity instanceof HostileEntity && !entity.hasCustomName())
                         || entity instanceof ServerPlayerEntity player
                                 && tardis.loyalty().get(player).level() == Loyalty.Type.REJECT.level) {
                     tardis.alarm().enabled().set(true);

@@ -4,6 +4,7 @@ import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
 
 import java.util.UUID;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -38,6 +39,14 @@ public class ClientTardisUtil {
         ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
             UUID id = TardisServerWorld.getClientTardisId(world);
             currentTardis = new TardisRef(id, uuid -> ClientTardisManager.getInstance().demandTardis(uuid));
+        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            UUID id = TardisServerWorld.getClientTardisId(client.world);
+            currentTardis = new TardisRef(id, uuid -> ClientTardisManager.getInstance().demandTardis(uuid));
+        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            if (currentTardis != null)
+                currentTardis = null;
         });
     }
 

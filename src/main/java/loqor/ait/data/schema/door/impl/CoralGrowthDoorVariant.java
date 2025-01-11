@@ -24,12 +24,12 @@ public class CoralGrowthDoorVariant extends DoorSchema {
 
     @Override
     public SoundEvent openSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+        return SoundEvents.BLOCK_BEEHIVE_SHEAR;
     }
 
     @Override
     public SoundEvent closeSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
+        return SoundEvents.BLOCK_BEEHIVE_SHEAR;
     }
 
     @Override

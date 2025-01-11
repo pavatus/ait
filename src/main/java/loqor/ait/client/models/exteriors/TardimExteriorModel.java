@@ -76,7 +76,11 @@ public class TardimExteriorModel extends ExteriorModel {
             DoorHandler handler = exterior.tardis().get().door();
 
             this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
-            this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
+            this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.areBothOpen()) ? 1.575f : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.tardis.getChild("left_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+            this.tardis.getChild("right_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -86,12 +90,7 @@ public class TardimExteriorModel extends ExteriorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        return Animation.Builder.create(0).build();
     }
 
     @Override

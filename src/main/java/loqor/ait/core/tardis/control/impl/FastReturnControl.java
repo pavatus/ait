@@ -2,9 +2,11 @@ package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
@@ -42,5 +44,10 @@ public class FastReturnControl extends Control {
         Text previousPosition = Text.translatable("tardis.message.control.fast_return.last_position");
         Text currentPosition = Text.translatable("tardis.message.control.fast_return.current_position");
         player.sendMessage((!isLastPosition ? previousPosition : currentPosition), true);
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.FAST_RETURN;
     }
 }

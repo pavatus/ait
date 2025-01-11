@@ -15,12 +15,12 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 public abstract class ClientClassicBoxVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/classic";
-    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
-            CATEGORY_PATH + "/classic.png");
+    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/classic.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/classic.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/classic_";
 
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
-            .with(type -> type.getTexture(CATEGORY_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
                     BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
                     BiomeHandler.BiomeType.SANDY)
             .build();

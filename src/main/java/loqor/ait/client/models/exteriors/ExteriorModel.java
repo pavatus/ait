@@ -35,22 +35,6 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         super(function);
     }
 
-    public void animateBlockEntity(ExteriorBlockEntity exterior) {
-        this.getPart().traverse().forEach(ModelPart::resetTransform);
-
-        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
-            this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(
-                    exterior.prevAnimState), exterior.animationTimer);
-    }
-
-    public void animateEntity(FlightTardisEntity entity) {
-        this.getPart().traverse().forEach(ModelPart::resetTransform);
-
-        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
-            this.updateAnimation(entity.DOOR_STATE, this.getAnimationForDoorState(
-                    entity.prevAnimState), entity.age);
-    }
-
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         Tardis tardis = exterior.tardis().get();

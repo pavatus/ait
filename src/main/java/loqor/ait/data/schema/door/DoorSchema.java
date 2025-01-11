@@ -5,12 +5,12 @@ import java.lang.reflect.Type;
 import com.google.gson.*;
 
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.data.schema.door.impl.CapsuleDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.door.DoorRegistry;
@@ -52,11 +52,11 @@ public abstract class DoorSchema {
     // fixme should this be in a "DoorSounds" type thing, also i dont like these
     // method names.
     public SoundEvent openSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
+        return AITSounds.CLASSIC_DOOR_OPEN;
     }
 
     public SoundEvent closeSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+        return AITSounds.CLASSIC_DOOR_CLOSE;
     }
 
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {

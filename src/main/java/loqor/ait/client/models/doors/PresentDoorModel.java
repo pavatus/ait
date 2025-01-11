@@ -8,7 +8,6 @@ import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 // Made with Blockbench 4.11.2
@@ -45,9 +44,13 @@ public class PresentDoorModel extends DoorModel {
             DoorHandler door = linkableBlockEntity.tardis().get().door();
 
             this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
-            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
                     ? -8F
                     : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.present.getChild("left_door").yaw = (float) Math.toRadians(maxRot*linkableBlockEntity.tardis().get().door().getLeftRot());
+            this.present.getChild("right_door").yaw = (float) -Math.toRadians(maxRot*linkableBlockEntity.tardis().get().door().getRightRot());
         }
 
         matrices.push();
@@ -60,12 +63,12 @@ public class PresentDoorModel extends DoorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 
     @Override
