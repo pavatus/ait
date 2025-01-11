@@ -40,7 +40,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
             return null;
 
         return new PositionedLoopingSound(AITSounds.VORTEX_SOUND, SoundCategory.AMBIENT,
-                tardis.getDesktop().getDoorPos().getPos(), 0.1f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.4f);
     }
 
     public static ClientVortexSoundsHandler create() {

@@ -20,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.PeanutBlock;
 import loqor.ait.core.tardis.Tardis;
@@ -60,9 +61,9 @@ public class HammerItem extends SwordItem {
             return ActionResult.PASS;
 
         if (!(tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)) {
-            world.playSound(null, consoleBlockEntity.getPos(), SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS,
+            world.playSound(null, consoleBlockEntity.getPos(), AITSounds.GROAN, SoundCategory.BLOCKS,
                     1f, 1.0f);
-            world.playSoundFromEntity(null, player, SoundEvents.ENTITY_DOLPHIN_HURT, SoundCategory.PLAYERS, 0.2f, 0.5f);
+            world.playSoundFromEntity(null, player, AITSounds.HAMMER_STRIKE, SoundCategory.PLAYERS, 0.5f, 0.2f);
 
             tardis.loyalty().subLevel((ServerPlayerEntity) player, 35); // safe cast since its on server already
             return ActionResult.SUCCESS;

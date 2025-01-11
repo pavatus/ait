@@ -94,6 +94,7 @@ public class AITSounds {
     public static final SoundEvent MOODY3 = register("tardis/moody/moody3");
     public static final SoundEvent MOODY4 = register("tardis/moody/moody4");
     public static final SoundEvent MOODY5 = register("tardis/moody/moody5");
+    public static final SoundEvent HAMMER_STRIKE = register("tardis/hammer_strike");
 
 
     // Controls
