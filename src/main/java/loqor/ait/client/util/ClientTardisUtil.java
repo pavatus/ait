@@ -44,6 +44,10 @@ public class ClientTardisUtil {
             UUID id = TardisServerWorld.getClientTardisId(client.world);
             currentTardis = new TardisRef(id, uuid -> ClientTardisManager.getInstance().demandTardis(uuid));
         });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            if (currentTardis != null)
+                currentTardis = null;
+        });
     }
 
     public static void changeExteriorWithScreen(UUID uuid, Identifier variant, boolean variantchange) {

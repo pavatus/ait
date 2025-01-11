@@ -197,11 +197,12 @@ public class TardisDesktop extends TardisComponent {
     }
 
     private void completeQueue() {
+        this.tardis.door().setLocked(false);
         this.tardis.door().setDeadlocked(false);
         this.tardis.alarm().enabled().set(false);
 
-        this.tardis.door().interactLock(tardis.door()
-                .previouslyLocked().get(), null, false);
+        /*this.tardis.door().interactLock(tardis.door()
+                .previouslyLocked().get(), null, false);*/
     }
 
     public ActionQueue changeInterior(TardisDesktopSchema schema, boolean clear, boolean sendEvent) {

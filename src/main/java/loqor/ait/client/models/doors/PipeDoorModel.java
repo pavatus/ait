@@ -4,6 +4,7 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.tardis.Tardis;
@@ -28,12 +29,16 @@ public class PipeDoorModel extends DoorModel {
 
     @Override
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        matrices.push();
+        matrices.translate(0, -1f, 0);
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90f));
         Tardis tardis = linkableBlockEntity.tardis().get();
 
         if (tardis == null) return;
 
-        this.tardis.pivotY = !tardis.door().isOpen() ? -62f : -48f;
+        this.tardis.pivotY = !tardis.door().isOpen() ? this.tardis.pivotY  + 0.5f: this.tardis.pivotY + 14.5f;
         super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        matrices.pop();
     }
 
     @Override
