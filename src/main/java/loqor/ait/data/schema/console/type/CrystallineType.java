@@ -22,64 +22,97 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 public class CrystallineType extends ConsoleTypeSchema {
     public static final Identifier REFERENCE = AITMod.id("console/crystalline");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
-            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.18749999f, 0.16250001f),
-                    new Vector3f(0.016406255774199963f, 0.7500000037252903f, -0.6609375244006515f)),
-            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.16250001f, 0.22500002f),
-                    new Vector3f(1.0734375165775418f, 0.2624999964609742f, -0.8734375275671482f)),
+
+            // done
+            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.18749999f, 0.20000002f),
+                    new Vector3f(0.5164070203900337f, 0.9375000027939677f, -0.2984382575377822f)),
+            // done
+            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.17500001f, 0.20000002f),
+                    new Vector3f(-0.5515623334795237f, 0.9375000577419996f, 0.32656213641166687f)),
+            // done
             new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.06249999f, 0.1f),
-                    new Vector3f(-0.7453125081956387f, 0.5500003825873137f, 0.20078123826533556f)),
-            new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.12500001f, 0.11250001f),
-                    new Vector3f(0.7000000067055225f, 0.5499999988824129f, -0.20039063785225153f)),
-            new ControlTypes(new DoorControl(), EntityDimensions.changing(0.1375f, 0.14999999f),
-                    new Vector3f(1.222656256519258f, 0.2624996146187186f, 0.7230468932539225f)),
-            new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.099999994f, 0.09999998f),
-                    new Vector3f(-1.1023437762632966f, 0.5499996189028025f, 0.5757812689989805f)),
-            new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.17500001f, 0.16250001f),
-                    new Vector3f(1.026562513783574f, 0.5625001918524504f, 0.5898437444120646f)),
-            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.36249992f, 0.31249997f),
-                    new Vector3f(0.3859374951571226f, 0.8250013394281268f, 0.6128906365483999f)),
+                    new Vector3f(-0.7203126903623343f, 0.5250001903623343f, -0.19921913743019104f)),
+            // done
+            new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.087500006f, 0.11250001f),
+                    new Vector3f(0.6999998092651367f, 0.5750001911073923f, -3.908127546310425E-4f)),
+            // done
+            new ControlTypes(new DoorControl(), EntityDimensions.changing(0.125f, 0.124999985f),
+                    new Vector3f(1.0601562475785613f, 0.38749957270920277f, 0.4980472531169653f)),
+            // done
+            new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.099999994f, 0.14999999f),
+                    new Vector3f(-0.9273435566574335f, 0.474999712780118f, 7.80859962105751E-4f)),
+            // done
+            new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.08749999f, 0.1375f),
+                    new Vector3f(0.41406268160790205f, 0.4749999986961484f, 0.8148437533527613f)),
+            // done
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.3874999f, 0.3874999f),
+                    new Vector3f(0.873436744324863f, 1.0875012436881661f, 0.5253902422264218f)),
+            // done
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.3874999f, 0.3874999f),
+                    new Vector3f(-0.9015632821246982f, 1.0625012433156371f, -0.5121097732335329f)),
+            // done
             new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.06249999f, 0.1f),
-                    new Vector3f(-0.7960937554016709f, 0.537499756552279f, 0.27695312164723873f)),
+                    new Vector3f(-0.7210939396172762f, 0.5249999044463038f, -0.12304726243019104f)),
+            // done
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.17500004f, 0.15f),
-                    new Vector3f(-0.3125000046566129f, 0.45000019017606974f, -0.8390625016763806f)),
-            new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.23750003f, 0.099999994f),
-                    new Vector3f(0.7398437662050128f, 0.7150001563131809f, -0.40507811680436134f)),
-            new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.1125f, 0.112500004f),
-                    new Vector3f(-7.812399417161942E-4f, 0.5875001922249794f, 1.2890625316649675f)),
-            new ControlTypes(new XControl(), EntityDimensions.changing(0.099999994f, 0.099999994f),
-                    new Vector3f(0.9898437727242708f, 0.450000093318522f, 0.3039062600582838f)),
-            new ControlTypes(new YControl(), EntityDimensions.changing(0.112500004f, 0.1f),
-                    new Vector3f(1.0140625247731805f, 0.45000018924474716f, 0.10195313300937414f)),
-            new ControlTypes(new ZControl(), EntityDimensions.changing(0.1f, 0.1f),
-                    new Vector3f(1.0640625273808837f, 0.43750028498470783f, -0.08671874366700649f)),
-            new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.125f, 0.125f),
-                    new Vector3f(0.2218750175088644f, 0.6125000976026058f, -0.49882812704890966f)),
-            new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.15f, 0.15f),
-                    new Vector3f(-0.0015624836087226868f, 0.37499990314245224f, 1.337890642695129f)),
-            new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.1125f, 0.1125f),
-                    new Vector3f(-1.185156256891787f, 0.3999998066574335f, 0.6890625087544322f)),
+                    new Vector3f(4.6566128730773926E-9f, 0.8875002926215529f, 0.698437332175672f)),
+            // done
+            new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.099999994f, 0.16250001f),
+                    new Vector3f(0.08984335884451866f, 0.9025001553818583f, -0.630077937617898f)),
+            // done
+            new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.08749999f, 0.125f),
+                    new Vector3f(0.4367189472541213f, 0.41250009275972843f, 0.9890624955296516f)),
+            // done
+            new ControlTypes(new XControl(), EntityDimensions.changing(0.08749999f, 0.099999994f),
+                    new Vector3f(0.40234335977584124f, 0.5250000488013029f, -0.7085935743525624f)),
+            // done
+            new ControlTypes(new YControl(), EntityDimensions.changing(0.0875f, 0.1f),
+                    new Vector3f(0.4640628732740879f, 0.48750028666108847f, -0.810546507127583f)),
+            // done
+            new ControlTypes(new ZControl(), EntityDimensions.changing(0.0875f, 0.1f),
+                    new Vector3f(0.5140621103346348f, 0.4375002384185791f, -0.8992185713723302f)),
+            // done
+            new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.07499999f, 0.125f),
+                    new Vector3f(0.6218751966953278f, 0.6125001907348633f, -0.2363279303535819f)),
+            // done
+            new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.125f, 0.15f),
+                    new Vector3f(-0.0015621185302734375f, 0.2124999975785613f, 1.4003906259313226f)),
+            // done
+            new ControlTypes(new HailMaryControl(), EntityDimensions.changing(0.099999994f, 0.1125f),
+                    new Vector3f(-0.3851558566093445f, 0.4374998575076461f, 0.8640621211379766f)),
+            // done
             new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.21250002f, 0.125f),
-                    new Vector3f(-0.6140624955296516f, 0.42000007536262274f, 0.8394531309604645f)),
-            new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.125f, 0.099999994f),
-                    new Vector3f(7.812455296516418E-4f, 0.5749997152015567f, -1.1804687520489097f)),
-            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.15f, 0.16250001f),
-                    new Vector3f(-1.0218750229105353f, 0.5500002857297659f, -0.5851562647148967f)),
-            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.1125f, 0.29999998f),
-                    new Vector3f(-1.258593762293458f, 0.24999980442225933f, 0.5769531261175871f)),
-            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.125f, 0.125f),
-                    new Vector3f(-0.3843750134110451f, 0.5750000923871994f, -0.5351562639698386f)),
+                    new Vector3f(-0.5640623085200787f, 0.35750007536262274f, 0.9519527452066541f)),
+            // done
+            new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1125f, 0.16250001f),
+                    new Vector3f(-0.5367189487442374f, 0.3999998066574335f, -0.9179685553535819f)),
+            // done
+            new ControlTypes(new PowerControl(), EntityDimensions.changing(0.1125f, 0.125f),
+                    new Vector3f(-0.9718753807246685f, 0.4125001886859536f, -0.46015643887221813f)),
+            // done
+            new ControlTypes(new SiegeModeControl(), EntityDimensions.changing(0.1125f, 0.18750001f),
+                    new Vector3f(-0.6085935495793819f, 0.6499997675418854f, 0.014452925883233547f)),
+            // done
+            new ControlTypes(new HADSControl(), EntityDimensions.changing(0.125f, 0.16250001f),
+                    new Vector3f(-0.2718746168538928f, 0.9250002913177013f, -0.4726562490686774f)),
+            // done
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f),
-                    new Vector3f(0.80078125f, 0.537500761449337f, 0.07656250149011612f)),
+                    new Vector3f(0.6382812475785613f, 0.7250008611008525f, 0.10156288184225559f)),
+            // done
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f),
-                    new Vector3f(0.8007812770083547f, 0.5375005733221769f, -0.02343749813735485f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.1375f, 0.1125f),
-                    new Vector3f(0.7257812488824129f, 0.5875006653368473f, 0.2390625039115548f)),
-            new ControlTypes(new CloakControl(), EntityDimensions.changing(0.1375f, 0.1375f),
-                    new Vector3f(-0.3484375160187483f, 0.600000855512917f, 0.4757812535390258f)),
-            new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f),
-                    new Vector3f(0.6019531404599547f, 0.6249998062849045f, 7.812539115548134E-4f)),
-            new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.099999994f, 0.21250002f),
-                    new Vector3f(-1.2734375027939677f, 0.1874997541308403f, -0.5624999990686774f)),};
+                    new Vector3f(0.6382812475785613f, 0.7250003842636943f, -0.09843750111758709f)),
+            // done
+            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.07499999f, 0.07499999f),
+                    new Vector3f(0.6382814394310117f, 0.7250005742534995f, 0.0015623057261109352f)),
+
+            new ControlTypes(new CloakControl(), EntityDimensions.changing(0.17500001f, 0.08749999f),
+                    new Vector3f(-0.3484373092651367f, 0.7125008599832654f, 0.5757814422249794f)),
+            // done
+            new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.125f),
+                    new Vector3f(1.051953513175249f, 0.41249999683350325f, 7.810592651367188E-4f)),
+            // done
+            new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.17500001f, 0.1125f),
+                    new Vector3f(-0.3359374860301614f, 0.5499997669830918f, -0.6000000005587935f)),};
 
     public CrystallineType() {
         super(REFERENCE, "crystalline");

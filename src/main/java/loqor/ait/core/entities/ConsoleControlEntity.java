@@ -409,8 +409,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.consoleBlockPos != null) {
             Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
             if (this.control != null)
-                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", "
-                        + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY()
+                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + "f, "
+                        + this.getControlHeight() + "f), new Vector3f(" + centered.getX() + "f, " + centered.getY()
                         + "f, " + centered.getZ() + "f)),"));
         }
     }

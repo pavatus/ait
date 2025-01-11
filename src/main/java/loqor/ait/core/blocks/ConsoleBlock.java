@@ -173,7 +173,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
 
-            if (consoleBlockEntity.tardis().get() == null) return;
+            if (consoleBlockEntity.tardis() == null) return;
 
             if (!consoleBlockEntity.tardis().get().fuel().hasPower()) return;
 

@@ -13,7 +13,6 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,7 +26,8 @@ import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import loqor.ait.core.engine.impl.EngineSystem;
-import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.SonicItem2;
+import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.core.world.TardisServerWorld;
 
 public class SonicRendering {
@@ -108,7 +108,7 @@ public class SonicRendering {
         if (client.player == null)
             return;
 
-        if (isPlayerHoldingSonicOf(SonicItem.Mode.TARDIS) && !TardisServerWorld.isTardisDimension(client.player.getWorld()))
+        if (isPlayerHoldingSonicOf(SonicMode.Modes.TARDIS) && !TardisServerWorld.isTardisDimension(client.player.getWorld()))
             renderSelectedBlock(context);
 
         worldProfiler.pop();
@@ -214,17 +214,19 @@ public class SonicRendering {
     }
 
     public static boolean isScanningSonic(ItemStack sonic) {
-        return isSonicOf(SonicItem.Mode.SCANNING, sonic);
+        return isSonicOf(SonicMode.Modes.SCANNING, sonic);
     }
-    public static boolean isSonicOf(SonicItem.Mode mode, ItemStack sonic) {
-        NbtCompound nbt = sonic.getOrCreateNbt();
-        return nbt.getInt(SonicItem.MODE_KEY) == mode.ordinal() || nbt.getInt(SonicItem.PREV_MODE_KEY) == mode.ordinal();
+    public static boolean isSonicOf(SonicMode mode, ItemStack sonic) {
+        if (sonic.getItem() instanceof SonicItem2) {
+            return SonicItem2.mode(sonic) == mode;
+        }
+        return false;
     }
 
     public static boolean isPlayerHoldingScanningSonic() {
-        return isPlayerHoldingSonicOf(SonicItem.Mode.SCANNING);
+        return isPlayerHoldingSonicOf(SonicMode.Modes.SCANNING);
     }
-    public static boolean isPlayerHoldingSonicOf(SonicItem.Mode mode) {
+    public static boolean isPlayerHoldingSonicOf(SonicMode mode) {
         PlayerEntity player = MinecraftClient.getInstance().player;
 
         if (player == null)
@@ -239,10 +241,10 @@ public class SonicRendering {
     }
 
     public static ItemStack getSonicStack(PlayerEntity player) {
-        if (player.getMainHandStack().getItem() instanceof SonicItem)
+        if (player.getMainHandStack().getItem() instanceof SonicItem2)
             return player.getMainHandStack();
 
-        if (player.getOffHandStack().getItem() instanceof SonicItem)
+        if (player.getOffHandStack().getItem() instanceof SonicItem2)
             return player.getOffHandStack();
 
         return null;

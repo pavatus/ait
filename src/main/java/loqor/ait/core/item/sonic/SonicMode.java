@@ -2,6 +2,8 @@ package loqor.ait.core.item.sonic;
 
 import java.util.function.Function;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -17,9 +19,10 @@ import loqor.ait.data.schema.sonic.SonicSchema;
 public abstract class SonicMode implements Ordered {
 
     public static class Modes {
-        public static final SonicMode[] VALUES = new SonicMode[4];
+        public static final SonicMode[] VALUES = new SonicMode[5];
         private static int lastIndex = 0;
 
+        public static final SonicMode INACTIVE = register(InactiveSonicMode::new);
         public static final SonicMode INTERACTION = register(InteractionSonicMode::new);
         public static final SonicMode OVERLOAD = register(OverloadSonicMode::new);
         public static final SonicMode SCANNING = register(ScanningSonicMode::new);
@@ -45,7 +48,7 @@ public abstract class SonicMode implements Ordered {
         public static SonicMode previous(SonicMode mode) {
             int previousIndex = mode.index() - 1;
 
-            if (previousIndex == 0)
+            if (previousIndex < 0)
                 return VALUES[VALUES.length - 1];
 
             return VALUES[previousIndex];
@@ -97,5 +100,8 @@ public abstract class SonicMode implements Ordered {
     @Override
     public int index() {
         return index;
+    }
+    public String asString() {
+        return StringUtils.capitalize(this.toString().replace("_", " "));
     }
 }
