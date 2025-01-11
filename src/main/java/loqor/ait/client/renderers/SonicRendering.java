@@ -187,19 +187,23 @@ public class SonicRendering {
         context.drawCenteredTextWithShadow(client.textRenderer, text, getCentreX(), (int) (getMaxY() * 0.42), Colors.WHITE);
     }
 
+    private int getMaxX() {
+        return client.getWindow().getScaledWidth();
+    }
 
     private int getMaxY() {
         return client.getWindow().getScaledHeight() ;
     }
-    private int getCentreY() {
-        return getMaxY() / 2;
-    }
-    private int getMaxX() {
-        return client.getWindow().getScaledWidth();
-    }
+
+
     private int getCentreX() {
         return getMaxX() / 2;
     }
+
+    private int getCentreY() {
+        return getMaxY() / 2;
+    }
+
     private int getTextWidth(String text) {
         return client.textRenderer.getWidth(text);
     }
@@ -216,16 +220,18 @@ public class SonicRendering {
     public static boolean isScanningSonic(ItemStack sonic) {
         return isSonicOf(SonicMode.Modes.SCANNING, sonic);
     }
+
     public static boolean isSonicOf(SonicMode mode, ItemStack sonic) {
-        if (sonic.getItem() instanceof SonicItem2) {
+        if (sonic.getItem() instanceof SonicItem2)
             return SonicItem2.mode(sonic) == mode;
-        }
+
         return false;
     }
 
     public static boolean isPlayerHoldingScanningSonic() {
         return isPlayerHoldingSonicOf(SonicMode.Modes.SCANNING);
     }
+
     public static boolean isPlayerHoldingSonicOf(SonicMode mode) {
         PlayerEntity player = MinecraftClient.getInstance().player;
 

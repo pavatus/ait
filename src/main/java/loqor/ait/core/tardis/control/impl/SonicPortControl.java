@@ -1,6 +1,5 @@
 package loqor.ait.core.tardis.control.impl;
 
-import loqor.ait.core.item.SonicItem2;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -11,7 +10,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.SonicItem2;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
