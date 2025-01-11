@@ -59,11 +59,11 @@ public abstract class StallionVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.1d;
+        return 2.5d;
     }
 
     @Override
     public double portalWidth() {
-        return 0.75d;
+        return 1d;
     }
 }

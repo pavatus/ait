@@ -33,7 +33,7 @@ public abstract class PresentVariant extends ExteriorVariantSchema {
 
     @Override
     public boolean hasPortals() {
-        return false;
+        return true;
     }
 
     @Override
@@ -49,5 +49,15 @@ public abstract class PresentVariant extends ExteriorVariantSchema {
             case 13, 14, 15 -> pos.add(-0.349f, 0, -0.349f); // NORTH WEST n n
             default -> pos;
         };
+    }
+
+    @Override
+    public double portalHeight() {
+        return 2d;
+    }
+
+    @Override
+    public double portalWidth() {
+        return 1.25d;
     }
 }

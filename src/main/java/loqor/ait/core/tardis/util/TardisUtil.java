@@ -85,7 +85,6 @@ public class TardisUtil {
                 if (!player.isSneaking()) {
                     DoorHandler.DoorState state = tardis.door().getDoorState();
                     tardis.door().interact(player.getServerWorld(), null, player);
-                    tardis.door().openDoors();
                 } else {
                     tardis.door().interactToggleLock(player);
                 }
