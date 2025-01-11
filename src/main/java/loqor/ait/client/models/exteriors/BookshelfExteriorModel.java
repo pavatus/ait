@@ -153,7 +153,7 @@ public class BookshelfExteriorModel extends ExteriorModel {
     @Override
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (exterior.tardis().isEmpty())
+        if (!exterior.isLinked())
             return;
 
         matrices.push();

@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers.entities;
 
-import loqor.ait.client.util.ClientLightUtil;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -8,19 +7,18 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.machines.ShieldsModel;
 import loqor.ait.client.renderers.AITRenderLayers;
+import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisExterior;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import org.joml.Quaternionf;
 
 public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
@@ -54,8 +52,6 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         double e = vec3d.horizontalLengthSquared();
 
         matrices.push();
-
-        this.model.animateEntity(entity);
 
         if (d > 0.0 && e > 0.0) {
             double l = (vec3d2.x * vec3d.x + vec3d2.z * vec3d.z) / Math.sqrt(d * e);
@@ -116,10 +112,6 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             model = tardis.getExterior().getVariant().getClient().model();
 
         return model;
-    }
-
-    public Identifier getEmission(Tardis tardis) {
-        return tardis.getExterior().getVariant().getClient().emission();
     }
 
     @Override

@@ -3,14 +3,11 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -39,7 +36,6 @@ import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -51,11 +47,6 @@ import loqor.ait.data.DirectedGlobalPos;
 public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
     private DirectedBlockPos directedPos;
-
-    public final AnimationState DOOR_STATE = new AnimationState();
-
-    public int animationTimer = 0;
-    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -70,10 +61,8 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         Tardis tardis = door.tardis().get();
         DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
 
-        if (world.isClient()) {
-            door.checkAnimations();
+        if (world.isClient())
             return;
-        }
 
         BlockPos exteriorPos = globalExteriorPos.getPos();
         World exteriorWorld = globalExteriorPos.getWorld();
@@ -101,21 +90,6 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
             world.scheduleFluidTick(pos, blockState.getFluidState().getFluid(),
                     blockState.getFluidState().getFluid().getTickRate(world));
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    private void checkAnimations() {
-        //this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
-
-        Tardis tardis = this.tardis().get();
-        DoorHandler door = tardis.door();
-
-        DoorHandler.AnimationDoorState state = door.animationState.get();
-
-        if (state != null && this.prevAnimState != state) {
-            DOOR_STATE.start(animationTimer);
-            this.prevAnimState = state;
         }
     }
 

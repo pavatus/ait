@@ -2,9 +2,6 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
-import loqor.ait.core.tardis.handler.DoorHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.*;
@@ -38,10 +35,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     private Vec3d lastVelocity = Vec3d.ZERO;
     private BlockPos interiorPos;
-
-    public final AnimationState DOOR_STATE = new AnimationState();
-
-    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public FlightTardisEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -85,7 +78,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         if (this.getWorld().isClient()) {
             this.lastVelocity = this.getVelocity();
-            this.checkAnimations();
             return;
         }
 
@@ -111,19 +103,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         if (player.isSneaking() && (onGround || tardis.travel().antigravs().get()))
             this.finishLand(tardis, player);
-    }
-
-    @Environment(EnvType.CLIENT)
-    private void checkAnimations() {
-        Tardis tardis = this.tardis().get();
-        DoorHandler door = tardis.door();
-
-        DoorHandler.AnimationDoorState state = door.animationState.get();
-
-        if (state != null && this.prevAnimState != state) {
-            DOOR_STATE.start(this.age);
-            this.prevAnimState = state;
-        }
     }
 
     @Override

@@ -40,7 +40,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     private static final Property<DoorState> DOOR_STATE = Property.forEnum("door_state", DoorState.class, DoorState.CLOSED);
     private static final Property<AnimationDoorState> ANIMATION_STATE = Property.forEnum("animation_state", AnimationDoorState.class, AnimationDoorState.CLOSED);
 
-    // FIXME @THEO
     private static final FloatProperty LEFT_DOOR_ROT = new FloatProperty("left_door_rot");
     private static final FloatProperty RIGHT_DOOR_ROT = new FloatProperty("right_door_rot");
 
@@ -50,7 +49,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
     private final Value<DoorState> doorState = DOOR_STATE.create(this);
 
-    // FIXME @THEO
     private final FloatValue leftDoorRot = LEFT_DOOR_ROT.create(this);
     private final FloatValue rightDoorRot = RIGHT_DOOR_ROT.create(this);
 
@@ -100,11 +98,21 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         if (this.shouldSucc())
             this.succ();
 
-        // FIXME @THEO
-        if (!this.isClosed()) {
-            leftDoorRot.set(calculateRotation(leftDoorRot.get(), this.getDoorState() == DoorState.HALF || this.getDoorState() == DoorState.BOTH));
-            rightDoorRot.set(calculateRotation(rightDoorRot.get(), this.getDoorState() == DoorState.BOTH));
-        }
+        leftDoorRot.flatMap(rot -> this.tryUpdateRot(rot, this.getDoorState() != DoorState.CLOSED));
+        rightDoorRot.flatMap(rot -> this.tryUpdateRot(rot, this.getDoorState() == DoorState.BOTH));
+    }
+
+    private float tryUpdateRot(float rot, boolean opening) {
+        if (this.isClosed())
+            return rot;
+
+        if (opening && rot == 1)
+            return rot;
+
+        if (!opening && rot == 0)
+            return rot;
+
+        return this.calculateRotation(rot, opening);
     }
 
     public float calculateRotation(float currentRotation, boolean opening) {
@@ -401,14 +409,6 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 return true;
 
             return (this == BOTH || this == SECOND) && doorState == DoorState.BOTH;
-        }
-
-        public static AnimationDoorState match(DoorState state) {
-            return switch (state) {
-                case BOTH -> AnimationDoorState.BOTH;
-                case HALF -> AnimationDoorState.FIRST;
-                case CLOSED -> AnimationDoorState.CLOSED;
-            };
         }
 
         public static AnimationDoorState match(DoorState newState, DoorState oldState) {

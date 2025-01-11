@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 @SuppressWarnings("rawtypes")
@@ -26,14 +25,6 @@ public abstract class DoorModel extends SinglePartEntityModel {
 
     public DoorModel(Function<Identifier, RenderLayer> function) {
         super(function);
-    }
-
-    public void animateBlockEntity(DoorBlockEntity door) {
-        this.getPart().traverse().forEach(ModelPart::resetTransform);
-
-        /*if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
-            this.updateAnimation(door.DOOR_STATE, this.getAnimationForDoorState(
-                    door.prevAnimState), door.animationTimer);*/
     }
 
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,

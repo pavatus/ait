@@ -1,12 +1,12 @@
 package loqor.ait.client.models.exteriors;
 
-import loqor.ait.AITMod;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;

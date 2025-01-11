@@ -166,9 +166,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         if (tardis.selfDestruct().isQueued())
             matrices.scale(0.7f, 0.7f, 0.7f);
 
-        profiler.swap("animate");
-        model.animateBlockEntity(entity);
-
         model.renderWithAnimations(entity, this.model.getPart(), matrices,
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);

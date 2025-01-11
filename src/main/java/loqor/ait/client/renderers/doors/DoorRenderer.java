@@ -122,9 +122,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
-        profiler.swap("animate");
-        model.animateBlockEntity(entity);
-
         model.renderWithAnimations(entity, model.getPart(), matrices,
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1,
                 1 /* 0.5f */, 1);

@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -38,7 +37,6 @@ import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -47,11 +45,6 @@ import loqor.ait.core.tardis.util.TardisUtil;
 public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
 
     private ExteriorAnimation animation;
-
-    public final AnimationState DOOR_STATE = new AnimationState();
-
-    public int animationTimer = 0;
-    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -194,7 +187,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             this.getAnimation().reset();
 
         this.exteriorLightBlockState(blockState, pos, state);
-        this.checkAnimations();
     }
 
     public void verifyAnimation() {
@@ -210,21 +202,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         if (this.getWorld() != null && !this.getWorld().isClient()) {
             this.animation.tellClientsToSetup(tardis.travel().getState());
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    private void checkAnimations() {
-        //this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
-
-        Tardis tardis = this.tardis().get();
-        DoorHandler door = tardis.door();
-
-        DoorHandler.AnimationDoorState state = door.animationState.get();
-
-        if (state != null && this.prevAnimState != state) {
-            DOOR_STATE.start(animationTimer);
-            this.prevAnimState = state;
         }
     }
 

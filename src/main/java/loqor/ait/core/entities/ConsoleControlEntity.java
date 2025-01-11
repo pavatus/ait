@@ -2,14 +2,12 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
-import com.mojang.serialization.Dynamic;
 import dev.drtheo.blockqueue.data.TimeUnit;
 import dev.drtheo.scheduler.Scheduler;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
