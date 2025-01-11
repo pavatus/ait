@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.entities;
 
+import loqor.ait.client.util.ClientLightUtil;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -80,7 +81,11 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
         if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {
             boolean alarms = tardis.alarm().enabled().get();
-            this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(getEmission(tardis), true)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+
+            ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderEntity,
+                    exteriorVariant.emission(), entity, this.model.getPart(), matrices,
+                    vertexConsumers, light, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1,
+                    alarms ? 0.3f : 1, 1);
         }
 
         BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
