@@ -2,6 +2,12 @@ package loqor.ait.core.entities.base;
 
 import java.util.Collections;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Dynamic;
+import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.EntityType;
@@ -19,7 +25,16 @@ import net.minecraft.world.World;
 
 public abstract class DummyLivingEntity extends LivingEntity {
 
-    private static final Iterable<ItemStack> ARMOR = Collections.singleton(ItemStack.EMPTY);
+    protected static final Iterable<ItemStack> ARMOR = Collections.singleton(ItemStack.EMPTY);
+
+    protected static final Brain<?> BRAIN = Brain.createProfile(
+            ImmutableList.of(), ImmutableList.of()
+    ).deserialize(new Dynamic<>(
+            NbtOps.INSTANCE, NbtOps.INSTANCE.createMap(
+                    ImmutableMap.of(NbtOps.INSTANCE.createString("memories"),
+                            NbtOps.INSTANCE.emptyMap()
+                    )
+    )));
 
     protected DummyLivingEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);

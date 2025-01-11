@@ -416,6 +416,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     }
 
     @Override
+    public Brain<?> getBrain() {
+        return BRAIN;
+    }
+
+    @Override
     protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
         return null;
     }
