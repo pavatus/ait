@@ -68,7 +68,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             boolean doorsClosed = tardis.door().isClosed();
             float deg = (float) (entity.getVelocity().horizontalLength() * 45f);
 
-            if (doorsClosed) {
+            if (!doorsClosed) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
                 deg = -deg;
             } else {
