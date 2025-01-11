@@ -59,7 +59,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) v));
         }
 
-        if (entity.isOnGround()) {
+        if (!entity.isOnGround()) {
             if (!tardis.door().isOpen()) {
                 this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));
