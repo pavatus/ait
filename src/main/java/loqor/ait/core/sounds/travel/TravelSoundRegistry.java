@@ -22,6 +22,7 @@ public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
     public static TravelSound DEFAULT_DEMAT;
     public static TravelSound DEFAULT_MAT;
     public static TravelSound PHASING_DEMAT;
+    public static TravelSound PHASING_REMAT;
     public static TravelSound EMPTY;
 
     @Override
@@ -31,6 +32,7 @@ public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
         DEFAULT_MAT = register(new TravelSound(TravelHandlerBase.State.MAT, AITMod.id("default_mat"), AITSounds.MAT.getId(), 460, 240, 240, 400, 0.2f, 0.4f));
         DEFAULT = new TravelSoundMap().of(TravelHandlerBase.State.DEMAT, DEFAULT_DEMAT).of(TravelHandlerBase.State.MAT, DEFAULT_MAT);
         PHASING_DEMAT = register(new TravelSound(TravelHandlerBase.State.DEMAT, AITMod.id("phasing_demat"), AITSounds.PHASING_DEMAT.getId(), 240, 240, 240, 210, 0.2f, 0.4f));
+        PHASING_DEMAT = register(new TravelSound(TravelHandlerBase.State.MAT, AITMod.id("phasing_remat"), AITSounds.PHASING_REMAT.getId(), 240, 240, 240, 210, 0.2f, 0.4f));
     }
 
     @Override

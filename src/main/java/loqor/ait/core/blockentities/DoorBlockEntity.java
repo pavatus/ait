@@ -56,7 +56,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
     public final AnimationState DOOR_STATE = new AnimationState();
 
     public int animationTimer = 0;
-    public DoorHandler.AnimationDoorState prevAnimState;
+    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public DoorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.DOOR_BLOCK_ENTITY_TYPE, pos, state);
