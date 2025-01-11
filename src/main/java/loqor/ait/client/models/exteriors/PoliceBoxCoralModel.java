@@ -150,8 +150,8 @@ public class PoliceBoxCoralModel extends ExteriorModel {
                     : 0.0F;
         } else {
             float maxRot = 90f;
-            this.TARDIS.getChild("Doors").getChild("left_door").yaw = -(float) Math.toRadians(maxRot*door.getLeftRot());
-            this.TARDIS.getChild("Doors").getChild("right_door").yaw = (float) Math.toRadians(maxRot*door.getRightRot());
+            this.TARDIS.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
+            this.TARDIS.getChild("Doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot*door.getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
