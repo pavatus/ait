@@ -22,7 +22,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
@@ -216,7 +215,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
     @Environment(EnvType.CLIENT)
     private void checkAnimations() {
-        this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
+        //this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
 
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
