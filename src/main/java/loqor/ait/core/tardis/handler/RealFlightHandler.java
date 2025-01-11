@@ -42,11 +42,11 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     private final BoolValue flying = FLYING.create(this);
 
     static {
-        ClientPlayNetworking.registerGlobalReceiver(EXIT_FLIGHT, (client, handler, buf, responseSender) -> {
-            System.out.println("flight exit");
+        ClientPlayNetworking.registerGlobalReceiver(EXIT_FLIGHT, (client, handler, buf, responseSender)
+                -> client.executeSync(() -> {
             client.options.setPerspective(Perspective.FIRST_PERSON);
             client.options.hudHidden = false;
-        });
+        }));
 
         TardisEvents.DEMAT.register(tardis -> tardis.flight().falling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
     }
