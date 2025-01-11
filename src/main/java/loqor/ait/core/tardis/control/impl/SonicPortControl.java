@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.control.impl;
 
+import loqor.ait.core.item.SonicItem2;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -32,10 +33,13 @@ public class SonicPortControl extends Control {
             return true;
         }
 
-        if (player.getMainHandStack().getItem() instanceof SonicItem linker
-                && (!player.getMainHandStack().getOrCreateNbt().contains("tardis") || player.isSneaking())) {
+        ItemStack stack = player.getMainHandStack();
 
-            linker.link(player.getMainHandStack(), tardis);
+        if (!(stack.getItem() instanceof SonicItem2 linker))
+            return false;
+
+        if (!linker.isLinked(stack) || player.isSneaking()) {
+            linker.link(stack, tardis);
             world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS,
                     1.0F, 1.0F);
 
@@ -46,11 +50,6 @@ public class SonicPortControl extends Control {
             world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 12, 0.4F,
                     1F, 0.4F, 5.0F);
         }
-
-        ItemStack stack = player.getMainHandStack();
-
-        if (!(stack.getItem() instanceof SonicItem))
-            return false;
 
         handler.insertConsoleSonic(stack, console);
         player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
