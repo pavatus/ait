@@ -8,7 +8,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -73,10 +72,8 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = context.camera().getPos();
-        BlockPos pos = tardis.getDesktop().getConsolePos().stream().findFirst().orElse(null);
-        if (pos == null) return;
-        Vec3d targetPos = new Vec3d(pos.getX(),
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), pos.getY());
+        Vec3d targetPos = new Vec3d(cameraPos.getX(),
+                context.world().getBottomY() - (tardis.isGrowth() ? 150 : 120), cameraPos.getZ());
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
@@ -87,19 +84,7 @@ public class TardisStar {
         matrixStack.push();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
-        if (tardis.isGrowth()) {
-            matrixStack.translate(tardis.getDesktop().getDoorPos().getPos().getX(), diff.y,
-                    tardis.getDesktop().getDoorPos().getPos().getX());
-        } else {
-            matrixStack.translate(
-                    pos.getX() != 0
-                            ? diff.x - .5
-                            : tardis.getDesktop().getDoorPos().getPos().getX() - .5,
-                    diff.y,
-                    pos.getY() != 0
-                            ? diff.z - .5
-                            : tardis.getDesktop().getDoorPos().getPos().getX() - .5);
-        }
+        matrixStack.translate(0, diff.y, 0);
         if (!tardis.isRefueling())
             matrixStack.scale(8, 8, 8);
         else
