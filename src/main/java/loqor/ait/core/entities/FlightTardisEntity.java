@@ -197,9 +197,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     @Override
     protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
-        if (getWorld().isClient())
-            return Vec3d.ZERO;
-
         float f = controllingPlayer.sidewaysSpeed * 2f;
         float g = controllingPlayer.forwardSpeed * 2f;
 

@@ -54,6 +54,11 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
     static {
         TardisEvents.DEMAT.register(tardis -> tardis.door().isOpen() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
+
+        TardisEvents.EXTERIOR_CHANGE.register(tardis -> {
+            if (!tardis.door().hasDoubleDoor() && tardis.door().getDoorState() == DoorState.BOTH)
+                tardis.door().setDoorState(DoorState.HALF);
+        });
     }
 
     public DoorHandler() {
@@ -330,7 +335,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         public DoorState next(boolean isDouble) {
             return switch (this) {
                 case CLOSED -> HALF;
-                case HALF -> isDouble ? BOTH : HALF;
+                case HALF -> isDouble ? BOTH : CLOSED;
                 case BOTH -> CLOSED;
             };
         }
