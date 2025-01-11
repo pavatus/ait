@@ -54,7 +54,7 @@ public class AITConfig implements ConfigData {
         public boolean I_HATE_GL = true;
         public boolean ANIMATE_CONSOLE = true;
         public boolean ANIMATE_DOORS = true;
-        public int DOOR_ANIMATION_SPEED = 2;
+        /*public int DOOR_ANIMATION_SPEED = 2;*/
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public TemperatureType TEMPERATURE_TYPE = TemperatureType.CELCIUS;

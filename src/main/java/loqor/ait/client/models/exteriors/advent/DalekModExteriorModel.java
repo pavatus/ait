@@ -6,7 +6,6 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
@@ -75,12 +74,12 @@ public class DalekModExteriorModel extends ExteriorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 
     @Override
@@ -109,13 +108,18 @@ public class DalekModExteriorModel extends ExteriorModel {
         matrices.scale(0.945F, 0.945F, 0.945F);
         matrices.translate(0, -1.5f, 0);
 
+        DoorHandler door = exterior.tardis().get().door();
+
         if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
-            DoorHandler door = exterior.tardis().get().door();
 
             this.dalekmod.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-            this.dalekmod.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+            this.dalekmod.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
                     ? 5F
                     : 0.0F;
+        } else {
+            float maxRot = 90;
+            this.dalekmod.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
+            this.dalekmod.getChild("Doors").getChild("right_door").yaw = (float) -Math.toRadians(maxRot*door.getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

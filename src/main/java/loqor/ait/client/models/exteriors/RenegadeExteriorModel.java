@@ -5,6 +5,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -89,7 +90,14 @@ public class RenegadeExteriorModel extends ExteriorModel {
 
         matrices.push();
         matrices.translate(0, -1.5f, 0);
-        renegade.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? 1.75f : 0f;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            renegade.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? 1.75f : 0f;
+        else {
+            float maxRot = 90f;
+
+            DoorHandler door = exterior.tardis().get().door();
+            renegade.getChild("door").yaw = -(float) Math.toRadians(maxRot * door.getLeftRot());
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();

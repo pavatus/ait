@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.entities.FallingTardisEntity;
@@ -37,9 +36,9 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     public void animateBlockEntity(ExteriorBlockEntity exterior) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
 
-        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+        /*if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
             this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(
-                    exterior.prevAnimState), exterior.animationTimer);
+                    exterior.prevAnimState), exterior.animationTimer);*/
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,

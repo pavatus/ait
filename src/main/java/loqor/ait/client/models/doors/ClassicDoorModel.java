@@ -9,7 +9,6 @@ import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class ClassicDoorModel extends DoorModel {
@@ -69,12 +68,12 @@ public class ClassicDoorModel extends DoorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 
     @Override
@@ -94,9 +93,13 @@ public class ClassicDoorModel extends DoorModel {
             DoorHandler door = doorEntity.tardis().get().door();
 
             this.classic.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
-            this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+            this.classic.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
                     ? 5F
                     : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.classic.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*doorEntity.tardis().get().door().getLeftRot());
+            this.classic.getChild("Doors").getChild("right_door").yaw = (float) -Math.toRadians(maxRot*doorEntity.tardis().get().door().getRightRot());
         }
 
         super.renderWithAnimations(doorEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

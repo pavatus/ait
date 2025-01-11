@@ -6,6 +6,7 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
@@ -48,7 +49,12 @@ public class PlinthDoorModel extends DoorModel {
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
-        plinth.getChild("door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? -1.75f : 0f;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            plinth.getChild("door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? -1.75f : 0f;
+        } else {
+            float maxRot = 90f;
+            plinth.getChild("door").yaw = -(float) Math.toRadians(maxRot*linkableBlockEntity.tardis().get().door().getLeftRot());
+        }
         super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();

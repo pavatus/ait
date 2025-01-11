@@ -1,29 +1,16 @@
 package loqor.ait.client.animation.exterior.door;
 
-import net.minecraft.client.render.entity.animation.Animation;
-import net.minecraft.client.render.entity.animation.AnimationHelper;
-import net.minecraft.client.render.entity.animation.Keyframe;
-import net.minecraft.client.render.entity.animation.Transformation;
 
 public class DoorAnimations {
 
     // THIS IS FOR THE EXTERIOR
 
-    public static final Animation EXTERIOR_FIRST_OPEN_ANIMATION= Animation.Builder.create(0.4167F)
+    /*public static final Animation EXTERIOR_FIRST_OPEN_ANIMATION= Animation.Builder.create(0.4167F)
             .addBoneAnimation("left_door", new Transformation(Transformation.Targets.ROTATE,
             new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
             new Keyframe(0.25F, AnimationHelper.createRotationalVector(0.0F, 80.0F, 0.0F), Transformation.Interpolations.CUBIC),
             new Keyframe(0.3333F, AnimationHelper.createRotationalVector(0.0F, 77.5F, 0.0F), Transformation.Interpolations.CUBIC),
             new Keyframe(0.4167F, AnimationHelper.createRotationalVector(0.0F, 80.0F, 0.0F), Transformation.Interpolations.CUBIC)
-            ))
-            .build();
-
-    public static final Animation EXTERIOR_FIRST_CLOSE_ANIMATION = Animation.Builder.create(0.4167F)
-            .addBoneAnimation("left_door", new Transformation(Transformation.Targets.ROTATE,
-            new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 80.0F, 0.0F), Transformation.Interpolations.CUBIC),
-            new Keyframe(0.25F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
-            new Keyframe(0.3333F, AnimationHelper.createRotationalVector(0.0F, 5.0F, 0.0F), Transformation.Interpolations.CUBIC),
-            new Keyframe(0.4167F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .build();
 
@@ -77,15 +64,6 @@ public class DoorAnimations {
             new Keyframe(0.25F, AnimationHelper.createRotationalVector(0.0F, 80.0F, 0.0F), Transformation.Interpolations.CUBIC),
             new Keyframe(0.3333F, AnimationHelper.createRotationalVector(0.0F, 77.5F, 0.0F), Transformation.Interpolations.CUBIC),
             new Keyframe(0.4167F, AnimationHelper.createRotationalVector(0.0F, 80.0F, 0.0F), Transformation.Interpolations.CUBIC)
-            ))
-            .build();
-
-    public static final Animation INTERIOR_FIRST_CLOSE_ANIMATION = Animation.Builder.create(0.4167F)
-            .addBoneAnimation("left_door", new Transformation(Transformation.Targets.ROTATE,
-            new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 80.0F, 0.0F), Transformation.Interpolations.CUBIC),
-            new Keyframe(0.25F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
-            new Keyframe(0.3333F, AnimationHelper.createRotationalVector(0.0F, 5.0F, 0.0F), Transformation.Interpolations.CUBIC),
-            new Keyframe(0.4167F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .build();
 
@@ -154,5 +132,5 @@ public class DoorAnimations {
                                     Transformation.Interpolations.LINEAR),
                             new Keyframe(0.5f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
                                     Transformation.Interpolations.LINEAR)))
-            .build();
+            .build();*/
 }

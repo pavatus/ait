@@ -1,4 +1,4 @@
-package loqor.ait.data.properties.doubl3;
+package loqor.ait.data.properties.dbl;
 
 import java.util.function.Function;
 

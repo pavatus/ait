@@ -157,7 +157,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             }
         }
 
-        if (tardis.door().isOpen())
+        if (tardis.door().getLeftRot() > 0)
             this.renderDoorBoti(entity, variant, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
 
         matrices.pop();

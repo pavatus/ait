@@ -6,7 +6,6 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -48,9 +47,13 @@ public class PresentExteriorModel extends ExteriorModel {
             DoorHandler door = exterior.tardis().get().door();
 
             this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
-            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
                     ? -8F
                     : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.present.getChild("left_door").yaw = (float) Math.toRadians(exterior.tardis().get().door().getLeftRot() * maxRot);
+            this.present.getChild("right_door").yaw = -(float) Math.toRadians(exterior.tardis().get().door().getRightRot() * maxRot);
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -70,7 +73,7 @@ public class PresentExteriorModel extends ExteriorModel {
             DoorHandler door = falling.tardis().get().door();
 
             this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 9F : 0.0F;
-            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
                     ? -9F
                     : 0.0F;
         }
@@ -86,11 +89,11 @@ public class PresentExteriorModel extends ExteriorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 }
