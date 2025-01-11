@@ -108,8 +108,6 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
         TardisUtil.teleportOutside(tardis, player);
         Scheduler.get().runTaskLater(() -> {
             player.startRiding(entity);
-            player.setInvisible(true);
-
             this.sendEnterFlightPacket(player);
         }, TimeUnit.TICKS, 2);
 

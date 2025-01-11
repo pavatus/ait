@@ -94,6 +94,9 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         if (player == null || !this.isLinked())
             return;
 
+        if (!player.isInvisible())
+            player.setInvisible(true);
+
         Tardis tardis = this.tardis().get();
         boolean onGround = this.isOnGround();
 
@@ -194,11 +197,14 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     @Override
     protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
+        if (getWorld().isClient())
+            return Vec3d.ZERO;
+
         float f = controllingPlayer.sidewaysSpeed * 2f;
         float g = controllingPlayer.forwardSpeed * 2f;
 
-        double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? 2
-                : controllingPlayer.isSneaking() ? -1 : -0.1;
+        double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? 1f
+                : controllingPlayer.isSneaking() ? -1f : -0.1f;
 
         if (v < 0 && this.isOnGround())
             return Vec3d.ZERO.add(0, -0.04f, 0);
