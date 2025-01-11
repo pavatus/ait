@@ -99,6 +99,9 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     }
 
     public void enterFlight(ServerPlayerEntity player) {
+        this.tardis.door().closeDoors();
+        this.flying.set(true);
+
         FlightTardisEntity entity = FlightTardisEntity.createAndSpawn(
                 player, this.tardis.asServer());
 
@@ -118,11 +121,15 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     }
 
     public void exitFlight(ServerPlayerEntity player) {
+        this.flying.set(false);
+
         player.setInvisible(false);
         this.sendExitFlightPacket(player);
 
         tardis.travel().forcePosition(cached -> cached.rotation((byte) RotationPropertyHelper.fromYaw(player.getYaw())));
         tardis.travel().placeExterior(false);
+
+        tardis.travel().finishRemat();
     }
 
     private void sendExitFlightPacket(ServerPlayerEntity player) {

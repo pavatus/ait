@@ -288,6 +288,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         tardis.stats().setTravelEffects(before);
     }
+
     public void forceDemat() {
         this.forceDemat(null);
     }

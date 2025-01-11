@@ -4,6 +4,7 @@ import static loqor.ait.core.tardis.animation.ExteriorAnimation.*;
 
 import java.util.function.Function;
 
+import loqor.ait.core.entities.FlightTardisEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -40,6 +41,14 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
             this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(
                     exterior.prevAnimState), exterior.animationTimer);
+    }
+
+    public void animateEntity(FlightTardisEntity entity) {
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+
+        if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.updateAnimation(entity.DOOR_STATE, this.getAnimationForDoorState(
+                    entity.prevAnimState), entity.animationTimer);
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,

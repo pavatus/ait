@@ -75,6 +75,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
+        this.model.animateEntity(entity);
         this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
         if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {
