@@ -79,9 +79,6 @@ public class ClientTardisUtil {
      * Gets the tardis the player is currently inside
      */
     public static ClientTardis getCurrentTardis() {
-        if (currentTardis == null)
-            return null;
-
         return (ClientTardis) currentTardis.get();
     }
 
