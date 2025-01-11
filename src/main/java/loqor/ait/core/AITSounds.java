@@ -168,6 +168,8 @@ public class AITSounds {
     // Tools
     public static final SoundEvent DING = register("tools/goes_ding");
     public static final SoundEvent STASER = register("tools/staser");
+    public static final SoundEvent REMOTE = register("tools/remote");
+
 
     // Fabricator
     public static final SoundEvent FABRICATOR_START = register("tools/fabricator/start");

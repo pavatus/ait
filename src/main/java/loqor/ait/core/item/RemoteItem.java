@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
@@ -78,7 +79,7 @@ public class RemoteItem extends LinkableItem {
                         return;
 
                     if (!TardisServerWorld.isTardisDimension((ServerWorld) world)) {
-                        world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+                        world.playSound(null, pos, AITSounds.REMOTE, SoundCategory.BLOCKS);
 
                         BlockPos temp = pos.up();
 
