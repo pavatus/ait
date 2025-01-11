@@ -143,8 +143,8 @@ public class CapsuleExteriorModel extends ExteriorModel {
                     : 0.0F;
         } else {
             float maxRot = 90f;
-            this.body.getChild("doors").getChild("left_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
-            this.body.getChild("doors").getChild("right_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
+            this.body.getChild("doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+            this.body.getChild("doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

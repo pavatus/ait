@@ -85,9 +85,26 @@ public class DalekModExteriorModel extends ExteriorModel {
     @Override
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
                               VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (falling.tardis().isEmpty())
+            return;
+
         matrices.push();
-        matrices.scale(1.5f, 1.5f, 1.5f);
+        matrices.scale(0.945F, 0.945F, 0.945F);
         matrices.translate(0, -1.5f, 0);
+
+        DoorHandler door = falling.tardis().get().door();
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+
+            this.dalekmod.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+            this.dalekmod.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
+                    ? 5F
+                    : 0.0F;
+        } else {
+            float maxRot = 90;
+            this.dalekmod.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
+            this.dalekmod.getChild("Doors").getChild("right_door").yaw = (float) -Math.toRadians(maxRot*door.getRightRot());
+        }
 
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();

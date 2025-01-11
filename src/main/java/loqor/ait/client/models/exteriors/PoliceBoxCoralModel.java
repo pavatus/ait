@@ -161,9 +161,25 @@ public class PoliceBoxCoralModel extends ExteriorModel {
     @Override
     public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
             VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (falling.tardis().isEmpty())
+            return;
+
         matrices.push();
         matrices.scale(0.63F, 0.63F, 0.63F);
         matrices.translate(0, -1.5f, 0);
+        DoorHandler door = falling.tardis().get().door();
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+
+            this.TARDIS.getChild("Doors").getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+            this.TARDIS.getChild("Doors").getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
+                    ? 5F
+                    : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.TARDIS.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
+            this.TARDIS.getChild("Doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot*door.getRightRot());
+        }
 
         super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
