@@ -6,6 +6,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 
@@ -25,8 +26,8 @@ public class DoorControl extends Control {
         }
 
         this.soundEvent = !tardis.door().isOpen()
-                ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON
-                : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
+                ? AITSounds.DOOR_CONTROL
+                : AITSounds.DOOR_CONTROLALT;
 
         tardis.door().interact(world, player.getBlockPos(), player);
         return true;

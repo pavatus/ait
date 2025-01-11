@@ -18,6 +18,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -73,6 +74,7 @@ public class TelepathicControl extends Control {
             tardis.siege().texture().set(SiegeHandler.DEFAULT_TEXTURRE);
             return false;
         }
+
 
         if (type instanceof LinkableItem linker) {
             if (linker instanceof SonicItem)
@@ -192,6 +194,11 @@ public class TelepathicControl extends Control {
     @Override
     public long getDelayLength() {
         return 5 * 1000L;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.TELEPATHIC_CIRCUITS;
     }
 
     public static void locateWithChunkGenAsync(ServerPlayerEntity player, Tardis tardis,

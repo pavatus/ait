@@ -39,6 +39,8 @@ public class AITSounds {
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
 
+
+
     //EIGHTH SOUNDS
     public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
     public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
@@ -103,6 +105,33 @@ public class AITSounds {
     public static final SoundEvent KNOCK = register("controls/knock");
     public static final SoundEvent SNAP = register("controls/snap");
     public static final SoundEvent BWEEP = register("controls/bweep");
+    public static final SoundEvent ENGINE_REFUEL_CRANK = register("controls/engine_refuel_crank");
+    public static final SoundEvent TELEPATHIC_CIRCUITS = register("controls/telepathic_circuits");
+    public static final SoundEvent PROTOCOL_3 = register("controls/protocol_3");
+    public static final SoundEvent PROTOCOL_3ALT = register("controls/protocol_3alt");
+    public static final SoundEvent LAND_TYPE = register("controls/land_type");
+    public static final SoundEvent DOOR_LOCK = register("controls/door_lock");
+    public static final SoundEvent MONITOR = register("controls/monitor");
+    public static final SoundEvent DOOR_CONTROL = register("controls/door_control");
+    public static final SoundEvent DOOR_CONTROLALT = register("controls/door_controlalt");
+    public static final SoundEvent POWER_FLICK = register("controls/power_flick");
+    public static final SoundEvent PROTOCOL_19 = register("controls/protocol_19");
+    public static final SoundEvent MARK_WAYPOINT = register("controls/mark_waypoint");
+    public static final SoundEvent ANTI_GRAVS = register("controls/anti_gravs");
+    public static final SoundEvent FAST_RETURN = register("controls/fast_return");
+    public static final SoundEvent PROTOCOL_116 = register("controls/protocol_116");
+    public static final SoundEvent SHIELDS = register("controls/shield");
+    public static final SoundEvent ALARM = register("controls/alarm_flick");
+    public static final SoundEvent SLOT_IN = register("controls/slot_in");
+    public static final SoundEvent HAIL_MARY = register("controls/hail_mary");
+    public static final SoundEvent SIEGE = register("controls/siege");
+    public static final SoundEvent DIRECTION = register("controls/direction");
+    public static final SoundEvent SET_WAYPOINT = register("controls/waypoint_set");
+    public static final SoundEvent XYZ = register("controls/xyz");
+    public static final SoundEvent RANDOMIZE = register("controls/randomize");
+    public static final SoundEvent INCREMENT = register("controls/increment");
+    public static final SoundEvent DIMENSION = register("controls/dimension");
+
 
     // Console
     public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");

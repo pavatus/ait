@@ -2,10 +2,12 @@ package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 
@@ -27,5 +29,10 @@ public class MonitorControl extends Control {
 
         AITMod.openScreen(player, 0, tardis.getUuid(), console);
         return true;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.MONITOR;
     }
 }

@@ -41,7 +41,7 @@ public class SiegeModeControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
+        return AITSounds.SIEGE;
     }
 
     @Override
