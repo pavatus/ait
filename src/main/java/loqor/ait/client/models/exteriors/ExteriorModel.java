@@ -48,7 +48,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
         if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
             this.updateAnimation(entity.DOOR_STATE, this.getAnimationForDoorState(
-                    entity.prevAnimState), entity.animationTimer);
+                    entity.prevAnimState), entity.age);
     }
 
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,
