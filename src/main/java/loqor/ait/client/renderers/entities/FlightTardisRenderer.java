@@ -20,6 +20,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisExterior;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
+import org.joml.Quaternionf;
 
 public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
@@ -53,6 +54,9 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         double e = vec3d.horizontalLengthSquared();
 
         matrices.push();
+
+        this.model.animateEntity(entity);
+
         if (d > 0.0 && e > 0.0) {
             double l = (vec3d2.x * vec3d.x + vec3d2.z * vec3d.z) / Math.sqrt(d * e);
             double m = vec3d2.x * vec3d.z - vec3d2.z * vec3d.x;
@@ -61,22 +65,21 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         }
 
         if (!entity.isOnGround()) {
-            if (tardis.door().isClosed()) {
+            boolean doorsClosed = tardis.door().isClosed();
+            float deg = (float) (entity.getVelocity().horizontalLength() * 45f);
+
+            if (doorsClosed) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (-entity.getVelocity().horizontalLength() * 45f)));
+                deg = -deg;
             } else {
                 this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (entity.getVelocity().horizontalLength() * 45f)));
             }
-        } else {
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(
-                    RotationPropertyHelper.toDegrees(tardis.travel().position().getRotation())
-            ));
+
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(deg));
         }
 
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
 
-        this.model.animateEntity(entity);
         this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
         if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {

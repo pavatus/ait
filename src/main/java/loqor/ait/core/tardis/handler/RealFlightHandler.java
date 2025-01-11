@@ -43,6 +43,7 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
 
     static {
         ClientPlayNetworking.registerGlobalReceiver(EXIT_FLIGHT, (client, handler, buf, responseSender) -> {
+            System.out.println("flight exit");
             client.options.setPerspective(Perspective.FIRST_PERSON);
             client.options.hudHidden = false;
         });
