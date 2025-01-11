@@ -91,6 +91,9 @@ public class ClientLandingManager {
     }
 
     private void request(ClientWorld world, WorldChunk chunk) {
+        if (!NetworkUtil.canClientSendPackets())
+            return;
+
         this.request(world.getRegistryKey(), chunk.getPos().toLong());
     }
 }
