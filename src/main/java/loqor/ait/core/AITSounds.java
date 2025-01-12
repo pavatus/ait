@@ -77,11 +77,11 @@ public class AITSounds {
     public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
     //HALFLIFE
     //public static final SoundEvent HALFLIFE_DEMAT = register("tardis/halflife_demat");
-    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //public static final SoundEvent HALFLIFE_FLIGHT = register("tardis/halflife_flight");
     //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
     //PORTAL
     //public static final SoundEvent PORTAL_DEMAT = register("tardis/portal_demat");
-    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_flight");
     //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
 
 

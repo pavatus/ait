@@ -265,10 +265,10 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 : doorSchema.openSound();
 
         tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(), sound,
-                SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
+                SoundCategory.BLOCKS, 0.15F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
         interior.playSound(null, tardis.getDesktop().getDoorPos().getPos(), sound,
-                SoundCategory.BLOCKS, 0.6F, world.getRandom().nextBoolean() ? 1f : 0.8f);
+                SoundCategory.BLOCKS, 0.15F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
         if (player.isSneaking()) {
             if (this.isOpen()) {
