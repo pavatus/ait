@@ -150,7 +150,6 @@ public class AITSounds {
     public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
     public static final SoundEvent CLOISTER = register("tardis/cloister");
-    public static final SoundEvent CLOISTER2 = register("tardis/cloister2");
     public static final SoundEvent GROAN = register("tardis/groan");
 
     // Creaks
