@@ -39,13 +39,7 @@ public class CreakRegistry {
     public static CreakSound SIX;
     public static CreakSound SEVEN;
     public static CreakSound CAVE;
-    public static CreakSound GROAN;
     public static CreakSound WHISPER;
-    public static CreakSound MOODY1;
-    public static CreakSound MOODY2;
-    public static CreakSound MOODY3;
-    public static CreakSound MOODY4;
-    public static CreakSound MOODY5;
 
     public static void init() {
         ONE = register(CreakSound.create(AITMod.MOD_ID, "one", AITSounds.CREAK_ONE));
@@ -55,13 +49,6 @@ public class CreakRegistry {
         FIVE = register(CreakSound.create(AITMod.MOD_ID, "five", AITSounds.CREAK_FIVE));
         SIX = register(CreakSound.create(AITMod.MOD_ID, "six", AITSounds.CREAK_SIX));
         SEVEN = register(CreakSound.create(AITMod.MOD_ID, "seven", AITSounds.CREAK_SEVEN));
-        GROAN = register(CreakSound.create(AITMod.MOD_ID, "groan", AITSounds.GROAN));
-        MOODY1 = register(CreakSound.create(AITMod.MOD_ID, "moody1", AITSounds.MOODY1));
-        MOODY2 = register(CreakSound.create(AITMod.MOD_ID, "moody2", AITSounds.MOODY2));
-        MOODY3 = register(CreakSound.create(AITMod.MOD_ID, "moody3", AITSounds.MOODY3));
-        MOODY4 = register(CreakSound.create(AITMod.MOD_ID, "moody4", AITSounds.MOODY4));
-        MOODY5 = register(CreakSound.create(AITMod.MOD_ID, "moody5", AITSounds.MOODY5));
-
         CAVE = register(CreakSound.create(AITMod.MOD_ID, "cave", SoundEvents.AMBIENT_CAVE.value()));
         WHISPER = register(CreakSound.create(AITMod.MOD_ID, "whisper", AITSounds.WHISPER));
     }
