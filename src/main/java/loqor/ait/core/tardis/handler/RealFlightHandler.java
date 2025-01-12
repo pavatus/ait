@@ -117,7 +117,8 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
 
     private void sendEnterFlightPacket(ServerPlayerEntity player) {
         ServerPlayNetworking.send(player, ENTER_FLIGHT, PacketByteBufs.create());
-    }
+        tardis.travel().autopilot(true);
+  }
 
     public void exitFlight(ServerPlayerEntity player) {
         this.flying.set(false);
