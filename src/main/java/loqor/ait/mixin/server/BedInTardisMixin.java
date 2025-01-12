@@ -59,7 +59,7 @@ public class BedInTardisMixin {
             case PILOT -> AITSounds.PILOT_BED;
             case COMPANION -> AITSounds.COMPANION_BED;
             case NEUTRAL -> AITSounds.NEUTRAL_BED;
-            case REJECT -> AITSounds.TARDIS_REJECTION_SFX;
+            case REJECT -> AITSounds.REJECT_BED;
 
         };
         ClientScheduler.get().runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);

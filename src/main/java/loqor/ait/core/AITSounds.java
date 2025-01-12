@@ -99,9 +99,11 @@ public class AITSounds {
     public static final SoundEvent PILOT_BED = register("tardis/bed/pilot");
     public static final SoundEvent COMPANION_BED = register("tardis/bed/companion");
     public static final SoundEvent NEUTRAL_BED = register("tardis/bed/neutral");
-    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
+    public static final SoundEvent REJECT_BED = register("tardis/bed/reject");
     public static final SoundEvent LOYALTY_UP = register("tardis/moody/loyalty_up");
     public static final SoundEvent GROAN = register("tardis/groan");
+    //Possible could be used for a mood related thing?
+    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
 
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = register("controls/demat_lever_pull");
