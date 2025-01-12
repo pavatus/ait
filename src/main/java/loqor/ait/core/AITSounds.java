@@ -88,15 +88,20 @@ public class AITSounds {
 
 
 
-    // TARDIS SFX
-    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
+    // APPARATUS VIVI
     public static final SoundEvent MOODY1 = register("tardis/moody/moody1");
     public static final SoundEvent MOODY2 = register("tardis/moody/moody2");
     public static final SoundEvent MOODY3 = register("tardis/moody/moody3");
     public static final SoundEvent MOODY4 = register("tardis/moody/moody4");
     public static final SoundEvent MOODY5 = register("tardis/moody/moody5");
     public static final SoundEvent HAMMER_STRIKE = register("tardis/hammer_strike");
-
+    public static final SoundEvent OWNER_BED = register("tardis/bed/owner");
+    public static final SoundEvent PILOT_BED = register("tardis/bed/pilot");
+    public static final SoundEvent COMPANION_BED = register("tardis/bed/companion");
+    public static final SoundEvent NEUTRAL_BED = register("tardis/bed/neutral");
+    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
+    public static final SoundEvent LOYALTY_UP = register("tardis/moody/loyalty_up");
+    public static final SoundEvent GROAN = register("tardis/groan");
 
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = register("controls/demat_lever_pull");
@@ -151,7 +156,7 @@ public class AITSounds {
     public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
     public static final SoundEvent CLOISTER = register("tardis/cloister");
-    public static final SoundEvent GROAN = register("tardis/groan");
+
 
     // Creaks
     public static final SoundEvent CREAK_ONE = register("tardis/creaks/creak_one");
