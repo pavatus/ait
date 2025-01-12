@@ -14,6 +14,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -75,6 +76,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     private ConsoleControlEntity(World world, Tardis tardis) {
         this(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
         this.link(tardis);
+    }
+
+    @Override
+    public boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source) {
+        return false;
     }
 
     public static ConsoleControlEntity create(World world, Tardis tardis) {
