@@ -306,7 +306,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_CRASH,
                 SoundCategory.AMBIENT);
-        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_CRASH, SoundCategory.AMBIENT);
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.ABORT_FLIGHT, SoundCategory.AMBIENT);
 
         NetworkUtil.sendToInterior(this.tardis.asServer(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }

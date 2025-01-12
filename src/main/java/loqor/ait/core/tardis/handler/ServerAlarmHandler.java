@@ -84,9 +84,10 @@ public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTi
             soundCounter = 0;
 
             float volume = isDoorOpen() ? 1.0f : 0.3f;
+            float pitch = isDoorOpen() ? 1f : 0.2f;
 
             tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
-                    AITSounds.CLOISTER, SoundCategory.AMBIENT, volume, 0.2f);
+                    AITSounds.CLOISTER, SoundCategory.AMBIENT, volume, pitch);
         }
     }
 }
