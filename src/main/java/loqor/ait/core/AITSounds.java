@@ -30,6 +30,7 @@ public class AITSounds {
     public static final SoundEvent FLIGHT_LOOP = register("tardis/flight_loop");
     public static final SoundEvent UNSTABLE_FLIGHT_LOOP = register("tardis/unstable_flight_loop");
     public static final SoundEvent LAND_THUD = register("tardis/land_thud");
+    public static final SoundEvent LAND_CRASH = register("tardis/land_crash");
     public static final SoundEvent SHUTDOWN = register("tardis/console_shutdown");
     public static final SoundEvent POWERUP = register("tardis/console_powerup");
     public static final SoundEvent WAYPOINT_ACTIVATE = register("tardis/waypoint_activate");
@@ -149,6 +150,7 @@ public class AITSounds {
     public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
     public static final SoundEvent CLOISTER = register("tardis/cloister");
+    public static final SoundEvent CLOISTER2 = register("tardis/cloister2");
     public static final SoundEvent GROAN = register("tardis/groan");
 
     // Creaks

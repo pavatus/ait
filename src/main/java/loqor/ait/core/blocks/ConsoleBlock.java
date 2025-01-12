@@ -141,7 +141,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
                 is_z_negative = true;
             }
 
-            world.playSound(null, pos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 4f, 1f);
+            world.playSound(null, pos, AITSounds.CLOISTER2, SoundCategory.BLOCKS, 4f, 1f);
 
             player.addVelocity(0.15f * x_random * (is_x_negative ? -1 : 1), 0.1f * y_random,
                     0.15f * z_random * (is_z_negative ? -1 : 1));

@@ -119,7 +119,7 @@ public class KeyItem extends LinkableItem {
             return;
 
         tardis.loyalty().subLevel(player, 15);
-        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CLOISTER);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CLOISTER2);
     }
 
     private static void hailMary(Tardis tardis, ItemStack stack, PlayerEntity player) {
