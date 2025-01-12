@@ -202,6 +202,7 @@ public class AITSounds {
 
     // Engine related stuff
     public static final SoundEvent POWER_CONVERT = register("tardis/power_convert");
+    public static final SoundEvent FLUID_LINK_CONNECT = register("tools/fluid_link_connect");
 
 
 
