@@ -2,9 +2,11 @@ package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -45,6 +47,11 @@ public class LandTypeControl extends Control {
 
     public void messageYPlayer(ServerPlayerEntity player, TravelHandlerBase.GroundSearch value) {
         player.sendMessage(Text.translatable("message.ait.control.ylandtype", value), true);
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.LAND_TYPE;
     }
 
     public void messageXPlayer(ServerPlayerEntity player, boolean var) {

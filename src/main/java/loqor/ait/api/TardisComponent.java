@@ -92,7 +92,11 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
     public static void init(TardisComponent component, Tardis tardis, InitContext context) {
         component.setTardis(tardis);
-        Initializable.init(component, context);
+        component.init(context);
+    }
+
+    public static void postInit(TardisComponent component, InitContext context) {
+        component.postInit(context);
     }
 
     public enum Id implements IdLike {
@@ -127,7 +131,10 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         CLOAK(CloakHandler.class, CloakHandler::new),
         INCREMENT(IncrementManager.class, IncrementManager::new),
         LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new),
-        CHAMELEON(ChameleonHandler.class, ChameleonHandler::new);
+        CHAMELEON(ChameleonHandler.class, ChameleonHandler::new),
+        SELF_DESTRUCT(SelfDestructHandler.class, SelfDestructHandler::new),
+        OPINION(OpinionHandler.class, OpinionHandler::new),
+        SUBSYSTEM(SubSystemHandler.class, SubSystemHandler::new),;
 
         private final Supplier<TardisComponent> creator;
 

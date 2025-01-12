@@ -20,7 +20,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class ToyotaType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/toyota");
+    public static final Identifier REFERENCE = AITMod.id("console/toyota");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.21249999f, 0.20000002f),
                     new Vector3f(0.4406250063329935f, 0.5749999973922968f, 1.4359375312924385f)),

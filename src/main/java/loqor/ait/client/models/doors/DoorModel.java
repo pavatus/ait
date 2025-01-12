@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
@@ -27,9 +28,17 @@ public abstract class DoorModel extends SinglePartEntityModel {
         super(function);
     }
 
-    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        if (door.tardis().isEmpty())
+    public void animateBlockEntity(DoorBlockEntity door) {
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+
+        /*if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.updateAnimation(door.DOOR_STATE, this.getAnimationForDoorState(
+                    door.prevAnimState), door.animationTimer);*/
+    }
+
+    public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+        if (linkableBlockEntity.tardis().isEmpty())
             return;
 
         root.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
@@ -40,5 +49,5 @@ public abstract class DoorModel extends SinglePartEntityModel {
             float headPitch) {
     }
 
-    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
+    public abstract Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state);
 }

@@ -19,6 +19,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -28,8 +29,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.*;
@@ -40,6 +45,7 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
+import loqor.ait.core.util.ServerLifecycleHooks;
 
 public class FallingTardisEntity extends LinkableDummyEntity {
 
@@ -151,7 +157,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
         boolean isCrashing = travel.isCrashing();
 
         TardisUtil.getPlayersInsideInterior(tardis.asServer()).forEach(player -> {
-            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
+            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_CRASH;
             float volume = isCrashing ? 1.0F : 3.0F;
 
             player.playSound(sound, volume, 1.0f);
@@ -161,8 +167,17 @@ public class FallingTardisEntity extends LinkableDummyEntity {
             ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), blockPos);
 
         if (isCrashing) {
-            this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 10, true,
-                    World.ExplosionSourceType.MOB);
+            this.getWorld().createExplosion(this, null, new ExplosionBehavior() {
+                        @Override
+                        public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
+                            MinecraftServer server = ServerLifecycleHooks.get();
+                            if (server == null) return false;
+                            if (!server.getGameRules().getBoolean(AITMod.TARDIS_GRIEFING)) return false;
+
+                            return super.canDestroyBlock(explosion, world, pos, state, power);
+                        }
+                    }, this.getPos(), 10, true,
+                    World.ExplosionSourceType.TNT);
 
             travel.setCrashing(false);
         }

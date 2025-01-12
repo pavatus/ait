@@ -1,13 +1,23 @@
 package loqor.ait.core.blocks;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -15,8 +25,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.FabricatorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 
@@ -24,10 +34,6 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
 
     public static final VoxelShape DEFAULT_SHAPE = VoxelShapes.cuboid(0, 0, 0, 1, (double) 2 / 16, 1);
 
-    // @TODO MAKE THIS GO ON TOP OF A MACHINE CASING WHICH ENCASES A BLOCK LIKE A
-    // SMITHING TABLE OR
-    // SOME OTHER CRAFTING
-    // TABLE THING
     public FabricatorBlock(Settings settings) {
         super(settings);
 
@@ -42,10 +48,13 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        if (!world.getBlockState(pos.down()).isOf(Blocks.SMITHING_TABLE))
-            return false;
-        return super.canPlaceAt(state, world, pos);
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.getBlockEntity(pos) instanceof FabricatorBlockEntity be) {
+            be.useOn(state, world, player.isSneaking(), player);
+            return ActionResult.SUCCESS;
+        }
+
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -65,6 +74,11 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        if (!(world.getBlockEntity(pos) instanceof FabricatorBlockEntity be)) return;
+        if (!be.isValid()) return;
+        if (!be.hasBlueprint()) return;
+        if (be.getBlueprint().orElseThrow().isComplete()) return;
+
         Direction direction = state.get(FACING);
         double d = (double) pos.getX() + 0.55 - (double) (random.nextFloat() * 0.1f);
         double e = (double) pos.getY() + 0.55 - (double) (random.nextFloat() * 0.1f);
@@ -73,6 +87,10 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
         world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d + (double) direction.getOffsetX() * g,
                 e + (double) direction.getOffsetY() * g, f + (double) direction.getOffsetZ() * g,
                 random.nextGaussian() * 0.005, random.nextGaussian() * 0.005, random.nextGaussian() * 0.005);
+
+        if (random.nextDouble() < 0.05) {
+            world.playSound(d, e, f, AITSounds.FABRICATOR_LOOP, SoundCategory.BLOCKS, 0.25f, 1.0f, false);
+        }
     }
 
     @Override
@@ -93,5 +111,12 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+
+        tooltip.add(Text.translatable("block.ait.fabricator.tooltip.use").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }

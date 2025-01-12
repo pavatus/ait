@@ -10,7 +10,7 @@ import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
 
 public class GeometricDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/geometric");
+    public static final Identifier REFERENCE = AITMod.id("door/geometric");
 
     public GeometricDoorVariant() {
         super(REFERENCE);

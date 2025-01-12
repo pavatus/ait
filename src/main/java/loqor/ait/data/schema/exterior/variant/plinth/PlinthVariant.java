@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.plinth;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -19,7 +18,7 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/plinth/plinth_";
 
     protected PlinthVariant(String name) {
-        super(PlinthCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/plinth/" + name),
+        super(PlinthCategory.REFERENCE, AITMod.id("exterior/plinth/" + name),
                 new Loyalty(Loyalty.Type.COMPANION));
     }
 

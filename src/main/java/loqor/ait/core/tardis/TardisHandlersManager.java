@@ -33,6 +33,10 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     @Override
     protected void onInit(InitContext ctx) {
         this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
+    }
+
+    @Override
+    public void postInit(InitContext ctx) {
         this.forEach(component -> component.postInit(ctx));
     }
 
@@ -63,7 +67,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
             try {
                 tickable.tick(server);
             } catch (Exception e) {
-                AITMod.LOGGER.error("Ticking failed for {}", component.getId().name(), e);
+                AITMod.LOGGER.error("Ticking failed for {} | {}", component.getId().name(), component.tardis().getUuid().toString(), e);
             }
         });
     }

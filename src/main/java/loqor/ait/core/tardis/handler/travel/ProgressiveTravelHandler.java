@@ -53,7 +53,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     }
 
     private boolean isFlightTicking() {
-        return this.tardis().travel().getState() == State.FLIGHT && this.getTargetTicks() != 0;
+        return this.tardis.travel().getState() == State.FLIGHT && this.getTargetTicks() != 0;
     }
 
     public boolean hasFinishedFlight() {
@@ -158,14 +158,14 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     @Override
     protected int clampSpeed(int value) {
         int max = this.autopilot() ? 1 : this.maxSpeed.get();
+        if (!this.tardis.subsystems().stabilisers().isEnabled()) max = 3;
+
         return MathHelper.clamp(value, 0, max);
     }
 
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
-
-        Tardis tardis = this.tardis();
 
         if ((this.getTargetTicks() > 0 || this.getFlightTicks() > 0)
                 && this.getState() == TravelHandlerBase.State.LANDED)
@@ -188,13 +188,13 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
             boolean shouldRemat = TardisEvents.FINISH_FLIGHT.invoker().onFinish(tardis.asServer()) == TardisEvents.Interaction.SUCCESS;
 
             if (shouldRemat)
-                this.tardis().travel().rematerialize();
+                this.tardis.travel().rematerialize();
 
             return;
         }
 
         if (server.getTicks() % (this.maxSpeed.get() - this.speed() + 1) == 0)
-            this.setFlightTicks(this.getFlightTicks() + AITMod.AIT_CONFIG.TRAVEL_PER_TICK());
+            this.setFlightTicks(this.getFlightTicks() + AITMod.CONFIG.SERVER.TRAVEL_PER_TICK);
     }
 
     public void triggerSequencingDuringFlight(Tardis tardis) {

@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.easter_head;
 
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -18,8 +17,8 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/easter_head/easter_head_";
 
     protected EasterHeadVariant(String name) {
-        super(EasterHeadCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/easter_head/" + name),
-                new Loyalty(Loyalty.Type.PILOT));
+        super(EasterHeadCategory.REFERENCE, AITMod.id("exterior/easter_head/" + name),
+                new Loyalty(Loyalty.Type.COMPANION));
     }
 
     @Override

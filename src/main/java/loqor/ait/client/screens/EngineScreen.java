@@ -11,7 +11,7 @@ import loqor.ait.core.screen_handlers.EngineScreenHandler;
 
 public class EngineScreen extends HandledScreen<EngineScreenHandler> {
 
-    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/gui/engine_gui.png");
+    private static final Identifier TEXTURE = AITMod.id("textures/gui/engine_gui.png");
 
     public EngineScreen(EngineScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);

@@ -8,26 +8,17 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.TardisComponent;
-import loqor.ait.core.tardis.handler.CloakHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
-import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.mood.MoodDictatedEvent;
 import loqor.ait.core.tardis.handler.mood.TardisMood;
-import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class MoodEventPoolRegistry {
     public static final SimpleRegistry<MoodDictatedEvent> REGISTRY = FabricRegistryBuilder
-            .createSimple(RegistryKey.<MoodDictatedEvent>ofRegistry(new Identifier(AITMod.MOD_ID, "mood_event_pool")))
+            .createSimple(RegistryKey.<MoodDictatedEvent>ofRegistry(AITMod.id("mood_event_pool")))
             .buildAndRegister();
 
     private static final Random random = Random.create();
@@ -38,7 +29,8 @@ public class MoodEventPoolRegistry {
 
     // Negative mood events
     public static MoodDictatedEvent CHANGE_DIM;
-    public static MoodDictatedEvent RANDOM_THROTTLING_UP;
+    public static MoodDictatedEvent FORCE_DEMAT;
+    public static MoodDictatedEvent FLY_TO_WAYPOINT;
     public static MoodDictatedEvent KICK_PLAYER_OUT;
     public static MoodDictatedEvent CLOAKING_WHEN_AFRAID;
     public static MoodDictatedEvent FAST_RETURN_AND_TAKEOFF;
@@ -85,126 +77,110 @@ public class MoodEventPoolRegistry {
      */
     public static void init() {
 
-        CHANGE_DIM = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "change_dim"), tardis -> {
+        //The ones i commented out do not work
+
+        CHANGE_DIM = register(MoodDictatedEvent.Builder.create(AITMod.id("change_dim"), tardis -> {
             List<ServerWorld> listOfDims = WorldUtil.getOpenWorlds();
             ServerWorld randomWorld = listOfDims.get(random.nextInt(listOfDims.size()));
 
             tardis.travel().forceDestination(cached -> cached.world(randomWorld));
-        }, 80, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
+        }, 1, TardisMood.Alignment.NEGATIVE));
 
         RANDOM_SIEGE = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_siege"), tardis -> {
-                    tardis.<SiegeHandler>handler(TardisComponent.Id.SIEGE).setActive(true);
-                }, 256, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
+                MoodDictatedEvent.Builder.create(AITMod.id("random_siege"),
+                        tardis -> tardis.siege().setActive(true), 1, TardisMood.Alignment.NEGATIVE));
 
-        FAST_RETURN_AND_TAKEOFF = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_return_and_takeoff"), tardis -> {
-                    TravelHandler travel = tardis.travel();
-
-                    if (tardis.door().isOpen())
-                        tardis.door().closeDoors();
-
-                    travel.autopilot(true);
-
-                    travel.handbrake(false);
-
-                    travel.speed(1);
-
-                    boolean same = travel.destination().equals(travel.previousPosition());
-
-                    if (travel.previousPosition() != null)
-                        travel.forceDestination(same ? travel.position() : travel.previousPosition());
-
-                    travel.dematerialize();
-                }, 128, TardisMood.Alignment.NEUTRAL, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
 
         RANDOM_POWER_OFF = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_power_off"), tardis -> {
+                MoodDictatedEvent.Builder.create(AITMod.id("random_power_off"), tardis -> {
                     if (!tardis.travel().inFlight())
-                        tardis.engine().disablePower();
-                }, 256, TardisMood.Alignment.NEGATIVE));
+                        tardis.fuel().disablePower();
+                }, 1, TardisMood.Alignment.NEGATIVE));
 
         RANDOM_ALARM_ACTIVATION = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_alarm_activation"),
-                        tardis -> tardis.alarm().enabled().set(true), 32, TardisMood.Alignment.NEGATIVE));
+                MoodDictatedEvent.Builder.create(AITMod.id("random_alarm_activation"),
+                        tardis -> tardis.alarm().enabled().set(true), 1, TardisMood.Alignment.NEGATIVE));
 
-        RANDOM_THROTTLING_UP = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_throttling_up"), tardis -> {
-                    if (tardis.travel().inFlight())
-                        tardis.travel().increaseSpeed();
-                }, 16, TardisMood.Alignment.NEGATIVE, TardisMood.Moods.HATEFUL, TardisMood.Moods.HURT));
+        FORCE_DEMAT = register(
+                MoodDictatedEvent.Builder.create(AITMod.id("force_demat"),
+                        tardis -> tardis.travel().dematerialize(), 1, TardisMood.Alignment.NEGATIVE));
 
-        KICK_PLAYER_OUT = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "kick_player_out"), tardis -> {
-                    tardis.door().setLocked(false);
-                    tardis.door().openDoors();
+        FLY_TO_WAYPOINT = register(
+                MoodDictatedEvent.Builder.create(AITMod.id("fly_to_waypoint"),
+                        tardis -> tardis.waypoint().gotoWaypoint(), 1, TardisMood.Alignment.NEUTRAL));
 
-                    if (tardis.getDesktop().doorPos() != null)
-                        tardis.getInteriorWorld().playSound(null, tardis.getDesktop().doorPos().getPos(),
-                                SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
+        //TODO: Fix
+        //KICK_PLAYER_OUT = register(
+                //MoodDictatedEvent.Builder.create(AITMod.id("kick_player_out"), tardis -> {
+                    //tardis.door().setLocked(false);
+                    //tardis.door().openDoors();
 
-                    if (tardis.travel().position() != null)
-                        tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
-                                SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
-                }, 32, TardisMood.Alignment.NEUTRAL));
+                    //if (tardis.getDesktop().getDoorPos() != null)
+                      //  tardis.getInteriorWorld().playSound(null, tardis.getDesktop().getDoorPos().getPos(),
+                        //        SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
 
-        SHIELD_ACTIVATION = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "shield_activation"), tardis -> {
-                    ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
-                    shields.enable();
+                    //if (tardis.travel().position() != null)
+                      //  tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
+                                //SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
+                //}, 1, TardisMood.Alignment.NEUTRAL));
 
-                    if (shields.visuallyShielded().get())
-                        shields.disableVisuals();
-                }, 96, TardisMood.Alignment.NEUTRAL));
+        //SHIELD_ACTIVATION = register(
+              //  MoodDictatedEvent.Builder.create(AITMod.id("shield_activation"), tardis -> {
+                //    ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
+                  //  shields.enable();
+
+                    //if (shields.visuallyShielded().get())
+                      //  shields.disableVisuals();
+                //}, 1, TardisMood.Alignment.NEGATIVE));
 
         CLOAKING_WHEN_AFRAID = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "cloaking_when_afraid"),
-                        tardis -> tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().set(true), 96,
-                        TardisMood.Alignment.NEUTRAL, TardisMood.Moods.FEARFUL));
+                MoodDictatedEvent.Builder.create(AITMod.id("cloaking_when_afraid"), tardis -> {
+                    tardis.cloak().cloaked().set(true);
+                    }, 1, TardisMood.Alignment.NEGATIVE));
 
-        ACTIVATE_AUTOPILOT = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "activate_autopilot"),
-                        tardis -> tardis.travel().autopilot(true), 128, TardisMood.Alignment.NEUTRAL));
+       // ACTIVATE_AUTOPILOT = register(
+               // MoodDictatedEvent.Builder.create(AITMod.id("activate_autopilot"),
+                    //    tardis -> tardis.travel().autopilot(true), 1, TardisMood.Alignment.NEUTRAL));
 
-        AUTO_REFUEL = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "auto_refuel"),
-                tardis -> tardis.fuel().refueling().set(true), 32, TardisMood.Alignment.POSITIVE));
+        AUTO_REFUEL = register(MoodDictatedEvent.Builder.create(AITMod.id("auto_refuel"),
+                tardis -> tardis.fuel().refueling().set(true), 1, TardisMood.Alignment.POSITIVE));
 
         ADD_LOYALTY = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "add_loyalty"),
+                MoodDictatedEvent.Builder.create(AITMod.id("add_loyalty"),
                         tardis -> TardisUtil.getPlayersInsideInterior(tardis)
                                 .forEach(player -> tardis.loyalty().get(player).add(7)),
-                        64, TardisMood.Alignment.POSITIVE));
+                        1, TardisMood.Alignment.POSITIVE));
 
-        RANDOM_XP_GRANT = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "random_xp_grant"),
+        RANDOM_XP_GRANT = register(MoodDictatedEvent.Builder.create(AITMod.id("random_xp_grant"),
                 tardis -> TardisUtil.getPlayersInsideInterior(tardis)
                         .forEach(player -> player
                                 .addExperience((int) (player.getNextLevelExperience() + player.experienceProgress))),
-                32, TardisMood.Alignment.POSITIVE));
+                1, TardisMood.Alignment.POSITIVE));
 
         // instant flight basically, expensive.
         FAST_FLIGHT = register(
-                MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "fast_flight"), tardis -> {
+                MoodDictatedEvent.Builder.create(AITMod.id("fast_flight"), tardis -> {
                     if (tardis.travel().inFlight()) {
                         tardis.travel().decreaseFlightTime(
                                 tardis.travel().getTargetTicks() - tardis.travel().getFlightTicks());
                     }
                     tardis.fuel().removeFuel(1000);
-                }, 256, TardisMood.Alignment.POSITIVE));
+                }, 1, TardisMood.Alignment.POSITIVE));
 
         // TODO: should make this happen when a low loyalty player approaches the TARDIS
-        LOCK_DOORS = register(MoodDictatedEvent.Builder.create(new Identifier(AITMod.MOD_ID, "lock_doors"), tardis -> {
-            tardis.door().setLocked(true);
-            if (tardis.getDesktop().doorPos() != null)
-                tardis.getInteriorWorld().playSound(null, tardis.getDesktop().doorPos().getPos(),
-                        SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.BLOCKS, 1f, 1f);
+        //LOCK_DOORS = register(MoodDictatedEvent.Builder.create(AITMod.id("lock_doors"), tardis -> {
+         //   tardis.door().setLocked(true);
+         //   if (tardis.getDesktop().getDoorPos() != null)
+             //   tardis.getInteriorWorld().playSound(null, tardis.getDesktop().getDoorPos().getPos(),
+             //           SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.BLOCKS, 1f, 1f);
 
-            DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+          //  DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
 
-            if (exteriorPos == null)
-                return;
+           // if (exteriorPos == null)
+            //    return;
 
-            exteriorPos.getWorld().playSound(null, exteriorPos.getPos(), SoundEvents.BLOCK_CHAIN_PLACE,
-                    SoundCategory.BLOCKS, 1f, 1f);
-        }, 48, TardisMood.Alignment.NEUTRAL));
+           // exteriorPos.getWorld().playSound(null, exteriorPos.getPos(), SoundEvents.BLOCK_CHAIN_PLACE,
+                //    SoundCategory.BLOCKS, 1f, 1f);
+        //}, 1, TardisMood.Alignment.NEUTRAL));
     }
 }

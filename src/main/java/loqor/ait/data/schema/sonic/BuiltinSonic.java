@@ -23,7 +23,7 @@ public class BuiltinSonic extends SonicSchema {
             identifiers[i] = new Identifier(MOD_ID, prefix + id + "/" + MODES[i]);
         }
 
-        Identifier sonicId = new Identifier(AITMod.MOD_ID, id);
+        Identifier sonicId = AITMod.id(id);
 
         return new BuiltinSonic(sonicId,
                 new Models(identifiers[0], identifiers[1], identifiers[2], identifiers[3], identifiers[4]));

@@ -11,7 +11,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class PlinthDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/plinth");
+    public static final Identifier REFERENCE = AITMod.id("door/plinth");
 
     public PlinthDoorVariant() {
         super(REFERENCE);
@@ -34,12 +34,6 @@ public class PlinthDoorVariant extends DoorSchema {
 
     @Override
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
-        return switch (direction) {
-            case DOWN, UP -> pos;
-            case NORTH -> pos.add(0, 0.3, -0.4);
-            case SOUTH -> pos.add(0, 0.3, 0.4);
-            case WEST -> pos.add(-0.4, 0.3, 0);
-            case EAST -> pos.add(0.4, 0.3, 0);
-        };
+        return pos.add(0, -0.175, -0.4);
     }
 }

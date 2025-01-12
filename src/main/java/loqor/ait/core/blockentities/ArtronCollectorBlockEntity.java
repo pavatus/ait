@@ -1,5 +1,6 @@
 package loqor.ait.core.blockentities;
 
+import dev.pavatus.gun.core.item.StaserBoltMagazine;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -59,16 +60,20 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
             } else if (stack.getItem() instanceof ChargedZeitonCrystalItem crystal) {
                 double residual = crystal.addFuel(this.getCurrentFuel(), stack);
                 this.setCurrentFuel(residual);
+            } else if (stack.getItem() instanceof StaserBoltMagazine magazine) {
+                double residual = magazine.addFuel(this.getCurrentFuel(), stack);
+                this.setCurrentFuel(residual);
             }
-            if (stack.getItem() == AITBlocks.ZEITON_CLUSTER.asItem()) {
+            if (stack.isOf(AITBlocks.ZEITON_CLUSTER.asItem())) {
                 if (sneaking) {
-                    this.setCurrentFuel(this.addFuel(15));
-                    if (!player.isCreative())
-                        stack.decrement(1);
+                    player.getInventory().setStack(player.getInventory().selectedSlot,
+                            new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL));
                     return;
                 }
-                player.getInventory().setStack(player.getInventory().selectedSlot,
-                        new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL));
+
+                // todo - instead of zeiton cluster for fuel, check for the TARDIS_FUEL tag
+                this.addFuel(15);
+                stack.decrement(1);
             }
         }
     }

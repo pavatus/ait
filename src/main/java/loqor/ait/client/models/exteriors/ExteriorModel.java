@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.effects.ZeitonHighEffect;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -32,6 +33,14 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         super(function);
     }
 
+    public void animateBlockEntity(ExteriorBlockEntity exterior) {
+        this.getPart().traverse().forEach(ModelPart::resetTransform);
+
+        /*if (AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.updateAnimation(exterior.DOOR_STATE, this.getAnimationForDoorState(
+                    exterior.prevAnimState), exterior.animationTimer);*/
+    }
+
     public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         Tardis tardis = exterior.tardis().get();
@@ -41,7 +50,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
 
         float newAlpha = alpha;
 
-        if (tardis.cloak().cloaked().get()) {
+        if (tardis.cloak().cloaked().get() && !ZeitonHighEffect.isHigh(MinecraftClient.getInstance().player)) {
             PlayerEntity player = MinecraftClient.getInstance().player;
 
             if (!(tardis.loyalty().get(player).isOf(Loyalty.Type.COMPANION))) {
@@ -74,5 +83,5 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
             float headPitch) {
     }
 
-    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
+    public abstract Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state);
 }

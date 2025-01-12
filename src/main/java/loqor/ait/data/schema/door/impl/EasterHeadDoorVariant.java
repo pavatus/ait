@@ -9,7 +9,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class EasterHeadDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/easter_head");
+    public static final Identifier REFERENCE = AITMod.id("door/easter_head");
 
     public EasterHeadDoorVariant() {
         super(REFERENCE);

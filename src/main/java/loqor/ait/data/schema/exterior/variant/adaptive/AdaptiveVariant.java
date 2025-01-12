@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.adaptive;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -16,7 +15,7 @@ import loqor.ait.registry.impl.door.DoorRegistry;
 public class AdaptiveVariant extends ExteriorVariantSchema {
 
     public AdaptiveVariant() {
-        super(AdaptiveCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/adaptive"));
+        super(AdaptiveCategory.REFERENCE, AITMod.id("exterior/adaptive"));
     }
 
     @Override

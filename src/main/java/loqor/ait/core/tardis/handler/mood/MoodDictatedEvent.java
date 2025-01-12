@@ -12,7 +12,7 @@ import loqor.ait.core.tardis.ServerTardis;
 public interface MoodDictatedEvent {
 
     default Identifier id() {
-        return new Identifier(AITMod.MOD_ID, "mood_dictated_event");
+        return AITMod.id("mood_dictated_event");
     }
 
     void execute(ServerTardis tardis);

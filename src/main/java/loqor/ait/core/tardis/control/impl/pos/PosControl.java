@@ -38,7 +38,7 @@ public abstract class PosControl extends Control {
                 (leftClick) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis),
                 destination.getWorld());
 
-        travel.forceDestination(destination.pos(pos));
+        travel.destination(destination.pos(pos));
         messagePlayerDestination(player, travel);
         return true;
     }

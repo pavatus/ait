@@ -14,7 +14,7 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 public class ClientGrowthVariant extends ClientExteriorVariantSchema {
 
     public ClientGrowthVariant() {
-        super(new Identifier(AITMod.MOD_ID, "exterior/coral_growth"));
+        super(AITMod.id("exterior/coral_growth"));
     }
 
     @Override

@@ -1,8 +1,9 @@
 package loqor.ait.core.blocks;
 
-import java.util.Optional;
 import java.util.function.ToIntFunction;
 
+import dev.pavatus.planet.core.planet.Planet;
+import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,6 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -45,7 +45,6 @@ import net.minecraft.world.WorldAccess;
 import loqor.ait.api.ICantBreak;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.TardisEvents;
-import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
@@ -54,7 +53,6 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.BiomeHandler;
-import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
@@ -79,14 +77,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
             Block.createCuboidShape(11.0, 0.0, 11.0, 16.0, 32.0, 16.0), Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
     public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
 
-    public ExteriorBlock(Settings settings) {
-        super(settings.nonOpaque());
+    public static final VoxelShape DIAGONAL_SHAPE;
 
-        this.setDefaultState(
-                this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false).with(LEVEL_9, 9));
-    }
-
-    public VoxelShape diagonalShape() {
+    static {
         VoxelShape shape = VoxelShapes.empty();
         shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.125, 0, -0.125, 0.875, 0.0625, 0.875),
                 BooleanBiFunction.OR);
@@ -119,7 +112,14 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         shape = VoxelShapes.combineAndSimplify(shape, VoxelShapes.cuboid(-0.3125, 0, -0.3125, 0.625, 0.0625, 0.625),
                 BooleanBiFunction.OR);
 
-        return shape;
+        DIAGONAL_SHAPE = shape;
+    }
+
+    public ExteriorBlock(Settings settings) {
+        super(settings.nonOpaque());
+
+        this.setDefaultState(
+                this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false).with(LEVEL_9, 9));
     }
 
     @Override
@@ -165,7 +165,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        VoxelShape normal = this.getNormalShape(state);
+        VoxelShape normal = this.getNormalShape(state, false);
 
         if (!(blockEntity instanceof ExteriorBlockEntity exterior))
             return normal;
@@ -201,17 +201,15 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        // todo move these to a reusable method
-
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (!(blockEntity instanceof ExteriorBlockEntity exterior) || exterior.tardis() == null)
-            return getNormalShape(state);
+            return getNormalShape(state, false);
 
         Tardis tardis = exterior.tardis().get();
 
         if (tardis == null)
-            return getNormalShape(state);
+            return getNormalShape(state, false);
 
         if (tardis.siege().isActive())
             return SIEGE_SHAPE;
@@ -220,7 +218,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
             return LEDGE_DOOM;
 
         if (DependencyChecker.hasPortals() && !tardis.door().isOpen() && tardis.getExterior().getVariant().hasPortals())
-            return getLedgeShape(state);
+            return getNormalShape(state, true);
 
         if (tardis.getExterior().getVariant() instanceof AdaptiveVariant)
             return VoxelShapes.empty();
@@ -229,7 +227,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         if (travel.getState() == TravelHandlerBase.State.LANDED
                 || travel.getAnimTicks() >= 0.75 * travel.getMaxAnimTicks())
-            return getNormalShape(state);
+            return getNormalShape(state, false);
 
         if (DependencyChecker.hasPortals())
             return PORTALS_SHAPE;
@@ -237,20 +235,21 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         return VoxelShapes.empty();
     }
 
-    public VoxelShape getNormalShape(BlockState state) {
-        Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
+    // TODO cache this.
+    public VoxelShape getNormalShape(BlockState state, boolean ignorePortals) {
+        Direction direction = RotationPropertyHelper.toDirection(state.get(ROTATION))
+                .orElse(null);
 
-        if (direction.isEmpty()) {
-            if (DependencyChecker.hasPortals()) {
-                return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), PORTALS_SHAPE_DIAGONAL);
-            }
-            return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
+        VoxelShape shape;
+
+        if (direction == null) {
+            shape = DependencyChecker.hasPortals() && !ignorePortals ? PORTALS_SHAPE_DIAGONAL : DIAGONAL_SHAPE;
+            direction = approximateDirection(state.get(ROTATION));
         } else {
-            if (DependencyChecker.hasPortals()) {
-                return rotateShape(Direction.NORTH, direction.get(), PORTALS_SHAPE);
-            }
-            return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
+            shape = DependencyChecker.hasPortals() && !ignorePortals ? PORTALS_SHAPE : CUBE_NORTH_SHAPE;
         }
+
+        return rotateShape(Direction.NORTH, direction, shape);
     }
 
     public Direction approximateDirection(int rotation) {
@@ -260,17 +259,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
             case 5, 6, 7 -> Direction.SOUTH;
             case 9, 10, 11 -> Direction.WEST;
         };
-    }
-
-    public VoxelShape getLedgeShape(BlockState state) {
-        // fixme these wont have ledges probably
-        Optional<Direction> direction = RotationPropertyHelper.toDirection(state.get(ROTATION));
-
-        if (direction.isEmpty()) {
-            return rotateShape(Direction.NORTH, approximateDirection(state.get(ROTATION)), diagonalShape());
-        } else {
-            return rotateShape(Direction.NORTH, direction.get(), CUBE_NORTH_SHAPE);
-        }
     }
 
     @Override
@@ -283,12 +271,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (!(blockEntity instanceof ExteriorBlockEntity exterior) || !exterior.isLinked())
-            return getNormalShape(state);
+            return getNormalShape(state, false);
 
         TravelHandlerBase.State travelState = exterior.tardis().get().travel().getState();
 
         if (travelState == TravelHandlerBase.State.LANDED || exterior.getAlpha() > 0.75)
-            return getNormalShape(state);
+            return getNormalShape(state, false);
 
         if (exterior.tardis().get().getExterior().getVariant().equals(ExteriorVariantRegistry.DOOM))
             return LEDGE_DOOM;
@@ -305,14 +293,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof ExteriorBlockEntity exterior) {
-            if (world.isClient()) {
-                if (exterior.tardis() == null || exterior.tardis().isEmpty()) {
-                    ClientTardisManager.getInstance().askTardis(GlobalPos.create(world.getRegistryKey(), pos));
-                    return ActionResult.FAIL;
-                }
-
+            if (world.isClient())
                 return ActionResult.SUCCESS;
-            }
 
             if (exterior.tardis().isEmpty())
                 return ActionResult.FAIL;
@@ -341,9 +323,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull World world, @NotNull BlockState state,
             @NotNull BlockEntityType<T> type) {
         return (world1, blockPos, blockState, ticker) -> {
-            if (ticker instanceof ExteriorBlockEntity exterior) {
+            if (ticker instanceof ExteriorBlockEntity exterior)
                 exterior.tick(world, blockPos, blockState, exterior);
-            }
         };
     }
 
@@ -374,6 +355,8 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         if (tardis.getExterior().getCategory().equals(CategoryRegistry.CORAL_GROWTH))
             return;
+
+        Planet planet = PlanetRegistry.getInstance().get(tardis.travel().position().getWorld());
 
         FallingTardisEntity.spawnFromBlock(world, pos, state);
 
@@ -440,12 +423,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
 
         world.scheduleBlockTick(pos, this, 2);
-        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_CRASH, SoundCategory.BLOCKS);
 
         tardis.flight().falling().set(false);
 
-        DoorHandler.lockTardis(
-                tardis.door().previouslyLocked().get() || tardis.interiorChangingHandler().isQueued(), tardis, null,
+        tardis.door().interactLock(
+                tardis.door().previouslyLocked().get(),null,
                 false);
 
         TardisEvents.LANDED.invoker().onLanded(tardis);

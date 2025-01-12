@@ -1,123 +1,220 @@
 package loqor.ait.core;
 
+import java.util.List;
+
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.sounds.MatSound;
-import loqor.ait.registry.auto.SoundRegistryContainer;
 
-public class AITSounds implements SoundRegistryContainer {
-    public static final SoundEvent SECRET_MUSIC = SoundEvent.of(new Identifier(AITMod.MOD_ID, "music/secret_music"));
-    public static final SoundEvent EVEN_MORE_SECRET_MUSIC = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "music/even_more_secret_music"));
-    public static final SoundEvent DRIFTING_MUSIC = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "music/drifting_by_radio"));
-    public static final SoundEvent MERCURY_MUSIC = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "music/mercury_by_nitrogenesis"));
+public class AITSounds {
+    // public static final SoundEvent SECRET_MUSIC = register("music/secret_music"); // removed for its large size - if you bring it back, COMPRESS IT
+    public static final SoundEvent EVEN_MORE_SECRET_MUSIC = register("music/even_more_secret_music");
+    public static final SoundEvent DRIFTING_MUSIC = register("music/drifting_by_radio");
+    public static final SoundEvent MERCURY_MUSIC = register("music/mercury_nitrogenez");
+    public static final SoundEvent WONDERFUL_TIME_IN_SPACE = register("music/wonderful_time_in_space");
 
     // TARDIS
-    public static final SoundEvent DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/demat"));
-    public static final SoundEvent MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/mat"));
-    public static final SoundEvent HOP_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hop_takeoff"));
-    public static final SoundEvent HOP_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hop_land"));
-    public static final SoundEvent FAIL_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/fail_takeoff"));
-    public static final SoundEvent FAIL_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/fail_land"));
-    public static final SoundEvent EMERG_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/emergency_land"));
-    public static final SoundEvent FLIGHT_LOOP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/flight_loop"));
-    public static final SoundEvent UNSTABLE_FLIGHT_LOOP = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/unstable_flight_loop"));
-    public static final SoundEvent LAND_THUD = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/land_thud"));
-    public static final SoundEvent SHUTDOWN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/console_shutdown"));
-    public static final SoundEvent POWERUP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/console_powerup"));
-    public static final SoundEvent WAYPOINT_ACTIVATE = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/waypoint_activate"));
 
-    public static final SoundEvent SIEGE_ENABLE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/siege_enable"));
-    public static final SoundEvent SIEGE_DISABLE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/siege_disable"));
+    public static final SoundEvent DEMAT = register("tardis/demat");
+    public static final SoundEvent MAT = register("tardis/mat");
+    public static final SoundEvent HOP_DEMAT = register("tardis/hop_takeoff");
+    public static final SoundEvent HOP_MAT = register("tardis/hop_land");
+    public static final SoundEvent FAIL_DEMAT = register("tardis/fail_takeoff");
+    public static final SoundEvent FAIL_MAT = register("tardis/fail_land");
+    public static final SoundEvent PHASING_DEMAT = register("tardis/engine_phasing_demat");
+    public static final SoundEvent PHASING_REMAT = register("tardis/engine_phasing_remat");
+    public static final SoundEvent EMERG_MAT = register("tardis/emergency_land");
+    public static final SoundEvent FLIGHT_LOOP = register("tardis/flight_loop");
+    public static final SoundEvent UNSTABLE_FLIGHT_LOOP = register("tardis/unstable_flight_loop");
+    public static final SoundEvent LAND_THUD = register("tardis/land_thud");
+    public static final SoundEvent ABORT_FLIGHT = register("tardis/abort_flight");
+    public static final SoundEvent LAND_CRASH = register("tardis/land_crash");
+    public static final SoundEvent SHUTDOWN = register("tardis/console_shutdown");
+    public static final SoundEvent POWERUP = register("tardis/console_powerup");
+    public static final SoundEvent WAYPOINT_ACTIVATE = register("tardis/waypoint_activate");
+    public static final SoundEvent CLASSIC_DOOR_OPEN = register("tardis/classic_door_open");
+    public static final SoundEvent CLASSIC_DOOR_CLOSE = register("tardis/classic_door_close");
 
-    public static final SoundEvent EIGHT_DEMAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_demat"));
-    public static final SoundEvent EIGHT_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/eighth_mat"));
-    public static final SoundEvent GHOST_MAT = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/ghost_mat"));
+    public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
+    public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
+
+
+
+    //EIGHTH SOUNDS
+    public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
+    public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
+    public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
+    //GHOST MAT
+    public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
+    //GHOSTBUSTERS SOUNDS
+    public static final SoundEvent GB_DEMAT = register("tardis/gb_demat");
+    public static final SoundEvent GB_FLIGHT = register("tardis/gb_flight");
+    public static final SoundEvent GB_MAT = register("tardis/gb_mat");
+    //PROTON SOUNDS
+    public static final SoundEvent PROTON_FLIGHT = register("tardis/proton_flight");
+    public static final SoundEvent PROTON_DEMAT = register("tardis/proton_demat");
+    public static final SoundEvent PROTON_MAT = register("tardis/proton_mat");
+    //TYPE 70 SOUNDS
+    public static final SoundEvent TYPE70_DEMAT = register("tardis/type70_demat");
+    public static final SoundEvent TYPE70_MAT = register("tardis/type70_mat");
+    //CLASSIC SOUNDS
+    public static final SoundEvent CLASSIC_DEMAT = register("tardis/classic_demat");
+    public static final SoundEvent CLASSIC_MAT = register("tardis/classic_mat");
+    public static final SoundEvent REGEN_DEMAT = register("tardis/regen_demat");
+    //DRUMLESS SOUND
+    public static final SoundEvent DRUMLESS_DEMAT = register("tardis/drumless_demat");
+    //MINECART SOUNDS
+    public static final SoundEvent MINECART_DEMAT = register("tardis/minecart_demat");
+    public static final SoundEvent MINECART_FLIGHT = register("tardis/minecart_flight");
+    public static final SoundEvent MINECART_MAT = register("tardis/minecart_mat");
+    //MASTER SOUNDS
+    public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
+    public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
+    //STYLE SOUNDS
+    public static final SoundEvent STYLE_DEMAT = register("tardis/style_demat");
+    public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
+    //HALFLIFE
+    //public static final SoundEvent HALFLIFE_DEMAT = register("tardis/halflife_demat");
+    //public static final SoundEvent HALFLIFE_FLIGHT = register("tardis/halflife_flight");
+    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //PORTAL
+    //public static final SoundEvent PORTAL_DEMAT = register("tardis/portal_demat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_flight");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
+
+
+
+
+
+    // APPARATUS VIVI
+    public static final SoundEvent MOODY1 = register("tardis/moody/moody1");
+    public static final SoundEvent MOODY2 = register("tardis/moody/moody2");
+    public static final SoundEvent MOODY3 = register("tardis/moody/moody3");
+    public static final SoundEvent MOODY4 = register("tardis/moody/moody4");
+    public static final SoundEvent MOODY5 = register("tardis/moody/moody5");
+    public static final SoundEvent HAMMER_STRIKE = register("tardis/hammer_strike");
+    public static final SoundEvent OWNER_BED = register("tardis/bed/owner");
+    public static final SoundEvent PILOT_BED = register("tardis/bed/pilot");
+    public static final SoundEvent COMPANION_BED = register("tardis/bed/companion");
+    public static final SoundEvent NEUTRAL_BED = register("tardis/bed/neutral");
+    public static final SoundEvent REJECT_BED = register("tardis/bed/reject");
+    public static final SoundEvent LOYALTY_UP = register("tardis/moody/loyalty_up");
+    public static final SoundEvent GROAN = register("tardis/groan");
+    //Possible could be used for a mood related thing?
+    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
 
     // Controls
-    public static final SoundEvent DEMAT_LEVER_PULL = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "controls/demat_lever_pull"));
-    public static final SoundEvent HANDBRAKE_LEVER_PULL = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "controls/handbrake_lever_pull"));
-    public static final SoundEvent HANDBRAKE_UP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/handbrake_up"));
-    public static final SoundEvent HANDBRAKE_DOWN = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "controls/handbrake_down"));
-    public static final SoundEvent CRANK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/crank"));
-    public static final SoundEvent KNOCK = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/knock"));
-    public static final SoundEvent SNAP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/snap"));
-    public static final SoundEvent BWEEP = SoundEvent.of(new Identifier(AITMod.MOD_ID, "controls/bweep"));
+    public static final SoundEvent DEMAT_LEVER_PULL = register("controls/demat_lever_pull");
+    public static final SoundEvent HANDBRAKE_LEVER_PULL = register("controls/handbrake_lever_pull");
+    public static final SoundEvent HANDBRAKE_UP = register("controls/handbrake_up");
+    public static final SoundEvent HANDBRAKE_DOWN = register("controls/handbrake_down");
+    public static final SoundEvent CRANK = register("controls/crank");
+    public static final SoundEvent KNOCK = register("controls/knock");
+    public static final SoundEvent SNAP = register("controls/snap");
+    public static final SoundEvent BWEEP = register("controls/bweep");
+    public static final SoundEvent ENGINE_REFUEL_CRANK = register("controls/engine_refuel_crank");
+    public static final SoundEvent TELEPATHIC_CIRCUITS = register("controls/telepathic_circuits");
+    public static final SoundEvent PROTOCOL_3 = register("controls/protocol_3");
+    public static final SoundEvent PROTOCOL_3ALT = register("controls/protocol_3alt");
+    public static final SoundEvent LAND_TYPE = register("controls/land_type");
+    public static final SoundEvent DOOR_LOCK = register("controls/door_lock");
+    public static final SoundEvent MONITOR = register("controls/monitor");
+    public static final SoundEvent DOOR_CONTROL = register("controls/door_control");
+    public static final SoundEvent DOOR_CONTROLALT = register("controls/door_controlalt");
+    public static final SoundEvent POWER_FLICK = register("controls/power_flick");
+    public static final SoundEvent PROTOCOL_19 = register("controls/protocol_19");
+    public static final SoundEvent MARK_WAYPOINT = register("controls/mark_waypoint");
+    public static final SoundEvent ANTI_GRAVS = register("controls/anti_gravs");
+    public static final SoundEvent FAST_RETURN = register("controls/fast_return");
+    public static final SoundEvent PROTOCOL_116_ON = register("controls/protocol_116_on");
+    public static final SoundEvent PROTOCOL_116_OFF = register("controls/protocol_116_off");
+    public static final SoundEvent SHIELDS = register("controls/shield");
+    public static final SoundEvent ALARM = register("controls/alarm_flick");
+    public static final SoundEvent SLOT_IN = register("controls/slot_in");
+    public static final SoundEvent HAIL_MARY = register("controls/hail_mary");
+    public static final SoundEvent SIEGE = register("controls/siege");
+    public static final SoundEvent DIRECTION = register("controls/direction");
+    public static final SoundEvent SET_WAYPOINT = register("controls/waypoint_set");
+    public static final SoundEvent XYZ = register("controls/xyz");
+    public static final SoundEvent RANDOMIZE = register("controls/randomize");
+    public static final SoundEvent INCREMENT = register("controls/increment");
+    public static final SoundEvent DIMENSION = register("controls/dimension");
+    public static final SoundEvent ML = register("tardis/ml");
+
+
+    // Console
+    public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");
+    public static final SoundEvent CONSOLE_BOOTUP = register("tardis/console_bootup");
 
     // Hums
-    public static final SoundEvent TOYOTA_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/toyota_hum"));
-    public static final SoundEvent CORAL_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/coral_hum"));
-    public static final SoundEvent EIGHT_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/eight_hum"));
-    public static final SoundEvent COPPER_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/copper_hum"));
-    public static final SoundEvent EXILE_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/exile_hum"));
-    public static final SoundEvent PRIME_HUM = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/hums/prime_hum"));
-    public static final SoundEvent TOKAMAK_HUM = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/hums/tokamak_hum"));
+    public static final SoundEvent TOYOTA_HUM = register("tardis/hums/toyota_hum");
+    public static final SoundEvent CORAL_HUM = register("tardis/hums/coral_hum");
+    public static final SoundEvent CHRISTMAS_HUM = register("tardis/hums/advent/christmas_hum");
+    public static final SoundEvent EIGHT_HUM = register("tardis/hums/eight_hum");
+    public static final SoundEvent COPPER_HUM = register("tardis/hums/copper_hum");
+    public static final SoundEvent EXILE_HUM = register("tardis/hums/exile_hum");
+    public static final SoundEvent PRIME_HUM = register("tardis/hums/prime_hum");
+    public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
-    public static final SoundEvent CLOISTER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/cloister"));
-    public static final SoundEvent GROAN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/groan"));
+    public static final SoundEvent CLOISTER = register("tardis/cloister");
+
 
     // Creaks
-    public static final SoundEvent CREAK_ONE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_one"));
-    public static final SoundEvent CREAK_TWO = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_two"));
-    public static final SoundEvent CREAK_THREE = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_three"));
-    public static final SoundEvent CREAK_FOUR = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_four"));
-    public static final SoundEvent CREAK_FIVE = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_five"));
-    public static final SoundEvent CREAK_SIX = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_six"));
-    public static final SoundEvent CREAK_SEVEN = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/creaks/creak_seven"));
-    public static final SoundEvent WHISPER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/creaks/whisper"));
+    public static final SoundEvent CREAK_ONE = register("tardis/creaks/creak_one");
+    public static final SoundEvent CREAK_TWO = register("tardis/creaks/creak_two");
+    public static final SoundEvent CREAK_THREE = register("tardis/creaks/creak_three");
+    public static final SoundEvent CREAK_FOUR = register("tardis/creaks/creak_four");
+    public static final SoundEvent CREAK_FIVE = register("tardis/creaks/creak_five");
+    public static final SoundEvent CREAK_SIX = register("tardis/creaks/creak_six");
+    public static final SoundEvent CREAK_SEVEN = register("tardis/creaks/creak_seven");
+    public static final SoundEvent WHISPER = register("tardis/creaks/whisper");
 
-    // Vortex Sounds
-    public static final SoundEvent VORTEX_SOUND = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/vortex_sound"));
-    public static final SoundEvent RAIN = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/exterior/rain"));
-    public static final SoundEvent THUNDER = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tardis/exterior/thunder"));
+    // Outside Sounds
+    public static final SoundEvent VORTEX_SOUND = register("tardis/vortex_sound");
+    public static final SoundEvent RAIN = register("tardis/exterior/rain");
+    public static final SoundEvent THUNDER = register("tardis/exterior/thunder");
 
     // Tools
-    public static final SoundEvent DING = SoundEvent.of(new Identifier(AITMod.MOD_ID, "tools/goes_ding"));
+    public static final SoundEvent DING = register("tools/goes_ding");
+    public static final SoundEvent STASER = register("tools/staser");
+    public static final SoundEvent REMOTE = register("tools/remote");
+
+
+    // Fabricator
+    public static final SoundEvent FABRICATOR_START = register("tools/fabricator/start");
+    public static final SoundEvent FABRICATOR_END = register("tools/fabricator/end");
+    public static final SoundEvent FABRICATOR_LOOP = register("tools/fabricator/loop");
 
     // Sonic
-    public static final SoundEvent SONIC_USE = SoundEvent.of(new Identifier(AITMod.MOD_ID, "sonic/use"));
-    public static final SoundEvent SONIC_SWITCH = SoundEvent.of(new Identifier(AITMod.MOD_ID, "sonic/switch"));
-
-    // FIXME: move somwehre else + these values suck
-    public static final MatSound DEMAT_ANIM = new MatSound(DEMAT, 240, 240, 240, 210, 0.2f, 0.4f); // fixme especially
-                                                                                                    // this one it
-                                                                                                    // flickers bad
-    public static final MatSound MAT_ANIM = new MatSound(MAT, 460, 240, 240, 400, 0.2f, 0.4f);
-    public static final MatSound FLIGHT_ANIM = new MatSound(FLIGHT_LOOP, 120, 60, 60, 60, 0, 0); // tf is this even
-    public static final MatSound EIGHT_DEMAT_ANIM = new MatSound(EIGHT_DEMAT, 8 * 20, 8 * 20, 8 * 20, 9 * 20, 0.1f,
-            0.3f);
-    public static final MatSound EIGHT_MAT_ANIM = new MatSound(EIGHT_MAT, 11 * 20, 11 * 20, 9 * 20, 9 * 20, 0.2f, 0.4f);
-    public static final MatSound GHOST_MAT_ANIM = new MatSound(GHOST_MAT, 590, 320, 320, 320, 0.2f, 0.4f);
+    public static final SoundEvent SONIC_USE = register("sonic/use");
+    public static final SoundEvent SONIC_SWITCH = register("sonic/switch");
 
     // Secret
-    public static final SoundEvent DOOM_DOOR_OPEN = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_open"));
-    public static final SoundEvent DOOM_DOOR_CLOSE = SoundEvent
-            .of(new Identifier(AITMod.MOD_ID, "tardis/secret/doom_door_close"));
+    public static final SoundEvent DOOM_DOOR_OPEN = register("tardis/secret/doom_door_open");
+    public static final SoundEvent DOOM_DOOR_CLOSE = register("tardis/secret/doom_door_close");
+    public static final SoundEvent ERROR = register("error");
 
-    @Override
-    public Registry<SoundEvent> getRegistry() {
-        return Registries.SOUND_EVENT;
+    // Engine
+    public static final SoundEvent ENGINE_REFUEL = register("tardis/engine_refuel");
+
+    // Engine related stuff
+    public static final SoundEvent POWER_CONVERT = register("tardis/power_convert");
+
+
+
+    public static void init() {
+
     }
-
-    @Override
-    public Class<SoundEvent> getTargetFieldType() {
-        return SoundEvent.class;
+    private static SoundEvent register(String name) {
+        return register(AITMod.id(name));
+    }
+    private static SoundEvent register(Identifier id) {
+        return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+    }
+    public static List<SoundEvent> getSounds(String modid) {
+        return Registries.SOUND_EVENT.stream().filter(sound -> sound.getId().getNamespace().equals(modid)).toList();
     }
 }

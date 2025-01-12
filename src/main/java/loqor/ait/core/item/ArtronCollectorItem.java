@@ -103,6 +103,6 @@ public class ArtronCollectorItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         NbtCompound tag = stack.getOrCreateNbt();
         String text = tag.contains(AU_LEVEL) ? "" + tag.getDouble(AU_LEVEL) : "0.0";
-        tooltip.add(Text.literal(text + "au / " + COLLECTOR_MAX_FUEL + ".0au").formatted(Formatting.BLUE));
+        tooltip.add(Text.literal(text + " / " + COLLECTOR_MAX_FUEL + ".0").formatted(Formatting.BLUE));
     }
 }

@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.text.TranslatableTextContent;
 
 import loqor.ait.AITMod;
 import loqor.ait.datagen.datagen_providers.lang.LanguageType;
@@ -64,7 +65,10 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      *            The translation.
      */
     public void addTranslation(ItemGroup itemGroup, String translation) {
-        translations.put(getTranslationKeyForItemGroup(itemGroup), translation);
+        if (!(itemGroup.getDisplayName().getContent() instanceof TranslatableTextContent translatable))
+            return;
+
+        translations.put(translatable.getKey(), translation);
     }
 
     /**
@@ -89,16 +93,5 @@ public class AITLanguageProvider extends FabricLanguageProvider {
      */
     public void addTranslation(Block block, String translation) {
         translations.put(block.getTranslationKey(), translation);
-    }
-
-    /**
-     * Get the translation key for the OwoItemGroup
-     *
-     * @param itemGroup
-     *            The item group to get the translation key for
-     * @return The translation key for the item group
-     */
-    private String getTranslationKeyForItemGroup(ItemGroup itemGroup) {
-        return itemGroup.getDisplayName().getString();
     }
 }

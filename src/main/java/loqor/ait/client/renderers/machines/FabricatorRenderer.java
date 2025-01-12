@@ -1,7 +1,9 @@
 package loqor.ait.client.renderers.machines;
 
-import net.minecraft.block.Blocks;
+import org.joml.Vector3f;
+
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -9,20 +11,22 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.FabricatorModel;
 import loqor.ait.client.util.ClientLightUtil;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.blockentities.FabricatorBlockEntity;
 import loqor.ait.core.blocks.FabricatorBlock;
+import loqor.ait.core.item.blueprint.Blueprint;
 
 public class FabricatorRenderer<T extends FabricatorBlockEntity> implements BlockEntityRenderer<T> {
 
-    public static final Identifier FABRICATOR_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/block/fabricator.png");
+    public static final Identifier FABRICATOR_TEXTURE = AITMod.id("textures/block/fabricator.png");
     public static final Identifier EMISSIVE_FABRICATOR_TEXTURE = new Identifier(AITMod.MOD_ID,
             "textures/block/fabricator_emission.png");
     private final FabricatorModel fabricatorModel;
@@ -48,7 +52,7 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
                 vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(FABRICATOR_TEXTURE)), light, overlay, 1.0F,
                 1.0F, 1.0F, 1.0F);
 
-        if (entity.getWorld().getBlockState(entity.getPos().down()).isOf(Blocks.SMITHING_TABLE)) {
+        if (entity.isValid()) {
             ClientLightUtil.renderEmissive(ClientLightUtil.Renderable.create(fabricatorModel::render),
                     EMISSIVE_FABRICATOR_TEXTURE, entity, fabricatorModel.getPart(), matrices, vertexConsumers, light,
                     overlay, 1, 1, 1, 1);
@@ -57,22 +61,65 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
         matrices.pop();
         matrices.push();
 
-        ItemStack stack = new ItemStack(AITItems.BLUEPRINT);
+        ItemStack stack = entity.getShowcaseStack();
 
-        double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
-
-        if (stack.getItem() == AITItems.DEMATERIALIZATION_CIRCUIT) {
-            matrices.scale(0.75f, 0.75f, 0.75f);
-            matrices.translate(0.65f, 0.35f + (offset / 2), 0.65f);
-        } else {
-            matrices.scale(1, 1, 1);
-            matrices.translate(0.5f, 0.275f + offset, 0.5f);
+        // Apply the same rotation as the block
+        matrices.translate(0.5, 1.5, 0.5);
+        float rotation = entity.getCachedState().get(FabricatorBlock.FACING).asRotation();
+        if (entity.getCachedState().get(FabricatorBlock.FACING) == Direction.NORTH ||
+                entity.getCachedState().get(FabricatorBlock.FACING) == Direction.SOUTH) {
+            rotation += 180;
         }
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+        matrices.translate(-0.5, -1.5, -0.5);
 
-        MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
-                overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+        if (!stack.isEmpty()) {
+            matrices.push();
+            double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
+
+            matrices.translate(0.5f, 0.35f + (offset / 2), 0.5f);
+
+            Vector3f scale = MinecraftClient.getInstance().getItemRenderer().getModel(stack, entity.getWorld(), null, 0).getTransformation().firstPersonRightHand.scale;
+            matrices.scale(0.7f, 0.7f, 0.7f);
+            matrices.scale(scale.x, scale.y, scale.z);
+
+            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
+                    overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+            matrices.pop();
+        }
+        renderText(entity, tickDelta, matrices, vertexConsumers, light, overlay);
 
         matrices.pop();
         profiler.pop();
+    }
+
+    private void renderText(FabricatorBlockEntity entity, float tickDelta, MatrixStack matrices,
+                            VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+        matrices.push();
+
+        matrices.translate(0.93, 0.1255, 0.315);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90f));
+        matrices.scale(0.005f, 0.005f, 0.005f);
+
+        // display "PRESS TO CRAFT" if enough materials
+        Text text = Text.literal("COLLECT OUTPUT");
+
+        // if does not have blueprint, text is "INSERT BLUEPRINT"
+        if (!entity.hasBlueprint()) {
+            text = Text.literal("INSERT BLUEPRINT");
+        }
+
+        Blueprint print = entity.getBlueprint().orElse(null);
+        ItemStack stack = entity.getShowcaseStack();
+        // display "INSERT (COUNT) MATERIAL" if not enough materials
+        if (print != null && !print.isComplete()) {
+            text = Text.literal("INSERT " + print.getCountLeftFor(stack) + " " + Text.translatable(stack.getTranslationKey()).getString().toUpperCase());
+        }
+
+        renderer.drawWithOutline(text.asOrderedText(), 0, 40, 0x60eaf0, 0x108fb3,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        matrices.pop();
     }
 }

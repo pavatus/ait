@@ -22,7 +22,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
@@ -30,7 +29,9 @@ import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
+import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.item.SonicItem;
@@ -38,16 +39,19 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import loqor.ait.core.tardis.handler.InteriorChangingHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
 
 public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
-    public int animationTimer = 0;
-    public final AnimationState DOOR_STATE = new AnimationState();
+
     private ExteriorAnimation animation;
+
+    public final AnimationState DOOR_STATE = new AnimationState();
+
+    public int animationTimer = 0;
+    public DoorHandler.AnimationDoorState prevAnimState = DoorHandler.AnimationDoorState.CLOSED;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -67,19 +71,18 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (tardis.isGrowth())
             return;
 
-
         SonicHandler handler = tardis.sonic();
 
+        ItemStack hand = player.getMainHandStack();
         boolean hasSonic = handler.getExteriorSonic() != null;
         boolean shouldEject = player.isSneaking();
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()
-                && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isQueued()) {
-            ItemStack key = player.getMainHandStack();
-            UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
+        if (hand.getItem() instanceof KeyItem && !tardis.siege().isActive()
+                && !tardis.interiorChangingHandler().queued().get()) {
+            UUID keyId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
 
-            if (key.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
-                DoorHandler.toggleLock(tardis, (ServerPlayerEntity) player);
+            if (hand.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
+                tardis.door().interactToggleLock((ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
                 player.sendMessage(Text.translatable("tardis.key.identity_error"), true); // TARDIS does not identify
@@ -104,19 +107,13 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
         }
 
-        if (player.getMainHandStack().getItem() instanceof SonicItem && !tardis.siege().isActive()
-                && !tardis.<InteriorChangingHandler>handler(TardisComponent.Id.INTERIOR).isQueued()
+        if (hand.getItem() instanceof SonicItem && !tardis.siege().isActive()
+                && !tardis.interiorChangingHandler().queued().get()
                 && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
-            ItemStack sonic = player.getMainHandStack();
-            UUID sonicId = LinkableItem.getTardisIdFromUuid(sonic, "tardis");
+            UUID sonicId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
 
             if (Objects.equals(tardis.getUuid(), sonicId)) {
-                ItemStack stack = player.getMainHandStack();
-
-                if (!(stack.getItem() instanceof SonicItem))
-                    return;
-
-                handler.insertExteriorSonic(stack);
+                handler.insertExteriorSonic(hand);
 
                 player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
                 world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
@@ -130,6 +127,14 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
         }
 
+        // try to stop phasing
+        EngineSystem.Phaser phasing = tardis.subsystems().engine().phaser();
+        if (phasing.isPhasing() && SonicItem.isSonic(hand) && SonicItem.isOf(world, hand, tardis)) {
+            world.playSound(null, pos, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1F, 1F);
+            phasing.cancel();
+            return;
+        }
+
         if (sneaking && tardis.siege().isActive() && !tardis.isSiegeBeingHeld()) {
             SiegeTardisItem.pickupTardis(tardis, (ServerPlayerEntity) player);
             return;
@@ -138,7 +143,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (!tardis.travel().isLanded())
             return;
 
-        DoorHandler.useDoor(tardis, (ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
+        tardis.door().interact((ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
     }
 
     public void onEntityCollision(Entity entity) {
@@ -150,7 +155,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (ref.isEmpty())
             return;
 
-
         Tardis tardis = ref.get();
         TravelHandler travel = tardis.travel();
 
@@ -160,10 +164,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 && travel.getAnimTicks() >= 0.9 * travel.getMaxAnimTicks())
             TardisUtil.teleportInside(tardis, entity);
 
-        if (tardis.door().isClosed())
-            return;
-
-        if (!tardis.getLockedTardis()
+        if (!tardis.door().isClosed()
                 && (!DependencyChecker.hasPortals() || !tardis.getExterior().getVariant().hasPortals()))
             TardisUtil.teleportInside(tardis, entity);
     }
@@ -181,13 +182,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         TravelHandlerBase.State state = travel.getState();
 
         if (!world.isClient()) {
-            if (tardis.travel().isLanded()) {
-                world.scheduleBlockTick(this.getPos(), this.getCachedState().getBlock(), 2);
-            }
-        }
+            if (tardis.travel().isLanded())
+                world.scheduleBlockTick(this.getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
 
-        if (!world.isClient())
             return;
+        }
 
         if (state.animated())
             this.getAnimation().tick(tardis);
@@ -215,23 +214,17 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     }
 
     @Environment(EnvType.CLIENT)
-    public void checkAnimations() {
-        if (this.tardis().isEmpty())
-            return;
+    private void checkAnimations() {
+        //this.animationTimer += AITMod.CONFIG.CLIENT.DOOR_ANIMATION_SPEED;
 
-        animationTimer++;
         Tardis tardis = this.tardis().get();
         DoorHandler door = tardis.door();
 
-        DoorHandler.DoorStateEnum doorState = door.getDoorState();
-        DoorHandler.DoorStateEnum animState = door.getAnimationExteriorState();
+        DoorHandler.AnimationDoorState state = door.tempExteriorState.get();
 
-        if (animState == null)
-            return;
-
-        if (animState != doorState) {
+        if (state != null && this.prevAnimState != door.tempExteriorState.get()) {
             DOOR_STATE.start(animationTimer);
-            door.tempExteriorState = doorState;
+            this.prevAnimState = door.tempExteriorState.get();
         }
     }
 
