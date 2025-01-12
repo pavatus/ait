@@ -34,6 +34,8 @@ import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.integer.IntProperty;
+import loqor.ait.data.properties.integer.IntValue;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 
@@ -58,6 +60,10 @@ public class StatsHandler extends KeyedTardisComponent {
     private static final BoolProperty SECURITY = new BoolProperty("security", false);
     private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
     private static final BoolProperty RECEIVE_CALLS = new BoolProperty("receive_calls", true);
+    private static final IntProperty TARDIS_X_SCALE = new IntProperty("tardis_x_scale");
+    private static final IntProperty TARDIS_Y_SCALE = new IntProperty("tardis_y_scale");
+    private static final IntProperty TARDIS_Z_SCALE = new IntProperty("tardis_z_scale");
+
 
     private final Value<String> tardisName = NAME.create(this);
     private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME.create(this);
@@ -72,6 +78,11 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<Identifier> matId = MAT_FX.create(this);
     private final Value<Identifier> flightId = FLIGHT_FX.create(this);
     private final Value<Identifier> vortexId = VORTEX_FX.create(this);
+    private final IntValue tardis_x_scale = TARDIS_X_SCALE.create(this);
+    private final IntValue tardis_y_scale = TARDIS_Y_SCALE.create(this);
+    private final IntValue tardis_z_scale = TARDIS_Z_SCALE.create(this);
+
+
 
     @Exclude
     private Lazy<TravelSoundMap> travelFxCache;
@@ -88,6 +99,9 @@ public class StatsHandler extends KeyedTardisComponent {
     public void onCreate() {
         this.markCreationDate();
         this.setName(StatsHandler.getRandomName());
+        this.setXScale(1);
+        this.setYScale(1);
+        this.setZScale(1);
     }
 
     @Override
@@ -251,6 +265,30 @@ public class StatsHandler extends KeyedTardisComponent {
         }
     }
 
+    public float getXScale() {
+        return (float) tardis_x_scale.get();
+    }
+
+    public float getYScale() {
+        return (float) tardis_y_scale.get();
+    }
+
+    public float getZScale() {
+        return (float) tardis_z_scale.get();
+    }
+
+    public void setXScale(int scale) {
+        this.tardis_x_scale.set(scale);
+    }
+
+    public void setYScale(int scale) {
+        this.tardis_y_scale.set(scale);
+    }
+
+    public void setZScale(int scale) {
+        this.tardis_z_scale.set(scale);
+    }
+
     public String getCreationString() {
         return DateFormat.getDateTimeInstance(DateFormat.LONG, 3).format(this.getCreationDate());
     }
@@ -300,6 +338,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
         return this.vortexFxCache.get();
     }
+
     private VortexReference createVortexEffectsCache() {
         return VortexReferenceRegistry.getInstance().getOrFallback(this.vortexId.get());
     }
