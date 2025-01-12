@@ -129,7 +129,8 @@ public class AITSounds {
     public static final SoundEvent MARK_WAYPOINT = register("controls/mark_waypoint");
     public static final SoundEvent ANTI_GRAVS = register("controls/anti_gravs");
     public static final SoundEvent FAST_RETURN = register("controls/fast_return");
-    public static final SoundEvent PROTOCOL_116 = register("controls/protocol_116");
+    public static final SoundEvent PROTOCOL_116_ON = register("controls/protocol_116_on");
+    public static final SoundEvent PROTOCOL_116_OFF = register("controls/protocol_116_off");
     public static final SoundEvent SHIELDS = register("controls/shield");
     public static final SoundEvent ALARM = register("controls/alarm_flick");
     public static final SoundEvent SLOT_IN = register("controls/slot_in");
