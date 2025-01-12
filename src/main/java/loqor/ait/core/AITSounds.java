@@ -30,6 +30,7 @@ public class AITSounds {
     public static final SoundEvent FLIGHT_LOOP = register("tardis/flight_loop");
     public static final SoundEvent UNSTABLE_FLIGHT_LOOP = register("tardis/unstable_flight_loop");
     public static final SoundEvent LAND_THUD = register("tardis/land_thud");
+    public static final SoundEvent ABORT_FLIGHT = register("tardis/abort_flight");
     public static final SoundEvent LAND_CRASH = register("tardis/land_crash");
     public static final SoundEvent SHUTDOWN = register("tardis/console_shutdown");
     public static final SoundEvent POWERUP = register("tardis/console_powerup");
@@ -77,26 +78,33 @@ public class AITSounds {
     public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
     //HALFLIFE
     //public static final SoundEvent HALFLIFE_DEMAT = register("tardis/halflife_demat");
-    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
+    //public static final SoundEvent HALFLIFE_FLIGHT = register("tardis/halflife_flight");
     //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
     //PORTAL
     //public static final SoundEvent PORTAL_DEMAT = register("tardis/portal_demat");
+    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_flight");
     //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
-    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
 
 
 
 
 
-    // TARDIS SFX
-    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
+    // APPARATUS VIVI
     public static final SoundEvent MOODY1 = register("tardis/moody/moody1");
     public static final SoundEvent MOODY2 = register("tardis/moody/moody2");
     public static final SoundEvent MOODY3 = register("tardis/moody/moody3");
     public static final SoundEvent MOODY4 = register("tardis/moody/moody4");
     public static final SoundEvent MOODY5 = register("tardis/moody/moody5");
     public static final SoundEvent HAMMER_STRIKE = register("tardis/hammer_strike");
-
+    public static final SoundEvent OWNER_BED = register("tardis/bed/owner");
+    public static final SoundEvent PILOT_BED = register("tardis/bed/pilot");
+    public static final SoundEvent COMPANION_BED = register("tardis/bed/companion");
+    public static final SoundEvent NEUTRAL_BED = register("tardis/bed/neutral");
+    public static final SoundEvent REJECT_BED = register("tardis/bed/reject");
+    public static final SoundEvent LOYALTY_UP = register("tardis/moody/loyalty_up");
+    public static final SoundEvent GROAN = register("tardis/groan");
+    //Possible could be used for a mood related thing?
+    public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
 
     // Controls
     public static final SoundEvent DEMAT_LEVER_PULL = register("controls/demat_lever_pull");
@@ -133,6 +141,7 @@ public class AITSounds {
     public static final SoundEvent RANDOMIZE = register("controls/randomize");
     public static final SoundEvent INCREMENT = register("controls/increment");
     public static final SoundEvent DIMENSION = register("controls/dimension");
+    public static final SoundEvent ML = register("tardis/ml");
 
 
     // Console
@@ -150,7 +159,7 @@ public class AITSounds {
     public static final SoundEvent RENAISSANCE_HUM = register("tardis/hums/renaissance_hum");
 
     public static final SoundEvent CLOISTER = register("tardis/cloister");
-    public static final SoundEvent GROAN = register("tardis/groan");
+
 
     // Creaks
     public static final SoundEvent CREAK_ONE = register("tardis/creaks/creak_one");

@@ -423,7 +423,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         tardis.<BiomeHandler>handler(TardisComponent.Id.BIOME).update();
 
         world.scheduleBlockTick(pos, this, 2);
-        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.BLOCKS);
+        tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_CRASH, SoundCategory.BLOCKS);
 
         tardis.flight().falling().set(false);
 

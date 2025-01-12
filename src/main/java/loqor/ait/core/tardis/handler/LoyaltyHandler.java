@@ -93,7 +93,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
                 schema -> this.playUnlockEffects(player, schema)) || playSound;
 
         if (playSound)
-            player.getServerWorld().playSound(null, player.getBlockPos(), AITSounds.MOODY5,
+            player.getServerWorld().playSound(null, player.getBlockPos(), AITSounds.LOYALTY_UP,
                     SoundCategory.PLAYERS, 0.2F, 1.0F);
 
         if (loyalty.isOf(Loyalty.Type.PILOT)) {
