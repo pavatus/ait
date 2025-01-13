@@ -98,7 +98,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         if (this.getWorld().isClient()) {
             MinecraftClient client = MinecraftClient.getInstance();
             Tardis tardisClient = this.tardis().get().asClient();
-            tardisClient.flight().horizontalVelocity().set(this.getVelocity().horizontalLength());
             if (client.player == this.getControllingPassenger()) {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
                 client.options.hudHidden = true;

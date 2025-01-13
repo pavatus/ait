@@ -24,8 +24,6 @@ import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.dbl.DoubleProperty;
-import loqor.ait.data.properties.dbl.DoubleValue;
 
 public class RealFlightHandler extends KeyedTardisComponent implements TardisTickable {
 
@@ -35,12 +33,8 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     private static final BoolProperty IS_FALLING = new BoolProperty("falling", false);
     private static final BoolProperty FLYING = new BoolProperty("flying", false);
 
-    private static final DoubleProperty HORIZONTAL_VELOCITY = new DoubleProperty("horizontal_velocity", 0.0d);
-
     private final BoolValue falling = IS_FALLING.create(this);
     private final BoolValue flying = FLYING.create(this);
-
-    private final DoubleValue horizontalVelocity = HORIZONTAL_VELOCITY.create(this);
 
     static {
         TardisEvents.DEMAT.register(tardis -> tardis.flight().falling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
@@ -54,15 +48,10 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     public void onLoaded() {
         falling.of(this, IS_FALLING);
         flying.of(this, FLYING);
-        horizontalVelocity.of(this, HORIZONTAL_VELOCITY);
     }
 
     public boolean isFlying() {
         return flying.get();
-    }
-
-    public DoubleValue horizontalVelocity() {
-        return horizontalVelocity;
     }
 
     @Override

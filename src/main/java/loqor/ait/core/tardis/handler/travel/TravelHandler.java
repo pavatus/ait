@@ -197,9 +197,9 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         DirectedGlobalPos.Cached globalPos = this.position();
 
         ServerWorld level = globalPos.getWorld();
-        BlockEntity entity = level.getBlockEntity(globalPos.getPos());
+        BlockEntity blockEntity = level.getBlockEntity(globalPos.getPos());
 
-        if (entity instanceof ExteriorBlockEntity exterior)
+        if (blockEntity instanceof ExteriorBlockEntity exterior)
             this.runAnimations(exterior);
     }
 

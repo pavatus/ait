@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.entities;
 
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -54,13 +55,14 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) v));
         }
 
-        if (!entity.groundCollision) {
+        if (!entity.groundCollision  && entity.getControllingPassenger() != null &&
+        entity.getControllingPassenger() instanceof AbstractClientPlayerEntity player) {
             boolean doorsClosed = tardis.door().isClosed();
-            float deg = (float) (tardis.flight().horizontalVelocity().get() * 45f);
+            float deg = (float) (player.getVelocity().horizontalLength() * 45f);
 
-            if (!doorsClosed && entity.getControllingPassenger() != null) {
+            if (!doorsClosed) {
                 this.model.getPart().setAngles((float) 0, 0, 0);
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0f));
                 deg = -deg;
             } else {
                 this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * tardis.travel().speed()), 0);
