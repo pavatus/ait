@@ -47,7 +47,8 @@ public class AutoPilotControl extends Control {
                         SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
 
-            tardis.flight().enterFlight(player);
+            world.getServer().executeSync(()
+                    -> tardis.flight().enterFlight(player));
             return true;
         }
 
