@@ -75,11 +75,11 @@ public class HammerItem extends SwordItem {
             if (!player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
 
                 int hammerUses = travel.getHammerUses();
-                world.playSound(null, consoleBlockEntity.getPos(), AITSounds.GROAN, SoundCategory.BLOCKS,
+                world.playSound(null, consoleBlockEntity.getPos(), AITSounds.HAMMER_HIT, SoundCategory.BLOCKS,
                         1f, 1.0f);
 
                 if (hammerUses > 3) {
-                    world.playSoundFromEntity(null, player, AITSounds.HAMMER_HIT, SoundCategory.PLAYERS, 0.5f, 0.2f);
+                    world.playSoundFromEntity(null, player, AITSounds.HAMMER_STRIKE, SoundCategory.PLAYERS, 0.5f, 0.2f);
 
                     tardis.door().closeDoors();
                     tardis.door().setLocked(true);
