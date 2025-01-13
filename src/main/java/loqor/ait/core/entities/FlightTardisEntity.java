@@ -34,7 +34,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     private static final List<ItemStack> EMPTY = List.of();
     private static final ItemStack AIR = new ItemStack(Items.AIR);
 
-    private Vec3d lastVelocity = Vec3d.ZERO;
+    private Vec3d lastVelocity;
     private BlockPos interiorPos;
 
     public FlightTardisEntity(EntityType<? extends LivingEntity> entityType, World world) {
