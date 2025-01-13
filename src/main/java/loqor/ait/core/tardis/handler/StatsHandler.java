@@ -12,8 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.pavatus.register.unlockable.Unlockable;
 
-import loqor.ait.data.properties.flt.FloatProperty;
-import loqor.ait.data.properties.flt.FloatValue;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
@@ -36,8 +34,8 @@ import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.integer.IntProperty;
-import loqor.ait.data.properties.integer.IntValue;
+import loqor.ait.data.properties.dbl.DoubleProperty;
+import loqor.ait.data.properties.dbl.DoubleValue;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 
@@ -62,9 +60,9 @@ public class StatsHandler extends KeyedTardisComponent {
     private static final BoolProperty SECURITY = new BoolProperty("security", false);
     private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
     private static final BoolProperty RECEIVE_CALLS = new BoolProperty("receive_calls", true);
-    private static final FloatProperty TARDIS_X_SCALE = new FloatProperty("tardis_x_scale");
-    private static final FloatProperty TARDIS_Y_SCALE = new FloatProperty("tardis_y_scale");
-    private static final FloatProperty TARDIS_Z_SCALE = new FloatProperty("tardis_z_scale");
+    private static final DoubleProperty TARDIS_X_SCALE = new DoubleProperty("tardis_x_scale");
+    private static final DoubleProperty TARDIS_Y_SCALE = new DoubleProperty("tardis_y_scale");
+    private static final DoubleProperty TARDIS_Z_SCALE = new DoubleProperty("tardis_z_scale");
 
 
     private final Value<String> tardisName = NAME.create(this);
@@ -80,9 +78,9 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<Identifier> matId = MAT_FX.create(this);
     private final Value<Identifier> flightId = FLIGHT_FX.create(this);
     private final Value<Identifier> vortexId = VORTEX_FX.create(this);
-    private final FloatValue tardis_x_scale = TARDIS_X_SCALE.create(this);
-    private final FloatValue tardis_y_scale = TARDIS_Y_SCALE.create(this);
-    private final FloatValue tardis_z_scale = TARDIS_Z_SCALE.create(this);
+    private final DoubleValue tardis_x_scale = TARDIS_X_SCALE.create(this);
+    private final DoubleValue tardis_y_scale = TARDIS_Y_SCALE.create(this);
+    private final DoubleValue tardis_z_scale = TARDIS_Z_SCALE.create(this);
 
 
 
@@ -271,26 +269,30 @@ public class StatsHandler extends KeyedTardisComponent {
     }
 
     public float getXScale() {
-        return (float) tardis_x_scale.get();
+        double v = tardis_x_scale.get();
+        return (float) v;
     }
 
     public float getYScale() {
-        return (float) tardis_y_scale.get();
+        double v = tardis_y_scale.get();
+        return (float) v;
     }
 
     public float getZScale() {
-        return (float) tardis_z_scale.get();
+        double v = tardis_z_scale.get();
+        return (float) v;
     }
 
-    public void setXScale(float scale) {
+
+    public void setXScale(double scale) {
         this.tardis_x_scale.set(scale);
     }
 
-    public void setYScale(float scale) {
+    public void setYScale(double scale) {
         this.tardis_y_scale.set(scale);
     }
 
-    public void setZScale(float scale) {
+    public void setZScale(double scale) {
         this.tardis_z_scale.set(scale);
     }
 
