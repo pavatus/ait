@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITTags;
+import loqor.ait.core.entities.FlightTardisEntity;
 
 @Mixin(PlayerEntity.class)
 public abstract class DismountEntityMixin extends Entity {
@@ -24,7 +25,7 @@ public abstract class DismountEntityMixin extends Entity {
         if (this.getVehicle() == null)
             return;
 
-        if (this.getVehicle().getType().isIn(AITTags.EntityTypes.NON_DISMOUNTABLE))
+        if (this.getVehicle() instanceof FlightTardisEntity || this.getVehicle().getType().isIn(AITTags.EntityTypes.NON_DISMOUNTABLE))
             cir.setReturnValue(false);
     }
 }

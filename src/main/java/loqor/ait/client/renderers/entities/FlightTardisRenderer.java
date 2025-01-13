@@ -53,12 +53,12 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) v));
         }
 
-        if (!entity.isOnGround()) {
+        if (!entity.groundCollision) {
             boolean doorsClosed = tardis.door().isClosed();
             float deg = (float) (entity.getVelocity().horizontalLength() * 45f);
 
-            if (!doorsClosed) {
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-180f));
+            if (!doorsClosed && entity.getControllingPassenger() != null) {
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getControllingPassenger().getBodyYaw()));
                 deg = -deg;
             } else {
                 this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * 4), 0);

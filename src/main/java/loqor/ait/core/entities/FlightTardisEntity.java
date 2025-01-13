@@ -18,6 +18,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableLivingEntity;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
@@ -40,6 +41,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         super(entityType, world);
 
         this.setInvulnerable(true);
+        this.lastVelocity = Vec3d.ZERO;
     }
 
     private FlightTardisEntity(BlockPos riderPos, DirectedGlobalPos.Cached pos, ServerTardis tardis) {
@@ -64,6 +66,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         );
 
         exteriorPos.getWorld().spawnEntity(entity);
+        player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
         return entity;
     }
 
@@ -74,12 +77,11 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     @Override
     public void tick() {
+        this.lastVelocity = this.getVelocity();
+        this.setRotation(0, 0);
         super.tick();
 
-        if (this.getWorld().isClient()) {
-            this.lastVelocity = this.getVelocity();
-            return;
-        }
+        if (this.getWorld().isClient()) return;
 
         PlayerEntity player = this.getPlayer();
 
@@ -90,6 +92,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             player.setInvisible(true);
 
         Tardis tardis = this.tardis().get();
+
         boolean onGround = this.isOnGround();
 
         tardis.flight().tickFlight((ServerPlayerEntity) player);
@@ -101,8 +104,10 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             );
         }
 
-        if (player.isSneaking() && (onGround || tardis.travel().antigravs().get()))
+        if (player.isSneaking() && (onGround || tardis.travel().antigravs().get())) {
+            System.out.println(onGround);
             this.finishLand(tardis, player);
+        }
     }
 
     @Override
@@ -122,7 +127,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     }
 
     private void playThud() {
-        this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.getWorld().playSound(null, this.getBlockPos(), AITSounds.LAND_THUD, SoundCategory.BLOCKS, 2F, 1F / (AITMod.RANDOM.nextFloat() * 0.4F + 0.8F));
     }
 
     private void finishLand(Tardis tardis, PlayerEntity player) {
@@ -182,10 +187,10 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? 1f
                 : controllingPlayer.isSneaking() ? -1f : -0.1f;
 
-        if (v < 0 && this.isOnGround())
-            return Vec3d.ZERO.add(0, -0.04f, 0);
+        /*if (v < 0 && this.isOnGround())
+            return Vec3d.ZERO.add(0, -0.04f, 0);*/
 
-        return new Vec3d(f, v, g);
+        return this.isOnGround() ? new Vec3d(0, 0, 0) : new Vec3d(f, v * 4f, g);
     }
 
     @Override
