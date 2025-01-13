@@ -188,7 +188,6 @@ public class BOTI {
         stack.pop();
 
         stack.push();
-        stack.translate(0, -1.375, 0);
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         if (variant.emission() != null)
             ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);

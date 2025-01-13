@@ -48,6 +48,16 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         double e = vec3d.horizontalLengthSquared();
 
         matrices.push();
+        if (tardis.door().isClosed() && !entity.groundCollision)
+            matrices.translate(0, 0.25f * -entity.getVelocity().getY(), 0);
+
+        /*VortexUtil vortexUtil = tardis.stats().getVortexEffects().toUtil();
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin(0.2 * tickDelta)));
+        matrices.translate(0, 0, 500);
+        vortexUtil.renderVortex(matrices);
+        matrices.pop();*/
+
         if (d > 0.0 && e > 0.0) {
             double l = (vec3d2.x * vec3d.x + vec3d2.z * vec3d.z) / Math.sqrt(d * e);
             double m = vec3d2.x * vec3d.z - vec3d2.z * vec3d.x;
@@ -55,23 +65,23 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) v));
         }
 
-        if (!entity.groundCollision  && entity.getControllingPassenger() != null &&
+        if ( entity.getControllingPassenger() != null &&
         entity.getControllingPassenger() instanceof AbstractClientPlayerEntity player) {
             boolean doorsClosed = tardis.door().isClosed();
-            float deg = (float) (player.getVelocity().horizontalLength() * 45f);
+            float deg = (float) (entity.getVelocity().horizontalLength() * 45f);//(float) (Math.toDegrees(MathHelper.lerp(tickDelta, playdeg, -player.getVelocity().horizontalLength() * 45f)));
 
-            if (!doorsClosed) {
+            if (!entity.groundCollision && !doorsClosed) {
                 this.model.getPart().setAngles((float) 0, 0, 0);
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0f));
-                deg = -deg;
-            } else {
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
+            } else if (!entity.groundCollision) {
                 this.model.getPart().setAngles((float) 0, ((entity.getRotation(tickDelta)) * tardis.travel().speed()), 0);
             }
 
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(deg));
+            if (!entity.groundCollision)
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) (2f * Math.cos(0.2f * (tickDelta + entity.age)) + deg)));
         }
 
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.groundCollision ? 180f : (float) (2f * Math.sin(0.2f * (tickDelta + entity.age)) + 180f)));
 
         this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 

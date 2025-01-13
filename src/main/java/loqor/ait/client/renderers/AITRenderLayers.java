@@ -51,7 +51,7 @@ public class AITRenderLayers extends RenderLayer {
     public static RenderLayer getBotiInteriorEmission(Identifier texture) {
         MultiPhaseParameters parameters = MultiPhaseParameters.builder()
                 .texture(new Texture(texture, false, false))
-                .program(ENTITY_CUTOUT_NONULL_PROGRAM)
+                .program(ENTITY_CUTOUT_NONULL_OFFSET_Z_PROGRAM)
                 .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
                 .cull(DISABLE_CULLING)
                 .layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
