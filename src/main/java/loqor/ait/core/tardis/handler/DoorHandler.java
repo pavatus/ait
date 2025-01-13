@@ -324,10 +324,10 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
             player.sendMessage(Text.literal(lockedState), true);
 
         tardis.travel().position().getWorld().playSound(null, tardis.travel().position().getPos(),
-                SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+                AITSounds.EXTERIOR_KEY_INTERACT, SoundCategory.BLOCKS, 0.6F, 1F);
 
         tardis.asServer().getInteriorWorld().playSound(null, tardis.getDesktop().getDoorPos().getPos(),
-                SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.6F, 1F);
+                AITSounds.INTERIOR_KEY_INTERACT, SoundCategory.BLOCKS, 0.6F, 1F);
 
         return true;
     }

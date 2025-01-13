@@ -186,7 +186,7 @@ public class KeyItem extends LinkableItem {
         tardis.stats().hailMary().set(false);
         tardis.door().previouslyLocked().set(false);
 
-        // like a sound to show its been called
+        // like a sound to show it's been called
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
         world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
     }
