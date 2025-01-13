@@ -93,6 +93,9 @@ public class Control {
         if (!this.ignoresSecurity() && security)
             return SecurityControl.hasMatchingKey(user, tardis);
 
+        /*if (tardis.flight().isFlying())
+            return false;*/
+
         SubSystem.IdLike dependent = this.requiredSubSystem();
         if (dependent != null) {
             return tardis.subsystems().get(dependent).isEnabled();

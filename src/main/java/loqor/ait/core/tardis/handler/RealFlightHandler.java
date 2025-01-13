@@ -61,6 +61,10 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
         flying.of(this, FLYING);
     }
 
+    public boolean isFlying() {
+        return flying.get();
+    }
+
     @Override
     public void tick(MinecraftServer server) {
         if (this.falling.get())
