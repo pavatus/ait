@@ -175,7 +175,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
                 && this.getFlightTicks() < this.getTargetTicks())
             this.recalculate();
 
-        if (server.getTicks() % 2 == 0)
+        if (server.getTicks() % 2 == 0 && !this.tardis().flight().isFlying())
             this.triggerSequencingDuringFlight(tardis);
 
         if (!this.isFlightTicking())

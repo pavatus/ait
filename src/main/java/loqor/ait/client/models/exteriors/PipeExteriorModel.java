@@ -49,13 +49,13 @@ public class PipeExteriorModel extends ExteriorModel {
     @Override
     public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
                                                            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        if (!falling.isLinked())
-            return;
-
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+        //matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+        Tardis tardis = falling.tardis().get();
 
-        this.tardis.pivotY = !falling.tardis().get().door().isOpen() ? -14F : 0;
+        if (tardis == null) return;
+
+        this.tardis.pivotY = !tardis.door().isOpen() ? 22F : 8f;
 
         super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();

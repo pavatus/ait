@@ -4,7 +4,9 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
@@ -60,6 +62,19 @@ public class EasterHeadModel extends ExteriorModel {
         this.head.getChild("door").pitch = (exterior.tardis().get().door().isOpen()) ? -45f : 0f;
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        matrices.pop();
+    }
+
+    @Override
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (falling.tardis().isEmpty())
+            return;
+
+        matrices.push();
+        matrices.translate(0, -1.5f, 0);
+        this.head.getChild("door").pitch = (falling.tardis().get().door().isOpen()) ? -45f : 0f;
+
+        super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 

@@ -1114,6 +1114,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         // keybinds
         provider.addTranslation("category.ait.main", "Adventures in Time");
         provider.addTranslation("key.ait.snap", "Snap");
+        provider.addTranslation("key.ait.increase_speed", "Increase Speed (RWF)");
+        provider.addTranslation("key.ait.decrease_speed", "Decrease Speed (RWF)");
+        provider.addTranslation("key.ait.toggle_antigravs", "Toggle Antigravs (RWF)");
 
         // effects
         provider.addTranslation("effect.ait.zeiton_high", "Zeiton High");

@@ -36,7 +36,7 @@ public class PipeDoorModel extends DoorModel {
 
         if (tardis == null) return;
 
-        this.tardis.pivotY = !tardis.door().isOpen() ? this.tardis.pivotY  + 0.5f: this.tardis.pivotY + 14.5f;
+        this.tardis.pivotY = !tardis.door().isOpen() ? -22f : -8f;
         super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
     }

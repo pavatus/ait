@@ -52,6 +52,8 @@ public class TardisUtil {
 
     public static final Identifier REGION_LANDING_CODE = AITMod.id("region_landing_code");
     public static final Identifier SNAP = AITMod.id("snap");
+    public static final Identifier FLYING_SPEED = AITMod.id("flying_speed");
+    public static final Identifier TOGGLE_ANTIGRAVS = AITMod.id("toggle_antigravs");
     public static final Identifier FIND_PLAYER = AITMod.id("find_player");
 
     public static void init() {
@@ -59,6 +61,15 @@ public class TardisUtil {
             UUID uuid = buf.readUuid();
             ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
                 PermissionHandler permissions = tardis.handler(TardisComponent.Id.PERMISSIONS);
+
+                if (tardis.flight().isFlying()) {
+                    if (!player.isSneaking()) {
+                        tardis.door().interact(player.getServerWorld(), null, player);
+                    } else {
+                        tardis.door().interactToggleLock(player);
+                    }
+                    return;
+                }
 
                 if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
                     return;
@@ -83,6 +94,29 @@ public class TardisUtil {
                 } else {
                     tardis.door().interactToggleLock(player);
                 }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(FLYING_SPEED, (server, player, handler, buf, responseSender) -> {
+            UUID uuid = buf.readUuid();
+            String direction = buf.readString();
+            ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
+                if (!tardis.flight().isFlying()) return;
+                switch (direction) {
+                    case "up":
+                        tardis.travel().increaseSpeed();
+                        break;
+                    case "down":
+                        tardis.travel().decreaseSpeed();
+                        break;
+                }
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(TOGGLE_ANTIGRAVS, (server, player, handler, buf, responseSender) -> {
+            UUID uuid = buf.readUuid();
+            ServerTardisManager.getInstance().getTardis(server, uuid, tardis -> {
+                if (!tardis.flight().isFlying()) return;
+                tardis.travel().antigravs().toggle();
             });
         });
 

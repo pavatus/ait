@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -20,6 +22,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.link.LinkableLivingEntity;
+import loqor.ait.client.util.ClientShakeUtil;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.ServerTardis;
@@ -76,22 +79,40 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     }
 
     @Override
+    protected float getOffGroundSpeed() {
+        if (this.tardis() != null)
+            return this.getMovementSpeed() * (this.tardis().get().travel().speed() * 0.03f);
+        return super.getOffGroundSpeed();
+    }
+
+    @Override
     public void tick() {
         this.lastVelocity = this.getVelocity();
         this.setRotation(0, 0);
         super.tick();
 
-        if (this.getWorld().isClient()) return;
-
         PlayerEntity player = this.getPlayer();
+
+        Tardis tardis = this.tardis().get();
+
+        if (this.getWorld().isClient()) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player == this.getControllingPassenger()) {
+                client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+                client.options.hudHidden = true;
+                Tardis tardisClient = this.tardis().get().asClient();
+                tardisClient.flight().horizontalVelocity().set(this.getVelocity().horizontalLength());
+                if (!this.groundCollision)
+                    ClientShakeUtil.shake((float) ((float) (tardisClient.travel().speed() + this.getVelocity().horizontalLength()) / tardisClient.travel().maxSpeed().get()));
+            }
+            return;
+        }
 
         if (player == null || !this.isLinked())
             return;
 
         if (!player.isInvisible())
             player.setInvisible(true);
-
-        Tardis tardis = this.tardis().get();
 
         boolean onGround = this.isOnGround();
 
@@ -131,6 +152,12 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     }
 
     private void finishLand(Tardis tardis, PlayerEntity player) {
+        if (this.getWorld().isClient()) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+            client.options.hudHidden = true;
+            return;
+        }
         if (!(player instanceof ServerPlayerEntity serverPlayer))
             return;
 
@@ -181,16 +208,20 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     @Override
     protected Vec3d getControlledMovementInput(PlayerEntity controllingPlayer, Vec3d movementInput) {
-        float f = controllingPlayer.sidewaysSpeed * 2f;
-        float g = controllingPlayer.forwardSpeed * 2f;
+        if (this.tardis() == null || !this.tardis().get().fuel().hasPower()) return new Vec3d(0, 0, 0);
+        float f = controllingPlayer.sidewaysSpeed * this.tardis().get().travel().speed();
+        float g = controllingPlayer.forwardSpeed * this.tardis().get().travel().speed();
 
-        double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? 1f
-                : controllingPlayer.isSneaking() ? -1f : -0.1f;
+        float speedVal = this.isSubmergedInWater() ? 30f : 10f;
 
-        /*if (v < 0 && this.isOnGround())
-            return Vec3d.ZERO.add(0, -0.04f, 0);*/
+        double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? speedVal :
+                controllingPlayer.isSneaking() ? -speedVal :
+                        this.tardis().get().travel().antigravs().get() ? 0.0f : f > 0 || g > 0 ? -0.5f : -2f;
 
-        return this.isOnGround() ? new Vec3d(0, 0, 0) : new Vec3d(f, v * 4f, g);
+        if (v < 0 && this.isOnGround())
+            return Vec3d.ZERO.add(0, -0.4f, 0);
+
+        return new Vec3d(f, v, g);//return this.isOnGround() ? new Vec3d(0, 0, 0) : new Vec3d(f, v * 4f, g);
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.pavatus.planet.mixin.gravity;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,9 +26,15 @@ import net.minecraft.world.World;
 
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.AITStatusEffects;
+import loqor.ait.core.entities.FlightTardisEntity;
+import loqor.ait.core.tardis.Tardis;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+
+    @Shadow protected abstract boolean tryUseTotem(DamageSource source);
+
+    @Shadow public abstract void takeKnockback(double strength, double x, double z);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -122,10 +129,35 @@ public abstract class LivingEntityMixin extends Entity {
         ServerWorld worldA = server.getWorld(worldKeyA);
         ServerWorld worldB = server.getWorld(worldKeyB);
 
+        if (entity.hasVehicle()) {
+            if (entity instanceof PlayerEntity player) {
+                Entity tardisEntity = player.getVehicle();
+                if (tardisEntity instanceof FlightTardisEntity flightTardis) {
+                    Tardis tardis = flightTardis.tardis().get();
+                    if (flightTardis.tardis() == null) return;
+                    if (y >= tpHeightA && entityWorld == worldA) {
+                        moveToWorldWithPassenger(flightTardis, tardis, player, worldB);
+                    } else if (y >= tpHeightB && entityWorld == worldB) {
+                        moveToWorldWithPassenger(flightTardis, tardis, player, worldA);
+                    }
+                    return;
+                }
+            }
+        }
+
         if (y >= tpHeightA && entityWorld == worldA) {
             entity.moveToWorld(worldB);
         } else if (y >= tpHeightB && entityWorld == worldB) {
             entity.moveToWorld(worldA);
         }
+    }
+
+    @Unique private static void moveToWorldWithPassenger(FlightTardisEntity tardisEntity, Tardis tardis, PlayerEntity player, ServerWorld b) {
+        player.stopRiding();
+        tardis.flight().flying().set(false);
+        player.moveToWorld(b);
+        tardisEntity.moveToWorld(b);
+        tardis.flight().flying().set(true);
+        player.startRiding(tardisEntity);
     }
 }

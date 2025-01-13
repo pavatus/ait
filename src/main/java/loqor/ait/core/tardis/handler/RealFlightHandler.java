@@ -2,15 +2,10 @@ package loqor.ait.core.tardis.handler;
 
 import dev.drtheo.blockqueue.data.TimeUnit;
 import dev.drtheo.scheduler.Scheduler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.Perspective;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -29,6 +24,8 @@ import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.dbl.DoubleProperty;
+import loqor.ait.data.properties.dbl.DoubleValue;
 
 public class RealFlightHandler extends KeyedTardisComponent implements TardisTickable {
 
@@ -38,16 +35,14 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     private static final BoolProperty IS_FALLING = new BoolProperty("falling", false);
     private static final BoolProperty FLYING = new BoolProperty("flying", false);
 
+    private static final DoubleProperty HORIZONTAL_VELOCITY = new DoubleProperty("horizontal_velocity", 0.0d);
+
     private final BoolValue falling = IS_FALLING.create(this);
     private final BoolValue flying = FLYING.create(this);
 
-    static {
-        ClientPlayNetworking.registerGlobalReceiver(EXIT_FLIGHT, (client, handler, buf, responseSender)
-                -> client.executeSync(() -> {
-            client.options.setPerspective(Perspective.FIRST_PERSON);
-            client.options.hudHidden = false;
-        }));
+    private final DoubleValue horizontalVelocity = HORIZONTAL_VELOCITY.create(this);
 
+    static {
         TardisEvents.DEMAT.register(tardis -> tardis.flight().falling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
     }
 
@@ -59,25 +54,21 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     public void onLoaded() {
         falling.of(this, IS_FALLING);
         flying.of(this, FLYING);
+        horizontalVelocity.of(this, HORIZONTAL_VELOCITY);
     }
 
     public boolean isFlying() {
         return flying.get();
     }
 
+    public DoubleValue horizontalVelocity() {
+        return horizontalVelocity;
+    }
+
     @Override
     public void tick(MinecraftServer server) {
         if (this.falling.get())
             this.tardis.door().setLocked(true);
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void tick(MinecraftClient client) {
-        if (flying.get()) {
-            client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-            client.options.hudHidden = true;
-        }
     }
 
     public void tickFlight(ServerPlayerEntity player) {
@@ -121,7 +112,6 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
 
     private void sendEnterFlightPacket(ServerPlayerEntity player) {
         ServerPlayNetworking.send(player, ENTER_FLIGHT, PacketByteBufs.create());
-        tardis.travel().autopilot(true);
   }
 
     public void exitFlight(ServerPlayerEntity player) {
@@ -142,5 +132,9 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
 
     public BoolValue falling() {
         return falling;
+    }
+
+    public BoolValue flying() {
+        return flying;
     }
 }

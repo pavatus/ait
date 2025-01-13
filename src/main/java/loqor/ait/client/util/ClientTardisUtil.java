@@ -1,6 +1,6 @@
 package loqor.ait.client.util;
 
-import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
+import static loqor.ait.core.tardis.util.TardisUtil.*;
 
 import java.util.UUID;
 
@@ -78,6 +78,29 @@ public class ClientTardisUtil {
         buf.writeUuid(uuid);
 
         ClientPlayNetworking.send(SNAP, buf);
+    }
+
+    public static void flyingSpeedPacket(Tardis tardis, String direction) {
+        flyingSpeedPacket(tardis.getUuid(), direction);
+    }
+
+    public static void flyingSpeedPacket(UUID uuid, String direction) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        buf.writeString(direction);
+
+        ClientPlayNetworking.send(FLYING_SPEED, buf);
+    }
+
+    public static void toggleAntigravs(Tardis tardis) {
+        toggleAntigravs(tardis.getUuid());
+    }
+
+    public static void toggleAntigravs(UUID uuid) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+
+        ClientPlayNetworking.send(TOGGLE_ANTIGRAVS, buf);
     }
 
     public static boolean isPlayerInATardis() {
