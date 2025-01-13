@@ -271,22 +271,16 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     public void forceDemat(TravelSound replacementSound) {
         this.state.set(State.DEMAT);
 
-        TravelSound before = tardis.stats().getTravelEffects().get(State.DEMAT);
-        if (replacementSound != null && replacementSound.target() == State.DEMAT) {
-            tardis.stats().setTravelEffects(replacementSound);
-        }
-
         SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 
         // Play dematerialize sound at the position
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
+        System.out.println(tardis.stats().getTravelEffects().get(this.getState()).soundId());
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 2f, 1f);
         this.runAnimations();
 
         this.startFlight();
-
-        tardis.stats().setTravelEffects(before);
     }
 
     public void forceDemat() {
@@ -311,9 +305,9 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         this.finishRemat();
 
-        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_THUD,
+        this.position().getWorld().playSound(null, this.position().getPos(), AITSounds.LAND_CRASH,
                 SoundCategory.AMBIENT);
-        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+        this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.ABORT_FLIGHT, SoundCategory.AMBIENT);
 
         NetworkUtil.sendToInterior(this.tardis.asServer(), CANCEL_DEMAT_SOUND, PacketByteBufs.empty());
     }
@@ -360,6 +354,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 2f, 1f);
+        System.out.println(sound.getId());
         this.placeExterior(true); // we schedule block update in #finishRemat
     }
 

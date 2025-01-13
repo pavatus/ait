@@ -55,11 +55,11 @@ public class BedInTardisMixin {
         player.sendMessage(message, true);
 
         SoundEvent sound = switch(loyalty.type()) {
-            case OWNER -> AITSounds.MOODY4;
-            case PILOT -> AITSounds.MOODY3;
-            case COMPANION -> AITSounds.MOODY2;
-            case NEUTRAL -> AITSounds.MOODY1;
-            case REJECT -> AITSounds.TARDIS_REJECTION_SFX;
+            case OWNER -> AITSounds.OWNER_BED;
+            case PILOT -> AITSounds.PILOT_BED;
+            case COMPANION -> AITSounds.COMPANION_BED;
+            case NEUTRAL -> AITSounds.NEUTRAL_BED;
+            case REJECT -> AITSounds.REJECT_BED;
 
         };
         ClientScheduler.get().runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);

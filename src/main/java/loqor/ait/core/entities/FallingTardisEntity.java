@@ -153,7 +153,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
         boolean isCrashing = travel.isCrashing();
 
         TardisUtil.getPlayersInsideInterior(tardis.asServer()).forEach(player -> {
-            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
+            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_CRASH;
             float volume = isCrashing ? 1.0F : 3.0F;
 
             player.playSound(sound, volume, 1.0f);

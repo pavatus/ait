@@ -145,8 +145,8 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
             float maxRot = 90f;
 
             DoorHandler door = exterior.tardis().get().door();
-            this.classic.getChild("Doors").getChild("left_door").yaw = -(float) Math.toRadians(maxRot * door.getLeftRot());
-            this.classic.getChild("Doors").getChild("right_door").yaw = (float) Math.toRadians(maxRot * door.getRightRot());
+            this.classic.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot * door.getLeftRot());
+            this.classic.getChild("Doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot * door.getRightRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);

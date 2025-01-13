@@ -80,8 +80,8 @@ public class StallionDoorModel extends DoorModel {
             body.getChild("door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? -1.35f : 0f;
             body.getChild("door").getChild("door_two").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? 2.65f : 0f;
         } else {
-            float maxLeftRot = 90f;
-            float maxRightRot = 170f;
+            float maxLeftRot = 87f;
+            float maxRightRot = 150f;
 
             body.getChild("door").yaw = -(float) Math.toRadians(maxLeftRot*linkableBlockEntity.tardis().get().door().getLeftRot());
             body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(maxRightRot*linkableBlockEntity.tardis().get().door().getLeftRot());

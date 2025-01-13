@@ -9,6 +9,7 @@ import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
+import loqor.ait.client.models.exteriors.BoothExteriorModel;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class BoothDoorModel extends DoorModel {
@@ -60,7 +61,10 @@ public class BoothDoorModel extends DoorModel {
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red,
             float green, float blue, float alpha) {
-        k2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        BoothExteriorModel boothExteriorModel = new BoothExteriorModel(BoothExteriorModel.getTexturedModelData().createModel());
+        ModelPart part = boothExteriorModel.getPart();
+        part.getChild("Door").visible = false;
+        part.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
     @Override

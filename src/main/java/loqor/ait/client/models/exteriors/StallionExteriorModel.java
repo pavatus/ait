@@ -116,10 +116,10 @@ public class StallionExteriorModel extends ExteriorModel {
             body.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? -1.35f : 0f;
             body.getChild("door").getChild("door_two").yaw = exterior.tardis().get().door().isOpen() ? 2.65f : 0f;
         } else {
-            float maxRot = 90f;
-            float rightMaxRot = 170f;
-            body.getChild("door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
-            body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(rightMaxRot * exterior.tardis().get().door().getLeftRot());
+            float maxLeftRot = 87f;
+            float maxRightRot = 150f;
+            body.getChild("door").yaw = -(float) Math.toRadians(maxLeftRot * exterior.tardis().get().door().getLeftRot());
+            body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(maxRightRot * exterior.tardis().get().door().getLeftRot());
         }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, alpha);

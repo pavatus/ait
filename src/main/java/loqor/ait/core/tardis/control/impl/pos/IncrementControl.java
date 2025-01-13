@@ -36,7 +36,7 @@ public class IncrementControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.INCREMENT;
+        return AITSounds.CRANK;
     }
 
     private void messagePlayerIncrement(ServerPlayerEntity player, Tardis tardis) {

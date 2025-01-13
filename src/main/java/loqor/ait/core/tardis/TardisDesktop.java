@@ -100,7 +100,7 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public void setDoorPos(DoorBlockEntity door) {
-        if (door == null)
+        if (door == null || door.getWorld() == null || door.getWorld().isClient())
             return;
 
         DirectedBlockPos pos = door.getDirectedPos();

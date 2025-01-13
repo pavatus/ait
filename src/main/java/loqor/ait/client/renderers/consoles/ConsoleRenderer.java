@@ -75,11 +75,11 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.scale(0.9f, 0.9f, 0.9f);
 
         MinecraftClient.getInstance().getItemRenderer().
-                renderItem(new ItemStack(Items.LIGHT_BLUE_STAINED_GLASS_PANE),
+                renderItem(new ItemStack(Items.ORANGE_STAINED_GLASS_PANE),
                         ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.translate(0 + entity.getWorld().random.nextFloat() * 0.02, 0 + entity.getWorld().random.nextFloat() * 0.02, 0 + entity.getWorld().random.nextFloat() * 0.02);
         MinecraftClient.getInstance().getItemRenderer().
-                renderItem(new ItemStack(Items.BLUE_STAINED_GLASS_PANE),
+                renderItem(new ItemStack(Items.ORANGE_STAINED_GLASS_PANE),
                         ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.pop();
 
@@ -92,11 +92,11 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
         matrices.scale(0.9f, 0.9f, 0.9f);
 
         MinecraftClient.getInstance().getItemRenderer().
-                renderItem(new ItemStack(Items.LIGHT_BLUE_STAINED_GLASS_PANE),
+                renderItem(new ItemStack(Items.ORANGE_STAINED_GLASS_PANE),
                         ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.translate(0 - entity.getWorld().random.nextFloat() * 0.02, 0 + entity.getWorld().random.nextFloat() * 0.02, 0 - entity.getWorld().random.nextFloat() * 0.02);
         MinecraftClient.getInstance().getItemRenderer().
-                renderItem(new ItemStack(Items.BLUE_STAINED_GLASS_PANE),
+                renderItem(new ItemStack(Items.ORANGE_STAINED_GLASS_PANE),
                         ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
         matrices.pop();
     }

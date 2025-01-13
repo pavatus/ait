@@ -247,23 +247,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
     private void applyNameTransforms(Tardis tardis, MatrixStack matrices, String name) {
         if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
-            matrices.translate(0, 1.25f, -0.7f);
+            matrices.translate(0, tardis.stats().getYScale() + 0.25f, -0.7f);
+        }else if (name.equalsIgnoreCase("smallboi")) {
+            matrices.scale(tardis.stats().getXScale() - 0.3f, tardis.stats().getYScale() - 0.3f, tardis.stats().getZScale() - 0.3f);
+        }else if (name.equalsIgnoreCase("toy")) {
+            matrices.scale(tardis.stats().getXScale() - 0.7f, tardis.stats().getYScale() - 0.7f, tardis.stats().getZScale() - 0.7f);
+        }else if (name.equalsIgnoreCase("bigboi")) {
+            matrices.scale(tardis.stats().getXScale() + 0.1f, tardis.stats().getYScale() + 0.1f, tardis.stats().getZScale() + 0.1f);
+        }else if (name.equalsIgnoreCase("massiveboi")) {
+            matrices.scale(tardis.stats().getXScale() + 0.2f, tardis.stats().getYScale() + 0.2f, tardis.stats().getZScale() + 0.2f);
+        }else {
+            matrices.scale(tardis.stats().getXScale(), tardis.stats().getYScale(), tardis.stats().getZScale());
         }
-
-        if (name.equalsIgnoreCase("smallboi"))
-            matrices.scale(0.7f, 0.7f, 0.7f);
-
-        if (name.equalsIgnoreCase("toy"))
-            matrices.scale(0.3f, 0.3f, 0.3f);
-
-        if (name.equalsIgnoreCase("bigboi"))
-            matrices.scale(1.1f, 1.1f, 1.1f);
-
-        if (name.equalsIgnoreCase("massiveboi"))
-            matrices.scale(1.2f, 1.2f, 1.2f);
-
-        //This cant be obtained in survival as it bypasses the name tag limit, you'll need commands.
-        if (name.equalsIgnoreCase("SIZE_LEAK_DONT_NAME_YOUR_TARDIS_THIS_ITS_SPECIFICLY_FOR_A_TRENZALORE_BUILD_ON_THE_SERVER_AS_CLASSIC_ASKED_ME"))
-            matrices.scale(10f, 10f, 10f);
     }
 }
