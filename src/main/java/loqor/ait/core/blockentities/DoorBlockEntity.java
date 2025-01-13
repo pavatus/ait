@@ -75,7 +75,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
             if (waterlogged && world.getServer().getTicks() % 20 == 0 && world.getRandom().nextBoolean()) {
                 for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(tardis.asServer())) {
-                    tardis.loyalty().subLevel(player, 1);
+                    tardis.loyalty().subLevel(player, 5);
                 }
             }
         }
