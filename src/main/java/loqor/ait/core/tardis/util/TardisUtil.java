@@ -34,14 +34,12 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
-import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.Loyalty;
 import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
 import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;
 import loqor.ait.mixin.lookup.SimpleEntityLookupAccessor;
@@ -71,12 +69,6 @@ public class TardisUtil {
                     return;
                 }
 
-                if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
-                    return;
-
-                if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
-                    return;
-
                 player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);
 
                 BlockPos exteriorPos = tardis.travel().position().getPos();
@@ -92,8 +84,19 @@ public class TardisUtil {
                 if (!player.isSneaking()) {
                     tardis.door().interact(player.getServerWorld(), null, player);
                 } else {
+                    boolean isLocked = tardis.door().locked();
                     tardis.door().interactToggleLock(player);
+                    player.getWorld().playSound(
+                            null,
+                            pos,
+                            isLocked ? AITSounds.REMOTE_UNLOCK : AITSounds.REMOTE_LOCK,
+                            SoundCategory.BLOCKS,
+                            1.0F,
+                            1.0F
+                    );
                 }
+
+
             });
         });
 
