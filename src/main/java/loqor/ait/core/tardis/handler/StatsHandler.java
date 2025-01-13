@@ -12,8 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.pavatus.register.unlockable.Unlockable;
 
-import loqor.ait.data.properties.flt.FloatProperty;
-import loqor.ait.data.properties.flt.FloatValue;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
@@ -36,8 +34,8 @@ import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.integer.IntProperty;
-import loqor.ait.data.properties.integer.IntValue;
+import loqor.ait.data.properties.flt.FloatProperty;
+import loqor.ait.data.properties.flt.FloatValue;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 
