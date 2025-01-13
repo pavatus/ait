@@ -73,7 +73,6 @@ public class TardisUtil {
 
                 if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
                     return;
-
                 if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
                     return;
 
@@ -92,8 +91,19 @@ public class TardisUtil {
                 if (!player.isSneaking()) {
                     tardis.door().interact(player.getServerWorld(), null, player);
                 } else {
+                    boolean isLocked = tardis.door().locked();
                     tardis.door().interactToggleLock(player);
+                    player.getWorld().playSound(
+                            null,
+                            pos,
+                            isLocked ? AITSounds.REMOTE_UNLOCK : AITSounds.REMOTE_LOCK,
+                            SoundCategory.BLOCKS,
+                            1.0F,
+                            1.0F
+                    );
                 }
+
+
             });
         });
 

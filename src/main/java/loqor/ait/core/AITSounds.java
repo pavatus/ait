@@ -103,6 +103,8 @@ public class AITSounds {
     public static final SoundEvent REJECT_BED = register("tardis/bed/reject");
     public static final SoundEvent LOYALTY_UP = register("tardis/moody/loyalty_up");
     public static final SoundEvent GROAN = register("tardis/groan");
+    public static final SoundEvent REMOTE_LOCK = register("tardis/remote_lock");
+    public static final SoundEvent REMOTE_UNLOCK = register("tardis/remote_unlock");
     //Possible could be used for a mood related thing?
     public static final SoundEvent TARDIS_REJECTION_SFX = register("tardis/tardis_rejection_sfx");
 
