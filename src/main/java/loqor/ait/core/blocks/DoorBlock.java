@@ -54,7 +54,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
             BlockState exteriorState = exteriorWorld.getBlockState(exteriorPos);
             if (!tardis.travel().inFlight())
-                if (!(exteriorState.getBlock() instanceof AirBlock))
+                if ((exteriorState.getBlock() instanceof ExteriorBlock))
                     setDoorLight(tardis, exteriorState.get(ExteriorBlock.LEVEL_9));
         });
 

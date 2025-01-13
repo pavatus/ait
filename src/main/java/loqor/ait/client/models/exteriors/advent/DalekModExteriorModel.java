@@ -97,7 +97,7 @@ public class DalekModExteriorModel extends ExteriorModel {
                     ? 5F
                     : 0.0F;
         } else {
-            float maxRot = 90;
+            float maxRot = 80;
             this.dalekmod.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
             this.dalekmod.getChild("Doors").getChild("right_door").yaw = (float) -Math.toRadians(maxRot*door.getRightRot());
         }
@@ -129,7 +129,7 @@ public class DalekModExteriorModel extends ExteriorModel {
                     ? 5F
                     : 0.0F;
         } else {
-            float maxRot = 90;
+            float maxRot = 80;
             this.dalekmod.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
             this.dalekmod.getChild("Doors").getChild("right_door").yaw = (float) -Math.toRadians(maxRot*door.getRightRot());
         }

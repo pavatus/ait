@@ -47,7 +47,7 @@ public class DalekModDoorModel extends DoorModel {
                     ? 5.0f
                     : 0.0F;
         } else {
-            float maxRot = 90f;
+            float maxRot = 80f;
         this.dalekmod.getChild("Doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot*doorEntity.tardis().get().door().getLeftRot());
         this.dalekmod.getChild("Doors").getChild("right_door").yaw = (float) -Math.toRadians(maxRot*doorEntity.tardis().get().door().getRightRot());
         }

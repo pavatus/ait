@@ -696,6 +696,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.stallion", "Stallion");
         provider.addTranslation("exterior.ait.jake", "Jake");
         provider.addTranslation("exterior.ait.dalek_mod", "Dalek Mod");
+        provider.addTranslation("exterior.ait.pipe", "Pipe");
+        provider.addTranslation("exterior.ait.present", "Present");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
@@ -1012,6 +1014,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.futuristic", "Futuristic");
         provider.addTranslation("exterior.ait.cherrywood", "Cherrywood");
         provider.addTranslation("exterior.ait.yard", "73 Yards");
+        provider.addTranslation("exterior.ait.tokamak", "Tokamak");
+        provider.addTranslation("exterior.ait.black_mesa", "Black Mesa");
+        provider.addTranslation("exterior.ait.aperture_science", "Aperture Science");
 
         // Classic specific
         provider.addTranslation("exterior.ait.definitive", "Definitive");

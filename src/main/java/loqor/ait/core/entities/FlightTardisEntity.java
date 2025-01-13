@@ -69,7 +69,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         );
 
         exteriorPos.getWorld().spawnEntity(entity);
-        player.getAbilities().setFlySpeed(player.getAbilities().getFlySpeed() * 1.5F);
         return entity;
     }
 
@@ -81,13 +80,16 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     @Override
     protected float getOffGroundSpeed() {
         if (this.tardis() != null)
-            return this.getMovementSpeed() * (this.tardis().get().travel().speed() * 0.03f);
+            if (this.getVelocity().horizontalLength() > 0.1f) {
+                return this.getMovementSpeed() * (this.tardis().get().travel().speed() * 0.03f);
+            }
         return super.getOffGroundSpeed();
     }
 
     @Override
     public void tick() {
         this.lastVelocity = this.getVelocity();
+        this.velocityDirty = true;
         this.setRotation(0, 0);
         super.tick();
 
@@ -219,8 +221,8 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         if (v < 0 && this.isOnGround())
             return Vec3d.ZERO.add(0, -0.4f, 0);
-
-        return new Vec3d(f, v, g);//return this.isOnGround() ? new Vec3d(0, 0, 0) : new Vec3d(f, v * 4f, g);
+        Vec3d yourmom = new Vec3d(f, v, g);
+        return yourmom;//return this.isOnGround() ? new Vec3d(0, 0, 0) : new Vec3d(f, v * 4f, g);
     }
 
     @Override
@@ -273,11 +275,12 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     }
 
     @Override
-    public void setJumpStrength(int strength) { }
+    public void setJumpStrength(int strength) {
+    }
 
     @Override
     public boolean canJump() {
-        return true;
+        return false;
     }
 
     @Override
