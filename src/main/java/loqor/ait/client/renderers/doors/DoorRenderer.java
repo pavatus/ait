@@ -119,6 +119,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         matrices.push();
         matrices.translate(0.5, 0, 0.5);
+        matrices.scale(tardis.stats().getXScale(), tardis.stats().getYScale(), tardis.stats().getZScale());
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 

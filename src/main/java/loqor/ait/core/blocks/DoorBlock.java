@@ -143,6 +143,9 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         if (door.tardis().get().siege().isActive())
             return;
 
+//        if (door.tardis().get().stats().getYScale() == 0)
+//            return;
+
         Vec3d expansionBehind = new Vec3d(entity.prevX, entity.prevY, entity.prevZ).subtract(entity.getPos());
         Vec3d expansionForward = entity.getVelocity();
 
