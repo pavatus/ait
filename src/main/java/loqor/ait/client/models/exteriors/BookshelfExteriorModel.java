@@ -179,9 +179,23 @@ public class BookshelfExteriorModel extends ExteriorModel {
     @Override
     public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
                                                            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (!falling.isLinked())
+            return;
+
         matrices.push();
         matrices.scale(1F, 1F, 1F);
         matrices.translate(0, -1.5f, 0);
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = falling.tardis().get().door();
+
+            this.bookshelf.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -4.75F : 0.0F;
+            this.bookshelf.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen()) ? 4.75F : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.bookshelf.getChild("left_door").yaw = -(float) Math.toRadians(maxRot * falling.tardis().get().door().getLeftRot());
+            this.bookshelf.getChild("right_door").yaw = (float) Math.toRadians(maxRot * falling.tardis().get().door().getRightRot());
+        }
 
         super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();

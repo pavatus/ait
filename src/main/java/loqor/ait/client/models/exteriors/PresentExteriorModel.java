@@ -64,7 +64,7 @@ public class PresentExteriorModel extends ExteriorModel {
     @Override
     public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
                                                            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        if (!falling.isLinked())
+        if (falling.tardis().isEmpty())
             return;
 
         matrices.push();
@@ -73,10 +73,14 @@ public class PresentExteriorModel extends ExteriorModel {
         if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
             DoorHandler door = falling.tardis().get().door();
 
-            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 9F : 0.0F;
+            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
             this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
-                    ? -9F
+                    ? -8F
                     : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.present.getChild("left_door").yaw = (float) Math.toRadians(falling.tardis().get().door().getLeftRot() * maxRot);
+            this.present.getChild("right_door").yaw = -(float) Math.toRadians(falling.tardis().get().door().getRightRot() * maxRot);
         }
 
         super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

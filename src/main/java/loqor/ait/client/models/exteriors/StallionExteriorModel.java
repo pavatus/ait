@@ -130,7 +130,18 @@ public class StallionExteriorModel extends ExteriorModel {
     public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
                                                            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         matrices.push();
+        matrices.scale(0.95f, 0.95f, 0.95f);
         matrices.translate(0, -1.5f, 0);
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            body.getChild("door").yaw = falling.tardis().get().door().isOpen() ? -1.35f : 0f;
+            body.getChild("door").getChild("door_two").yaw = falling.tardis().get().door().isOpen() ? 2.65f : 0f;
+        } else {
+            float maxLeftRot = 87f;
+            float maxRightRot = 150f;
+            body.getChild("door").yaw = -(float) Math.toRadians(maxLeftRot * falling.tardis().get().door().getLeftRot());
+            body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(maxRightRot * falling.tardis().get().door().getLeftRot());
+        }
 
         super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();

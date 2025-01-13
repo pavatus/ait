@@ -16,13 +16,13 @@ import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisExterior;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
     private ExteriorModel model;
+    private ClientExteriorVariantSchema variant;
 
     public FlightTardisRenderer(EntityRendererFactory.Context context) {
         super(context);
@@ -36,14 +36,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
         Tardis tardis = entity.tardis().get();
 
-        TardisExterior exterior = tardis.getExterior();
-        ClientExteriorVariantSchema exteriorVariant = exterior.getVariant().getClient();
-
-        if (exteriorVariant == null)
-            return;
-
-        if (this.getModel(tardis) == null)
-            return;
+        this.updateModel(tardis);
 
         Vec3d vec3d = entity.getRotationVec(tickDelta);
         Vec3d vec3d2 = entity.lerpVelocity(tickDelta);
@@ -78,17 +71,17 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
         this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
-        if (exteriorVariant.emission() != null && tardis.engine().hasPower()) {
+        if (variant.emission() != null && tardis.engine().hasPower()) {
             boolean alarms = tardis.alarm().enabled().get();
 
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderEntity,
-                    exteriorVariant.emission(), entity, this.model.getPart(), matrices,
+                    variant.emission(), entity, this.model.getPart(), matrices,
                     vertexConsumers, light, OverlayTexture.DEFAULT_UV, 1, alarms ? 0.3f : 1,
                     alarms ? 0.3f : 1, 1);
         }
 
         BiomeHandler biome = tardis.handler(TardisComponent.Id.BIOME);
-        Identifier biomeTexture = biome.getBiomeKey().get(exteriorVariant.overrides());
+        Identifier biomeTexture = biome.getBiomeKey().get(variant.overrides());
 
         if (biomeTexture != null && !this.getTexture(entity).equals(biomeTexture))
             model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(biomeTexture)), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
@@ -120,5 +113,14 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
             return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE; // random texture just so i dont crash
 
         return entity.tardis().get().getExterior().getVariant().getClient().texture();
+    }
+
+    private void updateModel(Tardis tardis) {
+        ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
+
+        if (this.variant != variant) {
+            this.variant = variant;
+            this.model = variant.model();
+        }
     }
 }
