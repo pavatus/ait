@@ -61,7 +61,8 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     }
 
     public void tickFlight(ServerPlayerEntity player) {
-        tardis.travel().forcePosition(cached -> cached.pos(player.getBlockPos()));
+        tardis.travel().forcePosition(cached -> cached.pos(player.getBlockPos())
+                .rotation((byte) RotationPropertyHelper.fromYaw(player.getYaw())));
     }
 
     public void onLanding(ServerWorld world, BlockPos pos) {

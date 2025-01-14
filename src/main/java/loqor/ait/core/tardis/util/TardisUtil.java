@@ -31,6 +31,7 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
@@ -233,6 +234,7 @@ public class TardisUtil {
                 : TardisUtil.offsetDoorPosition(directed).add(0, 0.125, 0);
 
         world.getServer().execute(() -> {
+            if (entity.hasVehicle() && entity.getVehicle() instanceof FlightTardisEntity) return;
             if (entity instanceof ServerPlayerEntity player) {
                 WorldUtil.teleportToWorld(player, world, vec,
                         RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
