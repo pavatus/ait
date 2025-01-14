@@ -1029,6 +1029,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.shalka", "Shalka");
         provider.addTranslation("exterior.ait.mint", "Mint");
         provider.addTranslation("exterior.ait.yeti", "Yeti");
+        provider.addTranslation("exterior.ait.tango", "Tango");
+        provider.addTranslation("exterior.ait.falloutwho", "Fallout Who");
 
         // Renegade specific
         provider.addTranslation("exterior.ait.cabinet", "Cabinet");
