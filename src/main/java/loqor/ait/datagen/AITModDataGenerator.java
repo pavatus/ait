@@ -734,6 +734,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("desktop.ait.industrial", "Industrial");
         provider.addTranslation("desktop.ait.hybern", "Hybern");
         provider.addTranslation("desktop.ait.missy", "Missy");
+        provider.addTranslation("desktop.ait.tron", "Tron");
+        provider.addTranslation("desktop.ait.planetarium", "Planetarium");
+        provider.addTranslation("desktop.ait.modest", "Modest");
 
         // Sonic Screwdrivers
         provider.addTranslation("sonic.ait.prime", "Prime");
