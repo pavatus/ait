@@ -1,4 +1,4 @@
-Developers: Loqor, Duzo, Theo, and Maketendo
+Developers: Loqor, Duzo, Theo, Maketendo, and AddieDaBaddie
 
 Artists: Westankrang, Tright, b2, Ouro
 

@@ -44,6 +44,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 - [duzo](https://duzo.is-a.dev/)
 - [Dr. Theo](https://theo.is-a.dev/)
 - Maketendo
+- [AddieDaBaddie](https://github.com/Addi3/addie.info.io/wiki)
 
 ---
 
