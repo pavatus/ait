@@ -739,7 +739,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("desktop.ait.modest", "Modest");
         provider.addTranslation("desktop.ait.war_games", "War Games");
         provider.addTranslation("desktop.ait.renewed", "Renewed");
-        provider.addTranslation("desktop.ait.refurbishment", "Refurbishment");
+        provider.addTranslation("desktop.ait.definitive", "Definitive");
         provider.addTranslation("desktop.ait.exile", "Exile");
         provider.addTranslation("desktop.ait.axos", "Axos");
 
