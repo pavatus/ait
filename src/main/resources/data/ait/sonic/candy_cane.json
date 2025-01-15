@@ -1,11 +1,11 @@
 {
   "id": "ait:candy_cane",
   "models": {
-    "inactive": "ait:item/sonic/candy_cane/candy_cane",
-    "interaction": "ait:item/sonic/candy_cane/candy_cane",
-    "overload": "ait:item/sonic/candy_cane/candy_cane",
-    "scanning": "ait:item/sonic/candy_cane/candy_cane",
-    "tardis": "ait:item/sonic/candy_cane/candy_cane"
+    "inactive": "ait:item/sonic/candy_cane/inactive",
+    "interaction": "ait:item/sonic/candy_cane/interaction",
+    "overload": "ait:item/sonic/candy_cane/overload",
+    "scanning": "ait:item/sonic/candy_cane/scanning",
+    "tardis": "ait:item/sonic/candy_cane/tardis"
   },
   "loyalty": {
     "type": "PILOT"
