@@ -3,8 +3,8 @@
   "textures": {
     "north": "ait:block/decoration/roundels/tardim",
     "south": "ait:block/decoration/roundels/tardim",
-    "east": "ait:block/decoration/roundels/tardim_sides",
-    "west": "ait:block/decoration/roundels/tardim_sides",
+    "east": "ait:block/decoration/roundels/tardim",
+    "west": "ait:block/decoration/roundels/tardim",
     "up": "ait:block/decoration/roundels/tardim",
     "down": "ait:block/decoration/roundels/tardim"
   }

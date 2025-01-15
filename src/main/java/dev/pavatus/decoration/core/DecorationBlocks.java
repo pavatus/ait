@@ -25,6 +25,9 @@ public class DecorationBlocks extends BlockContainer {
     @NoEnglish
     public static final Block TARDIM_ROUNDEL = new RoundelBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"TARDIM");
+    @NoEnglish
+    public static final Block RENAISSANCE_ROUNDEL = new RoundelBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"RENAISSANCE");
 
 
     @Override

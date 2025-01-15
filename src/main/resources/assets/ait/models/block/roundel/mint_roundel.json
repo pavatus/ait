@@ -3,8 +3,8 @@
   "textures": {
     "north": "ait:block/decoration/roundels/mint",
     "south": "ait:block/decoration/roundels/mint",
-    "east": "ait:block/decoration/roundels/mint_sides",
-    "west": "ait:block/decoration/roundels/mint_sides",
+    "east": "ait:block/decoration/roundels/mint",
+    "west": "ait:block/decoration/roundels/mint",
     "up": "ait:block/decoration/roundels/mint",
     "down": "ait:block/decoration/roundels/mint"
   }
