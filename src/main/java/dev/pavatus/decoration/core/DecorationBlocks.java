@@ -15,16 +15,16 @@ import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 public class DecorationBlocks extends BlockContainer {
     @NoEnglish
     public static final Block MINT_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY), "MINT");
     @NoEnglish
     public static final Block WHITE_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"WHITE");
     @NoEnglish
     public static final Block DARK_OAK_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"DARK OAK");
     @NoEnglish
     public static final Block TARDIM_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY));
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"TARDIM");
 
 
     @Override
