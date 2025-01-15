@@ -46,9 +46,10 @@ public class RoundelBlock extends Block {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
+        if (id == null) {return;}
+
         tooltip.add(Text.translatable("tooltip.ait.roundel_type").formatted(Formatting.BLUE, Formatting.ITALIC));
         tooltip.add(Text.literal(id).formatted(Formatting.DARK_GRAY));
-
     }
 
     @Override
