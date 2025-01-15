@@ -1,5 +1,6 @@
 package dev.pavatus.module;
 
+import dev.pavatus.decoration.DecorationModule;
 import dev.pavatus.gun.GunModule;
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.register.datapack.DatapackRegistry;
@@ -18,6 +19,7 @@ public class ModuleRegistry extends DatapackRegistry<Module> {
         super.onCommonInit();
 
         register(PlanetModule.instance());
+        register(DecorationModule.instance());
         register(GunModule.instance());
 
         iterator().forEachRemaining(Module::init);

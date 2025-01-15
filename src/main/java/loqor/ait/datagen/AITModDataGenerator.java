@@ -782,6 +782,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tooltip.ait.power_converter", "(Convert Zeiton,Lava,Coal and Wood into Artron)");
         provider.addTranslation("tooltip.ait.singularity", "(Give the TARDIS Coral this to allow the generation of the interior)");
         provider.addTranslation("tooltip.ait.tardis_coral", "(Place the CORAL on soul sand in a rift chunk and give it a SMS to generate your interior)");
+        provider.addTranslation("tooltip.ait.roundel_type", "Roundel Type:");
 
         // Painting
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
