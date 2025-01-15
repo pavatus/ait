@@ -69,6 +69,7 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
         this.tardis.travel().forcePosition(cached -> cached.world(world.getRegistryKey()).pos(pos));
 
         this.falling.set(false);
+        this.tardis.door().setLocked(this.tardis.door().previouslyLocked().get());
         this.tardis.door().setDeadlocked(false);
 
         world.playSound(null, pos, AITSounds.LAND_THUD, SoundCategory.BLOCKS);

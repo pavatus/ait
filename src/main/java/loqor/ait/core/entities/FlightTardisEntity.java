@@ -36,7 +36,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     private static final List<ItemStack> EMPTY = List.of();
     private static final ItemStack AIR = new ItemStack(Items.AIR);
-
+    public float speedPitch;
     private Vec3d lastVelocity;
     private BlockPos interiorPos;
 
@@ -89,7 +89,6 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     @Override
     public void tick() {
         this.lastVelocity = this.getVelocity();
-        this.velocityDirty = true;
         this.setRotation(0, 0);
         super.tick();
 
@@ -102,7 +101,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             Tardis tardisClient = this.tardis().get().asClient();
             if (client.player == this.getControllingPassenger()) {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-                client.options.hudHidden = true;
+                //client.options.hudHidden = true;
                 if (!this.groundCollision)
                     ClientShakeUtil.shake((float) (tardisClient.travel().speed() + this.getVelocity().horizontalLength()) / tardisClient.travel().maxSpeed().get());
             }
