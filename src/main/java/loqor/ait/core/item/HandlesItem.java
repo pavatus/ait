@@ -114,6 +114,23 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("cloak", HandlesResponses.TOGGLE_CLOAK);
         RESPONSE_MAP.put("p3", HandlesResponses.TOGGLE_CLOAK);
         RESPONSE_MAP.put("protocol 3", HandlesResponses.TOGGLE_CLOAK);
+
+        RESPONSE_MAP.put("open doors", HandlesResponses.OPEN_DOOR);
+        RESPONSE_MAP.put("open the doors", HandlesResponses.OPEN_DOOR);
+        RESPONSE_MAP.put("open", HandlesResponses.OPEN_DOOR);
+        RESPONSE_MAP.put("door open", HandlesResponses.OPEN_DOOR);
+
+        RESPONSE_MAP.put("close the doors", HandlesResponses.CLOSE_DOOR);
+        RESPONSE_MAP.put("close doors", HandlesResponses.CLOSE_DOOR);
+        RESPONSE_MAP.put("close", HandlesResponses.CLOSE_DOOR);
+        RESPONSE_MAP.put("door close", HandlesResponses.CLOSE_DOOR);
+
+        RESPONSE_MAP.put("toggle lock", HandlesResponses.TOGGLE_LOCK);
+        RESPONSE_MAP.put("toggle door lock", HandlesResponses.TOGGLE_LOCK);
+        RESPONSE_MAP.put("lock", HandlesResponses.TOGGLE_LOCK);
+        RESPONSE_MAP.put("door lock", HandlesResponses.TOGGLE_LOCK);
+
+
     }
 
     public HandlesResponses getHandlesResponses(String lastMessage) {
@@ -240,6 +257,90 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.shields().toggle();
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        OPEN_DOOR {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.toggle_shields", tardis.door().isOpen());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.door().openDoors();
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        CLOSE_DOOR {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.toggle_shields", tardis.door().isClosed());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.door().closeDoors();
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        TOGGLE_LOCK {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.toggle_shields", tardis.door().locked());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.door().interactToggleLock(null, true);
                 success(tardis, player, world);
             }
             @Override
