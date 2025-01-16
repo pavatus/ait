@@ -120,6 +120,7 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("open", HandlesResponses.OPEN_DOOR);
         RESPONSE_MAP.put("door open", HandlesResponses.OPEN_DOOR);
         RESPONSE_MAP.put("open door", HandlesResponses.OPEN_DOOR);
+        RESPONSE_MAP.put("open sesame", HandlesResponses.OPEN_DOOR);
 
         RESPONSE_MAP.put("close the doors", HandlesResponses.CLOSE_DOOR);
         RESPONSE_MAP.put("close doors", HandlesResponses.CLOSE_DOOR);
