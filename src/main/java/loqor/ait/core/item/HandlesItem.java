@@ -130,6 +130,12 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("lock", HandlesResponses.TOGGLE_LOCK);
         RESPONSE_MAP.put("door lock", HandlesResponses.TOGGLE_LOCK);
 
+        RESPONSE_MAP.put("activate handbrake", HandlesResponses.ACTIVATE_HANDBRAKE);
+        RESPONSE_MAP.put("handbrake on", HandlesResponses.ACTIVATE_HANDBRAKE);
+
+        RESPONSE_MAP.put("disable handbrake", HandlesResponses.DISABLE_HANDBRAKE);
+        RESPONSE_MAP.put("handbrake off", HandlesResponses.DISABLE_HANDBRAKE);
+
 
     }
 
@@ -278,7 +284,7 @@ public class HandlesItem extends LinkableItem {
         OPEN_DOOR {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_shields", tardis.door().isOpen());
+                return Text.translatable("message.ait.handles.open_doors", tardis.door().isOpen());
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -306,7 +312,7 @@ public class HandlesItem extends LinkableItem {
         CLOSE_DOOR {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_shields", tardis.door().isClosed());
+                return Text.translatable("message.ait.handles.close_doors", tardis.door().isClosed());
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -334,13 +340,71 @@ public class HandlesItem extends LinkableItem {
         TOGGLE_LOCK {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_shields", tardis.door().locked());
+                return Text.translatable("message.ait.handles.toggle_lock", tardis.door().locked());
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.door().interactToggleLock(null, true);
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        ACTIVATE_HANDBRAKE {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.activate_handbrake", tardis.travel().handbrake());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.travel().handbrake(true);
+
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        DISABLE_HANDBRAKE {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.disable_handbrake", tardis.travel().handbrake());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.travel().handbrake(false);
+
                 success(tardis, player, world);
             }
             @Override
