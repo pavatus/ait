@@ -49,14 +49,18 @@ public class HandlesItem extends LinkableItem {
         for (int i = 0; i < player.getInventory().size(); i++) {
             stack = player.getInventory().getStack(i);
 
-            if (!(stack.getItem() instanceof HandlesItem item)) return;
+            if (stack.getItem() instanceof HandlesItem item) {
 
-            if (!item.isLinked(stack)) return;
+                if (item.isLinked(stack)) {
 
-            Tardis tardis = HandlesItem.getTardis(player.getWorld(), stack);
-            HandlesResponses response = item.getHandlesResponses(messageSignedContent);
+                    Tardis tardis = HandlesItem.getTardis(player.getWorld(), stack);
+                    HandlesResponses response = item.getHandlesResponses(messageSignedContent);
 
-            respond(tardis, player, response, stack);
+                    if (tardis.butler().getHandles() == null)
+                        respond(tardis, player, response, stack);
+                    break;
+                }
+            }
         }
 
         if (!TardisServerWorld.isTardisDimension(player.getWorld())) return;
@@ -69,6 +73,8 @@ public class HandlesItem extends LinkableItem {
 
         HandlesResponses response = item.getHandlesResponses(messageSignedContent);
 
+        System.out.println(messageSignedContent.toLowerCase().replace(",", "").replace("handles ", ""));
+
         respond(tardis, player, response, tardis.butler().getHandles());
     }
 
@@ -79,6 +85,7 @@ public class HandlesItem extends LinkableItem {
 
     static {
         RESPONSE_MAP.put("take off", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("takeoff", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put("start flight", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put("fly", HandlesResponses.TAKE_OFF);
 
@@ -101,7 +108,7 @@ public class HandlesItem extends LinkableItem {
 
     public HandlesResponses getHandlesResponses(String lastMessage) {
         return RESPONSE_MAP.getOrDefault(lastMessage.toLowerCase().replace(",", "")
-                .replace("handles", ""), HandlesResponses.DEFAULT);
+                .replace("handles ", ""), HandlesResponses.DEFAULT);
     }
 
     public enum HandlesResponses implements StringIdentifiable {

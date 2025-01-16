@@ -27,11 +27,8 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.api.link.LinkableItem;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.item.HypercubeItem;
-import loqor.ait.core.item.KeyItem;
-import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.*;
 import loqor.ait.core.likes.ItemOpinion;
 import loqor.ait.core.likes.ItemOpinionRegistry;
 import loqor.ait.core.lock.LockedDimensionRegistry;
@@ -76,14 +73,9 @@ public class TelepathicControl extends Control {
             return false;
         }
 
-        if (player.isSneaking() && type == AITItems.HANDLES) {
-
-            return true;
-        }
-
 
         if (type instanceof LinkableItem linker) {
-            if (linker instanceof SonicItem)
+            if (linker instanceof SonicItem2 || linker instanceof HandlesItem)
                 return false;
 
             linker.link(held, tardis);

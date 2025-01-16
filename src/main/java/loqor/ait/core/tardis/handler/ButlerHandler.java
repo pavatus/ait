@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import loqor.ait.api.ArtronHolderItem;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
@@ -52,23 +51,23 @@ public class ButlerHandler extends KeyedTardisComponent implements ArtronHolderI
         return result;
     }
 
-    private static void insertAnyHandles(Value<ItemStack> value, ItemStack sonic, Consumer<ItemStack> spawner) {
+    private static void insertAnyHandles(Value<ItemStack> value, ItemStack handles, Consumer<ItemStack> spawner) {
         value.flatMap(stack -> {
             if (stack != null)
                 spawner.accept(stack);
 
-            return sonic;
+            return handles;
         });
     }
 
-    public static void spawnItem(World world, BlockPos pos, ItemStack sonic) {
-        ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), sonic);
+    public static void spawnItem(World world, BlockPos pos, ItemStack handles) {
+        ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), handles);
         world.spawnEntity(entity);
     }
 
     @Override
     public double getMaxFuel(ItemStack stack) {
-        return SonicItem.MAX_FUEL;
+        return 0;
     }
 
     @Override

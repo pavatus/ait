@@ -12,7 +12,6 @@ import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.item.HandlesItem;
-import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.SonicItem2;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
@@ -31,6 +30,8 @@ public class SonicPortControl extends Control {
             boolean leftClick) {
         SonicHandler handler = tardis.sonic();
         ButlerHandler butler = tardis.butler();
+
+        System.out.println(handler.getConsoleSonic());
 
         if ((leftClick || player.isSneaking()) && (handler.getConsoleSonic() != null || butler.getHandles() != null)) {
             if (handler.getConsoleSonic() != null) {
@@ -60,11 +61,13 @@ public class SonicPortControl extends Control {
                     1F, 0.4F, 5.0F);
         }
 
-        if (butler.getHandles() == null && (stack.getItem() instanceof SonicItem || stack.getItem() instanceof SonicItem2))
-            handler.insertConsoleSonic(stack, console);
-        if (handler.getConsoleSonic() == null && stack.getItem() instanceof HandlesItem)
+        if (handler.getConsoleSonic() == null && stack.getItem() instanceof HandlesItem) {
             butler.insertHandles(stack, console);
-        player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+            player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+        } else if (butler.getHandles() == null && stack.getItem() instanceof SonicItem2) {
+            handler.insertConsoleSonic(stack, console);
+            player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+        }
 
         TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f,
                 1);
