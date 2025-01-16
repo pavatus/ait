@@ -32,13 +32,12 @@ public class SonicPortControl extends Control {
         SonicHandler handler = tardis.sonic();
         ButlerHandler butler = tardis.butler();
 
-        if (butler.getHandles() == null && handler.getConsoleSonic() != null && (leftClick || player.isSneaking())) {
-            SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
-            return true;
-        }
-
-        if (handler.getConsoleSonic() == null && butler.getHandles() != null && (leftClick || player.isSneaking())) {
-            ButlerHandler.spawnItem(world, console, butler.takeHandles());
+        if ((leftClick || player.isSneaking()) && (handler.getConsoleSonic() != null || butler.getHandles() != null)) {
+            if (handler.getConsoleSonic() != null) {
+                SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
+            } else {
+                ButlerHandler.spawnItem(world, console, butler.takeHandles());
+            }
             return true;
         }
 
@@ -61,9 +60,9 @@ public class SonicPortControl extends Control {
                     1F, 0.4F, 5.0F);
         }
 
-        if (stack.getItem() instanceof SonicItem || stack.getItem() instanceof SonicItem2)
+        if (butler.getHandles() == null && (stack.getItem() instanceof SonicItem || stack.getItem() instanceof SonicItem2))
             handler.insertConsoleSonic(stack, console);
-        if (stack.getItem() instanceof HandlesItem)
+        if (handler.getConsoleSonic() == null && stack.getItem() instanceof HandlesItem)
             butler.insertHandles(stack, console);
         player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
