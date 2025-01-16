@@ -44,6 +44,8 @@ public class HandlesItem extends LinkableItem {
 
         if (player.getWorld().isClient()) return;
 
+        if (!bl) return;
+
         for (int i = 0; i < player.getInventory().size(); i++) {
             stack = player.getInventory().getStack(i);
 
@@ -51,13 +53,10 @@ public class HandlesItem extends LinkableItem {
 
             if (!item.isLinked(stack)) return;
 
-            if (!bl) return;
-
             Tardis tardis = HandlesItem.getTardis(player.getWorld(), stack);
             HandlesResponses response = item.getHandlesResponses(messageSignedContent);
 
-            response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, stack);
-            player.sendMessage(response.getResponseText(tardis, player), true);
+            respond(tardis, player, response, stack);
         }
 
         if (!TardisServerWorld.isTardisDimension(player.getWorld())) return;
@@ -68,39 +67,41 @@ public class HandlesItem extends LinkableItem {
 
         if (!(tardis.butler().getHandles().getItem() instanceof HandlesItem item)) return;
 
-        if (!bl) return;
-
         HandlesResponses response = item.getHandlesResponses(messageSignedContent);
 
-        response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, tardis.butler().getHandles());
+        respond(tardis, player, response, tardis.butler().getHandles());
+    }
+
+    private static void respond(Tardis tardis, PlayerEntity player, HandlesResponses response, ItemStack stack) {
+        response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, stack);
         player.sendMessage(response.getResponseText(tardis, player), true);
     }
 
     static {
-        String h = "handles";
-        RESPONSE_MAP.put(h + " take off", HandlesResponses.TAKE_OFF);
-        RESPONSE_MAP.put(h + " start flight", HandlesResponses.TAKE_OFF);
-        RESPONSE_MAP.put(h + " fly", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("take off", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("start flight", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("fly", HandlesResponses.TAKE_OFF);
 
-        RESPONSE_MAP.put(h + " land", HandlesResponses.LAND);
-        RESPONSE_MAP.put(h + " stop flight", HandlesResponses.LAND);
-        RESPONSE_MAP.put(h + " stop flying", HandlesResponses.LAND);
+        RESPONSE_MAP.put("land", HandlesResponses.LAND);
+        RESPONSE_MAP.put("stop flight", HandlesResponses.LAND);
+        RESPONSE_MAP.put("stop flying", HandlesResponses.LAND);
 
-        RESPONSE_MAP.put(h + " toggle shields", HandlesResponses.TOGGLE_SHIELDS);
-        RESPONSE_MAP.put(h + " shields", HandlesResponses.TOGGLE_SHIELDS);
+        RESPONSE_MAP.put("toggle shields", HandlesResponses.TOGGLE_SHIELDS);
+        RESPONSE_MAP.put("shields", HandlesResponses.TOGGLE_SHIELDS);
 
-        RESPONSE_MAP.put(h + " toggle alarms", HandlesResponses.TOGGLE_ALARMS);
-        RESPONSE_MAP.put(h + " alarms", HandlesResponses.TOGGLE_ALARMS);
+        RESPONSE_MAP.put("toggle alarms", HandlesResponses.TOGGLE_ALARMS);
+        RESPONSE_MAP.put("alarms", HandlesResponses.TOGGLE_ALARMS);
 
-        RESPONSE_MAP.put(h + " toggle antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
-        RESPONSE_MAP.put(h + " antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
+        RESPONSE_MAP.put("toggle antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
+        RESPONSE_MAP.put("antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
 
-        RESPONSE_MAP.put(h + " toggle cloak", HandlesResponses.TOGGLE_CLOAK);
-        RESPONSE_MAP.put(h + " cloak", HandlesResponses.TOGGLE_CLOAK);
+        RESPONSE_MAP.put("toggle cloak", HandlesResponses.TOGGLE_CLOAK);
+        RESPONSE_MAP.put("cloak", HandlesResponses.TOGGLE_CLOAK);
     }
 
     public HandlesResponses getHandlesResponses(String lastMessage) {
-        return RESPONSE_MAP.getOrDefault(lastMessage.toLowerCase().replace(",", ""), HandlesResponses.DEFAULT);
+        return RESPONSE_MAP.getOrDefault(lastMessage.toLowerCase().replace(",", "")
+                .replace("handles", ""), HandlesResponses.DEFAULT);
     }
 
     public enum HandlesResponses implements StringIdentifiable {
