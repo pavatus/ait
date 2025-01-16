@@ -217,6 +217,21 @@ public class AITSounds {
     public static final SoundEvent HANDLES_PLEASE_ASK_AGAIN = register("tardis/handles/please_ask_again");
     public static final SoundEvent HANDLES_PARDON = register("tardis/handles/pardon");
 
+    //Mobs
+    //Cybermen2005
+    public static final SoundEvent delete = register("mobs/cybermen/2005/delete");
+    public static final SoundEvent unnecessary = register("mobs/cybermen/2005/unnecessary");
+    public static final SoundEvent superior = register("mobs/cybermen/2005/superior");
+    public static final SoundEvent deleted = register("mobs/cybermen/2005/deleted");
+    public static final SoundEvent cyber_stun = register("mobs/cybermen/2005/cyber_stun");
+    public static final SoundEvent stomp4 = register("mobs/cybermen/2005/stomp4");
+    public static final SoundEvent stomp3 = register("mobs/cybermen/2005/stomp3");
+    public static final SoundEvent stomp2 = register("mobs/cybermen/2005/stomp2");
+    public static final SoundEvent stomp1 = register("mobs/cybermen/2005/stomp1");
+    public static final SoundEvent cyber_fire = register("mobs/cybermen/2005/cyber_fire");
+    public static final SoundEvent electric_hit = register("mobs/cybermen/2005/electric_hit");
+
+
 
     public static void init() {
 
