@@ -88,6 +88,10 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("takeoff", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put("start flight", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put("fly", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("allons-y", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("geronimo", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("demat", HandlesResponses.TAKE_OFF);
+        RESPONSE_MAP.put("dematerialize", HandlesResponses.TAKE_OFF);
 
         RESPONSE_MAP.put("land", HandlesResponses.LAND);
         RESPONSE_MAP.put("stop flight", HandlesResponses.LAND);
@@ -98,12 +102,18 @@ public class HandlesItem extends LinkableItem {
 
         RESPONSE_MAP.put("toggle alarms", HandlesResponses.TOGGLE_ALARMS);
         RESPONSE_MAP.put("alarms", HandlesResponses.TOGGLE_ALARMS);
+        RESPONSE_MAP.put("cloister", HandlesResponses.TOGGLE_ALARMS);
+        RESPONSE_MAP.put("cloister bells", HandlesResponses.TOGGLE_ALARMS);
 
         RESPONSE_MAP.put("toggle antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
         RESPONSE_MAP.put("antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
+        RESPONSE_MAP.put("antimavs", HandlesResponses.TOGGLE_ANTIGRAVS);
+        RESPONSE_MAP.put("gravity", HandlesResponses.TOGGLE_ANTIGRAVS);
 
         RESPONSE_MAP.put("toggle cloak", HandlesResponses.TOGGLE_CLOAK);
         RESPONSE_MAP.put("cloak", HandlesResponses.TOGGLE_CLOAK);
+        RESPONSE_MAP.put("p3", HandlesResponses.TOGGLE_CLOAK);
+        RESPONSE_MAP.put("protocol 3", HandlesResponses.TOGGLE_CLOAK);
     }
 
     public HandlesResponses getHandlesResponses(String lastMessage) {
