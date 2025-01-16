@@ -11,7 +11,6 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.WaypointHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
@@ -2508,7 +2507,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
         // Shields
         ModelPart shield = controls.getChild("p_ctrl_4").getChild("bone41").getChild("pully").getChild("bone47");
-        shield.pivotX = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shield.pivotX = tardis.shields().shielded().get()
                 ? shield.pivotX - 1
                 : shield.pivotX;
 

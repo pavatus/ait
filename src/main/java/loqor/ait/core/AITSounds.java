@@ -17,7 +17,6 @@ public class AITSounds {
     public static final SoundEvent WONDERFUL_TIME_IN_SPACE = register("music/wonderful_time_in_space");
 
     // TARDIS
-
     public static final SoundEvent DEMAT = register("tardis/demat");
     public static final SoundEvent MAT = register("tardis/mat");
     public static final SoundEvent HOP_DEMAT = register("tardis/hop_takeoff");
@@ -211,6 +210,12 @@ public class AITSounds {
     public static final SoundEvent POWER_CONVERT = register("tardis/power_convert");
     public static final SoundEvent FLUID_LINK_CONNECT = register("tools/fluid_link_connect");
 
+    // Handles
+    public static final SoundEvent HANDLES_AFFIRMATIVE = register("tardis/handles/affirmative");
+    public static final SoundEvent HANDLES_DENIED = register("tardis/handles/denied");
+    public static final SoundEvent HANDLES_FAULT_DEVELOPED = register("tardis/handles/fault_developed");
+    public static final SoundEvent HANDLES_PLEASE_ASK_AGAIN = register("tardis/handles/please_ask_again");
+    public static final SoundEvent HANDLES_PARDON = register("tardis/handles/pardon");
 
 
     public static void init() {

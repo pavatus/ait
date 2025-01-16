@@ -15,7 +15,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 // Made with Blockbench 4.9.2
@@ -1563,8 +1562,8 @@ public class HartnellConsoleModel extends ConsoleModel {
 
         ModelPart shield = this.bone.getChild("panels").getChild("p_2").getChild("bone48").getChild("bone49")
                 .getChild("bone50").getChild("sl_switch_6").getChild("bone57");
-        shield.pivotX = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
-                ? tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get()
+        shield.pivotX = tardis.shields().shielded().get()
+                ? tardis.shields().visuallyShielded().get()
                         ? shield.pivotX + 0.5f
                         : shield.pivotX + 1
                 : shield.pivotX;

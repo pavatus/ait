@@ -10,10 +10,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.item.HandlesItem;
+import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.SonicItem2;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.handler.ButlerHandler;
 import loqor.ait.core.tardis.handler.SonicHandler;
 
 public class SonicPortControl extends Control {
@@ -26,16 +30,23 @@ public class SonicPortControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
             boolean leftClick) {
         SonicHandler handler = tardis.sonic();
+        ButlerHandler butler = tardis.butler();
 
-        if (handler.getConsoleSonic() != null && (leftClick || player.isSneaking())) {
+        if (butler.getHandles() == null && handler.getConsoleSonic() != null && (leftClick || player.isSneaking())) {
             SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
+            return true;
+        }
+
+        if (handler.getConsoleSonic() == null && butler.getHandles() != null && (leftClick || player.isSneaking())) {
+            ButlerHandler.spawnItem(world, console, butler.takeHandles());
             return true;
         }
 
         ItemStack stack = player.getMainHandStack();
 
-        if (!(stack.getItem() instanceof SonicItem2 linker))
-            return false;
+        if (!((stack.getItem() instanceof SonicItem2) || (stack.getItem() instanceof HandlesItem))) return false;
+
+        LinkableItem linker = (LinkableItem) stack.getItem();
 
         if (!linker.isLinked(stack) || player.isSneaking()) {
             linker.link(stack, tardis);
@@ -50,7 +61,10 @@ public class SonicPortControl extends Control {
                     1F, 0.4F, 5.0F);
         }
 
-        handler.insertConsoleSonic(stack, console);
+        if (stack.getItem() instanceof SonicItem || stack.getItem() instanceof SonicItem2)
+            handler.insertConsoleSonic(stack, console);
+        if (stack.getItem() instanceof HandlesItem)
+            butler.insertHandles(stack, console);
         player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
         TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f,

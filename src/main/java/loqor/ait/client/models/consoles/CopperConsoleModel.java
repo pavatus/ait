@@ -6,12 +6,10 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.copper.CopperAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class CopperConsoleModel extends ConsoleModel {
@@ -1803,9 +1801,9 @@ public class CopperConsoleModel extends ConsoleModel {
 
         // shields
         ModelPart shields = this.copper.getChild("controls").getChild("panel_4").getChild("rot16").getChild("t_switch").getChild("bone106");
-        shields.pivotY += tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shields.pivotY += tardis.shields().shielded().get()
                 ? 0.8f : 0;
-        shields.pivotZ += tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get() ? -0.4f : 0;
+        shields.pivotZ += tardis.shields().visuallyShielded().get() ? -0.4f : 0;
 
         // antigravs
         ModelPart antigravs = this.copper.getChild("controls").getChild("panel_4").getChild("rot16").getChild("lever8").getChild("bone103");

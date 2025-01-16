@@ -37,6 +37,21 @@ public class ClientCrystallineVariant extends ClientConsoleVariantSchema {
 
     @Override
     public Vector3f sonicItemTranslations() {
-        return new Vector3f(-0.55f, 1.1f, -0.1f);
+        return new Vector3f(1.6f, 1.0f, 0.5f);
+    }
+
+    @Override
+    public float[] sonicItemRotations() {
+        return new float[]{-90f, -22.5f};
+    }
+
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(0.75f, 1.25f, 0.5f);
+    }
+
+    @Override
+    public float[] handlesRotations() {
+        return new float[]{-90f, 120f};
     }
 }

@@ -76,6 +76,9 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public SonicHandler sonic() {
         return this.handler(TardisComponent.Id.SONIC);
     }
+    public ButlerHandler butler() {
+        return this.handler(TardisComponent.Id.BUTLER);
+    }
 
     public TravelHandler travel() {
         return this.handler(TardisComponent.Id.TRAVEL);
@@ -238,5 +241,9 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     }
     public SubSystemHandler subsystems() {
         return this.handler(TardisComponent.Id.SUBSYSTEM);
+    }
+
+    public ShieldHandler shields() {
+        return this.handler(TardisComponent.Id.SHIELDS);
     }
 }

@@ -12,14 +12,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.toyota.ToyotaAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
@@ -1679,7 +1677,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
         antigravs.yaw = tardis.travel().antigravs().get() ? antigravs.yaw - 1.58f : antigravs.yaw;
 
         ModelPart shield = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps2");
-        shield.yaw = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shield.yaw = tardis.shields().shielded().get()
                 ? shield.yaw - 1.58f
                 : shield.yaw;
 

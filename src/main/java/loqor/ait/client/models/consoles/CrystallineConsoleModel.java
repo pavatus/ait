@@ -1239,7 +1239,7 @@ public class CrystallineConsoleModel extends ConsoleModel {
         increment.roll = increment.roll - (IncrementManager.increment(tardis) / 1000f);
 
 //        ModelPart shield = this.console.getChild("panel1").getChild("controls").getChild("faucettaps2");
-//        shield.yaw = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+//        shield.yaw = tardis.shields().shielded().get()
 //                ? shield.yaw - 1.58f
 //                : shield.yaw;
 //

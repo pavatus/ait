@@ -15,9 +15,11 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
 
 import loqor.ait.client.models.consoles.ConsoleModel;
+import loqor.ait.client.models.items.HandlesModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.item.HandlesItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
@@ -136,27 +138,43 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
             model.renderMonitorText(tardis, entity, matrices, vertexConsumers, light, overlay);
         }
 
-        profiler.swap("sonic"); // } emission / sonic {
+        profiler.swap("sonic_port"); // } emission / sonic {
 
-        ItemStack stack = tardis.sonic().getConsoleSonic();
+        ItemStack stack = tardis.sonic().getConsoleSonic() == null ?
+                tardis.butler().getHandles() : tardis.sonic().getConsoleSonic();
 
         if (stack == null) {
             profiler.pop(); // } sonic
             return;
         }
 
-        matrices.push();
-        matrices.translate(variant.sonicItemTranslations().x(), variant.sonicItemTranslations().y(),
-                variant.sonicItemTranslations().z());
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(variant.sonicItemRotations()[0]));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(variant.sonicItemRotations()[1]));
-        matrices.scale(0.9f, 0.9f, 0.9f);
-
         int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
-        MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove,
-                overlay, matrices, vertexConsumers, entity.getWorld(), 0);
 
-        matrices.pop();
+        if (stack.getItem() instanceof HandlesItem) {
+            matrices.push();
+            matrices.translate(variant.handlesTranslations().x(), variant.handlesTranslations().y(),
+                    variant.handlesTranslations().z());
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(variant.handlesRotations()[0]));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(variant.handlesRotations()[1]));
+            matrices.scale(0.6f, 0.6f, 0.6f);
+            HandlesModel handlesModel = new HandlesModel(HandlesModel.getTexturedModelData().createModel());
+            //handlesModel.setAngles(matrices, ModelTransformationMode.GROUND, false);
+            handlesModel.handles.getChild("stalk").pitch = 45f;
+            handlesModel.handles.getChild("stalk").getChild("head").pitch = -0.25f;
+            handlesModel.render(null, MinecraftClient.getInstance().player, stack, matrices, vertexConsumers, light, overlay, 0);
+            matrices.pop();
+        } else {
+            matrices.push();
+            matrices.translate(variant.sonicItemTranslations().x(), variant.sonicItemTranslations().y(),
+                    variant.sonicItemTranslations().z());
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(variant.sonicItemRotations()[0]));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(variant.sonicItemRotations()[1]));
+            matrices.scale(0.9f, 0.9f, 0.9f);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, lightAbove,
+                    overlay, matrices, vertexConsumers, entity.getWorld(), 0);
+            matrices.pop();
+        }
+
         profiler.pop(); // } sonic
     }
 

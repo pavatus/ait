@@ -59,7 +59,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
             }
 
             buf.encodeAsJson(DatapackConsole.CODEC, new DatapackConsole(schema.id(), schema.parent().id(),
-                    DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, List.of(), new Vector3f(), false));
+                    DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, List.of(), new Vector3f(), List.of(), new Vector3f(),
+                    false));
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);

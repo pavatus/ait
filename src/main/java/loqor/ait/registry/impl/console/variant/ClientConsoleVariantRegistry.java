@@ -141,6 +141,30 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
                 return variant.sonicTranslation();
             }
+
+            @Override
+            public float[] handlesRotations() {
+                if (variant.handlesRotation().isEmpty()) {
+                    return parentVariant.handlesRotations();
+                }
+
+                float[] result = new float[2];
+
+                for (int i = 0; i < 2; i++) {
+                    result[i] = variant.handlesRotation().get(i);
+                }
+
+                return result;
+            }
+
+            @Override
+            public Vector3f handlesTranslations() {
+                if (variant.handlesTranslation().equals(0,0,0)) {
+                    return parentVariant.handlesTranslations();
+                }
+
+                return variant.handlesTranslation();
+            }
         };
     }
 

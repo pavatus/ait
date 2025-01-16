@@ -2,11 +2,9 @@ package loqor.ait.core.engine.impl;
 
 
 import loqor.ait.AITMod;
-import loqor.ait.api.TardisComponent;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 
 public class ShieldsCircuit extends DurableSubSystem implements StructureHolder {
     private static MultiBlockStructure STRUCTURE;
@@ -38,6 +36,6 @@ public class ShieldsCircuit extends DurableSubSystem implements StructureHolder 
     protected void onDisable() {
         super.onDisable();
 
-        this.tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).disableAll();
+        this.tardis.shields().disableAll();
     }
 }

@@ -44,4 +44,13 @@ public class ClientCopperVariant extends ClientConsoleVariantSchema {
     public float[] sonicItemRotations() {
         return new float[]{-60f, -12.5f};
     }
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(0.8f, 1.25f, 0.68f);
+    }
+
+    @Override
+    public float[] handlesRotations() {
+        return new float[]{-60f, 120f};
+    }
 }

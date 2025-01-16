@@ -27,6 +27,7 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.item.KeyItem;
@@ -73,6 +74,11 @@ public class TelepathicControl extends Control {
         if (type == Items.STONE) {
             tardis.siege().texture().set(SiegeHandler.DEFAULT_TEXTURRE);
             return false;
+        }
+
+        if (player.isSneaking() && type == AITItems.HANDLES) {
+
+            return true;
         }
 
 
