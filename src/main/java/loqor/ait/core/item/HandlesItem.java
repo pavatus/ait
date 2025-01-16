@@ -32,7 +32,6 @@ public class HandlesItem extends LinkableItem {
     }
 
     static {
-        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, params) -> !message.getSignedContent().startsWith("handles"));
         ServerMessageEvents.CHAT_MESSAGE.register(HandlesItem::onChatMessage);
     }
 
