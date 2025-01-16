@@ -37,33 +37,43 @@ public class HandlesItem extends LinkableItem {
 
     private static void onChatMessage(SignedMessage signedMessage, ServerPlayerEntity player, MessageType.Parameters parameters) {
         ItemStack stack;
+
+        String messageSignedContent = signedMessage.getSignedContent();
+
+        boolean bl = messageSignedContent.toLowerCase().startsWith("handles");
+
         if (player.getWorld().isClient()) return;
+
         for (int i = 0; i < player.getInventory().size(); i++) {
             stack = player.getInventory().getStack(i);
-            if (stack.getItem() instanceof HandlesItem item) {
-                if (item.isLinked(stack)) {
-                    Tardis tardis = HandlesItem.getTardis(player.getWorld(), stack);
-                    String messageSignedContent = signedMessage.getSignedContent();
-                    if (messageSignedContent.toLowerCase().contains("handles")) {
-                        HandlesResponses response = item.getHandlesResponses(messageSignedContent);
-                        response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, stack);
-                        player.sendMessage(response.getResponseText(tardis, player), true);
-                    }
-                }
-            }
+
+            if (!(stack.getItem() instanceof HandlesItem item)) return;
+
+            if (!item.isLinked(stack)) return;
+
+            if (!bl) return;
+
+            Tardis tardis = HandlesItem.getTardis(player.getWorld(), stack);
+            HandlesResponses response = item.getHandlesResponses(messageSignedContent);
+
+            response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, stack);
+            player.sendMessage(response.getResponseText(tardis, player), true);
         }
 
-        if (TardisServerWorld.isTardisDimension(player.getWorld())) {
-            Tardis tardis = ((TardisServerWorld) player.getWorld()).getTardis();
-            if (tardis.butler().getHandles() != null && tardis.butler().getHandles().getItem() instanceof HandlesItem item) {
-                String messageSignedContent = signedMessage.getSignedContent();
-                if (messageSignedContent.toLowerCase().contains("handles")) {
-                    HandlesResponses response = item.getHandlesResponses(messageSignedContent);
-                    response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, tardis.butler().getHandles());
-                    player.sendMessage(response.getResponseText(tardis, player), true);
-                }
-            }
-        }
+        if (!TardisServerWorld.isTardisDimension(player.getWorld())) return;
+
+        Tardis tardis = ((TardisServerWorld) player.getWorld()).getTardis();
+
+        if (tardis.butler().getHandles() == null) return;
+
+        if (!(tardis.butler().getHandles().getItem() instanceof HandlesItem item)) return;
+
+        if (!bl) return;
+
+        HandlesResponses response = item.getHandlesResponses(messageSignedContent);
+
+        response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, tardis.butler().getHandles());
+        player.sendMessage(response.getResponseText(tardis, player), true);
     }
 
     static {
