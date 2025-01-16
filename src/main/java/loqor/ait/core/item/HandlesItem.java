@@ -119,11 +119,13 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("open the doors", HandlesResponses.OPEN_DOOR);
         RESPONSE_MAP.put("open", HandlesResponses.OPEN_DOOR);
         RESPONSE_MAP.put("door open", HandlesResponses.OPEN_DOOR);
+        RESPONSE_MAP.put("open door", HandlesResponses.OPEN_DOOR);
 
         RESPONSE_MAP.put("close the doors", HandlesResponses.CLOSE_DOOR);
         RESPONSE_MAP.put("close doors", HandlesResponses.CLOSE_DOOR);
         RESPONSE_MAP.put("close", HandlesResponses.CLOSE_DOOR);
         RESPONSE_MAP.put("door close", HandlesResponses.CLOSE_DOOR);
+        RESPONSE_MAP.put("close door", HandlesResponses.CLOSE_DOOR);
 
         RESPONSE_MAP.put("toggle lock", HandlesResponses.TOGGLE_LOCK);
         RESPONSE_MAP.put("toggle door lock", HandlesResponses.TOGGLE_LOCK);
