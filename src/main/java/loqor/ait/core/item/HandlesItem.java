@@ -15,7 +15,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 
@@ -70,36 +69,32 @@ public class HandlesItem extends LinkableItem {
     static {
         String h = "handles";
         RESPONSE_MAP.put(h + " take off", HandlesResponses.TAKE_OFF);
-        RESPONSE_MAP.put(h + ", take off", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put(h + " start flight", HandlesResponses.TAKE_OFF);
-        RESPONSE_MAP.put(h + ", start flight", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put(h + " fly", HandlesResponses.TAKE_OFF);
-        RESPONSE_MAP.put(h + ", fly", HandlesResponses.TAKE_OFF);
 
         RESPONSE_MAP.put(h + " land", HandlesResponses.LAND);
-        RESPONSE_MAP.put(h + ", land", HandlesResponses.LAND);
         RESPONSE_MAP.put(h + " stop flight", HandlesResponses.LAND);
-        RESPONSE_MAP.put(h + ", stop flight", HandlesResponses.LAND);
         RESPONSE_MAP.put(h + " stop flying", HandlesResponses.LAND);
-        RESPONSE_MAP.put(h + ", stop flying", HandlesResponses.LAND);
 
         RESPONSE_MAP.put(h + " toggle shields", HandlesResponses.TOGGLE_SHIELDS);
-        RESPONSE_MAP.put(h + ", toggle shields", HandlesResponses.TOGGLE_SHIELDS);
         RESPONSE_MAP.put(h + " shields", HandlesResponses.TOGGLE_SHIELDS);
-        RESPONSE_MAP.put(h + ", shields", HandlesResponses.TOGGLE_SHIELDS);
 
         RESPONSE_MAP.put(h + " toggle alarms", HandlesResponses.TOGGLE_ALARMS);
-        RESPONSE_MAP.put(h + ", toggle alarms", HandlesResponses.TOGGLE_ALARMS);
         RESPONSE_MAP.put(h + " alarms", HandlesResponses.TOGGLE_ALARMS);
-        RESPONSE_MAP.put(h + ", alarms", HandlesResponses.TOGGLE_ALARMS);
+
+        RESPONSE_MAP.put(h + " toggle antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
+        RESPONSE_MAP.put(h + " antigravs", HandlesResponses.TOGGLE_ANTIGRAVS);
+
+        RESPONSE_MAP.put(h + " toggle cloak", HandlesResponses.TOGGLE_CLOAK);
+        RESPONSE_MAP.put(h + " cloak", HandlesResponses.TOGGLE_CLOAK);
     }
 
     public HandlesResponses getHandlesResponses(String lastMessage) {
-        return RESPONSE_MAP.getOrDefault(lastMessage.toLowerCase(), HandlesResponses.DEFAULT);
+        return RESPONSE_MAP.getOrDefault(lastMessage.toLowerCase().replace(",", ""), HandlesResponses.DEFAULT);
     }
 
     public enum HandlesResponses implements StringIdentifiable {
-        DEFAULT(Formatting.GRAY) {
+        DEFAULT {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
                 return Text.translatable("message.ait.handles.default", player.getName());
@@ -107,8 +102,6 @@ public class HandlesItem extends LinkableItem {
 
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
-                /*world.playSound(null, player.getPos().getX(), player.getPos().getY(), player.getPos().getZ()
-                        , AITSounds.TARDIS_REJECTION_SFX, SoundCategory.PLAYERS, 1f, 1f);*/
                 if (tardis == null) return;
                 failed(tardis, player, world);
             }
@@ -125,7 +118,7 @@ public class HandlesItem extends LinkableItem {
             public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
             }
         },
-        TAKE_OFF(Formatting.GOLD) {
+        TAKE_OFF {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
                 return Text.translatable("message.ait.handles.take_off", player.getName());
@@ -165,13 +158,9 @@ public class HandlesItem extends LinkableItem {
                 });
             }
         },
-        LAND(Formatting.DARK_BLUE) {
+        LAND {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                tardis.getDesktop().getConsolePos().forEach(pos -> {
-                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
-                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
-                });
                 return Text.translatable("message.ait.handles.land", player.getName());
             }
             @Override
@@ -213,13 +202,9 @@ public class HandlesItem extends LinkableItem {
                 });
             }
         },
-        TOGGLE_SHIELDS(Formatting.AQUA) {
+        TOGGLE_SHIELDS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                tardis.getDesktop().getConsolePos().forEach(pos -> {
-                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
-                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
-                });
                 return Text.translatable("message.ait.handles.toggle_shields", tardis.shields().shielded());
             }
             @Override
@@ -245,13 +230,65 @@ public class HandlesItem extends LinkableItem {
                 });
             }
         },
-        TOGGLE_ALARMS(Formatting.RED) {
+        TOGGLE_ANTIGRAVS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.toggle_antigravs", tardis.travel().antigravs());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.travel().antigravs().toggle();
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
                 tardis.getDesktop().getConsolePos().forEach(pos -> {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+            }
+        },
+        TOGGLE_CLOAK {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.toggle_cloaked", tardis.cloak().cloaked().get());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                tardis.cloak().cloaked().set(!tardis.cloak().cloaked().get());
+                success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        TOGGLE_ALARMS {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
                 return Text.translatable("message.ait.handles.toggle_alarms", tardis.alarm().enabled());
             }
             @Override
@@ -277,13 +314,6 @@ public class HandlesItem extends LinkableItem {
                 });
             }
         };
-
-
-        public final Formatting format;
-
-        HandlesResponses(Formatting formatting) {
-            this.format = formatting;
-        }
 
         public abstract void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player,
                                  ItemStack stack);
