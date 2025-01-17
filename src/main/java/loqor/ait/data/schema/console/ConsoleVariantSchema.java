@@ -43,7 +43,7 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
     public static final Vector3f DEFAULT_SONIC_POS = new Vector3f(0.1f, 1.2f, 0.26f);
 
     public static final float[] DEFAULT_HANDLES_ROTATION = new float[]{120f, 135f};
-    public static final Vector3f DEFAULT_HANDLES_POS = new Vector3f(0.1f, 1.2f, 0.26f);
+    public static final Vector3f DEFAULT_HANDLES_POS = new Vector3f(0.65f, 1.6f, 0.6f);
 
     private final Identifier parent;
     private final Identifier id;
