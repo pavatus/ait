@@ -486,6 +486,21 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
             createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
             createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.REMOTE_ITEM)
+                    .pattern("OPO")
+                    .pattern("BSB")
+                    .pattern("OKO")
+                    .input('O', Items.NETHERITE_SCRAP)
+                    .criterion(hasItem(Items.NETHERITE_SCRAP), conditionsFromItem(Items.NETHERITE_SCRAP))
+                    .input('S', Blocks.STONE_BUTTON)
+                    .criterion(hasItem(Blocks.STONE_BUTTON), conditionsFromItem(Blocks.STONE_BUTTON))
+                    .input('P', Items.NETHER_STAR)
+                    .criterion(hasItem(Items.NETHER_STAR), conditionsFromItem(Items.NETHER_STAR))
+                    .input('K', Blocks.REDSTONE_BLOCK)
+                    .criterion(hasItem(Blocks.REDSTONE_BLOCK), conditionsFromItem(Blocks.REDSTONE_BLOCK))
+                    .input('B', Items.NETHERITE_INGOT)
+                    .criterion(hasItem(Items.NETHERITE_INGOT), conditionsFromItem(Items.NETHERITE_INGOT)));
+
             generateSmithingRecipes(provider);
             return provider;
         })));
