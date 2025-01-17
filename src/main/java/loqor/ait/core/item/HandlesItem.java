@@ -139,6 +139,25 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("disable handbrake", HandlesResponses.DISABLE_HANDBRAKE);
         RESPONSE_MAP.put("handbrake off", HandlesResponses.DISABLE_HANDBRAKE);
 
+        RESPONSE_MAP.put("enable refuelling", HandlesResponses.ACTIVATE_REFUEL);
+        RESPONSE_MAP.put("activate refuelling", HandlesResponses.ACTIVATE_REFUEL);
+        RESPONSE_MAP.put("activate refuel", HandlesResponses.ACTIVATE_REFUEL);
+        RESPONSE_MAP.put("refuel", HandlesResponses.ACTIVATE_REFUEL);
+        RESPONSE_MAP.put("start refueling", HandlesResponses.ACTIVATE_REFUEL);
+        RESPONSE_MAP.put("refueling on", HandlesResponses.ACTIVATE_REFUEL);
+
+        RESPONSE_MAP.put("stop refueling", HandlesResponses.DISABLE_REFUEL);
+        RESPONSE_MAP.put("stop refuel", HandlesResponses.DISABLE_REFUEL);
+        RESPONSE_MAP.put("disable refueling", HandlesResponses.DISABLE_REFUEL);
+        RESPONSE_MAP.put("disable refuel", HandlesResponses.DISABLE_REFUEL);
+        RESPONSE_MAP.put("halt refueling process", HandlesResponses.DISABLE_REFUEL);
+        RESPONSE_MAP.put("refueling off", HandlesResponses.DISABLE_REFUEL);
+
+        RESPONSE_MAP.put("displace", HandlesResponses.DISPLACE);
+        RESPONSE_MAP.put("waypoint", HandlesResponses.DISPLACE);
+        RESPONSE_MAP.put("go to waypoint", HandlesResponses.DISPLACE);
+        RESPONSE_MAP.put("fly to waypoint", HandlesResponses.DISPLACE);
+
 
     }
 
@@ -212,6 +231,56 @@ public class HandlesItem extends LinkableItem {
                 });
             }
         },
+        DISPLACE {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.displace", player.getName());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                if (!tardis.travel().isLanded()) {
+                    failed(tardis, player, world);
+                    return;
+                }
+                if (!tardis.waypoint().hasWaypoint()) {
+                    failed(tardis, player, world);
+                    return;
+                }
+                if (!tardis.travel().autopilot()) {
+                    failed(tardis, player, world);
+                    return;
+                }
+
+                boolean doors = tardis.door().isOpen();
+                boolean handbrake = tardis.travel().handbrake();
+                boolean speed = tardis.travel().speed() <= 0;
+
+                if (handbrake) tardis.travel().handbrake(false);
+                if (doors) tardis.door().closeDoors();
+                if (speed) tardis.travel().increaseSpeed();
+                tardis.waypoint().gotoWaypoint();
+
+                success(tardis, player, world);
+            }
+
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
         LAND {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
@@ -239,6 +308,77 @@ public class HandlesItem extends LinkableItem {
                 if (speed) tardis.travel().speed(0);
                 tardis.travel().handbrake(true);
                 success(tardis, player, world);
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        ACTIVATE_REFUEL {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.activate_refuel", player.getName());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                if (tardis.travel().inFlight() || tardis.flight().isFlying()) {
+                    failed(tardis, player, world);
+                    return;
+                }
+
+                if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
+                    tardis.travel().handbrake(true);
+                    tardis.setRefueling(true);
+                    success(tardis, player, world);
+                    return;
+                }
+
+
+            }
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        DISABLE_REFUEL {
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return Text.translatable("message.ait.handles.disable_refuel", player.getName());
+            }
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                if (tardis == null) return;
+
+                if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
+                    tardis.setRefueling(false);
+                    success(tardis, player, world);
+                    return;
+                }
+
             }
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -289,9 +429,17 @@ public class HandlesItem extends LinkableItem {
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
                 return Text.translatable("message.ait.handles.open_doors", tardis.door().isOpen());
             }
+
+
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
+
+
+                if (tardis.door().locked()) {
+                    failed(tardis, player, world);
+                    return;
+                }
 
                 tardis.door().openDoors();
                 success(tardis, player, world);
@@ -376,6 +524,11 @@ public class HandlesItem extends LinkableItem {
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
+
+                if (tardis.travel().inFlight() || tardis.flight().isFlying()) {
+                    failed(tardis, player, world);
+                    return;
+                }
 
                 tardis.travel().handbrake(true);
 
