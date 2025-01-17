@@ -1008,6 +1008,20 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.renaissance", "Renaissance");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
+        // Handles
+        provider.addTranslation("message.ait.handles.take_off","Handels: Taking Off");
+        provider.addTranslation("message.ait.handles.land","Handels: Landing");
+        provider.addTranslation("message.ait.handles.toggle_shields","Handels: Toggling Shields");
+        provider.addTranslation("message.ait.handles.toggle_alarms","Handels: Toggling Alarms");
+        provider.addTranslation("message.ait.handles.toggle_antigravs","Handels: Toggling Antigravs");
+        provider.addTranslation("message.ait.handles.toggle_cloaked","Handels: Toggling Cloak");
+        provider.addTranslation("message.ait.handles.open_doors","Handels: Opening Doors");
+        provider.addTranslation("message.ait.handles.close_doors","Handels: Closing Doors");
+        provider.addTranslation("message.ait.handles.toggle_lock","Handels: Toggling Lock");
+        provider.addTranslation("message.ait.handles.activate_handbrake","Handels: Handbrake Activated");
+        provider.addTranslation("message.ait.handles.disable_handbrake","Handels: Handbrake Disabled");
+        provider.addTranslation("message.ait.handles.default","Handels: Couldn't recognise command");
+
         // Exterior Variant translations
 
         // All
