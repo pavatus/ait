@@ -168,7 +168,7 @@ public class BOTI {
         stack.translate(0, 0, 500);
         stack.scale(1.5f, 1.5f, 1.5f);
         VortexUtil util = tardis.stats().getVortexEffects().toUtil();
-        if (!tardis.travel().isLanded() && !tardis.flight().isFlying()) {
+        if (!tardis.travel().isLanded() /*&& !tardis.flight().isFlying()*/) {
             util.renderVortex(stack);
             /*// TODO not a clue if this will work but oh well - Loqor
             stack.push();
