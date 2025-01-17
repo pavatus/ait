@@ -317,8 +317,8 @@ public class BOTI {
         if (!warningSent) {
             warningSent = true;
 
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("A Nvidia Videocard is HIGHLY reccomended for the BOTI effect, the BOTI effect is very picky and sometimes will just not work with certain video cards.").formatted(Formatting.RED), false);
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("If you have a videocard that is not Nvidia please install the indium mod and disable I HATE GL in the ait config. This SHOULD fix BOTI being broken. ").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("An Nvidia Videocard is HIGHLY reccomended for the BOTI effect, the BOTI effect is very picky and sometimes will just not work with certain video cards.").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("If you have a videocard that is not Nvidia, please install the indium mod and disable I HATE GL in the ait config. This SHOULD fix BOTI being broken. ").formatted(Formatting.RED), false);
             MinecraftClient.getInstance().player.sendMessage(Text.literal("MACS DO NOT WORK AS THEY DROPPED THAT SUPPORT IN FAVOR OF METAL").formatted(Formatting.RED), false);
         }
     }
