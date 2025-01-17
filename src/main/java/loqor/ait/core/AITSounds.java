@@ -216,6 +216,7 @@ public class AITSounds {
     public static final SoundEvent HANDLES_FAULT_DEVELOPED = register("tardis/handles/fault_developed");
     public static final SoundEvent HANDLES_PLEASE_ASK_AGAIN = register("tardis/handles/please_ask_again");
     public static final SoundEvent HANDLES_PARDON = register("tardis/handles/pardon");
+    public static final SoundEvent HANDLES_WHEN = register("tardis/handles/when");
 
     //Mobs
     //Cybermen2005
