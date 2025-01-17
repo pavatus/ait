@@ -234,6 +234,8 @@ public class AITSounds {
     //Nightmare in silver
     public static final SoundEvent UPGRADE_IN_PROGRESS = register("mobs/cybermen/nightmare/upgrade_in_progress");
     public static final SoundEvent UPGRADE_IN_PROGRESS_ALT = register("mobs/cybermen/nightmare/upgrade_in_progress_alt");
+    public static final SoundEvent SILVER_STOMP_LOOP = register("mobs/cybermen/nightmare/silver_stomp_loop");
+    public static final SoundEvent SILVER_STOMP_START_FINISH = register("mobs/cybermen/nightmare/silver_stomp_start_finish");
 
 
 
