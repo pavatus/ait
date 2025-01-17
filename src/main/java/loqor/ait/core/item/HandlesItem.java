@@ -1,7 +1,6 @@
 package loqor.ait.core.item;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import org.apache.commons.lang3.StringUtils;
@@ -80,10 +79,13 @@ public class HandlesItem extends LinkableItem {
 
     private static void respond(Tardis tardis, PlayerEntity player, HandlesResponses response, ItemStack stack) {
         response.run(tardis, (ServerWorld) player.getWorld(), player.getBlockPos(), player, stack);
-        player.sendMessage(response.getResponseText(tardis, player), true);
+        player.sendMessage(response.getResponseText(tardis, player), false);
     }
 
     static {
+        RESPONSE_MAP.put("help", HandlesResponses.HELP);
+        RESPONSE_MAP.put("tell me a joke", HandlesResponses.JOKE);
+
         RESPONSE_MAP.put("take off", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put("takeoff", HandlesResponses.TAKE_OFF);
         RESPONSE_MAP.put("start flight", HandlesResponses.TAKE_OFF);
@@ -189,6 +191,72 @@ public class HandlesItem extends LinkableItem {
 
             @Override
             public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+            }
+        },
+        HELP {
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+
+            }
+
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                return(Text.literal("<Handles> Here are all the available commands: " + String.valueOf(new ArrayList<>(RESPONSE_MAP.keySet()))));
+            }
+
+
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        JOKE {
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+
+            }
+
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                // List of jokes that Handles might say
+                List<String> jokes = List.of(
+                        "Why did the Dalek apply for a job? It wanted to EX-TER-MINATE its competition!",
+                        "How many Time Lords does it take to change a light bulb? None, they just change the timeline.",
+                        "Why does the TARDIS always win hide-and-seek? Because it’s in another dimension!",
+                        "What do you call a Time Lord with no time? A Lord!",
+                        "Why was the TARDIS always calm? Because it’s bigger on the inside."
+                );
+
+                String randomJoke = jokes.get((int) (Math.random() * jokes.size()));
+                return Text.literal("<Handles> "+ randomJoke);
+            }
+
+
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
             }
         },
         TAKE_OFF {

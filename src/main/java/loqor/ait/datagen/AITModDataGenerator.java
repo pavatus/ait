@@ -1024,21 +1024,23 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
 
         // Handles
-        provider.addTranslation("message.ait.handles.take_off","Handles: Taking Off");
-        provider.addTranslation("message.ait.handles.land","Handles: Landing");
-        provider.addTranslation("message.ait.handles.toggle_shields","Handles: Toggling Shields");
-        provider.addTranslation("message.ait.handles.toggle_alarms","Handles: Toggling Alarms");
-        provider.addTranslation("message.ait.handles.toggle_antigravs","Handles: Toggling Antigravs");
-        provider.addTranslation("message.ait.handles.toggle_cloaked","Handles: Toggling Cloak");
-        provider.addTranslation("message.ait.handles.open_doors","Handles: Opening Doors");
-        provider.addTranslation("message.ait.handles.close_doors","Handles: Closing Doors");
-        provider.addTranslation("message.ait.handles.toggle_lock","Handles: Toggling Lock");
-        provider.addTranslation("message.ait.handles.activate_handbrake","Handles: Handbrake Activated");
-        provider.addTranslation("message.ait.handles.disable_handbrake","Handles: Handbrake Disabled");
-        provider.addTranslation("message.ait.handles.default","Handles: Couldn't recognise command");
-        provider.addTranslation("message.ait.handles.displace","Handles: Displacing Coordinates");
-        provider.addTranslation("message.ait.handles.activate_refuel","Handles: Refuel Activated");
-        provider.addTranslation("message.ait.handles.disable_refuel","Handles: Refuel Disabled");
+        provider.addTranslation("message.ait.handles.take_off","<Handles> Taking Off.");
+        provider.addTranslation("message.ait.handles.land","<Handles> Landing.");
+        provider.addTranslation("message.ait.handles.toggle_shields","<Handles> Toggling Shields.");
+        provider.addTranslation("message.ait.handles.toggle_alarms","<Handles> Toggling Alarms.");
+        provider.addTranslation("message.ait.handles.toggle_antigravs","<Handles> Toggling Antigravs.");
+        provider.addTranslation("message.ait.handles.toggle_cloaked","<Handles> Toggling Cloak.");
+        provider.addTranslation("message.ait.handles.open_doors","<Handles> Opening Doors.");
+        provider.addTranslation("message.ait.handles.close_doors","<Handles> Closing Doors.");
+        provider.addTranslation("message.ait.handles.toggle_lock","<Handles> Toggling Lock.");
+        provider.addTranslation("message.ait.handles.activate_handbrake","<Handles> Handbrake Activated.");
+        provider.addTranslation("message.ait.handles.disable_handbrake","<Handles> Handbrake Disabled.");
+        provider.addTranslation("message.ait.handles.default","<Handles> Couldn't recognise command.");
+        provider.addTranslation("message.ait.handles.displace","<Handles> Displacing Coordinates.");
+        provider.addTranslation("message.ait.handles.activate_refuel","<Handles> Refuel Activated.");
+        provider.addTranslation("message.ait.handles.disable_refuel","<Handles> Refuel Disabled.");
+        provider.addTranslation("message.ait.handles.when","<Handles> When.");
+        provider.addTranslation("message.ait.handles.when","<Handles> Affirmative.");
 
         // Exterior Variant translations
 
