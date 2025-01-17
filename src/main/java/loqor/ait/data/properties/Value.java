@@ -75,15 +75,14 @@ public class Value<T> implements Disposable {
     }
 
     public void set(T value) {
-        if (this.value == value)
-            return;
-
         this.set(value, true);
     }
 
     public void set(T value, boolean sync) {
-        this.value = value;
+        if (this.value == value)
+            return;
 
+        this.value = value;
 
         if (this.listeners != null) {
             for (Consumer<T> listener : this.listeners)

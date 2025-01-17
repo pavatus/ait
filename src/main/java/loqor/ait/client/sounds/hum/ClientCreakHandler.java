@@ -1,6 +1,6 @@
 package loqor.ait.client.sounds.hum;
 
-import static loqor.ait.AITMod.AIT_CONFIG;
+import static loqor.ait.AITMod.CONFIG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class ClientCreakHandler extends SoundHandler {
 
         for (CreakSound sound : CreakRegistry.REGISTRY) {
             list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT,
-                    AIT_CONFIG.INTERIOR_HUM_VOLUME()));
+                    CONFIG.CLIENT.INTERIOR_HUM_VOLUME));
         }
 
         return list;
@@ -73,7 +73,7 @@ public class ClientCreakHandler extends SoundHandler {
         }
 
         PlayerFollowingSound following = new PlayerFollowingSound(chosen.sound(), SoundCategory.AMBIENT,
-                AIT_CONFIG.INTERIOR_HUM_VOLUME());
+                CONFIG.CLIENT.INTERIOR_HUM_VOLUME);
         startIfNotPlaying(following);
     }
 

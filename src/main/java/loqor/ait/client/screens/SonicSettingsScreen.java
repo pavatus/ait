@@ -32,7 +32,7 @@ import loqor.ait.registry.impl.SonicRegistry;
 
 public class SonicSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/sonic_selection.png");
+            "textures/gui/tardis/monitor/sonic_selection.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     int bgHeight = 130;
     int bgWidth = 216;

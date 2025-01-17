@@ -1,5 +1,7 @@
 package loqor.ait.mixin.server;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.ClientScheduler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,9 +25,7 @@ import loqor.ait.AITMod;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.Loyalty;
-import loqor.ait.data.TimeUnit;
 
 @Mixin(BedBlock.class)
 public class BedInTardisMixin {
@@ -38,7 +38,7 @@ public class BedInTardisMixin {
     @Unique @Environment(EnvType.CLIENT)
     private void onClientSleep(PlayerEntity player) {
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
-        if (tardis == null || AITMod.AIT_CONFIG.DISABLE_LOYALTY_SLEEPING_ACTIONBAR()) return;
+        if (tardis == null || AITMod.CONFIG.CLIENT.DISABLE_LOYALTY_SLEEPING_ACTIONBAR) return;
 
         Loyalty loyalty = tardis.loyalty().get(player);
 
@@ -55,10 +55,13 @@ public class BedInTardisMixin {
         player.sendMessage(message, true);
 
         SoundEvent sound = switch(loyalty.type()) {
-            case PILOT -> AITSounds.GHOST_MAT;
-            case REJECT -> AITSounds.TARDIS_REJECTION_SFX;
-            default -> AITSounds.GROAN;
+            case OWNER -> AITSounds.OWNER_BED;
+            case PILOT -> AITSounds.PILOT_BED;
+            case COMPANION -> AITSounds.COMPANION_BED;
+            case NEUTRAL -> AITSounds.NEUTRAL_BED;
+            case REJECT -> AITSounds.REJECT_BED;
+
         };
-        Scheduler.Client.runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
+        ClientScheduler.get().runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
     }
 }

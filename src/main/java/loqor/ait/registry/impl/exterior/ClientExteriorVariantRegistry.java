@@ -1,10 +1,6 @@
 package loqor.ait.registry.impl.exterior;
 
 
-import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
-
-import java.util.Calendar;
-
 import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -40,6 +36,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.pipe.client.ClientPipeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
@@ -152,7 +149,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema BOX_FUTURE;
     public static ClientExteriorVariantSchema BOX_CORAL;
     public static ClientExteriorVariantSchema BOX_CHERRY;
-    public static ClientExteriorVariantSchema BOX_TOKAMAK;
+    public static ClientExteriorVariantSchema BOX_RENAISSANCE;
     public static ClientExteriorVariantSchema PRIME;
     public static ClientExteriorVariantSchema YETI;
     public static ClientExteriorVariantSchema DEFINITIVE;
@@ -198,6 +195,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema DALEK_MOD_1980;
     //public static ClientExteriorVariantSchema JAKE_DEFAULT;
     public static ClientExteriorVariantSchema PRESENT_DEFAULT;
+    public static ClientExteriorVariantSchema PIPE_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -212,7 +210,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         BOX_FIRE = register(new ClientPoliceBoxFireVariant());
         BOX_FUTURE = register(new ClientPoliceBoxFuturisticVariant());
         BOX_CORAL = register(new ClientPoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new ClientPoliceBoxTokamakVariant());
+        BOX_RENAISSANCE = register(new ClientPoliceBoxRenaissanceVariant());
         BOX_CHERRY = register(new ClientPoliceBoxCherryVariant());
 
         // Classic Box
@@ -277,25 +275,23 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         ADAPTIVE = register(new ClientAdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
-            DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
-            DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
-            DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
-            DALEK_MOD_1976 = register(new ClientDalekMod1976Variant());
-            DALEK_MOD_1980 = register(new ClientDalekMod1980Variant());
-        }
+        DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
+        DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
+        DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
+        DALEK_MOD_1976 = register(new ClientDalekMod1976Variant());
+        DALEK_MOD_1980 = register(new ClientDalekMod1980Variant());
 
         // Jake
         //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
 
         // Present
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 5))
-            PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
+        PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
+        PIPE_DEFAULT = register(new ClientPipeDefaultVariant());
     }
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier(AITMod.MOD_ID, "client_exterior");
+        return AITMod.id("client_exterior");
     }
 
     @Override

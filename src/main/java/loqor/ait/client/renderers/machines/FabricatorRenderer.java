@@ -26,7 +26,7 @@ import loqor.ait.core.item.blueprint.Blueprint;
 
 public class FabricatorRenderer<T extends FabricatorBlockEntity> implements BlockEntityRenderer<T> {
 
-    public static final Identifier FABRICATOR_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/block/fabricator.png");
+    public static final Identifier FABRICATOR_TEXTURE = AITMod.id("textures/block/fabricator.png");
     public static final Identifier EMISSIVE_FABRICATOR_TEXTURE = new Identifier(AITMod.MOD_ID,
             "textures/block/fabricator_emission.png");
     private final FabricatorModel fabricatorModel;

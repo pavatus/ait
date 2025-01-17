@@ -4,10 +4,10 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.SecurityControl;
@@ -49,7 +49,7 @@ public class Control {
     }
 
     public SoundEvent getSound() {
-        return SoundEvents.BLOCK_NOTE_BLOCK_BIT.value();
+        return AITSounds.XYZ;
     }
 
     public boolean requiresPower() {
@@ -92,6 +92,9 @@ public class Control {
 
         if (!this.ignoresSecurity() && security)
             return SecurityControl.hasMatchingKey(user, tardis);
+
+        /*if (tardis.flight().isFlying())
+            return false;*/
 
         SubSystem.IdLike dependent = this.requiredSubSystem();
         if (dependent != null) {

@@ -16,15 +16,16 @@ import loqor.ait.data.schema.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientBlueAlnicoVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
-import loqor.ait.data.schema.console.variant.coral.client.ClientBlueCoralVariant;
-import loqor.ait.data.schema.console.variant.coral.client.ClientGreenCoralVariant;
-import loqor.ait.data.schema.console.variant.coral.client.ClientWhiteCoralVariant;
+import loqor.ait.data.schema.console.variant.coral.client.*;
+import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientWoodenHartnellVariant;
+import loqor.ait.data.schema.console.variant.steam.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamGildedVariant;
+import loqor.ait.data.schema.console.variant.steam.client.ClientSteamPlaypalVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamSteelVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamVariant;
 import loqor.ait.data.schema.console.variant.toyota.client.ClientToyotaBlueVariant;
@@ -140,6 +141,30 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
                 return variant.sonicTranslation();
             }
+
+            @Override
+            public float[] handlesRotations() {
+                if (variant.handlesRotation().isEmpty()) {
+                    return parentVariant.handlesRotations();
+                }
+
+                float[] result = new float[2];
+
+                for (int i = 0; i < 2; i++) {
+                    result[i] = variant.handlesRotation().get(i);
+                }
+
+                return result;
+            }
+
+            @Override
+            public Vector3f handlesTranslations() {
+                if (variant.handlesTranslation().equals(0,0,0)) {
+                    return parentVariant.handlesTranslations();
+                }
+
+                return variant.handlesTranslation();
+            }
         };
     }
 
@@ -157,6 +182,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema CORAL_GREEN;
     public static ClientConsoleVariantSchema CORAL_BLUE;
     public static ClientConsoleVariantSchema CORAL_WHITE;
+    public static ClientConsoleVariantSchema CORAL_DECAYED;
+    public static ClientConsoleVariantSchema CORAL_SITH;
     public static ClientConsoleVariantSchema TOYOTA;
     public static ClientConsoleVariantSchema TOYOTA_BLUE;
     public static ClientConsoleVariantSchema TOYOTA_LEGACY;
@@ -166,9 +193,13 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema STEAM_CHERRY;
     public static ClientConsoleVariantSchema STEAM_STEEL;
     public static ClientConsoleVariantSchema STEAM_GILDED;
+    public static ClientConsoleVariantSchema STEAM_PLAYPAL;
+    public static ClientConsoleVariantSchema STEAM_COPPER;
     public static ClientConsoleVariantSchema HUDOLIN;
     public static ClientConsoleVariantSchema COPPER;
     public static ClientConsoleVariantSchema COPPER_TAIGA;
+    public static ClientConsoleVariantSchema CRYSTALLINE;
+
 
     @Override
     public void onClientInit() {
@@ -182,6 +213,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         CORAL_GREEN = register(new ClientGreenCoralVariant());
         CORAL_BLUE = register(new ClientBlueCoralVariant());
         CORAL_WHITE = register(new ClientWhiteCoralVariant());
+        CORAL_DECAYED = register(new ClientCoralDecayedVariant());
+        CORAL_SITH = register(new ClientCoralSithVariant());
 
         // Toyota variants
         TOYOTA = register(new ClientToyotaVariant());
@@ -197,6 +230,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         STEAM_CHERRY = register(new ClientSteamCherryVariant());
         STEAM_STEEL = register(new ClientSteamSteelVariant());
         STEAM_GILDED = register(new ClientSteamGildedVariant());
+        STEAM_COPPER = register(new ClientSteamCopperVariant());
+        STEAM_PLAYPAL = register(new ClientSteamPlaypalVariant());
 
         // Hudolin variants
         // HUDOLIN = register(new ClientHudolinVariant());
@@ -204,5 +239,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         // Copper variants
         COPPER = register(new ClientCopperVariant());
         COPPER_TAIGA = register(new ClientCopperTaigaVariant());
+
+        // Crystalline variants
+        CRYSTALLINE = register(new ClientCrystallineVariant());
     }
 }

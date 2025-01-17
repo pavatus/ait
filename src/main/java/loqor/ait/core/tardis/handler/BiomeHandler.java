@@ -40,6 +40,10 @@ public class BiomeHandler extends KeyedTardisComponent {
     private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
     private final Value<BiomeType> type = TYPE.create(this);
 
+    static {
+        TardisEvents.LANDED.register(tardis -> tardis.<BiomeHandler>handler(Id.BIOME).update());
+    }
+
     public BiomeHandler() {
         super(Id.BIOME);
     }
@@ -94,7 +98,7 @@ public class BiomeHandler extends KeyedTardisComponent {
             TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class, ChorusPlantFeature.class
     );
 
-    private static final Identifier CACTUS = new Identifier(AITMod.MOD_ID, "cactus");
+    private static final Identifier CACTUS = AITMod.id("cactus");
 
     private List<ConfiguredFeature<?, ?>> findTrees(ServerWorld world, RegistryEntry<Biome> biome) {
         if (this.type.get() == BiomeType.SANDY && world.random.nextInt(5) != 0)
@@ -145,6 +149,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         return this.type.get();
     }
 
+    // FIXME(PERFORMANCE)
     private static BiomeType getTagForBiome(RegistryEntry<Biome> biome) {
         if (biome.isIn(ConventionalBiomeTags.SNOWY) || biome.isIn(ConventionalBiomeTags.SNOWY_PLAINS)
                 || biome.isIn(ConventionalBiomeTags.ICY))
@@ -209,7 +214,7 @@ public class BiomeHandler extends KeyedTardisComponent {
                 return texture;
 
             String path = texture.getPath();
-            return new Identifier(AITMod.MOD_ID, path.substring(0, path.length() - 4) + this.suffix + ".png");
+            return AITMod.id(path.substring(0, path.length() - 4) + this.suffix + ".png");
         };
 
         public Identifier get(BiomeOverrides overrides) {

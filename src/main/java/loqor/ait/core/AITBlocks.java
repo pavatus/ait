@@ -7,15 +7,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import dev.pavatus.lib.block.ABlockSettings;
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.NoBlockItem;
+import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
@@ -32,7 +34,7 @@ import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 
-public class AITBlocks implements BlockRegistryContainer {
+public class AITBlocks extends BlockContainer {
 
     // TODO ADVENT BLOCKS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
     public static Block SNOW_GLOBE;
@@ -66,12 +68,16 @@ public class AITBlocks implements BlockRegistryContainer {
 
     @NoEnglish
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
-    public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool()
+    public static final Block ENGINE_BLOCK = new EngineBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).requiresTool()
             .instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+
     @NoEnglish
     public static final Block ENGINE_CORE_BLOCK = new EngineCoreBlock(
-            AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
+            ABlockSettings.create().itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR))
+                    .mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
                     .strength(3.0F).luminance((state) -> 15).nonOpaque());
+
     @PickaxeMineable
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
@@ -149,12 +155,14 @@ public class AITBlocks implements BlockRegistryContainer {
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @AutomaticModel(justItem = true)
-    public static final Block POWER_CONVERTER = new PowerConverterBlock(FabricBlockSettings.create().nonOpaque()
+    public static final Block POWER_CONVERTER = new PowerConverterBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
-    public static final Block GENERIC_SUBSYSTEM = new GenericSubSystemBlock(FabricBlockSettings.create().nonOpaque()
+    public static final Block GENERIC_SUBSYSTEM = new GenericSubSystemBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     @NoBlockItem
@@ -165,8 +173,9 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block MACHINE_CASING = new MachineCasingBlock(FabricBlockSettings.create().nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
-    public static final Block FABRICATOR = new FabricatorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
-            .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
+    public static final Block FABRICATOR = new FabricatorBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
     // Control Blocks
     @NoBlockItem
@@ -175,6 +184,11 @@ public class AITBlocks implements BlockRegistryContainer {
             FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
+
+    @PickaxeMineable
+    @NoBlockItem
+    @NoBlockDrop
+    public static final Block PEANUT = new PeanutBlock(FabricBlockSettings.copy(Blocks.OBSIDIAN));
 
     // TODO ADVENT
     static {
@@ -207,10 +221,10 @@ public class AITBlocks implements BlockRegistryContainer {
 
     }
 
-
     @NoEnglish
-    public static final Block CABLE_BLOCK = new CableBlock(
-            FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
+    public static final Block CABLE_BLOCK = new CableBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
+            .instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
 
     public static List<Block> get() {
         List<Block> list = new ArrayList<>();
@@ -225,16 +239,7 @@ public class AITBlocks implements BlockRegistryContainer {
     }
 
     @Override
-    public BlockItem createBlockItem(Block block, String identifier) {
-        // hard coded because im lazy rn
-        if (block == FABRICATOR || block == GENERIC_SUBSYSTEM || block == POWER_CONVERTER || block == ENGINE_CORE_BLOCK || block == ENGINE_BLOCK || block == CABLE_BLOCK) {
-            return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.FABRICATOR));
-        }
-
-        if (block == ZEITON_BLOCK || block == ZEITON_CLUSTER || block == SMALL_ZEITON_BUD || block == LARGE_ZEITON_BUD || block == MEDIUM_ZEITON_BUD || block == COMPACT_ZEITON || block == ZEITON_COBBLE || block == BUDDING_ZEITON) {
-            return new BlockItem(block, new OwoItemSettings());
-        }
-
-        return new BlockItem(block, new OwoItemSettings().group(AITItemGroups.MAIN));
+    public Item.Settings createBlockItemSettings(Block block) {
+        return new AItemSettings().group(AITItemGroups.MAIN);
     }
 }

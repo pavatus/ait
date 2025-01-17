@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.renegade;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -19,7 +18,7 @@ public abstract class RenegadeVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/renegade/renegade_";
 
     protected RenegadeVariant(String name) {
-        super(RenegadeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name),
+        super(RenegadeCategory.REFERENCE, AITMod.id("exterior/renegade/" + name),
                 new Loyalty(Loyalty.Type.PILOT));
     }
 

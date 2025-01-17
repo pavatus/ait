@@ -1,11 +1,14 @@
 package loqor.ait.core.blocks;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +20,8 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -26,7 +31,7 @@ import net.minecraft.world.WorldAccess;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.EngineCoreBlockEntity;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 @SuppressWarnings("deprecation")
 public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
@@ -82,7 +87,7 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (!(world.isClient()) && !TardisDimension.isTardisDimension(world)) {
+        if (!(world.isClient()) && !TardisServerWorld.isTardisDimension(world)) {
             world.breakBlock(pos, !((PlayerEntity) placer).isCreative());
             return;
         }
@@ -111,5 +116,12 @@ public class EngineCoreBlock extends BlockWithEntity implements Waterloggable {
     static {
         WATERLOGGED = Properties.WATERLOGGED;
         SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+
+        tooltip.add(Text.translatable("tooltip.ait.singularity").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }

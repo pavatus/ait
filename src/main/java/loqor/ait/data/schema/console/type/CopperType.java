@@ -18,7 +18,7 @@ import loqor.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 
 public class CopperType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/copper");
+    public static final Identifier REFERENCE = AITMod.id("console/copper");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
             new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.17499998f, 0.23750003f),
                     new Vector3f(-0.359375f, 0.6250000949949026f, -1.0265655517578125f)),

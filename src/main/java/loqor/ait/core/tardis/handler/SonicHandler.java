@@ -24,7 +24,7 @@ import loqor.ait.data.properties.Value;
 
 public class SonicHandler extends KeyedTardisComponent implements ArtronHolderItem, TardisTickable {
 
-    public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
+    public static final Identifier CHANGE_SONIC = AITMod.id("change_sonic");
 
     private static final Property<ItemStack> CONSOLE_SONIC = new Property<>(Property.Type.ITEM_STACK, "console_sonic",
             (ItemStack) null);
@@ -123,7 +123,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
                 return;
 
             // Safe to get as ^ that method runs the check for us
-            ServerTardis tardis = (ServerTardis) this.tardis();
+            ServerTardis tardis = this.tardis.asServer();
 
             if (!tardis.fuel().hasPower())
                 return;
@@ -133,7 +133,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
         }
 
         if (exteriorSonic != null) {
-            ServerTardis tardis = (ServerTardis) this.tardis();
+            ServerTardis tardis = this.tardis.asServer();
 
             TardisCrashHandler crash = tardis.crash();
             boolean isToxic = crash.isToxic();

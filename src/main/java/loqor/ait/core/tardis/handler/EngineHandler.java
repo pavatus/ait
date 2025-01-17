@@ -23,23 +23,23 @@ public class EngineHandler extends KeyedTardisComponent {
         engineCorePos.of(this, ENGINE_CORE_POS);
     }
 
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.2.0")
     public boolean hasEngineCore() {
         return engineCorePos.get() != null;
     }
 
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.2.0")
     public Vector2i getCorePos() {
         Vector2i result = engineCorePos.get();
         return result != null ? result : ZERO;
     }
 
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.2.0")
     public void linkEngine(int x, int z) {
         engineCorePos.set(new Vector2i(x, z));
     }
 
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.2.0")
     public void unlinkEngine() {
         engineCorePos.set((Vector2i) null);
     }

@@ -18,7 +18,7 @@ public class WorldOpenFlowsMixin {
     @Inject(method = "tryLoad", at = @At(value = "INVOKE_ASSIGN", target = "Lcom/mojang/serialization/Lifecycle;experimental()Lcom/mojang/serialization/Lifecycle;", remap = false), cancellable = true)
     private static void confirmWorldCreation(MinecraftClient client, CreateWorldScreen parent, Lifecycle lifecycle,
             Runnable loader, boolean bypassWarnings, CallbackInfo ci) {
-        if (!AITMod.AIT_CONFIG.SHOW_EXPERIMENTAL_WARNING()) {
+        if (!AITMod.CONFIG.CLIENT.SHOW_EXPERIMENTAL_WARNING) {
             loader.run();
             ci.cancel();
         }

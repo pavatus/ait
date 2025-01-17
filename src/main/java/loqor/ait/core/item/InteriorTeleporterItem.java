@@ -73,7 +73,7 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         stack.setCount(stack.getCount() - 1);
         user.getItemCooldownManager().set(this, 16 * 20);
 
-        BlockPos door = tardis.getDesktop().doorPos().getPos();
+        BlockPos door = tardis.getDesktop().getDoorPos().getPos();
         createTeleportEffect(tardis.asServer().getInteriorWorld(), door.toCenterPos().subtract(0, 0.5, 0), PARTICLE_SUCCESS);
         world.playSound(null, door, AITSounds.DING, SoundCategory.PLAYERS, 1f, 1f);
         world.playSound(null, door, AITSounds.LAND_THUD, SoundCategory.PLAYERS, 1f, 1f);

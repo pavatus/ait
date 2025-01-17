@@ -4,10 +4,11 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
+import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class BoothExteriorModel extends ExteriorModel {
@@ -92,7 +93,12 @@ public class BoothExteriorModel extends ExteriorModel {
             return;
 
         matrices.push();
-        this.k2.getChild("Door").yaw = exterior.tardis().get().door().isOpen() ? 1.575F : 0.0F;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.k2.getChild("Door").yaw = exterior.tardis().get().door().isOpen() ? 1.575F : 0.0F;
+        else {
+            float maxRot = 90f;
+            this.k2.getChild("Door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+        }
         matrices.scale(1f, 1f, 1f);
         matrices.translate(0, -1.5f, 0);
 
@@ -101,22 +107,27 @@ public class BoothExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.K2BOOTH_EXTERIOR_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.K2BOOTH_EXTERIOR_OPEN_ANIMATION;
-            case SECOND, BOTH -> Animation.Builder.create(0).build();
-        };
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();
     }
 
     @Override
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (falling.tardis().isEmpty())
+            return;
+
         matrices.push();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.k2.getChild("Door").yaw = falling.tardis().get().door().isOpen() ? 1.575F : 0.0F;
+        else {
+            float maxRot = 90f;
+            this.k2.getChild("Door").yaw = (float) Math.toRadians(maxRot * falling.tardis().get().door().getLeftRot());
+        }
         matrices.scale(1f, 1f, 1f);
         matrices.translate(0, -1.5f, 0);
 
-        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 

@@ -1,7 +1,7 @@
 package dev.pavatus.gun.core.item;
 
-import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
 import net.minecraft.item.Item;
@@ -10,10 +10,11 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Rarity;
 
 
-public class GunItems implements ItemRegistryContainer {
-    public static final Item CULT_STASER = new BaseGunItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE));
-    public static final Item CULT_STASER_RIFLE = new StaserRifleItem(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE));
-    public static final Item STASER_BOLT_MAGAZINE = new StaserBoltMagazine(new OwoItemSettings().maxCount(1).rarity(Rarity.RARE));
+public class GunItems extends ItemContainer {
+
+    public static final Item CULT_STASER = new BaseGunItem(new FabricItemSettings().maxCount(1).rarity(Rarity.RARE));
+    public static final Item CULT_STASER_RIFLE = new StaserRifleItem(new FabricItemSettings().maxCount(1).rarity(Rarity.RARE));
+    public static final Item STASER_BOLT_MAGAZINE = new StaserBoltMagazine(new FabricItemSettings().maxCount(1).rarity(Rarity.RARE));
 
     static {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {

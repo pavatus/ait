@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import dev.pavatus.planet.core.PlanetBlocks;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,11 +45,11 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.landing.LandingPadRegion;
@@ -393,7 +395,24 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         INTERACTION(Formatting.GREEN) {
             @Override
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                Block block = world.getBlockState(pos).getBlock();
                 BlockState blockState = world.getBlockState(pos);
+
+                if (block == Blocks.SNOW || block == Blocks.SNOW_BLOCK || block == Blocks.POWDER_SNOW)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.SNOWBALL)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block instanceof TntBlock) {
+                    TntBlock.primeTnt(world, pos);
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    return;
+                }
 
                 if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
                     return;
@@ -421,11 +440,65 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                         Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
+
+
+
         },
         OVERLOAD(Formatting.RED) {
             @Override
             public void run(Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 Block block = world.getBlockState(pos).getBlock();
+
+                if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_PANES)) {
+                    world.breakBlock(pos, false);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+                    return;
+                }
+
+                if (block == Blocks.BRICKS || block == Blocks.BRICK_WALL)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.BRICK, 4)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.NETHER_BRICKS || block == Blocks.RED_NETHER_BRICKS || block == Blocks.NETHER_BRICK_WALL || block == Blocks.RED_NETHER_BRICK_WALL)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.NETHER_BRICK, 4)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.ICE || block == Blocks.BLUE_ICE || block == Blocks.FROSTED_ICE || block == Blocks.PACKED_ICE)  {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Blocks.AIR)));
+                    world.setBlockState(pos, Blocks.WATER.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+
+
+                if (block == AITBlocks.CONSOLE)  {
+                    world.breakBlock(pos, true);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+                    return;
+                }
+
+                if (block.getDefaultState().isIn(ConventionalBlockTags.GLASS_BLOCKS)) {
+                    world.breakBlock(pos, false);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+                    return;
+                }
+
+                if (block instanceof LeavesBlock) {
+                    world.breakBlock(pos, false);
+                    world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+
+                    return;
+                }
 
                 if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
                     return;
@@ -438,6 +511,230 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
+
+                if (block instanceof SandBlock) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.GLASS)));
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+//God forgive me for what i did to this code
+
+                if (block == Blocks.COAL_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.COAL)));
+                    world.setBlockState(pos, Blocks.STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DEEPSLATE_COAL_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.COAL)));
+                    world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == PlanetBlocks.MARTIAN_COAL_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.COAL)));
+                    world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == PlanetBlocks.ANORTHOSITE_COAL_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.COAL)));
+                    world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == Blocks.LAPIS_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.LAPIS_LAZULI)));
+                    world.setBlockState(pos, Blocks.STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DEEPSLATE_LAPIS_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.LAPIS_LAZULI)));
+                    world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == PlanetBlocks.MARTIAN_LAPIS_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.LAPIS_LAZULI)));
+                    world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == PlanetBlocks.ANORTHOSITE_LAPIS_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.LAPIS_LAZULI)));
+                    world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == Blocks.DIAMOND_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.DIAMOND)));
+                    world.setBlockState(pos, Blocks.STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DEEPSLATE_DIAMOND_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.DIAMOND)));
+                    world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == PlanetBlocks.MARTIAN_DIAMOND_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.DIAMOND)));
+                    world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == PlanetBlocks.ANORTHOSITE_DIAMOND_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.DIAMOND)));
+                    world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == Blocks.IRON_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_IRON)));
+                    world.setBlockState(pos, Blocks.STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DEEPSLATE_IRON_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_IRON)));
+                    world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == PlanetBlocks.MARTIAN_IRON_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_IRON)));
+                    world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == PlanetBlocks.ANORTHOSITE_IRON_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_IRON)));
+                    world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == Blocks.GOLD_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_GOLD)));
+                    world.setBlockState(pos, Blocks.STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DEEPSLATE_GOLD_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_GOLD)));
+                    world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == PlanetBlocks.MARTIAN_GOLD_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_GOLD)));
+                    world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == PlanetBlocks.ANORTHOSITE_GOLD_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_GOLD)));
+                    world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == Blocks.NETHER_GOLD_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_GOLD)));
+                    world.setBlockState(pos, Blocks.NETHERRACK.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == Blocks.COPPER_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_COPPER)));
+                    world.setBlockState(pos, Blocks.STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == Blocks.DEEPSLATE_COPPER_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_COPPER)));
+                    world.setBlockState(pos, Blocks.DEEPSLATE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
+                if (block == PlanetBlocks.MARTIAN_COPPER_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_COPPER)));
+                    world.setBlockState(pos, PlanetBlocks.MARTIAN_STONE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                }
+
+                if (block == PlanetBlocks.ANORTHOSITE_COPPER_ORE) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
+                            new ItemStack(Items.RAW_COPPER)));
+                    world.setBlockState(pos, PlanetBlocks.ANORTHOSITE.getDefaultState(),
+                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                }
+
                 if (block instanceof RedstoneLampBlock) {
                     world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
                             world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -448,21 +745,6 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
 
-                if (block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                            new ItemStack(Items.IRON_INGOT)));
-                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                }
-
-                if (block == Blocks.GOLD_ORE || block == Blocks.DEEPSLATE_GOLD_ORE || block == Blocks.NETHER_GOLD_ORE) {
-                    world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                            new ItemStack(Items.GOLD_INGOT)));
-                    world.setBlockState(pos, Blocks.AIR.getDefaultState(),
-                            Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                }
             }
         },
         SCANNING(Formatting.AQUA) {
@@ -485,12 +767,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (!TardisDimension.isTardisDimension(world)) {
+                if (!TardisServerWorld.isTardisDimension(world)) {
                     sendRiftInfo(tardis, world, pos, player, stack);
                     return;
                 }
 
-                if (TardisDimension.isTardisDimension(world))
+                if (TardisServerWorld.isTardisDimension(world))
                     sendTardisInfo(tardis, world, pos, player, stack);
             }
 
@@ -571,7 +853,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     return;
                 }
 
-                if (TardisDimension.isTardisDimension(world)) {
+                if (TardisServerWorld.isTardisDimension(world)) {
                     if (player.getPitch() == -90 && !tardis.travel().handbrake()) {
                         player.sendMessage(Text.translatable("message.ait.remoteitem.success1"), true);
                         tardis.travel().dematerialize();

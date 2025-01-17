@@ -92,7 +92,11 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
     public static void init(TardisComponent component, Tardis tardis, InitContext context) {
         component.setTardis(tardis);
-        Initializable.init(component, context);
+        component.init(context);
+    }
+
+    public static void postInit(TardisComponent component, InitContext context) {
+        component.postInit(context);
     }
 
     public enum Id implements IdLike {
@@ -105,6 +109,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         TRAVEL(TravelHandler.class, TravelHandler::new),
         DOOR(DoorHandler.class, DoorHandler::new),
         SONIC(SonicHandler.class, SonicHandler::new),
+        BUTLER(ButlerHandler.class, ButlerHandler::new),
         PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
         LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
         ENGINE(EngineHandler.class, EngineHandler::new),

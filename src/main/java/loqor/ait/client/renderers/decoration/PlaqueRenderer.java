@@ -51,9 +51,10 @@ public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityR
 
         matrices.pop();
 
-        if (entity.findTardis().isEmpty())
+        if (entity.tardis() == null || entity.tardis().isEmpty())
             return;
-        Tardis tardis = entity.findTardis().get();
+
+        Tardis tardis = entity.tardis().get();
 
         matrices.push();
         matrices.translate(0.5, 0.75, 0.5);

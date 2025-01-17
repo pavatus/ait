@@ -4,6 +4,7 @@
   "package": "dev.pavatus.planet.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "WorldMixin",
     "gravity.AssortedEntityMixin",
     "gravity.BoatEntityMixin",
     "gravity.LivingEntityMixin"

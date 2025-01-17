@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -17,6 +18,7 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.landing.LandingPadSpot;
@@ -147,17 +149,23 @@ public final class TardisEvents {
             });
 
     public static final Event<MoveDoor> DOOR_MOVE = EventFactory.createArrayBacked(MoveDoor.class,
-            callbacks -> (tardis, prev) -> {
+            callbacks -> (tardis, newPos, oldPos) -> {
                 for (MoveDoor callback : callbacks) {
-                    callback.onMove(tardis, prev);
+                    callback.onMove(tardis, newPos, oldPos);
                 }
             });
 
     public static final Event<UseDoor> USE_DOOR = EventFactory.createArrayBacked(UseDoor.class,
-            callbacks -> (tardis, player) -> {
+            callbacks -> (tardis, interior, world, player, pos) -> {
                 for (UseDoor callback : callbacks) {
-                    callback.onUseDoor(tardis, player);
+                    DoorHandler.InteractionResult result = callback.onUseDoor(tardis, interior, world, player, pos);
+                    if (result == DoorHandler.InteractionResult.CONTINUE)
+                        continue;
+
+                    return result;
                 }
+
+                return DoorHandler.InteractionResult.CONTINUE;
             });
 
     public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class,
@@ -417,7 +425,7 @@ public final class TardisEvents {
 
     @FunctionalInterface
     public interface UseDoor {
-        void onUseDoor(Tardis tardis, @Nullable ServerPlayerEntity player);
+        DoorHandler.InteractionResult onUseDoor(Tardis tardis, ServerWorld interior, ServerWorld world, @Nullable ServerPlayerEntity player, @Nullable BlockPos pos);
     }
 
     /**
@@ -426,7 +434,7 @@ public final class TardisEvents {
      */
     @FunctionalInterface
     public interface MoveDoor {
-        void onMove(Tardis tardis, DirectedBlockPos previous);
+        void onMove(ServerTardis tardis, @Nullable DirectedBlockPos newPos, @Nullable DirectedBlockPos oldPos);
     }
 
     @FunctionalInterface
@@ -441,7 +449,7 @@ public final class TardisEvents {
 
     @FunctionalInterface
     public interface BreakDoor {
-        void onBreak(Tardis tardis, BlockPos pos);
+        void onBreak(Tardis tardis, DirectedBlockPos pos);
     }
 
     @FunctionalInterface

@@ -8,7 +8,7 @@ import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
 
 public class ClassicDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/classic");
+    public static final Identifier REFERENCE = AITMod.id("door/classic");
 
     public ClassicDoorVariant() {
         super(REFERENCE);

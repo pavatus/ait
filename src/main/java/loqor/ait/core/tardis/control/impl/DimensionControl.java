@@ -5,11 +5,13 @@ import java.util.concurrent.CompletableFuture;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
@@ -71,5 +73,10 @@ public class DimensionControl extends Control {
 
         current -= 1;
         return current < 0 ? lastIndex : current;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.DIMENSION;
     }
 }

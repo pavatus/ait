@@ -1,13 +1,10 @@
 package loqor.ait.core.engine.impl;
 
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.TardisComponent;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 
 public class ShieldsCircuit extends DurableSubSystem implements StructureHolder {
     private static MultiBlockStructure STRUCTURE;
@@ -29,7 +26,7 @@ public class ShieldsCircuit extends DurableSubSystem implements StructureHolder 
     @Override
     public MultiBlockStructure getStructure() {
         if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/shield"));
+            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/shield"));
         }
 
         return STRUCTURE;
@@ -39,6 +36,6 @@ public class ShieldsCircuit extends DurableSubSystem implements StructureHolder 
     protected void onDisable() {
         super.onDisable();
 
-        this.tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).disableAll();
+        this.tardis.shields().disableAll();
     }
 }

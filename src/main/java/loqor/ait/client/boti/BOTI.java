@@ -4,11 +4,8 @@ import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRe
 import static loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer.PAINTING_TEXTURE;
 
 import com.mojang.blaze3d.platform.GlConst;
-import com.mojang.blaze3d.platform.GlDebugInfo;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
@@ -31,23 +28,23 @@ import loqor.ait.client.models.decoration.GallifreyFallsModel;
 import loqor.ait.client.models.doors.DoorModel;
 import loqor.ait.client.renderers.AITRenderLayers;
 import loqor.ait.client.renderers.VortexUtil;
+import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
+import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 
 public class BOTI {
 
-    private static boolean sendNvidiaWarning = false;
+    private static boolean warningSent = false;
     public static BOTIHandler BOTI_HANDLER = new BOTIHandler();
     public static AITBufferBuilderStorage AIT_BUF_BUILDER_STORAGE = new AITBufferBuilderStorage();
 
     public static void renderGallifreyFallsPainting(MatrixStack stack, SinglePartEntityModel singlePartEntityModel, int light, VertexConsumerProvider provider) {
-        if (!isNvidiaVideocard()) {
-            sendNvidiaWarning();
+        if (!checkBoti())
             return;
-        }
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -113,21 +110,15 @@ public class BOTI {
     }
 
     public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
-
         if (!variant.parent().hasPortals()) return;
 
-        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
+        if (!checkTardisBoti())
             return;
-        }
-
-        if (!isNvidiaVideocard()) {
-            sendNvidiaWarning();
-            return;
-        }
-
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
+
+        Tardis tardis = door.tardis().get();
 
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
@@ -154,12 +145,12 @@ public class BOTI {
         stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight(), 1f);
         if (door.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED)
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEndGateway()), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
-        else
+        else {
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+        }
         botiProvider.draw();
         stack.pop();
         copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
-        // RenderSystem.depthMask(false);
 
         BOTI_HANDLER.afbo.beginWrite(false);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -168,18 +159,23 @@ public class BOTI {
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
         stack.push();
-        if (!door.tardis().get().travel().autopilot() && door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
-            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 360f));
-        if (!door.tardis().get().crash().isNormal())
+        if (!tardis.travel().autopilot() && tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+            stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / tardis.travel().speed()) * 360f));
+        if (!tardis.crash().isNormal())
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        //stack.translate(Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), Math.cos(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f), 400 + Math.sin(MinecraftClient.getInstance().player.age / ((float) 200 / door.tardis().get().travel().speed()) * 600f));
         stack.translate(0, 0, 500);
         stack.scale(1.5f, 1.5f, 1.5f);
-        VortexUtil util = door.tardis().get().stats().getVortexEffects().toUtil();
-        if (door.tardis().get().travel().getState() != TravelHandlerBase.State.LANDED)
+        VortexUtil util = tardis.stats().getVortexEffects().toUtil();
+        if (!tardis.travel().isLanded() /*&& !tardis.flight().isFlying()*/) {
             util.renderVortex(stack);
+            /*// TODO not a clue if this will work but oh well - Loqor
+            stack.push();
+            stack.scale(0.9f, 0.9f, 0.9f);
+            util.renderVortex(stack);
+            stack.pop();*/
+        }
         botiProvider.draw();
         stack.pop();
 
@@ -187,6 +183,7 @@ public class BOTI {
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
 
         ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+        //((DoorModel) frame).render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
 
@@ -194,6 +191,7 @@ public class BOTI {
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         if (variant.emission() != null)
             ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+            //((DoorModel) frame).render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
 
@@ -209,16 +207,8 @@ public class BOTI {
     }
 
     public static void renderExteriorBoti(ExteriorBlockEntity exterior, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
-
-        if (!AITMod.AIT_CONFIG.ENABLE_TARDIS_BOTI()) {
+        if (!checkTardisBoti())
             return;
-        }
-
-        if (!isNvidiaVideocard()) {
-            sendNvidiaWarning();
-            return;
-        }
-
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
@@ -268,7 +258,7 @@ public class BOTI {
 
         variant.getDoor().model().renderWithAnimations(exterior, variant.getDoor().model().getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
 
-        //MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(new Identifier(AITMod.MOD_ID, "interiors/coral")), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
+        //MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(AITMod.id("interiors/coral")), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
         /*ChunkRendererRegionBuilder builder = new ChunkRendererRegionBuilder();
         ChunkRendererRegion region = builder.build(TardisDimension.get(exterior.tardis().get().asServer()).get(), new BlockPos(0, 0, 0),  new BlockPos(30, 30, 30), 0);*/
         botiProvider.draw();
@@ -308,17 +298,28 @@ public class BOTI {
         GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT, GlConst.GL_NEAREST);
     }
 
-    // copied from immersive portals
-    @Environment(EnvType.CLIENT)
-    public static boolean isNvidiaVideocard() {
-        return GlDebugInfo.getVendor().toLowerCase().contains("nvidia");
-    }
-    private static void sendNvidiaWarning() {
-        if (!sendNvidiaWarning) {
-            sendNvidiaWarning = true;
+    private static boolean checkTardisBoti() {
+        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
+            return false;
 
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("A Nvidia Videocard is required for BOTI effects, please disable BOTI in the Config.").formatted(Formatting.RED), false);
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("NAG LOQOR IN THE DISCORD TO FIX BOTI !!!").formatted(Formatting.RED), false);
+        return checkBoti();
+    }
+
+    private static boolean checkBoti() {
+        if (DependencyChecker.hasNvidiaCard() || !AITMod.CONFIG.CLIENT.I_HATE_GL)
+            return true;
+
+        sendNvidiaWarning();
+        return false;
+    }
+
+    private static void sendNvidiaWarning() {
+        if (!warningSent) {
+            warningSent = true;
+
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("An Nvidia Videocard is HIGHLY reccomended for the BOTI effect, the BOTI effect is very picky and sometimes will just not work with certain video cards.").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("If you have a videocard that is not Nvidia, please install the indium mod and disable I HATE GL in the ait config. This SHOULD fix BOTI being broken. ").formatted(Formatting.RED), false);
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("MACS DO NOT WORK AS THEY DROPPED THAT SUPPORT IN FAVOR OF METAL").formatted(Formatting.RED), false);
         }
     }
 }

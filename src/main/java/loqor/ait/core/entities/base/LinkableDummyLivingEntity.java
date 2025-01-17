@@ -20,8 +20,8 @@ public abstract class LinkableDummyLivingEntity extends DummyLivingEntity implem
 
     private TardisRef tardis;
 
-    public LinkableDummyLivingEntity(EntityType<? extends LivingEntity> type, World world) {
-        super(type, world);
+    public LinkableDummyLivingEntity(EntityType<? extends LivingEntity> type, World world, boolean hasBrain) {
+        super(type, world, hasBrain);
     }
 
     @Override

@@ -2,7 +2,6 @@ package loqor.ait.core.tardis;
 
 import java.util.Optional;
 
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -26,7 +25,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class TardisExterior extends TardisComponent {
 
-    public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
+    public static final Identifier CHANGE_EXTERIOR = AITMod.id("change_exterior");
 
     private static final ExteriorCategorySchema MISSING_CATEGORY = CategoryRegistry.getInstance().fallback();
     private static final ExteriorVariantSchema MISSING_VARIANT = ExteriorVariantRegistry.getInstance().fallback();
@@ -59,7 +58,7 @@ public class TardisExterior extends TardisComponent {
             tardis.getExterior().setVariant(variant);
 
         DirectedGlobalPos.Cached cached = tardis.travel().position();
-        WorldOps.updateIfOnServer(cached.getWorld(), cached.getPos());
+        cached.getWorld().getChunkManager().markForUpdate(cached.getPos());
 
         TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
         return true;
@@ -74,7 +73,7 @@ public class TardisExterior extends TardisComponent {
 
     private void setMissing() {
         if (this.tardis instanceof ClientTardis clientTardis)
-            ClientTardisUtil.changeExteriorWithScreen(clientTardis, MISSING_CATEGORY.id(), MISSING_VARIANT.id(), true);
+            ClientTardisUtil.changeExteriorWithScreen(clientTardis, MISSING_VARIANT.id(), true);
 
         this.category = MISSING_CATEGORY;
         this.variant = MISSING_VARIANT;

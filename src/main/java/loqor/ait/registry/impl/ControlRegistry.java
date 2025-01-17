@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.tardis.control.Control;
@@ -20,10 +19,10 @@ import loqor.ait.core.tardis.control.impl.waypoint.*;
 
 public class ControlRegistry {
     public static final SimpleRegistry<Control> REGISTRY = FabricRegistryBuilder
-            .createSimple(RegistryKey.<Control>ofRegistry(new Identifier(AITMod.MOD_ID, "control"))).buildAndRegister();
+            .createSimple(RegistryKey.<Control>ofRegistry(AITMod.id("control"))).buildAndRegister();
 
     public static Control register(Control control) {
-        return Registry.register(REGISTRY, new Identifier(AITMod.MOD_ID, control.getId()), control);
+        return Registry.register(REGISTRY, AITMod.id(control.getId()), control);
     }
 
     /**
@@ -35,7 +34,7 @@ public class ControlRegistry {
      */
     public static Optional<Control> fromId(String id) {
         // this will need changing when AIT only controls is changed
-        return Optional.ofNullable(REGISTRY.get(new Identifier(AITMod.MOD_ID, id)));
+        return Optional.ofNullable(REGISTRY.get(AITMod.id(id)));
     }
 
     public static void init() {

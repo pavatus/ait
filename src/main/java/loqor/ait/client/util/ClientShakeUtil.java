@@ -1,6 +1,5 @@
 package loqor.ait.client.util;
 
-import java.util.Objects;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
@@ -14,10 +13,13 @@ public class ClientShakeUtil {
     private static final int MAX_DISTANCE = 16; // The radius from the console where the player will feel the shake
 
     public static boolean shouldShake(Tardis tardis) {
-        return Objects.equals(ClientTardisUtil.getCurrentTardis(), tardis)
-                && ((tardis.travel().getState() != TravelHandlerBase.State.LANDED
-                && ClientTardisUtil.distanceFromConsole() < MAX_DISTANCE && !tardis.travel().autopilot())
-                || tardis.flight().falling().get());
+        if (ClientTardisUtil.getCurrentTardis() != tardis)
+            return false;
+
+        if (tardis.flight().falling().get())
+            return true;
+
+        return !tardis.travel().autopilot() && tardis.travel().getState() != TravelHandlerBase.State.LANDED;
     }
 
     /**
@@ -27,7 +29,7 @@ public class ClientShakeUtil {
         shake(1f - (float) (ClientTardisUtil.distanceFromConsole() / MAX_DISTANCE));
     }
 
-    public static void ShakeFromEverywhere() {
+    public static void shakeFromEverywhere() {
         shake(0.1f);
     }
 

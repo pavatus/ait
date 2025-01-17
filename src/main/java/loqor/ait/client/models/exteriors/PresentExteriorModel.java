@@ -4,10 +4,11 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
+import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class PresentExteriorModel extends ExteriorModel {
@@ -43,34 +44,46 @@ public class PresentExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = exterior.tardis().get().door();
 
-        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
-        this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? -8F
-                : 0.0F;
+            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
+                    ? -8F
+                    : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.present.getChild("left_door").yaw = (float) Math.toRadians(exterior.tardis().get().door().getLeftRot() * maxRot);
+            this.present.getChild("right_door").yaw = -(float) Math.toRadians(exterior.tardis().get().door().getRightRot() * maxRot);
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
     }
 
     @Override
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-                              VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         if (falling.tardis().isEmpty())
             return;
 
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = falling.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = falling.tardis().get().door();
 
-        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 9F : 0.0F;
-        this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? -9F
-                : 0.0F;
+            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
+                    ? -8F
+                    : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.present.getChild("left_door").yaw = (float) Math.toRadians(falling.tardis().get().door().getLeftRot() * maxRot);
+            this.present.getChild("right_door").yaw = -(float) Math.toRadians(falling.tardis().get().door().getRightRot() * maxRot);
+        }
 
-        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 
@@ -80,12 +93,7 @@ public class PresentExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();
     }
 }

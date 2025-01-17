@@ -5,13 +5,11 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.alnico.AlnicoAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class AlnicoConsoleModel extends ConsoleModel {
@@ -1442,7 +1440,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
         ModelPart shield = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2")
                 .getChild("longswitch8");
-        shield.pitch = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shield.pitch = tardis.shields().shielded().get()
                 ? shield.pitch + 1f
                 : shield.pitch;
 

@@ -6,8 +6,8 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 // Made with Blockbench 4.11.2
@@ -40,12 +40,18 @@ public class PresentDoorModel extends DoorModel {
 
     @Override
     public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
-        DoorHandler door = linkableBlockEntity.tardis().get().door();
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler door = linkableBlockEntity.tardis().get().door();
 
-        this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? -8F : 0.0F;
-        this.present.getChild("right_door").yaw = (door.isRightOpen() || door.isBothOpen())
-                ? 8F
-                : 0.0F;
+            this.present.getChild("left_door").yaw = (door.isLeftOpen() || door.isOpen()) ? 8F : 0.0F;
+            this.present.getChild("right_door").yaw = (door.isRightOpen() || door.areBothOpen())
+                    ? -8F
+                    : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.present.getChild("left_door").yaw = (float) Math.toRadians(maxRot*linkableBlockEntity.tardis().get().door().getLeftRot());
+            this.present.getChild("right_door").yaw = (float) -Math.toRadians(maxRot*linkableBlockEntity.tardis().get().door().getRightRot());
+        }
 
         matrices.push();
         matrices.translate(0, -1.5, 0);
@@ -56,13 +62,13 @@ public class PresentDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return switch (state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 
     @Override

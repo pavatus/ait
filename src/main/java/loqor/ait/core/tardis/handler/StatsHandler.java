@@ -24,23 +24,24 @@ import loqor.ait.core.sounds.flight.FlightSoundRegistry;
 import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.sounds.travel.map.TravelSoundMap;
-import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.vortex.reference.VortexReference;
 import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
-import loqor.ait.core.util.Cachable;
+import loqor.ait.core.util.Lazy;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
+import loqor.ait.data.properties.dbl.DoubleProperty;
+import loqor.ait.data.properties.dbl.DoubleValue;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.registry.impl.DesktopRegistry;
 
 public class StatsHandler extends KeyedTardisComponent {
 
-    private static final Identifier NAME_PATH = new Identifier(AITMod.MOD_ID, "tardis_names.json");
+    private static final Identifier NAME_PATH = AITMod.id("tardis_names.json");
     private static List<String> NAME_CACHE;
 
     private static final Property<String> NAME = new Property<>(Property.Type.STR, "name", "");
@@ -59,6 +60,10 @@ public class StatsHandler extends KeyedTardisComponent {
     private static final BoolProperty SECURITY = new BoolProperty("security", false);
     private static final BoolProperty HAIL_MARY = new BoolProperty("hail_mary", false);
     private static final BoolProperty RECEIVE_CALLS = new BoolProperty("receive_calls", true);
+    private static final DoubleProperty TARDIS_X_SCALE = new DoubleProperty("tardis_x_scale");
+    private static final DoubleProperty TARDIS_Y_SCALE = new DoubleProperty("tardis_y_scale");
+    private static final DoubleProperty TARDIS_Z_SCALE = new DoubleProperty("tardis_z_scale");
+
 
     private final Value<String> tardisName = NAME.create(this);
     private final Value<String> playerCreatorName = PLAYER_CREATOR_NAME.create(this);
@@ -73,13 +78,18 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<Identifier> matId = MAT_FX.create(this);
     private final Value<Identifier> flightId = FLIGHT_FX.create(this);
     private final Value<Identifier> vortexId = VORTEX_FX.create(this);
+    private final DoubleValue tardis_x_scale = TARDIS_X_SCALE.create(this);
+    private final DoubleValue tardis_y_scale = TARDIS_Y_SCALE.create(this);
+    private final DoubleValue tardis_z_scale = TARDIS_Z_SCALE.create(this);
+
+
 
     @Exclude
-    private Cachable<TravelSoundMap> travelFxCache;
+    private Lazy<TravelSoundMap> travelFxCache;
     @Exclude
-    private Cachable<FlightSound> flightFxCache;
+    private Lazy<FlightSound> flightFxCache;
     @Exclude
-    private Cachable<VortexReference> vortexFxCache;
+    private Lazy<VortexReference> vortexFxCache;
 
     public StatsHandler() {
         super(Id.STATS);
@@ -89,6 +99,9 @@ public class StatsHandler extends KeyedTardisComponent {
     public void onCreate() {
         this.markCreationDate();
         this.setName(StatsHandler.getRandomName());
+        this.setXScale(1.0f);
+        this.setYScale(1.0f);
+        this.setZScale(1.0f);
     }
 
     @Override
@@ -106,6 +119,9 @@ public class StatsHandler extends KeyedTardisComponent {
         matId.of(this, MAT_FX);
         flightId.of(this, FLIGHT_FX);
         vortexId.of(this, VORTEX_FX);
+        tardis_x_scale.of(this, TARDIS_X_SCALE);
+        tardis_y_scale.of(this, TARDIS_Y_SCALE);
+        tardis_z_scale.of(this, TARDIS_Z_SCALE);
 
         vortexId.addListener((id) -> {
             if (this.vortexFxCache != null)
@@ -235,8 +251,6 @@ public class StatsHandler extends KeyedTardisComponent {
     }
 
     public Date getCreationDate() {
-        Tardis tardis = this.tardis();
-
         if (creationDate.get() == null) {
             AITMod.LOGGER.error("{} was missing creation date! Resetting to now", tardis.getUuid().toString());
             markCreationDate();
@@ -252,6 +266,34 @@ public class StatsHandler extends KeyedTardisComponent {
             AITMod.LOGGER.error("Error parsing creation date for {}", tardis.getUuid().toString(), e);
             return Date.from(Instant.now());
         }
+    }
+
+    public float getXScale() {
+        double v = tardis_x_scale.get();
+        return (float) v;
+    }
+
+    public float getYScale() {
+        double v = tardis_y_scale.get();
+        return (float) v;
+    }
+
+    public float getZScale() {
+        double v = tardis_z_scale.get();
+        return (float) v;
+    }
+
+
+    public void setXScale(double scale) {
+        this.tardis_x_scale.set(scale);
+    }
+
+    public void setYScale(double scale) {
+        this.tardis_y_scale.set(scale);
+    }
+
+    public void setZScale(double scale) {
+        this.tardis_z_scale.set(scale);
     }
 
     public String getCreationString() {
@@ -271,7 +313,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public TravelSoundMap getTravelEffects() {
         if (this.travelFxCache == null) {
-            this.travelFxCache = new Cachable<>(this::createTravelEffectsCache);
+            this.travelFxCache = new Lazy<>(this::createTravelEffectsCache);
         }
 
         return this.travelFxCache.get();
@@ -287,7 +329,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public FlightSound getFlightEffects() {
         if (this.flightFxCache == null) {
-            this.flightFxCache = new Cachable<>(this::createFlightEffectsCache);
+            this.flightFxCache = new Lazy<>(this::createFlightEffectsCache);
         }
 
         return this.flightFxCache.get();
@@ -298,11 +340,12 @@ public class StatsHandler extends KeyedTardisComponent {
 
     public VortexReference getVortexEffects() {
         if (this.vortexFxCache == null) {
-            this.vortexFxCache = new Cachable<>(this::createVortexEffectsCache);
+            this.vortexFxCache = new Lazy<>(this::createVortexEffectsCache);
         }
 
         return this.vortexFxCache.get();
     }
+
     private VortexReference createVortexEffectsCache() {
         return VortexReferenceRegistry.getInstance().getOrFallback(this.vortexId.get());
     }

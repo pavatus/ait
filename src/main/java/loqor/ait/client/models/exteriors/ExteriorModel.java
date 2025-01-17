@@ -15,9 +15,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.effects.ZeitonHighEffect;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.data.Loyalty;
@@ -65,8 +65,8 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
         root.render(matrices, vertices, light, overlay, red, green, blue, newAlpha);
     }
 
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         root.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
@@ -75,5 +75,5 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
             float headPitch) {
     }
 
-    public abstract Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state);
+    public abstract Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state);
 }

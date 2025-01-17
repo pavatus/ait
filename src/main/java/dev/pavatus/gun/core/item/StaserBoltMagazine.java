@@ -35,7 +35,7 @@ public class StaserBoltMagazine extends Item implements ArtronHolderItem {
         ItemStack stack = new ItemStack(this);
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
+        nbt.putDouble(FUEL_KEY, MAX_FUEL);
 
         return stack;
     }

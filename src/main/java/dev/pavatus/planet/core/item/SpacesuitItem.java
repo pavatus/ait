@@ -16,11 +16,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
 import loqor.ait.core.item.RenderableArmorItem;
+import loqor.ait.core.world.TardisServerWorld;
 
 
 public class SpacesuitItem extends RenderableArmorItem {
     public static final String OXYGEN_KEY = "oxygen";
-    public static final double MAX_OXYGEN = 4.2D; // 20 minutes worth of oxygen in LITERS.
+    public static final double MAX_OXYGEN = 5.2D;
 
     public SpacesuitItem(ArmorMaterial material, Type type, Settings settings, boolean hasCustomRendering) {
         super(material, type, settings, hasCustomRendering);
@@ -54,7 +55,7 @@ public class SpacesuitItem extends RenderableArmorItem {
 
         if (planet == null) return;
 
-        if (planet.hasOxygen() && compound.getDouble(OXYGEN_KEY) < MAX_OXYGEN) {
+        if ((TardisServerWorld.isTardisDimension(world) || planet.hasOxygen()) && compound.getDouble(OXYGEN_KEY) < MAX_OXYGEN) {
             // compound.putDouble(OXYGEN_KEY, Math.min(4.2D, compound.getDouble(OXYGEN_KEY) + 0.0035D));
             compound.putDouble(OXYGEN_KEY, Math.min(MAX_OXYGEN, compound.getDouble(OXYGEN_KEY) + 0.2D));
         } else if (compound.getDouble(OXYGEN_KEY) > 0.0D) {

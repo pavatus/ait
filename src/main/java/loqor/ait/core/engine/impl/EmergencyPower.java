@@ -1,6 +1,5 @@
 package loqor.ait.core.engine.impl;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -59,7 +58,7 @@ public class EmergencyPower extends SubSystem implements ArtronHolder, Structure
     @Override
     public MultiBlockStructure getStructure() {
         if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/emergency_power"));
+            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/emergency_power"));
         }
 
         return STRUCTURE;

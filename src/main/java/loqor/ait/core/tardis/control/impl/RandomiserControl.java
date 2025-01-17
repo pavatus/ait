@@ -2,9 +2,11 @@ package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
@@ -53,5 +55,9 @@ public class RandomiserControl extends Control {
         Text text = Text.translatable("tardis.message.control.randomiser.destination")
                 .append(Text.literal(pos.getX() + " | " + pos.getY() + " | " + pos.getZ()));
         player.sendMessage(text, true);
+    }
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.RANDOMIZE;
     }
 }

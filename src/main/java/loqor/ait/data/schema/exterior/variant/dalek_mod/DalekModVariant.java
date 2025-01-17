@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.dalek_mod;
 
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -18,7 +17,7 @@ public abstract class DalekModVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/dalek_mod/dalek_mod_";
 
     protected DalekModVariant(Integer number) {
-        super(DalekModCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/dalek_mod/" + number),
+        super(DalekModCategory.REFERENCE, AITMod.id("exterior/dalek_mod/" + number),
                 new Loyalty(Loyalty.Type.OWNER));
     }
 

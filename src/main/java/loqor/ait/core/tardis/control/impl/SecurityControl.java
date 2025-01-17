@@ -89,7 +89,7 @@ public class SecurityControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.BWEEP;
+        return AITSounds.PROTOCOL_19;
     }
 
     @Override

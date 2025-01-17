@@ -11,16 +11,16 @@ public class VortexReferenceRegistry extends SimpleDatapackRegistry<VortexRefere
         super(VortexReference::fromInputStream, VortexReference.CODEC, "fx/vortex", true);
     }
 
-    public static VortexReference SPACE;
+    public static VortexReference TOYOTA;
 
     @Override
     protected void defaults() {
-        SPACE = register(new VortexReference(AITMod.id("space"), AITMod.id("textures/vortex/space.png")));
+        TOYOTA = register(new VortexReference(AITMod.id("toyota"), AITMod.id("textures/vortex/toyota.png")));
     }
 
     @Override
     public VortexReference fallback() {
-        return SPACE;
+        return TOYOTA;
     }
 
     public static VortexReferenceRegistry getInstance() {

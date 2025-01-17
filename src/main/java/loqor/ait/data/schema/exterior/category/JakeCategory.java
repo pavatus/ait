@@ -6,7 +6,7 @@ import loqor.ait.AITMod;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 
 public class JakeCategory extends ExteriorCategorySchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "exterior/jake");
+    public static final Identifier REFERENCE = AITMod.id("exterior/jake");
 
     public JakeCategory() {
         super(REFERENCE, "jake");

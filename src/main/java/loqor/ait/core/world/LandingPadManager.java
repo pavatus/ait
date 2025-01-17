@@ -17,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 
 import loqor.ait.AITMod;
@@ -27,7 +29,7 @@ import loqor.ait.data.landing.LandingPadRegion;
 public class LandingPadManager {
 
     private static final AttachmentType<LandingPadRegion> PERSISTENT = AttachmentRegistry.createPersistent(
-            new Identifier(AITMod.MOD_ID, "landing_pads"), LandingPadRegion.CODEC
+            AITMod.id("landing_pads"), LandingPadRegion.CODEC
     );
 
     public static void init() {
@@ -40,15 +42,20 @@ public class LandingPadManager {
         this.world = world;
     }
 
-    public @Nullable LandingPadRegion getRegion(ChunkPos pos) {
-        return this.world.getChunk(pos.x, pos.z).getAttached(PERSISTENT);
+    @Nullable public LandingPadRegion getRegion(ChunkPos pos) {
+        Chunk chunk = this.world.getChunk(pos.x, pos.z, ChunkStatus.FULL, false);
+
+        if (chunk == null)
+            return null;
+
+        return chunk.getAttached(PERSISTENT);
     }
 
-    public @Nullable LandingPadRegion getRegion(long pos) {
+    @Nullable public LandingPadRegion getRegion(long pos) {
         return this.getRegion(new ChunkPos(pos));
     }
 
-    public @Nullable LandingPadRegion getRegionAt(BlockPos pos) {
+    @Nullable public LandingPadRegion getRegionAt(BlockPos pos) {
         return this.getRegion(new ChunkPos(pos));
     }
 
@@ -87,8 +94,8 @@ public class LandingPadManager {
 
     public static class Network {
 
-        public static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "landingpad_sync");
-        public static final Identifier REQUEST = new Identifier(AITMod.MOD_ID, "landingpad_request");
+        public static final Identifier SYNC = AITMod.id("landingpad_sync");
+        public static final Identifier REQUEST = AITMod.id("landingpad_request");
 
         public static void syncForPlayer(Action action, ServerPlayerEntity player) {
             ServerWorld world = player.getServerWorld();

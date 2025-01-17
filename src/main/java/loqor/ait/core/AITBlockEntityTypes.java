@@ -6,8 +6,8 @@ import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
 import java.util.Calendar;
 
+import dev.pavatus.lib.container.impl.BlockEntityContainer;
 import dev.pavatus.planet.core.PlanetBlocks;
-import io.wispforest.owo.registration.reflect.BlockEntityRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import net.minecraft.block.entity.BlockEntityType;
@@ -18,7 +18,7 @@ import loqor.ait.core.blocks.PowerConverterBlock;
 import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
-public class AITBlockEntityTypes implements BlockEntityRegistryContainer {
+public class AITBlockEntityTypes implements BlockEntityContainer {
     public static BlockEntityType<SnowGlobeBlockEntity> SNOW_GLOBE_BLOCK_ENTITY_TYPE;
 
     public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder

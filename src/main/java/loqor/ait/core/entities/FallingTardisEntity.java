@@ -35,7 +35,6 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.TardisEvents;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -84,9 +83,6 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);
-
-        tardis.flight().falling().set(true);
-        TardisEvents.START_FALLING.invoker().onStartFall(tardis);
     }
 
     @Override
@@ -157,7 +153,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
         boolean isCrashing = travel.isCrashing();
 
         TardisUtil.getPlayersInsideInterior(tardis.asServer()).forEach(player -> {
-            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
+            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_CRASH;
             float volume = isCrashing ? 1.0F : 3.0F;
 
             player.playSound(sound, volume, 1.0f);
@@ -187,7 +183,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
             this.state = this.state.with(Properties.WATERLOGGED, true);
 
         if (block instanceof ExteriorBlock exterior)
-            exterior.onLanding(tardis, this.getWorld(), blockPos);
+            exterior.onLanding(tardis, (ServerWorld) this.getWorld(), blockPos);
 
         travel.placeExterior(false);
         this.discard();

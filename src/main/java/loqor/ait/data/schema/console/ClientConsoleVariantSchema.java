@@ -67,6 +67,14 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
         return ConsoleVariantSchema.DEFAULT_SONIC_ROTATION;
     }
 
+    public Vector3f handlesTranslations() {
+        return ConsoleVariantSchema.DEFAULT_HANDLES_POS;
+    }
+
+    public float[] handlesRotations() {
+        return ConsoleVariantSchema.DEFAULT_HANDLES_ROTATION;
+    }
+
     private static class Serializer
             implements
                 JsonSerializer<ClientConsoleVariantSchema>,

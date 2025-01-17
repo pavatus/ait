@@ -1,138 +1,138 @@
 package dev.pavatus.multidim;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.stream.Stream;
 
-import com.google.gson.*;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.JsonOps;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import org.apache.commons.io.FilenameUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import dev.pavatus.multidim.api.MultiDimServerWorld;
+import dev.pavatus.multidim.api.WorldBlueprint;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
+
+import loqor.ait.core.events.ServerCrashEvent;
+import loqor.ait.core.events.WorldSaveEvent;
 
 public class MultiDimFileManager {
-    private final Set<RegistryKey<World>> toWrite = new ReferenceOpenHashSet<>();
-    private final Gson gson = new Gson();
+
+    private static final Gson gson = new Gson();
 
     private static Path getRootSavePath(Path root) {
-        return root.resolve(".multidim");
+        return root.resolve(".multidim2");
     }
 
     public static Path getRootSavePath(MinecraftServer server) {
-        return MultiDimFileManager.getRootSavePath(server.getSavePath(WorldSavePath.ROOT));
+        return getRootSavePath(server.getSavePath(WorldSavePath.ROOT));
     }
+
     private static Path getSavePath(MinecraftServer server, Identifier id) {
         return getRootSavePath(server).resolve(id.getNamespace()).resolve(id.getPath() + ".json");
     }
 
-    public void add(ServerWorld world) {
-        this.add(world.getRegistryKey());
-    }
-    public void add(RegistryKey<World> world) {
-        this.toWrite.add(world);
+    public static void init() {
+        ServerCrashEvent.EVENT.register((server, report) -> {
+            for (ServerWorld world : server.getWorlds()) {
+                writeIfNeeded(server, world);
+            }
+        });
+
+        WorldSaveEvent.EVENT.register(world -> writeIfNeeded(world.getServer(), world));
+        ServerLifecycleEvents.SERVER_STARTED.register(MultiDimFileManager::readAll);
     }
 
-    public void write(MinecraftServer server) {
-        for (RegistryKey<World> key : this.toWrite) {
-            this.write(server, key);
-        }
-        this.toWrite.clear();
+    private static void writeIfNeeded(MinecraftServer server, ServerWorld world) {
+        if (world instanceof MultiDimServerWorld msw && msw.getBlueprint().persistent())
+            write(server, msw);
     }
-    private void write(MinecraftServer server, RegistryKey<World> key) {
-        // basically immersive portals code lol
-        ServerWorld world = server.getWorld(key);
-        if (world == null) return;
 
-        DimensionOptions options = new DimensionOptions(world.getDimensionEntry(), world.getChunkManager().getChunkGenerator());
-        File file = getSavePath(server, key.getValue()).toFile();
+    private static void write(MinecraftServer server, MultiDimServerWorld world) {
+        RegistryKey<World> key = world.getRegistryKey();
+        Path file = getSavePath(server, key.getValue());
 
         try {
-            if (!file.exists()) {
-                if (!file.getParentFile().exists()) {
-                    file.getParentFile().mkdirs();
-                }
-                file.createNewFile();
+            if (!Files.exists(file)) {
+                Files.createDirectories(file.getParent());
+                Files.createFile(file);
             }
 
-            try (FileWriter writer = new FileWriter(file)) {
-                RegistryOps<JsonElement> ops = RegistryOps.of(JsonOps.INSTANCE, server.getRegistryManager());
-                JsonElement result = DimensionOptions.CODEC.encode(options, ops, new JsonObject()).get().left().orElse(null);
-                if (result == null) {
-                    MultiDim.LOGGER.warn("Couldn't encode world file! {}", key.getValue());
-                    return;
-                }
+            JsonObject root = new JsonObject();
+            root.addProperty("blueprint", world.getBlueprint().id().toString());
 
-                this.gson.toJson(result, writer);
-            }
+            Files.writeString(file, gson.toJson(root));
         } catch (IOException e) {
-            MultiDim.LOGGER.warn("Couldn't create world file! {}", key.getValue(), e);
+            MultiDimMod.LOGGER.warn("Couldn't create world file! {}", key.getValue(), e);
         }
     }
 
-    public HashMap<RegistryKey<World>, DimensionOptions> read(MinecraftServer server) {
-        HashMap<RegistryKey<World>, DimensionOptions> map = new HashMap<>();
-
-        if (server == null || !server.isRunning()) return map;
-
-        Path root = getRootSavePath(server);
-        if (!Files.exists(root)) return map;
-
-        File[] files = root.toFile().listFiles();
-        if (files == null) return map;
-
-        for (File namespace : files) {
-            if (!namespace.isDirectory()) continue;
-
-            for (File file : namespace.listFiles()) {
-                Identifier id = new Identifier(namespace.getName(), FilenameUtils.getBaseName(file.getName()));
-
-                Pair<RegistryKey<World>, DimensionOptions> result = this.read(server, id);
-                if (result == null) continue;
-                map.put(result.getFirst(), result.getSecond());
-                this.toWrite.add(result.getFirst());
-            }
-        }
-
-        return map;
-    }
-    private Pair<RegistryKey<World>, DimensionOptions> read(MinecraftServer server, Identifier id) {
-        File file = getSavePath(server, id).toFile();
-
-        RegistryOps<JsonElement> ops = RegistryOps.of(JsonOps.INSTANCE, server.getRegistryManager());
+    private static Saved read(MinecraftServer server, Identifier id) {
+        Path file = getSavePath(server, id);
 
         try {
-            JsonElement element;
+            JsonObject element = JsonParser.parseString(Files.readString(file)).getAsJsonObject();
+            Identifier blueprint = Identifier.tryParse(element.get("blueprint").getAsString());
 
-            try(FileReader reader = new FileReader(file)) {
-                element = JsonParser.parseReader(reader);
-            }
-
-            Optional<Pair<DimensionOptions, JsonElement>> result = DimensionOptions.CODEC.decode(ops, element).get().left();
-            if (result.isEmpty()) {
-                MultiDim.LOGGER.warn("Couldn't decode world file! {}", id);
-                return null;
-            }
-
-            DimensionOptions options = result.get().getFirst();
-            return Pair.of(RegistryKey.of(RegistryKeys.WORLD, id), options);
+            return new Saved(blueprint, RegistryKey.of(RegistryKeys.WORLD, id));
         } catch (Throwable e) {
-            MultiDim.LOGGER.warn("Couldn't read world file! {}", id, e);
+            MultiDimMod.LOGGER.warn("Couldn't read world file! {}", id, e);
             return null;
         }
     }
 
-    private Gson getGson() {
-        return this.gson;
+    public static void readAll(MinecraftServer server) {
+        if (server == null || !server.isRunning())
+            return;
+
+        Path root = getRootSavePath(server);
+
+        if (!Files.exists(root))
+            return;
+
+        try (Stream<Path> stream = Files.list(root)) {
+            stream.forEach(namespace -> {
+                if (!Files.isDirectory(namespace))
+                    return;
+
+                readNamespace(server, namespace);
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private static void readNamespace(MinecraftServer server, Path namespace) {
+        MultiDim multidim = MultiDim.get(server);
+
+        try (Stream<Path> stream = Files.list(namespace)) {
+            stream.forEach(file -> {
+                String fileName = file.getFileName().toString();
+
+                Identifier id = new Identifier(
+                        namespace.getFileName().toString(),
+                        fileName.substring(0, fileName.length() - 5) // remove .json suffix
+                );
+
+                Saved saved = read(server, id);
+
+                if (saved == null)
+                    return;
+
+                WorldBlueprint blueprint = multidim.getBlueprint(saved.blueprint);
+                multidim.load(blueprint, saved.world);
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    record Saved(Identifier blueprint, RegistryKey<World> world) { }
 }

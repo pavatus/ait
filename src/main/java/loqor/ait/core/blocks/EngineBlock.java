@@ -70,7 +70,17 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (!(world.getBlockEntity(pos) instanceof EngineBlockEntity engine))
             return;
+
         if (!engine.isLinked()) return;
+
+        world.addParticle(ParticleTypes.SMOKE, true, pos.getX() + -0.9f, pos.getY() + 1.25,
+                pos.getZ() + 1.8f, 0, 0.06, 0);
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + -0.9f, pos.getY() + 1.25,
+                pos.getZ() + 1.8f, 0, 0.06, 0);
+        world.addParticle(ParticleTypes.FLAME, true, pos.getX() + -0.9f, pos.getY() + 1.25,
+                pos.getZ() + 1.8f, 0, 0.06, 0);
+        world.addParticle(ParticleTypes.SMALL_FLAME, true, pos.getX() + -0.9f, pos.getY() + 1.25,
+                pos.getZ() + 1.8f, 0, 0.06, 0);
 
         float durability = engine.tardis().get().subsystems().engine().durability();
 

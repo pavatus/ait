@@ -1,13 +1,21 @@
 package loqor.ait.core.blocks;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +29,7 @@ import loqor.ait.core.AITTags;
 import loqor.ait.core.engine.link.block.FluidLinkBlock;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
-public class PowerConverterBlock extends FluidLinkBlock  {
+public class PowerConverterBlock extends FluidLinkBlock {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
@@ -62,9 +70,9 @@ public class PowerConverterBlock extends FluidLinkBlock  {
             if (!(be.isPowered())) return ActionResult.FAIL;
             if (!stack.isIn(AITTags.Items.IS_TARDIS_FUEL)) return ActionResult.FAIL;
 
-            be.source().addLevel(10);
+            be.source().addLevel(125);
             stack.decrement(1);
-            world.playSound(null, pos, AITSounds.BWEEP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            world.playSound(null, pos, AITSounds.POWER_CONVERT, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
             return ActionResult.SUCCESS;
         }
@@ -85,6 +93,14 @@ public class PowerConverterBlock extends FluidLinkBlock  {
     public static class BlockEntity extends FluidLinkBlockEntity {
         public BlockEntity(BlockPos pos, BlockState state) {
             super(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE, pos, state);
+
         }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+
+        tooltip.add(Text.translatable("tooltip.ait.power_converter").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }

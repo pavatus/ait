@@ -2,17 +2,17 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -31,6 +31,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
@@ -40,8 +41,6 @@ import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
-import loqor.ait.core.util.schedule.Scheduler;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 
 public class ConsoleControlEntity extends LinkableDummyLivingEntity {
@@ -69,12 +68,17 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     private Control control;
 
     public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
+        super(entityType, world, false);
     }
 
     private ConsoleControlEntity(World world, Tardis tardis) {
         this(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
         this.link(tardis);
+    }
+
+    @Override
+    public boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source) {
+        return false;
     }
 
     public static ConsoleControlEntity create(World world, Tardis tardis) {
@@ -84,7 +88,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public void remove(RemovalReason reason) {
         AITMod.LOGGER.debug("Control entity discarded as {}", reason);
-        super.remove(reason);
+        this.setRemoved(reason);
     }
 
     @Override
@@ -115,7 +119,10 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+        TardisRef ref = this.asRef();
+
+        if (ref != null && ref.getId() != null)
+            nbt.putUuid("tardis", ref.getId());
 
         if (consoleBlockPos != null)
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
@@ -189,6 +196,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+
+        if (source.getAttacker() instanceof TntEntity tnt) {
+            return false;
+        }
+
         if (source.getAttacker() instanceof PlayerEntity player) {
             if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
@@ -347,7 +359,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
             this.dataTracker.set(ON_DELAY, true);
 
-            Scheduler.runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
+            Scheduler.get().runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
         }
 
         if (this.consoleBlockPos != null)
@@ -401,8 +413,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.consoleBlockPos != null) {
             Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
             if (this.control != null)
-                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", "
-                        + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY()
+                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + "f, "
+                        + this.getControlHeight() + "f), new Vector3f(" + centered.getX() + "f, " + centered.getY()
                         + "f, " + centered.getZ() + "f)),"));
         }
     }

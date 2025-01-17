@@ -7,11 +7,9 @@ import dev.pavatus.gun.client.ScopeOverlay;
 import dev.pavatus.gun.client.render.StaserBoltEntityRenderer;
 import dev.pavatus.gun.core.entity.GunEntityTypes;
 import dev.pavatus.gun.core.item.GunItems;
+import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
-import dev.pavatus.module.ModuleRegistry;
-import io.wispforest.owo.itemgroup.Icon;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
-import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
@@ -21,6 +19,7 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -37,10 +36,8 @@ public class GunModule extends Module {
 
     @Override
     public void init() {
-        // getItemGroup().initialize();
-
-        FieldRegistrationHandler.register(GunItems.class, AITMod.MOD_ID, false);
-        FieldRegistrationHandler.register(GunEntityTypes.class, AITMod.MOD_ID, false);
+        RegistryContainer.register(GunItems.class, AITMod.MOD_ID);
+        RegistryContainer.register(GunEntityTypes.class, AITMod.MOD_ID);
     }
 
     @Override
@@ -78,8 +75,8 @@ public class GunModule extends Module {
     }
 
     @Override
-    protected OwoItemGroup.Builder buildItemGroup() {
-        return OwoItemGroup.builder(new Identifier(AITMod.MOD_ID, id().getPath()), () -> Icon.of(GunItems.CULT_STASER));
+    protected AItemGroup.Builder buildItemGroup() {
+        return AItemGroup.builder(id()).icon(() -> new ItemStack(GunItems.CULT_STASER));
     }
 
     @Override
@@ -129,8 +126,5 @@ public class GunModule extends Module {
 
     public static GunModule instance() {
         return INSTANCE;
-    }
-    public static boolean isLoaded() {
-        return ModuleRegistry.instance().get(ID) != null;
     }
 }

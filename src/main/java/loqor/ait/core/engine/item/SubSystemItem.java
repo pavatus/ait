@@ -30,7 +30,7 @@ public class SubSystemItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        tooltip.add(Text.literal(this.id().name()).formatted(Formatting.YELLOW));
+        tooltip.add(Text.literal(this.id().name().replace("_", " ")).formatted(Formatting.YELLOW));
         tooltip.add(Text.translatable("tooltip.ait.subsystem_item").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 }

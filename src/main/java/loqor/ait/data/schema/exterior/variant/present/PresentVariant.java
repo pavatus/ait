@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.present;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -18,7 +17,7 @@ public abstract class PresentVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/present/present_";
 
     protected PresentVariant(String name) {
-        super(PresentCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/present/" + name),
+        super(PresentCategory.REFERENCE, AITMod.id("exterior/present/" + name),
                 new Loyalty(Loyalty.Type.NEUTRAL));
     }
 
@@ -34,7 +33,7 @@ public abstract class PresentVariant extends ExteriorVariantSchema {
 
     @Override
     public boolean hasPortals() {
-        return false;
+        return true;
     }
 
     @Override
@@ -50,5 +49,15 @@ public abstract class PresentVariant extends ExteriorVariantSchema {
             case 13, 14, 15 -> pos.add(-0.349f, 0, -0.349f); // NORTH WEST n n
             default -> pos;
         };
+    }
+
+    @Override
+    public double portalHeight() {
+        return 2d;
+    }
+
+    @Override
+    public double portalWidth() {
+        return 1.25d;
     }
 }

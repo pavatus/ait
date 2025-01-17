@@ -34,9 +34,9 @@
 		"Saturn & Maketendo (wiki)"
 	],
 	"contact": {
-		"homepage": "https://loqor.dev",
-		"sources": "https://github.com/Loqor/ait/",
-		"issues": "https://github.com/Loqor/ait/issues"
+		"homepage": "https://pavatus.github.io",
+		"sources": "https://github.com/pavatus/ait/",
+		"issues": "https://github.com/pavatus/ait/issues"
 	},
 	"license": "Apache-2.0",
 	"icon": "assets/ait/icon.png",
@@ -44,7 +44,7 @@
 	"entrypoints": {
 		"main": [
 			"loqor.ait.AITMod",
-			"dev.pavatus.multidim.MultiDim"
+          "dev.pavatus.multidim.MultiDimMod"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
@@ -55,23 +55,27 @@
 		],
 		"ait-main": [
 			"loqor.ait.compat.Compat"
+		],
+		"modmenu": [
+			"dev.pavatus.config.AITModMenu"
 		]
 	},
 	"mixins": [
 		"ait.mixins.json",
 		"gaslighter.mixins.json",
 		"multidim.mixins.json",
-		"planet.mixins.json"
+		"planet.mixins.json",
+		"pavatuslib.mixins.json"
 	],
+	"accessWidener": "ait.accesswidener",
 	"depends": {
 		"fabricloader": ">=${loader_version}",
 		"minecraft": "${minecraft_version}",
 		"java": ">=17",
 		"fabric-api": "*",
-		"owo-lib": "*"
+		"cloth-config": "*"
 	},
 	"suggests": {
-		"immersiveportals": "*",
 		"k9-mod": "*"
 	},
 	"custom": {

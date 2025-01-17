@@ -1,6 +1,5 @@
 package loqor.ait.client.renderers;
 
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,6 +14,7 @@ import net.minecraft.world.BlockRenderView;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class MultiBlockStructureRenderer {
+
     private final MinecraftClient client;
     private final Profiler profiler;
 
@@ -22,6 +22,7 @@ public class MultiBlockStructureRenderer {
         this.client = client;
         this.profiler = client.getProfiler();
     }
+
     private MultiBlockStructureRenderer() {
         this(MinecraftClient.getInstance());
     }
@@ -46,7 +47,7 @@ public class MultiBlockStructureRenderer {
         BlockPos pos = centre.add(offset.offset());
 
         BlockPos diff = pos.subtract(centre);
-        BlockState state = this.getBlock(offset.block(), 0).getDefaultState();
+        BlockState state = this.getBlock(offset.block()).getDefaultState();
         BlockEntity entity = world.getBlockEntity(offset.offset());
 
         matrices.push();
@@ -62,17 +63,20 @@ public class MultiBlockStructureRenderer {
             renderBlockEntities(entity, matrices, provider);
         matrices.pop();
     }
+
     private void renderCulledBlocks(BlockState state, BlockPos pos, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider) {
         client.getBlockRenderManager().getModelRenderer().render(view, client.getBlockRenderManager().getModel(state), state, pos, matrices, provider.getBuffer(RenderLayers.getBlockLayer(state)), true, client.world.random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
     }
+
     private void renderBlockEntities(BlockEntity entity,  MatrixStack matrices, VertexConsumerProvider provider) {
         client.getBlockEntityRenderDispatcher().render(entity, MinecraftClient.getInstance().getTickDelta(), matrices, provider);
     }
+
     public void renderOffset(MultiBlockStructure.BlockOffset offset, BlockPos centre, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider, boolean holographic) {
         BlockPos pos = centre.add(offset.offset());
 
         BlockPos diff = pos.subtract(centre);
-        BlockState state = this.getBlock(offset.block(), client.getServer().getTicks()).getDefaultState();
+        BlockState state = this.getBlock(offset.block()).getDefaultState();
 
         matrices.push();
         matrices.translate(diff.getX(), diff.getY(), diff.getZ());
@@ -85,10 +89,12 @@ public class MultiBlockStructureRenderer {
         renderBlock(state, pos, view, matrices, provider);
         matrices.pop();
     }
+
     private void renderBlock(BlockState state, BlockPos pos, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider) {
         client.getBlockRenderManager().getModelRenderer().render(view, client.getBlockRenderManager().getModel(state), state, pos, matrices, provider.getBuffer(RenderLayers.getBlockLayer(state)), false, client.world.random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
     }
-    private Block getBlock(MultiBlockStructure.AllowedBlocks block, int ticks) {
+
+    private Block getBlock(MultiBlockStructure.AllowedBlocks block) {
         return (Block) block.toArray()[0];
     }
 

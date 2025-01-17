@@ -1,6 +1,5 @@
 package loqor.ait.core.engine.impl;
 
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
@@ -36,7 +35,7 @@ public class DematCircuit extends DurableSubSystem implements StructureHolder {
     @Override
     public MultiBlockStructure getStructure() {
         if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/demat"));
+            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/demat"));
         }
 
         return STRUCTURE;

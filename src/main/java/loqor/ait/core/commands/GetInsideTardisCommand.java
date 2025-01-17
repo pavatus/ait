@@ -11,9 +11,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.util.TextUtil;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class GetInsideTardisCommand {
 
@@ -25,9 +24,10 @@ public class GetInsideTardisCommand {
 
     private static int runCommand(CommandContext<ServerCommandSource> context) {
         Entity source = context.getSource().getEntity();
-        Tardis tardis = TardisDimension.get(source.getWorld()).orElse(null);
 
-        source.sendMessage(Text.translatable("message.ait.id").append(TextUtil.forTardis(tardis)));
+        if (source.getWorld() instanceof TardisServerWorld tardisWorld)
+            source.sendMessage(Text.translatable("message.ait.id").append(TextUtil.forTardis(tardisWorld.getTardis())));
+
         return Command.SINGLE_SUCCESS;
     }
 }

@@ -3,7 +3,7 @@ package loqor.ait.api.link;
 import java.util.Optional;
 import java.util.UUID;
 
-import blue.endless.jankson.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

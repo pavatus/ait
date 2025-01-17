@@ -5,7 +5,6 @@ import dev.pavatus.register.datapack.SimpleDatapackRegistry;
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
@@ -13,7 +12,7 @@ import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 
 public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {
     public static final LootFunctionType BLUEPRINT_TYPE = Registry.register(Registries.LOOT_FUNCTION_TYPE,
-            new Identifier(AITMod.MOD_ID, "set_blueprint"),
+            AITMod.id("set_blueprint"),
             new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
 
     private static final BlueprintRegistry instance = new BlueprintRegistry();

@@ -5,12 +5,10 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.steam.SteamAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class SteamConsoleModel extends ConsoleModel {
@@ -1519,8 +1517,8 @@ public class SteamConsoleModel extends ConsoleModel {
 
         ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5")
                 .getChild("bone21");
-        shields.roll = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
-                ? tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get() ? 0.0F : 0.4363F
+        shields.roll = tardis.shields().shielded().get()
+                ? tardis.shields().visuallyShielded().get() ? 0.0F : 0.4363F
                 : -0.5672F;
 
         ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever")

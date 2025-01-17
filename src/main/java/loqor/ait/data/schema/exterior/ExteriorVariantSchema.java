@@ -150,7 +150,7 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = new Identifier(AITMod.MOD_ID, "capsule_default");
+                id = AITMod.id("capsule_default");
             }
 
             return ExteriorVariantRegistry.getInstance().get(id);

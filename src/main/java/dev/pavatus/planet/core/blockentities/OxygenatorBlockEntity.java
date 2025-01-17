@@ -26,7 +26,7 @@ public class OxygenatorBlockEntity extends BlockEntity {
         if (planet.hasOxygen()) return;
         world.getOtherEntities(null, new Box(blockPos).expand(20), entity -> entity instanceof LivingEntity).forEach(entity -> {
             if  (entity instanceof LivingEntity livingEntity) {
-                livingEntity.addStatusEffect(new StatusEffectInstance(AITStatusEffects.OXYGENATED, 20, 1));
+                livingEntity.addStatusEffect(new StatusEffectInstance(AITStatusEffects.OXYGENATED, 20, 1, true, false));
             }
         });
     }

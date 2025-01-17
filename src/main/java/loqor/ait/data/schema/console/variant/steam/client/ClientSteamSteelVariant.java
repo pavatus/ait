@@ -44,4 +44,13 @@ public class ClientSteamSteelVariant extends ClientConsoleVariantSchema {
     public float[] sonicItemRotations() {
         return new float[]{30f, 120f};
     }
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(0.5f, 1.25f, 0.5f);
+    }
+
+    @Override
+    public float[] handlesRotations() {
+        return new float[]{210f, 120f};
+    }
 }

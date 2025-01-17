@@ -27,7 +27,7 @@ import loqor.ait.core.util.ServerLifecycleHooks;
 
 public abstract class ExteriorAnimation {
 
-    public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
+    public static final Identifier UPDATE = AITMod.id("update_setup_anim");
     public static final double MAX_CLOAK_DISTANCE = 5d;
 
     protected ExteriorBlockEntity exterior;

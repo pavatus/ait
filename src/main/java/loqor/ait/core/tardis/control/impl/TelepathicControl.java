@@ -1,10 +1,8 @@
 package loqor.ait.core.tardis.control.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -20,6 +18,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -28,11 +27,8 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.api.link.LinkableItem;
-import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.item.HypercubeItem;
-import loqor.ait.core.item.KeyItem;
-import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.*;
 import loqor.ait.core.likes.ItemOpinion;
 import loqor.ait.core.likes.ItemOpinionRegistry;
 import loqor.ait.core.lock.LockedDimensionRegistry;
@@ -72,18 +68,14 @@ public class TelepathicControl extends Control {
             return false;
         }
 
-        if (AITItems.isUnlockedOnThisDay(Calendar.DECEMBER, 31) && (type == Blocks.SNOW.asItem() || type == Blocks.SNOW_BLOCK.asItem() || type == Blocks.POWDER_SNOW.asItem())) {
-            //TODO DUZO PLEASE DO THIS - locate a snow biome nearby!
-            return true;
-        }
-
         if (type == Items.STONE) {
             tardis.siege().texture().set(SiegeHandler.DEFAULT_TEXTURRE);
             return false;
         }
 
+
         if (type instanceof LinkableItem linker) {
-            if (linker instanceof SonicItem)
+            if (linker instanceof SonicItem2 || linker instanceof HandlesItem)
                 return false;
 
             linker.link(held, tardis);
@@ -200,6 +192,11 @@ public class TelepathicControl extends Control {
     @Override
     public long getDelayLength() {
         return 5 * 1000L;
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.TELEPATHIC_CIRCUITS;
     }
 
     public static void locateWithChunkGenAsync(ServerPlayerEntity player, Tardis tardis,

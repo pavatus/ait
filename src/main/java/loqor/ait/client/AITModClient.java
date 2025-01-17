@@ -6,14 +6,19 @@ import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 import java.util.UUID;
 
+import dev.drtheo.scheduler.ClientScheduler;
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,8 +34,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import loqor.ait.api.ClientWorldEvents;
+import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.client.data.ClientLandingManager;
+import loqor.ait.client.overlays.FabricatorOverlay;
+import loqor.ait.client.overlays.SonicOverlay;
 import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.client.renderers.TardisStar;
@@ -43,6 +50,7 @@ import loqor.ait.client.renderers.decoration.SnowGlobeRenderer;
 import loqor.ait.client.renderers.doors.DoorRenderer;
 import loqor.ait.client.renderers.entities.ControlEntityRenderer;
 import loqor.ait.client.renderers.entities.FallingTardisRenderer;
+import loqor.ait.client.renderers.entities.FlightTardisRenderer;
 import loqor.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer;
 import loqor.ait.client.renderers.exteriors.ExteriorRenderer;
 import loqor.ait.client.renderers.machines.*;
@@ -51,7 +59,6 @@ import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.screens.BlueprintFabricatorScreen;
 import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
-import loqor.ait.client.screens.interior.OwOInteriorSelectScreen;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.client.util.ClientTardisUtil;
@@ -61,10 +68,8 @@ import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.item.*;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
@@ -76,7 +81,7 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        Scheduler.Client.init();
+        ClientScheduler.init();
 
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
@@ -94,15 +99,18 @@ public class AITModClient implements ClientModInitializer {
         siegeItemPredicate();
         adventItemPredicates();
 
-        // TODO make skybox renderer for mars so we dont have to render the moon
-        // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
-        // DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MOON.getValue(), new MoonSkyProperties());
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            ConfigCommand.register(dispatcher);
+        });
 
         AITKeyBinds.init();
 
         HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
 
         ClientLandingManager.init();
+
+        HudRenderCallback.EVENT.register(new SonicOverlay());
+        HudRenderCallback.EVENT.register(new FabricatorOverlay());
 
         /*
          * ClientVortexDataHandler.init(); WorldRenderEvents.END.register(context -> {
@@ -118,9 +126,6 @@ public class AITModClient implements ClientModInitializer {
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
-            if (!ClientTardisUtil.isPlayerInATardis())
-                return;
-
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
             if (tardis == null)
@@ -170,7 +175,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_TYPE,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
+                    if (client.world == null)
                         return;
 
                     String id = buf.readString();
@@ -183,7 +188,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ConsoleGeneratorBlockEntity.SYNC_VARIANT,
                 (client, handler, buf, responseSender) -> {
-                    if (client.world == null || !TardisDimension.isTardisDimension(client.world))
+                    if (client.world == null)
                         return;
 
                     Identifier id = Identifier.tryParse(buf.readString());
@@ -230,8 +235,6 @@ public class AITModClient implements ClientModInitializer {
             client.getSoundManager().stopSounds(tardis.stats().getTravelEffects().get(TravelHandlerBase.State.DEMAT).soundId(), SoundCategory.BLOCKS);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(MOD_ID, "change_world"), (client, handler, buf, response) -> ClientWorldEvents.CHANGE_WORLD.invoker().onChange());
-
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
     }
@@ -251,7 +254,6 @@ public class AITModClient implements ClientModInitializer {
         return switch (id) {
             case 0 -> new MonitorScreen(tardis, console);
             case 1 -> new BlueprintFabricatorScreen();
-            case 2 -> new OwOInteriorSelectScreen(tardis.getUuid(), new MonitorScreen(tardis, console));
             default -> null;
         };
     }
@@ -281,16 +283,12 @@ public class AITModClient implements ClientModInitializer {
 
         CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"),
                 (model, stack, world, entity, seed) -> {
-                    SonicItem.Mode mode = SonicItem.findMode(stack);
                     SonicSchema.Models models = SonicItem.findSchema(stack).models();
 
-                    return switch (mode) {
-                        case INACTIVE -> models.inactive();
-                        case INTERACTION -> models.interaction();
-                        case OVERLOAD -> models.overload();
-                        case SCANNING -> models.scanning();
-                        case TARDIS -> models.tardis();
-                    };
+                    if (entity == null || !(entity.getActiveItem() == stack && entity.isUsingItem()))
+                        return models.inactive();
+
+                    return SonicItem2.mode(stack).model(models);
                 });
     }
 
@@ -421,6 +419,7 @@ public class AITModClient implements ClientModInitializer {
     public static void entityRenderRegister() {
         EntityRendererRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE, ControlEntityRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
+        EntityRendererRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE, FlightTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
             EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);

@@ -158,7 +158,7 @@ public class EngineSystem extends DurableSubSystem {
                     (phaser) -> {
                         Tardis tardis1 = system.tardis();
                         TravelHandler travel = tardis1.travel();
-                        TravelUtil.randomPos(tardis1, 10, 1000, cached -> {
+                        TravelUtil.randomPos(tardis1, 10, 100, cached -> {
                             travel.forceDestination(cached);
                             if (travel.isLanded()) {
                                 system.tardis().subsystems().demat().removeDurability(10);

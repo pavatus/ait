@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import dev.pavatus.register.unlockable.Unlockable;
 
-import net.minecraft.world.World;
-
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.ClientTardis;
@@ -41,6 +39,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         TardisComponent.init(desktop, this, ctx);
         TardisComponent.init(exterior, this, ctx);
         TardisComponent.init(handlers, this, ctx);
+
+        TardisComponent.postInit(desktop, ctx);
+        TardisComponent.postInit(exterior, ctx);
+        TardisComponent.postInit(handlers, ctx);
     }
 
     public static void init(Tardis tardis, TardisComponent.InitContext ctx) {
@@ -74,9 +76,8 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public SonicHandler sonic() {
         return this.handler(TardisComponent.Id.SONIC);
     }
-
-    public boolean getLockedTardis() {
-        return this.door().locked();
+    public ButlerHandler butler() {
+        return this.handler(TardisComponent.Id.BUTLER);
     }
 
     public TravelHandler travel() {
@@ -177,11 +178,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         return unlockable.freebie() || this.stats().isUnlocked(unlockable);
     }
 
-    // for now this just checks that the exterior is the coral growth, which is bad.
-    // but its fine
-    // for
-    // first beta
-    // this should stop basic features of the tardis from happening
+    // FIXME: this needs to be changed.
     public boolean isGrowth() {
         return hasGrowthExterior() || hasGrowthDesktop();
     }
@@ -246,5 +243,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         return this.handler(TardisComponent.Id.SUBSYSTEM);
     }
 
-    public abstract World getInteriorWorld();
+    public ShieldHandler shields() {
+        return this.handler(TardisComponent.Id.SHIELDS);
+    }
 }

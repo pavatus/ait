@@ -14,7 +14,7 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 public class ClientDoomVariant extends ClientExteriorVariantSchema {
 
     public ClientDoomVariant() {
-        super(new Identifier(AITMod.MOD_ID, "exterior/doom"));
+        super(AITMod.id("exterior/doom"));
     }
 
     @Override

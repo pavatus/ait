@@ -71,7 +71,7 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
             SonicSchema.Models models = schema.models();
             models.load(consumer);
 
-            LOGGER.info("Loading sonic '" + schema.id() + "' with models: " + models);
+            LOGGER.debug("Loading sonic '{}' with models: {}", schema.id(), models);
         }
     }
 }

@@ -75,10 +75,10 @@ public class FluidLinkBlockEntity extends InteriorLinkableBlockEntity implements
         }
     }
     protected SoundData getLosePowerSound() {
-        return new SoundData(AITSounds.HANDBRAKE_DOWN, SoundCategory.BLOCKS, 0.1F, 0.75F);
+        return new SoundData(AITSounds.SLOT_IN, SoundCategory.BLOCKS, 0.1F, 0.75F);
     }
     protected SoundData getGainPowerSound() {
-        return new SoundData(AITSounds.SONIC_SWITCH, SoundCategory.BLOCKS, 0.1F, 0.75F);
+        return new SoundData(AITSounds.FLUID_LINK_CONNECT, SoundCategory.BLOCKS, 0.1F, 0.75F);
     }
 
     public boolean isPowered() {

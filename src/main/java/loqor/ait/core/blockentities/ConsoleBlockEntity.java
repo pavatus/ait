@@ -32,10 +32,10 @@ import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
 import loqor.ait.core.tardis.control.sequences.SequenceHandler;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
@@ -59,8 +59,6 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public void onLinked() {
-        if (this.getWorld().getRegistryKey().equals(World.OVERWORLD)) return;
-
         if (this.tardis().isEmpty())
             return;
 
@@ -185,7 +183,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         if (!(this.world instanceof ServerWorld serverWorld))
             return;
 
-        if (!TardisDimension.isTardisDimension((ServerWorld) this.getWorld()))
+        if (!TardisServerWorld.isTardisDimension((ServerWorld) this.getWorld()))
             return;
 
         this.killControls();
@@ -230,7 +228,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
             return;
         }
 
-        if (!TardisDimension.isTardisDimension((ServerWorld) this.getWorld()))
+        if (!TardisServerWorld.isTardisDimension((ServerWorld) this.getWorld()))
             this.markRemoved();
 
         if (this.tardis().isEmpty())

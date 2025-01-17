@@ -32,7 +32,7 @@ public class PowerControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
+        return AITSounds.POWER_FLICK;
     }
 
     @Override

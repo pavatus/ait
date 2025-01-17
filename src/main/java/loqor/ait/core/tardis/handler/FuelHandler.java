@@ -1,9 +1,13 @@
 package loqor.ait.core.tardis.handler;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -16,15 +20,17 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.engine.impl.EmergencyPower;
 import loqor.ait.core.engine.impl.EngineSystem;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.doubl3.DoubleProperty;
-import loqor.ait.data.properties.doubl3.DoubleValue;
+import loqor.ait.data.properties.dbl.DoubleProperty;
+import loqor.ait.data.properties.dbl.DoubleValue;
 
 public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, TardisTickable {
     public static final double TARDIS_MAX_FUEL = 50000;
@@ -39,6 +45,48 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
     static {
         TardisEvents.DEMAT.register(tardis -> tardis.fuel().refueling().get() ? TardisEvents.Interaction.FAIL : TardisEvents.Interaction.PASS);
+
+        TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
+            if (tardis.fuel().hasPower() || !tardis.door().locked() || player == null)
+                return DoorHandler.InteractionResult.CONTINUE;
+
+            ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+
+            // if holding a key and in siege mode and have an empty interior, disable siege
+            // mode !!
+            if (stack.getItem() instanceof KeyItem && tardis.siege().isActive() && KeyItem.isOf(world, stack, tardis)
+                    && TardisUtil.isInteriorEmpty(tardis.asServer())) {
+                player.swingHand(Hand.MAIN_HAND);
+                tardis.siege().setActive(false);
+
+                tardis.door().interactLock(false, player, true);
+            }
+
+            // if holding an axe then break open the door RAHHH
+            if (stack.getItem() instanceof AxeItem) {
+                if (tardis.siege().isActive())
+                    return DoorHandler.InteractionResult.CANCEL;
+
+                player.swingHand(Hand.MAIN_HAND);
+                stack.setDamage(stack.getDamage() - 1);
+
+                if (pos != null)
+                    world.playSound(null, pos, SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS, 1f,
+                            1f);
+
+                interior.playSound(null, tardis.getDesktop().getDoorPos().getPos(),
+                        SoundEvents.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, SoundCategory.BLOCKS);
+
+                // forcefully unlock the tardis
+                tardis.door().interactLock(false, player, true);
+                tardis.door().openDoors();
+
+                TardisEvents.FORCED_ENTRY.invoker().onForcedEntry(tardis, player);
+                return DoorHandler.InteractionResult.SUCCESS;
+            }
+
+            return DoorHandler.InteractionResult.KNOCK;
+        });
     }
 
     public FuelHandler() {
@@ -129,7 +177,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
             double toAdd = 7;
 
-            if (manager.getArtron(chunk) > 0 && !TardisDimension.isTardisDimension(world)) {
+            if (manager.getArtron(chunk) > 0 && !TardisServerWorld.isTardisDimension(world)) {
                 manager.removeFuel(chunk, 2);
                 toAdd += 2;
             }

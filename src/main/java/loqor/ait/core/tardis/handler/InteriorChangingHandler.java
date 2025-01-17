@@ -3,6 +3,8 @@ package loqor.ait.core.tardis.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.drtheo.blockqueue.data.TimeUnit;
+import dev.drtheo.scheduler.Scheduler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Blocks;
@@ -33,10 +35,9 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.DirectedGlobalPos;
-import loqor.ait.data.TimeUnit;
+import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -47,7 +48,7 @@ import loqor.ait.registry.impl.DesktopRegistry;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
 
-    public static final Identifier CHANGE_DESKTOP = new Identifier(AITMod.MOD_ID, "change_desktop");
+    public static final Identifier CHANGE_DESKTOP = AITMod.id("change_desktop");
 
     private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "queued_interior", new Identifier(""));
     private static final BoolProperty QUEUED = new BoolProperty("queued");
@@ -56,6 +57,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     private final Value<Identifier> queuedInterior = QUEUED_INTERIOR_PROPERTY.create(this);
     private final BoolValue queued = QUEUED.create(this);
     private final BoolValue regenerating = REGENERATING.create(this);
+
+    @Exclude
     private List<ItemStack> restorationChestContents;
 
     public InteriorChangingHandler() {
@@ -72,7 +75,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     static {
         TardisEvents.DEMAT.register(tardis -> {
             if (tardis.isGrowth()
-                    || tardis.interiorChangingHandler().isQueued())
+                    || tardis.interiorChangingHandler().queued().get())
                 return TardisEvents.Interaction.FAIL;
 
             return TardisEvents.Interaction.PASS;
@@ -103,8 +106,12 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                 })));
     }
 
-    public boolean isQueued() {
-        return queued.get();
+    public BoolValue queued() {
+        return queued;
+    }
+
+    public BoolValue regenerating() {
+        return regenerating;
     }
 
     public TardisDesktopSchema getQueuedInterior() {
@@ -135,48 +142,42 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         this.queuedInterior.set(schema.id());
         this.queued.set(true);
 
-        tardis.alarm().enabled().set(true);
-        tardis.getDesktop().getConsolePos().clear();
-
-        if (!tardis.hasGrowthDesktop())
-            tardis.removeFuel(5000 * tardis.travel().instability());
-
-        TravelHandler travel = this.tardis().travel();
+        TravelHandler travel = this.tardis.travel();
 
         if (travel.getState() == TravelHandler.State.FLIGHT && !travel.isCrashing())
             travel.crash();
 
         restorationChestContents = new ArrayList<>();
+
         for (SubSystem system : tardis.subsystems().getEnabled()) {
-            if (system == null) continue;
+            if (system == null)
+                continue;
+
             restorationChestContents.addAll(system.toStacks());
             AITMod.LOGGER.debug("Storing Subsystem, {} ({}) => {}", system.getId(), system.isEnabled(), system.toStacks());
         }
     }
 
-    private void complete() {
-        tardis.getDesktop().changeInterior(this.getQueuedInterior(), true);
+    private void changeInterior() {
+        tardis.getDesktop().changeInterior(this.getQueuedInterior(), true, true)
+                .thenRun(() -> {
+                    this.queued.set(false);
+                    this.regenerating.set(false);
 
-        this.queued.set(false);
-        this.regenerating.set(false);
+                    tardis.engine().unlinkEngine();
 
-        tardis.alarm().enabled().set(false);
+                    if (tardis.hasGrowthExterior()) {
+                        TravelHandler travel = tardis.travel();
 
-        boolean previouslyLocked = tardis.door().previouslyLocked().get();
-        DoorHandler.lockTardis(previouslyLocked, tardis, null, false);
+                        travel.autopilot(true);
+                        travel.forceDemat();
+                    } else {
+                        tardis.removeFuel(5000 * tardis.travel().instability());
+                    }
 
-        tardis.engine().unlinkEngine();
-
-        if (tardis.hasGrowthExterior()) {
-            TravelHandler travel = tardis.travel();
-
-            travel.autopilot(true);
-            travel.forceDemat();
-        }
-
-        TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
-
-        createChestAtInteriorDoor(restorationChestContents);
+                    TardisUtil.sendMessageToLinked(tardis.asServer(), Text.translatable("tardis.message.interiorchange.success", tardis.stats().getName(), tardis.getDesktop().getSchema().name()));
+                    createChestAtInteriorDoor(restorationChestContents);
+                }).execute();
     }
 
     private void warnPlayers() {
@@ -190,32 +191,33 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     private void createChestAtInteriorDoor(List<ItemStack> contents) {
         if (contents == null || contents.isEmpty()) {
-            AITMod.LOGGER.debug("No contents to save in recovery chest for {}", this.tardis());
+            AITMod.LOGGER.debug("No contents to save in recovery chest for {}", this.tardis);
             return;
         }
 
-        DirectedBlockPos door = this.tardis.getDesktop().doorPos();
+        DirectedBlockPos door = this.tardis.getDesktop().getDoorPos();
         DirectedGlobalPos.Cached safe = WorldUtil.locateSafe(DirectedGlobalPos.Cached.create(this.tardis.asServer().getInteriorWorld(), door.getPos().offset(door.toMinecraftDirection(), 2), door.getRotation()), TravelHandlerBase.GroundSearch.MEDIAN, true);
 
         // set block to chest
         if (!(safe.getWorld().getBlockState(safe.getPos()).isAir())) {
-            AITMod.LOGGER.error("Failed to create recovery chest at {} for {}", safe, this.tardis());
+            AITMod.LOGGER.error("Failed to create recovery chest at {} for {}", safe, this.tardis);
             return;
         }
+
         safe.getWorld().setBlockState(safe.getPos(), Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, door.toMinecraftDirection().getOpposite()), 3);
 
         // set chest contents
         ChestBlockEntity chest = (ChestBlockEntity) safe.getWorld().getBlockEntity(safe.getPos());
         List<ItemStack> overflow = new ArrayList<>(contents);
+
         for (int i = 0; i < 27 && !overflow.isEmpty(); i++) {
             chest.setStack(i, overflow.remove(0));
         }
 
-        AITMod.LOGGER.debug("Created recovery chest at {} for {}", safe, this.tardis());
+        AITMod.LOGGER.debug("Created recovery chest at {} for {}", safe, this.tardis);
 
-        if (!overflow.isEmpty()) {
+        if (!overflow.isEmpty())
             createChestAtInteriorDoor(overflow);
-        }
     }
 
     @Override
@@ -226,7 +228,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             this.generateInteriorWithItem();
 
             if (!isQueued) {
-                if (this.tardis.door().isBothClosed()) {
+                if (this.tardis.door().isClosed()) {
                     this.tardis.door().openDoors();
                 } else {
                     this.tardis.door().setLocked(false);
@@ -250,12 +252,9 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
             return;
         }
 
-        if (!tardis.door().locked())
-            DoorHandler.lockTardis(true, this.tardis(), null, true);
-
         if (!this.regenerating.get()) {
-            tardis.getDesktop().clearOldInterior();
-            Scheduler.runTaskLater(this::complete, TimeUnit.SECONDS, 15);
+            tardis.getDesktop().startQueue(true);
+            Scheduler.get().runTaskLater(this::changeInterior, TimeUnit.SECONDS, 5);
 
             this.regenerating.set(true);
         }

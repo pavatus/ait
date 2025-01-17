@@ -1,5 +1,9 @@
 package loqor.ait.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
 import loqor.ait.core.tardis.Tardis;
@@ -11,4 +15,7 @@ import loqor.ait.core.tardis.Tardis;
 public interface TardisTickable {
 
     default void tick(MinecraftServer server) { }
+
+    @Environment(EnvType.CLIENT)
+    default void tick(MinecraftClient client) { }
 }

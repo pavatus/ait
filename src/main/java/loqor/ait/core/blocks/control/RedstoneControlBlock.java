@@ -98,7 +98,7 @@ public class RedstoneControlBlock extends ControlBlock {
         }
 
         world.setBlockState(pos, Mode.set(state, Mode.get(state).next())); // set to next mode
-        world.playSound(null, pos, AITSounds.SONIC_SWITCH, SoundCategory.BLOCKS, 1f, 0.8f);
+        world.playSound(null, pos, AITSounds.REDSTONE_CONTROL_SWITCHAROO, SoundCategory.BLOCKS, 0.1f, 0f);
 
         return ActionResult.SUCCESS;
     }

@@ -1,9 +1,6 @@
 package loqor.ait.registry.impl.exterior;
 
-import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -39,6 +36,7 @@ import loqor.ait.data.schema.exterior.variant.geometric.GeometricFireVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.pipe.PipeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
@@ -144,7 +142,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema BOX_SOUL;
     public static ExteriorVariantSchema BOX_FUTURE;
     public static ExteriorVariantSchema BOX_CORAL;
-    public static ExteriorVariantSchema BOX_TOKAMAK;
+    public static ExteriorVariantSchema BOX_RENAISSANCE;
     public static ExteriorVariantSchema BOX_CHERRY;
     public static ExteriorVariantSchema PRIME;
     public static ExteriorVariantSchema YETI;
@@ -190,6 +188,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema DALEK_MOD_1980;
     //public static ExteriorVariantSchema JAKE_DEFAULT;
     public static ExteriorVariantSchema PRESENT_DEFAULT;
+    public static ExteriorVariantSchema PIPE_DEFAULT;
 
     @Override
     protected void defaults() {
@@ -206,7 +205,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         BOX_FIRE = register(new PoliceBoxFireVariant());
         BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
         BOX_CORAL = register(new PoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
+        BOX_RENAISSANCE = register(new PoliceBoxRenaissanceVariant());
         BOX_CHERRY = register(new PoliceBoxCherryVariant());
 
         // Classic Box
@@ -271,19 +270,19 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         ADAPTIVE = register(new AdaptiveVariant());
 
         // Dalek Mod
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 6)) {
-            DALEK_MOD_1963 = register(new DalekMod1963Variant());
-            DALEK_MOD_1967 = register(new DalekMod1967Variant());
-            DALEK_MOD_1970 = register(new DalekMod1970Variant());
-            DALEK_MOD_1976 = register(new DalekMod1976Variant());
-            DALEK_MOD_1980 = register(new DalekMod1980Variant());
-        }
+        DALEK_MOD_1963 = register(new DalekMod1963Variant());
+        DALEK_MOD_1967 = register(new DalekMod1967Variant());
+        DALEK_MOD_1970 = register(new DalekMod1970Variant());
+        DALEK_MOD_1976 = register(new DalekMod1976Variant());
+        DALEK_MOD_1980 = register(new DalekMod1980Variant());
 
         // Jake
         //JAKE_DEFAULT = register(new JakeDefaultVariant());
 
         // Present
-        if (isUnlockedOnThisDay(Calendar.JANUARY, 5))
-            PRESENT_DEFAULT = register(new PresentDefaultVariant());
+        PRESENT_DEFAULT = register(new PresentDefaultVariant());
+
+        // Pipe
+        PIPE_DEFAULT = register(new PipeDefaultVariant());
     }
 }

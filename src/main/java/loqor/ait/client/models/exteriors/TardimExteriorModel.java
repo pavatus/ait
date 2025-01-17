@@ -5,10 +5,11 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
+import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 // Made with Blockbench 4.9.1
@@ -66,20 +67,20 @@ public class TardimExteriorModel extends ExteriorModel {
             VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         if (exterior.tardis().isEmpty())
             return;
+
         matrices.push();
-        // matrices.scale(0.6F,0.6f,0.6f);
         matrices.translate(0, -1.5f, 0);
 
-        /*
-         * this.tardis.getChild("left_door").yaw = exterior.getRightDoor() ? 0 :
-         * -1.575f; this.tardis.getChild("right_door").yaw = exterior.getLeftDoor() ? 0
-         * : 1.575f;
-         */
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler handler = exterior.tardis().get().door();
 
-        DoorHandler handler = exterior.tardis().get().door();
-
-        this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
-        this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.isBothOpen()) ? 1.575f : 0.0F;
+            this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
+            this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.areBothOpen()) ? 1.575f : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.tardis.getChild("left_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+            this.tardis.getChild("right_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
+        }
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
@@ -87,22 +88,31 @@ public class TardimExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();
     }
 
     @Override
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (falling.tardis().isEmpty())
+            return;
+
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler handler = falling.tardis().get().door();
+
+            this.tardis.getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -1.575f : 0.0F;
+            this.tardis.getChild("right_door").yaw = (handler.isRightOpen() || handler.areBothOpen()) ? 1.575f : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.tardis.getChild("left_door").yaw = -(float) Math.toRadians(maxRot * falling.tardis().get().door().getLeftRot());
+            this.tardis.getChild("right_door").yaw = (float) Math.toRadians(maxRot * falling.tardis().get().door().getRightRot());
+        }
+
+        super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 }

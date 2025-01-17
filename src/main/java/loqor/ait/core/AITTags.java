@@ -1,10 +1,10 @@
 package loqor.ait.core;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 
@@ -12,9 +12,10 @@ public class AITTags {
 
     public static class Blocks {
         public static final TagKey<Block> SONIC_INTERACTABLE = createTag("sonic_interactable");
+        public static final TagKey<Block> FLUID_LINK_CAN_CONNECT = createTag("fluid_link_can_connect");
 
         private static TagKey<Block> createTag(String name) {
-            return TagKey.of(RegistryKeys.BLOCK, new Identifier(AITMod.MOD_ID, name));
+            return TagKey.of(RegistryKeys.BLOCK, AITMod.id(name));
         }
     }
 
@@ -31,7 +32,17 @@ public class AITTags {
         public static final TagKey<Item> REPAIRS_SUBSYSTEM = createTag("repairs_subsystem");
 
         private static TagKey<Item> createTag(String name) {
-            return TagKey.of(RegistryKeys.ITEM, new Identifier(AITMod.MOD_ID, name));
+            return TagKey.of(RegistryKeys.ITEM, AITMod.id(name));
+        }
+    }
+
+    public static class EntityTypes {
+
+        public static final TagKey<EntityType<?>> BOSS = createTag("boss");
+        public static final TagKey<EntityType<?>> NON_DISMOUNTABLE = createTag("non_dismountable");
+
+        private static TagKey<EntityType<?>> createTag(String name) {
+            return TagKey.of(RegistryKeys.ENTITY_TYPE, AITMod.id(name));
         }
     }
 }

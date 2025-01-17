@@ -21,7 +21,7 @@ public abstract class ClientRenegadeVariant extends ClientExteriorVariantSchema 
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
 
     protected ClientRenegadeVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/renegade/" + name));
+        super(AITMod.id("exterior/renegade/" + name));
 
         this.name = name;
     }
@@ -33,12 +33,12 @@ public abstract class ClientRenegadeVariant extends ClientExteriorVariantSchema 
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+        return AITMod.id(TEXTURE_PATH + name + "_emission" + ".png");
     }
 
     @Override

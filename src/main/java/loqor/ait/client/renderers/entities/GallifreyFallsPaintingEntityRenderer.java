@@ -25,8 +25,8 @@ import loqor.ait.core.entities.GallifreyFallsPaintingEntity;
 public class GallifreyFallsPaintingEntityRenderer
         extends EntityRenderer<GallifreyFallsPaintingEntity> {
     private Framebuffer framebuffer;
-    public static final Identifier PAINTING_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/painting/gallifrey_falls.png");
-    public static final Identifier FRAME_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/painting/frame.png");
+    public static final Identifier PAINTING_TEXTURE = AITMod.id("textures/painting/gallifrey_falls/gallifrey_falls.png");
+    public static final Identifier FRAME_TEXTURE = AITMod.id("textures/painting/gallifrey_falls/frame.png");
     GallifreyFallsFrameModel frame;
     GallifreyFallsModel painting;
     public GallifreyFallsPaintingEntityRenderer(EntityRendererFactory.Context context) {

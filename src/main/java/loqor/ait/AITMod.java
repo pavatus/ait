@@ -6,17 +6,17 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.drtheo.scheduler.Scheduler;
+import dev.pavatus.config.AITConfig;
+import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.register.Registries;
 import dev.pavatus.register.api.RegistryEvents;
-import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -51,9 +51,9 @@ import loqor.ait.api.AITModInitializer;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
-import loqor.ait.core.config.AITConfig;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.item.blueprint.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
@@ -71,7 +71,6 @@ import loqor.ait.core.util.CustomTrades;
 import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.core.util.schedule.Scheduler;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.data.landing.LandingPadRegion;
@@ -82,15 +81,13 @@ import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
-
-
 public class AITMod implements ModInitializer {
 
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
     public static final Random RANDOM = new Random();
 
-    public static final AITConfig AIT_CONFIG = AITConfig.createAndLoad();
+    public static final AITConfig CONFIG = AITConfig.createAndLoad();
     public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
             GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
@@ -122,6 +119,7 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ServerLifecycleHooks.init();
         NetworkUtil.init();
         Scheduler.init();
         AsyncLocatorUtil.setupExecutorService();
@@ -161,21 +159,21 @@ public class AITMod implements ModInitializer {
 
         Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
+
         AITStatusEffects.init();
         AITVillagers.init();
+        AITArgumentTypes.register();
+        AITSounds.init();
+        AITDimensions.init();
+
         CustomTrades.registerCustomTrades();
 
-        // ServerVortexDataHandler.init();
-        ServerLifecycleHooks.init();
-
-        AITArgumentTypes.register();
-
-        AITSounds.init();
-        FieldRegistrationHandler.register(AITItems.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlocks.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITBlockEntityTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITEntityTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AITPaintings.class, MOD_ID, false);
+        RegistryContainer.register(AITItemGroups.class, MOD_ID);
+        RegistryContainer.register(AITItems.class, MOD_ID);
+        RegistryContainer.register(AITBlocks.class, MOD_ID);
+        RegistryContainer.register(AITBlockEntityTypes.class, MOD_ID);
+        RegistryContainer.register(AITEntityTypes.class, MOD_ID);
+        RegistryContainer.register(AITPaintings.class, MOD_ID);
 
         WorldUtil.init();
         TardisUtil.init();
@@ -216,8 +214,9 @@ public class AITMod implements ModInitializer {
             ListCommand.register(dispatcher);
             LoadCommand.register(dispatcher);
             DebugCommand.register(dispatcher);
+            EraseChunksCommand.register(dispatcher);
+            FlightCommand.register(dispatcher);
         }));
-
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,
                 (server, player, handler, buf, responseSender) -> {
@@ -270,16 +269,6 @@ public class AITMod implements ModInitializer {
                     });
                 });
 
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            AIT_CONFIG.save();
-            AsyncLocatorUtil.shutdownExecutorService();
-        });
-
-        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> NetworkUtil.send(player, new Identifier(AITMod.MOD_ID, "change_world"), PacketByteBufs.create()));
-
-        AITItemGroups.MAIN.initialize();
-        AITItemGroups.FABRICATOR.initialize();
-
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (source.isBuiltin()
                     && (id.equals(LootTables.NETHER_BRIDGE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
@@ -298,17 +287,14 @@ public class AITMod implements ModInitializer {
     public void entityAttributeRegister() {
         FabricDefaultAttributeRegistry.register(AITEntityTypes.CONTROL_ENTITY_TYPE,
                 ConsoleControlEntity.createDummyAttributes());
+
+        FabricDefaultAttributeRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE,
+                FlightTardisEntity.createDummyAttributes());
     }
 
-    public static final Identifier OPEN_SCREEN = new Identifier(AITMod.MOD_ID, "open_screen");
-    public static final Identifier OPEN_SCREEN_TARDIS = new Identifier(AITMod.MOD_ID, "open_screen_tardis");
-    public static final Identifier OPEN_SCREEN_CONSOLE = new Identifier(AITMod.MOD_ID, "open_screen_console");
-
-    public static void openScreen(ServerPlayerEntity player, int id) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeInt(id);
-        ServerPlayNetworking.send(player, OPEN_SCREEN, buf);
-    }
+    public static final Identifier OPEN_SCREEN = AITMod.id("open_screen");
+    public static final Identifier OPEN_SCREEN_TARDIS = AITMod.id("open_screen_tardis");
+    public static final Identifier OPEN_SCREEN_CONSOLE = AITMod.id("open_screen_console");
 
     public static void openScreen(ServerPlayerEntity player, int id, UUID tardis) {
         PacketByteBuf buf = PacketByteBufs.create();
@@ -325,6 +311,7 @@ public class AITMod implements ModInitializer {
 
         ServerPlayNetworking.send(player, OPEN_SCREEN_CONSOLE, buf);
     }
+
     public static Identifier id(String path) {
         return new Identifier(MOD_ID, path);
     }

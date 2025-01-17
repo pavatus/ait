@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetBlocks;
+import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.planet.core.world.PlanetConfiguredFeatures;
 import dev.pavatus.planet.core.world.PlanetPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -25,7 +26,6 @@ import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
@@ -46,6 +46,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         generateLanguages(pack);
         generateItemTags(pack);
         generateBlockTags(pack);
+        generateEntityTypeTags(pack);
         generateRecipes(pack);
         generateBlockModels(pack);
         generateSoundData(pack);
@@ -93,10 +94,12 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Items.ENDER_PEARL), conditionsFromItem(Items.ENDER_PEARL))
                     .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
+
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_BLOCK, 1)
                             .pattern("ZZ ").pattern("ZZ ").pattern("   ").input('Z', AITItems.ZEITON_SHARD)
                             .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, 1)
                             .pattern("GGG").pattern("GNG").pattern("GGG")
@@ -104,9 +107,11 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                                     conditionsFromItem(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE))
                             .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET)));
+
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder
                     .create(RecipeCategory.BREWING, AITItems.ZEITON_DUST, 4).input(AITItems.ZEITON_SHARD)
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder
                     .create(RecipeCategory.MISC, AITItems.CHARGED_ZEITON_CRYSTAL, 1).pattern("ZZZ").pattern("CAC")
                     .pattern("ZZZ").input('Z', AITItems.ZEITON_SHARD).input('C', AITBlocks.ZEITON_CLUSTER)
@@ -114,6 +119,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .criterion(hasItem(AITBlocks.ZEITON_CLUSTER), conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
                     .criterion(hasItem(AITItems.ARTRON_COLLECTOR), conditionsFromItem(AITItems.ARTRON_COLLECTOR)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder
                     .create(RecipeCategory.MISC, AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, 1).pattern("SSS")
                     .pattern("SGS").pattern("SSS").input('G', AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE)
@@ -121,6 +127,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
                             conditionsFromItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE))
                     .criterion(hasItem(Items.NETHERITE_SCRAP), conditionsFromItem(Items.NETHERITE_SCRAP)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder
                     .create(RecipeCategory.MISC, AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, 1).pattern("SAS")
                     .pattern("INI").pattern("SAS").input('I', Items.NETHERITE_INGOT)
@@ -131,6 +138,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             conditionsFromItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE))
                     .criterion(hasItem(Items.NETHERITE_SCRAP), conditionsFromItem(Items.NETHERITE_SCRAP))
                     .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder
                     .create(RecipeCategory.TOOLS, AITBlocks.ARTRON_COLLECTOR_BLOCK, 1).pattern(" L ").pattern(" R ")
                     .pattern("SBS").input('L', Items.LIGHTNING_ROD).input('R', Items.IRON_INGOT)
@@ -139,12 +147,14 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Items.SMOOTH_STONE_SLAB), conditionsFromItem(Items.SMOOTH_STONE_SLAB))
                     .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.ARTRON_COLLECTOR, 1)
                     .pattern("CCC").pattern("IRI").pattern("CCC").input('C', Items.COPPER_INGOT)
                     .input('I', Items.IRON_INGOT).input('R', Items.REDSTONE_BLOCK)
                     .criterion(hasItem(Items.COPPER_INGOT), conditionsFromItem(Items.COPPER_INGOT))
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
+
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.RIFT_SCANNER, 1).pattern(" A ")
                             .pattern("IDI").pattern("QRQ").input('A', Items.AMETHYST_SHARD).input('I', Items.IRON_INGOT)
@@ -154,6 +164,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
                             .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK))
                             .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.WAYPOINT_BANK, 1)
                     .pattern("RTR").pattern("BWB").pattern("IEI").input('R', Items.REDSTONE)
                     .input('T', Blocks.TINTED_GLASS).input('B', Items.IRON_BARS).input('W', AITItems.WAYPOINT_CARTRIDGE)
@@ -164,6 +175,74 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(AITItems.WAYPOINT_CARTRIDGE), conditionsFromItem(AITItems.WAYPOINT_CARTRIDGE))
                     .criterion(hasItem(Items.IRON_BLOCK), conditionsFromItem(Items.IRON_BLOCK))
                     .criterion(hasItem(Blocks.ENDER_CHEST), conditionsFromItem(Blocks.ENDER_CHEST)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.POWER_CONVERTER, 1)
+                    .pattern("RFR")
+                    .pattern("BGB")
+                    .pattern("IFI")
+                    .input('R', Items.REDSTONE)
+                    .input('B', Items.IRON_BARS)
+                    .input('F', AITBlocks.CABLE_BLOCK)
+                    .input('I', Blocks.IRON_BLOCK)
+                    .input('G', AITBlocks.GENERIC_SUBSYSTEM)
+                    .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                    .criterion(hasItem(Items.IRON_BARS), conditionsFromItem(Items.IRON_BARS))
+                    .criterion(hasItem(AITBlocks.CABLE_BLOCK), conditionsFromItem(AITBlocks.CABLE_BLOCK))
+                    .criterion(hasItem(Items.IRON_BLOCK), conditionsFromItem(Items.IRON_BLOCK))
+                    .criterion(hasItem(AITBlocks.GENERIC_SUBSYSTEM), conditionsFromItem(AITBlocks.GENERIC_SUBSYSTEM)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.BULB, 1)
+                    .pattern("GGG")
+                    .pattern("G G")
+                    .pattern(" I ")
+                    .input('I', Items.IRON_INGOT)
+                    .input('G', Blocks.GLASS_PANE)
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Blocks.GLASS_PANE), conditionsFromItem(Blocks.GLASS_PANE)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.CONDENSER, 1)
+                    .pattern("III")
+                    .pattern("IBI")
+                    .pattern("III")
+                    .input('I', Items.IRON_INGOT)
+                    .input('B', Blocks.IRON_BARS)
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Blocks.IRON_BARS), conditionsFromItem(Blocks.IRON_BARS)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, PlanetItems.FABRIC, 1)
+                    .pattern("SSS")
+                    .pattern("SPS")
+                    .pattern("SSS")
+                    .input('S', Items.STRING)
+                    .input('P', Items.PAPER)
+                    .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                    .criterion(hasItem(Items.PAPER), conditionsFromItem(Items.PAPER)));
+
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, PlanetBlocks.OXYGENATOR_BLOCK, 1)
+                    .pattern("IWI")
+                    .pattern("BTB")
+                    .pattern("IWI")
+                    .input('I', Items.BLACKSTONE)
+                    .input('B', Items.IRON_BARS)
+                    .input('T', Items.GHAST_TEAR)
+                    .input('W', Items.WATER_BUCKET)
+                    .criterion(hasItem(Items.BLACKSTONE), conditionsFromItem(Items.BLACKSTONE))
+                    .criterion(hasItem(Items.IRON_BARS), conditionsFromItem(Items.IRON_BARS))
+                    .criterion(hasItem(Items.WATER_BUCKET), conditionsFromItem(Items.WATER_BUCKET))
+                    .criterion(hasItem(Items.GHAST_TEAR), conditionsFromItem(Items.GHAST_TEAR)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.GENERIC_SUBSYSTEM, 1)
+                    .pattern("IBI")
+                    .pattern("BSB")
+                    .pattern("IBI")
+                    .input('I', Items.IRON_BLOCK)
+                    .input('B', Items.IRON_BARS)
+                    .input('S', Items.GHAST_TEAR)
+                    .criterion(hasItem(Items.IRON_BLOCK), conditionsFromItem(Items.IRON_BLOCK))
+                    .criterion(hasItem(Items.IRON_BARS), conditionsFromItem(Items.IRON_BARS))
+                    .criterion(hasItem(Items.GHAST_TEAR), conditionsFromItem(Items.GHAST_TEAR)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder
                     .create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.CORAL_PLANT, 1).pattern("ZHZ").pattern("CDC")
                     .pattern("RGR").input('Z', AITBlocks.ZEITON_BLOCK).input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
@@ -176,6 +255,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .criterion(hasItem(AITBlocks.CONSOLE_GENERATOR), conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
+
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1).pattern("GSG")
                             .pattern("SBS").pattern("GSG").input('G', Items.GOLD_NUGGET).input('S', Items.SPRUCE_SLAB)
@@ -183,6 +263,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET))
                             .criterion(hasItem(Items.SPRUCE_SLAB), conditionsFromItem(Items.SPRUCE_SLAB))
                             .criterion(hasItem(Items.BLACK_CONCRETE), conditionsFromItem(Items.BLACK_CONCRETE)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.SONIC_SCREWDRIVER, 1)
                     .pattern(" QZ").pattern("IRQ").pattern("CI ").input('I', Items.IRON_INGOT).input('Q', Items.QUARTZ)
                     .input('C', Items.COMPARATOR).input('Z', AITItems.ZEITON_SHARD).input('R', Items.REDSTONE_BLOCK)
@@ -191,6 +272,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
                     .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ").pattern("CEC").pattern(" I ").input('G', Items.GLASS).input('C', Items.COMPARATOR)
                     .input('E', Items.END_CRYSTAL).input('I', Items.IRON_INGOT)
@@ -198,6 +280,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
                     .criterion(hasItem(Items.END_CRYSTAL), conditionsFromItem(Items.END_CRYSTAL))
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DETECTOR_BLOCK, 4)
                     .pattern(" D ").pattern("ICI").pattern(" R ").input('D', Items.DAYLIGHT_DETECTOR)
                     .input('I', Items.IRON_INGOT).input('C', Items.COMPARATOR).input('R', Items.REDSTONE)
@@ -205,12 +288,14 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
                     .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.DOOR_BLOCK, 1)
                     .pattern("GCG").pattern("CDC").pattern("CCC").input('D', Items.IRON_DOOR)
                     .input('G', Items.GLASS_PANE).input('C', Items.LIGHT_GRAY_CONCRETE)
                     .criterion(hasItem(Items.IRON_DOOR), conditionsFromItem(Items.IRON_DOOR))
                     .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
                     .criterion(hasItem(Items.LIGHT_GRAY_CONCRETE), conditionsFromItem(Items.LIGHT_GRAY_CONCRETE)));
+
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.WAYPOINT_CARTRIDGE, 1).pattern("III")
                             .pattern("IBI").pattern("CGC").input('I', Items.IRON_INGOT).input('B', Items.REDSTONE_BLOCK)
@@ -219,6 +304,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK))
                             .criterion(hasItem(Items.GREEN_DYE), conditionsFromItem(Items.GREEN_DYE))
                             .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET)));
+
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HAMMER, 1)
                     .pattern("DSD").pattern(" A ").pattern(" T ").input('D', Items.DRIED_KELP).input('S', Items.STRING)
                     .input('A', Items.IRON_AXE).input('T', Items.STICK)
@@ -303,6 +389,20 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .input(Items.MILK_BUCKET).criterion(hasItem(Items.MILK_BUCKET), conditionsFromItem(Items.MILK_BUCKET)));
             }
 
+            if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+                provider.addShapedRecipe(
+                        ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.SNOW_GLOBE, 1)
+                                .pattern("GGG")
+                                .pattern("GSG")
+                                .pattern("CCC")
+                                .input('G', Items.GLASS_PANE)
+                                .input('C', Items.BLUE_CONCRETE)
+                                .input('S', Items.SNOWBALL)
+                                .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
+                                .criterion(hasItem(Items.BLUE_CONCRETE), conditionsFromItem(Items.BLUE_CONCRETE))
+                                .criterion(hasItem(Items.SNOWBALL), conditionsFromItem(Items.SNOWBALL)));
+            }
+
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.HYPERCUBE)
                     .pattern("BBB").pattern("BEB").pattern("BBB").input('B', AITItems.ZEITON_SHARD)
@@ -368,10 +468,20 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
                     .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
                     .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
-            provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
-                    .input(AITBlocks.ZEITON_COBBLE).criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
-                    .input(AITItems.CHARGED_ZEITON_CRYSTAL).criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL), conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL)));
 
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.COMPACT_ZEITON)
+                    .pattern("OBO")
+                    .pattern("BSB")
+                    .pattern("OPO")
+                    .input('O', AITItems.ZEITON_SHARD)
+                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
+                    .input('S', Blocks.COBBLESTONE)
+                    .criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
+                    .input('P', AITBlocks.ZEITON_COBBLE)
+                    .criterion(hasItem(AITBlocks.ZEITON_COBBLE), conditionsFromItem(AITBlocks.ZEITON_COBBLE))
+                    .input('B', AITBlocks.ZEITON_BLOCK)
+                    .criterion(hasItem(AITBlocks.ZEITON_BLOCK), conditionsFromItem(AITBlocks.ZEITON_BLOCK)));
 
             createStairsRecipe(PlanetBlocks.MARTIAN_STONE_STAIRS, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
             createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, PlanetBlocks.MARTIAN_STONE_SLAB, Ingredient.ofItems(PlanetBlocks.MARTIAN_STONE));
@@ -392,7 +502,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.IRON_KEY), conditionsFromItem(AITItems.IRON_KEY))
                         .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET))
                         .criterion(hasItem(AITItems.GOLD_KEY), conditionsFromItem(AITItems.GOLD_KEY)),
-                new Identifier(AITMod.MOD_ID, "gold_key_smithing"));
+                AITMod.id("gold_key_smithing"));
         provider.addSmithingTransformRecipe(
                 SmithingTransformRecipeJsonBuilder
                         .create(Ingredient.ofItems(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
@@ -403,7 +513,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.GOLD_KEY), conditionsFromItem(AITItems.GOLD_KEY))
                         .criterion(hasItem(Items.NETHERITE_SCRAP), conditionsFromItem(Items.NETHERITE_SCRAP))
                         .criterion(hasItem(AITItems.NETHERITE_KEY), conditionsFromItem(AITItems.NETHERITE_KEY)),
-                new Identifier(AITMod.MOD_ID, "netherite_key_smithing"));
+                AITMod.id("netherite_key_smithing"));
         provider.addSmithingTransformRecipe(
                 SmithingTransformRecipeJsonBuilder
                         .create(Ingredient.ofItems(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
@@ -414,7 +524,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.NETHERITE_KEY), conditionsFromItem(AITItems.NETHERITE_KEY))
                         .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
                         .criterion(hasItem(AITItems.CLASSIC_KEY), conditionsFromItem(AITItems.CLASSIC_KEY)),
-                new Identifier(AITMod.MOD_ID, "classic_key_smithing"));
+                AITMod.id("classic_key_smithing"));
     }
 
     public void generateSoundData(FabricDataGenerator.Pack pack) {
@@ -435,6 +545,10 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generateBlockTags(FabricDataGenerator.Pack pack) {
         pack.addProvider(AITBlockTagProvider::new);
+    }
+
+    public void generateEntityTypeTags(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITEntityTypeTagProvider::new);
     }
 
     public void generateBlockModels(FabricDataGenerator.Pack pack) {
@@ -488,29 +602,65 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
         ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
 
+        // Control entities
+        provider.addTranslation("control.ait.antigravs", "Antigravs");
+        provider.addTranslation("control.ait.protocol_116", "Protocol 116");
+        provider.addTranslation("control.ait.protocol_3", "Protocol 3");
+        provider.addTranslation("control.ait.dimension", "Dimension");
+        provider.addTranslation("control.ait.direction", "Direction");
+        provider.addTranslation("control.ait.door_control", "Door Control");
+        provider.addTranslation("control.ait.door_lock", "Door Lock");
+        provider.addTranslation("control.ait.fast_return", "Fast Return");
+        provider.addTranslation("control.ait.alarms", "Alarms");
+        provider.addTranslation("control.ait.protocol_813", "Protocol 813");
+        provider.addTranslation("control.ait.handbrake", "Handbrake");
+        provider.addTranslation("control.ait.land_type", "Land Type");
+        provider.addTranslation("control.ait.monitor", "Monitor");
+        provider.addTranslation("control.ait.power", "Power");
+        provider.addTranslation("control.ait.randomiser", "Randomiser");
+        provider.addTranslation("control.ait.refueler", "Refueler");
+        provider.addTranslation("control.ait.protocol_19", "Protocol 19");
+        provider.addTranslation("control.ait.protocol_1913", "Protocol 1913");
+        provider.addTranslation("control.ait.sonic_port", "Sonic Port");
+        provider.addTranslation("control.ait.telepathic_circuit", "Telepathic Circuit");
+        provider.addTranslation("control.ait.throttle", "Throttle");
+        provider.addTranslation("control.ait.visualiser", "Visualiser");
+        provider.addTranslation("control.ait.eject_waypoint", "Eject Waypoint");
+        provider.addTranslation("control.ait.goto_waypoint", "Goto Waypoint");
+        provider.addTranslation("control.ait.load_waypoint", "Load Waypoint");
+        provider.addTranslation("control.ait.mark_waypoint", "Mark Waypoint");
+        provider.addTranslation("control.ait.set_waypoint", "Set Waypoint");
+        provider.addTranslation("control.ait.increment", "Increment");
+        provider.addTranslation("control.ait.x", "X");
+        provider.addTranslation("control.ait.y", "Y");
+        provider.addTranslation("control.ait.z", "Z");
+        provider.addTranslation("control.ait.shields", "Shields");
+
         // Tabs
         provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         provider.addTranslation(AITItemGroups.FABRICATOR, "AIT: Fabrication");
 
         // Config
-        provider.addTranslation("text.config.aitconfig.option.MINIFY_JSON", "Minify JSON");
-        provider.addTranslation("text.config.aitconfig.option.GHOST_MONUMENT", "Allow Ghost Monument");
-        provider.addTranslation("text.config.aitconfig.option.LOCK_DIMENSIONS", "Lock Dimensions");
-        provider.addTranslation("text.config.aitconfig.option.WORLDS_BLACKLIST", "Blacklist Dimensions");
-        provider.addTranslation("text.config.aitconfig.option.TRAVEL_PER_TICK", "TARDIS travel per tick");
-        provider.addTranslation("text.config.aitconfig.option.SEND_BULK", "Send Bulk");
-        provider.addTranslation("text.config.aitconfig.option.MAX_TARDISES", "Max TARDISES (-1 = Infinite)");
+        provider.addTranslation("text.autoconfig.aitconfig.category.server", "Server");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.MINIFY_JSON", "Minify JSON");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.GHOST_MONUMENT", "Allow Ghost Monument");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.LOCK_DIMENSIONS", "Lock Dimensions");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.WORLDS_BLACKLIST", "Blacklist Dimensions");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.TRAVEL_PER_TICK", "TARDIS travel per tick");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.SEND_BULK", "Send Bulk");
+        provider.addTranslation("text.autoconfig.aitconfig.option.SERVER.MAX_TARDISES", "Max TARDISES (-1 = Infinite)");
 
-        provider.addTranslation("text.config.aitconfig.option.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
-        provider.addTranslation("text.config.aitconfig.option.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
-        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
-        provider.addTranslation("text.config.aitconfig.option.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
-        provider.addTranslation("text.config.aitconfig.option.TEMPERATURE_TYPE", "Temperature Type");
-        provider.addTranslation("text.config.aitconfig.option.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
-
-        provider.addTranslation("text.config.aitconfig.enum.temperatureType.fahrenheit", "Fahrenheit (°F)");
-        provider.addTranslation("text.config.aitconfig.enum.temperatureType.kelvin", "Kelvin (K)");
-        provider.addTranslation("text.config.aitconfig.enum.temperatureType.celcius", "Celcius (°C)");
+        provider.addTranslation("text.autoconfig.aitconfig.category.client", "Client");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.SHOW_EXPERIMENTAL_WARNING", "Show Experimental Warning");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ENVIRONMENT_PROJECTOR", "Disable Environment Projector Skybox");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.DISABLE_LOYALTY_FOG", "Disable Loyalty Fog");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.DISABLE_LOYALTY_SLEEPING_ACTIONBAR", "Disable Loyalty Sleeping Actionbar Message");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.TEMPERATURE_TYPE", "Temperature Type");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ENABLE_TARDIS_BOTI", "Enable TARDIS BOTI");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.I_HATE_GL", "I HATE GL");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ANIMATE_CONSOLE", "Animate Console?");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.ANIMATE_DOORS", "Animate Doors?");
+        provider.addTranslation("text.autoconfig.aitconfig.option.CLIENT.DOOR_ANIMATION_SPEED", "Door Animation Speed");
 
         provider.addTranslation(AITMod.TARDIS_GRIEFING.getTranslationKey(), "TARDIS Griefing");
         provider.addTranslation("entity.minecraft.villager.fabricator_engineer", "Fabricator Engineer");
@@ -546,6 +696,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.stallion", "Stallion");
         provider.addTranslation("exterior.ait.jake", "Jake");
         provider.addTranslation("exterior.ait.dalek_mod", "Dalek Mod");
+        provider.addTranslation("exterior.ait.pipe", "Pipe");
+        provider.addTranslation("exterior.ait.present", "Present");
 
         // Desktops
         provider.addTranslation("desktop.ait.coral", "Coral");
@@ -565,7 +717,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("desktop.ait.victorian", "Victorian");
         provider.addTranslation("desktop.ait.vintage", "Vintage");
         provider.addTranslation("desktop.ait.dev", "Dev");
-        provider.addTranslation("desktop.ait.tokamak", "Tokamak");
+        provider.addTranslation("desktop.ait.renaissance", "Renaissance");
         provider.addTranslation("desktop.ait.toyota", "Toyota");
         provider.addTranslation("desktop.ait.crystalline", "Crystalline");
         provider.addTranslation("desktop.ait.hourglass", "Hourglass");
@@ -582,6 +734,15 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("desktop.ait.industrial", "Industrial");
         provider.addTranslation("desktop.ait.hybern", "Hybern");
         provider.addTranslation("desktop.ait.missy", "Missy");
+        provider.addTranslation("desktop.ait.tron", "Tron");
+        provider.addTranslation("desktop.ait.planetarium", "Planetarium");
+        provider.addTranslation("desktop.ait.modest", "Modest");
+        provider.addTranslation("desktop.ait.war_games", "War Games");
+        provider.addTranslation("desktop.ait.renewed", "Renewed");
+        provider.addTranslation("desktop.ait.definitive", "Definitive");
+        provider.addTranslation("desktop.ait.exile", "Exile");
+        provider.addTranslation("desktop.ait.axos", "Axos");
+        provider.addTranslation("desktop.ait.cherryblossom", "Cherryblossom");
 
         // Sonic Screwdrivers
         provider.addTranslation("sonic.ait.prime", "Prime");
@@ -618,16 +779,19 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("block.ait.fabricator.tooltip.use", "(Place on top of a Smithing Table)");
         provider.addTranslation("tooltip.ait.use_in_tardis", "(Place inside a TARDIS)");
         provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
+        provider.addTranslation("tooltip.ait.power_converter", "(Convert Zeiton,Lava,Coal and Wood into Artron)");
+        provider.addTranslation("tooltip.ait.singularity", "(Give the TARDIS Coral this to allow the generation of the interior)");
+        provider.addTranslation("tooltip.ait.tardis_coral", "(Place the CORAL on soul sand in a rift chunk and give it a SMS to generate your interior)");
+        provider.addTranslation("tooltip.ait.roundel_type", "Roundel Type:");
 
-        // ????
+        // Painting
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");
         provider.addTranslation("painting.ait.crab_thrower.author", "???");
-
-        // Galifrayan Falls Painting
 
         provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
+        // Death
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
 
@@ -667,7 +831,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.success", "%s has grown to %d");
         provider.addTranslation("tardis.message.landingpad.adjust", "Adjusting to landing pad..");
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
-        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal to bootstrap...");
+        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal or nether star to bootstrap...");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
@@ -711,11 +875,11 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.description.ultimate_counter", "Attempt to use the sonic screwdriver on wood.");
         provider.addTranslation("achievement.ait.title.forced_entry", "That Won't Have Consequences...");
         provider.addTranslation("achievement.ait.description.forced_entry", "Forcefully enter a TARDIS.");
-        provider.addTranslation("achievement.ait.title.pui", "Seriously, piloting under the influence?");
+        provider.addTranslation("achievement.ait.title.pui", "Piloting under the influence");
         provider.addTranslation("achievement.ait.description.pui", "Consume Zeiton Dust while the TARDIS is in flight.");
         provider.addTranslation("achievement.ait.title.bonding", "I think it's starting to trust you.");
         provider.addTranslation("achievement.ait.description.bonding", "Reach 'Pilot' loyalty for the first time.");
-        provider.addTranslation("achievement.ait.title.owner_ship", "But hey it trusts you now worth it right?");
+        provider.addTranslation("achievement.ait.title.owner_ship", "It trusts you now worth it right?");
         provider.addTranslation("achievement.ait.description.owner_ship", "Reach 'Owner' loyalty for the first time.");
         provider.addTranslation("achievement.ait.title.enable_subsystem", "Time-Space Engineer");
         provider.addTranslation("achievement.ait.description.enable_subsystem", "Enable a subsystem.");
@@ -756,13 +920,16 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.mode.overload", "OVERLOAD");
         provider.addTranslation("sonic.ait.mode.scanning", "SCANNING");
 
+        // Effects
+        provider.addTranslation("effect.air.lunar_sickness", "Lunar Sickness");
+
 
         // Key tooltips
         provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
         provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
         provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
         provider.addTranslation("tooltip.ait.skeleton_key", "CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.");
-        provider.addTranslation("tooltip.ait.subsystem_item", "(Use this on the Generic Subsytem Block to set it to this type)");
+        provider.addTranslation("tooltip.ait.subsystem_item", "(Use this on the Generalised Subsytem Core to set it to this type)");
 
         // Item tooltips
         provider.addTranslation("message.ait.artron_units", "Artron Units: %s");
@@ -783,6 +950,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS is out of fuel and cannot dematerialise");
         provider.addTranslation("message.ait.remoteitem.warning2",
                 "The TARDIS is refueling and is unable to dematerialise");
+        provider.addTranslation("message.ait.remoteitem.cancel.refuel",
+                "Refuling process halted, TARDIS dematerializing");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("message.ait.remoteitem.success1", "Dematerialized TARDIS");
         provider.addTranslation("message.ait.remoteitem.success2", "Activated refueler and handbrake");
@@ -813,7 +982,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sequence.ait.dimensional_breach", "DIMENSION BREACH: SECURE DOORS");
         provider.addTranslation("sequence.ait.energy_drain", "Artron drain detected!");
         provider.addTranslation("sequence.ait.power_drain_imminent", "Power drain imminent!");
-        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship computer offline! Crash imminent!");
+        provider.addTranslation("sequence.ait.ship_computer_offline", "Ship requires re-stabilization!");
         provider.addTranslation("sequence.ait.anti_gravity_error", "Gravity miscalculation!");
         provider.addTranslation("sequence.ait.dimensional_drift_x", "Drifting off course X!");
         provider.addTranslation("sequence.ait.dimensional_drift_y", "Drifting off course Y!");
@@ -825,6 +994,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sequence.ait.ground_unstable", "Unstable landing position!");
         provider.addTranslation("sequence.ait.increment_scale_recalculation_necessary", "Increment scale error! Recalculation necessary!");
         provider.addTranslation("sequence.ait.small_debris_field", "Small debris field!");
+        provider.addTranslation("sequence.ait.slow_down_to_avoid_flying_out_of_vortex", "Vortex drift: de-acceleration necessary!");
 
 
         // Hums
@@ -835,8 +1005,25 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("screen.ait.interior.settings.beacon", "Beacon");
         provider.addTranslation("screen.ait.interior.settings.copper", "Copper");
         provider.addTranslation("screen.ait.interior.settings.prime", "Prime");
-        provider.addTranslation("screen.ait.interior.settings.tokamak", "Tokamak");
+        provider.addTranslation("screen.ait.interior.settings.renaissance", "Renaissance");
         provider.addTranslation("screen.ait.interior.settings.exile", "Exile");
+
+        // Handles
+        provider.addTranslation("message.ait.handles.take_off","Handles: Taking Off");
+        provider.addTranslation("message.ait.handles.land","Handles: Landing");
+        provider.addTranslation("message.ait.handles.toggle_shields","Handles: Toggling Shields");
+        provider.addTranslation("message.ait.handles.toggle_alarms","Handles: Toggling Alarms");
+        provider.addTranslation("message.ait.handles.toggle_antigravs","Handles: Toggling Antigravs");
+        provider.addTranslation("message.ait.handles.toggle_cloaked","Handles: Toggling Cloak");
+        provider.addTranslation("message.ait.handles.open_doors","Handles: Opening Doors");
+        provider.addTranslation("message.ait.handles.close_doors","Handles: Closing Doors");
+        provider.addTranslation("message.ait.handles.toggle_lock","Handles: Toggling Lock");
+        provider.addTranslation("message.ait.handles.activate_handbrake","Handles: Handbrake Activated");
+        provider.addTranslation("message.ait.handles.disable_handbrake","Handles: Handbrake Disabled");
+        provider.addTranslation("message.ait.handles.default","Handles: Couldn't recognise command");
+        provider.addTranslation("message.ait.handles.displace","Handles: Displacing Coordinates");
+        provider.addTranslation("message.ait.handles.activate_refuel","Handles: Refuel Activated");
+        provider.addTranslation("message.ait.handles.disable_refuel","Handles: Refuel Disabled");
 
         // Exterior Variant translations
 
@@ -847,13 +1034,18 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.soul", "Soul");
         provider.addTranslation("exterior.ait.gilded", "Gilded");
         provider.addTranslation("exterior.ait.steel", "Steel");
+        provider.addTranslation("exterior.ait.geometric_blue", "Biscay");
+        provider.addTranslation("exterior.ait.geometric_green", "War Games");
 
         // Police box specific
-        provider.addTranslation("exterior.ait.tokamak", "Tokamak");
+        provider.addTranslation("exterior.ait.renaissance", "Renaissance");
         provider.addTranslation("exterior.ait.coral", "Coral");
         provider.addTranslation("exterior.ait.futuristic", "Futuristic");
         provider.addTranslation("exterior.ait.cherrywood", "Cherrywood");
         provider.addTranslation("exterior.ait.yard", "73 Yards");
+        provider.addTranslation("exterior.ait.tokamak", "Tokamak");
+        provider.addTranslation("exterior.ait.black_mesa", "Black Mesa");
+        provider.addTranslation("exterior.ait.aperture_science", "Aperture Science");
 
         // Classic specific
         provider.addTranslation("exterior.ait.definitive", "Definitive");
@@ -864,6 +1056,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.shalka", "Shalka");
         provider.addTranslation("exterior.ait.mint", "Mint");
         provider.addTranslation("exterior.ait.yeti", "Yeti");
+        provider.addTranslation("exterior.ait.tango", "Tango");
+        provider.addTranslation("exterior.ait.falloutwho", "Fallout Who");
 
         // Renegade specific
         provider.addTranslation("exterior.ait.cabinet", "Cabinet");
@@ -913,7 +1107,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
-                "Interior reconfiguration started! Please leave the interior.");
+                "ARS initiated, console room is being reconfigured, please vacate the interior!");
         provider.addTranslation("tardis.message.interiorchange.subsystems_enabled",
                 "TARDIS has %s subsystems enabled. Are you sure you want to do this?");
 
@@ -955,7 +1149,10 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // keybinds
         provider.addTranslation("category.ait.main", "Adventures in Time");
-        provider.addTranslation("key.ait.snap", "Snap");
+        provider.addTranslation("key.ait.snap", "Open/Close/Lock Doors (KEY/RWF)");
+        provider.addTranslation("key.ait.increase_speed", "Increase Speed (RWF)");
+        provider.addTranslation("key.ait.decrease_speed", "Decrease Speed (RWF)");
+        provider.addTranslation("key.ait.toggle_antigravs", "Toggle Antigravs (RWF)");
 
         // effects
         provider.addTranslation("effect.ait.zeiton_high", "Zeiton High");

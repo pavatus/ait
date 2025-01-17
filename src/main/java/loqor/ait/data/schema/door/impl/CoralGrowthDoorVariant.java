@@ -11,7 +11,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class CoralGrowthDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/coral_growth");
+    public static final Identifier REFERENCE = AITMod.id("door/coral_growth");
 
     public CoralGrowthDoorVariant() {
         super(REFERENCE);
@@ -24,12 +24,12 @@ public class CoralGrowthDoorVariant extends DoorSchema {
 
     @Override
     public SoundEvent openSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
+        return SoundEvents.BLOCK_BEEHIVE_SHEAR;
     }
 
     @Override
     public SoundEvent closeSound() {
-        return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
+        return SoundEvents.BLOCK_BEEHIVE_SHEAR;
     }
 
     @Override

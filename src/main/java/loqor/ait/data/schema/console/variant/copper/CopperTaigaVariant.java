@@ -8,7 +8,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.CopperType;
 
 public class CopperTaigaVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/copper_taiga");
+    public static final Identifier REFERENCE = AITMod.id("console/copper_taiga");
 
     public CopperTaigaVariant() {
         super(CopperType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.OWNER));

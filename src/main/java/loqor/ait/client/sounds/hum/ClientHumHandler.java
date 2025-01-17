@@ -1,6 +1,6 @@
 package loqor.ait.client.sounds.hum;
 
-import static loqor.ait.AITMod.AIT_CONFIG;
+import static loqor.ait.AITMod.CONFIG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +32,18 @@ public class ClientHumHandler extends SoundHandler {
     private LoopingSound current;
 
     static {
-        ClientWorldEvents.CHANGE_WORLD.register(() -> {
+        ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
+            if (world == null)
+                return;
+
             ClientHumHandler handler = ClientSoundManager.getHum();
             handler.stopSounds();
             handler.current = null;
 
             ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
-            if ((tardis == null)) return;
+
+            if (tardis == null)
+                return;
 
             handler.getHum(tardis);
         });
@@ -102,7 +107,7 @@ public class ClientHumHandler extends SoundHandler {
 
         for (Hum sound : HumRegistry.getInstance().toList()) {
             list.add(new PlayerFollowingLoopingSound(sound.sound(), SoundCategory.AMBIENT,
-                    AIT_CONFIG.INTERIOR_HUM_VOLUME()));
+                    CONFIG.CLIENT.INTERIOR_HUM_VOLUME));
         }
 
         return list;

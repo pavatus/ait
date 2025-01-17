@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.jake;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -18,7 +17,7 @@ public abstract class JakeVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/jake/jake_";
 
     protected JakeVariant(String name) {
-        super(JakeCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/jake/" + name),
+        super(JakeCategory.REFERENCE, AITMod.id("exterior/jake/" + name),
                 new Loyalty(Loyalty.Type.OWNER));
     }
 

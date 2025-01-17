@@ -1,6 +1,5 @@
 package loqor.ait.core.engine.impl;
 
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.engine.DurableSubSystem;
@@ -27,7 +26,7 @@ public class GravitationalCircuit extends DurableSubSystem implements StructureH
     @Override
     public MultiBlockStructure getStructure() {
         if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(new Identifier(AITMod.MOD_ID, "multiblock/gravity"));
+            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/gravity"));
         }
 
         return STRUCTURE;

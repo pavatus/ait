@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -77,8 +76,6 @@ public class HadsHandler extends KeyedTardisComponent implements TardisTickable 
     }
 
     public void dematerialiseWhenInDanger() {
-        ServerTardis tardis = (ServerTardis) tardis();
-
         TravelHandler travel = tardis.travel();
         TravelHandlerBase.State state = travel.getState();
 

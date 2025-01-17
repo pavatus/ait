@@ -89,9 +89,12 @@ public class CableBlock extends FluidLinkBlock {
     protected int getConnectionMask(BlockState state) {
         int i = 0;
         for (int j = 0; j < FACINGS.length; ++j) {
-            if (!state.get(FACING_PROPERTIES.get(FACINGS[j]))) continue;
+            if (!state.get(FACING_PROPERTIES.get(FACINGS[j])))
+                continue;
+
             i |= 1 << j;
         }
+
         return i;
     }
 

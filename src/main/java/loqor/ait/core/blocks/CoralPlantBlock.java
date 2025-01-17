@@ -1,11 +1,13 @@
 package loqor.ait.core.blocks;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.RavagerEntity;
@@ -18,7 +20,9 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -36,11 +40,11 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.blockentities.CoralBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.registry.impl.DesktopRegistry;
@@ -132,7 +136,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
             return false;
         }
 
-        if (TardisDimension.isTardisDimension(world)) {
+        if (TardisServerWorld.isTardisDimension(world)) {
             this.createConsole(world, pos);
             return true;
         }
@@ -171,7 +175,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
                 || (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos)
-                        && !TardisDimension.isTardisDimension((ServerWorld) world))) {
+                        && !TardisServerWorld.isTardisDimension((ServerWorld) world))) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
         }
@@ -214,6 +218,13 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(AGE).add(FACING).add(HAS_SMS);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+
+        tooltip.add(Text.translatable("tooltip.ait.tardis_coral").formatted(Formatting.DARK_GRAY, Formatting.ITALIC));
     }
 
     @Nullable @Override

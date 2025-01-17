@@ -6,6 +6,7 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
+import loqor.ait.AITMod;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
@@ -75,15 +76,24 @@ public class StallionDoorModel extends DoorModel {
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
-        body.getChild("door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? -1.35f : 0f;
-        body.getChild("door").getChild("door_two").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? 2.65f : 0f;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            body.getChild("door").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? -1.35f : 0f;
+            body.getChild("door").getChild("door_two").yaw = linkableBlockEntity.tardis().get().door().isOpen() ? 2.65f : 0f;
+        } else {
+            float maxLeftRot = 87f;
+            float maxRightRot = 150f;
+
+            body.getChild("door").yaw = -(float) Math.toRadians(maxLeftRot*linkableBlockEntity.tardis().get().door().getLeftRot());
+            body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(maxRightRot*linkableBlockEntity.tardis().get().door().getLeftRot());
+        }
+
         super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
     }
 }

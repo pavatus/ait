@@ -45,7 +45,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class MonitorScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/monitor_gui.png");
+            "textures/gui/tardis/monitor/monitor_gui.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     private ExteriorCategorySchema category;
     private ClientExteriorVariantSchema currentVariant;
@@ -147,7 +147,7 @@ public class MonitorScreen extends ConsoleScreen {
     public static void sendExteriorPacket(ClientTardis tardis, ExteriorCategorySchema category,
             ClientExteriorVariantSchema variant) {
         if (category != tardis.getExterior().getCategory() || variant.parent() != tardis.getExterior().getVariant()) {
-            ClientTardisUtil.changeExteriorWithScreen(tardis, category.id(), variant.id(),
+            ClientTardisUtil.changeExteriorWithScreen(tardis, variant.id(),
                     variant.parent() != tardis.getExterior().getVariant());
         }
     }

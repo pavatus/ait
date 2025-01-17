@@ -14,7 +14,7 @@ import loqor.ait.core.blockentities.FlagBlockEntity;
 import loqor.ait.core.blocks.FlagBlock;
 
 public class FlagBlockEntityRenderer<T extends FlagBlockEntity> implements BlockEntityRenderer<T> {
-    public static final Identifier FLAG_TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/decoration/us_flag.png");
+    public static final Identifier FLAG_TEXTURE = AITMod.id("textures/blockentities/decoration/us_flag.png");
 
     public FlagModel flagModel = new FlagModel(FlagModel.getTexturedModelData().createModel());
 

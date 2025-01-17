@@ -13,6 +13,7 @@ import loqor.ait.core.AITBlocks;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
+import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ServerLifecycleHooks;
@@ -67,6 +68,7 @@ public class LifeSupportCircuit extends DurableSubSystem implements StructureHol
         List<LivingEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis);
 
         for (LivingEntity entity : entities) {
+            if (entity instanceof ConsoleControlEntity) continue;
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 20, 1, true, false));
         }
     }

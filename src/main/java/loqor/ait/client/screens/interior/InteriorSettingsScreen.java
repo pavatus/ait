@@ -42,11 +42,11 @@ import loqor.ait.registry.impl.DesktopRegistry;
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/interior_settings.png");
+            "textures/gui/tardis/monitor/interior_settings.png");
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/interior_settings.png");
+            "textures/gui/tardis/monitor/interior_settings.png");
     private static final Identifier MISSING_PREVIEW = new Identifier(AITMod.MOD_ID,
-            "textures/gui/tardis/desktop/missing_preview.png");
+            "textures/gui/tardis/monitor/presets/missing_preview.png");
     private final List<ButtonWidget> buttons = Lists.newArrayList();
     int bgHeight = 166;
     int bgWidth = 256;

@@ -1,19 +1,17 @@
 package loqor.ait.core;
 
-import io.wispforest.owo.itemgroup.Icon;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
+import dev.pavatus.lib.container.impl.ItemGroupContainer;
+import dev.pavatus.lib.itemgroup.AItemGroup;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.item.ItemStack;
 
 import loqor.ait.AITMod;
 
-public class AITItemGroups {
-    //Creative Inventory Tabs
-    public static final OwoItemGroup MAIN = OwoItemGroup
-            .builder(new Identifier(AITMod.MOD_ID, "item_group"), () -> Icon.of(AITItems.TARDIS_ITEM))
-            .disableDynamicTitle().build();
+public class AITItemGroups implements ItemGroupContainer {
 
-    public static final OwoItemGroup FABRICATOR = OwoItemGroup
-                        .builder(new Identifier(AITMod.MOD_ID, "fabricator"), () -> Icon.of(AITItems.BLUEPRINT))
-            .disableDynamicTitle().build();
+    public static final AItemGroup MAIN = AItemGroup.builder(AITMod.id("item_group"))
+            .icon(() -> new ItemStack(AITItems.TARDIS_ITEM)).build();
+
+    public static final AItemGroup FABRICATOR = AItemGroup.builder(AITMod.id("fabricator"))
+            .icon(() -> new ItemStack(AITItems.BLUEPRINT)).build();
 }
