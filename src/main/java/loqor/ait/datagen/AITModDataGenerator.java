@@ -1021,6 +1021,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.handles.activate_handbrake","Handles: Handbrake Activated");
         provider.addTranslation("message.ait.handles.disable_handbrake","Handles: Handbrake Disabled");
         provider.addTranslation("message.ait.handles.default","Handles: Couldn't recognise command");
+        provider.addTranslation("message.ait.handles.displace","Handles: Displacing Coordinates");
+        provider.addTranslation("message.ait.handles.activate_refuel","Handles: Refuel Activated");
+        provider.addTranslation("message.ait.handles.disable_refuel","Handles: Refuel Disabled");
 
         // Exterior Variant translations
 
