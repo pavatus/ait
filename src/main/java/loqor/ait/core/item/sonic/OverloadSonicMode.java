@@ -1,6 +1,8 @@
 package loqor.ait.core.item.sonic;
 
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -38,6 +40,11 @@ public class OverloadSonicMode extends SonicMode {
 
     protected OverloadSonicMode(int index) {
         super(index);
+    }
+
+    @Override
+    public Text text() {
+        return Text.translatable("sonic.ait.mode.overload").formatted(Formatting.RED, Formatting.BOLD);
     }
 
     @Override
