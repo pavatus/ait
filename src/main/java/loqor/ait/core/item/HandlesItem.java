@@ -162,7 +162,7 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("start refueling", HandlesResponses.ACTIVATE_REFUEL);
         RESPONSE_MAP.put("refueling on", HandlesResponses.ACTIVATE_REFUEL);
 
-        //Disble refuelling
+        //Disable refuelling
         RESPONSE_MAP.put("stop refueling", HandlesResponses.DISABLE_REFUEL);
         RESPONSE_MAP.put("stop refuel", HandlesResponses.DISABLE_REFUEL);
         RESPONSE_MAP.put("disable refueling", HandlesResponses.DISABLE_REFUEL);
@@ -213,7 +213,7 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("play wait", HandlesResponses.PLAY_WAIT);
         RESPONSE_MAP.put("play pigstep", HandlesResponses.PLAY_PIGSTEP);
         RESPONSE_MAP.put("play otherside", HandlesResponses.PLAY_OTHERSIDE);
-        RESPONSE_MAP.put("playrelic", HandlesResponses.PLAY_RELIC);
+        RESPONSE_MAP.put("play relic", HandlesResponses.PLAY_RELIC);
         RESPONSE_MAP.put("play 5", HandlesResponses.PLAY_5);
         RESPONSE_MAP.put("wtis", HandlesResponses.PLAY_WTIS);
         RESPONSE_MAP.put("play wtis", HandlesResponses.PLAY_WTIS);

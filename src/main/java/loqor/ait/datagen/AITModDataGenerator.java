@@ -1041,6 +1041,26 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.handles.disable_refuel","<Handles> Refuel Disabled.");
         provider.addTranslation("message.ait.handles.when","<Handles> When.");
         provider.addTranslation("message.ait.handles.when","<Handles> Affirmative.");
+        provider.addTranslation("message.ait.handles.play_wtis","<Handles> Now Playing Wonderful Time In Space.");
+        provider.addTranslation("message.ait.handles.play_drifting","<Handles> Now Playing Drifting.");
+        provider.addTranslation("message.ait.handles.play_mercury","<Handles> Now Playing Mercury.");
+        provider.addTranslation("message.ait.handles.play_13","<Handles> Now Playing 13.");
+        provider.addTranslation("message.ait.handles.play_cat","<Handles> Now Playing Cat.");
+        provider.addTranslation("message.ait.handles.play_blocks","<Handles> Now Playing Blocks.");
+        provider.addTranslation("message.ait.handles.play_chirp","<Handles> Now Playing Chirp.");
+        provider.addTranslation("message.ait.handles.play_far","<Handles> Now Playing Far.");
+        provider.addTranslation("message.ait.handles.play_hall","<Handles> Now Playing Hall.");
+        provider.addTranslation("message.ait.handles.play_mellohi","<Handles> Now Playing Mellohi.");
+        provider.addTranslation("message.ait.handles.play_stal","<Handles> Now Playing Stal.");
+        provider.addTranslation("message.ait.handles.play_strad","<Handles> Now Playing Strad.");
+        provider.addTranslation("message.ait.handles.play_ward","<Handles> Now Playing Ward.");
+        provider.addTranslation("message.ait.handles.play_11","<Handles> Now Playing 11.");
+        provider.addTranslation("message.ait.handles.play_wait","<Handles> Now Playing Wait.");
+        provider.addTranslation("message.ait.handles.play_pigstep","<Handles> Now Playing Pigstep.");
+        provider.addTranslation("message.ait.handles.play_otherside","<Handles> Now Playing Otherside.");
+        provider.addTranslation("message.ait.handles.play_relic","<Handles> Now Playing Relic.");
+        provider.addTranslation("message.ait.handles.play_5","<Handles> Now Playing 5.");
+
 
         // Exterior Variant translations
 
