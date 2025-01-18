@@ -43,8 +43,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"loqor.ait.AITMod",
-          "dev.pavatus.multidim.MultiDimMod"
+			"loqor.ait.AITMod"
 		],
 		"client": [
 			"loqor.ait.client.AITModClient",
@@ -63,7 +62,6 @@
 	"mixins": [
 		"ait.mixins.json",
 		"gaslighter.mixins.json",
-		"multidim.mixins.json",
 		"planet.mixins.json",
 		"pavatuslib.mixins.json"
 	],

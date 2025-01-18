@@ -6,7 +6,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import dev.drtheo.blockqueue.util.ChunkEraser;
+import dev.drtheo.queue.api.util.block.ChunkEraser;
 
 import net.minecraft.block.Block;
 import net.minecraft.command.argument.ColumnPosArgumentType;
@@ -31,7 +31,8 @@ public class EraseChunksCommand {
 
         new ChunkEraser.Builder()
                 .withFlags(Block.FORCE_STATE | Block.REDRAW_ON_MAIN_THREAD)
-                .build(context.getSource().getWorld(), from.toChunkPos(), to.toChunkPos());
+                .build(context.getSource().getWorld(), from.toChunkPos(), to.toChunkPos())
+                .execute();
 
         return Command.SINGLE_SUCCESS;
     }

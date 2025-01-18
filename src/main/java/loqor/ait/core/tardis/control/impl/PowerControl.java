@@ -42,7 +42,7 @@ public class PowerControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return this.noDelay ? 0 : 10_000;
+        return this.noDelay ? 0 : 200;
     }
 
     @Override

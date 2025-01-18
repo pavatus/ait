@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -25,7 +26,6 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.util.network.c2s.SyncPropertyC2SPacket;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class NetworkUtil {

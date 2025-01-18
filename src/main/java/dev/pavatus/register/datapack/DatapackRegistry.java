@@ -3,6 +3,7 @@ package dev.pavatus.register.datapack;
 import java.util.*;
 import java.util.function.Supplier;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import dev.pavatus.register.Registry;
 
 import net.minecraft.network.PacketByteBuf;
@@ -10,7 +11,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.api.Identifiable;
-import loqor.ait.core.util.ServerLifecycleHooks;
 
 /**
  * A registry which is compatible with datapack registering

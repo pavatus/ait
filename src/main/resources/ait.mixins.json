@@ -20,7 +20,6 @@
     "rwf.DismountEntityMixin",
     "rwf.LivingEntityAccessor",
     "server.BedInTardisMixin",
-    "server.ChunkSectionMixin",
     "server.EnderDragonFightAccessor",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
@@ -28,7 +27,6 @@
     "server.ServerPlayerMixin",
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
-    "server.WorldChunkMixin",
     "server.structure.StructureTemplateAccessor"
   ],
   "client": [

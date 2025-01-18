@@ -2,9 +2,9 @@ package loqor.ait.core.tardis;
 
 import java.util.*;
 
-import dev.drtheo.blockqueue.ActionQueue;
-import dev.drtheo.blockqueue.QueuedStructureTemplate;
-import dev.drtheo.blockqueue.util.ChunkEraser;
+import dev.drtheo.queue.api.ActionQueue;
+import dev.drtheo.queue.api.util.block.ChunkEraser;
+import dev.drtheo.queue.api.util.structure.QueuedStructureTemplate;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
@@ -200,9 +200,6 @@ public class TardisDesktop extends TardisComponent {
         this.tardis.door().setLocked(false);
         this.tardis.door().setDeadlocked(false);
         this.tardis.alarm().enabled().set(false);
-
-        /*this.tardis.door().interactLock(tardis.door()
-                .previouslyLocked().get(), null, false);*/
     }
 
     public ActionQueue changeInterior(TardisDesktopSchema schema, boolean clear, boolean sendEvent) {

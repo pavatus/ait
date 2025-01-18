@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
-import dev.pavatus.multidim.MultiDim;
-import dev.pavatus.multidim.api.MultiDimServerWorld;
-import dev.pavatus.multidim.api.WorldBlueprint;
+import dev.drtheo.multidim.MultiDim;
+import dev.drtheo.multidim.api.MultiDimServerWorld;
+import dev.drtheo.multidim.api.WorldBlueprint;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +30,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
 
 public class TardisServerWorld extends MultiDimServerWorld {

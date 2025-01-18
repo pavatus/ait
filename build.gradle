@@ -99,6 +99,10 @@ dependencies {
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     modCompileOnlyApi "maven.modrinth:k9-mod:${project.k9_version}"
+
+    include(modImplementation("com.github.DrTheodor:mc-multidim:v2.0.0"))
+    include(modImplementation("com.github.DrTheodor:mc-scheduler:v1.0.1"))
+    include(modImplementation("com.github.DrTheodor:mc-queue:v1.0.0"))
 }
 
 processResources {
