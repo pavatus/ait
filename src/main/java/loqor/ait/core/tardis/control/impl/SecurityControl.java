@@ -94,6 +94,6 @@ public class SecurityControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return (long) (2.5 * 1000L);
+        return 50;
     }
 }

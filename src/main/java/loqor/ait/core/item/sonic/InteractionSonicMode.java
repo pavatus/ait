@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -20,6 +22,11 @@ public class InteractionSonicMode extends SonicMode {
 
     protected InteractionSonicMode(int index) {
         super(index);
+    }
+
+    @Override
+    public Text text() {
+        return Text.translatable("sonic.ait.mode.interaction").formatted(Formatting.GREEN,Formatting.BOLD);
     }
 
     @Override

@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.function.Predicate;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -44,7 +45,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 
 public class FallingTardisEntity extends LinkableDummyEntity {
 

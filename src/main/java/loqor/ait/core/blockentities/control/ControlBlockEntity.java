@@ -2,8 +2,8 @@ package loqor.ait.core.blockentities.control;
 
 import java.util.Optional;
 
-import dev.drtheo.blockqueue.data.TimeUnit;
-import dev.drtheo.scheduler.Scheduler;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -89,9 +89,9 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         return this.run(user, isMine);
     }
 
-    public void createDelay(long millis) {
+    public void createDelay(long ticks) {
         this.onDelay = true;
 
-        Scheduler.get().runTaskLater(() -> this.onDelay = false, TimeUnit.MILLISECONDS, millis);
+        Scheduler.get().runTaskLater(() -> this.onDelay = false, TimeUnit.TICKS, ticks);
     }
 }

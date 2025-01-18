@@ -1,4 +1,4 @@
-package loqor.ait.core.util;
+package dev.pavatus.lib.util;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 

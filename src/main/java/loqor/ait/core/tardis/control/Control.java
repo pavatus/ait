@@ -69,7 +69,7 @@ public class Control {
     }
 
     public long getDelayLength() {
-        return 250L;
+        return 5;
     }
 
     public boolean shouldHaveDelay() {

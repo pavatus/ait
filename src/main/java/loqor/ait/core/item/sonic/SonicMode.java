@@ -2,12 +2,11 @@ package loqor.ait.core.item.sonic;
 
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
@@ -73,19 +72,17 @@ public abstract class SonicMode implements Ordered {
         return Modes.previous(this);
     }
 
+    public abstract Text text();
+
     public abstract int maxTime();
 
     public boolean startUsing(ItemStack stack, World world, PlayerEntity user, Hand hand) {
         return true;
     }
 
-    public void tick(ItemStack stack, World world, LivingEntity user, int ticks, int ticksLeft) {
+    public void tick(ItemStack stack, World world, LivingEntity user, int ticks, int ticksLeft) { }
 
-    }
-
-    public void stopUsing(ItemStack stack, World world, LivingEntity user, int ticks, int ticksLeft) {
-
-    }
+    public void stopUsing(ItemStack stack, World world, LivingEntity user, int ticks, int ticksLeft) { }
 
     public void finishUsing(ItemStack stack, World world, LivingEntity user) {
         this.stopUsing(stack, world, user, this.maxTime(), 0);
@@ -100,8 +97,5 @@ public abstract class SonicMode implements Ordered {
     @Override
     public int index() {
         return index;
-    }
-    public String asString() {
-        return StringUtils.capitalize(this.toString().replace("_", " "));
     }
 }

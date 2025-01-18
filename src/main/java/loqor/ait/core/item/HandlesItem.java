@@ -87,6 +87,7 @@ public class HandlesItem extends LinkableItem {
         //Misc stuff
         RESPONSE_MAP.put("help", HandlesResponses.HELP);
         RESPONSE_MAP.put("tell me a joke", HandlesResponses.JOKE);
+        RESPONSE_MAP.put("tell me a fun fact", HandlesResponses.FUN_FACT);
 
         //Demat
         RESPONSE_MAP.put("take off", HandlesResponses.TAKE_OFF);
@@ -162,7 +163,7 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("start refueling", HandlesResponses.ACTIVATE_REFUEL);
         RESPONSE_MAP.put("refueling on", HandlesResponses.ACTIVATE_REFUEL);
 
-        //Disble refuelling
+        //Disable refuelling
         RESPONSE_MAP.put("stop refueling", HandlesResponses.DISABLE_REFUEL);
         RESPONSE_MAP.put("stop refuel", HandlesResponses.DISABLE_REFUEL);
         RESPONSE_MAP.put("disable refueling", HandlesResponses.DISABLE_REFUEL);
@@ -213,7 +214,7 @@ public class HandlesItem extends LinkableItem {
         RESPONSE_MAP.put("play wait", HandlesResponses.PLAY_WAIT);
         RESPONSE_MAP.put("play pigstep", HandlesResponses.PLAY_PIGSTEP);
         RESPONSE_MAP.put("play otherside", HandlesResponses.PLAY_OTHERSIDE);
-        RESPONSE_MAP.put("playrelic", HandlesResponses.PLAY_RELIC);
+        RESPONSE_MAP.put("play relic", HandlesResponses.PLAY_RELIC);
         RESPONSE_MAP.put("play 5", HandlesResponses.PLAY_5);
         RESPONSE_MAP.put("wtis", HandlesResponses.PLAY_WTIS);
         RESPONSE_MAP.put("play wtis", HandlesResponses.PLAY_WTIS);
@@ -254,14 +255,12 @@ public class HandlesItem extends LinkableItem {
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 success(tardis, player, world);
-
             }
 
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return(Text.literal("<Handles> Here are all the available commands: " + String.valueOf(new ArrayList<>(RESPONSE_MAP.keySet()))));
+                return null;
             }
-
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -277,18 +276,28 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.literal("<Handles> Here are all the available commands: "
+                                + String.valueOf(new ArrayList<>(RESPONSE_MAP.keySet()))), false);
+                    });
+                }
             }
         },
         JOKE {
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 success(tardis, player, world);
-
             }
 
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                // List of jokes that Handles might say
                 List<String> jokes = List.of(
                         "Why did the Dalek apply for a job? It wanted to EX-TER-MINATE its competition!",
                         "How many Time Lords does it take to change a light bulb? None, they just change the timeline.",
@@ -296,12 +305,9 @@ public class HandlesItem extends LinkableItem {
                         "What do you call a Time Lord with no time? A Lord!",
                         "Why was the TARDIS always calm? Because it’s bigger on the inside."
                 );
-
                 String randomJoke = jokes.get((int) (Math.random() * jokes.size()));
-                return Text.literal("<Handles> "+ randomJoke);
-
+                return Text.literal("<Handles> " + randomJoke);
             }
-
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -317,13 +323,69 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(getResponseText(tardis, player), false);
+                    });
+                }
+            }
+        },
+        FUN_FACT {
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                success(tardis, player, world);
+            }
+
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                List<String> funFacts = List.of(
+                        "The first TARDIS was actually painted green!",
+                        "Gallifrey has two suns and an orange sky!",
+                        "Handles once saved the Doctor’s life by solving a centuries-old riddle."
+                );
+                String randomFact = funFacts.get((int) (Math.random() * funFacts.size()));
+                return Text.literal("<Handles> " + randomFact);
+            }
+
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(getResponseText(tardis, player), false);
+                    });
+                }
             }
         },
         TAKE_OFF {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.take_off", player.getName());
+                return null;
             }
+
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
@@ -340,8 +402,19 @@ public class HandlesItem extends LinkableItem {
                 if (handbrake) tardis.travel().handbrake(false);
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().increaseSpeed();
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.take_off", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
-            }
+                }
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -357,26 +430,20 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
             }
         },
         DISPLACE {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.displace", player.getName());
+                return null;
             }
+
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
-                if (!tardis.travel().isLanded()) {
-                    failed(tardis, player, world);
-                    return;
-                }
-                if (!tardis.waypoint().hasWaypoint()) {
-                    failed(tardis, player, world);
-                    return;
-                }
-                if (!tardis.travel().autopilot()) {
+                if (!tardis.travel().isLanded() || !tardis.waypoint().hasWaypoint() || !tardis.travel().autopilot()) {
                     failed(tardis, player, world);
                     return;
                 }
@@ -388,10 +455,19 @@ public class HandlesItem extends LinkableItem {
                 if (handbrake) tardis.travel().handbrake(false);
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().increaseSpeed();
-                tardis.waypoint().gotoWaypoint();
 
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.displace", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
-            }
+                }
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -412,7 +488,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_WTIS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_wtis", player.getName());
+                return null;
             }
 
             @Override
@@ -423,6 +499,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             AITSounds.WONDERFUL_TIME_IN_SPACE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_wtis", player.getName()));
+                    });
+                }
 
                 success(tardis, player, world);
             }
@@ -433,6 +519,7 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
             }
 
             @Override
@@ -441,12 +528,14 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
+
             }
         },
         PLAY_DRIFTING {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_wtis", player.getName());
+                return null;
             }
 
             @Override
@@ -457,7 +546,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             AITSounds.DRIFTING_MUSIC, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_drifting", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -480,7 +578,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_MERCURY {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_mercury", player.getName());
+                return null;
             }
 
             @Override
@@ -492,6 +590,16 @@ public class HandlesItem extends LinkableItem {
                             AITSounds.MERCURY_MUSIC, SoundCategory.PLAYERS, 1f, 1f);
                 });
 
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_mercury", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -514,7 +622,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_13 {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_13", player.getName());
+                return null;
             }
 
             @Override
@@ -525,7 +633,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_13, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_13", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -548,7 +665,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_CAT {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_cat", player.getName());
+                return null;
             }
 
             @Override
@@ -559,7 +676,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_CAT, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_cat", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -582,7 +708,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_BLOCKS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_blocks", player.getName());
+                return null;
             }
 
             @Override
@@ -593,7 +719,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_BLOCKS, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_blocks", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -616,7 +751,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_CHIRP {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_chirp", player.getName());
+                return null;
             }
 
             @Override
@@ -627,7 +762,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_CHIRP, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_chirp", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -650,7 +794,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_FAR {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_far", player.getName());
+                return null;
             }
 
             @Override
@@ -661,7 +805,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_FAR, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_far", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -684,7 +837,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_MALL {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_mall", player.getName());
+                return null;
             }
 
             @Override
@@ -695,7 +848,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_MALL, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_mall", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -718,7 +880,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_MELLOHI {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_mellohi", player.getName());
+                return null;
             }
 
             @Override
@@ -729,7 +891,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_MELLOHI, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_mellohi", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -752,7 +923,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_STAL {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_stal", player.getName());
+                return null;
             }
 
             @Override
@@ -763,7 +934,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_STAL, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_stal", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -786,7 +966,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_STRAD {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_strad", player.getName());
+                return null;
             }
 
             @Override
@@ -797,7 +977,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_STRAD, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_strad", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -820,7 +1009,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_WARD {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_ward", player.getName());
+                return null;
             }
 
             @Override
@@ -831,7 +1020,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_WARD, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_ward", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -854,7 +1052,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_11 {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_11", player.getName());
+                return null;
             }
 
             @Override
@@ -865,7 +1063,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_11, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_11", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -888,7 +1095,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_WAIT {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_11", player.getName());
+                return null;
             }
 
             @Override
@@ -899,7 +1106,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_11, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_wait", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -922,7 +1138,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_PIGSTEP {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_pigstep", player.getName());
+                return null;
             }
 
             @Override
@@ -933,7 +1149,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_PIGSTEP, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_pigstep", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -956,7 +1181,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_OTHERSIDE {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_otherside", player.getName());
+                return null;
             }
 
             @Override
@@ -967,7 +1192,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_OTHERSIDE, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_otherside", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -990,7 +1224,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_RELIC {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_relic", player.getName());
+                return null;
             }
 
             @Override
@@ -1001,7 +1235,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_RELIC, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_relic", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -1024,7 +1267,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_5 {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_5", player.getName());
+                return null;
             }
 
             @Override
@@ -1035,7 +1278,16 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_5, SoundCategory.PLAYERS, 1f, 1f);
                 });
-
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.play_5", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
 
@@ -1058,7 +1310,7 @@ public class HandlesItem extends LinkableItem {
         LAND {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.land", player.getName());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -1081,8 +1333,19 @@ public class HandlesItem extends LinkableItem {
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().speed(0);
                 tardis.travel().handbrake(true);
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.land", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
+
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
                 tardis.getDesktop().getConsolePos().forEach(pos -> {
@@ -1102,7 +1365,7 @@ public class HandlesItem extends LinkableItem {
         ACTIVATE_REFUEL {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.activate_refuel", player.getName());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -1116,12 +1379,21 @@ public class HandlesItem extends LinkableItem {
                 if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
                     tardis.travel().handbrake(true);
                     tardis.setRefueling(true);
+                    if (world.getServer() != null) {
+                        world.getServer().execute(() -> {
+                            try {
+                                Thread.sleep(125);
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                            }
+                            player.sendMessage(Text.translatable("message.ait.handles.activate_refuel", player.getName()));
+                        });
+                    }
                     success(tardis, player, world);
+                }
                     return;
                 }
 
-
-            }
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
                 tardis.getDesktop().getConsolePos().forEach(pos -> {
@@ -1141,7 +1413,7 @@ public class HandlesItem extends LinkableItem {
         DISABLE_REFUEL {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.disable_refuel", player.getName());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -1149,6 +1421,16 @@ public class HandlesItem extends LinkableItem {
 
                 if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
                     tardis.setRefueling(false);
+                    if (world.getServer() != null) {
+                        world.getServer().execute(() -> {
+                            try {
+                                Thread.sleep(125);
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                            }
+                            player.sendMessage(Text.translatable("message.ait.handles.disable_refuel", player.getName()));
+                        });
+                    }
                     success(tardis, player, world);
                     return;
                 }
@@ -1173,13 +1455,23 @@ public class HandlesItem extends LinkableItem {
         TOGGLE_SHIELDS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_shields", tardis.shields().shielded());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.shields().toggle();
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.toggle_shields", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1201,7 +1493,7 @@ public class HandlesItem extends LinkableItem {
         OPEN_DOOR {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.open_doors", tardis.door().isOpen());
+                return null;
             }
 
 
@@ -1216,6 +1508,16 @@ public class HandlesItem extends LinkableItem {
                 }
 
                 tardis.door().openDoors();
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.open_doors", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1237,13 +1539,23 @@ public class HandlesItem extends LinkableItem {
         CLOSE_DOOR {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.close_doors", tardis.door().isClosed());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.door().closeDoors();
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.close_doors", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1265,13 +1577,23 @@ public class HandlesItem extends LinkableItem {
         TOGGLE_LOCK {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_lock", tardis.door().locked());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.door().interactToggleLock(null, true);
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.toggle_lock", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1293,7 +1615,7 @@ public class HandlesItem extends LinkableItem {
         ACTIVATE_HANDBRAKE {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.activate_handbrake", tardis.travel().handbrake());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -1306,6 +1628,16 @@ public class HandlesItem extends LinkableItem {
 
                 tardis.travel().handbrake(true);
 
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.activate_handbrake", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1327,7 +1659,7 @@ public class HandlesItem extends LinkableItem {
         DISABLE_HANDBRAKE {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.disable_handbrake", tardis.travel().handbrake());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
@@ -1335,6 +1667,16 @@ public class HandlesItem extends LinkableItem {
 
                 tardis.travel().handbrake(false);
 
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.disable_handbrake", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1356,13 +1698,23 @@ public class HandlesItem extends LinkableItem {
         TOGGLE_ANTIGRAVS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_antigravs", tardis.travel().antigravs());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.travel().antigravs().toggle();
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.toggle_antigravs", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1384,13 +1736,23 @@ public class HandlesItem extends LinkableItem {
         TOGGLE_CLOAK {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_cloaked", tardis.cloak().cloaked().get());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.cloak().cloaked().set(!tardis.cloak().cloaked().get());
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.toggle_cloaked", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override
@@ -1412,13 +1774,23 @@ public class HandlesItem extends LinkableItem {
         TOGGLE_ALARMS {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.toggle_alarms", tardis.alarm().enabled());
+                return null;
             }
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
                 tardis.alarm().toggle();
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.translatable("message.ait.handles.toggle_alarms", player.getName()));
+                    });
+                }
                 success(tardis, player, world);
             }
             @Override

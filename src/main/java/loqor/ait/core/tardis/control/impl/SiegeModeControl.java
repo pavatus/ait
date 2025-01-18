@@ -51,7 +51,7 @@ public class SiegeModeControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return 10000L;
+        return 200;
     }
 
     @Override

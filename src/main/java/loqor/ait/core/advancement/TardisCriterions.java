@@ -1,7 +1,7 @@
 package loqor.ait.core.advancement;
 
-import dev.drtheo.blockqueue.data.TimeUnit;
-import dev.drtheo.scheduler.Scheduler;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 import net.minecraft.advancement.Advancement;
@@ -62,7 +62,7 @@ public class TardisCriterions {
             Advancement advancement = player.getServer().getAdvancementLoader().get(new Identifier("ait/enter_tardis"));
             if (player.getWorld() instanceof TardisServerWorld && !player.getAdvancementTracker().getProgress(advancement).isDone()) {
                 Scheduler.get().runTaskLater(() -> tardis.asServer().getInteriorWorld().playSound(null, player.getBlockPos(), AITSounds.WONDERFUL_TIME_IN_SPACE,
-                        SoundCategory.PLAYERS, 0.6f, 1.0f), TimeUnit.MILLISECONDS, 2000);
+                        SoundCategory.PLAYERS, 0.6f, 1.0f), TimeUnit.TICKS, 40);
             }
             TardisCriterions.ENTER_TARDIS.trigger(player);
         });

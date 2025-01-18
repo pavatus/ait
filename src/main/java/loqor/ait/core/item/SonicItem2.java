@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -49,25 +48,16 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
         ItemStack stack = user.getStackInHand(hand);
         SonicMode mode = mode(stack);
 
-        if (mode == null) return TypedActionResult.fail(stack);
+        if (mode == null)
+            return TypedActionResult.fail(stack);
 
         if (user.isSneaking()) {
-            world.playSound(user, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1F, 1F);
-            Text message = null;
+            mode = mode.next();
+            setMode(stack, mode);
 
-            if (mode.next() == SonicMode.Modes.INACTIVE) {
-                message = Text.translatable("sonic.ait.mode.inactive").formatted(Formatting.GRAY, Formatting.BOLD);
-            } else if (mode.next() == SonicMode.Modes.INTERACTION) {
-                message = Text.translatable("sonic.ait.mode.interaction").formatted(Formatting.GREEN,Formatting.BOLD);
-            } else if (mode.next() == SonicMode.Modes.OVERLOAD) {
-                message = Text.translatable("sonic.ait.mode.overload").formatted(Formatting.RED, Formatting.BOLD);
-            } else if (mode.next() == SonicMode.Modes.SCANNING) {
-                message = Text.translatable("sonic.ait.mode.scanning").formatted(Formatting.YELLOW, Formatting.BOLD);
-            } else if (mode.next() == SonicMode.Modes.TARDIS) {
-                message = Text.translatable("sonic.ait.mode.tardis").formatted(Formatting.BLUE, Formatting.BOLD);
-            }
-            user.sendMessage(message, true);
-            setMode(stack, mode.next());
+            world.playSound(user, user.getBlockPos(), AITSounds.SONIC_SWITCH, SoundCategory.PLAYERS, 1F, 1F);
+            user.sendMessage(mode.text(), true);
+
             return TypedActionResult.consume(stack);
         }
 

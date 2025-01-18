@@ -13,6 +13,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -163,23 +164,22 @@ public class KeyItem extends LinkableItem {
             );
         }
         tardis.alarm().enabled().set(true);
-
-
-        travel.dematerialize();
-        travel.autopilot(true);
+        tardis.travel().forceDemat();
 
         if (travel.getState() != TravelHandlerBase.State.DEMAT)
             return;
 
         travel.forceDestination(globalPos);
-        travel.speed(9999);
+        travel.decreaseFlightTime(500000);
         travel.forceRemat();
-
-        tardis.removeFuel(100);
+        tardis.shields().enable();
+        tardis.shields().enableVisuals();
+        tardis.removeFuel(4250);
 
 
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));
+        ((ServerWorld) world).spawnParticles(ParticleTypes.ELECTRIC_SPARK, pos.getX(), pos.getY(), pos.getZ(), 10, 1, 1, 1, 1);
 
         player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
@@ -187,7 +187,7 @@ public class KeyItem extends LinkableItem {
         tardis.door().previouslyLocked().set(false);
 
         // like a sound to show it's been called
-        world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
+        world.playSound(null, pos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 5f, 0.1f);
         world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
     }
 
