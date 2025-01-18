@@ -28,9 +28,9 @@ public class AITDimensions {
     public static WorldBlueprint TARDIS_WORLD_BLUEPRINT;
 
     public static void init() {
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            Registry.register(Registries.CHUNK_GENERATOR, AITMod.id("void"), VoidChunkGenerator.CODEC);
+        Registry.register(Registries.CHUNK_GENERATOR, AITMod.id("void"), VoidChunkGenerator.CODEC);
 
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             TARDIS_WORLD_BLUEPRINT = new WorldBlueprint(AITMod.id("tardis"))
                     .setPersistent(true).shouldTickTime(false).withCreator(TardisServerWorld::new)
                     .withType(AITMod.id("tardis_dimension_type"))

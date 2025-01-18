@@ -181,7 +181,7 @@ public class AITItems extends ItemContainer {
 
     public static final Item HANDLES = new HandlesItem(new AItemSettings().maxCount(1).group(AITItemGroups.MAIN));
 
-    public static final Item COFFEE = new HotChocolateItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item COFFEE = new CoffeeItem(new AItemSettings().group(AITItemGroups.MAIN));
 
 
     // Block controls
