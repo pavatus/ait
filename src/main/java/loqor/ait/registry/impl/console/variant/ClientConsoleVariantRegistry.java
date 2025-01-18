@@ -22,7 +22,9 @@ import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVaria
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientWoodenHartnellVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaisanceFireVariant;
 import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaisanceVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.clientRenaisanceTokamakVariant;
 import loqor.ait.data.schema.console.variant.steam.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamGildedVariant;
@@ -201,6 +203,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema COPPER_TAIGA;
     public static ClientConsoleVariantSchema CRYSTALLINE;
     public static ClientConsoleVariantSchema RENAISANCE;
+    public static ClientConsoleVariantSchema RENAISANCE_FIRE;
+    public static ClientConsoleVariantSchema RENAISANCE_TOKAMAK;
 
 
     @Override
@@ -244,6 +248,10 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
         // Crystalline variants
         CRYSTALLINE = register(new ClientCrystallineVariant());
+
+        //Renaisance variants
         RENAISANCE = register(new ClientRenaisanceVariant());
+        RENAISANCE_TOKAMAK = register(new clientRenaisanceTokamakVariant());
+        RENAISANCE_FIRE = register(new ClientRenaisanceFireVariant());
     }
 }
