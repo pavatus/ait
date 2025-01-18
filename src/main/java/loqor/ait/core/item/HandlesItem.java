@@ -446,7 +446,7 @@ public class HandlesItem extends LinkableItem {
         PLAY_DRIFTING {
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return Text.translatable("message.ait.handles.play_wtis", player.getName());
+                return Text.translatable("message.ait.handles.play_drifting", player.getName());
             }
 
             @Override
