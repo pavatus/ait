@@ -10,6 +10,7 @@ import java.util.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import dev.pavatus.register.unlockable.Unlockable;
 
 import net.minecraft.registry.RegistryKey;
@@ -28,7 +29,6 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.vortex.reference.VortexReference;
 import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.core.util.Lazy;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;

@@ -33,6 +33,11 @@ public class ScanningSonicMode extends SonicMode {
     }
 
     @Override
+    public Text text() {
+        return Text.translatable("sonic.ait.mode.scanning").formatted(Formatting.YELLOW, Formatting.BOLD);
+    }
+
+    @Override
     public int maxTime() {
         return 5 * 60 * 20;
     }

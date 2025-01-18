@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.animation;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -23,7 +24,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.NetworkUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 
 public abstract class ExteriorAnimation {
 

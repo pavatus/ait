@@ -1,10 +1,11 @@
 package loqor.ait.core.engine;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
+
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.util.ServerLifecycleHooks;
 
 public abstract class DurableSubSystem extends SubSystem {
     private float durability = 0;

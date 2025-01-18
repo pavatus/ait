@@ -45,7 +45,7 @@ public class RandomiserControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return 2000L;
+        return 40;
     }
 
     private void messagePlayer(ServerPlayerEntity player, TravelHandler travel) {

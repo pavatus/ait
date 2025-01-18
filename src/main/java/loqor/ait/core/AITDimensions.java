@@ -1,10 +1,12 @@
 package loqor.ait.core;
 
-import dev.pavatus.multidim.MultiDim;
-import dev.pavatus.multidim.api.VoidChunkGenerator;
-import dev.pavatus.multidim.api.WorldBlueprint;
+import dev.drtheo.multidim.MultiDim;
+import dev.drtheo.multidim.api.VoidChunkGenerator;
+import dev.drtheo.multidim.api.WorldBlueprint;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.world.World;
@@ -27,6 +29,8 @@ public class AITDimensions {
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            Registry.register(Registries.CHUNK_GENERATOR, AITMod.id("void"), VoidChunkGenerator.CODEC);
+
             TARDIS_WORLD_BLUEPRINT = new WorldBlueprint(AITMod.id("tardis"))
                     .setPersistent(true).shouldTickTime(false).withCreator(TardisServerWorld::new)
                     .withType(AITMod.id("tardis_dimension_type"))

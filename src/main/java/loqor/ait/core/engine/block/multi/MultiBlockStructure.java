@@ -2,6 +2,7 @@ package loqor.ait.core.engine.block.multi;
 
 import java.util.*;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -16,7 +17,6 @@ import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.mixin.server.structure.StructureTemplateAccessor;
 

@@ -16,6 +16,8 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -38,6 +40,11 @@ public class OverloadSonicMode extends SonicMode {
 
     protected OverloadSonicMode(int index) {
         super(index);
+    }
+
+    @Override
+    public Text text() {
+        return Text.translatable("sonic.ait.mode.overload").formatted(Formatting.RED, Formatting.BOLD);
     }
 
     @Override

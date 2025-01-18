@@ -1,7 +1,7 @@
 package loqor.ait.mixin.server;
 
-import dev.drtheo.blockqueue.data.TimeUnit;
-import dev.drtheo.scheduler.ClientScheduler;
+import dev.drtheo.scheduler.api.ClientScheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.spongepowered.asm.mixin.Mixin;
@@ -60,8 +60,8 @@ public class BedInTardisMixin {
             case COMPANION -> AITSounds.COMPANION_BED;
             case NEUTRAL -> AITSounds.NEUTRAL_BED;
             case REJECT -> AITSounds.REJECT_BED;
-
         };
+
         ClientScheduler.get().runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
     }
 }

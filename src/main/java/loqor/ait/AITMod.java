@@ -6,9 +6,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-import dev.drtheo.scheduler.Scheduler;
 import dev.pavatus.config.AITConfig;
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
 import dev.pavatus.register.Registries;
@@ -68,7 +68,6 @@ import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.core.util.CustomTrades;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.world.LandingPadManager;
@@ -121,7 +120,6 @@ public class AITMod implements ModInitializer {
     public void onInitialize() {
         ServerLifecycleHooks.init();
         NetworkUtil.init();
-        Scheduler.init();
         AsyncLocatorUtil.setupExecutorService();
 
         ConsoleRegistry.init();

@@ -5,7 +5,3 @@ accessible field net/minecraft/item/ItemGroup texture Ljava/lang/String;
 accessible field net/minecraft/item/ItemGroup scrollbar Z
 accessible field net/minecraft/item/ItemGroup renderName Z
 accessible field net/minecraft/item/ItemGroup special Z
-
-# loqor.ait
-accessible method net/minecraft/world/chunk/WorldChunk$WrappedBlockEntityTickInvoker setWrapped (Lnet/minecraft/world/chunk/BlockEntityTickInvoker;)V
-accessible class net/minecraft/world/chunk/WorldChunk$WrappedBlockEntityTickInvoker
