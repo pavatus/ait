@@ -15,19 +15,37 @@ import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 public class DecorationBlocks extends BlockContainer {
     @NoEnglish
     public static final Block MINT_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY), "MINT");
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL), "MINT (Version A)");
+    @NoEnglish
+    public static final Block MINT_ROUNDEL_SIDE = new RoundelBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL), "MINT (Version B)");
     @NoEnglish
     public static final Block WHITE_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"WHITE");
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"WHITE (Version A)");
+    @NoEnglish
+    public static final Block WHITE_ROUNDEL_SIDE = new RoundelBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"WHITE (Version B)");
     @NoEnglish
     public static final Block DARK_OAK_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"DARK OAK");
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"DARK OAK (Version A)");
+    @NoEnglish
+    public static final Block DARK_OAK_ROUNDEL_SIDE = new RoundelBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"DARK OAK (Version B)");
     @NoEnglish
     public static final Block TARDIM_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"TARDIM");
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"TARDIM (Version A)");
+    @NoEnglish
+    public static final Block TARDIM_ROUNDEL_SIDE = new RoundelBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"TARDIM (Version B)");
     @NoEnglish
     public static final Block RENAISSANCE_ROUNDEL = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.DESTROY),"RENAISSANCE");
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"RENAISSANCE (Version A)");
+
+
+
+
+
+
 
 
     @Override
