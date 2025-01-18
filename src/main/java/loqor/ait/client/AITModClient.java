@@ -424,6 +424,7 @@ public class AITModClient implements ClientModInitializer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
             EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
         }
+        EntityRendererRegistry.register(AITEntityTypes.NIGHTMARE_CYBERMAN_ENTITY_TYPE, NightmareCybermanRenderer::new);
     }
 
     public static void setupBlockRendering() {

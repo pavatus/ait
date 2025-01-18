@@ -53,6 +53,7 @@ import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
 import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
+import loqor.ait.core.entities.DummyCybermanEntity;
 import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.item.blueprint.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
@@ -290,6 +291,9 @@ public class AITMod implements ModInitializer {
 
         FabricDefaultAttributeRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE,
                 FlightTardisEntity.createDummyAttributes());
+
+        FabricDefaultAttributeRegistry.register(AITEntityTypes.NIGHTMARE_CYBERMAN_ENTITY_TYPE,
+                DummyCybermanEntity.createDummyCybermanAttributes());
     }
 
     public static final Identifier OPEN_SCREEN = AITMod.id("open_screen");
