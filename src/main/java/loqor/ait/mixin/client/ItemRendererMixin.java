@@ -1,5 +1,6 @@
 package loqor.ait.mixin.client;
 
+import dev.pavatus.planet.core.PlanetItems;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,7 +42,7 @@ public class ItemRendererMixin {
             this.ait$handleGeigerCounterRendering(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, world, light, overlay, seed, ci);
         }
 
-        if (stack.isOf(AITItems.HANDLES)) {
+        if (stack.isOf(PlanetItems.HANDLES)) {
             this.ait$handleHandlesRendering(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, world, light, overlay, seed, ci);
         }
     }
@@ -57,7 +58,7 @@ public class ItemRendererMixin {
         if (stack.isOf(AITItems.GEIGER_COUNTER)) {
             this.ait$handleGeigerCounterRendering(null, stack, renderMode, leftHanded, matrices, vertexConsumers, null, light, overlay, 0, ci);
         }
-        if (stack.isOf(AITItems.HANDLES)) {
+        if (stack.isOf(PlanetItems.HANDLES)) {
             this.ait$handleHandlesRendering(null, stack, renderMode, leftHanded, matrices, vertexConsumers, null, light, overlay, 0, ci);
         }
     }
@@ -101,7 +102,7 @@ public class ItemRendererMixin {
     }
 
     @Unique private void ait$handleHandlesRendering(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, @Nullable World world, int light, int overlay, int seed, CallbackInfo ci) {
-        if (!stack.isOf(AITItems.HANDLES))
+        if (!stack.isOf(PlanetItems.HANDLES))
             return;
 
         matrices.push();

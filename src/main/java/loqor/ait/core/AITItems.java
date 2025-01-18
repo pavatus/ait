@@ -179,7 +179,6 @@ public class AITItems extends ItemContainer {
     public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC,
             new AItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
 
-    public static final Item HANDLES = new HandlesItem(new AItemSettings().maxCount(1).group(AITItemGroups.MAIN));
 
 
     //Renaissance liquids

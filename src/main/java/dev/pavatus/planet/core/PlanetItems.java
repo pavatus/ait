@@ -6,6 +6,8 @@ import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.item.AnorthositeSwordItem;
 import dev.pavatus.planet.core.item.PlanetToolMaterial;
 import dev.pavatus.planet.core.item.SpacesuitItem;
+import loqor.ait.core.AITItemGroups;
+import loqor.ait.core.item.HandlesItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +42,8 @@ public class PlanetItems extends ItemContainer {
     public static final Item ANORTHOSITE_PICKAXE = new PickaxeItem(PlanetToolMaterial.ANORTHOSITE, 2, 2f, new AItemSettings());
     public static final Item ANORTHOSITE_AXE = new AxeItem(PlanetToolMaterial.ANORTHOSITE, 3, 1f, new AItemSettings());
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new AItemSettings());
+
+    public static final Item HANDLES = new HandlesItem(new AItemSettings().maxCount(1).group(PlanetModule.instance().getItemGroup()));
 
     // MATERIALS
     public static final Item FABRIC = new Item(new AItemSettings());
