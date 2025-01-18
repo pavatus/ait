@@ -113,9 +113,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        if (variant instanceof ClientRenaisanceVariant)
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
-            matrices.translate( -0.5, -1.5,0.5);
 
         profiler.swap("animate");
         model.animateBlockEntity(entity, tardis.travel().getState(), hasPower);
