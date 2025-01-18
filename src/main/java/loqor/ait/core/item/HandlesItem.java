@@ -87,6 +87,7 @@ public class HandlesItem extends LinkableItem {
         //Misc stuff
         RESPONSE_MAP.put("help", HandlesResponses.HELP);
         RESPONSE_MAP.put("tell me a joke", HandlesResponses.JOKE);
+        RESPONSE_MAP.put("tell me a fun fact", HandlesResponses.FUN_FACT);
 
         //Demat
         RESPONSE_MAP.put("take off", HandlesResponses.TAKE_OFF);
@@ -299,6 +300,43 @@ public class HandlesItem extends LinkableItem {
 
                 String randomJoke = jokes.get((int) (Math.random() * jokes.size()));
                 return Text.literal("<Handles> "+ randomJoke);
+
+            }
+
+
+            @Override
+            public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_DENIED, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+
+            @Override
+            public void success(Tardis tardis, PlayerEntity player, ServerWorld world) {
+                tardis.getDesktop().getConsolePos().forEach(pos -> {
+                    player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+                            AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
+                });
+            }
+        },
+        FUN_FACT {
+            @Override
+            public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+                success(tardis, player, world);
+
+            }
+
+            @Override
+            public Text getResponseText(Tardis tardis, PlayerEntity player) {
+                // List of fun facts that Handles might say
+                List<String> fun_fact = List.of(
+                        "insert fun fact",
+                        "insert fun fact2"
+                );
+
+                String randomFact = fun_fact.get((int) (Math.random() * fun_fact.size()));
+                return Text.literal("<Handles> "+ randomFact);
 
             }
 
