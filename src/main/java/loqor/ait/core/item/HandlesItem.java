@@ -255,14 +255,12 @@ public class HandlesItem extends LinkableItem {
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 success(tardis, player, world);
-
             }
 
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                return(Text.literal("<Handles> Here are all the available commands: " + String.valueOf(new ArrayList<>(RESPONSE_MAP.keySet()))));
+                return null;
             }
-
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -278,18 +276,28 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(Text.literal("<Handles> Here are all the available commands: "
+                                + String.valueOf(new ArrayList<>(RESPONSE_MAP.keySet()))), false);
+                    });
+                }
             }
         },
         JOKE {
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 success(tardis, player, world);
-
             }
 
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                // List of jokes that Handles might say
                 List<String> jokes = List.of(
                         "Why did the Dalek apply for a job? It wanted to EX-TER-MINATE its competition!",
                         "How many Time Lords does it take to change a light bulb? None, they just change the timeline.",
@@ -297,12 +305,9 @@ public class HandlesItem extends LinkableItem {
                         "What do you call a Time Lord with no time? A Lord!",
                         "Why was the TARDIS always calm? Because it’s bigger on the inside."
                 );
-
                 String randomJoke = jokes.get((int) (Math.random() * jokes.size()));
-                return Text.literal("<Handles> "+ randomJoke);
-
+                return Text.literal("<Handles> " + randomJoke);
             }
-
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -318,28 +323,35 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(getResponseText(tardis, player), false);
+                    });
+                }
             }
         },
         FUN_FACT {
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 success(tardis, player, world);
-
             }
 
             @Override
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
-                // List of fun facts that Handles might say
-                List<String> fun_fact = List.of(
-                        "insert fun fact",
-                        "insert fun fact2"
+                List<String> funFacts = List.of(
+                        "The first TARDIS was actually painted green!",
+                        "Gallifrey has two suns and an orange sky!",
+                        "Handles once saved the Doctor’s life by solving a centuries-old riddle."
                 );
-
-                String randomFact = fun_fact.get((int) (Math.random() * fun_fact.size()));
-                return Text.literal("<Handles> "+ randomFact);
-
+                String randomFact = funFacts.get((int) (Math.random() * funFacts.size()));
+                return Text.literal("<Handles> " + randomFact);
             }
-
 
             @Override
             public void failed(Tardis tardis, PlayerEntity player, ServerWorld world) {
@@ -355,6 +367,17 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        player.sendMessage(getResponseText(tardis, player), false);
+                    });
+                }
             }
         },
         TAKE_OFF {
@@ -362,6 +385,7 @@ public class HandlesItem extends LinkableItem {
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
                 return Text.translatable("message.ait.handles.take_off", player.getName());
             }
+
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
@@ -378,7 +402,17 @@ public class HandlesItem extends LinkableItem {
                 if (handbrake) tardis.travel().handbrake(false);
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().increaseSpeed();
-                success(tardis, player, world);
+
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        success(tardis, player, world);
+                    });
+                }
             }
 
             @Override
@@ -402,19 +436,12 @@ public class HandlesItem extends LinkableItem {
             public Text getResponseText(Tardis tardis, PlayerEntity player) {
                 return Text.translatable("message.ait.handles.displace", player.getName());
             }
+
             @Override
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
-                if (!tardis.travel().isLanded()) {
-                    failed(tardis, player, world);
-                    return;
-                }
-                if (!tardis.waypoint().hasWaypoint()) {
-                    failed(tardis, player, world);
-                    return;
-                }
-                if (!tardis.travel().autopilot()) {
+                if (!tardis.travel().isLanded() || !tardis.waypoint().hasWaypoint() || !tardis.travel().autopilot()) {
                     failed(tardis, player, world);
                     return;
                 }
@@ -426,9 +453,18 @@ public class HandlesItem extends LinkableItem {
                 if (handbrake) tardis.travel().handbrake(false);
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().increaseSpeed();
-                tardis.waypoint().gotoWaypoint();
 
-                success(tardis, player, world);
+                if (world.getServer() != null) {
+                    world.getServer().execute(() -> {
+                        try {
+                            Thread.sleep(125);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                        tardis.waypoint().gotoWaypoint();
+                        success(tardis, player, world);
+                    });
+                }
             }
 
             @Override
