@@ -63,6 +63,9 @@ public class TardisItemBuilder extends Item {
         if (player.getItemCooldownManager().isCoolingDown(this))
             return ActionResult.FAIL;
 
+        if (player.getOffHandStack() != null)
+            return ActionResult.FAIL;
+
         if (context.getHand() != Hand.MAIN_HAND)
             return ActionResult.SUCCESS;
 
