@@ -3,6 +3,7 @@ package loqor.ait.core.engine.impl;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.joml.Vector3f;
 
 import net.minecraft.sound.SoundEvent;
@@ -19,7 +20,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 
 public class EngineSystem extends DurableSubSystem {

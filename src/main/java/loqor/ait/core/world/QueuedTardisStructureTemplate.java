@@ -1,6 +1,6 @@
 package loqor.ait.core.world;
 
-import dev.drtheo.blockqueue.QueuedStructureTemplate;
+import dev.drtheo.queue.api.util.structure.QueuedStructureTemplate;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;

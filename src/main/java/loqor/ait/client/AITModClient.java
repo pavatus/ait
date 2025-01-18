@@ -6,7 +6,6 @@ import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 import java.util.UUID;
 
-import dev.drtheo.scheduler.ClientScheduler;
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.register.Registries;
 import net.fabricmc.api.ClientModInitializer;
@@ -81,8 +80,6 @@ public class AITModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientScheduler.init();
-
         Registries.getInstance().subscribe(Registries.InitType.CLIENT);
 
         // TODO move to Registries

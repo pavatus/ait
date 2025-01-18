@@ -2,8 +2,8 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
-import dev.drtheo.blockqueue.data.TimeUnit;
-import dev.drtheo.scheduler.Scheduler;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -359,7 +359,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
             this.dataTracker.set(ON_DELAY, true);
 
-            Scheduler.get().runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
+            Scheduler.get().runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.TICKS, this.control.getDelayLength());
         }
 
         if (this.consoleBlockPos != null)

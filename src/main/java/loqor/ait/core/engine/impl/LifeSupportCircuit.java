@@ -2,6 +2,8 @@ package loqor.ait.core.engine.impl;
 
 import java.util.List;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -16,7 +18,6 @@ import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 
 public class LifeSupportCircuit extends DurableSubSystem implements StructureHolder {
     private static final MultiBlockStructure STRUCTURE = createStructure();

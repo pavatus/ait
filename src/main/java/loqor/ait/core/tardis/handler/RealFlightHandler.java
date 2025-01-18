@@ -1,7 +1,7 @@
 package loqor.ait.core.tardis.handler;
 
-import dev.drtheo.blockqueue.data.TimeUnit;
-import dev.drtheo.scheduler.Scheduler;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -93,6 +93,7 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
                 player, this.tardis.asServer());
 
         TardisUtil.teleportOutside(tardis, player);
+
         Scheduler.get().runTaskLater(() -> {
             player.startRiding(entity);
             this.sendEnterFlightPacket(player);

@@ -191,7 +191,7 @@ public class TelepathicControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return 5 * 1000L;
+        return 1000;
     }
 
     @Override

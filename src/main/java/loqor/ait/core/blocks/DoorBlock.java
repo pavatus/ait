@@ -1,5 +1,6 @@
 package loqor.ait.core.blocks;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -35,7 +36,6 @@ import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.ShapeUtil;
 import loqor.ait.data.DirectedGlobalPos;
 

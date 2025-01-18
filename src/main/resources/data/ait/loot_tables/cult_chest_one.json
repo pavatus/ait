@@ -53,6 +53,11 @@
           "type": "minecraft:item",
           "name": "ait:cult_staser",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:handles",
+          "weight": 0.5
         }
       ],
       "rolls": 15

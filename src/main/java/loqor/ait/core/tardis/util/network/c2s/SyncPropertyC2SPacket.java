@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.util.network.c2s;
 
 import java.util.UUID;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -15,7 +16,6 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.properties.Value;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 

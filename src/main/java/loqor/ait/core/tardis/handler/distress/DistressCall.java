@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.handler.distress;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,6 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
 import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.DirectedGlobalPos;
