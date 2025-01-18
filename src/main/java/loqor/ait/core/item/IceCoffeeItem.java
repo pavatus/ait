@@ -21,9 +21,9 @@ import net.minecraft.world.event.GameEvent;
 
 import loqor.ait.core.AITItems;
 
-public class CoffeeItem extends Item {
+public class IceCoffeeItem extends Item {
 
-    public CoffeeItem(Item.Settings settings) {
+    public IceCoffeeItem(Item.Settings settings) {
         super(settings);
     }
 
@@ -40,7 +40,7 @@ public class CoffeeItem extends Item {
             Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity)playerEntity, stack);
         }
         if (!world.isClient) {
-                user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 340, 2));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 340, 2));
         }
         if (playerEntity != null) {
             playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));

@@ -1,5 +1,6 @@
 package loqor.ait.data.schema.console.variant.renaisance;
 
+import loqor.ait.data.schema.console.type.RenaisanceType;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -10,6 +11,6 @@ public class RenaisanceVariant extends ConsoleVariantSchema {
     public static final Identifier REFERENCE = AITMod.id("console/renaisance");
 
     public RenaisanceVariant() {
-        super(RenaisanceVariant.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));
+        super(RenaisanceType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));
     }
 }

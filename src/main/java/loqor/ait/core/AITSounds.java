@@ -186,6 +186,8 @@ public class AITSounds {
     public static final SoundEvent REMOTE = register("tools/remote");
     public static final SoundEvent REDSTONE_CONTROL_SWITCHAROO = register("tools/redstone_control_switcharoo");
     public static final SoundEvent HAMMER_HIT = register("tools/hammer_hit");
+    public static final SoundEvent COFFEE_MACHINE = register("tardis/coffee_machine");
+
 
 
 
