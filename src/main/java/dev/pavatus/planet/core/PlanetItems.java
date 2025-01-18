@@ -6,12 +6,12 @@ import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.item.AnorthositeSwordItem;
 import dev.pavatus.planet.core.item.PlanetToolMaterial;
 import dev.pavatus.planet.core.item.SpacesuitItem;
-import loqor.ait.core.AITItemGroups;
-import loqor.ait.core.item.HandlesItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.*;
+
+import loqor.ait.core.item.HandlesItem;
 
 public class PlanetItems extends ItemContainer {
 
