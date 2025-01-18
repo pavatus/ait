@@ -181,7 +181,17 @@ public class AITItems extends ItemContainer {
 
     public static final Item HANDLES = new HandlesItem(new AItemSettings().maxCount(1).group(AITItemGroups.MAIN));
 
+
+    //Renaissance liquids
+    public static final Item MUG_EMPTY = new MugEmptyItem(new AItemSettings().group(AITItemGroups.MAIN));
     public static final Item COFFEE = new CoffeeItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item TEA = new TeaItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item LATTE = new LatteItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item MILK = new MilkItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item WATER = new WaterItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item ICE_COFFEE = new IceCoffeeItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item COCO_MILK = new CocoMilkItem(new AItemSettings().group(AITItemGroups.MAIN));
+
 
 
     // Block controls
