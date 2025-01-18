@@ -279,11 +279,6 @@ public class HandlesItem extends LinkableItem {
 
                 if (world.getServer() != null) {
                     world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
                         player.sendMessage(Text.literal("<Handles> Here are all the available commands: "
                                 + String.valueOf(new ArrayList<>(RESPONSE_MAP.keySet()))), false);
                     });
@@ -324,16 +319,9 @@ public class HandlesItem extends LinkableItem {
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(getResponseText(tardis, player), false);
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(getResponseText(tardis, player), false);
+                });
             }
         },
         FUN_FACT {
@@ -368,16 +356,9 @@ public class HandlesItem extends LinkableItem {
                             AITSounds.HANDLES_AFFIRMATIVE, SoundCategory.PLAYERS, 1f, 1f);
                 });
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(getResponseText(tardis, player), false);
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(getResponseText(tardis, player), false);
+                });
             }
         },
         TAKE_OFF {
@@ -403,16 +384,9 @@ public class HandlesItem extends LinkableItem {
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().increaseSpeed();
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.take_off", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.take_off", player.getName()));
+                });
                 success(tardis, player, world);
                 }
 
@@ -456,16 +430,9 @@ public class HandlesItem extends LinkableItem {
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().increaseSpeed();
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.displace", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.displace", player.getName()));
+                });
                 success(tardis, player, world);
                 }
 
@@ -499,16 +466,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             AITSounds.WONDERFUL_TIME_IN_SPACE, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_wtis", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_wtis", player.getName()));
+                });
 
                 success(tardis, player, world);
             }
@@ -546,16 +506,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             AITSounds.DRIFTING_MUSIC, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_drifting", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_drifting", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -590,16 +543,9 @@ public class HandlesItem extends LinkableItem {
                             AITSounds.MERCURY_MUSIC, SoundCategory.PLAYERS, 1f, 1f);
                 });
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_mercury", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_mercury", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -633,16 +579,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_13, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_13", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_13", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -676,16 +615,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_CAT, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_cat", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_cat", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -719,16 +651,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_BLOCKS, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_blocks", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_blocks", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -762,16 +687,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_CHIRP, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_chirp", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_chirp", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -805,16 +723,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_FAR, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_far", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_far", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -848,16 +759,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_MALL, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_mall", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_mall", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -891,16 +795,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_MELLOHI, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_mellohi", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_mellohi", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -934,16 +831,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_STAL, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_stal", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_stal", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -977,16 +867,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_STRAD, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_strad", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_strad", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1020,16 +903,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_WARD, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_ward", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_ward", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1063,16 +939,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_11, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_11", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_11", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1106,16 +975,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_11, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_wait", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_wait", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1149,16 +1011,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_PIGSTEP, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_pigstep", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_pigstep", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1192,16 +1047,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_OTHERSIDE, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_otherside", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_otherside", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1235,16 +1083,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_RELIC, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_relic", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_relic", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1278,16 +1119,9 @@ public class HandlesItem extends LinkableItem {
                     player.getWorld().playSound(null, consolePos.getX(), consolePos.getY(), consolePos.getZ(),
                             SoundEvents.MUSIC_DISC_5, SoundCategory.PLAYERS, 1f, 1f);
                 });
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.play_5", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.play_5", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1333,16 +1167,9 @@ public class HandlesItem extends LinkableItem {
                 if (doors) tardis.door().closeDoors();
                 if (speed) tardis.travel().speed(0);
                 tardis.travel().handbrake(true);
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.land", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.land", player.getName()));
+                });
                 success(tardis, player, world);
             }
 
@@ -1379,16 +1206,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
                     tardis.travel().handbrake(true);
                     tardis.setRefueling(true);
-                    if (world.getServer() != null) {
-                        world.getServer().execute(() -> {
-                            try {
-                                Thread.sleep(125);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                            }
-                            player.sendMessage(Text.translatable("message.ait.handles.activate_refuel", player.getName()));
-                        });
-                    }
+                    world.getServer().execute(() -> {
+                        player.sendMessage(Text.translatable("message.ait.handles.activate_refuel", player.getName()));
+                    });
                     success(tardis, player, world);
                 }
                     return;
@@ -1421,16 +1241,9 @@ public class HandlesItem extends LinkableItem {
 
                 if (tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
                     tardis.setRefueling(false);
-                    if (world.getServer() != null) {
-                        world.getServer().execute(() -> {
-                            try {
-                                Thread.sleep(125);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                            }
-                            player.sendMessage(Text.translatable("message.ait.handles.disable_refuel", player.getName()));
-                        });
-                    }
+                    world.getServer().execute(() -> {
+                        player.sendMessage(Text.translatable("message.ait.handles.disable_refuel", player.getName()));
+                    });
                     success(tardis, player, world);
                     return;
                 }
@@ -1462,16 +1275,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.shields().toggle();
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.toggle_shields", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.toggle_shields", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1508,16 +1314,9 @@ public class HandlesItem extends LinkableItem {
                 }
 
                 tardis.door().openDoors();
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.open_doors", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.open_doors", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1546,16 +1345,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.door().closeDoors();
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.close_doors", player.getName()));
-                    });
-                }
+                 world.getServer().execute(() -> {
+                     player.sendMessage(Text.translatable("message.ait.handles.close_doors", player.getName()));
+                 });
                 success(tardis, player, world);
             }
             @Override
@@ -1584,16 +1376,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.door().interactToggleLock(null, true);
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.toggle_lock", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.toggle_lock", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1628,16 +1413,9 @@ public class HandlesItem extends LinkableItem {
 
                 tardis.travel().handbrake(true);
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.activate_handbrake", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.activate_handbrake", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1667,16 +1445,9 @@ public class HandlesItem extends LinkableItem {
 
                 tardis.travel().handbrake(false);
 
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.disable_handbrake", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.disable_handbrake", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1705,16 +1476,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.travel().antigravs().toggle();
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.toggle_antigravs", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.toggle_antigravs", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1743,16 +1507,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.cloak().cloaked().set(!tardis.cloak().cloaked().get());
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.toggle_cloaked", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.toggle_cloaked", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
@@ -1781,16 +1538,9 @@ public class HandlesItem extends LinkableItem {
                 if (tardis == null) return;
 
                 tardis.alarm().toggle();
-                if (world.getServer() != null) {
-                    world.getServer().execute(() -> {
-                        try {
-                            Thread.sleep(125);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        player.sendMessage(Text.translatable("message.ait.handles.toggle_alarms", player.getName()));
-                    });
-                }
+                world.getServer().execute(() -> {
+                    player.sendMessage(Text.translatable("message.ait.handles.toggle_alarms", player.getName()));
+                });
                 success(tardis, player, world);
             }
             @Override
