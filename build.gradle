@@ -100,13 +100,13 @@ dependencies {
 
     modCompileOnlyApi "maven.modrinth:k9-mod:${project.k9_version}"
 
-    include(modImplementation("com.github.DrTheodor:mc-multidim:v2.0.0")) {
+    include(modImplementation("com.github.DrTheodor:mc-multidim:${project.multidim_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include(modImplementation("com.github.DrTheodor:mc-scheduler:v1.0.1")) {
+    include(modImplementation("com.github.DrTheodor:mc-scheduler:${project.scheduler_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include(modImplementation("com.github.DrTheodor:mc-queue:v1.0.1-1.20")) {
+    include(modImplementation("com.github.DrTheodor:mc-queue:${project.queue_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
 }
