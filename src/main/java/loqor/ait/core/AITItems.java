@@ -182,14 +182,14 @@ public class AITItems extends ItemContainer {
 
 
     //Renaissance liquids
-    public static final Item MUG_EMPTY = new MugEmptyItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item COFFEE = new CoffeeItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item TEA = new TeaItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item LATTE = new LatteItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item MILK = new MilkItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item WATER = new WaterItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item ICE_COFFEE = new IceCoffeeItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item COCO_MILK = new CocoMilkItem(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item MUG_EMPTY = new MugEmptyItem(new AItemSettings());
+    public static final Item COFFEE = new CoffeeItem(new AItemSettings());
+    public static final Item TEA = new TeaItem(new AItemSettings());
+    public static final Item LATTE = new LatteItem(new AItemSettings());
+    public static final Item MILK = new MilkItem(new AItemSettings());
+    public static final Item WATER = new WaterItem(new AItemSettings());
+    public static final Item ICE_COFFEE = new IceCoffeeItem(new AItemSettings());
+    public static final Item COCO_MILK = new CocoMilkItem(new AItemSettings());
 
 
 
@@ -272,6 +272,20 @@ public class AITItems extends ItemContainer {
             entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
             entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
             entries.addAfter(MERCURY_MUSIC_DISC, WONDERFUL_TIME_IN_SPACE_MUSIC_DISC);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
+            entries.addAfter(Items.MILK_BUCKET, COFFEE);
+            entries.addAfter(COFFEE, TEA);
+            entries.addAfter(TEA, LATTE);
+            entries.addAfter(LATTE, MILK);
+            entries.addAfter(MILK, WATER);
+            entries.addAfter(WATER, ICE_COFFEE);
+            entries.addAfter(ICE_COFFEE, COCO_MILK);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.addAfter(Items.BUCKET, MUG_EMPTY);
         });
 
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, AITItemGroups.FABRICATOR.id())).register(entries -> {
