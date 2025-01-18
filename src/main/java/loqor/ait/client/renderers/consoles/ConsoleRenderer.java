@@ -24,7 +24,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaisanceVariant;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
