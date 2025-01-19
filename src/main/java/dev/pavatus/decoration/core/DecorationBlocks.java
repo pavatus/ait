@@ -40,14 +40,11 @@ public class DecorationBlocks extends BlockContainer {
     @NoEnglish
     public static final Block RENAISSANCE_ROUNDEL = new RoundelBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"RENAISSANCE (Version A)");
+    public static final Block RENAISSANCE_ROUNDEL_SIDE = new RoundelBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"RENAISSANCE (Version B)");
     @NoEnglish
     public static final Block CRYSTALLINE_BLOCK = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"CRYSTALLINE");
-
-
-
-
-
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"CRYSTALLINE (Crystal)");
 
 
 

@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "north": "ait:block/decoration/roundels/renaissance_sides",
-    "south": "ait:block/decoration/roundels/renaissance_sides",
-    "east": "ait:block/decoration/roundels/renaissance_sides",
-    "west": "ait:block/decoration/roundels/renaissance_sides",
-    "up": "ait:block/decoration/roundels/renaissance_sides",
-    "down": "ait:block/decoration/roundels/renaissance_sides",
-    "particles": "ait:block/decoration/roundels/renaissance_sides"
+    "north": "ait:block/decoration/roundels/renaissance_roundel_side",
+    "south": "ait:block/decoration/roundels/renaissance_roundel_side",
+    "east": "ait:block/decoration/roundels/renaissance_roundel_side",
+    "west": "ait:block/decoration/roundels/renaissance_roundel_side",
+    "up": "ait:block/decoration/roundels/renaissance_roundel_side",
+    "down": "ait:block/decoration/roundels/renaissance_roundel_side",
+    "particle": "ait:block/decoration/roundels/renaissance_roundel_side"
   }
 }
