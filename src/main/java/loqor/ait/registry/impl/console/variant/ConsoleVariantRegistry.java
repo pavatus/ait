@@ -26,10 +26,10 @@ import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.WoodenHartnellVariant;
-import loqor.ait.data.schema.console.variant.renaisance.RenaisanceFireVariant;
-import loqor.ait.data.schema.console.variant.renaisance.RenaisanceTokamakVariant;
-import loqor.ait.data.schema.console.variant.renaisance.RenaisanceTwentySevenVariant;
-import loqor.ait.data.schema.console.variant.renaisance.RenaisanceVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaissanceFireVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaissanceTokamakVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaissanceTwentySevenVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaissanceVariant;
 import loqor.ait.data.schema.console.variant.steam.*;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaLegacyVariant;
@@ -137,9 +137,9 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema BOREALIS;
     public static ConsoleVariantSchema CRYSTALLINE;
     public static ConsoleVariantSchema RENAISANCE;
-    public static ConsoleVariantSchema RENAISANCE_TOKAMAK;
-    public static ConsoleVariantSchema RENAISANCE_FIRE;
-    public static ConsoleVariantSchema RENAISANCE_TWENTYSEVEN;
+    public static ConsoleVariantSchema RENAISSANCE_TOKAMAK;
+    public static ConsoleVariantSchema RENAISSANCE_FIRE;
+    public static ConsoleVariantSchema RENAISSANCE_TWENTYSEVEN;
 
 
     @Override
@@ -189,10 +189,10 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         CRYSTALLINE = registerStatic(new CrystallineVariant());
 
         // Renaisance variants
-        RENAISANCE = registerStatic(new RenaisanceVariant());
-        RENAISANCE_TOKAMAK = registerStatic(new RenaisanceTokamakVariant());
-        RENAISANCE_FIRE = registerStatic(new RenaisanceFireVariant());
-        RENAISANCE_TWENTYSEVEN = registerStatic(new RenaisanceTwentySevenVariant());
+        RENAISANCE = registerStatic(new RenaissanceVariant());
+        RENAISSANCE_TOKAMAK = registerStatic(new RenaissanceTokamakVariant());
+        RENAISSANCE_FIRE = registerStatic(new RenaissanceFireVariant());
+        RENAISSANCE_TWENTYSEVEN = registerStatic(new RenaissanceTwentySevenVariant());
 
     }
 }

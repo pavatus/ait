@@ -8,16 +8,16 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.RenaisanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.data.schema.console.variant.renaisance.RenaisanceVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaissanceFireVariant;
 
-public class ClientRenaisanceVariant extends ClientConsoleVariantSchema {
+public class ClientRenaissanceFireVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_default.png"));
+            ("textures/blockentities/consoles/renaisance_fire.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_default_emission.png"));
+            ("textures/blockentities/consoles/renaisance_fire_emission.png"));
 
-    public ClientRenaisanceVariant() {
-        super(RenaisanceVariant.REFERENCE, RenaisanceVariant.REFERENCE);
+    public ClientRenaissanceFireVariant() {
+        super(RenaissanceFireVariant.REFERENCE, RenaissanceFireVariant.REFERENCE);
     }
 
     @Override
@@ -47,11 +47,11 @@ public class ClientRenaisanceVariant extends ClientConsoleVariantSchema {
 
     @Override
     public Vector3f handlesTranslations() {
-        return new Vector3f(0.75f, 1.25f, 0.4f);
+        return new Vector3f(-0.01f, 1.45f, -0.04f);
     }
 
     @Override
     public float[] handlesRotations() {
-        return new float[]{-90f, 120f};
+        return new float[]{-180f, 120f};
     }
 }

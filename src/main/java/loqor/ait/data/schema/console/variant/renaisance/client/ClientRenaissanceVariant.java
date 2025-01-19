@@ -8,16 +8,16 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.RenaisanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.data.schema.console.variant.renaisance.RenaisanceTokamakVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaissanceVariant;
 
-public class clientRenaisanceTokamakVariant extends ClientConsoleVariantSchema {
+public class ClientRenaissanceVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_tokamak.png"));
+            ("textures/blockentities/consoles/renaisance_default.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_tokamak_emission.png"));
+            ("textures/blockentities/consoles/renaisance_default_emission.png"));
 
-    public clientRenaisanceTokamakVariant() {
-        super(RenaisanceTokamakVariant.REFERENCE, RenaisanceTokamakVariant.REFERENCE);
+    public ClientRenaissanceVariant() {
+        super(RenaissanceVariant.REFERENCE, RenaissanceVariant.REFERENCE);
     }
 
     @Override

@@ -7,10 +7,10 @@ import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.RenaisanceType;
 
-public class RenaisanceVariant extends ConsoleVariantSchema {
+public class RenaissanceVariant extends ConsoleVariantSchema {
     public static final Identifier REFERENCE = AITMod.id("console/renaisance");
 
-    public RenaisanceVariant() {
+    public RenaissanceVariant() {
         super(RenaisanceType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));
     }
 }

@@ -22,10 +22,10 @@ import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVaria
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientWoodenHartnellVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaisanceFireVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaisanceTwentySevenVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaisanceVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.clientRenaisanceTokamakVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceFireVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTwentySevenVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTokamakVariant;
 import loqor.ait.data.schema.console.variant.steam.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamGildedVariant;
@@ -204,9 +204,9 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema COPPER_TAIGA;
     public static ClientConsoleVariantSchema CRYSTALLINE;
     public static ClientConsoleVariantSchema RENAISANCE;
-    public static ClientConsoleVariantSchema RENAISANCE_FIRE;
-    public static ClientConsoleVariantSchema RENAISANCE_TOKAMAK;
-    public static ClientConsoleVariantSchema RENAISANCE_TWENTYSEVEN;
+    public static ClientConsoleVariantSchema RENAISSANCE_FIRE;
+    public static ClientConsoleVariantSchema RENAISSANCE_TOKAMAK;
+    public static ClientConsoleVariantSchema RENAISSANCE_TWENTYSEVEN;
 
 
     @Override
@@ -252,9 +252,9 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         CRYSTALLINE = register(new ClientCrystallineVariant());
 
         //Renaisance variants
-        RENAISANCE = register(new ClientRenaisanceVariant());
-        RENAISANCE_TOKAMAK = register(new clientRenaisanceTokamakVariant());
-        RENAISANCE_FIRE = register(new ClientRenaisanceFireVariant());
-        RENAISANCE_TWENTYSEVEN = register(new ClientRenaisanceTwentySevenVariant());
+        RENAISANCE = register(new ClientRenaissanceVariant());
+        RENAISSANCE_TOKAMAK = register(new ClientRenaissanceTokamakVariant());
+        RENAISSANCE_FIRE = register(new ClientRenaissanceFireVariant());
+        RENAISSANCE_TWENTYSEVEN = register(new ClientRenaissanceTwentySevenVariant());
     }
 }
