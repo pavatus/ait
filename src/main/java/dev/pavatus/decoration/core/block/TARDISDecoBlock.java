@@ -22,10 +22,10 @@ public class TARDISDecoBlock extends Block {
     public static final EnumProperty<Direction> FACING = EnumProperty.of("facing", Direction.class);
     private final String id;
 
-    public TARDISDecoBlock(Settings settings, String RoundelID) {
+    public TARDISDecoBlock(Settings settings, String DecoID) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
-        this.id = RoundelID;
+        this.id = DecoID();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class TARDISDecoBlock extends Block {
         return this.getDefaultState().with(FACING, context.getPlayer().getHorizontalFacing());
     }
 
-    public String RoundelID() {
+    public String DecoID() {
         return id;
     }
 
@@ -52,7 +52,7 @@ public class TARDISDecoBlock extends Block {
         super.appendTooltip(stack, world, tooltip, options);
 
         tooltip.add(Text.translatable("tooltip.ait.tardisdeco_type").formatted(Formatting.GREEN, Formatting.ITALIC));
-        tooltip.add(Text.literal(RoundelID()).formatted(Formatting.DARK_GREEN));
+        tooltip.add(Text.literal(DecoID()).formatted(Formatting.DARK_GREEN));
     }
 
     @Override

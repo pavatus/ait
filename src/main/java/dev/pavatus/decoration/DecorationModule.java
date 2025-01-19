@@ -78,6 +78,7 @@ public class DecorationModule extends Module {
                 provider.addTranslation(DecorationBlocks.DARK_OAK_ROUNDEL_SIDE, "Roundel");
                 provider.addTranslation(DecorationBlocks.WHITE_ROUNDEL_SIDE, "Roundel");
                 provider.addTranslation(DecorationBlocks.TARDIM_ROUNDEL_SIDE, "Roundel");
+                provider.addTranslation(DecorationBlocks.CRYSTALLINE_BLOCK, "Crystalline");
                 //provider.addTranslation(DecorationBlocks.RENAISSANCE_ROUNDEL_SIDE, "Roundel");
             }
 

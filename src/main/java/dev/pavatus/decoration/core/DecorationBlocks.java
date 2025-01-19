@@ -2,6 +2,7 @@ package dev.pavatus.decoration.core;
 
 import dev.pavatus.decoration.DecorationModule;
 import dev.pavatus.decoration.core.block.RoundelBlock;
+import dev.pavatus.decoration.core.block.TARDISDecoBlock;
 import dev.pavatus.lib.container.impl.BlockContainer;
 import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -40,6 +41,9 @@ public class DecorationBlocks extends BlockContainer {
     @NoEnglish
     public static final Block RENAISSANCE_ROUNDEL = new RoundelBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"RENAISSANCE (Version A)");
+    @NoEnglish
+    public static final Block CRYSTALLINE_BLOCK = new TARDISDecoBlock(
+            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"CRYSTALLINE");
 
 
 
