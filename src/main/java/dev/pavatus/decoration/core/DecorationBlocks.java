@@ -44,7 +44,8 @@ public class DecorationBlocks extends BlockContainer {
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"RENAISSANCE (Version B)");
     @NoEnglish
     public static final Block CRYSTALLINE_BLOCK = new RoundelBlock(
-            FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"CRYSTALLINE (Crystal)");
+            FabricBlockSettings.create().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL).luminance(state -> 50).nonOpaque(), "CRYSTALLINE (Crystal)");
+
 
 
 
