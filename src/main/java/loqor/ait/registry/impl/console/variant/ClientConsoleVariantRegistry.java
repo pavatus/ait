@@ -23,9 +23,9 @@ import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellV
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientWoodenHartnellVariant;
 import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceFireVariant;
+import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTokamakVariant;
 import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTwentySevenVariant;
 import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTokamakVariant;
 import loqor.ait.data.schema.console.variant.steam.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamGildedVariant;

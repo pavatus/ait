@@ -2,7 +2,6 @@ package dev.pavatus.decoration.core;
 
 import dev.pavatus.decoration.DecorationModule;
 import dev.pavatus.decoration.core.block.RoundelBlock;
-import dev.pavatus.decoration.core.block.TARDISDecoBlock;
 import dev.pavatus.lib.container.impl.BlockContainer;
 import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
