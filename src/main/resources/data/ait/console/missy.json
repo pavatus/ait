@@ -1,6 +1,0 @@
-{
-  "id": "ait:missy",
-  "parent": "ait:console/toyota",
-  "texture": "ait:textures/blockentities/consoles/missy.png",
-  "emission": "ait:textures/blockentities/consoles/missy_emission.png"
-}
