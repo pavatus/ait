@@ -28,6 +28,7 @@ import loqor.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.WoodenHartnellVariant;
 import loqor.ait.data.schema.console.variant.renaisance.RenaisanceFireVariant;
 import loqor.ait.data.schema.console.variant.renaisance.RenaisanceTokamakVariant;
+import loqor.ait.data.schema.console.variant.renaisance.RenaisanceTwentySevenVariant;
 import loqor.ait.data.schema.console.variant.renaisance.RenaisanceVariant;
 import loqor.ait.data.schema.console.variant.steam.*;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
@@ -138,6 +139,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema RENAISANCE;
     public static ConsoleVariantSchema RENAISANCE_TOKAMAK;
     public static ConsoleVariantSchema RENAISANCE_FIRE;
+    public static ConsoleVariantSchema RENAISANCE_TWENTYSEVEN;
+
 
     @Override
     protected void defaults() {
@@ -189,6 +192,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         RENAISANCE = registerStatic(new RenaisanceVariant());
         RENAISANCE_TOKAMAK = registerStatic(new RenaisanceTokamakVariant());
         RENAISANCE_FIRE = registerStatic(new RenaisanceFireVariant());
+        RENAISANCE_TWENTYSEVEN = registerStatic(new RenaisanceTwentySevenVariant());
 
     }
 }
