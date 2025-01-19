@@ -42,7 +42,7 @@ public class DecorationBlocks extends BlockContainer {
     public static final Block RENAISSANCE_ROUNDEL = new RoundelBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"RENAISSANCE (Version A)");
     @NoEnglish
-    public static final Block CRYSTALLINE_BLOCK = new TARDISDecoBlock(
+    public static final Block CRYSTALLINE_BLOCK = new RoundelBlock(
             FabricBlockSettings.create().nonOpaque().strength(0.01F, 0.01F).pistonBehavior(PistonBehavior.NORMAL),"CRYSTALLINE");
 
 

@@ -3,6 +3,8 @@ package loqor.ait.core.tardis.control.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
+import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -129,59 +131,186 @@ public class TelepathicControl extends Control {
         }
 
         if (held.isOf(AITItems.COFFEE)) {
+
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(AITItems.WATER)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(AITItems.TEA)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(AITItems.LATTE)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(AITItems.ICE_COFFEE)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(AITItems.MILK)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(Items.LAVA_BUCKET)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
             tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
         }
         if (held.isOf(Items.WATER_BUCKET)) {
-        tardis.travel().forceDemat();
-        tardis.alarm().toggle();
-        tardis.crash().addRepairTicks(1500);
-        return true;
-    }
-        if (held.isOf(Items.MILK_BUCKET)) {
-        tardis.travel().forceDemat();
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
+            tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
             tardis.alarm().toggle();
             tardis.crash().addRepairTicks(1500);
             return true;
-                    }
+        }
+        if (held.isOf(Items.MILK_BUCKET)) {
+            tardis.door().closeDoors();
+
+            tardis.travel().handbrake(false);
+            tardis.travel().forceDemat();
+            tardis.travel().speed(1021);
+            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
+                tardis.travel().destination(cached);
+                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
+            });
+            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
+                    5 * 10, 0, 0, 0, 0.1f * 10);
+
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
 
         if (LockedDimensionRegistry.tryUnlockDimension(player, held, tardis.asServer())) return true;
 
