@@ -181,14 +181,22 @@ public class AITItems extends ItemContainer {
 
 
 
-    //Renaissance liquids
+    // Refreshments
+    @NoEnglish
     public static final Item MUG_EMPTY = new MugEmptyItem(new AItemSettings());
+    @NoEnglish
     public static final Item COFFEE = new CoffeeItem(new AItemSettings());
+    @NoEnglish
     public static final Item TEA = new TeaItem(new AItemSettings());
+    @NoEnglish
     public static final Item LATTE = new LatteItem(new AItemSettings());
+    @NoEnglish
     public static final Item MILK = new MilkItem(new AItemSettings());
+    @NoEnglish
     public static final Item WATER = new WaterItem(new AItemSettings());
+    @NoEnglish
     public static final Item ICE_COFFEE = new IceCoffeeItem(new AItemSettings());
+    @NoEnglish
     public static final Item COCO_MILK = new CocoMilkItem(new AItemSettings());
 
 
