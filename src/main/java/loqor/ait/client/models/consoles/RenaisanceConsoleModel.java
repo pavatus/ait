@@ -1,9 +1,5 @@
 package loqor.ait.client.models.consoles;
 
-import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
@@ -18,7 +14,11 @@ import net.minecraft.util.math.RotationAxis;
 import loqor.ait.client.animation.console.renaisance.RenaisanceAnimation;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class RenaisanceConsoleModel extends ConsoleModel {
 

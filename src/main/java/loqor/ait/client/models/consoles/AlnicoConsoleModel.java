@@ -1,9 +1,5 @@
 package loqor.ait.client.models.consoles;
 
-import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
@@ -11,16 +7,20 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.client.animation.console.alnico.AlnicoAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedGlobalPos;
 
 public class AlnicoConsoleModel extends ConsoleModel {
     private final ModelPart alnico;

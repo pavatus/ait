@@ -1,9 +1,5 @@
 package loqor.ait.client.models.consoles;
 
-import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
@@ -11,19 +7,23 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.coral.CoralAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.WaypointHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.WorldUtil;
+import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
 
 public class CoralConsoleModel extends ConsoleModel {
     public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have
