@@ -76,12 +76,17 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public SonicHandler sonic() {
         return this.handler(TardisComponent.Id.SONIC);
     }
+
     public ButlerHandler butler() {
         return this.handler(TardisComponent.Id.BUTLER);
     }
 
     public TravelHandler travel() {
         return this.handler(TardisComponent.Id.TRAVEL);
+    }
+
+    public ExtraHandler extra() {
+        return this.handler(TardisComponent.Id.EXTRAS);
     }
 
     public RealFlightHandler flight() {

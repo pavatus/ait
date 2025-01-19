@@ -3,13 +3,14 @@ package loqor.ait.core.tardis.control.impl;
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
-import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
@@ -30,13 +31,18 @@ public class FoodCreationControl extends Control {
 
 
         Scheduler.get().runTaskLater(() -> {
-            if (player.isAlive() && player.getServerWorld().equals(world)) {
-                ItemStack coffeeItem = new ItemStack(AITItems.COFFEE);
-                tardis.removeFuel(1500);
-                if (!player.getInventory().insertStack(coffeeItem)) {
-                    player.dropItem(coffeeItem, false);
-                }
+            if (world.getBlockState(console).isAir()) {
+                return;
             }
+
+            ItemStack coffeeItem = new ItemStack((tardis.extra().getRefreshmentItem()).getItem());
+
+
+            Vec3d spawnPosition = Vec3d.ofCenter(console).add(0, 1.5, 1);
+            ItemEntity coffeeEntity = new ItemEntity(world, spawnPosition.x, spawnPosition.y, spawnPosition.z, coffeeItem);
+
+            tardis.removeFuel(1500);
+            world.spawnEntity(coffeeEntity);
         }, TimeUnit.TICKS, 180);
 
         return true;

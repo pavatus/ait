@@ -619,8 +619,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
         // Control entities
         provider.addTranslation("control.ait.antigravs", "Antigravs");
-        provider.addTranslation("control.ait.light_manipulator", "???");
-        provider.addTranslation("control.ait.food_creation", "Coffee Dispenser");
+        provider.addTranslation("control.ait.light_manipulator", "Refreshment Selector");
+        provider.addTranslation("control.ait.food_creation", "Refreshment Dispenser");
         provider.addTranslation("control.ait.protocol_116", "Protocol 116");
         provider.addTranslation("control.ait.protocol_3", "Protocol 3");
         provider.addTranslation("control.ait.dimension", "Dimension");

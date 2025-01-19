@@ -117,6 +117,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         BIOME(BiomeHandler.class, BiomeHandler::new),
         SHIELDS(ShieldHandler.class, ShieldHandler::new),
         STATS(StatsHandler.class, StatsHandler::new),
+        EXTRAS(ExtraHandler.class, ExtraHandler::new),
         CRASH_DATA(TardisCrashHandler.class, TardisCrashHandler::new),
         WAYPOINTS(WaypointHandler.class, WaypointHandler::new),
         OVERGROWN(OvergrownHandler.class, OvergrownHandler::new),
