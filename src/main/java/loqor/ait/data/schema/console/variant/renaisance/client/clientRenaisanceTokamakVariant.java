@@ -12,9 +12,9 @@ import loqor.ait.data.schema.console.variant.renaisance.RenaisanceTokamakVariant
 
 public class clientRenaisanceTokamakVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaissance_tokamak.png"));
+            ("textures/blockentities/consoles/renaisance_tokamak.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaissance_tokamak_emission.png"));
+            ("textures/blockentities/consoles/renaisance_tokamak_emission.png"));
 
     public clientRenaisanceTokamakVariant() {
         super(RenaisanceTokamakVariant.REFERENCE, RenaisanceTokamakVariant.REFERENCE);

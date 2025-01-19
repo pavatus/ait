@@ -12,9 +12,9 @@ import loqor.ait.data.schema.console.variant.renaisance.RenaisanceFireVariant;
 
 public class ClientRenaisanceFireVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaissance_fire.png"));
+            ("textures/blockentities/consoles/renaisance_fire.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaissance_fire_emission.png"));
+            ("textures/blockentities/consoles/renaisance_fire_emission.png"));
 
     public ClientRenaisanceFireVariant() {
         super(RenaisanceFireVariant.REFERENCE, RenaisanceFireVariant.REFERENCE);
