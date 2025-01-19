@@ -27,6 +27,7 @@ import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.*;
 import loqor.ait.core.likes.ItemOpinion;
@@ -126,6 +127,61 @@ public class TelepathicControl extends Control {
                 held.decrement(1);
             return true;
         }
+
+        if (held.isOf(AITItems.COFFEE)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(AITItems.WATER)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(AITItems.TEA)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(AITItems.LATTE)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(AITItems.ICE_COFFEE)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(AITItems.MILK)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(Items.LAVA_BUCKET)) {
+            tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+        }
+        if (held.isOf(Items.WATER_BUCKET)) {
+        tardis.travel().forceDemat();
+        tardis.alarm().toggle();
+        tardis.crash().addRepairTicks(1500);
+        return true;
+    }
+        if (held.isOf(Items.MILK_BUCKET)) {
+        tardis.travel().forceDemat();
+            tardis.alarm().toggle();
+            tardis.crash().addRepairTicks(1500);
+            return true;
+                    }
 
         if (LockedDimensionRegistry.tryUnlockDimension(player, held, tardis.asServer())) return true;
 
