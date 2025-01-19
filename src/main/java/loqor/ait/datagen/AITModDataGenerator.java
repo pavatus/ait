@@ -704,7 +704,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.WATER, "Cup of Water");
         provider.addTranslation(AITItems.ICE_COFFEE, "Cup of Ice Coffee");
         provider.addTranslation(AITItems.COCO_MILK, "Cup of Hot Coco Milk");
-        provider.addTranslation(AITItems.COCO_MILK, "Cup");
+        provider.addTranslation(AITItems.MUG_EMPTY, "Empty Mug");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");
