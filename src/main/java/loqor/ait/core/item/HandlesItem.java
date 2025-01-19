@@ -1274,7 +1274,7 @@ public class HandlesItem extends LinkableItem {
             public void run(@Nullable Tardis tardis, ServerWorld world, BlockPos pos, PlayerEntity player, ItemStack stack) {
                 if (tardis == null) return;
 
-                tardis.shields().toggle();
+                tardis.shields().visuallyShielded().toggle();
                 world.getServer().execute(() -> {
                     player.sendMessage(Text.translatable("message.ait.handles.toggle_shields", player.getName()));
                 });
