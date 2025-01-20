@@ -1,5 +1,5 @@
 plugins {
-    id "fabric-loom" version "1.6-SNAPSHOT"
+    id "fabric-loom" version "1.9-SNAPSHOT"
     id "maven-publish"
 
     id "com.diffplug.spotless" version "6.20.0"
@@ -107,6 +107,9 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
     include(modImplementation("com.github.DrTheodor:mc-queue:${project.queue_version}")) {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    include(modImplementation("com.github.pavatus:sakitus:${project.sakitus_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
 }
