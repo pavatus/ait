@@ -111,7 +111,7 @@ public class GunModule extends Module {
 
             @Override
             public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
-                provider.withItems(GunItems.class);
+
             }
 
             @Override
