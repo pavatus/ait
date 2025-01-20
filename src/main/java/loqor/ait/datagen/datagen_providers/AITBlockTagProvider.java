@@ -1,9 +1,8 @@
 package loqor.ait.datagen.datagen_providers;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.lib.datagen.tag.SakitusBlockTagProvider;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -19,11 +18,9 @@ import net.minecraft.util.Identifier;
 
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
-import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
-import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 
-public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+public class AITBlockTagProvider extends SakitusBlockTagProvider {
     public AITBlockTagProvider(FabricDataOutput output,
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
@@ -31,15 +28,6 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
-        FabricTagBuilder builder = getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE);
-        for (Map.Entry<Block, Annotation> entry : AITBlockLootTables.getAnnotatedBlocks(PickaxeMineable.class)) {
-            builder.add(entry.getKey());
-
-            PickaxeMineable annotation = (PickaxeMineable) entry.getValue();
-            if (annotation.tool() != PickaxeMineable.Tool.NONE) {
-                getOrCreateTagBuilder(annotation.tool().tag).add(entry.getKey());
-            }
-        }
 //TODO: Make the glass tag work on this and the leafs, for now theres just glass and glass pane and the birch leafs as a temporarly thing.
         getOrCreateTagBuilder(AITTags.Blocks.SONIC_INTERACTABLE).add(Blocks.IRON_DOOR).add(Blocks.IRON_TRAPDOOR)
                 .add(Blocks.TNT).add(Blocks.CAMPFIRE).add(Blocks.CANDLE).add(Blocks.CANDLE_CAKE)
@@ -90,6 +78,8 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 generator.blockTags(this);
             });
         });
+
+        super.configure(arg);
     }
 
     @Override

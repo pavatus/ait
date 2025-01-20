@@ -94,7 +94,7 @@ public class DecorationModule extends Module {
 
             @Override
             public void blockTags(AITBlockTagProvider provider) {
-
+                provider.withBlocks(DecorationBlocks.class);
             }
 
             @Override

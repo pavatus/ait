@@ -359,6 +359,7 @@ public class PlanetModule extends Module {
 
             @Override
             public void blockTags(AITBlockTagProvider provider) {
+                provider.withBlocks(PlanetBlocks.class);
 
                 // Martian Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
