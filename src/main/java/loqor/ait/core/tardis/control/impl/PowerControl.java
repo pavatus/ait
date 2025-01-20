@@ -26,13 +26,13 @@ public class PowerControl extends Control {
             return false;
         }
 
-        tardis.engine().togglePower();
+        tardis.fuel().togglePower();
         return false;
     }
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
+        return AITSounds.POWER_FLICK;
     }
 
     @Override
@@ -42,12 +42,12 @@ public class PowerControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return this.noDelay ? 0 : 10_000;
+        return this.noDelay ? 0 : 200;
     }
 
     @Override
     public boolean shouldHaveDelay(Tardis tardis) {
-        if (tardis.engine().hasPower())
+        if (tardis.fuel().hasPower())
             return false;
 
         return super.shouldHaveDelay();

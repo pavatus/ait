@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.function.Predicate;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -19,6 +20,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -28,9 +30,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
-import loqor.ait.api.TardisEvents;
+import loqor.ait.AITMod;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.core.*;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
@@ -78,9 +83,6 @@ public class FallingTardisEntity extends LinkableDummyEntity {
 
         world.setBlockState(pos, state.getFluidState().getBlockState(), 3);
         world.spawnEntity(fallingBlockEntity);
-
-        tardis.flight().falling().set(true);
-        TardisEvents.START_FALLING.invoker().onStartFall(tardis);
     }
 
     @Override
@@ -151,7 +153,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
         boolean isCrashing = travel.isCrashing();
 
         TardisUtil.getPlayersInsideInterior(tardis.asServer()).forEach(player -> {
-            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_THUD;
+            SoundEvent sound = isCrashing ? SoundEvents.ENTITY_GENERIC_EXPLODE : AITSounds.LAND_CRASH;
             float volume = isCrashing ? 1.0F : 3.0F;
 
             player.playSound(sound, volume, 1.0f);
@@ -161,8 +163,17 @@ public class FallingTardisEntity extends LinkableDummyEntity {
             ForcedChunkUtil.stopForceLoading((ServerWorld) this.getWorld(), blockPos);
 
         if (isCrashing) {
-            this.getWorld().createExplosion(this, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 10, true,
-                    World.ExplosionSourceType.MOB);
+            this.getWorld().createExplosion(this, null, new ExplosionBehavior() {
+                        @Override
+                        public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
+                            MinecraftServer server = ServerLifecycleHooks.get();
+                            if (server == null) return false;
+                            if (!server.getGameRules().getBoolean(AITMod.TARDIS_GRIEFING)) return false;
+
+                            return super.canDestroyBlock(explosion, world, pos, state, power);
+                        }
+                    }, this.getPos(), 10, true,
+                    World.ExplosionSourceType.TNT);
 
             travel.setCrashing(false);
         }
@@ -172,7 +183,7 @@ public class FallingTardisEntity extends LinkableDummyEntity {
             this.state = this.state.with(Properties.WATERLOGGED, true);
 
         if (block instanceof ExteriorBlock exterior)
-            exterior.onLanding(tardis, this.getWorld(), blockPos);
+            exterior.onLanding(tardis, (ServerWorld) this.getWorld(), blockPos);
 
         travel.placeExterior(false);
         this.discard();

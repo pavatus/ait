@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -17,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.GlobalPos;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
@@ -64,6 +64,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> this.reset());
         ClientLoginConnectionEvents.DISCONNECT.register((client, reason) -> this.reset());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> this.reset());
     }
 
     private void remove(PacketByteBuf buf) {
@@ -87,10 +88,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
         MinecraftClient.getInstance().executeTask(() -> ClientPlayNetworking.send(ASK, data));
     }
 
-    public void loadTardis(UUID uuid, @Nullable Consumer<ClientTardis> consumer) {
-        this.loadTardis(MinecraftClient.getInstance(), uuid, consumer);
-    }
-
     @Override
     @Deprecated
     public @Nullable ClientTardis demandTardis(MinecraftClient client, UUID uuid) {
@@ -109,17 +106,6 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
 
     public void getTardis(UUID uuid, Consumer<ClientTardis> consumer) {
         this.getTardis(MinecraftClient.getInstance(), uuid, consumer);
-    }
-
-    /**
-     * Asks the server for a tardis at an exterior position
-     */
-    @Deprecated(forRemoval = true)
-    public void askTardis(GlobalPos pos) {
-        PacketByteBuf data = PacketByteBufs.create();
-        data.writeGlobalPos(pos);
-
-        ClientPlayNetworking.send(ASK_POS, data);
     }
 
     private void syncTardis(UUID uuid, String json) {
@@ -184,7 +170,7 @@ public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftCl
     @Override
     protected GsonBuilder createGsonBuilder(Exclude.Strategy strategy) {
         return super.createGsonBuilder(strategy)
-                .registerTypeAdapter(Tardis.class, ClientTardis.creator());
+                .registerTypeAdapter(ClientTardis.class, ClientTardis.creator());
     }
 
     @Override

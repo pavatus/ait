@@ -8,7 +8,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.ToyotaType;
 
 public class ToyotaBlueVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/toyota_blue");
+    public static final Identifier REFERENCE = AITMod.id("console/toyota_blue");
 
     public ToyotaBlueVariant() {
         super(ToyotaType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.PILOT));

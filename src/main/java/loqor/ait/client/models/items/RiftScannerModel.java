@@ -19,11 +19,12 @@ import net.minecraft.util.math.*;
 import loqor.ait.AITMod;
 import loqor.ait.client.util.AngleInterpolator;
 import loqor.ait.core.item.RiftScannerItem;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class RiftScannerModel extends Model {
 
-    public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/blockentities/items/rift_scanner.png");
+    public static final Identifier TEXTURE = AITMod.id("textures/blockentities/items/rift_scanner.png");
+    public static final Identifier EMISSION = AITMod.id("textures/blockentities/items/rift_scanner_emission.png");
 
     private static final float MULTIPLIER = (float) (360 * Math.PI / 180);
 
@@ -33,7 +34,7 @@ public class RiftScannerModel extends Model {
     private final ModelPart root;
 
     public RiftScannerModel(ModelPart root) {
-        super(RenderLayer::getEntitySolid);
+        super(RenderLayer::getEntityCutout);
         this.root = root.getChild("root");
     }
 
@@ -98,7 +99,8 @@ public class RiftScannerModel extends Model {
 
     public void render(@Nullable ClientWorld world, @Nullable LivingEntity entity, ItemStack stack, MatrixStack matrices, VertexConsumerProvider provider, int light, int overlay, int seed) {
         this.root.getChild("arrow").roll = this.unclampedCall(stack, world, entity, seed) * MULTIPLIER;
-        this.render(matrices, provider.getBuffer(this.getLayer(TEXTURE)), light, overlay, 1, 1, 1, 1);
+        this.render(matrices, provider.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, 1, 1, 1, 1);
+        this.render(matrices, provider.getBuffer(RenderLayer.getEntityCutout(EMISSION)), 0xf000f0, overlay, 1, 1, 1, 1);
     }
 
     public float unclampedCall(ItemStack stack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
@@ -133,7 +135,7 @@ public class RiftScannerModel extends Model {
     }
 
     private boolean canPointTo(Entity entity, @Nullable BlockPos pos, @Nullable ClientWorld world) {
-        return world != null && !TardisDimension.isTardisDimension(world) &&
+        return world != null && !TardisServerWorld.isTardisDimension(world) &&
                 pos != null && !(pos.getSquaredDistance(entity.getPos()) < 9.999999747378752E-6);
     }
 

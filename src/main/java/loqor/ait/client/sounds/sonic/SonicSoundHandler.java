@@ -12,7 +12,7 @@ public class SonicSoundHandler {
     private final HashMap<UUID, SonicSound> sounds;
 
     static {
-        ClientWorldEvents.CHANGE_WORLD.register(() -> {
+        ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
             SonicSoundHandler handler = ClientSoundManager.getSonicSound();
             handler.sounds.values().forEach(SonicSound::stop);
             handler.sounds.clear();
@@ -33,6 +33,7 @@ public class SonicSoundHandler {
     public void onUse(AbstractClientPlayerEntity user) {
         this.get(user).onUse();
     }
+
     public void onFinishUse(AbstractClientPlayerEntity user) {
         this.get(user).onFinishUse();
     }

@@ -2,6 +2,7 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.function.Consumer;
 
+import dev.pavatus.module.ModuleRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 
@@ -24,64 +25,130 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
 
     @Override
     public void generateAdvancement(Consumer<Advancement> consumer) {
-        // todo replace all literals with translatables
 
-        Advancement placeCoral = Advancement.Builder.create()
-                .display(AITBlocks.CORAL_PLANT, Text.literal("Gardening Guru"),
-                        Text.literal("Plant the TARDIS Coral, the seed of time itself."),
-                        new Identifier("textures/entity/end_portal.png"), // the background for the
-                        // advancement screen
-                        AdvancementFrame.TASK, true, true, true)
-                .criterion("place_coral", new PlaceCoralCriterion.Conditions())
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(dataGenerator -> {
+            dataGenerator.advancements(consumer);
+        }));
+
+        Advancement root = Advancement.Builder.create()
+                .display(AITItems.CHARGED_ZEITON_CRYSTAL, Text.translatable("achievement.ait.title.root"),
+                        Text.translatable("achievement.ait.description.root"), new Identifier("textures/entity/end_portal.png"), AdvancementFrame.TASK, false, false, false)
+                .criterion("root", TardisCriterions.ROOT.conditions())
                 .build(consumer, AITMod.MOD_ID + "/root");
+
+        Advancement placeCoral = Advancement.Builder.create().parent(root)
+                .display(AITBlocks.CORAL_PLANT, Text.translatable("achievement.ait.title.place_coral"),
+                        Text.translatable("achievement.ait.description.place_coral"),
+                        null,
+                        AdvancementFrame.TASK, true, true, true)
+                .criterion("place_coral", TardisCriterions.PLACE_CORAL.conditions())
+                .build(consumer, AITMod.MOD_ID + "/place_coral");
+
         Advancement firstEnter = Advancement.Builder.create().parent(placeCoral)
-                .display(AITItems.TARDIS_ITEM, Text.literal("How Does It Fit?"),
-                        Text.literal("Enter the TARDIS for the first time"), null, AdvancementFrame.CHALLENGE, true,
+                .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.enter_tardis"),
+                        Text.translatable("achievement.ait.description.enter_tardis"), null, AdvancementFrame.CHALLENGE, true,
                         true, false)
-                .criterion("enter_tardis", new EnterTardisCriterion.Conditions())
+                .criterion("enter_tardis", TardisCriterions.ENTER_TARDIS.conditions())
                 .build(consumer, AITMod.MOD_ID + "/enter_tardis"); // for now this is the root advancement, meaning
         // its the first
         // one
         // that shows
 
         Advancement ironKey = Advancement.Builder.create().parent(firstEnter)
-                .display(AITItems.IRON_KEY, Text.literal("More than Just a Piece of Metal"),
-                        Text.literal("Gain an Iron Key"), null, AdvancementFrame.TASK, true, false, true)
+                .display(AITItems.IRON_KEY, Text.translatable("achievement.ait.title.iron_key"),
+                        Text.translatable("achievement.ait.description.iron_key"), null, AdvancementFrame.TASK, true, false, true)
                 .criterion("iron_key", InventoryChangedCriterion.Conditions.items(AITItems.IRON_KEY))
                 .build(consumer, AITMod.MOD_ID + "/iron_key");
+
         Advancement goldKey = Advancement.Builder.create().parent(ironKey)
-                .display(AITItems.GOLD_KEY, Text.literal("Golden Gatekeeper"), Text.literal("Gain a Golden Key"), null,
+                .display(AITItems.GOLD_KEY, Text.translatable("achievement.ait.title.gold_key"), Text.translatable("achievement.ait.description.gold_key"), null,
                         AdvancementFrame.TASK, true, false, true)
                 .criterion("gold_key", InventoryChangedCriterion.Conditions.items(AITItems.GOLD_KEY))
                 .build(consumer, AITMod.MOD_ID + "/gold_key");
+
         Advancement netheriteKey = Advancement.Builder.create().parent(goldKey)
-                .display(AITItems.NETHERITE_KEY, Text.literal("Forged in Fire"), Text.literal("Gain a Netherite Key"),
+                .display(AITItems.NETHERITE_KEY, Text.translatable("achievement.ait.title.netherite_key"), Text.translatable("achievement.ait.description.netherite_key"),
                         null, AdvancementFrame.TASK, true, true, true)
                 .criterion("netherite_key", InventoryChangedCriterion.Conditions.items(AITItems.NETHERITE_KEY))
                 .build(consumer, AITMod.MOD_ID + "/netherite_key");
+
         Advancement classicKey = Advancement.Builder.create().parent(netheriteKey)
-                .display(AITItems.CLASSIC_KEY, Text.literal("Time Traveler's Apprentice"),
-                        Text.literal("Gain a Classic Key"), null, AdvancementFrame.TASK, true, true, true)
+                .display(AITItems.CLASSIC_KEY, Text.translatable("achievement.ait.title.classic_key"),
+                        Text.translatable("achievement.ait.description.classic_key"), null, AdvancementFrame.TASK, true, true, true)
                 .criterion("classic_key", InventoryChangedCriterion.Conditions.items(AITItems.CLASSIC_KEY))
                 .build(consumer, AITMod.MOD_ID + "/classic_key");
 
         Advancement firstDemat = Advancement.Builder.create().parent(firstEnter)
-                .display(Items.ENDER_EYE, Text.literal("Maiden Voyage"), Text.literal(
-                        "Successfully initiate the takeoff sequence and experience your first journey through time and space with your TARDIS."),
+                .display(Items.ENDER_EYE, Text.translatable("achievement.ait.title.first_demat"), Text.translatable(
+                        "achievement.ait.description.first_demat"),
                         null, AdvancementFrame.CHALLENGE, true, true, true)
-                .criterion("first_demat", new TakeOffCriterion.Conditions())
+                .criterion("first_demat", TardisCriterions.TAKEOFF.conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_demat");
+
         Advancement firstCrash = Advancement.Builder.create().parent(firstDemat)
-                .display(Items.TNT, Text.literal("Temporal Turbulence"), Text.literal(
-                        "Embrace the chaos of time and space by unintentionally crashing your TARDIS for the first time."),
+                .display(Items.TNT, Text.translatable("achievement.ait.title.first_crash"), Text.translatable(
+                        "achievement.ait.description.first_crash"),
                         null, AdvancementFrame.CHALLENGE, true, true, true)
-                .criterion("first_crash", new CrashCriterion.Conditions())
+                .criterion("first_crash", TardisCriterions.CRASH.conditions())
                 .build(consumer, AITMod.MOD_ID + "/first_crash");
+
         Advancement breakGrowth = Advancement.Builder.create().parent(firstEnter)
-                .display(Items.OAK_LEAVES, Text.literal("Temporal Gardener"), Text.literal(
-                        "Tend to the temporal vines and foliage clinging to your TARDIS by breaking off vegetation."),
+                .display(Items.OAK_LEAVES, Text.translatable("achievement.ait.title.break_growth"), Text.translatable(
+                        "achievement.ait.description.break_growth"),
                         null, AdvancementFrame.TASK, true, false, true)
-                .criterion("break_growth", new BreakVegetationCriterion.Conditions())
+                .criterion("break_growth", TardisCriterions.VEGETATION.conditions())
                 .build(consumer, AITMod.MOD_ID + "/break_growth");
+
+        Advancement redecoration = Advancement.Builder.create().parent(firstEnter)
+                .display(Items.PAINTING , Text.translatable("achievement.ait.title.redecorate"),
+                        Text.translatable("achievement.ait.description.redecorate"), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("redecorate", TardisCriterions.REDECORATE.conditions())
+                .build(consumer, AITMod.MOD_ID + "/redecorate");
+
+        Advancement sonicWood = Advancement.Builder.create().parent(root)
+                .display(AITItems.SONIC_SCREWDRIVER, Text.translatable("achievement.ait.title.ultimate_counter"),
+                        Text.translatable("achievement.ait.description.ultimate_counter"), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("ultimate_counter", TardisCriterions.SONIC_WOOD.conditions())
+                .build(consumer, AITMod.MOD_ID + "/ultimate_counter");
+
+        Advancement axeTardis = Advancement.Builder.create().parent(firstEnter)
+                .display(Items.IRON_AXE, Text.translatable("achievement.ait.title.forced_entry"),
+                        Text.translatable("achievement.ait.description.forced_entry"), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("forced_entry", TardisCriterions.FORCED_ENTRY.conditions())
+                .build(consumer, AITMod.MOD_ID + "/forced_entry");
+
+        Advancement pilotHigh = Advancement.Builder.create().parent(firstDemat)
+                .display(AITItems.ZEITON_DUST, Text.translatable("achievement.ait.title.pui"),
+                        Text.translatable("achievement.ait.description.pui"), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("pui", TardisCriterions.PILOT_HIGH.conditions())
+                .build(consumer, AITMod.MOD_ID + "/pui");
+
+        Advancement reachPilot = Advancement.Builder.create().parent(firstEnter)
+                .display(AITBlocks.CORAL_PLANT, Text.translatable("achievement.ait.title.bonding"),
+                        Text.translatable("achievement.ait.description.bonding"), null, AdvancementFrame.TASK, true, false, true)
+                .criterion("bonding", TardisCriterions.REACH_PILOT.conditions())
+                .build(consumer, AITMod.MOD_ID + "/bonding");
+
+        Advancement reachOwner = Advancement.Builder.create().parent(firstEnter)
+                .display(AITItems.TARDIS_ITEM, Text.translatable("achievement.ait.title.owner_ship"),
+                        Text.translatable("achievement.ait.description.owner_ship"), null, AdvancementFrame.CHALLENGE, true, true, true)
+                .criterion("owner_ship", TardisCriterions.REACH_OWNER.conditions())
+                .build(consumer, AITMod.MOD_ID + "/owner_ship");
+
+        Advancement enableSubsystem = Advancement.Builder.create().parent(firstEnter)
+                .display(AITBlocks.GENERIC_SUBSYSTEM, Text.translatable("achievement.ait.title.enable_subsystem"),
+                        Text.translatable("achievement.ait.description.enable_subsystem"), null, AdvancementFrame.CHALLENGE, true, true, true)
+                .criterion("enable_subsystem", TardisCriterions.ENABLE_SUBSYSTEM.conditions())
+                .build(consumer, AITMod.MOD_ID + "/enable_subsystem");
+        Advancement repairSubsystem = Advancement.Builder.create().parent(firstEnter)
+                .display(AITItems.HAMMER, Text.translatable("achievement.ait.title.repair_subsystem"),
+                        Text.translatable("achievement.ait.description.repair_subsystem"), null, AdvancementFrame.TASK, true, true, true)
+                .criterion("repair_subsystem", TardisCriterions.REPAIR_SUBSYSTEM.conditions())
+                .build(consumer, AITMod.MOD_ID + "/repair_subsystem");
+        Advancement enginesPhase = Advancement.Builder.create().parent(firstDemat)
+                .display(AITItems.DEMATERIALIZATION_CIRCUIT, Text.translatable("achievement.ait.title.engines_phase"),
+                        Text.translatable("achievement.ait.description.engines_phase"), null, AdvancementFrame.CHALLENGE, true, true, true)
+                .criterion("engines_phase", TardisCriterions.ENGINES_PHASE.conditions())
+                .build(consumer, AITMod.MOD_ID + "/engines_phase");
     }
 }

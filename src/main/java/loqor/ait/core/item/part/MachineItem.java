@@ -21,7 +21,7 @@ import loqor.ait.data.schema.MachineRecipeSchema;
 
 public class MachineItem extends Item {
 
-    public static final Identifier MACHINE_DISASSEMBLE = new Identifier(AITMod.MOD_ID, "machine_disassemble");
+    public static final Identifier MACHINE_DISASSEMBLE = AITMod.id("machine_disassemble");
 
     public MachineItem(Settings settings) {
         super(settings);

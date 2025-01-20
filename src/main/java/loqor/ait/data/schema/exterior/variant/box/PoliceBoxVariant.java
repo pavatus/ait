@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.box;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -19,8 +18,8 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/police_box/police_box_";
 
     protected PoliceBoxVariant(String name) { // idk why i added the modid bit i dont use it later lol
-        super(PoliceBoxCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/police_box/" + name),
-                new Loyalty(Loyalty.Type.PILOT));
+        super(PoliceBoxCategory.REFERENCE, AITMod.id("exterior/police_box/" + name),
+                new Loyalty(Loyalty.Type.OWNER));
     }
 
     @Override

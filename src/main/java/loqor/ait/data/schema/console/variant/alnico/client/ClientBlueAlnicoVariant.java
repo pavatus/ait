@@ -39,4 +39,9 @@ public class ClientBlueAlnicoVariant extends ClientConsoleVariantSchema {
     public Vector3f sonicItemTranslations() {
         return new Vector3f(-0.55f, 1.1f, -0.1f);
     }
+
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(0.05f, 1.4f, 0.23f);
+    }
 }

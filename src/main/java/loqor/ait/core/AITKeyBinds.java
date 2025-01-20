@@ -9,10 +9,12 @@ import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.bind.KeyBind;
+import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.item.KeyItem;
 import loqor.ait.core.tardis.Tardis;
 
@@ -26,11 +28,22 @@ public class AITKeyBinds {
                 bind.tick(client);
         });
 
-        register(new KeyBind.Held("open", "snap", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, client -> {
+        register(new KeyBind.Held("snap", "main", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, client -> {
             ClientPlayerEntity player = client.player;
 
             if (player == null)
                 return;
+
+            if (player.hasVehicle()) {
+                Entity entity = player.getVehicle();
+                if (entity instanceof FlightTardisEntity flightTardis) {
+                    if (flightTardis.tardis() == null) return;
+                    Tardis tardis = flightTardis.tardis().get();
+
+                    ClientTardisUtil.snapToOpenDoors(tardis);
+                    return;
+                }
+            }
 
             Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
 
@@ -43,6 +56,48 @@ public class AITKeyBinds {
 
                     ClientTardisUtil.snapToOpenDoors(tardis);
                 }
+            }
+        }));
+        register(new KeyBind.Held("increase_speed", "main", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, client -> {
+            ClientPlayerEntity player = client.player;
+
+            if (player == null || !player.hasVehicle())
+                return;
+
+            Entity entity = player.getVehicle();
+            if (entity instanceof FlightTardisEntity flightTardis) {
+                if (flightTardis.tardis() == null) return;
+                Tardis tardis = flightTardis.tardis().get();
+
+                ClientTardisUtil.flyingSpeedPacket(tardis, "up");
+            }
+        }));
+        register(new KeyBind.Held("decrease_speed", "main", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, client -> {
+            ClientPlayerEntity player = client.player;
+
+            if (player == null || !player.hasVehicle())
+                return;
+
+            Entity entity = player.getVehicle();
+            if (entity instanceof FlightTardisEntity flightTardis) {
+                if (flightTardis.tardis() == null) return;
+                Tardis tardis = flightTardis.tardis().get();
+
+                ClientTardisUtil.flyingSpeedPacket(tardis, "down");
+            }
+        }));
+        register(new KeyBind.Held("toggle_antigravs", "main", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, client -> {
+            ClientPlayerEntity player = client.player;
+
+            if (player == null || !player.hasVehicle())
+                return;
+
+            Entity entity = player.getVehicle();
+            if (entity instanceof FlightTardisEntity flightTardis) {
+                if (flightTardis.tardis() == null) return;
+                Tardis tardis = flightTardis.tardis().get();
+
+                ClientTardisUtil.toggleAntigravs(tardis);
             }
         }));
     }

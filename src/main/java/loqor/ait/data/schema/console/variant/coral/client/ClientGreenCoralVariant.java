@@ -44,4 +44,13 @@ public class ClientGreenCoralVariant extends ClientConsoleVariantSchema {
     public float[] sonicItemRotations() {
         return new float[]{90f, 135f};
     }
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(0.5f, 1.6f, 0.5f);
+    }
+
+    @Override
+    public float[] handlesRotations() {
+        return new float[]{-90f, 135f};
+    }
 }

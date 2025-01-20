@@ -92,7 +92,11 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
 
     public static void init(TardisComponent component, Tardis tardis, InitContext context) {
         component.setTardis(tardis);
-        Initializable.init(component, context);
+        component.init(context);
+    }
+
+    public static void postInit(TardisComponent component, InitContext context) {
+        component.postInit(context);
     }
 
     public enum Id implements IdLike {
@@ -105,6 +109,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         TRAVEL(TravelHandler.class, TravelHandler::new),
         DOOR(DoorHandler.class, DoorHandler::new),
         SONIC(SonicHandler.class, SonicHandler::new),
+        BUTLER(ButlerHandler.class, ButlerHandler::new),
         PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
         LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
         ENGINE(EngineHandler.class, EngineHandler::new),
@@ -112,6 +117,7 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         BIOME(BiomeHandler.class, BiomeHandler::new),
         SHIELDS(ShieldHandler.class, ShieldHandler::new),
         STATS(StatsHandler.class, StatsHandler::new),
+        EXTRAS(ExtraHandler.class, ExtraHandler::new),
         CRASH_DATA(TardisCrashHandler.class, TardisCrashHandler::new),
         WAYPOINTS(WaypointHandler.class, WaypointHandler::new),
         OVERGROWN(OvergrownHandler.class, OvergrownHandler::new),
@@ -127,7 +133,10 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         CLOAK(CloakHandler.class, CloakHandler::new),
         INCREMENT(IncrementManager.class, IncrementManager::new),
         LANDING_PAD(LandingPadHandler.class, LandingPadHandler::new),
-        CHAMELEON(ChameleonHandler.class, ChameleonHandler::new);
+        CHAMELEON(ChameleonHandler.class, ChameleonHandler::new),
+        SELF_DESTRUCT(SelfDestructHandler.class, SelfDestructHandler::new),
+        OPINION(OpinionHandler.class, OpinionHandler::new),
+        SUBSYSTEM(SubSystemHandler.class, SubSystemHandler::new),;
 
         private final Supplier<TardisComponent> creator;
 

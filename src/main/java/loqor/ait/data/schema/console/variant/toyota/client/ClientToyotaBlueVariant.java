@@ -44,4 +44,13 @@ public class ClientToyotaBlueVariant extends ClientConsoleVariantSchema {
     public float[] sonicItemRotations() {
         return new float[]{-120f, -45f};
     }
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(0.05f, 1.75f, 0.36f);
+    }
+
+    @Override
+    public float[] handlesRotations() {
+        return new float[]{60f, 135f};
+    }
 }

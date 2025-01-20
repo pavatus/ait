@@ -7,17 +7,20 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.animation.PulsatingAnimation;
+import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.door.impl.StallionDoorVariant;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.data.schema.exterior.category.StallionCategory;
 import loqor.ait.registry.impl.door.DoorRegistry;
 
+
 public abstract class StallionVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/stallion/stallion_";
 
     protected StallionVariant(String name, String modId) {
-        super(StallionCategory.REFERENCE, new Identifier(modId, "exterior/stallion/" + name));
+        super(StallionCategory.REFERENCE, new Identifier(modId, "exterior/stallion/" + name),
+                new Loyalty(Loyalty.Type.COMPANION));
     }
 
     protected StallionVariant(String name) {
@@ -56,11 +59,11 @@ public abstract class StallionVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.1d;
+        return 2.5d;
     }
 
     @Override
     public double portalWidth() {
-        return 0.75d;
+        return 1d;
     }
 }

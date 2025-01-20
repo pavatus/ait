@@ -4,8 +4,11 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.gson.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 
 import loqor.ait.AITMod;
@@ -33,6 +36,10 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     @Override
     protected void onInit(InitContext ctx) {
         this.forEach(component -> TardisComponent.init(component, this.tardis, ctx));
+    }
+
+    @Override
+    public void postInit(InitContext ctx) {
         this.forEach(component -> component.postInit(ctx));
     }
 
@@ -63,7 +70,22 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
             try {
                 tickable.tick(server);
             } catch (Exception e) {
-                AITMod.LOGGER.error("Ticking failed for {}", component.getId().name(), e);
+                AITMod.LOGGER.error("Ticking failed for {} | {}", component.getId().name(), component.tardis().getUuid().toString(), e);
+            }
+        });
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void tick(MinecraftClient client) {
+        this.forEach(component -> {
+            if (!(component instanceof TardisTickable tickable))
+                return;
+
+            try {
+                tickable.tick(client);
+            } catch (Exception e) {
+                AITMod.LOGGER.error("Ticking failed for {} | {}", component.getId().name(), component.tardis().getUuid().toString(), e);
             }
         });
     }

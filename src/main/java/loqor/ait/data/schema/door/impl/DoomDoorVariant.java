@@ -9,7 +9,7 @@ import loqor.ait.data.schema.door.DoorSchema;
 
 public class DoomDoorVariant extends DoorSchema {
 
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/doom");
+    public static final Identifier REFERENCE = AITMod.id("door/doom");
 
     public DoomDoorVariant() {
         super(REFERENCE);

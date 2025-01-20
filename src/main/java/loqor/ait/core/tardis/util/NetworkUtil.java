@@ -5,9 +5,13 @@ import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -22,7 +26,6 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.util.network.c2s.SyncPropertyC2SPacket;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.DirectedGlobalPos;
 
 public class NetworkUtil {
@@ -124,5 +127,10 @@ public class NetworkUtil {
 
         ChunkPos chunkPos = new ChunkPos(exteriorPos.getPos());
         return Stream.concat(result, PlayerLookup.tracking(exteriorPos.getWorld(), chunkPos).stream());
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static boolean canClientSendPackets() {
+        return MinecraftClient.getInstance().getNetworkHandler() != null;
     }
 }

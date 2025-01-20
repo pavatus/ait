@@ -2,9 +2,11 @@ package loqor.ait.core.tardis.control.impl;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.ServerAlarmHandler;
@@ -32,5 +34,10 @@ public class HADSControl extends Control {
     @Override
     public boolean requiresPower() {
         return false; // todo remember to change this back when this becomes a HADS control again!!
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.ALARM;
     }
 }

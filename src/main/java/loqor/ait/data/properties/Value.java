@@ -2,6 +2,8 @@ package loqor.ait.data.properties;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -32,10 +34,14 @@ public class Value<T> implements Disposable {
     @Exclude
     protected Property<T> property;
 
+    @Exclude
+    private List<Consumer<T>> listeners;
+
     private T value;
 
     protected Value(T value) {
         this.value = value;
+        this.listeners = new ArrayList<>();
     }
 
     public void of(KeyedTardisComponent holder, Property<T> property) {
@@ -43,6 +49,13 @@ public class Value<T> implements Disposable {
         this.property = property;
 
         holder.register(this);
+    }
+
+    public void addListener(Consumer<T> listener) {
+        if (this.listeners == null)
+            this.listeners = new ArrayList<>();
+
+        this.listeners.add(listener);
     }
 
     public Property<T> getProperty() {
@@ -62,14 +75,19 @@ public class Value<T> implements Disposable {
     }
 
     public void set(T value) {
-        if (this.value == value)
-            return;
-
         this.set(value, true);
     }
 
     public void set(T value, boolean sync) {
+        if (this.value == value)
+            return;
+
         this.value = value;
+
+        if (this.listeners != null) {
+            for (Consumer<T> listener : this.listeners)
+                listener.accept(value);
+        }
 
         if (sync)
             this.sync();

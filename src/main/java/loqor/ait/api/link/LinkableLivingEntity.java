@@ -11,51 +11,85 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 
+import loqor.ait.api.link.v2.Linkable;
+import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.TardisManager;
 
-public abstract class LinkableLivingEntity extends LivingEntity {
+public abstract class LinkableLivingEntity extends LivingEntity implements Linkable {
 
-    public static final TrackedData<Optional<UUID>> TARDIS_ID;
+    public static final TrackedData<Optional<UUID>> TARDIS_ID  = DataTracker.registerData(
+            LinkableLivingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
-    static {
-        TARDIS_ID = DataTracker.registerData(LinkableLivingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    }
+    private TardisRef cache;
 
     protected LinkableLivingEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putString("TardisID", this.getTardisID().toString());
-        return nbt;
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+
+        UUID id = nbt.getUuid("Tardis");
+
+        if (id != null)
+            this.link(id);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.dataTracker.set(TARDIS_ID, Optional.of(UUID.fromString(nbt.getString("TardisID"))));
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+
+        this.tardisId().ifPresent(id -> nbt.putUuid("Tardis", id));
     }
 
-    public Tardis tardis() {
-        UUID id = this.getTardisID();
+    @Override
+    public void link(Tardis tardis) {
+        this.link(tardis.getUuid());
+    }
+
+    @Override
+    public void link(UUID id) {
+        this.dataTracker.set(TARDIS_ID, Optional.of(id));
+        this.createCache(id);
+    }
+
+    private void reloadCache() {
+        UUID id = this.tardisId().orElse(null);
 
         if (id == null)
-            return null;
+            return;
 
-        return TardisManager.with(this, (o, manager) -> manager.demandTardis(o, id));
+        this.createCache(id);
     }
 
-    public UUID getTardisID() {
-        return this.dataTracker.get(TARDIS_ID).orElse(null);
+    private void createCache(UUID id) {
+        this.cache = TardisRef.createAs(this, id);
     }
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-
         this.dataTracker.startTracking(TARDIS_ID, Optional.empty());
+    }
+
+    @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        super.onTrackedDataSet(data);
+
+        if (TARDIS_ID.equals(data))
+            this.reloadCache();
+    }
+
+    public TardisRef tardis() {
+        if (this.cache != null)
+            return cache;
+
+        this.reloadCache();
+        return cache;
+    }
+
+    private Optional<UUID> tardisId() {
+        return this.dataTracker.get(TARDIS_ID);
     }
 }

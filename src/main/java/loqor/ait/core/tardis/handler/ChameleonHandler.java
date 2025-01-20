@@ -67,27 +67,28 @@ public class ChameleonHandler extends TardisComponent {
             }
         });
 
-        TardisEvents.USE_DOOR.register((tardis, player) -> {
+        TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
             if (player == null)
-                return;
+                return DoorHandler.InteractionResult.CONTINUE;
 
             if (!isDisguised(tardis))
-                return;
+                return DoorHandler.InteractionResult.CONTINUE;
 
             if (tardis.door().isClosed()) {
                 tardis.chameleon().applyDisguise(player);
-                return;
+                return DoorHandler.InteractionResult.CONTINUE;
             }
 
             DirectedGlobalPos.Cached cached = tardis.travel().position();
             Optional<ExteriorBlockEntity> blockEntity = tardis.getExterior().findExteriorBlock();
 
             if (blockEntity.isEmpty())
-                return;
+                return DoorHandler.InteractionResult.CONTINUE;
 
             player.networkHandler.sendPacket(new BlockUpdateS2CPacket(cached.getWorld(), cached.getPos()));
             player.networkHandler.sendPacket(new BlockUpdateS2CPacket(cached.getWorld(), cached.getPos().up()));
             player.networkHandler.sendPacket(BlockEntityUpdateS2CPacket.create(blockEntity.get()));
+            return DoorHandler.InteractionResult.CONTINUE;
         });
 
         FakeBlockEvents.CHECK.register((player, state, pos) -> {

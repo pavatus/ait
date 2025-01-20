@@ -6,8 +6,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
-import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class EasterHeadDoorModel extends DoorModel {
@@ -39,14 +39,14 @@ public class EasterHeadDoorModel extends DoorModel {
     }
 
     @Override
-    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+    public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        this.bottom.pivotY = door.tardis().get().door().isOpen() ? 22 : 54;
+        this.bottom.pivotY = linkableBlockEntity.tardis().get().door().isOpen() ? 22 : 54;
 
-        super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();
     }
@@ -57,7 +57,7 @@ public class EasterHeadDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return switch (state) {
             case CLOSED -> EasterHeadAnimations.EASTER_HEAD_INTERIOR_DOOR_CLOSE_ANIMATION;
             case FIRST -> EasterHeadAnimations.EASTER_HEAD_INTERIOR_DOOR_OPEN_ANIMATION;

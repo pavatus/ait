@@ -1,10 +1,10 @@
 package loqor.ait.client.util;
 
-import static loqor.ait.core.tardis.util.TardisUtil.SNAP;
+import static loqor.ait.core.tardis.util.TardisUtil.*;
 
 import java.util.UUID;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
@@ -14,38 +14,43 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.api.ClientWorldEvents;
+import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.client.tardis.ClientTardis;
+import loqor.ait.client.tardis.manager.ClientTardisManager;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisExterior;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.SonicHandler;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class ClientTardisUtil {
+
     public static final int MAX_POWER_DELTA_TICKS = 3 * 20;
     public static final int MAX_ALARM_DELTA_TICKS = 60;
+
     private static int alarmDeltaTick;
     private static boolean alarmDeltaDirection; // true for increasing false for decreasing
     private static int powerDeltaTick;
 
-    private static ClientTardis currentTardis;
+    private static TardisRef currentTardis;
 
     static {
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            if (client.world == null || client.player == null)
-                return;
-
-            ClientTardis newTardis = null;
-
-            if (isPlayerInATardis(client))
-                newTardis = (ClientTardis) TardisDimension.get(client.world).orElse(null);
-
-            currentTardis = newTardis;
+        ClientWorldEvents.CHANGE_WORLD.register((client, world) -> {
+            UUID id = TardisServerWorld.getClientTardisId(world);
+            currentTardis = new TardisRef(id, uuid -> ClientTardisManager.getInstance().demandTardis(uuid));
+        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            UUID id = TardisServerWorld.getClientTardisId(client.world);
+            currentTardis = new TardisRef(id, uuid -> ClientTardisManager.getInstance().demandTardis(uuid));
+        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            if (currentTardis != null)
+                currentTardis = null;
         });
     }
 
-    public static void changeExteriorWithScreen(UUID uuid, Identifier exterior, Identifier variant,
-            boolean variantchange) {
+    public static void changeExteriorWithScreen(UUID uuid, Identifier variant, boolean variantchange) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeUuid(uuid);
         buf.writeBoolean(variantchange);
@@ -53,9 +58,8 @@ public class ClientTardisUtil {
         ClientPlayNetworking.send(TardisExterior.CHANGE_EXTERIOR, buf);
     }
 
-    public static void changeExteriorWithScreen(ClientTardis tardis, Identifier exterior, Identifier variant,
-            boolean variantchange) {
-        changeExteriorWithScreen(tardis.getUuid(), exterior, variant, variantchange);
+    public static void changeExteriorWithScreen(ClientTardis tardis, Identifier variant, boolean variantchange) {
+        changeExteriorWithScreen(tardis.getUuid(), variant, variantchange);
     }
 
     public static void changeSonicWithScreen(UUID uuid, SonicSchema schema) {
@@ -76,19 +80,41 @@ public class ClientTardisUtil {
         ClientPlayNetworking.send(SNAP, buf);
     }
 
-    public static boolean isPlayerInATardis() {
-        return isPlayerInATardis(MinecraftClient.getInstance());
+    public static void flyingSpeedPacket(Tardis tardis, String direction) {
+        flyingSpeedPacket(tardis.getUuid(), direction);
     }
 
-    private static boolean isPlayerInATardis(MinecraftClient client) {
-        return client.world != null && TardisDimension.isTardisDimension(client.world);
+    public static void flyingSpeedPacket(UUID uuid, String direction) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+        buf.writeString(direction);
+
+        ClientPlayNetworking.send(FLYING_SPEED, buf);
+    }
+
+    public static void toggleAntigravs(Tardis tardis) {
+        toggleAntigravs(tardis.getUuid());
+    }
+
+    public static void toggleAntigravs(UUID uuid) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeUuid(uuid);
+
+        ClientPlayNetworking.send(TOGGLE_ANTIGRAVS, buf);
+    }
+
+    public static boolean isPlayerInATardis() {
+        return currentTardis != null;
     }
 
     /**
      * Gets the tardis the player is currently inside
      */
     public static ClientTardis getCurrentTardis() {
-        return currentTardis;
+        if (currentTardis == null)
+            return null;
+
+        return (ClientTardis) currentTardis.get();
     }
 
     public static double distanceFromConsole() {
@@ -118,16 +144,48 @@ public class ClientTardisUtil {
         return lowest;
     }
 
-    public static void tickPowerDelta() {
+    public static BlockPos getNearestConsole() {
+        if (!isPlayerInATardis())
+            return BlockPos.ORIGIN;
+
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (player == null)
+            return BlockPos.ORIGIN;
+
         Tardis tardis = getCurrentTardis();
 
         if (tardis == null)
-            return;
+            return BlockPos.ORIGIN;
 
-        if (tardis.engine().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
-            setPowerDelta(getPowerDelta() + 1);
-        } else if (!tardis.engine().hasPower() && getPowerDelta() > 0) {
-            setPowerDelta(getPowerDelta() - 1);
+        BlockPos pos = player.getBlockPos();
+        double lowest = Double.MAX_VALUE;
+        BlockPos nearest = BlockPos.ORIGIN;
+
+        for (BlockPos console : tardis.getDesktop().getConsolePos()) {
+            double distance = Math.sqrt(pos.getSquaredDistance(console));
+
+            if (distance < lowest) {
+                lowest = distance;
+                nearest = console;
+            }
+        }
+
+        return nearest;
+    }
+
+    public static void tickPowerDelta() {
+        Tardis tardis = getCurrentTardis();
+
+        if (tardis == null) {
+            powerDeltaTick = MAX_POWER_DELTA_TICKS;
+            return;
+        }
+
+        if (tardis.fuel().hasPower() && getPowerDelta() < MAX_POWER_DELTA_TICKS) {
+            powerDeltaTick++;
+        } else if (!tardis.fuel().hasPower() && getPowerDelta() > 0) {
+            powerDeltaTick--;
         }
     }
 
@@ -139,55 +197,35 @@ public class ClientTardisUtil {
         return (float) getPowerDelta() / MAX_POWER_DELTA_TICKS;
     }
 
-    public static void setPowerDelta(int delta) {
-        if (!isPlayerInATardis())
-            return;
-
-        powerDeltaTick = delta;
-    }
-
     public static void tickAlarmDelta() {
-        if (!isPlayerInATardis()) {
-            if (getAlarmDelta() > 0)
-                setAlarmDelta(0);
-            return;
-        }
-
         Tardis tardis = getCurrentTardis();
 
-        if (!tardis.alarm().enabled().get()) {
-            if (getAlarmDelta() != MAX_ALARM_DELTA_TICKS)
-                setAlarmDelta(getAlarmDelta() + 1);
+        if (tardis == null || !tardis.alarm().enabled().get()) {
+            alarmDeltaTick = MAX_ALARM_DELTA_TICKS;
             return;
         }
 
-        if (getAlarmDelta() < MAX_ALARM_DELTA_TICKS && alarmDeltaDirection) {
-            setAlarmDelta(getAlarmDelta() + 1);
-        } else if (getAlarmDelta() > 0 && !alarmDeltaDirection) {
-            setAlarmDelta(getAlarmDelta() - 1);
+        if (alarmDeltaTick < MAX_ALARM_DELTA_TICKS && alarmDeltaDirection) {
+            alarmDeltaTick++;
+        } else if (alarmDeltaTick > 0 && !alarmDeltaDirection) {
+            alarmDeltaTick--;
         }
 
-        if (getAlarmDelta() >= MAX_ALARM_DELTA_TICKS) {
+        if (alarmDeltaTick >= MAX_ALARM_DELTA_TICKS)
             alarmDeltaDirection = false;
-        }
-        if (getAlarmDelta() == 0) {
+
+        if (alarmDeltaTick == 0)
             alarmDeltaDirection = true;
-        }
     }
 
     public static int getAlarmDelta() {
         if (!isPlayerInATardis())
             return 0;
+
         return alarmDeltaTick;
     }
 
     public static float getAlarmDeltaForLerp() {
         return (float) getAlarmDelta() / MAX_ALARM_DELTA_TICKS;
-    }
-
-    public static void setAlarmDelta(int delta) {
-        if (!isPlayerInATardis())
-            return;
-        alarmDeltaTick = delta;
     }
 }

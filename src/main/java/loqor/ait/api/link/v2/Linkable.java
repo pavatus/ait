@@ -13,6 +13,10 @@ public interface Linkable {
 
     TardisRef tardis();
 
+    default boolean isLinked() {
+        return this.tardis() != null && this.tardis().isPresent();
+    }
+
     /**
      * @implNote This method is called when the TardsRef instance gets created. This
      *           means that the ref is no longer null BUT the TARDIS instance still

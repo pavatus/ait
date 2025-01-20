@@ -3,9 +3,6 @@ package loqor.ait.core.blockentities;
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextConsole;
 import static loqor.ait.core.blockentities.ConsoleBlockEntity.nextVariant;
 
-import java.util.Optional;
-
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +17,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -29,20 +27,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.link.LinkableBlockEntity;
+import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITBlocks;
-import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.AITItems;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
-public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
-    public static final Identifier SYNC_TYPE = new Identifier(AITMod.MOD_ID, "sync_gen_type");
-    public static final Identifier SYNC_VARIANT = new Identifier(AITMod.MOD_ID, "sync_gen_variant");
+public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
+    public static final Identifier SYNC_TYPE = AITMod.id("sync_gen_type");
+    public static final Identifier SYNC_VARIANT = AITMod.id("sync_gen_variant");
     private Identifier type;
     private Identifier variant;
 
@@ -52,22 +49,20 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
     }
 
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
-        if (!TardisDimension.isTardisDimension(world))
+        if (!TardisServerWorld.isTardisDimension(world))
             return;
 
         ItemStack stack = player.getMainHandStack();
 
-        if (stack.getItem() instanceof SonicItem) {
-
+        if (stack.getItem() == AITItems.SONIC_SCREWDRIVER) {
             this.createConsole(player);
-
             return;
-        } else if (stack.isOf(Items.BLAZE_POWDER)) {
+        }
 
-            this.createConsole(player);
-
+        if (stack.isOf(Items.BLAZE_POWDER)) {
             stack.decrement(1);
 
+            this.createConsole(player);
             return;
         }
 
@@ -98,7 +93,7 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
         if (world == null)
             return;
 
-        if (this.findTardis().isPresent() && !this.findTardis().get().isUnlocked(this.getConsoleVariant())) {
+        if (this.tardis().isPresent() && !this.tardis().get().isUnlocked(this.getConsoleVariant())) {
             player.sendMessage(Text.literal("This console is not unlocked yet!").formatted(Formatting.ITALIC), true);
             world.playSound(null, this.pos, SoundEvents.ENTITY_GLOW_ITEM_FRAME_BREAK, SoundCategory.BLOCKS, 0.5f, 1.0f);
             return;
@@ -111,14 +106,6 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
         world.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 0.5f, 1.0f);
     }
 
-    @Override
-    public Optional<Tardis> findTardis() {
-        if (this.tardisId == null) {
-            TardisDimension.get(this.world).ifPresent(this::setTardis);
-        }
-        return super.findTardis();
-    }
-
     public ConsoleTypeSchema getConsoleSchema() {
         if (type == null) {
             this.setConsoleSchema(ConsoleRegistry.HARTNELL.id());
@@ -129,28 +116,29 @@ public class ConsoleGeneratorBlockEntity extends LinkableBlockEntity {
 
     public void setConsoleSchema(Identifier type) {
         this.type = type;
-        markDirty();
+
+        this.markDirty();
         this.syncType();
-        if (this.getWorld() == null)
-            return;
-        WorldOps.updateIfOnServer(this.getWorld(), this.pos);
+
+        if (this.getWorld() instanceof ServerWorld serverWorld)
+            serverWorld.getChunkManager().markForUpdate(this.pos);
     }
 
     public ConsoleVariantSchema getConsoleVariant() {
-        if (variant == null) {
+        if (this.variant == null)
             this.variant = this.getConsoleSchema().getDefaultVariant().id();
-        }
 
         return ConsoleVariantRegistry.getInstance().get(this.variant);
     }
 
     public void setVariant(Identifier variant) {
         this.variant = variant;
-        markDirty();
+
+        this.markDirty();
         this.syncVariant();
-        if (this.getWorld() == null)
-            return;
-        WorldOps.updateIfOnServer(this.getWorld(), this.pos);
+
+        if (this.getWorld() instanceof ServerWorld serverWorld)
+            serverWorld.getChunkManager().markForUpdate(this.pos);
     }
 
     public void changeConsole(ConsoleTypeSchema schema) {

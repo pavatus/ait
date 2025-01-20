@@ -25,11 +25,11 @@ public class ClientLavaSoundHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createLavaSound(ClientTardis tardis) {
-        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().getDoorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.BLOCKS,
-                tardis.getDesktop().doorPos().getPos(), 0.2f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.2f);
     }
 
     public static ClientLavaSoundHandler create() {
@@ -51,6 +51,10 @@ public class ClientLavaSoundHandler extends SoundHandler {
                 && tardis.<ExteriorEnvironmentHandler>handler(TardisComponent.Id.ENVIRONMENT).hasLava();
     }
 
+    private boolean areDoorsOpen(ClientTardis tardis) {
+        return tardis != null && tardis.door().isOpen();
+    }
+
     public void tick(MinecraftClient client) {
         ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
@@ -58,6 +62,12 @@ public class ClientLavaSoundHandler extends SoundHandler {
             this.generate(tardis);
 
         if (this.shouldPlaySounds(tardis)) {
+            if (areDoorsOpen(tardis)) {
+                this.getLavaSound(tardis).setVolume(1.0f);
+            } else {
+                this.getLavaSound(tardis).setVolume(0.2f);
+            }
+
             this.startIfNotPlaying(this.getLavaSound(tardis));
         } else {
             this.stopSound(LAVA_SOUND);

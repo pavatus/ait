@@ -8,7 +8,7 @@ import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
 
 public class PoliceBoxDoorVariant extends DoorSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "door/police_box");
+    public static final Identifier REFERENCE = AITMod.id("door/police_box");
 
     public PoliceBoxDoorVariant() {
         super(REFERENCE);

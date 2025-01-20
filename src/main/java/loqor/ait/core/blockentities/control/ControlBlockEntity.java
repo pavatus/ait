@@ -2,6 +2,9 @@ package loqor.ait.core.blockentities.control;
 
 import java.util.Optional;
 
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -15,8 +18,6 @@ import loqor.ait.core.blocks.control.RedstoneControlBlock;
 import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.control.Control;
-import loqor.ait.core.util.Scheduler;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.registry.impl.ControlRegistry;
 
 public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
@@ -88,9 +89,9 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         return this.run(user, isMine);
     }
 
-    public void createDelay(long millis) {
+    public void createDelay(long ticks) {
         this.onDelay = true;
 
-        Scheduler.runTaskLater(() -> this.onDelay = false, TimeUnit.MILLISECONDS, millis);
+        Scheduler.get().runTaskLater(() -> this.onDelay = false, TimeUnit.TICKS, ticks);
     }
 }

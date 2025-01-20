@@ -89,7 +89,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
             return;
 
         this.moodEvent = moodEvent;
-        TardisUtil.getPlayersInsideInterior(this.tardis().asServer()).forEach(player -> player
+        TardisUtil.getPlayersInsideInterior(this.tardis.asServer()).forEach(player -> player
                 .sendMessage(Text.literal(this.moodEvent.id().getPath()).formatted(Formatting.BOLD), true));
 
         raceMoods();
@@ -159,7 +159,7 @@ public class MoodHandler extends TardisComponent implements TardisTickable {
         if (!(this.tardis instanceof ServerTardis serverTardis))
             return;
 
-        System.out.println(mDE + " | " + alignment + " | " + winningMood);
+        //System.out.println(mDE + " | " + alignment + " | " + winningMood);
         if (alignment == TardisMood.Alignment.NEUTRAL) {
             if (winningMood.weight() + winningMood.swayWeight() >= mDE.getCost()) {
                 this.moodEvent.execute(serverTardis);

@@ -33,7 +33,7 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.client.util.SkyboxUtil;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 @Mixin(WorldRenderer.class)
 public abstract class SkyboxMixin {
@@ -70,6 +70,8 @@ public abstract class SkyboxMixin {
             Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager,
             Matrix4f projectionMatrix);
 
+    @Shadow protected abstract void renderStars();
+
     @Unique private static WorldRenderContext context;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
@@ -83,7 +85,7 @@ public abstract class SkyboxMixin {
         if (this.world == null)
             return;
 
-        if (TardisDimension.isTardisDimension(this.world)) {
+        if (TardisServerWorld.isTardisDimension(this.world)) {
             this.renderSkyDynamically(matrices, projectionMatrix, tickDelta, camera, fogCallback, ci);
             this.world.getProfiler().swap("projector");
         }
@@ -92,11 +94,21 @@ public abstract class SkyboxMixin {
             SkyboxUtil.renderTardisSky(matrices);
             ci.cancel();
         }
+
+        if (this.world.getRegistryKey() == AITDimensions.MOON) {
+            SkyboxUtil.renderMoonSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            ci.cancel();
+        }
+
+        if (this.world.getRegistryKey() == AITDimensions.SPACE) {
+            SkyboxUtil.renderSpaceSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            ci.cancel();
+        }
     }
 
     @Unique private void renderSkyDynamically(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera,
             Runnable fogCallback, CallbackInfo ci) {
-        if (!AITMod.AIT_CONFIG.ENVIRONMENT_PROJECTOR() || context == null) {
+        if (!AITMod.CONFIG.CLIENT.ENVIRONMENT_PROJECTOR || context == null) {
             SkyboxUtil.renderTardisSky(matrices);
             ci.cancel();
 

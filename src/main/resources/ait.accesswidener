@@ -1,0 +1,7 @@
+accessWidener v2 named
+# dev.pavatus.lib
+accessible method net/minecraft/item/ItemGroup <init> (Lnet/minecraft/item/ItemGroup$Row;ILnet/minecraft/item/ItemGroup$Type;Lnet/minecraft/text/Text;Ljava/util/function/Supplier;Lnet/minecraft/item/ItemGroup$EntryCollector;)V
+accessible field net/minecraft/item/ItemGroup texture Ljava/lang/String;
+accessible field net/minecraft/item/ItemGroup scrollbar Z
+accessible field net/minecraft/item/ItemGroup renderName Z
+accessible field net/minecraft/item/ItemGroup special Z

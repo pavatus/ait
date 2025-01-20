@@ -8,6 +8,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.TardisComponent;
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.CloakHandler;
@@ -26,7 +28,7 @@ public class CloakControl extends Control {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
 
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS,
+            world.playSound(null, player.getBlockPos(), AITSounds.PROTOCOL_3, SoundCategory.BLOCKS,
                     1.0F, 1.0F);
             return false;
         }
@@ -34,10 +36,10 @@ public class CloakControl extends Control {
         cloak.cloaked().set(!cloak.cloaked().get());
 
         if (cloak.cloaked().get()) {
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING, SoundCategory.BLOCKS,
+            world.playSound(null, player.getBlockPos(), AITSounds.PROTOCOL_3, SoundCategory.BLOCKS,
                     1.0F, 1.0F);
         } else {
-            world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SCULK_SENSOR_CLICKING_STOP,
+            world.playSound(null, player.getBlockPos(), AITSounds.PROTOCOL_3ALT,
                     SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
@@ -47,5 +49,10 @@ public class CloakControl extends Control {
     @Override
     public SoundEvent getSound() {
         return SoundEvents.INTENTIONALLY_EMPTY;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.CHAMELEON;
     }
 }

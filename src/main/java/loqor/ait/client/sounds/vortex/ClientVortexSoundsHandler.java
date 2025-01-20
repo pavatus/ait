@@ -11,6 +11,7 @@ import loqor.ait.client.sounds.SoundHandler;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class ClientVortexSoundsHandler extends SoundHandler {
@@ -25,7 +26,7 @@ public class ClientVortexSoundsHandler extends SoundHandler {
 
     private void validateVortexSound(ClientTardis tardis) {
         boolean valid = Objects.equals(
-                tardis.getDesktop().doorPos().getPos(),
+                tardis.getDesktop().getDoorPos().getPos(),
                 this.getVortexSound(tardis).getPosition()
         );
 
@@ -36,11 +37,11 @@ public class ClientVortexSoundsHandler extends SoundHandler {
     }
 
     private PositionedLoopingSound createVortexSound(ClientTardis tardis) {
-        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().getDoorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(AITSounds.VORTEX_SOUND, SoundCategory.AMBIENT,
-                tardis.getDesktop().doorPos().getPos(), 0.1f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.2f);
     }
 
     public static ClientVortexSoundsHandler create() {
@@ -61,6 +62,17 @@ public class ClientVortexSoundsHandler extends SoundHandler {
         return tardis != null && tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
     }
 
+    private float calculateVolume(ClientTardis tardis) {
+        if (tardis == null || tardis.door() == null) return 0.2f;
+
+        DoorHandler doorHandler = tardis.door();
+        if (doorHandler.isOpen()) {
+            return 0.5f;
+        }
+
+        return 0.2f;
+    }
+
     public void tick(MinecraftClient client) {
         ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
@@ -68,7 +80,11 @@ public class ClientVortexSoundsHandler extends SoundHandler {
             this.generate(tardis);
 
         if (this.shouldPlaySound(tardis)) {
-            if (this.isPlaying(VORTEX_SOUND)) return;
+            if (this.isPlaying(VORTEX_SOUND)) {
+                float newVolume = calculateVolume(tardis);
+                ((PositionedLoopingSound) VORTEX_SOUND).setVolume(newVolume);
+                return;
+            }
 
             this.validateVortexSound(tardis);
             this.startSound(this.getVortexSound(tardis));

@@ -7,6 +7,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -40,7 +41,7 @@ public class SiegeModeControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
+        return AITSounds.SIEGE;
     }
 
     @Override
@@ -50,6 +51,11 @@ public class SiegeModeControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return 10000L;
+        return 200;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.DESPERATION;
     }
 }

@@ -10,9 +10,11 @@ import com.google.gson.InstanceCreator;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import loqor.ait.api.TardisComponent;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
@@ -27,6 +29,9 @@ public class ServerTardis extends Tardis {
 
     @Exclude
     private final Set<TardisComponent> delta = new HashSet<>(32);
+
+    @Exclude
+    private ServerWorld world;
 
     public ServerTardis(UUID uuid, TardisDesktopSchema schema, ExteriorVariantSchema variantType) {
         super(uuid, new TardisDesktop(schema), new TardisExterior(variantType));
@@ -46,6 +51,11 @@ public class ServerTardis extends Tardis {
 
     public void tick(MinecraftServer server) {
         this.getHandlers().tick(server);
+
+        // tell interior players how to fix growth every 10 seconds
+        if (this.isGrowth() && server.getTicks() % 200 == 0) {
+            this.getInteriorWorld().getPlayers().forEach(player -> player.sendMessage(Text.translatable("tardis.message.growth.hint").formatted(Formatting.DARK_GRAY,Formatting.ITALIC), true));
+        }
     }
 
     public void markDirty(TardisComponent component) {
@@ -78,7 +88,10 @@ public class ServerTardis extends Tardis {
     }
 
     public ServerWorld getInteriorWorld() {
-        return TardisDimension.getOrCreate(this);
+        if (this.world == null)
+            this.world = TardisServerWorld.get(this);
+
+        return this.world;
     }
 
     public static Object creator() {

@@ -22,7 +22,7 @@ import loqor.ait.data.properties.Value;
 
 public class PermissionHandler extends KeyedTardisComponent {
 
-    private static final Identifier P19_LOYALTY_SYNC = new Identifier(AITMod.MOD_ID, "p19_loyalty");
+    private static final Identifier P19_LOYALTY_SYNC = AITMod.id("p19_loyalty");
 
     private static final Property<Loyalty.Type> P19_LOYALTY = Property.forEnum("p19_loyalty", Loyalty.Type.class,
             Loyalty.Type.COMPANION);
