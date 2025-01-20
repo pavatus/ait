@@ -60,7 +60,10 @@ public class AITModelProvider extends SakitusModelProvider {
             generator.registerSimpleCubeAll(block);
         }
 
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.models(this, generator)));
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getDataGenerator().ifPresent(data -> data.models(this, generator));
+            module.getBlockRegistry().ifPresent(this::withBlocks);
+        });
 
         super.generateBlockStateModels(generator);
     }
@@ -78,6 +81,11 @@ public class AITModelProvider extends SakitusModelProvider {
         generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
         generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
         generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
+
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getItemRegistry().ifPresent(this::withItems);
+            module.getBlockRegistry().ifPresent(this::withBlocks);
+        });
 
         super.generateItemModels(generator);
     }

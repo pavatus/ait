@@ -77,6 +77,7 @@ public class AITBlockTagProvider extends SakitusBlockTagProvider {
             module.getDataGenerator().ifPresent(generator -> {
                 generator.blockTags(this);
             });
+            module.getBlockRegistry().ifPresent(this::withBlocks);
         });
 
         super.configure(arg);

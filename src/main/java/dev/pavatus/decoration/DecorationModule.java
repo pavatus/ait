@@ -96,7 +96,6 @@ public class DecorationModule extends Module {
 
             @Override
             public void blockTags(AITBlockTagProvider provider) {
-                provider.withBlocks(DecorationBlocks.class);
             }
 
             @Override
@@ -106,13 +105,12 @@ public class DecorationModule extends Module {
 
             @Override
             public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
-                provider.withItems(DecorationItems.class);
-                provider.withBlocks(DecorationBlocks.class);
+
             }
 
             @Override
             public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
-                provider.withBlocks(DecorationBlocks.class);
+
             }
 
             @Override

@@ -361,8 +361,6 @@ public class PlanetModule extends Module {
 
             @Override
             public void blockTags(AITBlockTagProvider provider) {
-                provider.withBlocks(PlanetBlocks.class);
-
                 // Martian Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
                         .add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_WALL).add(PlanetBlocks.MARTIAN_STONE_WALL).add(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_BRICK_WALL);
@@ -397,9 +395,6 @@ public class PlanetModule extends Module {
                 generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
                 generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
                 generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
-
-                provider.withItems(PlanetItems.class);
-                provider.withBlocks(PlanetBlocks.class);
             }
 
             @Override
@@ -474,8 +469,6 @@ public class PlanetModule extends Module {
                 moon_sandstone_bricks_pool.stairs(PlanetBlocks.MOON_SANDSTONE_BRICK_STAIRS);
                 moon_sandstone_bricks_pool.wall(PlanetBlocks.MOON_SANDSTONE_BRICK_WALL);
                 moon_sandstone_bricks_pool.slab(PlanetBlocks.MOON_SANDSTONE_BRICK_SLAB);
-
-                provider.withBlocks(PlanetBlocks.class);
             }
 
             @Override
