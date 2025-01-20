@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
+import dev.pavatus.lib.register.api.RegistryEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -72,7 +73,9 @@ import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
+import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
+import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
@@ -82,6 +85,12 @@ public class AITModClient implements ClientModInitializer {
         // TODO move to Registries
         ClientDoorRegistry.init();
         ClientTardisManager.init();
+        RegistryEvents.INIT.register((registries, isClient) -> {
+            if (!isClient) return;
+
+            registries.register(ClientExteriorVariantRegistry.getInstance(), true);
+            registries.register(ClientConsoleVariantRegistry.getInstance(), true);
+        });
 
         setupBlockRendering();
         sonicModelPredicate();
