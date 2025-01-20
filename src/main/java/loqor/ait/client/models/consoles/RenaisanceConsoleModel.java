@@ -1331,7 +1331,7 @@ public class RenaisanceConsoleModel extends ConsoleModel {
         BlockPos abpdPos = abpd.getPos();
         matrices.push();
         // TODO dont forget to add variant.getConsoleTextPosition()!
-        matrices.translate(-0.385, 1.01, 1.2);
+        matrices.translate(-0.365, 1.01, 1.18);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         matrices.scale(0.0035f, 0.0035f, 0.0035f);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(270f));
@@ -1353,7 +1353,7 @@ public class RenaisanceConsoleModel extends ConsoleModel {
         matrices.pop();
 
         matrices.push();
-        matrices.translate(-0.18, 1.45, 0.60);
+        matrices.translate(-0.17, 1.535, 0.565);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         matrices.scale(0.0040f, 0.0040f, 0.0040f);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(270f));
