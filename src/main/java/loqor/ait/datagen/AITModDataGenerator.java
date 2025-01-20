@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import dev.pavatus.lib.datagen.lang.LanguageType;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.sound.SakitusSoundProvider;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.PlanetItems;
@@ -26,13 +27,11 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.sound.SoundEvent;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItemGroups;
 import loqor.ait.core.AITItems;
-import loqor.ait.core.AITSounds;
 import loqor.ait.datagen.datagen_providers.*;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 
@@ -542,15 +541,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public void generateSoundData(FabricDataGenerator.Pack pack) {
-        pack.addProvider((((output, registriesFuture) -> {
-            AITSoundProvider provider = new AITSoundProvider(output);
-
-            for (SoundEvent sound : AITSounds.getSounds(AITMod.MOD_ID)) {
-                provider.addSound(sound.getId().getPath(), sound);
-            }
-
-            return provider;
-        })));
+        pack.addProvider((((output, registriesFuture) -> new SakitusSoundProvider(output))));
     }
 
     public void generateItemTags(FabricDataGenerator.Pack pack) {
