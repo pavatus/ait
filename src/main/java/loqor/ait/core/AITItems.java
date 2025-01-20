@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import dev.pavatus.lib.container.impl.ItemContainer;
+import dev.pavatus.lib.datagen.util.NoEnglish;
 import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -32,8 +33,6 @@ import loqor.ait.core.item.link.AbstractLinkItem;
 import loqor.ait.core.item.link.FluidLinkItem;
 import loqor.ait.core.item.link.MercurialLinkItem;
 import loqor.ait.core.item.part.MachinePartItem;
-import loqor.ait.datagen.datagen_providers.util.NoEnglish;
-
 
 public class AITItems extends ItemContainer {
 

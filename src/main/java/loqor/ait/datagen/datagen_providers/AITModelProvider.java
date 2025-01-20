@@ -1,17 +1,13 @@
 package loqor.ait.datagen.datagen_providers;
 
-import static loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables.filterBlocksWithAnnotation;
-
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.data.client.*;
@@ -21,25 +17,38 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.AITBlocks;
-import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
-import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 
 
-public class AITModelProvider extends FabricModelProvider {
-    private final FabricDataOutput output;
+public class AITModelProvider extends SakitusModelProvider {
     private final List<Block> directionalBlocksToRegister = new ArrayList<>();
     private final List<Block> simpleBlocksToRegister = new ArrayList<>();
 
     public AITModelProvider(FabricDataOutput output) {
         super(output);
-        this.output = output;
+    }
+
+    private static Model item(String modid, String parent, TextureKey... requiredTextureKeys) {
+        return new Model(Optional.of(new Identifier(modid, "item/" + parent)), Optional.empty(), requiredTextureKeys);
+    }
+
+    private static Model item(String parent, TextureKey... requiredTextureKeys) {
+        return item(AITMod.MOD_ID, parent, requiredTextureKeys);
+    }
+
+    private static Model item(TextureKey... requiredTextureKeys) {
+        return item("minecraft", "generated", requiredTextureKeys);
+    }
+
+    private static Model item(String name) {
+        return item(name, TextureKey.LAYER0);
+    }
+
+    private static String getItemName(Item item) {
+        return item.getTranslationKey().split("\\.")[2];
     }
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator generator) {
-        filterBlocksWithAnnotation(AITBlocks.get(), AutomaticModel.class, false).forEach(generator::registerSimpleCubeAll);
-
         for (Block block : directionalBlocksToRegister) {
             // Identifier identifier = new
             // Identifier(block.getTranslationKey().split("\\.")[1]);
@@ -51,21 +60,13 @@ public class AITModelProvider extends FabricModelProvider {
             generator.registerSimpleCubeAll(block);
         }
 
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.models(generator)));
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.models(this, generator)));
+
+        super.generateBlockStateModels(generator);
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
-        for (Map.Entry<Block, Annotation> entry : AITBlockLootTables.getAnnotatedBlocks(AutomaticModel.class)) {
-            AutomaticModel annotation = (AutomaticModel) entry.getValue();
-            if (annotation.justItem()) {
-                registerItem(generator, entry.getKey().asItem(), AITMod.MOD_ID);
-            }
-        }
-        for (Map.Entry<Item, Annotation> entry : AITBlockLootTables.getAnnotatedItems(AutomaticModel.class)) {
-            registerItem(generator, entry.getKey(), AITMod.MOD_ID);
-        }
-        // filterBlocksWithAnnotation(AITBlocks.get(), AutomaticModel.class, false).forEach(b -> generator.register(b.asItem(), Models.));
         generator.register(PlanetItems.MARTIAN_STONE_SWORD, Models.HANDHELD);
         generator.register(PlanetItems.MARTIAN_STONE_SHOVEL, Models.HANDHELD);
         generator.register(PlanetItems.MARTIAN_STONE_PICKAXE, Models.HANDHELD);
@@ -78,7 +79,7 @@ public class AITModelProvider extends FabricModelProvider {
         generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
         generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
 
-
+        super.generateItemModels(generator);
     }
 
     public void registerDirectionalBlock(Block block) {
@@ -89,22 +90,11 @@ public class AITModelProvider extends FabricModelProvider {
         simpleBlocksToRegister.add(block);
     }
 
-    private static Model item(String modid, String parent, TextureKey... requiredTextureKeys) {
-        return new Model(Optional.of(new Identifier(modid, "item/" + parent)), Optional.empty(), requiredTextureKeys);
-    }
-    private static Model item(String parent, TextureKey... requiredTextureKeys) {
-        return item(AITMod.MOD_ID, parent, requiredTextureKeys);
-    }
-    private static Model item(TextureKey... requiredTextureKeys) {
-        return item("minecraft", "generated", requiredTextureKeys);
-    }
-    private static Model item(String name) {
-        return item(name, TextureKey.LAYER0);
-    }
     private void registerItem(ItemModelGenerator generator, Item item, String modid) {
         Model model = item(TextureKey.LAYER0);
         model.upload(ModelIds.getItemModelId(item), createTextureMap(item, modid), generator.writer);
     }
+
     private TextureMap createTextureMap(Item item, String modid) {
         Identifier texture = new Identifier(modid, "item/" + getItemName(item));
         if (!(doesTextureExist(texture))) {
@@ -112,9 +102,6 @@ public class AITModelProvider extends FabricModelProvider {
         }
 
         return new TextureMap().put(TextureKey.LAYER0, texture);
-    }
-    private static String getItemName(Item item) {
-        return item.getTranslationKey().split("\\.")[2];
     }
 
     public boolean doesTextureExist(Identifier texture) {

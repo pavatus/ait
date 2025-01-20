@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -99,9 +100,9 @@ public abstract class Module implements Identifiable {
         void blockTags(AITBlockTagProvider provider);
         void itemTags(AITItemTagProvider provider);
 
-        void generateItemModels(ItemModelGenerator itemModelGenerator);
+        void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator);
 
-        void models(BlockStateModelGenerator generator);
+        void models(SakitusModelProvider provider, BlockStateModelGenerator generator);
 
         void advancements(Consumer<Advancement> consumer);
     }

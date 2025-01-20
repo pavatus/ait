@@ -1,6 +1,7 @@
 package dev.pavatus.planet.core;
 
 import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.datagen.util.AutomaticModel;
 import dev.pavatus.lib.item.AItemSettings;
 import dev.pavatus.planet.PlanetModule;
 import dev.pavatus.planet.core.block.OxygenatorBlock;
@@ -11,7 +12,6 @@ import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Item;
 
 import loqor.ait.core.blocks.FlagBlock;
-import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
 import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 

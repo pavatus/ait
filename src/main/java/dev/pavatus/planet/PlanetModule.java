@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import dev.pavatus.planet.client.SpaceSuitOverlay;
@@ -376,7 +377,7 @@ public class PlanetModule extends Module {
 
 
             @Override
-            public void generateItemModels(ItemModelGenerator generator) {
+            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
@@ -394,10 +395,12 @@ public class PlanetModule extends Module {
                 generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
                 generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
 
+                provider.withItems(PlanetItems.class);
+                provider.withBlocks(PlanetBlocks.class);
             }
 
             @Override
-            public void models(BlockStateModelGenerator generator) {
+            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
                 //Martian (Slabs, Walls, etc.)
                 BlockStateModelGenerator.BlockTexturePool martian_stone_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_STONE);
                 martian_stone_pool.stairs(PlanetBlocks.MARTIAN_STONE_STAIRS);
@@ -468,6 +471,8 @@ public class PlanetModule extends Module {
                 moon_sandstone_bricks_pool.stairs(PlanetBlocks.MOON_SANDSTONE_BRICK_STAIRS);
                 moon_sandstone_bricks_pool.wall(PlanetBlocks.MOON_SANDSTONE_BRICK_WALL);
                 moon_sandstone_bricks_pool.slab(PlanetBlocks.MOON_SANDSTONE_BRICK_SLAB);
+
+                provider.withBlocks(PlanetBlocks.class);
             }
 
             @Override

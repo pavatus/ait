@@ -79,6 +79,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
         addDrop(PlanetBlocks.POLISHED_ANORTHOSITE_SLAB, slabDrops(PlanetBlocks.POLISHED_ANORTHOSITE_SLAB));
     }
 
+    @Deprecated(forRemoval = true)
     public static List<Block> filterBlocksWithAnnotation(List<Block> blocks, Class<? extends Annotation> annotationClass, boolean inverse) {
         // Get all annotated blocks with their annotations
         List<Map.Entry<Block, Annotation>> annotatedBlocks = getAnnotatedBlocks(annotationClass);
@@ -89,7 +90,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
                         .anyMatch(entry -> entry.getKey().equals(block)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
+    @Deprecated(forRemoval = true)
     public static List<Map.Entry<Block, Annotation>> getAnnotatedBlocks(Class<?> parent, Class<? extends Annotation> annotationClass) {
         return Stream.of(parent.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(annotationClass.asSubclass(java.lang.annotation.Annotation.class)))
@@ -107,7 +108,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
+    @Deprecated(forRemoval = true)
     public static List<Map.Entry<Block, Annotation>> getAnnotatedBlocks(Class<? extends Annotation> annotationClass) {
         List<Map.Entry<Block, Annotation>> list = getAnnotatedBlocks(AITBlocks.class, annotationClass);
 
@@ -115,7 +116,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 
         return list;
     }
-
+    @Deprecated(forRemoval = true)
     public static List<Map.Entry<Item, Annotation>> getAnnotatedItems(Class<?> parent, Class<? extends Annotation> annotationClass) {
         return Stream.of(parent.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(annotationClass.asSubclass(java.lang.annotation.Annotation.class)))
@@ -133,7 +134,7 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
+    @Deprecated(forRemoval = true)
     public static List<Map.Entry<Item, Annotation>> getAnnotatedItems(Class<? extends Annotation> annotationClass) {
         List<Map.Entry<Item, Annotation>> list = getAnnotatedItems(AITItems.class, annotationClass);
 
@@ -142,14 +143,4 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
         return list;
     }
 
-    public static List<Item> filterItemsWithAnnotation(List<Item> list, Class<? extends Annotation> annotationClass, boolean inverse) {
-        // Get all annotated blocks with their annotations
-        List<Map.Entry<Item, Annotation>> annotatedBlocks = getAnnotatedItems(annotationClass);
-
-        // Filter the input list to include only blocks that match annotated fields
-        return list.stream()
-                .filter(block -> inverse != annotatedBlocks.stream()
-                        .anyMatch(entry -> entry.getKey().equals(block)))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
 }

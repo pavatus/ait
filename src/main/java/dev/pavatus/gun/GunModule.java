@@ -9,6 +9,7 @@ import dev.pavatus.gun.core.entity.GunEntityTypes;
 import dev.pavatus.gun.core.item.GunItems;
 import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -109,12 +110,12 @@ public class GunModule extends Module {
             }
 
             @Override
-            public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-
+            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
+                provider.withItems(GunItems.class);
             }
 
             @Override
-            public void models(BlockStateModelGenerator generator) {
+            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
 
             }
 

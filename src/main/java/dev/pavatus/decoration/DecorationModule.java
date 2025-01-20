@@ -7,6 +7,7 @@ import dev.pavatus.decoration.core.DecorationBlocks;
 import dev.pavatus.decoration.core.DecorationItems;
 import dev.pavatus.lib.container.RegistryContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import net.fabricmc.api.EnvType;
@@ -101,15 +102,15 @@ public class DecorationModule extends Module {
 
             }
 
-
             @Override
-            public void generateItemModels(ItemModelGenerator generator) {
-
+            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
+                provider.withItems(DecorationItems.class);
+                provider.withBlocks(DecorationBlocks.class);
             }
 
             @Override
-            public void models(BlockStateModelGenerator generator) {
-
+            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
+                provider.withBlocks(DecorationBlocks.class);
             }
 
             @Override
