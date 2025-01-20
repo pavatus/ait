@@ -816,6 +816,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("painting.ait.gallifrey_falls.title", "Gallifrey Falls");
         provider.addTranslation("painting.ait.gallifrey_falls.author", "???");
 
+        provider.addTranslation("painting.ait.peanut.title", "Peanut");
+        provider.addTranslation("painting.ait.peanut.author", "???");
+
         // Death
         provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
         provider.addTranslation("death.attack.space_suffocation", "%1$s got blown up due to lack of Oxygen!");
