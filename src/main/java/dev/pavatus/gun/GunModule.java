@@ -8,6 +8,9 @@ import dev.pavatus.gun.client.render.StaserBoltEntityRenderer;
 import dev.pavatus.gun.core.entity.GunEntityTypes;
 import dev.pavatus.gun.core.item.GunItems;
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
+import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -25,7 +28,6 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
-import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 public class GunModule extends Module {
@@ -70,7 +72,7 @@ public class GunModule extends Module {
     }
 
     @Override
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.of(GunItems.class);
     }
 
@@ -88,7 +90,7 @@ public class GunModule extends Module {
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.of(new DataGenerator() {
             @Override
-            public void lang(AITLanguageProvider provider) {
+            public void lang(SakitusLanguageProvider provider) {
                 // provider.addTranslation(getItemGroup(), "AIT: Combat");
             }
 
@@ -108,12 +110,12 @@ public class GunModule extends Module {
             }
 
             @Override
-            public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
 
             }
 
             @Override
-            public void models(BlockStateModelGenerator generator) {
+            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
 
             }
 
