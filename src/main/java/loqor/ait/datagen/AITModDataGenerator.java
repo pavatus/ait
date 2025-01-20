@@ -608,7 +608,11 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.translateBlocks(AITBlocks.class);
         provider.translateItems(AITItems.class);
 
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getDataGenerator().ifPresent(data -> data.lang(provider));
+            module.getBlockRegistry().ifPresent(provider::translateBlocks);
+            module.getItemRegistry().ifPresent(provider::translateItems);
+        });
 
         // Control entities
         provider.addTranslation("control.ait.antigravs", "Antigravs");

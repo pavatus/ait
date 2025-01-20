@@ -91,7 +91,6 @@ public class GunModule extends Module {
         return Optional.of(new DataGenerator() {
             @Override
             public void lang(SakitusLanguageProvider provider) {
-                provider.translateItems(GunItems.class);
                 // provider.addTranslation(getItemGroup(), "AIT: Combat");
             }
 

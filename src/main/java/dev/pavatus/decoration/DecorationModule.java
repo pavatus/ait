@@ -70,8 +70,6 @@ public class DecorationModule extends Module {
         return Optional.of(new DataGenerator() {
             @Override
             public void lang(SakitusLanguageProvider provider) {
-                provider.translateBlocks(DecorationBlocks.class);
-                provider.translateItems(DecorationItems.class);
                 provider.addTranslation(getItemGroup(), "AIT: Decoration");
                 provider.addTranslation("itemGroup.ait.decoration", "AIT: Decoration");
                 provider.addTranslation(DecorationBlocks.MINT_ROUNDEL, "Roundel");

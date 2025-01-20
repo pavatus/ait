@@ -94,8 +94,6 @@ public class PlanetModule extends Module {
         return Optional.of(new DataGenerator() {
             @Override
             public void lang(SakitusLanguageProvider provider) {
-                provider.translateBlocks(PlanetBlocks.class);
-                provider.translateItems(PlanetItems.class);
                 provider.addTranslation(getItemGroup(), "AIT: Planetary Exploration");
                 provider.addTranslation("itemGroup.ait.planet", "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
