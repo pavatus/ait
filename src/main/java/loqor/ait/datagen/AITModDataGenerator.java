@@ -7,6 +7,8 @@ import static net.minecraft.data.server.recipe.RecipeProvider.createSlabRecipe;
 import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.lib.datagen.lang.LanguageType;
+import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.PlanetItems;
@@ -18,7 +20,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.*;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -33,9 +34,7 @@ import loqor.ait.core.AITItemGroups;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
 import loqor.ait.datagen.datagen_providers.*;
-import loqor.ait.datagen.datagen_providers.lang.LanguageType;
 import loqor.ait.datagen.datagen_providers.loot.AITBlockLootTables;
-import loqor.ait.datagen.datagen_providers.util.NoEnglish;
 
 public class
 AITModDataGenerator implements DataGeneratorEntrypoint {
@@ -608,12 +607,15 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
      * @param output           The data generator output.
      * @param registriesFuture The registries future.
      * @param languageType     The language type.
-     * @return The AITLanguageProvider.
+     * @return The SakitusLanguageProvider.
      */
 
-    public AITLanguageProvider addEnglishTranslations(FabricDataOutput output,
-                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
+    public SakitusLanguageProvider addEnglishTranslations(FabricDataOutput output,
+                                                          CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
+        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
+
+        provider.translateBlocks(AITBlocks.class);
+        provider.translateItems(AITItems.class);
 
         ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getDataGenerator().ifPresent(data -> data.lang(provider)));
 
@@ -1206,18 +1208,6 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("effect.ait.lunar_regolith", "Lunar Regolith Poisoned");
         provider.addTranslation("effect.ait.oxygenated", "Oxygenator Field");
 
-        // automatic english for items
-        AITBlockLootTables.filterItemsWithAnnotation(AITItems.get(), NoEnglish.class, true).forEach(var -> {
-            if (var instanceof BlockItem) return;
-
-            provider.addTranslation(var, fixupTranslationKey(var.getTranslationKey()));
-        });
-
-        // automatic english for blocks
-        AITBlockLootTables.filterBlocksWithAnnotation(AITBlocks.get(), NoEnglish.class, true).forEach(block -> {
-            provider.addTranslation(block, fixupTranslationKey(block.getTranslationKey()));
-        });
-
         return provider;
     }
 
@@ -1227,111 +1217,111 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
      * @param output           The data generator output.
      * @param registriesFuture The registries future.
      * @param languageType     The language type.
-     * @return The AITLanguageProvider.
+     * @return The SakitusLanguageProvider.
      */
-    public AITLanguageProvider addFrenchTranslations(FabricDataOutput output,
+    public SakitusLanguageProvider addFrenchTranslations(FabricDataOutput output,
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
+        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
-        aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-        aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Porte");
-        aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
-        aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Clé en Fer");
-        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Clé en Or");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Clé en Netherite");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Clé Classique");
-        aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Télécommande Stattenheim");
-        aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Collecteur d’Artron ");
-        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Scanneur de Faille");
-        aitLanguageProvider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Tournevis Sonique");
-        // aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER,
+        provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
+        provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+        provider.addTranslation(AITBlocks.DOOR_BLOCK, "Porte");
+        provider.addTranslation(AITBlocks.CONSOLE, "Console");
+        provider.addTranslation(AITItems.IRON_KEY, "Clé en Fer");
+        provider.addTranslation(AITItems.GOLD_KEY, "Clé en Or");
+        provider.addTranslation(AITItems.NETHERITE_KEY, "Clé en Netherite");
+        provider.addTranslation(AITItems.CLASSIC_KEY, "Clé Classique");
+        provider.addTranslation(AITItems.REMOTE_ITEM, "Télécommande Stattenheim");
+        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Collecteur d’Artron ");
+        provider.addTranslation(AITItems.RIFT_SCANNER, "Scanneur de Faille");
+        provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Tournevis Sonique");
+        // provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER,
         // "Tournevis
         // Sonique
         // Renaissance");
-        // aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER,
+        // provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER,
         // "Tournevis Sonique
         // Coral");
-        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
-        aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterieur");
-        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "Corail TARDIS");
-        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s a été écrasé(e) par un TARDIS!");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info1", "Information sur le Chunk à Artron: ");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info2", "Artron laissé dans le chunk: ");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info3", "Ceci n'est pas un chunk à faille");
-        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo",
+        provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
+        provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
+        provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Modèle de forge");
+        provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterieur");
+        provider.addTranslation(AITBlocks.CORAL_PLANT, "Corail TARDIS");
+        provider.addTranslation("death.attack.tardis_squash", "%1$s a été écrasé(e) par un TARDIS!");
+        provider.addTranslation("message.ait.riftscanner.info1", "Information sur le Chunk à Artron: ");
+        provider.addTranslation("message.ait.riftscanner.info2", "Artron laissé dans le chunk: ");
+        provider.addTranslation("message.ait.riftscanner.info3", "Ceci n'est pas un chunk à faille");
+        provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo",
                 "Maintenez la touche shift pour plus d'informations");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.active", "Protocole 116: ACTIF");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocole 116: INACTIF");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1",
+        provider.addTranslation("tardis.message.control.protocol_116.active", "Protocole 116: ACTIF");
+        provider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocole 116: INACTIF");
+        provider.addTranslation("message.ait.remoteitem.warning1",
                 "Le TARDIS n’a plus de carburant et ne peux plus se dématérialiser");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2",
+        provider.addTranslation("message.ait.remoteitem.warning2",
                 "Le TARDIS est en train de se recharger et est incapable de se dématérialiser");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning3",
+        provider.addTranslation("message.ait.remoteitem.warning3",
                 "Impossible de passer de la dimension extérieure à la dimension intérieure");
-        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.notardis",
+        provider.addTranslation("tooltip.ait.remoteitem.notardis",
                 "La télécommande n’est pas connecté avec le TARDIS");
-        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIF");
-        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravs: INACTIF");
-        aitLanguageProvider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
+        provider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIF");
+        provider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravs: INACTIF");
+        provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
+        provider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
                 "Retour Rapide: Dernière position inexistante!");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.last_position",
+        provider.addTranslation("tardis.message.control.fast_return.last_position",
                 " Retour Rapide: DERNIÈRE POSITION DÉFINIE");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position",
+        provider.addTranslation("tardis.message.control.fast_return.current_position",
                 "Fast Return: POSITION ACTUELLE DÉFINIE");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protocole 813: ACTIF");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocole 813: INACTF");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "Frein à main: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "Frein à main: OFF");
-        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége: Activé");
-        aitLanguageProvider.addTranslation("tardis.message.control.siege.enabled", "Siége: Désactivé");
-        aitLanguageProvider.addTranslation("tardis.message.control.refueler.enabled", "Rechargement: Activé");
-        aitLanguageProvider.addTranslation("tardis.message.control.refueler.disabled", "Rechargement: Désactivé");
-        aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Biome de Destination: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Incrément: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
-        aitLanguageProvider.addTranslation("command.ait.riftchunk.isariftchunk", "Ceci est un chunk à faille");
-        aitLanguageProvider.addTranslation("command.ait.riftchunk.isnotariftchunk", "Ceci n’est pas un chunk à faille");
-        aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "CHUNK À FAILLE TROUVÉ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "CHUNK À FAILLE NON TROUVÉ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged",
+        provider.addTranslation("tardis.message.control.protocol_813.active", "Protocole 813: ACTIF");
+        provider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocole 813: INACTF");
+        provider.addTranslation("tardis.message.control.handbrake.on", "Frein à main: ON");
+        provider.addTranslation("tardis.message.control.handbrake.off", "Frein à main: OFF");
+        provider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
+        provider.addTranslation("tardis.message.control.siege.enabled", "Siége: Activé");
+        provider.addTranslation("tardis.message.control.siege.enabled", "Siége: Désactivé");
+        provider.addTranslation("tardis.message.control.refueler.enabled", "Rechargement: Activé");
+        provider.addTranslation("tardis.message.control.refueler.disabled", "Rechargement: Désactivé");
+        provider.addTranslation("tardis.message.destination_biome", "Biome de Destination: ");
+        provider.addTranslation("tardis.message.control.increment.info", "Incrément: ");
+        provider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
+        provider.addTranslation("command.ait.riftchunk.isariftchunk", "Ceci est un chunk à faille");
+        provider.addTranslation("command.ait.riftchunk.isnotariftchunk", "Ceci n’est pas un chunk à faille");
+        provider.addTranslation("message.ait.sonic.riftfound", "CHUNK À FAILLE TROUVÉ");
+        provider.addTranslation("message.ait.sonic.riftnotfound", "CHUNK À FAILLE NON TROUVÉ");
+        provider.addTranslation("message.ait.sonic.handbrakedisengaged",
                 "Frein à main desserré, destination définie à la position actuelle");
-        aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Mode: ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.none", "Aucun");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4",
+        provider.addTranslation("message.ait.sonic.mode", "Mode: ");
+        provider.addTranslation("message.ait.sonic.none", "Aucun");
+        provider.addTranslation("message.ait.remoteitem.warning4",
                 "La cible a été réinitialisée et mise à jour, l'appareil est maintenant orienté vers votre nouvelle cible");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Amélioration");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Type de Clé: ");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Matériau: ");
-        aitLanguageProvider.addTranslation("message.ait.control.ylandtype", "Recherche Surface Mode: %s");
-        aitLanguageProvider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Surface Search: ON");
-        aitLanguageProvider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Surface Search: OFF");
+        provider.addTranslation("message.ait.keysmithing.upgrade", "Amélioration");
+        provider.addTranslation("message.ait.keysmithing.key", "Type de Clé: ");
+        provider.addTranslation("message.ait.keysmithing.ingredient", "Matériau: ");
+        provider.addTranslation("message.ait.control.ylandtype", "Recherche Surface Mode: %s");
+        provider.addTranslation("message.ait.control.xlandtype.on", "Horizontal Surface Search: ON");
+        provider.addTranslation("message.ait.control.xlandtype.off", "Horizontal Surface Search: OFF");
 
-        aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "La clé ne s’identifie avec aucun TARDIS");
+        provider.addTranslation("tooltip.ait.key.notardis", "La clé ne s’identifie avec aucun TARDIS");
         //
-        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
-        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
-        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
-        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
+        provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        provider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        provider.addTranslation("screen.ait.monitor.apply", "Apply");
+        provider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
+        provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        provider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
                 "The TARDIS does not have enough fuel to change it's interior");
-        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning",
+        provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
-        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
 
-        return aitLanguageProvider;
+        return provider;
     }
 
     /**
@@ -1340,201 +1330,201 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
      * @param output           The data generator output.
      * @param registriesFuture The registries future.
      * @param languageType     The language type.
-     * @return The AITLanguageProvider.
+     * @return The SakitusLanguageProvider.
      */
-    public AITLanguageProvider addSpanishTranslations(FabricDataOutput output,
+    public SakitusLanguageProvider addSpanishTranslations(FabricDataOutput output,
                                                       CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
+        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
-        aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-        aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
-        aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Console");
-        aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Iron Key");
-        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
-        aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
-        aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
-        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "escáner de Rift");
-        aitLanguageProvider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
-        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
-        aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
-        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
-        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
-        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1",
+        provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
+        provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+        provider.addTranslation(AITBlocks.DOOR_BLOCK, "Door");
+        provider.addTranslation(AITBlocks.CONSOLE, "Console");
+        provider.addTranslation(AITItems.IRON_KEY, "Iron Key");
+        provider.addTranslation(AITItems.GOLD_KEY, "Gold Key");
+        provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Key");
+        provider.addTranslation(AITItems.CLASSIC_KEY, "Classic Key");
+        provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Remote");
+        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artron Collector");
+        provider.addTranslation(AITItems.RIFT_SCANNER, "escáner de Rift");
+        provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Sonic Screwdriver");
+        provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+        provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+        provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+        provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Exterior");
+        provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Coral");
+        provider.addTranslation("death.attack.tardis_squash", "%1$s got squashed by a TARDIS!");
+        provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
+        provider.addTranslation("message.ait.riftscanner.info2", "Artron left in chunk: ");
+        provider.addTranslation("message.ait.riftscanner.info3", "This is not a rift chunk");
+        provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo", "Hold shift for more info");
+        provider.addTranslation("tardis.message.control.protocol_116.active", "Protocol 116: ACTIVE");
+        provider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
+        provider.addTranslation("message.ait.remoteitem.warning1",
                 "The TARDIS is out of fuel and cannot dematerialise");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2",
+        provider.addTranslation("message.ait.remoteitem.warning2",
                 "The TARDIS is refueling and is unable to dematerialise");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning3",
+        provider.addTranslation("message.ait.remoteitem.warning3",
                 "Cannot translocate exterior to interior dimension");
-        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.notardis",
+        provider.addTranslation("tooltip.ait.remoteitem.notardis",
                 "Remote does not identify with any TARDIS");
-        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravs: INACTIVE");
-        aitLanguageProvider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
+        provider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ACTIVE");
+        provider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravs: INACTIVE");
+        provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
+        provider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
                 "Fast Return: Last Position Nonexistent!");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.last_position",
+        provider.addTranslation("tardis.message.control.fast_return.last_position",
                 "Fast Return: LAST POSITION SET");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position",
+        provider.addTranslation("tardis.message.control.fast_return.current_position",
                 "Fast Return: CURRENT POSITION SET");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protocol 813: ACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "handbrake: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "handbrake: OFF");
-        aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Ground Searching: ON");
-        aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Ground Searching: OFF");
-        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.refueler.enabled", "Refueling: Enabled");
-        aitLanguageProvider.addTranslation("tardis.message.control.refueler.disabled", "Refueling: Disabled");
-        aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Increment: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
-        aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged",
+        provider.addTranslation("tardis.message.control.protocol_813.active", "Protocol 813: ACTIVE");
+        provider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
+        provider.addTranslation("tardis.message.control.handbrake.on", "handbrake: ON");
+        provider.addTranslation("tardis.message.control.handbrake.off", "handbrake: OFF");
+        provider.addTranslation("tardis.message.control.landtype.on", "Ground Searching: ON");
+        provider.addTranslation("tardis.message.control.landtype.off", "Ground Searching: OFF");
+        provider.addTranslation("tardis.message.control.randomiser.destination", "Destination: ");
+        provider.addTranslation("tardis.message.control.refueler.enabled", "Refueling: Enabled");
+        provider.addTranslation("tardis.message.control.refueler.disabled", "Refueling: Disabled");
+        provider.addTranslation("tardis.message.destination_biome", "Destination Biome: ");
+        provider.addTranslation("tardis.message.control.increment.info", "Increment: ");
+        provider.addTranslation("tardis.message.control.randomiser.poscontrol", "Destination: ");
+        provider.addTranslation("message.ait.sonic.riftfound", "RIFT CHUNK FOUND");
+        provider.addTranslation("message.ait.sonic.riftnotfound", "RIFT CHUNK NOT FOUND");
+        provider.addTranslation("message.ait.sonic.handbrakedisengaged",
                 "Handbrake disengaged, destination set to current position");
-        aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Mode: ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.none", "None");
-        aitLanguageProvider.addTranslation("message.ait.sonic.currenttype", "Current Casing: ");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4",
+        provider.addTranslation("message.ait.sonic.mode", "Mode: ");
+        provider.addTranslation("message.ait.sonic.none", "None");
+        provider.addTranslation("message.ait.sonic.currenttype", "Current Casing: ");
+        provider.addTranslation("message.ait.remoteitem.warning4",
                 "Target has been reset and updated, the device is now pointing towards your new target");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
-        aitLanguageProvider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
-        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
-        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
-        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
-        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
+        provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
+        provider.addTranslation("message.ait.keysmithing.key", "Key Type: ");
+        provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        provider.addTranslation("tooltip.ait.key.notardis", "Key does not identify with any TARDIS");
+        provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        provider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        provider.addTranslation("screen.ait.monitor.apply", "Apply");
+        provider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
+        provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        provider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
                 "The TARDIS does not have enough fuel to change it's interior");
-        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning",
+        provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
-        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
 
-        return aitLanguageProvider;
+        return provider;
     }
 
-    public AITLanguageProvider addGermanTranslations(FabricDataOutput output,
+    public SakitusLanguageProvider addGermanTranslations(FabricDataOutput output,
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        AITLanguageProvider aitLanguageProvider = new AITLanguageProvider(output, languageType);
+        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
 
-        aitLanguageProvider.addTranslation(AITItemGroups.MAIN, "Abenteuer in der Zeit");
-        aitLanguageProvider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
-        aitLanguageProvider.addTranslation(AITBlocks.DOOR_BLOCK, "Tür");
-        aitLanguageProvider.addTranslation(AITBlocks.CONSOLE, "Konsole");
-        aitLanguageProvider.addTranslation(AITItems.IRON_KEY, "Eiserner Schlüssel");
-        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY, "Goldener Schlüssel");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Schlüssel");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY, "Klassischer Schlüssel");
-        aitLanguageProvider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Fernbedienung");
-        aitLanguageProvider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artronsammler");
-        aitLanguageProvider.addTranslation(AITItems.RIFT_SCANNER, "Riss-Scanner");
-        aitLanguageProvider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Schallschraubenzieher");
-        // aitLanguageProvider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER,
+        provider.addTranslation(AITItemGroups.MAIN, "Abenteuer in der Zeit");
+        provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
+        provider.addTranslation(AITBlocks.DOOR_BLOCK, "Tür");
+        provider.addTranslation(AITBlocks.CONSOLE, "Konsole");
+        provider.addTranslation(AITItems.IRON_KEY, "Eiserner Schlüssel");
+        provider.addTranslation(AITItems.GOLD_KEY, "Goldener Schlüssel");
+        provider.addTranslation(AITItems.NETHERITE_KEY, "Netherite Schlüssel");
+        provider.addTranslation(AITItems.CLASSIC_KEY, "Klassischer Schlüssel");
+        provider.addTranslation(AITItems.REMOTE_ITEM, "Stattenheim Fernbedienung");
+        provider.addTranslation(AITItems.ARTRON_COLLECTOR, "Artronsammler");
+        provider.addTranslation(AITItems.RIFT_SCANNER, "Riss-Scanner");
+        provider.addTranslation(AITItems.SONIC_SCREWDRIVER, "Schallschraubenzieher");
+        // provider.addTranslation(AITItems.RENAISSANCE_SONIC_SCREWDRIVER,
         // "Renaissance
         // Schallschraubenzieher");
-        // aitLanguageProvider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER,
+        // provider.addTranslation(AITItems.CORAL_SONIC_SCREWDRIVER,
         // "Korallen
         // Schallschraubenzieher");
-        aitLanguageProvider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
-        aitLanguageProvider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
-        aitLanguageProvider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
-        aitLanguageProvider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Äußere Hülle");
-        aitLanguageProvider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Koralle");
-        aitLanguageProvider.addTranslation("death.attack.tardis_squash", "%1$s wurde von einer TARDIS zerquetscht!");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info2", "Artron noch im Chunk: ");
-        aitLanguageProvider.addTranslation("message.ait.riftscanner.info3", "Dies ist kein Riss-Chunk");
-        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo",
+        provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
+        provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
+        provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Schmiedevorlage");
+        provider.addTranslation(AITBlocks.EXTERIOR_BLOCK, "Äußere Hülle");
+        provider.addTranslation(AITBlocks.CORAL_PLANT, "TARDIS Koralle");
+        provider.addTranslation("death.attack.tardis_squash", "%1$s wurde von einer TARDIS zerquetscht!");
+        provider.addTranslation("message.ait.riftscanner.info1", "Artron Chunk Info: ");
+        provider.addTranslation("message.ait.riftscanner.info2", "Artron noch im Chunk: ");
+        provider.addTranslation("message.ait.riftscanner.info3", "Dies ist kein Riss-Chunk");
+        provider.addTranslation("tooltip.ait.remoteitem.holdformoreinfo",
                 "Shift halten für weitere Informationen");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.active", "Protokoll 116: AKTIV");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning1",
+        provider.addTranslation("tardis.message.control.protocol_116.active", "Protokoll 116: AKTIV");
+        provider.addTranslation("tardis.message.control.protocol_116.inactive", "Protocol 116: INACTIVE");
+        provider.addTranslation("message.ait.remoteitem.warning1",
                 "Die TARDIS benötigt Treibstoff und kann sich nicht dematerialisieren");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning2",
+        provider.addTranslation("message.ait.remoteitem.warning2",
                 "Die TARDIS tankt und kann sich nicht dematerialisieren");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning3",
+        provider.addTranslation("message.ait.remoteitem.warning3",
                 "Äußere Hülle kann nicht in die innere Dimension verschoben werden");
-        aitLanguageProvider.addTranslation("tooltip.ait.remoteitem.notardis",
+        provider.addTranslation("tooltip.ait.remoteitem.notardis",
                 "Fernbedienung identifiziert sich mit keiner TARDIS");
-        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.active", "Antigravitation: AKTIVIERT");
-        aitLanguageProvider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravitation: DEAKTIVIERT");
-        aitLanguageProvider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
+        provider.addTranslation("tardis.message.control.antigravs.active", "Antigravitation: AKTIVIERT");
+        provider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravitation: DEAKTIVIERT");
+        provider.addTranslation("message.ait.tardis.control.dimension.info", "Dimension: ");
+        provider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
                 "Rückreise: Letzte Position existiert nicht!");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.last_position",
+        provider.addTranslation("tardis.message.control.fast_return.last_position",
                 "Rückreise: LETZTE POSITION GESETZT");
-        aitLanguageProvider.addTranslation("tardis.message.control.fast_return.current_position",
+        provider.addTranslation("tardis.message.control.fast_return.current_position",
                 "Rückreise: JETZIGE POSITION GESETZT");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.active", "Protokoll 813: AKTIV");
-        aitLanguageProvider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.on", "Handbremse: AN");
-        aitLanguageProvider.addTranslation("tardis.message.control.handbrake.off", "Handbremse: AUS");
-        aitLanguageProvider.addTranslation("tardis.message.control.landtype.on", "Bodensuche: AN");
-        aitLanguageProvider.addTranslation("tardis.message.control.landtype.off", "Bodensuche: AUS");
-        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.destination", "Zielort: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.refueler.enabled", "Tanken: Aktiviert");
-        aitLanguageProvider.addTranslation("tardis.message.control.refueler.disabled", "Tanken: Deaktiviert");
-        aitLanguageProvider.addTranslation("tardis.message.destination_biome", "Zielbiom: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.increment.info", "Steigerung: ");
-        aitLanguageProvider.addTranslation("tardis.message.control.randomiser.poscontrol", "Zielort: ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.riftfound", "RIFT-CHUNK GEFUNDEN");
-        aitLanguageProvider.addTranslation("message.ait.sonic.riftnotfound", "KEIN RIFT-CHUNK GEFUNDEN");
-        aitLanguageProvider.addTranslation("message.ait.sonic.handbrakedisengaged",
+        provider.addTranslation("tardis.message.control.protocol_813.active", "Protokoll 813: AKTIV");
+        provider.addTranslation("tardis.message.control.protocol_813.inactive", "Protocol 813: INACTIVE");
+        provider.addTranslation("tardis.message.control.handbrake.on", "Handbremse: AN");
+        provider.addTranslation("tardis.message.control.handbrake.off", "Handbremse: AUS");
+        provider.addTranslation("tardis.message.control.landtype.on", "Bodensuche: AN");
+        provider.addTranslation("tardis.message.control.landtype.off", "Bodensuche: AUS");
+        provider.addTranslation("tardis.message.control.randomiser.destination", "Zielort: ");
+        provider.addTranslation("tardis.message.control.refueler.enabled", "Tanken: Aktiviert");
+        provider.addTranslation("tardis.message.control.refueler.disabled", "Tanken: Deaktiviert");
+        provider.addTranslation("tardis.message.destination_biome", "Zielbiom: ");
+        provider.addTranslation("tardis.message.control.increment.info", "Steigerung: ");
+        provider.addTranslation("tardis.message.control.randomiser.poscontrol", "Zielort: ");
+        provider.addTranslation("message.ait.sonic.riftfound", "RIFT-CHUNK GEFUNDEN");
+        provider.addTranslation("message.ait.sonic.riftnotfound", "KEIN RIFT-CHUNK GEFUNDEN");
+        provider.addTranslation("message.ait.sonic.handbrakedisengaged",
                 "Handbremse deaktiviert, Koordinaten auf jetzige Position gesetzt");
-        aitLanguageProvider.addTranslation("message.ait.sonic.mode", "Modus: ");
-        aitLanguageProvider.addTranslation("message.ait.sonic.none", "Keiner");
-        aitLanguageProvider.addTranslation("message.ait.remoteitem.warning4",
+        provider.addTranslation("message.ait.sonic.mode", "Modus: ");
+        provider.addTranslation("message.ait.sonic.none", "Keiner");
+        provider.addTranslation("message.ait.remoteitem.warning4",
                 "Ziel wurde zurückgesetzt und aktualisiert, das Gerät zeigt nun in Richtung des neuen Ziels");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.key", "Schlüsseltyp: ");
-        aitLanguageProvider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
-        aitLanguageProvider.addTranslation("tooltip.ait.key.notardis",
+        provider.addTranslation("message.ait.keysmithing.upgrade", "Upgrade");
+        provider.addTranslation("message.ait.keysmithing.key", "Schlüsseltyp: ");
+        provider.addTranslation("message.ait.keysmithing.ingredient", "Material: ");
+        provider.addTranslation("tooltip.ait.key.notardis",
                 "Schlüssel identifiziert sich mit keiner TARDIS");
         //
-        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
-        aitLanguageProvider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.apply", "Apply");
-        aitLanguageProvider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.back", "> Back");
-        aitLanguageProvider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.coral", "Coral");
-        aitLanguageProvider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
-        aitLanguageProvider.addTranslation("screen.ait.interor_select.title", "Interior Select");
-        aitLanguageProvider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
+        provider.addTranslation("tardis.message.control.hads.alarm_enabled", "Alarms: Enabled");
+        provider.addTranslation("tardis.message.control.hads.alarms_disabled", "Alarms: Disabled");
+        provider.addTranslation("screen.ait.monitor.desktop_settings", "Desktop Settings");
+        provider.addTranslation("screen.ait.monitor.apply", "Apply");
+        provider.addTranslation("screen.ait.monitor.fuel", "Fuel: ");
+        provider.addTranslation("screen.ait.interiorsettings.title", "Interior Settings");
+        provider.addTranslation("screen.ait.interiorsettings.back", "> Back");
+        provider.addTranslation("screen.ait.interiorsettings.changeinterior", "> Change Interior");
+        provider.addTranslation("screen.ait.interior.settings.hum", "HUMS");
+        provider.addTranslation("screen.ait.interior.settings.coral", "Coral");
+        provider.addTranslation("screen.ait.interior.settings.toyota", "Toyota");
+        provider.addTranslation("screen.ait.interor_select.title", "Interior Select");
+        provider.addTranslation("tardis.message.interiorchange.not_enough_fuel",
                 "The TARDIS does not have enough fuel to change it's interior");
-        aitLanguageProvider.addTranslation("tardis.message.interiorchange.warning",
+        provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
-        aitLanguageProvider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at:");
+        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at:");
 
-        return aitLanguageProvider;
+        return provider;
     }
 
-    public AITLanguageProvider addPortugueseTranslations(FabricDataOutput output,
+    public SakitusLanguageProvider addPortugueseTranslations(FabricDataOutput output,
                                                          CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        AITLanguageProvider provider = new AITLanguageProvider(output, languageType);
+        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
         return provider;
     }
 
@@ -1679,39 +1669,14 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
-        pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.RU_RU))); // ru_ru
+        pack.addProvider(((output, registriesFuture) -> new SakitusLanguageProvider(output, LanguageType.RU_RU))); // ru_ru
         // (Russian
         // Russia)
     }
 
     public void generate_UK_UA_Language(FabricDataGenerator.Pack pack) {
-        pack.addProvider(((output, registriesFuture) -> new AITLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
+        pack.addProvider(((output, registriesFuture) -> new SakitusLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
         // (Ukrainian
         // Ukraine)
-    }
-
-    public static String fixupTranslationKey(String key) {
-        // seperate at last .
-        int lastDot = key.lastIndexOf('.');
-        if (lastDot == -1) {
-            return key;
-        }
-        String suffix = key.substring(lastDot + 1);
-
-        // split at _
-        String[] parts = suffix.split("_");
-
-        // capitalise beginning of each string and join with space
-        StringBuilder builder = new StringBuilder();
-        for (String part : parts) {
-            builder.append(part.substring(0, 1).toUpperCase());
-            builder.append(part.substring(1));
-            builder.append(" ");
-        }
-
-        // remove last space
-        builder.deleteCharAt(builder.length() - 1);
-
-        return builder.toString();
     }
 }

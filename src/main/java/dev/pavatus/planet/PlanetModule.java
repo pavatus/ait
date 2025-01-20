@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import dev.pavatus.planet.client.SpaceSuitOverlay;
@@ -39,7 +40,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
-import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 
@@ -90,7 +90,9 @@ public class PlanetModule extends Module {
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.of(new DataGenerator() {
             @Override
-            public void lang(AITLanguageProvider provider) {
+            public void lang(SakitusLanguageProvider provider) {
+                provider.translateBlocks(PlanetBlocks.class);
+                provider.translateItems(PlanetItems.class);
                 provider.addTranslation(getItemGroup(), "AIT: Planetary Exploration");
                 provider.addTranslation("itemGroup.ait.planet", "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
