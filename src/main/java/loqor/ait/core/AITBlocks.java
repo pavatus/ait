@@ -10,6 +10,10 @@ import java.util.List;
 import dev.pavatus.lib.block.ABlockSettings;
 import dev.pavatus.lib.container.impl.BlockContainer;
 import dev.pavatus.lib.container.impl.NoBlockItem;
+import dev.pavatus.lib.datagen.util.AutomaticModel;
+import dev.pavatus.lib.datagen.util.NoBlockDrop;
+import dev.pavatus.lib.datagen.util.NoEnglish;
+import dev.pavatus.lib.datagen.util.PickaxeMineable;
 import dev.pavatus.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -28,10 +32,6 @@ import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
 import loqor.ait.core.engine.block.generic.GenericSubSystemBlock;
-import loqor.ait.datagen.datagen_providers.util.AutomaticModel;
-import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
-import loqor.ait.datagen.datagen_providers.util.NoEnglish;
-import loqor.ait.datagen.datagen_providers.util.PickaxeMineable;
 
 
 public class AITBlocks extends BlockContainer {

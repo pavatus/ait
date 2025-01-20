@@ -3,6 +3,10 @@ package dev.pavatus.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
+import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,7 +26,6 @@ import loqor.ait.AITMod;
 import loqor.ait.api.Identifiable;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
-import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 public abstract class Module implements Identifiable {
@@ -49,10 +52,10 @@ public abstract class Module implements Identifiable {
         return type;
     }
 
-    public Optional<Class<?>> getBlockRegistry() {
+    public Optional<Class<? extends BlockContainer>> getBlockRegistry() {
         return Optional.empty();
     }
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.empty();
     }
 
@@ -94,14 +97,14 @@ public abstract class Module implements Identifiable {
         /**
          * Called when the ENGLISH language provider is generating
          */
-        void lang(AITLanguageProvider provider);
+        void lang(SakitusLanguageProvider provider);
         void recipes(AITRecipeProvider provider);
         void blockTags(AITBlockTagProvider provider);
         void itemTags(AITItemTagProvider provider);
 
-        void generateItemModels(ItemModelGenerator itemModelGenerator);
+        void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator);
 
-        void models(BlockStateModelGenerator generator);
+        void models(SakitusModelProvider provider, BlockStateModelGenerator generator);
 
         void advancements(Consumer<Advancement> consumer);
     }

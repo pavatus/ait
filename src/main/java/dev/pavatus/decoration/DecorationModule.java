@@ -6,6 +6,10 @@ import java.util.function.Consumer;
 import dev.pavatus.decoration.core.DecorationBlocks;
 import dev.pavatus.decoration.core.DecorationItems;
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
+import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import net.fabricmc.api.EnvType;
@@ -20,7 +24,6 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
-import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 
@@ -53,12 +56,12 @@ public class DecorationModule extends Module {
 
 
     @Override
-    public Optional<Class<?>> getBlockRegistry() {
+    public Optional<Class<? extends BlockContainer>> getBlockRegistry() {
         return Optional.of(DecorationBlocks.class);
     }
 
     @Override
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.of(DecorationItems.class);
     }
 
@@ -66,7 +69,7 @@ public class DecorationModule extends Module {
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.of(new DataGenerator() {
             @Override
-            public void lang(AITLanguageProvider provider) {
+            public void lang(SakitusLanguageProvider provider) {
                 provider.addTranslation(getItemGroup(), "AIT: Decoration");
                 provider.addTranslation("itemGroup.ait.decoration", "AIT: Decoration");
                 provider.addTranslation(DecorationBlocks.MINT_ROUNDEL, "Roundel");
@@ -91,7 +94,6 @@ public class DecorationModule extends Module {
 
             @Override
             public void blockTags(AITBlockTagProvider provider) {
-
             }
 
             @Override
@@ -99,14 +101,13 @@ public class DecorationModule extends Module {
 
             }
 
-
             @Override
-            public void generateItemModels(ItemModelGenerator generator) {
+            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
 
             }
 
             @Override
-            public void models(BlockStateModelGenerator generator) {
+            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
 
             }
 

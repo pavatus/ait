@@ -6,6 +6,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
+import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
+import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
 import dev.pavatus.module.Module;
 import dev.pavatus.planet.client.SpaceSuitOverlay;
@@ -39,7 +43,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
-import loqor.ait.datagen.datagen_providers.AITLanguageProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;
 
 
@@ -77,12 +80,12 @@ public class PlanetModule extends Module {
 
 
     @Override
-    public Optional<Class<?>> getBlockRegistry() {
+    public Optional<Class<? extends BlockContainer>> getBlockRegistry() {
         return Optional.of(PlanetBlocks.class);
     }
 
     @Override
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.of(PlanetItems.class);
     }
 
@@ -90,7 +93,7 @@ public class PlanetModule extends Module {
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.of(new DataGenerator() {
             @Override
-            public void lang(AITLanguageProvider provider) {
+            public void lang(SakitusLanguageProvider provider) {
                 provider.addTranslation(getItemGroup(), "AIT: Planetary Exploration");
                 provider.addTranslation("itemGroup.ait.planet", "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
@@ -356,7 +359,6 @@ public class PlanetModule extends Module {
 
             @Override
             public void blockTags(AITBlockTagProvider provider) {
-
                 // Martian Blocks
                 provider.getOrCreateTagBuilder(BlockTags.WALLS)
                         .add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_WALL).add(PlanetBlocks.MARTIAN_STONE_WALL).add(PlanetBlocks.MOSSY_MARTIAN_COBBLESTONE_WALL).add(PlanetBlocks.MARTIAN_BRICK_WALL).add(PlanetBlocks.MARTIAN_SANDSTONE_BRICK_WALL);
@@ -374,7 +376,7 @@ public class PlanetModule extends Module {
 
 
             @Override
-            public void generateItemModels(ItemModelGenerator generator) {
+            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
@@ -391,11 +393,10 @@ public class PlanetModule extends Module {
                 generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
                 generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
                 generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
-
             }
 
             @Override
-            public void models(BlockStateModelGenerator generator) {
+            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
                 //Martian (Slabs, Walls, etc.)
                 BlockStateModelGenerator.BlockTexturePool martian_stone_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_STONE);
                 martian_stone_pool.stairs(PlanetBlocks.MARTIAN_STONE_STAIRS);
