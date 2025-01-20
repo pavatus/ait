@@ -1,18 +1,13 @@
 package loqor.ait.datagen.datagen_providers.loot;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import dev.pavatus.lib.datagen.loot.SakitusBlockLootTable;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 
-import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.loot.condition.MatchToolLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
@@ -24,9 +19,8 @@ import net.minecraft.predicate.item.ItemPredicate;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
-import loqor.ait.datagen.datagen_providers.util.NoBlockDrop;
 
-public class AITBlockLootTables extends FabricBlockLootTableProvider {
+public class AITBlockLootTables extends SakitusBlockLootTable {
 
     public AITBlockLootTables(FabricDataOutput output) {
         super(output);
@@ -34,8 +28,6 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        filterBlocksWithAnnotation(AITBlocks.get(), NoBlockDrop.class, true).forEach(this::addDrop);
-
         this.addDrop(AITBlocks.ZEITON_CLUSTER,
                 (block) -> dropsWithSilkTouch(block, ItemEntry.builder(AITItems.ZEITON_SHARD)
                         .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(4.0F)))
@@ -77,70 +69,9 @@ public class AITBlockLootTables extends FabricBlockLootTableProvider {
         addDrop(PlanetBlocks.ANORTHOSITE_BRICK_SLAB, slabDrops(PlanetBlocks.ANORTHOSITE_BRICK_SLAB));
         addDrop(PlanetBlocks.ANORTHOSITE_SLAB, slabDrops(PlanetBlocks.ANORTHOSITE_SLAB));
         addDrop(PlanetBlocks.POLISHED_ANORTHOSITE_SLAB, slabDrops(PlanetBlocks.POLISHED_ANORTHOSITE_SLAB));
+
+
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getBlockRegistry().ifPresent(this::withBlocks));
+        super.generate();
     }
-
-    @Deprecated(forRemoval = true)
-    public static List<Block> filterBlocksWithAnnotation(List<Block> blocks, Class<? extends Annotation> annotationClass, boolean inverse) {
-        // Get all annotated blocks with their annotations
-        List<Map.Entry<Block, Annotation>> annotatedBlocks = getAnnotatedBlocks(annotationClass);
-
-        // Filter the input list to include only blocks that match annotated fields
-        return blocks.stream()
-                .filter(block -> inverse != annotatedBlocks.stream()
-                        .anyMatch(entry -> entry.getKey().equals(block)))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-    @Deprecated(forRemoval = true)
-    public static List<Map.Entry<Block, Annotation>> getAnnotatedBlocks(Class<?> parent, Class<? extends Annotation> annotationClass) {
-        return Stream.of(parent.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(annotationClass.asSubclass(java.lang.annotation.Annotation.class)))
-                .filter(field -> Block.class.isAssignableFrom(field.getType())) // Ensure it's a Block
-                .map(field -> {
-                    try {
-                        // Access the NoLootTable annotation
-                        Annotation annotation = field.getAnnotation(annotationClass);
-                        // Pair the Block instance with its annotation in a Map.Entry
-                        return new AbstractMap.SimpleEntry<>((Block) field.get(null), annotation);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                })
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-    @Deprecated(forRemoval = true)
-    public static List<Map.Entry<Block, Annotation>> getAnnotatedBlocks(Class<? extends Annotation> annotationClass) {
-        List<Map.Entry<Block, Annotation>> list = getAnnotatedBlocks(AITBlocks.class, annotationClass);
-
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getBlockRegistry().ifPresent(blocks -> list.addAll(getAnnotatedBlocks(blocks, annotationClass))));
-
-        return list;
-    }
-    @Deprecated(forRemoval = true)
-    public static List<Map.Entry<Item, Annotation>> getAnnotatedItems(Class<?> parent, Class<? extends Annotation> annotationClass) {
-        return Stream.of(parent.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(annotationClass.asSubclass(java.lang.annotation.Annotation.class)))
-                .filter(field -> Item.class.isAssignableFrom(field.getType())) // Ensure it's a Block
-                .map(field -> {
-                    try {
-                        // Access the NoLootTable annotation
-                        Annotation annotation = field.getAnnotation(annotationClass);
-                        // Pair the Block instance with its annotation in a Map.Entry
-                        return new AbstractMap.SimpleEntry<>((Item) field.get(null), annotation);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                })
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-    @Deprecated(forRemoval = true)
-    public static List<Map.Entry<Item, Annotation>> getAnnotatedItems(Class<? extends Annotation> annotationClass) {
-        List<Map.Entry<Item, Annotation>> list = getAnnotatedItems(AITItems.class, annotationClass);
-
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> module.getItemRegistry().ifPresent(var -> list.addAll(getAnnotatedItems(var, annotationClass))));
-
-        return list;
-    }
-
 }

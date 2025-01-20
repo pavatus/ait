@@ -8,6 +8,7 @@ import dev.pavatus.gun.client.render.StaserBoltEntityRenderer;
 import dev.pavatus.gun.core.entity.GunEntityTypes;
 import dev.pavatus.gun.core.item.GunItems;
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
 import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
@@ -71,7 +72,7 @@ public class GunModule extends Module {
     }
 
     @Override
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.of(GunItems.class);
     }
 

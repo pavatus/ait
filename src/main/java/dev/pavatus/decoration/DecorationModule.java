@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 import dev.pavatus.decoration.core.DecorationBlocks;
 import dev.pavatus.decoration.core.DecorationItems;
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
 import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
@@ -54,12 +56,12 @@ public class DecorationModule extends Module {
 
 
     @Override
-    public Optional<Class<?>> getBlockRegistry() {
+    public Optional<Class<? extends BlockContainer>> getBlockRegistry() {
         return Optional.of(DecorationBlocks.class);
     }
 
     @Override
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.of(DecorationItems.class);
     }
 

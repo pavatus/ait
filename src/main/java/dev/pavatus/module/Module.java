@@ -3,6 +3,8 @@ package dev.pavatus.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
 import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
@@ -50,10 +52,10 @@ public abstract class Module implements Identifiable {
         return type;
     }
 
-    public Optional<Class<?>> getBlockRegistry() {
+    public Optional<Class<? extends BlockContainer>> getBlockRegistry() {
         return Optional.empty();
     }
-    public Optional<Class<?>> getItemRegistry() {
+    public Optional<Class<? extends ItemContainer>> getItemRegistry() {
         return Optional.empty();
     }
 
