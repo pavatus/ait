@@ -4,13 +4,14 @@ import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.data.schema.door.impl.ClassicHudolinDoorVariant;
 import loqor.ait.registry.impl.door.DoorRegistry;
 
-public class ClassicBoxShalkaVariant extends ClassicBoxVariant {
-    public ClassicBoxShalkaVariant() {
-        super("shalka");
+public class ClassicBoxHudolinVariant extends ClassicBoxVariant {
+    public ClassicBoxHudolinVariant() {
+        super("hudolin");
     }
 
     @Override
     public DoorSchema door() {
         return DoorRegistry.REGISTRY.get(ClassicHudolinDoorVariant.REFERENCE);
     }
+
 }

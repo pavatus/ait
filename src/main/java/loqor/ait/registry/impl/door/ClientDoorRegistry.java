@@ -38,6 +38,7 @@ public class ClientDoorRegistry {
 
     public static ClientDoorSchema TARDIM;
     public static ClientDoorSchema CLASSIC;
+    public static ClientDoorSchema CLASSIC_HUDOLIN;
     public static ClientDoorSchema BOOTH;
     public static ClientDoorSchema CAPSULE;
     public static ClientDoorSchema BOX;
@@ -60,6 +61,7 @@ public class ClientDoorRegistry {
     public static void init() {
         TARDIM = register(new ClientTardimDoorVariant());
         CLASSIC = register(new ClientClassicDoorVariant());
+        CLASSIC_HUDOLIN = register(new ClientClassicHudolinDoorVariant());
         BOOTH = register(new ClientBoothDoorVariant());
         CAPSULE = register(new ClientCapsuleDoorVariant());
         BOX = register(new ClientPoliceBoxDoorVariant());

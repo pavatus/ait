@@ -21,6 +21,7 @@ public class DoorRegistry {
 
     public static DoorSchema TARDIM;
     public static DoorSchema CLASSIC;
+    public static DoorSchema CLASSIC_HUDOLIN;
     public static DoorSchema BOOTH;
     public static DoorSchema CAPSULE;
     public static DoorSchema BOX;
@@ -43,6 +44,7 @@ public class DoorRegistry {
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
         CLASSIC = register(new ClassicDoorVariant());
+        CLASSIC_HUDOLIN = register(new ClassicHudolinDoorVariant());
         BOOTH = register(new BoothDoorVariant());
         CAPSULE = register(new CapsuleDoorVariant());
         BOX = register(new PoliceBoxDoorVariant());
