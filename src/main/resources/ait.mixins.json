@@ -23,14 +23,12 @@
     "server.EnderDragonFightAccessor",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
-    "server.ServerPlayerInteractionManagerMixin",
     "server.ServerPlayerMixin",
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
     "server.structure.StructureTemplateAccessor"
   ],
   "client": [
-    "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
