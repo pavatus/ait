@@ -3,7 +3,7 @@ package loqor.ait.core.tardis;
 import java.util.Objects;
 import java.util.UUID;
 
-import dev.pavatus.register.unlockable.Unlockable;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 
 import loqor.ait.api.Initializable;
 import loqor.ait.api.TardisComponent;

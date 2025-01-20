@@ -2,8 +2,8 @@ package dev.pavatus.module;
 
 import dev.pavatus.decoration.DecorationModule;
 import dev.pavatus.gun.GunModule;
+import dev.pavatus.lib.register.datapack.DatapackRegistry;
 import dev.pavatus.planet.PlanetModule;
-import dev.pavatus.register.datapack.DatapackRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

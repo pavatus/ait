@@ -9,13 +9,13 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pavatus.lib.api.Identifiable;
 
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;

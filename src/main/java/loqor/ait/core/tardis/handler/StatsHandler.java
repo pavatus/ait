@@ -10,8 +10,8 @@ import java.util.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
-import dev.pavatus.register.unlockable.Unlockable;
 
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;

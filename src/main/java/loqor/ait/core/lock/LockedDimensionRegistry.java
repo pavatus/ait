@@ -3,7 +3,7 @@ package loqor.ait.core.lock;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

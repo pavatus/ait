@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.pavatus.register.unlockable.Unlockable;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 
 import net.minecraft.util.Identifier;
 

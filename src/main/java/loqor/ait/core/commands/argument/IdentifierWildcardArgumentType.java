@@ -11,7 +11,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.pavatus.register.datapack.DatapackRegistry;
+import dev.pavatus.lib.api.Identifiable;
+import dev.pavatus.lib.register.datapack.DatapackRegistry;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
@@ -19,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 import loqor.ait.data.Wildcard;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;

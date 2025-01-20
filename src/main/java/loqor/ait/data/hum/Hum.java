@@ -2,10 +2,11 @@ package loqor.ait.data.hum;
 
 import java.util.Optional;
 
+import dev.pavatus.lib.api.Identifiable;
+
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
 
 public class Hum implements Identifiable, Nameable {

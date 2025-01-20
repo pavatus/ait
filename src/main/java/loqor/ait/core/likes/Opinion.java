@@ -2,10 +2,11 @@ package loqor.ait.core.likes;
 
 import java.util.Optional;
 
+import dev.pavatus.lib.api.Identifiable;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.api.Identifiable;
 import loqor.ait.core.tardis.ServerTardis;
 
 public interface Opinion extends Identifiable {

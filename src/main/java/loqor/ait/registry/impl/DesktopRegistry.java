@@ -1,6 +1,6 @@
 package loqor.ait.registry.impl;
 
-import dev.pavatus.register.unlockable.UnlockableRegistry;
+import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 
 import loqor.ait.data.datapack.DatapackDesktop;
 import loqor.ait.data.schema.desktop.DefaultCaveDesktop;

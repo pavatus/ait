@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
+import dev.pavatus.lib.api.Identifiable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.api.Identifiable;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.registry.impl.MachineRecipeRegistry;
 

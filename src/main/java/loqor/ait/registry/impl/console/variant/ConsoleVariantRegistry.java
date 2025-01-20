@@ -3,7 +3,7 @@ package loqor.ait.registry.impl.console.variant;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.pavatus.register.unlockable.UnlockableRegistry;
+import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Vector3f;
