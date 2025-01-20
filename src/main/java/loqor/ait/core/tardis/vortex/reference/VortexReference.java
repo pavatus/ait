@@ -9,13 +9,13 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pavatus.lib.api.Identifiable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
 import loqor.ait.client.renderers.VortexUtil;
 

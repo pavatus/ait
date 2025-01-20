@@ -2,7 +2,7 @@ package loqor.ait.core.likes;
 
 import java.util.Optional;
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

@@ -1,6 +1,6 @@
 package loqor.ait.core.sounds.travel;
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITSounds;

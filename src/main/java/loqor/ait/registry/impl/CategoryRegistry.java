@@ -4,7 +4,7 @@ package loqor.ait.registry.impl;
 
 import java.util.Random;
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.datapack.DatapackCategory;

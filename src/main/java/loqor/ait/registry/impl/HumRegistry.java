@@ -1,7 +1,7 @@
 package loqor.ait.registry.impl;
 
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.network.PacketByteBuf;
 

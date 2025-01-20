@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.gson.*;
-import dev.pavatus.register.Registry;
+import dev.pavatus.lib.register.Registry;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;

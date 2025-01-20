@@ -1,8 +1,9 @@
-package dev.pavatus.register.unlockable;
+package dev.pavatus.lib.register.unlockable;
 
 import java.util.Optional;
 
-import loqor.ait.api.Identifiable;
+import dev.pavatus.lib.api.Identifiable;
+
 import loqor.ait.data.Loyalty;
 
 public interface Unlockable extends Identifiable {

@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.google.gson.*;
-import dev.pavatus.register.unlockable.Unlockable;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

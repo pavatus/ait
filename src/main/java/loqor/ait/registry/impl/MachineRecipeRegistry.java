@@ -3,7 +3,7 @@ package loqor.ait.registry.impl;
 import java.util.Collection;
 import java.util.Optional;
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.item.ItemStack;
 

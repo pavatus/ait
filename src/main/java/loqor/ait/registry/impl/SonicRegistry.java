@@ -4,7 +4,7 @@ import static loqor.ait.AITMod.LOGGER;
 
 import java.util.function.Consumer;
 
-import dev.pavatus.register.unlockable.UnlockableRegistry;
+import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
