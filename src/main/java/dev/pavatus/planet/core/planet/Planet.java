@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pavatus.lib.api.Identifiable;
 import dev.pavatus.planet.core.item.SpacesuitItem;
 
 import net.minecraft.entity.EquipmentSlot;
@@ -18,7 +19,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 
 public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int temperature,
                      boolean hasClouds) implements Identifiable {

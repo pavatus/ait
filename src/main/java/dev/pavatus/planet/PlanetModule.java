@@ -11,13 +11,13 @@ import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
 import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.lib.itemgroup.AItemGroup;
+import dev.pavatus.lib.register.api.RegistryEvents;
 import dev.pavatus.module.Module;
 import dev.pavatus.planet.client.SpaceSuitOverlay;
 import dev.pavatus.planet.core.PlanetBlocks;
 import dev.pavatus.planet.core.PlanetItems;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import dev.pavatus.planet.core.util.PlanetCustomTrades;
-import dev.pavatus.register.api.RegistryEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -36,6 +36,7 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -371,7 +372,7 @@ public class PlanetModule extends Module {
 
             @Override
             public void itemTags(AITItemTagProvider provider) {
-
+                provider.getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR).add(PlanetItems.SPACESUIT_BOOTS).add(PlanetItems.SPACESUIT_LEGGINGS).add(PlanetItems.SPACESUIT_CHESTPLATE).add(PlanetItems.SPACESUIT_HELMET);
             }
 
 

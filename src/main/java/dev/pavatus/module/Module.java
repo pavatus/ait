@@ -3,6 +3,7 @@ package dev.pavatus.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.api.Identifiable;
 import dev.pavatus.lib.container.impl.BlockContainer;
 import dev.pavatus.lib.container.impl.ItemContainer;
 import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
@@ -23,7 +24,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 import loqor.ait.datagen.datagen_providers.AITBlockTagProvider;
 import loqor.ait.datagen.datagen_providers.AITItemTagProvider;
 import loqor.ait.datagen.datagen_providers.AITRecipeProvider;

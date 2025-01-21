@@ -41,7 +41,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import loqor.ait.api.ICantBreak;
+import dev.pavatus.lib.api.ICantBreak;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;

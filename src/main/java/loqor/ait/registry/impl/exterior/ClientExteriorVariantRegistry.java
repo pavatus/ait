@@ -1,7 +1,7 @@
 package loqor.ait.registry.impl.exterior;
 
 
-import dev.pavatus.register.datapack.DatapackRegistry;
+import dev.pavatus.lib.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import org.joml.Vector3f;

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import dev.pavatus.lib.datagen.model.SakitusModelProvider;
 import dev.pavatus.module.ModuleRegistry;
-import dev.pavatus.planet.core.PlanetItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.block.Block;
@@ -70,21 +69,10 @@ public class AITModelProvider extends SakitusModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
-        generator.register(PlanetItems.MARTIAN_STONE_SWORD, Models.HANDHELD);
-        generator.register(PlanetItems.MARTIAN_STONE_SHOVEL, Models.HANDHELD);
-        generator.register(PlanetItems.MARTIAN_STONE_PICKAXE, Models.HANDHELD);
-        generator.register(PlanetItems.MARTIAN_STONE_HOE, Models.HANDHELD);
-        generator.register(PlanetItems.MARTIAN_STONE_AXE, Models.HANDHELD);
-
-        generator.register(PlanetItems.ANORTHOSITE_SWORD, Models.HANDHELD);
-        generator.register(PlanetItems.ANORTHOSITE_SHOVEL, Models.HANDHELD);
-        generator.register(PlanetItems.ANORTHOSITE_PICKAXE, Models.HANDHELD);
-        generator.register(PlanetItems.ANORTHOSITE_HOE, Models.HANDHELD);
-        generator.register(PlanetItems.ANORTHOSITE_AXE, Models.HANDHELD);
-
         ModuleRegistry.instance().iterator().forEachRemaining(module -> {
             module.getItemRegistry().ifPresent(this::withItems);
             module.getBlockRegistry().ifPresent(this::withBlocks);
+            module.getDataGenerator().ifPresent(data -> data.generateItemModels(this, generator));
         });
 
         super.generateItemModels(generator);

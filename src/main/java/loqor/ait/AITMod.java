@@ -8,11 +8,10 @@ import java.util.UUID;
 
 import dev.pavatus.config.AITConfig;
 import dev.pavatus.lib.container.RegistryContainer;
+import dev.pavatus.lib.register.api.RegistryEvents;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
-import dev.pavatus.register.Registries;
-import dev.pavatus.register.api.RegistryEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -155,7 +154,6 @@ public class AITMod implements ModInitializer {
             registries.register(ModuleRegistry.instance());
         });
 
-        Registries.getInstance().subscribe(Registries.InitType.COMMON);
         DoorRegistry.init();
 
         AITStatusEffects.init();

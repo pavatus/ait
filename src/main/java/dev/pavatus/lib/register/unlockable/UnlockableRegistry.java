@@ -1,4 +1,4 @@
-package dev.pavatus.register.unlockable;
+package dev.pavatus.lib.register.unlockable;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
-import dev.pavatus.register.datapack.DatapackRegistry;
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.DatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.util.Identifier;
 

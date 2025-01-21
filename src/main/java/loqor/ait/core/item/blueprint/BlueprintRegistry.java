@@ -1,6 +1,6 @@
 package loqor.ait.core.item.blueprint;
 
-import dev.pavatus.register.datapack.SimpleDatapackRegistry;
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.registry.Registries;
