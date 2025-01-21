@@ -1,12 +1,12 @@
 package loqor.ait.data.schema.console.variant.renaisance.client;
 
+import loqor.ait.client.models.consoles.RenaissanceConsoleModel;
 import org.joml.Vector3f;
 
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
-import loqor.ait.client.models.consoles.RenaisanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.renaisance.RenaissanceFireVariant;
 
@@ -32,7 +32,7 @@ public class ClientRenaissanceFireVariant extends ClientConsoleVariantSchema {
 
     @Override
     public ConsoleModel model() {
-        return new RenaisanceConsoleModel(RenaisanceConsoleModel.getTexturedModelData().createModel());
+        return new RenaissanceConsoleModel(RenaissanceConsoleModel.getTexturedModelData().createModel());
     }
 
     @Override
