@@ -12,7 +12,6 @@ import dev.pavatus.lib.register.api.RegistryEvents;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
-import loqor.ait.core.item.blueprint.Blueprint;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
