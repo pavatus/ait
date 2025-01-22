@@ -6,6 +6,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.command.argument.BlockPosArgumentType;
@@ -20,7 +21,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class SummonTardisCommand {
 
@@ -48,7 +48,7 @@ public class SummonTardisCommand {
         if (pos == null)
             pos = source.getBlockPos();
 
-        DirectedGlobalPos.Cached globalPos = DirectedGlobalPos.Cached.create((ServerWorld) source.getWorld(), pos,
+        CachedDirectedGlobalPos globalPos = CachedDirectedGlobalPos.create((ServerWorld) source.getWorld(), pos,
                 (byte) RotationPropertyHelper.fromYaw(source.getBodyYaw()));
 
         TravelUtil.travelTo(tardis, globalPos);

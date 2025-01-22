@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.control.impl;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -18,7 +19,6 @@ import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class DimensionControl extends Control {
 
@@ -34,7 +34,7 @@ public class DimensionControl extends Control {
         }
 
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached dest = travel.destination();
+        CachedDirectedGlobalPos dest = travel.destination();
 
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             List<ServerWorld> dims = WorldUtil.getOpenWorlds();

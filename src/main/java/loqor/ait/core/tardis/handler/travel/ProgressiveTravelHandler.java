@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler.travel;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -11,7 +12,6 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.sequences.SequenceHandler;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 import loqor.ait.data.properties.integer.IntProperty;
@@ -62,7 +62,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
     }
 
     @Override
-    public void forceDestination(DirectedGlobalPos.Cached cached) {
+    public void forceDestination(CachedDirectedGlobalPos cached) {
         super.forceDestination(cached);
         this.recalculate();
     }
@@ -86,7 +86,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
         return Math.max(0, percentage);
     }
 
-    public DirectedGlobalPos.Cached getProgress() {
+    public CachedDirectedGlobalPos getProgress() {
         return TravelUtil.getPositionFromPercentage(this.position(), this.destination(),
                 this.getDurationAsPercentage());
     }

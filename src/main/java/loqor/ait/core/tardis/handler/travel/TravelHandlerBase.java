@@ -8,6 +8,7 @@ import com.mojang.serialization.DataResult;
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.dynamic.Codecs;
@@ -20,7 +21,6 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
@@ -35,12 +35,12 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
     private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
 
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(
-            Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) null);
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(
-            Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) null);
-    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(
-            Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) null);
+    private static final Property<CachedDirectedGlobalPos> POSITION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "position", (CachedDirectedGlobalPos) null);
+    private static final Property<CachedDirectedGlobalPos> DESTINATION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "destination", (CachedDirectedGlobalPos) null);
+    private static final Property<CachedDirectedGlobalPos> PREVIOUS_POSITION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (CachedDirectedGlobalPos) null);
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", false);
     private static final BoolProperty ANTIGRAVS = new BoolProperty("antigravs", false);
@@ -53,9 +53,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final BoolProperty HGROUND_SEARCH = new BoolProperty("hground_search", true);
 
     protected final Value<State> state = STATE.create(this);
-    protected final Value<DirectedGlobalPos.Cached> position = POSITION.create(this);
-    protected final Value<DirectedGlobalPos.Cached> destination = DESTINATION.create(this);
-    protected final Value<DirectedGlobalPos.Cached> previousPosition = PREVIOUS_POSITION.create(this);
+    protected final Value<CachedDirectedGlobalPos> position = POSITION.create(this);
+    protected final Value<CachedDirectedGlobalPos> destination = DESTINATION.create(this);
+    protected final Value<CachedDirectedGlobalPos> previousPosition = PREVIOUS_POSITION.create(this);
 
     private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
     protected final BoolValue crashing = CRASHING.create(this);
@@ -145,7 +145,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return state.get();
     }
 
-    public DirectedGlobalPos.Cached position() {
+    public CachedDirectedGlobalPos position() {
         return this.position.get();
     }
 
@@ -177,25 +177,25 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         this.hammerUses = 0;
     }
 
-    public void forcePosition(DirectedGlobalPos.Cached cached) {
+    public void forcePosition(CachedDirectedGlobalPos cached) {
         cached.init(TravelHandlerBase.server());
         this.previousPosition.set(this.position);
         this.position.set(cached);
     }
 
-    public void forcePosition(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void forcePosition(Function<CachedDirectedGlobalPos, CachedDirectedGlobalPos> position) {
         this.forcePosition(position.apply(this.position()));
     }
 
-    public DirectedGlobalPos.Cached destination() {
+    public CachedDirectedGlobalPos destination() {
         return destination.get();
     }
 
-    public void destination(DirectedGlobalPos.Cached cached) {
+    public void destination(CachedDirectedGlobalPos cached) {
         this.destination(cached, false);
     }
 
-    public void destination(DirectedGlobalPos.Cached cached, boolean force) {
+    public void destination(CachedDirectedGlobalPos cached, boolean force) {
         if (!force && this.destination().equals(cached))
             return;
 
@@ -212,21 +212,21 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         this.forceDestination(cached);
     }
 
-    public void forceDestination(DirectedGlobalPos.Cached cached) {
+    public void forceDestination(CachedDirectedGlobalPos cached) {
         cached.init(TravelHandlerBase.server());
         this.destination.set(cached);
     }
 
     // only use when you're sure the position you're g
-    public void destination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void destination(Function<CachedDirectedGlobalPos, CachedDirectedGlobalPos> position) {
         this.destination(position.apply(this.destination()));
     }
 
-    public void forceDestination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void forceDestination(Function<CachedDirectedGlobalPos, CachedDirectedGlobalPos> position) {
         this.forceDestination(position.apply(this.destination()));
     }
 
-    public DirectedGlobalPos.Cached previousPosition() {
+    public CachedDirectedGlobalPos previousPosition() {
         return previousPosition.get();
     }
 

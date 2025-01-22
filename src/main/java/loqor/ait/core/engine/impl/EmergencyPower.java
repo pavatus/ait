@@ -1,5 +1,6 @@
 package loqor.ait.core.engine.impl;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -11,7 +12,6 @@ import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 import loqor.ait.core.item.RiftScannerItem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class EmergencyPower extends SubSystem implements ArtronHolder, StructureHolder {
     private static MultiBlockStructure STRUCTURE;
@@ -25,7 +25,7 @@ public class EmergencyPower extends SubSystem implements ArtronHolder, Structure
             if (power > 200) return;
             TravelHandler travel = tdis.travel();
             RiftScannerItem.findNearestRift(travel.position().getWorld(), new ChunkPos(travel.position().getPos()), pos -> {
-                travel.destination(DirectedGlobalPos.Cached.create(travel.position().getWorld(), pos.getCenterAtY(70), (byte) 0));
+                travel.destination(CachedDirectedGlobalPos.create(travel.position().getWorld(), pos.getCenterAtY(70), (byte) 0));
                 travel.autopilot(true);
                 travel.dematerialize();
             });

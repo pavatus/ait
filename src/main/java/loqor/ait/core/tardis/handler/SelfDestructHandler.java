@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.handler;
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -19,7 +20,6 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
@@ -48,7 +48,7 @@ public class SelfDestructHandler extends KeyedTardisComponent implements TardisT
     }
 
     private void complete() {
-        DirectedGlobalPos.Cached exterior = tardis.travel().position();
+        CachedDirectedGlobalPos exterior = tardis.travel().position();
         ServerWorld world = exterior.getWorld();
         BlockPos pos = exterior.getPos();
 

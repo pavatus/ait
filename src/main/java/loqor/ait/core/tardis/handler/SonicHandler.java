@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.handler;
 
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.entity.ItemEntity;
@@ -18,7 +19,6 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 
@@ -101,7 +101,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
         world.spawnEntity(entity);
     }
 
-    public static void spawnItem(DirectedGlobalPos.Cached cached, ItemStack sonic) {
+    public static void spawnItem(CachedDirectedGlobalPos cached, ItemStack sonic) {
         spawnItem(cached.getWorld(), cached.getPos(), sonic);
     }
 

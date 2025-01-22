@@ -1,5 +1,6 @@
 package loqor.ait.core.blocks;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +38,6 @@ import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.ShapeUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 @SuppressWarnings("deprecation")
 public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, Waterloggable {
@@ -48,7 +48,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     static {
         TardisEvents.DOOR_OPEN.register(tardis -> {
-            DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+            CachedDirectedGlobalPos globalPos = tardis.travel().position();
             BlockPos exteriorPos = globalPos.getPos();
             World exteriorWorld = globalPos.getWorld();
 

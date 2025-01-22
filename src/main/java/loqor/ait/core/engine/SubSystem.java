@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.google.gson.*;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.ItemStack;
@@ -20,7 +21,6 @@ import loqor.ait.core.engine.impl.*;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.Ordered;
 
@@ -186,10 +186,10 @@ public abstract class SubSystem extends Initializable<SubSystem.InitContext> imp
         void index(int i);
     }
 
-    public record InitContext(@Nullable DirectedGlobalPos.Cached pos,
+    public record InitContext(@Nullable CachedDirectedGlobalPos pos,
                               boolean deserialized) implements Initializable.Context {
 
-        public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
+        public static InitContext createdAt(CachedDirectedGlobalPos pos) {
             return new InitContext(pos, false);
         }
 

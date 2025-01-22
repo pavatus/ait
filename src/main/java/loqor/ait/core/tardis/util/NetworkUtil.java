@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +27,6 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.util.network.c2s.SyncPropertyC2SPacket;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class NetworkUtil {
     public static void init() {
@@ -120,7 +120,7 @@ public class NetworkUtil {
 
     public static Stream<ServerPlayerEntity> getSubscribedPlayers(ServerTardis tardis) {
         Stream<ServerPlayerEntity> result = TardisUtil.getPlayersInsideInterior(tardis).stream();
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPos = tardis.travel().position();
 
         if (exteriorPos == null || exteriorPos.getWorld() == null)
             return result;

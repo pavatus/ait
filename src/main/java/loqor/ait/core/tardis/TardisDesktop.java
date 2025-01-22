@@ -32,7 +32,7 @@ import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.QueuedTardisStructureTemplate;
 import loqor.ait.data.Corners;
-import loqor.ait.data.DirectedBlockPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class TardisDesktop extends TardisComponent {

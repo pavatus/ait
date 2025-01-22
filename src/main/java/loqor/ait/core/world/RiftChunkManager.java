@@ -1,6 +1,7 @@
 package loqor.ait.core.world;
 
 import com.mojang.serialization.Codec;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
@@ -11,7 +12,6 @@ import net.minecraft.util.math.random.ChunkRandom;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.events.ServerChunkEvents;
-import loqor.ait.data.DirectedGlobalPos;
 
 @SuppressWarnings("UnstableApiUsage")
 public record RiftChunkManager(ServerWorld world) {
@@ -90,7 +90,7 @@ public record RiftChunkManager(ServerWorld world) {
         return RiftChunkManager.isRiftChunk(world, pos);
     }
 
-    public static boolean isRiftChunk(DirectedGlobalPos.Cached cached) {
+    public static boolean isRiftChunk(CachedDirectedGlobalPos cached) {
         return isRiftChunk(cached.getWorld(), cached.getPos());
     }
 

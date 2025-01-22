@@ -2,6 +2,7 @@ package loqor.ait.api;
 
 import java.util.Optional;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import org.jetbrains.annotations.Nullable;
@@ -19,8 +20,7 @@ import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.data.DirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.landing.LandingPadSpot;
 
 public final class TardisEvents {
@@ -74,7 +74,7 @@ public final class TardisEvents {
 
     public static final Event<BeforeLand> BEFORE_LAND = EventFactory.createArrayBacked(BeforeLand.class, callbacks -> (tardis, pos) -> {
         for (BeforeLand callback : callbacks) {
-            Result<DirectedGlobalPos.Cached> value = callback.onLanded(tardis, pos);
+            Result<CachedDirectedGlobalPos> value = callback.onLanded(tardis, pos);
 
             if (value.type() != Interaction.PASS)
                 return value;
@@ -356,7 +356,7 @@ public final class TardisEvents {
          * @param tardis
          *            the landed tardis
          */
-        Result<DirectedGlobalPos.Cached> onLanded(Tardis tardis, DirectedGlobalPos.Cached pos);
+        Result<CachedDirectedGlobalPos> onLanded(Tardis tardis, CachedDirectedGlobalPos pos);
     }
 
     /**

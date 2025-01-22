@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Blocks;
@@ -35,8 +36,8 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.data.DirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
@@ -196,7 +197,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         }
 
         DirectedBlockPos door = this.tardis.getDesktop().getDoorPos();
-        DirectedGlobalPos.Cached safe = WorldUtil.locateSafe(DirectedGlobalPos.Cached.create(this.tardis.asServer().getInteriorWorld(), door.getPos().offset(door.toMinecraftDirection(), 2), door.getRotation()), TravelHandlerBase.GroundSearch.MEDIAN, true);
+        CachedDirectedGlobalPos safe = WorldUtil.locateSafe(CachedDirectedGlobalPos.create(this.tardis.asServer().getInteriorWorld(), door.getPos().offset(door.toMinecraftDirection(), 2), door.getRotation()), TravelHandlerBase.GroundSearch.MEDIAN, true);
 
         // set block to chest
         if (!(safe.getWorld().getBlockState(safe.getPos()).isAir())) {

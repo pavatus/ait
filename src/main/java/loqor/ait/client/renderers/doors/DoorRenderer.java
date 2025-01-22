@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.doors;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
@@ -30,7 +31,6 @@ import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.handler.DoorHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -98,7 +98,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         if (DependencyChecker.hasPortals() && tardis.travel().getState() == TravelHandlerBase.State.LANDED
                 && tardis.door().getDoorState() != DoorHandler.DoorState.CLOSED) {
-            DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+            CachedDirectedGlobalPos globalPos = tardis.travel().position();
 
             BlockPos pos = globalPos.getPos();
             World world = globalPos.getWorld();

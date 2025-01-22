@@ -5,6 +5,7 @@ import static loqor.ait.core.tardis.handler.travel.TravelHandlerBase.State.LANDE
 import java.util.List;
 import java.util.UUID;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -30,7 +31,6 @@ import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class RemoteItem extends LinkableItem {
 
@@ -73,7 +73,7 @@ public class RemoteItem extends LinkableItem {
 
                     // Check if the Tardis is already present at this location before moving
                     // it there
-                    DirectedGlobalPos.Cached currentPosition = tardis.travel().position();
+                    CachedDirectedGlobalPos currentPosition = tardis.travel().position();
 
                     if (currentPosition.getPos().equals(pos))
                         return;
@@ -88,7 +88,7 @@ public class RemoteItem extends LinkableItem {
 
                         tardis.travel().speed(tardis.travel().maxSpeed().get());
 
-                        TravelUtil.travelTo(tardis, DirectedGlobalPos.Cached.create(serverWorld, temp, DirectionControl
+                        TravelUtil.travelTo(tardis, CachedDirectedGlobalPos.create(serverWorld, temp, DirectionControl
                                 .getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
                     } else {
                         world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F,

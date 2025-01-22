@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.control.impl;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -12,7 +13,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class DirectionControl extends Control {
 
@@ -24,7 +24,7 @@ public class DirectionControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
             boolean leftClick) {
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached dest = travel.destination();
+        CachedDirectedGlobalPos dest = travel.destination();
 
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);

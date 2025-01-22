@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.util;
 import java.util.*;
 import java.util.function.Predicate;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +41,7 @@ import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.data.DirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
 import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;
@@ -146,7 +146,7 @@ public class TardisUtil {
                         }
 
                         tardis.travel()
-                                .forceDestination(DirectedGlobalPos.Cached.create((ServerWorld) serverPlayer.getWorld(),
+                                .forceDestination(CachedDirectedGlobalPos.create((ServerWorld) serverPlayer.getWorld(),
                                         serverPlayer.getBlockPos(),
                                         (byte) RotationPropertyHelper.fromYaw(serverPlayer.getBodyYaw())));
 
@@ -203,7 +203,7 @@ public class TardisUtil {
     public static void dropOutside(Tardis tardis, Entity entity) {
         TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-        DirectedGlobalPos.Cached percentageOfDestination = tardis.travel().getProgress();
+        CachedDirectedGlobalPos percentageOfDestination = tardis.travel().getProgress();
         TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
                 percentageOfDestination.toPos());
     }
@@ -415,7 +415,7 @@ public class TardisUtil {
         NetworkUtil.getLinkedPlayers(tardis).forEach(player -> player.sendMessage(message, true));
     }
 
-    public static Optional<ServerPlayerEntity> findNearestPlayer(DirectedGlobalPos.Cached position) {
+    public static Optional<ServerPlayerEntity> findNearestPlayer(CachedDirectedGlobalPos position) {
         ServerWorld world = position.getWorld();
         BlockPos pos = position.getPos();
         ServerPlayerEntity nearestPlayer = null;

@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.exteriors;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -31,7 +32,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -92,7 +92,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             return;
         }
 
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPos = tardis.travel().position();
 
         if (exteriorPos == null) {
             profiler.pop();
