@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +51,6 @@ import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.landing.LandingPadSpot;
@@ -883,7 +883,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
                     rotation = 180 - rotation;
                 }
 
-                DirectedGlobalPos.Cached target = DirectedGlobalPos.Cached.create(world, pos, (byte) RotationPropertyHelper.fromYaw(rotation));
+                CachedDirectedGlobalPos target = CachedDirectedGlobalPos.create(world, pos, (byte) RotationPropertyHelper.fromYaw(rotation));
 
                 boolean isPilot = tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT);
                 boolean isNearTardis = ExteriorAnimation.isNearTardis(player, tardis, 256);

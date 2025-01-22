@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -9,7 +10,6 @@ import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 
@@ -90,7 +90,7 @@ public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements 
         if (this.isClient())
             return false;
 
-        DirectedGlobalPos.Cached cached = tardis.travel().position();
+        CachedDirectedGlobalPos cached = tardis.travel().position();
 
         World world = cached.getWorld();
         BlockPos tardisPos = cached.getPos();

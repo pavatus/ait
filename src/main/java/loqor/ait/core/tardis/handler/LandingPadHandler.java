@@ -1,6 +1,7 @@
 package loqor.ait.core.tardis.handler;
 
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.server.world.ServerWorld;
@@ -14,7 +15,6 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.LandingPadManager;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.landing.LandingPadSpot;
@@ -58,7 +58,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
             return;
 
         // find old spot and claim
-        DirectedGlobalPos.Cached pos = this.tardis.travel().position();
+        CachedDirectedGlobalPos pos = this.tardis.travel().position();
 
         if (pos.getWorld() == null)
             return; // nice
@@ -87,9 +87,9 @@ public class LandingPadHandler extends KeyedTardisComponent {
         return code;
     }
 
-    private DirectedGlobalPos.Cached update(DirectedGlobalPos.Cached pos) {
+    private CachedDirectedGlobalPos update(CachedDirectedGlobalPos pos) {
         TravelHandler travel = this.tardis.travel();
-        DirectedGlobalPos.Cached destination = travel.destination();
+        CachedDirectedGlobalPos destination = travel.destination();
         ServerWorld world = destination.getWorld();
 
         LandingPadSpot spot = findFreeSpot(world, destination.getPos());
@@ -162,7 +162,7 @@ public class LandingPadHandler extends KeyedTardisComponent {
     }
 
     private void syncSpot() {
-        DirectedGlobalPos.Cached cached = this.tardis.travel().position();
+        CachedDirectedGlobalPos cached = this.tardis.travel().position();
         LandingPadManager.Network.syncTracked(LandingPadManager.Network.Action.ADD, cached.getWorld(), new ChunkPos(cached.getPos()));
     }
 }

@@ -3,6 +3,7 @@ package loqor.ait.core.blockentities;
 import java.util.Objects;
 import java.util.UUID;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -41,8 +42,7 @@ import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.data.DirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 
 public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
@@ -59,7 +59,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         Tardis tardis = door.tardis().get();
-        DirectedGlobalPos.Cached globalExteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos globalExteriorPos = tardis.travel().position();
 
         if (world.isClient())
             return;

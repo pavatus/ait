@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.monitors;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SkullBlock;
 import net.minecraft.client.MinecraftClient;
@@ -23,7 +24,6 @@ import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -83,13 +83,13 @@ public class MonitorRenderer<T extends MonitorBlockEntity> implements BlockEntit
         matrices.translate(-50f, 0, -80);
 
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() == TravelHandlerBase.State.MAT
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() == TravelHandlerBase.State.MAT
                 ? travel.position()
                 : travel.getProgress();
 
         BlockPos abppPos = abpp.getPos();
 
-        DirectedGlobalPos.Cached abpd = tardis.travel().destination();
+        CachedDirectedGlobalPos abpd = tardis.travel().destination();
         BlockPos abpdPos = abpd.getPos();
 
         String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();

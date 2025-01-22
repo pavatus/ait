@@ -1,5 +1,6 @@
 package loqor.ait.mixin.server;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +16,6 @@ import loqor.ait.core.item.SiegeTardisItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedGlobalPos;
 
 // mmm mixin i love mixin
 @Mixin(ItemEntity.class)
@@ -46,7 +46,7 @@ public abstract class ItemEntityMixin {
 
         // if entity is zeiton cage and y is less than -100 give it back :(
         if (entity.getY() <= -60 && ZeitonCageBlock.isCageItem(stack)) {
-            ServerPlayerEntity nearest = TardisUtil.findNearestPlayer(DirectedGlobalPos.Cached.create((ServerWorld) entity.getWorld(), entity.getBlockPos(), (byte)0)).orElse(null);
+            ServerPlayerEntity nearest = TardisUtil.findNearestPlayer(CachedDirectedGlobalPos.create((ServerWorld) entity.getWorld(), entity.getBlockPos(), (byte)0)).orElse(null);
             ZeitonCageBlock.onVoid(stack, nearest);
             entity.kill();
         }

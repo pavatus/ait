@@ -34,7 +34,7 @@ import loqor.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import loqor.ait.core.tardis.control.sequences.Sequence;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedBlockPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 
 public class SequenceRegistry {
     public static final SimpleRegistry<Sequence> REGISTRY = FabricRegistryBuilder

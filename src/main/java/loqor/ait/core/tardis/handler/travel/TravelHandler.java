@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.handler.travel;
 
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 
 import net.minecraft.block.BlockState;
@@ -31,7 +32,6 @@ import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public final class TravelHandler extends AnimatedTravelHandler implements CrashableTardisTravel {
 
@@ -131,7 +131,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     }
 
     public void deleteExterior() {
-        DirectedGlobalPos.Cached globalPos = this.position.get();
+        CachedDirectedGlobalPos globalPos = this.position.get();
 
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
@@ -153,7 +153,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         return placeExterior(this.position(), animate, schedule);
     }
 
-    private ExteriorBlockEntity placeExterior(DirectedGlobalPos.Cached globalPos, boolean animate, boolean schedule) {
+    private ExteriorBlockEntity placeExterior(CachedDirectedGlobalPos globalPos, boolean animate, boolean schedule) {
         ServerWorld world = globalPos.getWorld();
         BlockPos pos = globalPos.getPos();
 
@@ -194,7 +194,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
     }
 
     public void runAnimations() {
-        DirectedGlobalPos.Cached globalPos = this.position();
+        CachedDirectedGlobalPos globalPos = this.position();
 
         ServerWorld level = globalPos.getWorld();
         BlockEntity blockEntity = level.getBlockEntity(globalPos.getPos());
@@ -329,8 +329,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         if (this.tardis.sequence().hasActiveSequence())
             this.tardis.sequence().setActiveSequence(null, true);
 
-        DirectedGlobalPos.Cached pos = this.getProgress();
-        TardisEvents.Result<DirectedGlobalPos.Cached> result = TardisEvents.BEFORE_LAND.invoker().onLanded(this.tardis, pos);
+        CachedDirectedGlobalPos pos = this.getProgress();
+        TardisEvents.Result<CachedDirectedGlobalPos> result = TardisEvents.BEFORE_LAND.invoker().onLanded(this.tardis, pos);
 
         if (result.type() == TardisEvents.Interaction.FAIL) {
             this.crash();
@@ -369,7 +369,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         TardisEvents.LANDED.invoker().onLanded(this.tardis);
     }
 
-    public void initPos(DirectedGlobalPos.Cached cached) {
+    public void initPos(CachedDirectedGlobalPos cached) {
         cached.init(TravelHandlerBase.server());
 
         if (this.position.get() == null)

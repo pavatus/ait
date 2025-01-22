@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.drtheo.multidim.MultiDim;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -36,7 +37,6 @@ import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.tardis.manager.TardisFileManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Value;
 
@@ -134,7 +134,7 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         tardis.setRemoved(true);
 
         ServerWorld tardisWorld = tardis.getInteriorWorld();
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPos = tardis.travel().position();
 
         if (exteriorPos != null) {
             TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> TardisUtil.teleportOutside(tardis, player));

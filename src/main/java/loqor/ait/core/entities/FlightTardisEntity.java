@@ -2,6 +2,7 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.MinecraftClient;
@@ -29,7 +30,6 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.mixin.rwf.LivingEntityAccessor;
 
 public class FlightTardisEntity extends LinkableLivingEntity implements JumpingMount {
@@ -47,7 +47,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         this.lastVelocity = Vec3d.ZERO;
     }
 
-    private FlightTardisEntity(BlockPos riderPos, DirectedGlobalPos.Cached pos, ServerTardis tardis) {
+    private FlightTardisEntity(BlockPos riderPos, CachedDirectedGlobalPos pos, ServerTardis tardis) {
         this(AITEntityTypes.FLIGHT_TARDIS_TYPE, pos.getWorld());
 
         this.interiorPos = riderPos;
@@ -62,7 +62,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     }
 
     public static FlightTardisEntity createAndSpawn(ServerPlayerEntity player, ServerTardis tardis) {
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPos = tardis.travel().position();
 
         FlightTardisEntity entity = new FlightTardisEntity(
                 player.getBlockPos(), exteriorPos, tardis

@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,6 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
 import loqor.ait.data.properties.dbl.DoubleProperty;
@@ -169,7 +169,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
         if (this.refueling().get() && this.getCurrentFuel() < FuelHandler.TARDIS_MAX_FUEL) {
             TravelHandler travel = tardis.travel();
 
-            DirectedGlobalPos.Cached pos = travel.position();
+            CachedDirectedGlobalPos pos = travel.position();
             ServerWorld world = pos.getWorld();
 
             RiftChunkManager manager = RiftChunkManager.getInstance(world);
@@ -252,7 +252,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
         if (travel.getState() != TravelHandler.State.LANDED)
             return;
 
-        DirectedGlobalPos.Cached pos = travel.position();
+        CachedDirectedGlobalPos pos = travel.position();
         World world = pos.getWorld();
 
         if (world == null)

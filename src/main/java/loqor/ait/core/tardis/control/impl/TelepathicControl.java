@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.control.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -40,7 +41,6 @@ import loqor.ait.core.tardis.handler.SiegeHandler;
 import loqor.ait.core.tardis.handler.distress.DistressCall;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 
 public class TelepathicControl extends Control {
@@ -328,7 +328,7 @@ public class TelepathicControl extends Control {
         Text text = Text.translatable("tardis.message.control.telepathic.choosing");
         player.sendMessage(text, true);
 
-        DirectedGlobalPos.Cached globalPos = tardis.travel().position();
+        CachedDirectedGlobalPos globalPos = tardis.travel().position();
 
         locateStructureOfInterest(player, tardis, globalPos.getWorld(), globalPos.getPos());
         return true;

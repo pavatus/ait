@@ -3,6 +3,7 @@ package loqor.ait.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,7 +37,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.mixin.server.EnderDragonFightAccessor;
 
 @SuppressWarnings("deprecation")
@@ -131,8 +131,8 @@ public class WorldUtil {
         return worlds;
     }
 
-    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached,
-            TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
+    public static CachedDirectedGlobalPos locateSafe(CachedDirectedGlobalPos cached,
+                                                     TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 

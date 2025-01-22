@@ -5,6 +5,7 @@ import java.util.Optional;
 import dev.drtheo.gaslighter.Gaslighter3000;
 import dev.drtheo.gaslighter.api.FakeBlockEvents;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
@@ -19,7 +20,6 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
 
@@ -48,7 +48,7 @@ public class ChameleonHandler extends TardisComponent {
             if (player.isInTeleportationState())
                 return;
 
-            DirectedGlobalPos.Cached pos = tardis.travel().position();
+            CachedDirectedGlobalPos pos = tardis.travel().position();
 
             if (pos == null || pos.getWorld() != player.getServerWorld())
                 return;
@@ -79,7 +79,7 @@ public class ChameleonHandler extends TardisComponent {
                 return DoorHandler.InteractionResult.CONTINUE;
             }
 
-            DirectedGlobalPos.Cached cached = tardis.travel().position();
+            CachedDirectedGlobalPos cached = tardis.travel().position();
             Optional<ExteriorBlockEntity> blockEntity = tardis.getExterior().findExteriorBlock();
 
             if (blockEntity.isEmpty())
@@ -123,7 +123,7 @@ public class ChameleonHandler extends TardisComponent {
 
     public boolean recalcDisguise() {
         long start = System.currentTimeMillis();
-        DirectedGlobalPos.Cached cached = tardis.travel().position();
+        CachedDirectedGlobalPos cached = tardis.travel().position();
         ServerWorld world = cached.getWorld();
 
         if (this.gaslighter == null)

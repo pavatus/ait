@@ -1,5 +1,6 @@
 package loqor.ait.core.item;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,7 +26,6 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.tardis.util.DefaultThemes;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -66,7 +66,7 @@ public class TardisItemBuilder extends Item {
         if (context.getHand() != Hand.MAIN_HAND)
             return ActionResult.SUCCESS;
 
-        DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.create(serverWorld,
+        CachedDirectedGlobalPos pos = CachedDirectedGlobalPos.create(serverWorld,
                 serverWorld.getBlockState(context.getBlockPos()).isReplaceable()
                         ? context.getBlockPos()
                         : context.getBlockPos().up(),

@@ -1,5 +1,6 @@
 package loqor.ait.client.models.consoles;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
@@ -20,7 +21,7 @@ import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 
 public class AlnicoConsoleModel extends ConsoleModel {
     private final ModelPart alnico;
@@ -1499,8 +1500,8 @@ public class AlnicoConsoleModel extends ConsoleModel {
         DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT
                 ? travel.getProgress()
                 : travel.position();
-        DirectedGlobalPos.Cached dabpd = travel.destination();
-        DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
+        CachedDirectedGlobalPos dabpd = travel.destination();
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
                 ? travel.getProgress()
                 : travel.position();
 

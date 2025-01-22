@@ -2,6 +2,7 @@ package loqor.ait.api;
 
 import java.util.function.Supplier;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import loqor.ait.AITMod;
@@ -17,7 +18,6 @@ import loqor.ait.core.tardis.handler.mood.MoodHandler;
 import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.enummap.Ordered;
 
@@ -268,10 +268,10 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         }
     }
 
-    public record InitContext(@Nullable DirectedGlobalPos.Cached pos,
+    public record InitContext(@Nullable CachedDirectedGlobalPos pos,
                               boolean deserialized) implements Initializable.Context {
 
-        public static InitContext createdAt(DirectedGlobalPos.Cached pos) {
+        public static InitContext createdAt(CachedDirectedGlobalPos pos) {
             return new InitContext(pos, false);
         }
 

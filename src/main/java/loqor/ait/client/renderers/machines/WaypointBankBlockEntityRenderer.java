@@ -20,7 +20,7 @@ import loqor.ait.core.blockentities.WaypointBankBlockEntity;
 import loqor.ait.core.blocks.WaypointBankBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 
 public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> implements BlockEntityRenderer<T> {
 

@@ -3,6 +3,7 @@ package loqor.ait.core.blocks;
 import java.util.List;
 import java.util.UUID;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -45,7 +46,6 @@ import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.core.world.TardisServerWorld;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -155,7 +155,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!(world.getPlayerByUuid(creatorId) instanceof ServerPlayerEntity player))
             return;
 
-        TardisBuilder builder = new TardisBuilder().at(DirectedGlobalPos.Cached.create(world, pos, (byte) 0))
+        TardisBuilder builder = new TardisBuilder().at(CachedDirectedGlobalPos.create(world, pos, (byte) 0))
                 .owner(player)
                 .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(0))
                 .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))

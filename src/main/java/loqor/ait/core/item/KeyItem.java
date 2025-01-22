@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -32,7 +33,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.enummap.EnumSet;
 import loqor.ait.data.enummap.Ordered;
@@ -148,7 +148,7 @@ public class KeyItem extends LinkableItem {
         World world = player.getWorld();
         BlockPos pos = player.getBlockPos();
 
-        DirectedGlobalPos.Cached globalPos = DirectedGlobalPos.Cached.create((ServerWorld) world, pos,
+        CachedDirectedGlobalPos globalPos = CachedDirectedGlobalPos.create((ServerWorld) world, pos,
                 (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
         List<PlayerEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis.asServer())

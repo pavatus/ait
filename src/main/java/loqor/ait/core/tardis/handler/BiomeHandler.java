@@ -6,6 +6,7 @@ import java.util.Set;
 
 import dev.drtheo.gaslighter.Gaslighter3000;
 import dev.drtheo.gaslighter.impl.FakeStructureWorldAccess;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +25,6 @@ import net.minecraft.world.gen.feature.*;
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisEvents;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
@@ -57,7 +57,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         this.update(this.tardis.travel().position());
     }
 
-    public void update(DirectedGlobalPos.Cached globalPos) {
+    public void update(CachedDirectedGlobalPos globalPos) {
         if (globalPos == null)
             return;
 

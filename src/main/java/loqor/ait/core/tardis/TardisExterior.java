@@ -2,6 +2,7 @@ package loqor.ait.core.tardis;
 
 import java.util.Optional;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -17,7 +18,6 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -57,7 +57,7 @@ public class TardisExterior extends TardisComponent {
         if (variantChange)
             tardis.getExterior().setVariant(variant);
 
-        DirectedGlobalPos.Cached cached = tardis.travel().position();
+        CachedDirectedGlobalPos cached = tardis.travel().position();
         cached.getWorld().getChunkManager().markForUpdate(cached.getPos());
 
         TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
@@ -121,7 +121,7 @@ public class TardisExterior extends TardisComponent {
     }
 
     public void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
-        DirectedGlobalPos.Cached pos = tardis.travel().position();
+        CachedDirectedGlobalPos pos = tardis.travel().position();
 
         pos.getWorld().playSound(null, pos.getPos(), sound, category, volume, pitch);
     }
