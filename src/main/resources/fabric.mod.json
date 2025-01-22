@@ -57,13 +57,15 @@
 		],
 		"modmenu": [
 			"dev.pavatus.config.AITModMenu"
+		],
+		"sakitus-main": [
+			"loqor.ait.sakitus.SakitusInitializer"
 		]
 	},
 	"mixins": [
 		"ait.mixins.json",
 		"gaslighter.mixins.json",
-		"planet.mixins.json",
-		"pavatuslib.mixins.json"
+		"planet.mixins.json"
 	],
 	"accessWidener": "ait.accesswidener",
 	"depends": {
