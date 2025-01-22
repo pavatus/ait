@@ -154,6 +154,8 @@ public class AITMod implements ModInitializer {
             registries.register(ModuleRegistry.instance());
         });
 
+        ModuleRegistry.instance().onCommonInit();
+
         DoorRegistry.init();
 
         AITStatusEffects.init();

@@ -2,6 +2,7 @@ package loqor.ait.core.blocks;
 
 import java.util.function.ToIntFunction;
 
+import dev.pavatus.lib.api.ICantBreak;
 import dev.pavatus.planet.core.planet.Planet;
 import dev.pavatus.planet.core.planet.PlanetRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import dev.pavatus.lib.api.ICantBreak;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlocks;

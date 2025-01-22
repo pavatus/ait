@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
 import dev.pavatus.lib.register.api.RegistryEvents;
+import dev.pavatus.module.ModuleRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -91,6 +92,7 @@ public class AITModClient implements ClientModInitializer {
             registries.register(ClientExteriorVariantRegistry.getInstance(), true);
             registries.register(ClientConsoleVariantRegistry.getInstance(), true);
         });
+        ModuleRegistry.instance().onClientInit();
 
         setupBlockRendering();
         sonicModelPredicate();

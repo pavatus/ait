@@ -1,12 +1,12 @@
 package loqor.ait.data.schema.console.variant.renaisance.client;
 
-import loqor.ait.client.models.consoles.RenaissanceConsoleModel;
 import org.joml.Vector3f;
 
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
+import loqor.ait.client.models.consoles.RenaissanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.renaisance.RenaissanceVariant;
 
