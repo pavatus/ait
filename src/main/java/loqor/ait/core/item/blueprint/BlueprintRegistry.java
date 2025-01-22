@@ -3,17 +3,11 @@ package loqor.ait.core.item.blueprint;
 import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.loot.function.LootFunctionType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 
-import loqor.ait.AITMod;
-import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 
 
 public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {
-    public static final LootFunctionType BLUEPRINT_TYPE = Registry.register(Registries.LOOT_FUNCTION_TYPE,
-            AITMod.id("set_blueprint"),
-            new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
+    public static LootFunctionType BLUEPRINT_TYPE;
 
     private static final BlueprintRegistry instance = new BlueprintRegistry();
 

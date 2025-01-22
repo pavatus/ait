@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import dev.pavatus.config.AITConfig;
 import dev.pavatus.lib.container.RegistryContainer;
-import dev.pavatus.lib.register.api.RegistryEvents;
 import dev.pavatus.lib.util.ServerLifecycleHooks;
 import dev.pavatus.module.ModuleRegistry;
 import dev.pavatus.planet.core.planet.Crater;
@@ -31,7 +30,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -50,22 +51,16 @@ import loqor.ait.api.AITModInitializer;
 import loqor.ait.core.*;
 import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.commands.*;
-import loqor.ait.core.engine.registry.SubSystemRegistry;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.item.blueprint.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
-import loqor.ait.core.likes.ItemOpinionRegistry;
-import loqor.ait.core.lock.LockedDimensionRegistry;
 import loqor.ait.core.screen_handlers.EngineScreenHandler;
-import loqor.ait.core.sounds.flight.FlightSoundRegistry;
-import loqor.ait.core.sounds.travel.TravelSoundRegistry;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import loqor.ait.core.util.CustomTrades;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.core.util.WorldUtil;
@@ -73,11 +68,10 @@ import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
 import loqor.ait.data.landing.LandingPadRegion;
 import loqor.ait.data.schema.MachineRecipeSchema;
+import loqor.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 import loqor.ait.registry.impl.*;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
-import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.door.DoorRegistry;
-import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
 
@@ -133,30 +127,6 @@ public class AITMod implements ModInitializer {
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
                 AITModInitializer::onInitializeAIT);
 
-        RegistryEvents.INIT.register((registries, isClient) -> {
-            if (isClient) return;
-
-            registries.register(SonicRegistry.getInstance());
-            registries.register(DesktopRegistry.getInstance());
-            registries.register(ConsoleVariantRegistry.getInstance());
-            registries.register(MachineRecipeRegistry.getInstance());
-            registries.register(TravelSoundRegistry.getInstance());
-            registries.register(FlightSoundRegistry.getInstance());
-            registries.register(VortexReferenceRegistry.getInstance());
-            registries.register(BlueprintRegistry.getInstance());
-            registries.register(ExteriorVariantRegistry.getInstance());
-            registries.register(CategoryRegistry.getInstance());
-            registries.register(TardisComponentRegistry.getInstance());
-            registries.register(LockedDimensionRegistry.getInstance());
-            registries.register(HumRegistry.getInstance());
-            registries.register(SubSystemRegistry.getInstance());
-            registries.register(ItemOpinionRegistry.getInstance());
-            registries.register(ModuleRegistry.instance());
-        });
-
-        BlueprintRegistry.getInstance().onCommonInit();
-        ModuleRegistry.instance().onCommonInit();
-
         DoorRegistry.init();
 
         AITStatusEffects.init();
@@ -173,6 +143,11 @@ public class AITMod implements ModInitializer {
         RegistryContainer.register(AITBlockEntityTypes.class, MOD_ID);
         RegistryContainer.register(AITEntityTypes.class, MOD_ID);
         RegistryContainer.register(AITPaintings.class, MOD_ID);
+        ModuleRegistry.instance().onCommonInit();
+
+        BlueprintRegistry.BLUEPRINT_TYPE = Registry.register(Registries.LOOT_FUNCTION_TYPE,
+                AITMod.id("set_blueprint"),
+                new LootFunctionType(new SetBlueprintLootFunction.Serializer()));
 
         WorldUtil.init();
         TardisUtil.init();
