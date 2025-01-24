@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Objects;
 
 import com.google.common.collect.Lists;
-
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -33,7 +34,6 @@ import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import dev.pavatus.lib.data.DirectedGlobalPos;
 import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;

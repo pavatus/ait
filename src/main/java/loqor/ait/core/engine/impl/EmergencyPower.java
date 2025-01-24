@@ -1,6 +1,7 @@
 package loqor.ait.core.engine.impl;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 

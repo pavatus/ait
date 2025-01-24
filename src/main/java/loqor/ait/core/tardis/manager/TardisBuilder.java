@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 

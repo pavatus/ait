@@ -2,6 +2,8 @@
 package loqor.ait.client.models.consoles;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
@@ -22,7 +24,6 @@ import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import dev.pavatus.lib.data.DirectedGlobalPos;
 
 public class ToyotaConsoleModel extends ConsoleModel {
     private final ModelPart toyota;

@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +42,6 @@ import loqor.ait.core.tardis.handler.permissions.PermissionHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.core.world.TardisServerWorld;
-import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.mixin.lookup.EntityTrackingSectionAccessor;
 import loqor.ait.mixin.lookup.SectionedEntityCacheAccessor;

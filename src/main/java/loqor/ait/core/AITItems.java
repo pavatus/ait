@@ -19,6 +19,7 @@ import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.InstrumentTags;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
@@ -198,7 +199,13 @@ public class AITItems extends ItemContainer {
     @NoEnglish
     public static final Item COCO_MILK = new CocoMilkItem(new AItemSettings());
 
+    public static final Item IRON_GOAT_HORN = new TardisGoatHorn(new AItemSettings().group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
 
+    public static final Item GOLD_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.UNCOMMON).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
+
+    public static final Item CLASSIC_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.EPIC).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS, TardisGoatHorn.Protocols.HAIL);
+
+    public static final Item NETHERITE_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.RARE).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS, TardisGoatHorn.Protocols.HAIL);
 
     // Block controls
 

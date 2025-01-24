@@ -5,6 +5,7 @@ import java.util.*;
 import dev.drtheo.queue.api.ActionQueue;
 import dev.drtheo.queue.api.util.block.ChunkEraser;
 import dev.drtheo.queue.api.util.structure.QueuedStructureTemplate;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
@@ -32,7 +33,6 @@ import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.QueuedTardisStructureTemplate;
 import loqor.ait.data.Corners;
-import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class TardisDesktop extends TardisComponent {

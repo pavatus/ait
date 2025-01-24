@@ -10,6 +10,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -34,8 +36,6 @@ import loqor.ait.core.tardis.handler.permissions.Permission;
 import loqor.ait.core.tardis.handler.permissions.PermissionLike;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.data.Corners;
-import dev.pavatus.lib.data.DirectedBlockPos;
-import dev.pavatus.lib.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.TardisMap;
 import loqor.ait.data.gson.*;

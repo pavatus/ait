@@ -505,6 +505,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public void generateSmithingRecipes(AITRecipeProvider provider) {
+        // Key Crafting
         provider.addSmithingTransformRecipe(
                 SmithingTransformRecipeJsonBuilder
                         .create(Ingredient.ofItems(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
@@ -538,6 +539,41 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
                         .criterion(hasItem(AITItems.CLASSIC_KEY), conditionsFromItem(AITItems.CLASSIC_KEY)),
                 AITMod.id("classic_key_smithing"));
+
+        // Horn Crafting
+        provider.addSmithingTransformRecipe(
+                SmithingTransformRecipeJsonBuilder
+                        .create(Ingredient.ofItems(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                Ingredient.ofItems(AITItems.IRON_GOAT_HORN), Ingredient.ofItems(Items.GOLD_NUGGET),
+                                RecipeCategory.TOOLS, AITItems.GOLD_GOAT_HORN)
+                        .criterion(hasItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                conditionsFromItem(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE))
+                        .criterion(hasItem(AITItems.IRON_GOAT_HORN), conditionsFromItem(AITItems.IRON_GOAT_HORN))
+                        .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET))
+                        .criterion(hasItem(AITItems.GOLD_KEY), conditionsFromItem(AITItems.GOLD_KEY)),
+                AITMod.id("gold_goat_horn_smithing"));
+        provider.addSmithingTransformRecipe(
+                SmithingTransformRecipeJsonBuilder
+                        .create(Ingredient.ofItems(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                Ingredient.ofItems(AITItems.GOLD_GOAT_HORN), Ingredient.ofItems(Items.NETHERITE_SCRAP),
+                                RecipeCategory.TOOLS, AITItems.NETHERITE_GOAT_HORN)
+                        .criterion(hasItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                conditionsFromItem(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE))
+                        .criterion(hasItem(AITItems.GOLD_GOAT_HORN), conditionsFromItem(AITItems.GOLD_GOAT_HORN))
+                        .criterion(hasItem(Items.NETHERITE_SCRAP), conditionsFromItem(Items.NETHERITE_SCRAP))
+                        .criterion(hasItem(AITItems.NETHERITE_KEY), conditionsFromItem(AITItems.NETHERITE_KEY)),
+                AITMod.id("netherite_goat_horn_smithing"));
+        provider.addSmithingTransformRecipe(
+                SmithingTransformRecipeJsonBuilder
+                        .create(Ingredient.ofItems(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                Ingredient.ofItems(AITItems.NETHERITE_GOAT_HORN), Ingredient.ofItems(Items.AMETHYST_SHARD),
+                                RecipeCategory.TOOLS, AITItems.CLASSIC_GOAT_HORN)
+                        .criterion(hasItem(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE),
+                                conditionsFromItem(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE))
+                        .criterion(hasItem(AITItems.NETHERITE_GOAT_HORN), conditionsFromItem(AITItems.NETHERITE_GOAT_HORN))
+                        .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
+                        .criterion(hasItem(AITItems.CLASSIC_KEY), conditionsFromItem(AITItems.CLASSIC_KEY)),
+                AITMod.id("classic_goat_horn_smithing"));
     }
 
     public void generateSoundData(FabricDataGenerator.Pack pack) {

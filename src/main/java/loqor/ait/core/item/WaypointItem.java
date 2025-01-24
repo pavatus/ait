@@ -3,6 +3,7 @@ package loqor.ait.core.item;
 import java.util.List;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -21,7 +22,6 @@ import net.minecraft.world.World;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.util.WorldUtil;
-import dev.pavatus.lib.data.DirectedGlobalPos;
 import loqor.ait.data.Waypoint;
 
 public class WaypointItem extends Item implements DyeableItem {

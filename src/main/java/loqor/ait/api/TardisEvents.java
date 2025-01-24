@@ -3,6 +3,7 @@ package loqor.ait.api;
 import java.util.Optional;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,6 @@ import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.DoorHandler;
-import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.landing.LandingPadSpot;
 
 public final class TardisEvents {

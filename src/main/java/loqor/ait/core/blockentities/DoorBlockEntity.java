@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -42,7 +43,6 @@ import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.world.TardisServerWorld;
-import dev.pavatus.lib.data.DirectedBlockPos;
 
 public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 

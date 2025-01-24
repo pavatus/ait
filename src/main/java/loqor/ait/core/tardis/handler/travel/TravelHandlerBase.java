@@ -7,8 +7,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
-
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.dynamic.Codecs;

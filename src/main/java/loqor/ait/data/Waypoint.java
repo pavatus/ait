@@ -1,6 +1,7 @@
 package loqor.ait.data;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.core.item.WaypointItem;

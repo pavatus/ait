@@ -3,6 +3,7 @@ package loqor.ait.registry.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 
 import net.minecraft.entity.EntityType;
@@ -34,7 +35,6 @@ import loqor.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import loqor.ait.core.tardis.control.sequences.Sequence;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.WorldUtil;
-import dev.pavatus.lib.data.DirectedBlockPos;
 
 public class SequenceRegistry {
     public static final SimpleRegistry<Sequence> REGISTRY = FabricRegistryBuilder

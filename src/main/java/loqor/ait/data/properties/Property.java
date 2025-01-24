@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 import org.joml.Vector2i;
 
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
-import dev.pavatus.lib.data.DirectedGlobalPos;
 
 public class Property<T> {
 

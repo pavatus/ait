@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import dev.drtheo.gaslighter.Gaslighter3000;
 import dev.drtheo.gaslighter.api.FakeBlockEvents;
-
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;

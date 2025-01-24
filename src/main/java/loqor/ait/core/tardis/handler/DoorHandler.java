@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler;
 
+import dev.pavatus.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.util.TriState;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +22,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.entities.ConsoleControlEntity;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.util.TardisUtil;
-import dev.pavatus.lib.data.DirectedBlockPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
