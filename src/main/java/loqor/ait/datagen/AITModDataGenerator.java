@@ -830,7 +830,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
         provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.ZEITON_CAGE, "Cage of Zeiton");
-        provider.addTranslation(AITBlocks.CABLE_BLOCK, "Fluid Link");
+        provider.addTranslation(AITBlocks.CABLE_BLOCK, "Artron Cable");
         provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core");
 
         // Block Tooltips
