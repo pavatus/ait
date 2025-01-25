@@ -60,6 +60,9 @@
 		],
 		"sakitus-main": [
 			"loqor.ait.sakitus.SakitusInitializer"
+		],
+		"sakitus-client": [
+			"loqor.ait.sakitus.client.SakitusClientInitializer"
 		]
 	},
 	"mixins": [
