@@ -18,7 +18,9 @@ import loqor.ait.data.schema.console.variant.copper.client.ClientCopperOreganoVa
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.data.schema.console.variant.coral.client.*;
+import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineMasterVariant;
 import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
+import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineZeitonVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
@@ -205,6 +207,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema COPPER_TAIGA;
     public static ClientConsoleVariantSchema COPPER_OREGANO;
     public static ClientConsoleVariantSchema CRYSTALLINE;
+    public static ClientConsoleVariantSchema CRYSTALLINE_MASTER;
+    public static ClientConsoleVariantSchema CRYSTALLINE_ZEITON;
     public static ClientConsoleVariantSchema RENAISANCE;
     public static ClientConsoleVariantSchema RENAISSANCE_FIRE;
     public static ClientConsoleVariantSchema RENAISSANCE_TOKAMAK;
@@ -253,6 +257,8 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
         // Crystalline variants
         CRYSTALLINE = register(new ClientCrystallineVariant());
+        CRYSTALLINE_MASTER = register(new ClientCrystallineMasterVariant());
+        CRYSTALLINE_ZEITON = register(new ClientCrystallineZeitonVariant());
 
         //Renaisance variants
         RENAISANCE = register(new ClientRenaissanceVariant());

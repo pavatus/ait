@@ -22,7 +22,9 @@ import loqor.ait.data.schema.console.variant.copper.CopperOreganoVariant;
 import loqor.ait.data.schema.console.variant.copper.CopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.CopperVariant;
 import loqor.ait.data.schema.console.variant.coral.*;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineMasterVariant;
 import loqor.ait.data.schema.console.variant.crystalline.CrystallineVariant;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineZeitonVariant;
 import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
@@ -138,6 +140,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema COPPER_OREGANO;
     public static ConsoleVariantSchema BOREALIS;
     public static ConsoleVariantSchema CRYSTALLINE;
+    public static ConsoleVariantSchema CRYSTALLINE_MASTER;
+    public static ConsoleVariantSchema CRYSTALLINE_ZEITON;
     public static ConsoleVariantSchema RENAISANCE;
     public static ConsoleVariantSchema RENAISSANCE_TOKAMAK;
     public static ConsoleVariantSchema RENAISSANCE_FIRE;
@@ -190,6 +194,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
 
         // Crystalline variants
         CRYSTALLINE = registerStatic(new CrystallineVariant());
+        CRYSTALLINE_MASTER = registerStatic(new CrystallineMasterVariant());
+        CRYSTALLINE_ZEITON = registerStatic(new CrystallineZeitonVariant());
 
         // Renaisance variants
         RENAISANCE = registerStatic(new RenaissanceVariant());
