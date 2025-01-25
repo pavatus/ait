@@ -112,7 +112,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (world.getBaseLightLevel(pos, 0) >= 9) {
+        if (world.getBaseLightLevel(pos, 0) >= 4) {
             int i = this.getAge(state);
             if (i < this.getMaxAge()) {
                 if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)) {
@@ -190,7 +190,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return (world.getBaseLightLevel(pos, 0) >= 8 || world.isSkyVisible(pos)) && super.canPlaceAt(state, world, pos);
+        return (world.getBaseLightLevel(pos, 0) >= 4 || world.isSkyVisible(pos)) && super.canPlaceAt(state, world, pos);
     }
 
     @Override

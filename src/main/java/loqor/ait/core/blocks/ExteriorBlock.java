@@ -59,9 +59,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     public static final byte MAX_ROTATION_INDEX = (byte) RotationPropertyHelper.getMax();
     private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
     public static final IntProperty ROTATION = Properties.ROTATION;
-    public static final IntProperty LEVEL_9 = Properties.LEVEL_15;
+    public static final IntProperty LEVEL_4 = Properties.LEVEL_15;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_9);
+    public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE = state -> state.get(LEVEL_4);
     public static final VoxelShape LEDGE_DOOM = Block.createCuboidShape(0, 0, -3.5, 16, 1, 16);
     public static final VoxelShape CUBE_NORTH_SHAPE = VoxelShapes.union(
             Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 32.0, 16.0), Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
@@ -114,7 +114,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         super(settings.nonOpaque());
 
         this.setDefaultState(
-                this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false).with(LEVEL_9, 9));
+                this.stateManager.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, false).with(LEVEL_4, 4));
     }
 
     @Override
@@ -136,12 +136,12 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return this.getDefaultState().with(ROTATION, 0).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER)
-                .with(LEVEL_9, 9);
+                .with(LEVEL_4, 4);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(ROTATION, WATERLOGGED, LEVEL_9);
+        builder.add(ROTATION, WATERLOGGED, LEVEL_4);
     }
 
     @Override

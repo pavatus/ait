@@ -222,6 +222,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (!blockState.isOf(AITBlocks.EXTERIOR_BLOCK))
             return;
 
-        this.getWorld().setBlockState(pos, blockState.with(ExteriorBlock.LEVEL_9, Math.round(this.getAlpha() * 9)));
+        this.getWorld().setBlockState(pos, blockState.with(ExteriorBlock.LEVEL_4, Math.round(this.getAlpha() * 4)));
     }
 }

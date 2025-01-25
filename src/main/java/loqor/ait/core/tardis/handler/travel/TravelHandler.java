@@ -161,7 +161,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         BlockState blockState = AITBlocks.EXTERIOR_BLOCK.getDefaultState()
                 .with(ExteriorBlock.ROTATION, (int) DirectionControl.getGeneralizedRotation(globalPos.getRotation()))
-                .with(ExteriorBlock.LEVEL_9, hasPower ? 9 : 0);
+                .with(ExteriorBlock.LEVEL_4, hasPower ? 4 : 0);
 
         world.setBlockState(pos, blockState);
 

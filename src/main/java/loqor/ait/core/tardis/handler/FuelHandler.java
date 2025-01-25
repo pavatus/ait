@@ -263,6 +263,6 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
             return;
 
         world.setBlockState(pos.getPos(),
-                state.with(ExteriorBlock.LEVEL_9, this.power.get() ? 9 : 0));
+                state.with(ExteriorBlock.LEVEL_4, this.power.get() ? 4 : 0));
     }
 }

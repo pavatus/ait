@@ -44,7 +44,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     public static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 12.1, 16.0, 32.0, 16.0);
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final IntProperty LEVEL_9 = ExteriorBlock.LEVEL_9;
+    public static final IntProperty LEVEL_4 = ExteriorBlock.LEVEL_4;
 
     static {
         TardisEvents.DOOR_OPEN.register(tardis -> {
@@ -55,7 +55,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
             BlockState exteriorState = exteriorWorld.getBlockState(exteriorPos);
             if (!tardis.travel().inFlight())
                 if ((exteriorState.getBlock() instanceof ExteriorBlock))
-                    setDoorLight(tardis, exteriorState.get(ExteriorBlock.LEVEL_9));
+                    setDoorLight(tardis, exteriorState.get(ExteriorBlock.LEVEL_4));
         });
 
         TardisEvents.DOOR_CLOSE.register(tardis -> setDoorLight(tardis, 0));
@@ -70,7 +70,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         BlockState state = world.getBlockState(pos);
         if (!(state.getBlock() instanceof DoorBlock))
             return;
-        world.setBlockState(pos, state.with(LEVEL_9, level));
+        world.setBlockState(pos, state.with(LEVEL_4, level));
     }
 
     public DoorBlock(Settings settings) {
@@ -79,7 +79,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
         this.setDefaultState(this.getStateManager().getDefaultState()
                 .with(FACING, Direction.NORTH)
                 .with(WATERLOGGED, false)
-                .with(LEVEL_9, 0));
+                .with(LEVEL_4, 0));
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
@@ -189,7 +189,7 @@ public class DoorBlock extends HorizontalDirectionalBlock implements BlockEntity
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, LEVEL_9);
+        builder.add(FACING, WATERLOGGED, LEVEL_4);
     }
 
     public FluidState getFluidState(BlockState state) {
