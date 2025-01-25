@@ -14,6 +14,7 @@ import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientBlueAlnicoVariant;
+import loqor.ait.data.schema.console.variant.copper.client.ClientCopperOreganoVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.data.schema.console.variant.coral.client.*;
@@ -202,6 +203,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema HUDOLIN;
     public static ClientConsoleVariantSchema COPPER;
     public static ClientConsoleVariantSchema COPPER_TAIGA;
+    public static ClientConsoleVariantSchema COPPER_OREGANO;
     public static ClientConsoleVariantSchema CRYSTALLINE;
     public static ClientConsoleVariantSchema RENAISANCE;
     public static ClientConsoleVariantSchema RENAISSANCE_FIRE;
@@ -247,6 +249,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         // Copper variants
         COPPER = register(new ClientCopperVariant());
         COPPER_TAIGA = register(new ClientCopperTaigaVariant());
+        COPPER_OREGANO = register(new ClientCopperOreganoVariant());
 
         // Crystalline variants
         CRYSTALLINE = register(new ClientCrystallineVariant());

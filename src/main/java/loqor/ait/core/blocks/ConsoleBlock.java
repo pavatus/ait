@@ -182,22 +182,22 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             double d = pos.getX();
             double e = pos.getY();
             double f = pos.getZ();
-            for (int i = 0; i < random.nextInt(20) + 1; ++i) {
+            for (int i = 0; i < random.nextInt(15) + 1; ++i) {
                 boolean bl = random.nextBoolean();
-                float particleSpeed = random.nextFloat() / 20.0f;
+                float particleSpeed = random.nextFloat() / 15.0f;
                 world.addParticle(ParticleTypes.SMOKE,
                         (double)pos.getX() + 0.5,
                         (double)pos.getY() + 2,
                         (double)pos.getZ() + 0.5,
                         bl ? particleSpeed : -particleSpeed,
-                        5.0E-5,
+                        2.2E-3,
                         bl ? particleSpeed : -particleSpeed);
-                world.addParticle(ParticleTypes.WARPED_SPORE,
+                world.addParticle(ParticleTypes.CLOUD,
                         pos.getX() + 0.5,
-                        pos.getY() + 2,
+                        pos.getY() + 0.5,
                         pos.getZ() + 0.5,
                         0.0,
-                        1.0,
+                        0.1,
                         0.0);
             }
         }

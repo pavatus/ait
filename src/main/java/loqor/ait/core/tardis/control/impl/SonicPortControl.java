@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.api.link.LinkableItem;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HandlesItem;
 import loqor.ait.core.item.SonicItem2;
 import loqor.ait.core.tardis.Tardis;
@@ -69,7 +70,7 @@ public class SonicPortControl extends Control {
             player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
 
-        TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 6f,
+        TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), console, AITSounds.SONIC_PORT, SoundCategory.PLAYERS, 6f,
                 1);
         return true;
     }

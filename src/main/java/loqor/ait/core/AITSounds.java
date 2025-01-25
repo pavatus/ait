@@ -137,6 +137,7 @@ public class AITSounds {
     public static final SoundEvent SHIELDS = register("controls/shield");
     public static final SoundEvent ALARM = register("controls/alarm_flick");
     public static final SoundEvent SLOT_IN = register("controls/slot_in");
+    public static final SoundEvent SONIC_PORT = register("controls/sonic_port");
     public static final SoundEvent HAIL_MARY = register("controls/hail_mary");
     public static final SoundEvent SIEGE = register("controls/siege");
     public static final SoundEvent DIRECTION = register("controls/direction");
