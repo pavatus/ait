@@ -25,10 +25,7 @@ import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVaria
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientKeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientMintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientWoodenHartnellVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceFireVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTokamakVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceTwentySevenVariant;
-import loqor.ait.data.schema.console.variant.renaisance.client.ClientRenaissanceVariant;
+import loqor.ait.data.schema.console.variant.renaissance.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.*;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamCherryVariant;
 import loqor.ait.data.schema.console.variant.steam.client.ClientSteamGildedVariant;
@@ -209,10 +206,11 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema CRYSTALLINE;
     public static ClientConsoleVariantSchema CRYSTALLINE_MASTER;
     public static ClientConsoleVariantSchema CRYSTALLINE_ZEITON;
-    public static ClientConsoleVariantSchema RENAISANCE;
+    public static ClientConsoleVariantSchema RENAISSANCE;
     public static ClientConsoleVariantSchema RENAISSANCE_FIRE;
     public static ClientConsoleVariantSchema RENAISSANCE_TOKAMAK;
     public static ClientConsoleVariantSchema RENAISSANCE_TWENTYSEVEN;
+    public static ClientConsoleVariantSchema RENAISSANCE_IDENTITY;
 
 
     @Override
@@ -260,10 +258,11 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         CRYSTALLINE_MASTER = register(new ClientCrystallineMasterVariant());
         CRYSTALLINE_ZEITON = register(new ClientCrystallineZeitonVariant());
 
-        //Renaisance variants
-        RENAISANCE = register(new ClientRenaissanceVariant());
+        //Renaissance variants
+        RENAISSANCE = register(new ClientRenaissanceVariant());
         RENAISSANCE_TOKAMAK = register(new ClientRenaissanceTokamakVariant());
         RENAISSANCE_FIRE = register(new ClientRenaissanceFireVariant());
         RENAISSANCE_TWENTYSEVEN = register(new ClientRenaissanceTwentySevenVariant());
+        RENAISSANCE_IDENTITY = register(new ClientRenaissanceIdentityVariant());
     }
 }

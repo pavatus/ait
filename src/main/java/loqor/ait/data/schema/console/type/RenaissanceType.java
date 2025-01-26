@@ -20,8 +20,8 @@ import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
-public class RenaisanceType extends ConsoleTypeSchema {
-    public static final Identifier REFERENCE = AITMod.id("console/renaisance");
+public class RenaissanceType extends ConsoleTypeSchema {
+    public static final Identifier REFERENCE = AITMod.id("console/renaissance");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
 
             // yes
@@ -120,8 +120,8 @@ public class RenaisanceType extends ConsoleTypeSchema {
                     new Vector3f(-1.1734386486932635f, 0.5000001899898052f, 0.6757816290482879f)),};
 
 
-    public RenaisanceType() {
-        super(REFERENCE, "renaisance");
+    public RenaissanceType() {
+        super(REFERENCE, "renaissance");
     }
 
     @Override
@@ -131,6 +131,6 @@ public class RenaisanceType extends ConsoleTypeSchema {
 
     @Override
     public ConsoleVariantSchema getDefaultVariant() {
-        return ConsoleVariantRegistry.RENAISANCE;
+        return ConsoleVariantRegistry.RENAISSANCE;
     }
 }

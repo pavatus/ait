@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
-import loqor.ait.client.animation.console.renaisance.RenaisanceAnimation;
+import loqor.ait.client.animation.console.renaissance.RenaissanceAnimation;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
@@ -1364,8 +1364,8 @@ public class RenaissanceConsoleModel extends ConsoleModel {
     @Override
     public Animation getAnimationForState(TravelHandlerBase.State state) {
         return switch (state) {
-            default -> RenaisanceAnimation.RENAISANCE_FLIGHT;
-            case LANDED -> RenaisanceAnimation.RENAISANCE_IDLE;
+            default -> RenaissanceAnimation.RENAISSANCE_FLIGHT;
+            case LANDED -> RenaissanceAnimation.RENAISSANCE_IDLE;
         };
     }
 

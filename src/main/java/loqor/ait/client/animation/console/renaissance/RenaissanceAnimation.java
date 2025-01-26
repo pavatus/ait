@@ -1,4 +1,4 @@
-package loqor.ait.client.animation.console.renaisance;// Save this class in your mod and generate all required imports
+package loqor.ait.client.animation.console.renaissance;// Save this class in your mod and generate all required imports
 
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
@@ -10,8 +10,8 @@ import net.minecraft.client.render.entity.animation.Transformation;
  * Exported for Minecraft version 1.19 or later with Yarn mappings
  * @author makefarttendo
  */
-public class RenaisanceAnimation {
-    public static final Animation RENAISANCE_FLIGHT = Animation.Builder.create(4.0F).looping()
+public class RenaissanceAnimation {
+    public static final Animation RENAISSANCE_FLIGHT = Animation.Builder.create(4.0F).looping()
         .addBoneAnimation("rotorlight", new Transformation(Transformation.Targets.TRANSLATE,
             new Keyframe(0.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
             new Keyframe(1.0F, AnimationHelper.createTranslationalVector(0.0F, 6.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -158,7 +158,7 @@ public class RenaisanceAnimation {
         ))
         .build();
 
-    public static final Animation RENAISANCE_IDLE = Animation.Builder.create(5.0F).looping()
+    public static final Animation RENAISSANCE_IDLE = Animation.Builder.create(5.0F).looping()
 
         .build();
 }

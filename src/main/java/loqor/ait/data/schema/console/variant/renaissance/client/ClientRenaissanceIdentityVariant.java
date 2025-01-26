@@ -1,4 +1,5 @@
-package loqor.ait.data.schema.console.variant.renaisance.client;
+package loqor.ait.data.schema.console.variant.renaissance.client;
+
 
 import org.joml.Vector3f;
 
@@ -8,16 +9,16 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.RenaissanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.data.schema.console.variant.renaisance.RenaissanceTokamakVariant;
+import loqor.ait.data.schema.console.variant.renaissance.RenaissanceIdentityVariant;
 
-public class ClientRenaissanceTokamakVariant extends ClientConsoleVariantSchema {
+public class ClientRenaissanceIdentityVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_tokamak.png"));
+            ("textures/blockentities/consoles/renaissance_identity.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_tokamak_emission.png"));
+            ("textures/blockentities/consoles/renaissance_identity_emission.png"));
 
-    public ClientRenaissanceTokamakVariant() {
-        super(RenaissanceTokamakVariant.REFERENCE, RenaissanceTokamakVariant.REFERENCE);
+    public ClientRenaissanceIdentityVariant() {
+        super(RenaissanceIdentityVariant.REFERENCE, RenaissanceIdentityVariant.REFERENCE);
     }
 
     @Override

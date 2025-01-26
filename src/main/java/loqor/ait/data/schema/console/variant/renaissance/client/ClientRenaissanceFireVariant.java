@@ -1,4 +1,4 @@
-package loqor.ait.data.schema.console.variant.renaisance.client;
+package loqor.ait.data.schema.console.variant.renaissance.client;
 
 import org.joml.Vector3f;
 
@@ -8,13 +8,13 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.RenaissanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.data.schema.console.variant.renaisance.RenaissanceFireVariant;
+import loqor.ait.data.schema.console.variant.renaissance.RenaissanceFireVariant;
 
 public class ClientRenaissanceFireVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_fire.png"));
+            ("textures/blockentities/consoles/renaissance_fire.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaisance_fire_emission.png"));
+            ("textures/blockentities/consoles/renaissance_fire_emission.png"));
 
     public ClientRenaissanceFireVariant() {
         super(RenaissanceFireVariant.REFERENCE, RenaissanceFireVariant.REFERENCE);
