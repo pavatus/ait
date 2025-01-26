@@ -1,5 +1,6 @@
 package loqor.ait.core.blocks;
 
+import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -24,10 +25,11 @@ import loqor.ait.core.engine.block.SubSystemBlockEntity;
 
 public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
-            -16.0, 0.0, -16.0,
-            32.0, 48.0, 32.0
-    );
+//    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
+//            -16.0, 0.0, -16.0,
+//            32.0, 48.0, 32.0
+//    );
+    protected static final VoxelShape Y_SHAPE = VoxelShapes.fullCube();
 
 
     public EngineBlock(Settings settings) {

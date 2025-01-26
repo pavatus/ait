@@ -46,6 +46,7 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
         matrices.translate(0.5f, 1.5f, 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
+        matrices.scale(0.25f, 0.25f, 0.25f);
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
