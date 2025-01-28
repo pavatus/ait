@@ -350,7 +350,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         Planet planet = PlanetRegistry.getInstance().get(world);
 
-        if (planet.zeroGravity())
+        if (planet != null && planet.zeroGravity())
             return;
 
         tardis.flight().onStartFalling(world, state, pos);
