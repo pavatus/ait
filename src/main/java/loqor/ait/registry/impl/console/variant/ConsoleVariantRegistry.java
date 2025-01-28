@@ -142,7 +142,6 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema RENAISSANCE;
     public static ConsoleVariantSchema RENAISSANCE_TOKAMAK;
     public static ConsoleVariantSchema RENAISSANCE_FIRE;
-    public static ConsoleVariantSchema RENAISSANCE_TWENTYSEVEN;
     public static ConsoleVariantSchema RENAISSANCE_IDENTITY;
 
 
@@ -199,7 +198,6 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         RENAISSANCE = registerStatic(new RenaissanceVariant());
         RENAISSANCE_TOKAMAK = registerStatic(new RenaissanceTokamakVariant());
         RENAISSANCE_FIRE = registerStatic(new RenaissanceFireVariant());
-        RENAISSANCE_TWENTYSEVEN = registerStatic(new RenaissanceTwentySevenVariant());
         RENAISSANCE_IDENTITY = registerStatic(new RenaissanceIdentityVariant());
 
     }

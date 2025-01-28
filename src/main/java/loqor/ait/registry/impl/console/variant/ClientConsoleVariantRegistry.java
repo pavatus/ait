@@ -209,7 +209,6 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema RENAISSANCE;
     public static ClientConsoleVariantSchema RENAISSANCE_FIRE;
     public static ClientConsoleVariantSchema RENAISSANCE_TOKAMAK;
-    public static ClientConsoleVariantSchema RENAISSANCE_TWENTYSEVEN;
     public static ClientConsoleVariantSchema RENAISSANCE_IDENTITY;
 
 
@@ -262,7 +261,6 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         RENAISSANCE = register(new ClientRenaissanceVariant());
         RENAISSANCE_TOKAMAK = register(new ClientRenaissanceTokamakVariant());
         RENAISSANCE_FIRE = register(new ClientRenaissanceFireVariant());
-        RENAISSANCE_TWENTYSEVEN = register(new ClientRenaissanceTwentySevenVariant());
         RENAISSANCE_IDENTITY = register(new ClientRenaissanceIdentityVariant());
     }
 }
