@@ -94,6 +94,8 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         PlayerEntity player = this.getPlayer();
 
+        if (!this.isLinked()) return;
+
         Tardis tardis = this.tardis().get();
 
         if (this.getWorld().isClient()) {
@@ -108,7 +110,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             return;
         }
 
-        if (player == null || !this.isLinked())
+        if (player == null)
             return;
 
         if (!player.isInvisible())
