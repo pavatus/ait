@@ -77,7 +77,7 @@ public class InteractionSonicMode extends SonicMode {
 
         if (canInteract1(ticks)
                 && block.getDefaultState().contains(DoorBlock.OPEN)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_CHEST_LOCKED , SoundCategory.BLOCKS, 1.0f,
+            world.playSound(null, pos, SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
 
             world.setBlockState(pos, state.cycle(DoorBlock.OPEN));
@@ -86,7 +86,7 @@ public class InteractionSonicMode extends SonicMode {
         }
 
 
-        if (canInteract1(ticks)
+        if (canMakeRedstoneTweak(ticks)
                 && state.contains(DaylightDetectorBlock.INVERTED)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -95,7 +95,7 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
         }
 
-        if (canInteract1(ticks)
+        if (canMakeRedstoneTweak(ticks)
                 && block.getDefaultState().contains(RedstoneLampBlock.LIT)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -105,7 +105,7 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
-        if (canInteract1(ticks)
+        if (canMakeRedstoneTweak(ticks)
                 && block.getDefaultState().contains(ComparatorBlock.MODE)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -115,7 +115,7 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
-        if (canInteract1(ticks)
+        if (canMakeRedstoneTweak(ticks)
                 && block.getDefaultState().contains(RepeaterBlock.POWERED)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
                     world.getRandom().nextFloat() * 0.4f + 0.8f);
@@ -134,16 +134,6 @@ public class InteractionSonicMode extends SonicMode {
             world.emitGameEvent(user, GameEvent.ENTITY_INTERACT, pos);
             return;
         }
-        //TODO: Make it so it dosent sound like satan possessed the jukebox
-        if (canInteract4(ticks)
-                && block.getDefaultState().contains(JukeboxBlock.HAS_RECORD)) {
-            world.playSound(null, pos, SoundEvents.MUSIC_DISC_PIGSTEP, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(JukeboxBlock.HAS_RECORD));
-            world.emitGameEvent(user, GameEvent.ENTITY_INTERACT, pos);
-            return;
-        }
     }
 
     private static boolean canInteract1(int ticks) {
@@ -158,8 +148,8 @@ public class InteractionSonicMode extends SonicMode {
         return ticks >= 30;
     }
 
-    private static boolean canInteract4(int ticks) {
-        return ticks >= 50;
+    private static boolean canMakeRedstoneTweak(int ticks) {
+        return ticks >= 5;
     }
 
     @Override
