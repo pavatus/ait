@@ -86,7 +86,7 @@ public class HammerItem extends SwordItem {
 
                     travel.handbrake(false);
                     tardis.addFuel(10);
-                    travel.forceDemat();
+                    travel.dematerialize();
                     tardis.alarm().enabled();
 
                     world.spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f,
