@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.2.2 (FabricMC 7c48b8c4).
  */
-package net.minecraft.client.render;
+package loqor.ait.client.boti;
 
 import java.util.SortedMap;
 
@@ -9,6 +9,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferBuilderStorage;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.util.Util;
 
 import loqor.ait.client.renderers.AITRenderLayers;
