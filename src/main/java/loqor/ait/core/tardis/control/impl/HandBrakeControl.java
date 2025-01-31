@@ -6,12 +6,14 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.impl.EngineSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class HandBrakeControl extends Control {
 
@@ -28,8 +30,7 @@ public class HandBrakeControl extends Control {
             return false;
         }
 
-        if (tardis.isInDanger())
-            return false;
+        if (tardis.isInDanger()) return false;
 
         EngineSystem.Phaser phaser = tardis.subsystems().engine().phaser();
         if (phaser.isPhasing()) {
@@ -37,16 +38,22 @@ public class HandBrakeControl extends Control {
             return true;
         }
 
-        // todo make this fancier when moving stuff from flightdata to travelhandler
-        boolean handbrake = tardis.travel().handbrake();
-        handbrake = !handbrake;
-
+        boolean handbrake = !tardis.travel().handbrake();
         tardis.travel().handbrake(handbrake);
 
-        if (tardis.isRefueling())
+        if (tardis.isRefueling()) {
             tardis.setRefueling(false);
+        }
 
-        this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
+        //Waiting for classic to give me the soounds lol
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            if (isRenaissanceVariant(consoleBlockEntity)) {
+                this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
+            } else {
+                this.soundEvent = handbrake ? AITSounds.HANDBRAKE_DOWN : AITSounds.HANDBRAKE_UP;
+            }
+        }
+
         TravelHandler travel = tardis.travel();
 
         if (handbrake && travel.getState() == TravelHandlerBase.State.FLIGHT) {
@@ -74,5 +81,12 @@ public class HandBrakeControl extends Control {
     @Override
     protected SubSystem.IdLike requiredSubSystem() {
         return null;
+    }
+
+    private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }
