@@ -7,18 +7,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class SiegeModeControl extends Control {
 
     private static final Text enabled = Text.translatable("tardis.message.control.siege.enabled");
     private static final Text disabled = Text.translatable("tardis.message.control.siege.disabled");
 
+    private SoundEvent soundEvent = AITSounds.SIEGE;
+
     public SiegeModeControl() {
-        // Ⓢ ?
         super("protocol_1913");
     }
 
@@ -34,14 +37,20 @@ public class SiegeModeControl extends Control {
 
         tardis.siege().setActive(!tardis.siege().isActive());
         tardis.alarm().enabled().set(false);
+        player.sendMessage(tardis.siege().isActive() ? enabled : disabled, true);
 
-        player.sendMessage((tardis.siege().isActive() ? enabled : disabled), true);
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            if (isRenaissanceVariant(consoleBlockEntity)) {
+                this.soundEvent = AITSounds.RENAISSANCE_POWER_SIEGE_ALT;
+            }
+        }
+
         return false;
     }
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.SIEGE;
+        return this.soundEvent;
     }
 
     @Override
@@ -57,5 +66,12 @@ public class SiegeModeControl extends Control {
     @Override
     protected SubSystem.IdLike requiredSubSystem() {
         return SubSystem.Id.DESPERATION;
+    }
+
+    private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }

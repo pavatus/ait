@@ -148,6 +148,9 @@ public class AITSounds {
     public static final SoundEvent DIMENSION = register("controls/dimension");
     public static final SoundEvent ML = register("tardis/ml");
 
+    //Alt console sounds for renaissance
+    public static final SoundEvent RENAISSANCE_LAND_TYPE_ALT = register("controls/renaissance_land_type_alt");
+    public static final SoundEvent RENAISSANCE_POWER_SIEGE_ALT = register("controls/renaissance_power_siege_alt");
 
     // Console
     public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");
