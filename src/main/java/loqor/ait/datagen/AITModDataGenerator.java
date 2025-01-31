@@ -241,19 +241,6 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.IRON_BARS), conditionsFromItem(Items.IRON_BARS))
                     .criterion(hasItem(Items.GHAST_TEAR), conditionsFromItem(Items.GHAST_TEAR)));
 
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder
-                    .create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.CORAL_PLANT, 1).pattern("ZHZ").pattern("CDC")
-                    .pattern("RGR").input('Z', AITBlocks.ZEITON_BLOCK).input('H', AITItems.CHARGED_ZEITON_CRYSTAL)
-                    .input('C', AITBlocks.ZEITON_CLUSTER).input('D', Items.DEAD_BRAIN_CORAL)
-                    .input('R', AITItems.ZEITON_SHARD).input('G', AITBlocks.CONSOLE_GENERATOR)
-                    .criterion(hasItem(AITBlocks.ZEITON_BLOCK), conditionsFromItem(AITBlocks.ZEITON_BLOCK))
-                    .criterion(hasItem(AITItems.CHARGED_ZEITON_CRYSTAL),
-                            conditionsFromItem(AITItems.CHARGED_ZEITON_CRYSTAL))
-                    .criterion(hasItem(AITBlocks.ZEITON_CLUSTER), conditionsFromItem(AITBlocks.ZEITON_CLUSTER))
-                    .criterion(hasItem(Items.DEAD_BRAIN_CORAL), conditionsFromItem(Items.DEAD_BRAIN_CORAL))
-                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
-                    .criterion(hasItem(AITBlocks.CONSOLE_GENERATOR), conditionsFromItem(AITBlocks.CONSOLE_GENERATOR)));
-
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, AITBlocks.PLAQUE_BLOCK, 1).pattern("GSG")
                             .pattern("SBS").pattern("GSG").input('G', Items.GOLD_NUGGET).input('S', Items.SPRUCE_SLAB)
@@ -261,15 +248,6 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                             .criterion(hasItem(Items.GOLD_NUGGET), conditionsFromItem(Items.GOLD_NUGGET))
                             .criterion(hasItem(Items.SPRUCE_SLAB), conditionsFromItem(Items.SPRUCE_SLAB))
                             .criterion(hasItem(Items.BLACK_CONCRETE), conditionsFromItem(Items.BLACK_CONCRETE)));
-
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.SONIC_SCREWDRIVER, 1)
-                    .pattern(" QZ").pattern("IRQ").pattern("CI ").input('I', Items.IRON_INGOT).input('Q', Items.QUARTZ)
-                    .input('C', Items.COMPARATOR).input('Z', AITItems.ZEITON_SHARD).input('R', Items.REDSTONE_BLOCK)
-                    .group("sonic_item").criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(hasItem(Items.QUARTZ), conditionsFromItem(Items.QUARTZ))
-                    .criterion(hasItem(Items.COMPARATOR), conditionsFromItem(Items.COMPARATOR))
-                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD))
-                    .criterion(hasItem(Items.REDSTONE_BLOCK), conditionsFromItem(Items.REDSTONE_BLOCK)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITBlocks.CONSOLE_GENERATOR, 1)
                     .pattern(" G ").pattern("CEC").pattern(" I ").input('G', Items.GLASS).input('C', Items.COMPARATOR)

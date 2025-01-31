@@ -1,0 +1,58 @@
+{
+  "output": {
+    "id": "ait:coral_plant",
+    "Count": 1
+  },
+  "inputs": [
+    {
+      "item": "ait:door_block",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "dead_brain_coral_block",
+      "maxCount": 6,
+      "minCount": 4
+    },
+    {
+      "item": "minecraft:ender_pearl",
+      "maxCount": 4,
+      "minCount": 2
+    },
+    {
+      "item": "ait:charged_zeiton_crystal",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:zeiton_shard",
+      "maxCount": 5,
+      "minCount": 4
+    },
+    {
+      "item": "ait:zeiton_block",
+      "maxCount": 8,
+      "minCount": 5
+    },
+    {
+      "item": "ait:inductor",
+      "maxCount": 8,
+      "minCount": 5
+    },
+    {
+      "item": "ait:manipulator",
+      "maxCount": 2,
+      "minCount": 1
+    },
+    {
+      "item": "ait:console_generator",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:budding_zeiton",
+      "maxCount": 9,
+      "minCount": 5
+    }
+  ]
+}
