@@ -168,6 +168,19 @@ public final class TardisEvents {
                 return DoorHandler.InteractionResult.CONTINUE;
             });
 
+    public static final Event<DoorUsed> DOOR_USED = EventFactory.createArrayBacked(DoorUsed.class,
+            callbacks -> (tardis, player) -> {
+                for (DoorUsed callback : callbacks) {
+                    DoorHandler.InteractionResult result = callback.onDoorUsed(tardis, player);
+                    if (result == DoorHandler.InteractionResult.CONTINUE)
+                        continue;
+
+                    return result;
+                }
+
+                return DoorHandler.InteractionResult.CONTINUE;
+            });
+
     public static final Event<EnterTardis> ENTER_TARDIS = EventFactory.createArrayBacked(EnterTardis.class,
             callbacks -> (tardis, entity) -> {
                 for (EnterTardis callback : callbacks) {
@@ -428,6 +441,10 @@ public final class TardisEvents {
         DoorHandler.InteractionResult onUseDoor(Tardis tardis, ServerWorld interior, ServerWorld world, @Nullable ServerPlayerEntity player, @Nullable BlockPos pos);
     }
 
+    @FunctionalInterface
+    public interface DoorUsed {
+        DoorHandler.InteractionResult onDoorUsed(Tardis tardis, ServerPlayerEntity player);
+    }
     /**
      * Called when the interior door position is changed, meaning it was probably
      * moved

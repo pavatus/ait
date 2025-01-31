@@ -67,7 +67,7 @@ public class ChameleonHandler extends TardisComponent {
             }
         });
 
-        TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
+        TardisEvents.DOOR_USED.register((tardis,  player) -> {
             if (player == null)
                 return DoorHandler.InteractionResult.CONTINUE;
 
