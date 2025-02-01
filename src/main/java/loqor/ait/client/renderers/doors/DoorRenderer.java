@@ -139,7 +139,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         if (!variant.equals(ClientExteriorVariantRegistry.DOOM))
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations,
-                this.variant.emission(), entity, model.getPart(), matrices, vertexConsumers, light, overlay, 1,
+                this.variant.emission(), entity, model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, 1,
                 alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
 
         profiler.swap("biome");

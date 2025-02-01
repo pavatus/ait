@@ -234,7 +234,7 @@ public class TardisUtil {
                 : TardisUtil.offsetDoorPosition(directed).add(0, 0.125, 0);
 
         world.getServer().execute(() -> {
-            if (entity.hasVehicle() && entity.getVehicle() instanceof FlightTardisEntity) return;
+            if (entity.getVehicle() instanceof FlightTardisEntity) return;
             if (entity instanceof ServerPlayerEntity player) {
                 WorldUtil.teleportToWorld(player, world, vec,
                         RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),

@@ -49,7 +49,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
             ClientLightUtil.renderEmissive(ClientConsoleVariantRegistry.HARTNELL.model()::renderWithAnimations, ClientConsoleVariantRegistry.HARTNELL.emission(),
                     entity, ClientConsoleVariantRegistry.HARTNELL.model().getPart(),
-                    matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+                    matrices, vertexConsumers, 0xf000f0, overlay, 1, 1, 1, 1);
             matrices.pop();
             return;
         }
@@ -126,7 +126,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
 
             if (!(variant.emission().equals(DatapackConsole.EMPTY))) {
                 ClientLightUtil.renderEmissive(model::renderWithAnimations, variant.emission(), entity, model.getPart(),
-                        matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+                        matrices, vertexConsumers, 0xf000f0, overlay, 1, 1, 1, 1);
             }
         }
 
