@@ -7,9 +7,11 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.ShieldHandler;
+import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class ShieldsControl extends Control {
 
@@ -26,6 +28,11 @@ public class ShieldsControl extends Control {
             return false;
         }
 
+        boolean isRenaissance = false;
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            isRenaissance = isRenaissanceVariant(consoleBlockEntity);
+        }
+
         ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
 
         if (leftClick) {
@@ -33,17 +40,26 @@ public class ShieldsControl extends Control {
                 shields.toggleVisuals();
         } else {
             shields.toggle();
-
             if (shields.visuallyShielded().get())
                 shields.disableVisuals();
         }
 
-        this.soundEvent = leftClick ? AITSounds.SHIELDS : AITSounds.HANDBRAKE_LEVER_PULL;
+        this.soundEvent = leftClick
+                ? (isRenaissance ? AITSounds.RENAISSANCE_SHIELDS_ALTALT : AITSounds.SHIELDS)
+                : (isRenaissance ? AITSounds.RENAISSANCE_SHIELDS_ALT : AITSounds.HANDBRAKE_LEVER_PULL);
+
         return true;
     }
 
     @Override
     public SoundEvent getSound() {
         return this.soundEvent;
+    }
+
+    private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }

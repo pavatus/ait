@@ -9,11 +9,15 @@ import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class AntiGravsControl extends Control {
+
+    private SoundEvent soundEvent = AITSounds.ANTI_GRAVS;
 
     public AntiGravsControl() {
         super("antigravs");
@@ -25,6 +29,13 @@ public class AntiGravsControl extends Control {
             this.addToControlSequence(tardis, player, console);
             return false;
         }
+
+        boolean isRenaissance = false;
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            isRenaissance = isRenaissanceVariant(consoleBlockEntity);
+        }
+
+        this.soundEvent = isRenaissance ? AITSounds.RENAISSANCE_ANTI_GRAV_ALT : AITSounds.ANTI_GRAVS;
 
         tardis.travel().antigravs().toggle();
 
@@ -39,11 +50,18 @@ public class AntiGravsControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.ANTI_GRAVS;
+        return this.soundEvent;
     }
 
     @Override
     protected SubSystem.IdLike requiredSubSystem() {
         return SubSystem.Id.GRAVITATIONAL;
+    }
+
+    private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }
