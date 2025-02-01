@@ -40,8 +40,6 @@ public class AITSounds {
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
 
-
-
     //EIGHTH SOUNDS
     public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
     public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
@@ -55,9 +53,6 @@ public class AITSounds {
     //MASTER SOUNDS
     public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
     public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
-    //STYLE SOUNDS
-    public static final SoundEvent STYLE_DEMAT = register("tardis/style_demat");
-    public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
 
 
 
