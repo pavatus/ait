@@ -715,7 +715,8 @@ public class RenaissanceConsoleModel extends ConsoleModel {
 
         ModelPartData rotor = bone7.addChild("rotor", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-        ModelPartData rotorrings = rotor.addChild("rotorrings", ModelPartBuilder.create().uv(38, 117).cuboid(0.0F, -14.0F, -1.0F, 0.0F, 24.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -46.0F, 0.0F));
+        ModelPartData rotorrings = rotor.addChild("rotorrings", ModelPartBuilder.create().uv(38, 117).cuboid(0.0F, -14.0F, -1.0F, 0.0F, 24.0F, 2.0F, new Dilation(0.0F))
+                .uv(45, 160).cuboid(-1.5F, -3.5F, -1.5F, 3.0F, 3.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -46.0F, 0.0F));
 
         ModelPartData cube_r207 = rotorrings.addChild("cube_r207", ModelPartBuilder.create().uv(42, 117).cuboid(0.0F, -18.483F, -1.0F, 0.0F, 24.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 4.483F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
