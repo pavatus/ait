@@ -151,6 +151,14 @@ public class AITSounds {
     //Alt console sounds for renaissance
     public static final SoundEvent RENAISSANCE_LAND_TYPE_ALT = register("controls/renaissance_land_type_alt");
     public static final SoundEvent RENAISSANCE_POWER_SIEGE_ALT = register("controls/renaissance_power_siege_alt");
+    public static final SoundEvent RENAISSANCE_SHIELDS_ALT = register("controls/renaissance_shields_alt");
+    public static final SoundEvent RENAISSANCE_SHIELDS_ALTALT = register("controls/renaissance_shieldsaltalt");
+    public static final SoundEvent RENAISSANCE_DOOR_ALT = register("controls/renaissance_dooralt");
+    public static final SoundEvent RENAISSANCE_DOOR_ALTALT = register("controls/renaissance_dooraltalt");
+    public static final SoundEvent RENAISSANCE_LOCK_ALT = register("controls/renaissance_lock_alt");
+    public static final SoundEvent RENAISSANCE_ANTI_GRAV_ALT = register("controls/renaissance_anti_grav_alt");
+    public static final SoundEvent RENAISSANCE_HANDBRAKE_ALT = register("controls/renaissance_handbrakealt");
+    public static final SoundEvent RENAISSANCE_HANDBRAKE_ALTALT = register("controls/renaissance_handbrakealtalt");
 
     // Console
     public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");

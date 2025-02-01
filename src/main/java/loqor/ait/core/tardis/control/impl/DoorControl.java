@@ -7,8 +7,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class DoorControl extends Control {
 
@@ -25,9 +27,20 @@ public class DoorControl extends Control {
             return false;
         }
 
-        this.soundEvent = !tardis.door().isOpen()
-                ? AITSounds.DOOR_CONTROL
-                : AITSounds.DOOR_CONTROLALT;
+        boolean isRenaissance = false;
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            isRenaissance = isRenaissanceVariant(consoleBlockEntity);
+        }
+
+        if (isRenaissance) {
+            this.soundEvent = !tardis.door().isOpen()
+                    ? AITSounds.RENAISSANCE_DOOR_ALT
+                    : AITSounds.RENAISSANCE_DOOR_ALTALT;
+        } else {
+            this.soundEvent = !tardis.door().isOpen()
+                    ? AITSounds.DOOR_CONTROL
+                    : AITSounds.DOOR_CONTROLALT;
+        }
 
         tardis.door().interact(world, player.getBlockPos(), player);
         return true;
@@ -36,5 +49,12 @@ public class DoorControl extends Control {
     @Override
     public SoundEvent getSound() {
         return this.soundEvent;
+    }
+
+    private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }
