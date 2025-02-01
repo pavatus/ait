@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.StallionExteriorModel;
+import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
@@ -16,9 +17,14 @@ public abstract class ClientStallionVariant extends ClientExteriorVariantSchema 
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/stallion";
     protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
             CATEGORY_PATH + "/stallion.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID,CATEGORY_PATH + "/biome" + "/stallion.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/stallion_";
 
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
+    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
+                    BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
+                    BiomeHandler.BiomeType.SANDY, BiomeHandler.BiomeType.RED_SANDY, BiomeHandler.BiomeType.MUDDY)
+            .build();
 
     protected ClientStallionVariant(String name) {
         super(AITMod.id("exterior/stallion/" + name));

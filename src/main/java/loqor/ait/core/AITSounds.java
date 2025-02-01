@@ -40,49 +40,19 @@ public class AITSounds {
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
 
-
-
     //EIGHTH SOUNDS
     public static final SoundEvent EIGHTH_DEMAT = register("tardis/eighth_demat");
     public static final SoundEvent EIGHTH_FLIGHT = register("tardis/eighth_flight");
     public static final SoundEvent EIGHTH_MAT = register("tardis/eighth_mat");
     //GHOST MAT
     public static final SoundEvent GHOST_MAT = register("tardis/ghost_mat");
-    //GHOSTBUSTERS SOUNDS
-    public static final SoundEvent GB_DEMAT = register("tardis/gb_demat");
-    public static final SoundEvent GB_FLIGHT = register("tardis/gb_flight");
-    public static final SoundEvent GB_MAT = register("tardis/gb_mat");
     //PROTON SOUNDS
     public static final SoundEvent PROTON_FLIGHT = register("tardis/proton_flight");
     public static final SoundEvent PROTON_DEMAT = register("tardis/proton_demat");
     public static final SoundEvent PROTON_MAT = register("tardis/proton_mat");
-    //TYPE 70 SOUNDS
-    public static final SoundEvent TYPE70_DEMAT = register("tardis/type70_demat");
-    public static final SoundEvent TYPE70_MAT = register("tardis/type70_mat");
-    //CLASSIC SOUNDS
-    public static final SoundEvent CLASSIC_DEMAT = register("tardis/classic_demat");
-    public static final SoundEvent CLASSIC_MAT = register("tardis/classic_mat");
-    public static final SoundEvent REGEN_DEMAT = register("tardis/regen_demat");
-    //DRUMLESS SOUND
-    public static final SoundEvent DRUMLESS_DEMAT = register("tardis/drumless_demat");
-    //MINECART SOUNDS
-    public static final SoundEvent MINECART_DEMAT = register("tardis/minecart_demat");
-    public static final SoundEvent MINECART_FLIGHT = register("tardis/minecart_flight");
-    public static final SoundEvent MINECART_MAT = register("tardis/minecart_mat");
     //MASTER SOUNDS
     public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
     public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
-    //STYLE SOUNDS
-    public static final SoundEvent STYLE_DEMAT = register("tardis/style_demat");
-    public static final SoundEvent STYLE_REMAT = register("tardis/style_mat");
-    //HALFLIFE
-    //public static final SoundEvent HALFLIFE_DEMAT = register("tardis/halflife_demat");
-    //public static final SoundEvent HALFLIFE_FLIGHT = register("tardis/halflife_flight");
-    //public static final SoundEvent HALFLIFE_REMAT = register("tardis/halflife_mat");
-    //PORTAL
-    //public static final SoundEvent PORTAL_DEMAT = register("tardis/portal_demat");
-    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_flight");
-    //public static final SoundEvent PORTAL_REMAT = register("tardis/portal_mat");
 
 
 
@@ -148,6 +118,17 @@ public class AITSounds {
     public static final SoundEvent DIMENSION = register("controls/dimension");
     public static final SoundEvent ML = register("tardis/ml");
 
+    //Alt console sounds for renaissance
+    public static final SoundEvent RENAISSANCE_LAND_TYPE_ALT = register("controls/renaissance_land_type_alt");
+    public static final SoundEvent RENAISSANCE_POWER_SIEGE_ALT = register("controls/renaissance_power_siege_alt");
+    public static final SoundEvent RENAISSANCE_SHIELDS_ALT = register("controls/renaissance_shields_alt");
+    public static final SoundEvent RENAISSANCE_SHIELDS_ALTALT = register("controls/renaissance_shieldsaltalt");
+    public static final SoundEvent RENAISSANCE_DOOR_ALT = register("controls/renaissance_dooralt");
+    public static final SoundEvent RENAISSANCE_DOOR_ALTALT = register("controls/renaissance_dooraltalt");
+    public static final SoundEvent RENAISSANCE_LOCK_ALT = register("controls/renaissance_lock_alt");
+    public static final SoundEvent RENAISSANCE_ANTI_GRAV_ALT = register("controls/renaissance_anti_grav_alt");
+    public static final SoundEvent RENAISSANCE_HANDBRAKE_ALT = register("controls/renaissance_handbrakealt");
+    public static final SoundEvent RENAISSANCE_HANDBRAKE_ALTALT = register("controls/renaissance_handbrakealtalt");
 
     // Console
     public static final SoundEvent CONSOLE_AMBIENT = register("tardis/console_ambient");

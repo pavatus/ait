@@ -77,6 +77,16 @@ public class TelepathicControl extends Control {
             return false;
         }
 
+        if (type == Items.OBSERVER) {
+            tardis.siege().texture().set(SiegeHandler.APERTURE_TEXTURE);
+            return false;
+        }
+
+        if (type == Items.QUARTZ_BLOCK) {
+            tardis.siege().texture().set(SiegeHandler.COMPANION_TEXTURE);
+            return false;
+        }
+
 
         if (type instanceof LinkableItem linker) {
             if (linker instanceof SonicItem2 || linker instanceof HandlesItem)
