@@ -1,18 +1,28 @@
 package loqor.ait.client.models.consoles;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.alnico.AlnicoAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.WorldUtil;
 
 public class AlnicoConsoleModel extends ConsoleModel {
     private final ModelPart alnico;
@@ -1409,7 +1419,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
         handbrake.pitch = !tardis.travel().handbrake() ? handbrake.pitch - 0.9f : handbrake.pitch + 0.9f;
 
         ModelPart power = alnico.getChild("section4").getChild("controls4").getChild("biglever2").getChild("bone12");
-        power.pitch = !tardis.engine().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
+        power.pitch = !tardis.fuel().hasPower() ? power.pitch - 0.9f : power.pitch + 0.9f;
 
         ModelPart autoPilot = alnico.getChild("section1").getChild("controls").getChild("multiswitchpanel")
                 .getChild("longswitch1");
@@ -1442,7 +1452,7 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
         ModelPart shield = alnico.getChild("section5").getChild("controls5").getChild("multiswitchpanel2")
                 .getChild("longswitch8");
-        shield.pitch = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shield.pitch = tardis.shields().shielded().get()
                 ? shield.pitch + 1f
                 : shield.pitch;
 
@@ -1478,6 +1488,61 @@ public class AlnicoConsoleModel extends ConsoleModel {
 
         super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
+        matrices.pop();
+    }
+
+    @Override
+    public void renderMonitorText(Tardis tardis, ConsoleBlockEntity entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        super.renderMonitorText(tardis, entity, matrices, vertexConsumers, light, overlay);
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        TextRenderer renderer = client.textRenderer;
+        TravelHandler travel = tardis.travel();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT
+                ? travel.getProgress()
+                : travel.position();
+        CachedDirectedGlobalPos dabpd = travel.destination();
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
+                ? travel.getProgress()
+                : travel.position();
+
+        BlockPos abppPos = abpp.getPos();
+        BlockPos abpdPos = abpd.getPos();
+        matrices.push();
+        // TODO dont forget to add variant.getConsoleTextPosition()!
+        matrices.translate(1.86, 0.47, 0.30);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+        matrices.scale(0.004f, 0.004f, 0.004f);
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(60f));
+        matrices.translate(-240f, -228, 5f);
+        String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
+        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
+        String positionDirectionText = " " + DirectionControl.rotationToDirection(abpp.getRotation()).toUpperCase();
+        String destinationPosText = " " + abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
+        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
+        String destinationDirectionText = " " + DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
+        renderer.drawWithOutline(Text.of("✛").asOrderedText(), 0, 40, 0x00F0FF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        renderer.drawWithOutline(Text.of(destinationPosText).asOrderedText(), 0, 48, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        renderer.drawWithOutline(destinationDimensionText.asOrderedText(), 0, 56, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        renderer.drawWithOutline(Text.of(destinationDirectionText).asOrderedText(), 0, 64, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        matrices.pop();
+
+        matrices.push();
+        matrices.translate(0.41, 1.40, 0.38);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(150f));
+        matrices.scale(0.015f, 0.015f, 0.015f);
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-30.5f));
+        String progressText = tardis.travel().getState() == TravelHandlerBase.State.LANDED
+                ? "0"
+                : tardis.travel().getDurationAsPercentage() + " ";
+        matrices.translate(0, -38, -52);
+        renderer.drawWithOutline(Text.of(progressText).asOrderedText(), 0 - renderer.getWidth(progressText) / 2, 0, 0xffffff, 0x03cffc,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         matrices.pop();
     }
 

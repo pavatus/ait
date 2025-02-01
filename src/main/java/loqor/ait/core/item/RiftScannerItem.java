@@ -1,5 +1,7 @@
 package loqor.ait.core.item;
 
+import java.util.function.Consumer;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,8 +14,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.world.RiftChunkManager;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class RiftScannerItem extends Item {
     private static final int MAX_ITERATIONS = 32;
@@ -27,11 +29,11 @@ public class RiftScannerItem extends Item {
         if (!(world instanceof ServerWorld serverWorld))
             return TypedActionResult.pass(user.getStackInHand(hand));
 
-        if (TardisDimension.isTardisDimension(serverWorld))
+        if (TardisServerWorld.isTardisDimension(serverWorld))
             return TypedActionResult.fail(user.getStackInHand(hand));
 
         user.getItemCooldownManager().set(this, 100);
-        this.createNewTarget(serverWorld, new ChunkPos(user.getBlockPos()), user.getStackInHand(hand));
+        findNearestRift(serverWorld, new ChunkPos(user.getBlockPos()), (chunk) -> setTarget(user.getStackInHand(hand), chunk));
 
         user.sendMessage(Text.translatable("riftchunk.ait.tracking"), true);
         return TypedActionResult.success(user.getStackInHand(hand));
@@ -45,22 +47,22 @@ public class RiftScannerItem extends Item {
      * @param source
      *            The current chunk
      */
-    private void createNewTarget(ServerWorld world, ChunkPos source, ItemStack stack) {
+    public static void findNearestRift(ServerWorld world, ChunkPos source, Consumer<ChunkPos> found) {
         int steps = 1;
         RiftChunkManager manager = RiftChunkManager.getInstance(world);
 
         for (int i = 0; i < MAX_ITERATIONS; i++) {
             if (steps % 2 != 0) {
-                if (trySearch(manager, steps, source, Direction.EAST, stack))
+                if (trySearch(manager, steps, source, Direction.EAST, found))
                     return;
 
-                if (trySearch(manager, steps, source, Direction.SOUTH, stack))
+                if (trySearch(manager, steps, source, Direction.SOUTH, found))
                     return;
             } else {
-                if (trySearch(manager, steps, source, Direction.WEST, stack))
+                if (trySearch(manager, steps, source, Direction.WEST, found))
                     return;
 
-                if (trySearch(manager, steps, source, Direction.NORTH, stack))
+                if (trySearch(manager, steps, source, Direction.NORTH, found))
                     return;
             }
 
@@ -68,12 +70,12 @@ public class RiftScannerItem extends Item {
         }
     }
 
-    private static boolean trySearch(RiftChunkManager manager, int limit, ChunkPos source, Direction direction, ItemStack stack) {
+    private static boolean trySearch(RiftChunkManager manager, int limit, ChunkPos source, Direction direction, Consumer<ChunkPos> found) {
         for (int b = 0; b <= limit; b++) {
             source = getChunkInDirection(source, direction);
 
             if (isConsumable(manager, source)) {
-                setTarget(stack, source);
+                found.accept(source);
                 return true;
             }
         }

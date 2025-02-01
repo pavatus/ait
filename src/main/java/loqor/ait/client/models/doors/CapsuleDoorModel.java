@@ -7,9 +7,8 @@ import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
-import loqor.ait.compat.DependencyChecker;
-import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class CapsuleDoorModel extends DoorModel {
@@ -89,13 +88,13 @@ public class CapsuleDoorModel extends DoorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return switch (state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();/*return switch (state) {
             case CLOSED -> DoorAnimations.INTERIOR_BOTH_CLOSE_ANIMATION;
             case FIRST -> DoorAnimations.INTERIOR_FIRST_OPEN_ANIMATION;
             case SECOND -> DoorAnimations.INTERIOR_SECOND_OPEN_ANIMATION;
             case BOTH -> DoorAnimations.INTERIOR_BOTH_OPEN_ANIMATION;
-        };
+        };*/
     }
 
     @Override
@@ -104,24 +103,31 @@ public class CapsuleDoorModel extends DoorModel {
     }
 
     @Override
-    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+    public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
 
         matrices.translate(0, -1.5f, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
 
-        DoorHandler handler = door.tardis().get().door();
+        DoorHandler door = linkableBlockEntity.tardis().get().door();
 
-        this.body.getChild("doors").getChild("door_left").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
-        this.body.getChild("doors").getChild("door_right").yaw = (handler.isRightOpen() || handler.isBothOpen())
-                ? 5F
-                : 0.0F;
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
 
-        if (DependencyChecker.hasPortals())
+            this.body.getChild("doors").getChild("door_left").yaw = (door.isLeftOpen() || door.isOpen()) ? -5F : 0.0F;
+            this.body.getChild("doors").getChild("door_right").yaw = (door.isRightOpen() || door.areBothOpen())
+                    ? 5F
+                    : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.body.getChild("doors").getChild("door_left").yaw = (float) Math.toRadians(maxRot*door.getLeftRot());
+            this.body.getChild("doors").getChild("door_right").yaw = (float) -Math.toRadians(maxRot*door.getRightRot());
+        }
+
+        if (AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             this.getPart().getChild("middle").getChild("back").visible = false;
 
-        super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();
     }

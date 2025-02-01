@@ -14,7 +14,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.TardisArgumentType;
 import loqor.ait.core.tardis.ServerTardis;
-import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class SetLockedCommand {
 
@@ -29,7 +28,7 @@ public class SetLockedCommand {
         ServerTardis tardis = TardisArgumentType.getTardis(context, "tardis");
         boolean locked = BoolArgumentType.getBool(context, "locked");
 
-        DoorHandler.lockTardis(locked, tardis, source, true);
+        tardis.door().interactLock(locked, source, true);
         return Command.SINGLE_SUCCESS;
     }
 }

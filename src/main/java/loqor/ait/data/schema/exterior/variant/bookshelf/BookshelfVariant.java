@@ -1,6 +1,5 @@
 package loqor.ait.data.schema.exterior.variant.bookshelf;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
@@ -19,7 +18,7 @@ public abstract class BookshelfVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/bookshelf/bookshelf_";
 
     protected BookshelfVariant(String name) { // idk why i added the modid bit i dont use it later lol
-        super(BookshelfCategory.REFERENCE, new Identifier(AITMod.MOD_ID, "exterior/bookshelf/" + name),
+        super(BookshelfCategory.REFERENCE, AITMod.id("exterior/bookshelf/" + name),
                 new Loyalty(Loyalty.Type.COMPANION));
     }
 

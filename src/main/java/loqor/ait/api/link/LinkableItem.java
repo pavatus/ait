@@ -36,6 +36,10 @@ public abstract class LinkableItem extends Item {
         stack.getOrCreateNbt().putUuid("tardis", uuid);
     }
 
+    public boolean isLinked(ItemStack stack) {
+        return stack.getOrCreateNbt().contains("tardis");
+    }
+
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         this.handleTooltip(stack, tooltip);

@@ -7,6 +7,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
@@ -23,7 +24,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.commands.argument.GroundSearchArgumentType;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class SafePosCommand {
 
@@ -42,7 +42,7 @@ public class SafePosCommand {
 
         TravelHandlerBase.GroundSearch search = GroundSearchArgumentType.getGroundSearch(context, "search-type");
 
-        DirectedGlobalPos.Cached cached = WorldUtil.locateSafe(DirectedGlobalPos.Cached.create(world, posA, (byte) 0),
+        CachedDirectedGlobalPos cached = WorldUtil.locateSafe(CachedDirectedGlobalPos.create(world, posA, (byte) 0),
                 search, false);
         BlockPos blockPos = cached.getPos();
 

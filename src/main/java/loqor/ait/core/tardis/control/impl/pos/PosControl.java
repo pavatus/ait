@@ -1,5 +1,7 @@
 package loqor.ait.core.tardis.control.impl.pos;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -8,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.data.DirectedGlobalPos;
 
 public abstract class PosControl extends Control {
 
@@ -32,19 +33,19 @@ public abstract class PosControl extends Control {
         }
 
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached destination = travel.destination();
+        CachedDirectedGlobalPos destination = travel.destination();
 
         BlockPos pos = this.type.add(destination.getPos(),
                 (leftClick) ? -IncrementManager.increment(tardis) : IncrementManager.increment(tardis),
                 destination.getWorld());
 
-        travel.forceDestination(destination.pos(pos));
+        travel.destination(destination.pos(pos));
         messagePlayerDestination(player, travel);
         return true;
     }
 
     private void messagePlayerDestination(ServerPlayerEntity player, TravelHandler travel) {
-        DirectedGlobalPos.Cached globalPos = travel.destination();
+        CachedDirectedGlobalPos globalPos = travel.destination();
         BlockPos pos = globalPos.getPos();
 
         Text text = Text.translatable("tardis.message.control.randomiser.poscontrol")

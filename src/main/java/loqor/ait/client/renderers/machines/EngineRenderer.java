@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
+import org.joml.Vector3f;
+
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -7,7 +9,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
@@ -15,7 +16,8 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.EngineModel;
 import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.blockentities.EngineBlockEntity;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.engine.impl.EngineSystem;
+import loqor.ait.core.tardis.Tardis;
 
 // Made with Blockbench 4.8.3
 // Exported for Minecraft version 1.17+ for Yarn
@@ -36,19 +38,22 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
     public void render(EngineBlockEntity entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        if (entity.hasWorld() && TardisDimension.isTardisDimension((ClientWorld) entity.getWorld())
-                && entity.findTardis().isEmpty())
+        if (entity.tardis() == null || entity.tardis().isEmpty())
             return;
 
+        Tardis tardis = entity.tardis().get();
         matrices.push();
         matrices.translate(0.5f, 1.5f, 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
+        matrices.scale(0.25f, 0.25f, 0.25f);
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (TardisDimension.isTardisDimension((ClientWorld) entity.getWorld()) && entity.findTardis().get().engine().hasPower()) {
-            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, 1, 1, 1, 1);
+        if (tardis.fuel().hasPower()) {
+            EngineSystem.Status status = tardis.subsystems().engine().status();
+            Vector3f colours = status.colour;
+            ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, colours.x, colours.y, colours.z, (status != EngineSystem.Status.OFF) ? 1.0F : 0.0F);
         }
 
         matrices.pop();
@@ -56,6 +61,6 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
     @Override
     public void render(EngineBlockEntity entity, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        root.render(matrices, vertices, light, overlay);
+        root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
     }
 }

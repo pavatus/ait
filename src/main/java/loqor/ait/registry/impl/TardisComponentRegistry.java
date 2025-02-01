@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.gson.*;
+import dev.pavatus.lib.register.Registry;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.TardisExterior;
 import loqor.ait.core.tardis.TardisHandlersManager;
-import loqor.ait.registry.Registry;
 
 public class TardisComponentRegistry implements Registry {
 

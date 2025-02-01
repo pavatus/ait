@@ -1,17 +1,25 @@
 package loqor.ait.core.tardis;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+import dev.drtheo.queue.api.ActionQueue;
+import dev.drtheo.queue.api.util.block.ChunkEraser;
+import dev.drtheo.queue.api.util.structure.QueuedStructureTemplate;
+import dev.pavatus.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
@@ -20,24 +28,32 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import loqor.ait.core.blockentities.DoorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
+import loqor.ait.core.world.QueuedTardisStructureTemplate;
 import loqor.ait.data.Corners;
-import loqor.ait.data.DirectedBlockPos;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 
 public class TardisDesktop extends TardisComponent {
 
-    public static final Identifier CACHE_CONSOLE = new Identifier(AITMod.MOD_ID, "cache_console");
+    private static final StructurePlacementData SETTINGS = new StructurePlacementData().setUpdateNeighbors(false);
+    public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
 
     private TardisDesktopSchema schema;
+
     private DirectedBlockPos doorPos;
 
     private final Corners corners;
     private final Set<BlockPos> consolePos;
 
+    private static final int RADIUS = 500;
+    private static final Corners CORNERS;
+
     static {
+        BlockPos first = new BlockPos(RADIUS, 0, RADIUS);
+        CORNERS = new Corners(first.multiply(-1), first);
+
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
                     BlockPos console = buf.readBlockPos();
@@ -55,13 +71,17 @@ public class TardisDesktop extends TardisComponent {
         super(Id.DESKTOP);
         this.schema = schema;
 
-        this.corners = TardisUtil.findInteriorSpot();
+        this.corners = CORNERS;
         this.consolePos = new HashSet<>();
     }
 
     @Override
-    public void onCreate() {
-        this.changeInterior(schema, false);
+    public void postInit(InitContext ctx) {
+        if (!ctx.created())
+            return;
+
+        // must be done in postInit, because it accesses door and alarm handlers
+        this.changeInterior(schema, false, false).execute();
     }
 
     @Override
@@ -79,36 +99,118 @@ public class TardisDesktop extends TardisComponent {
         return schema;
     }
 
-    public DirectedBlockPos doorPos() {
+    public void setDoorPos(DoorBlockEntity door) {
+        if (door == null || door.getWorld() == null || door.getWorld().isClient())
+            return;
+
+        DirectedBlockPos pos = door.getDirectedPos();
+
+        if (this.doorPos != null && this.doorPos.equals(pos))
+            return;
+
+        this.doorPos = pos;
+        TardisEvents.DOOR_MOVE.invoker().onMove(tardis.asServer(), pos, this.doorPos);
+    }
+
+    public void removeDoor(DoorBlockEntity door) {
+        if (this.doorPos == null)
+            return;
+
+        if (!this.doorPos.equals(door.getDirectedPos()))
+            return;
+
+        this.doorPos = null;
+        TardisEvents.BREAK_DOOR.invoker().onBreak(this.tardis, doorPos);
+    }
+
+    public DirectedBlockPos getDoorPos() {
+        if (this.doorPos == null) {
+            // womp womp
+            for (BlockPos consolePos : this.consolePos) {
+                return DirectedBlockPos.create(consolePos, (byte) 0);
+            }
+        }
+
         return doorPos;
     }
 
-    public void setInteriorDoorPos(DirectedBlockPos pos) {
-        TardisEvents.DOOR_MOVE.invoker().onMove(this.tardis, pos);
-        this.doorPos = pos;
-    }
-
     // TODO this is strictly for clearing the interior now
-    //@Deprecated(forRemoval = true, since = "1.1.0")
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public Corners getCorners() {
         return corners;
     }
 
-    public void changeInterior(TardisDesktopSchema schema, boolean sendEvent) {
-        long currentTime = System.currentTimeMillis();
+    public Optional<ActionQueue> createInteriorChangeQueue(TardisDesktopSchema schema, boolean sendEvent) {
+        long start = System.currentTimeMillis();
         this.schema = schema;
 
         if (sendEvent)
             TardisEvents.RECONFIGURE_DESKTOP.invoker().reconfigure(this.tardis);
 
-        DesktopGenerator generator = new DesktopGenerator(this.schema);
-        generator.place(this.tardis, this.tardis.asServer().getInteriorWorld(), this.corners);
+        ServerTardis tardis = this.tardis.asServer();
+        ServerWorld world = tardis.getInteriorWorld();
 
-        AITMod.LOGGER.warn("Time taken to generate interior: {}", System.currentTimeMillis() - currentTime);
+        Optional<StructureTemplate> optional = this.schema.findTemplate();
+
+        if (optional.isEmpty()) {
+            AITMod.LOGGER.error("Failed to find template for {}", this.schema.id());
+            return Optional.empty();
+        }
+
+        QueuedStructureTemplate template = new QueuedTardisStructureTemplate(optional.get(), tardis);
+
+        Optional<ActionQueue> optionalQueue = template.place(world, BlockPos.ofFloored(corners.getBox().getCenter()),
+                BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, world.getRandom(), Block.FORCE_STATE);
+
+        optionalQueue.ifPresentOrElse(queue -> queue.thenRun(
+                () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
+                        System.currentTimeMillis() - start)),
+                () -> AITMod.LOGGER.error("Failed to generate interior for {}",
+                        this.tardis.getUuid())
+        );
+
+        return optionalQueue;
     }
 
-    public void clearOldInterior() {
-        DesktopGenerator.clearArea(this.tardis.asServer().getInteriorWorld(), this.corners);
+    public ActionQueue createDesktopClearQueue() {
+        ServerWorld world = this.tardis.asServer().getInteriorWorld();
+        int chunkRadius = ChunkSectionPos.getSectionCoord(RADIUS);
+
+        // FIXME THEO: gross
+        TardisUtil.getEntitiesInBox(ItemFrameEntity.class, world, corners.getBox(), frame -> true)
+                .forEach(frame -> frame.remove(Entity.RemovalReason.DISCARDED));
+
+        return new ChunkEraser.Builder().build(
+                world, -chunkRadius, -chunkRadius, chunkRadius, chunkRadius
+        ).thenRun(() -> {
+            this.consolePos.clear();
+            this.doorPos = null;
+        });
+    }
+
+    public void startQueue(boolean interact) {
+        if (interact) // we use this for the SFX
+            this.tardis.door().interactLock(true, null, false);
+
+        this.tardis.door().setDeadlocked(true);
+        this.tardis.alarm().enabled().set(true);
+    }
+
+    private void completeQueue() {
+        this.tardis.door().setLocked(false);
+        this.tardis.door().setDeadlocked(false);
+        this.tardis.alarm().enabled().set(false);
+    }
+
+    public ActionQueue changeInterior(TardisDesktopSchema schema, boolean clear, boolean sendEvent) {
+        ActionQueue queue = new ActionQueue()
+                .thenRun(() -> this.startQueue(sendEvent));
+
+        if (clear)
+            queue.thenRun(this.createDesktopClearQueue());
+
+        return queue.thenRun(createInteriorChangeQueue(schema, sendEvent))
+                .thenRun(this::completeQueue);
     }
 
     public void cacheConsole(BlockPos consolePos) {
@@ -128,12 +230,14 @@ public class TardisDesktop extends TardisComponent {
         dim.addBlockEntity(generator);
     }
 
-    public static void playSoundAtConsole(ServerWorld dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
+    public static void playSoundAtConsole(World dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
             float pitch) {
         dim.playSound(null, console, sound, category, volume, pitch);
     }
 
     public void playSoundAtEveryConsole(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+        if (!this.isServer()) return;
+
         this.getConsolePos().forEach(consolePos -> playSoundAtConsole(this.tardis.asServer().getInteriorWorld(), consolePos, sound, category, volume, pitch));
     }
 

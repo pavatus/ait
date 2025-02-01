@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.pavatus.multidim.MultiDim;
-import io.wispforest.owo.ops.WorldOps;
+import dev.drtheo.multidim.MultiDim;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -35,11 +35,8 @@ import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
 import loqor.ait.core.tardis.manager.TardisFileManager;
-import loqor.ait.core.tardis.util.DesktopGenerator;
 import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.core.util.ForcedChunkUtil;
-import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.Value;
 
@@ -127,13 +124,17 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
         return this.fileManager.loadTardis(server, this, uuid, this::readTardis, this.lookup::put);
     }
 
+    public void loadAll(MinecraftServer server, @Nullable Consumer<ServerTardis> consumer) {
+        for (UUID id : this.fileManager.getTardisList(server)) {
+            this.getTardis(server, id, consumer);
+        }
+    }
+
     public void remove(MinecraftServer server, ServerTardis tardis) {
         tardis.setRemoved(true);
 
         ServerWorld tardisWorld = tardis.getInteriorWorld();
-
-        // Remove the exterior if it exists
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPos = tardis.travel().position();
 
         if (exteriorPos != null) {
             TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> TardisUtil.teleportOutside(tardis, player));
@@ -143,32 +144,16 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
 
             world.removeBlock(pos, false);
             world.removeBlockEntity(pos);
-        } else {
-            TardisUtil.getPlayersInsideInterior(tardis).forEach(player -> {
-                DirectedGlobalPos.Cached cached = tardis.travel().destination();
-                WorldOps.teleportToWorld(player, cached.getWorld(), cached.getPos().toCenterPos());
-            });
+
+            ForcedChunkUtil.stopForceLoading(exteriorPos);
         }
 
         MultiDim.get(server).remove(tardisWorld.getRegistryKey());
 
         this.sendTardisRemoval(server, tardis);
 
-        // Remove the interior door
-        DirectedBlockPos interiorDorPos = tardis.getDesktop().doorPos();
-
-        if (interiorDorPos != null) {
-            BlockPos interiorDoor = interiorDorPos.getPos();
-
-            tardisWorld.removeBlock(interiorDoor, false);
-            tardisWorld.removeBlockEntity(interiorDoor);
-        }
-
-        // Remove the interior
-        DesktopGenerator.clearArea(tardisWorld, tardis.getDesktop().getCorners());
-
-        this.fileManager.delete(server, tardis.getUuid());
         this.lookup.remove(tardis.getUuid());
+        this.fileManager.delete(server, tardis.getUuid());
     }
 
     private void save(MinecraftServer server, boolean clean) {
@@ -177,10 +162,10 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
 
         for (ServerTardis tardis : this.lookup.values()) {
             if (clean) {
-
                 if (tardis == null)
                     continue;
 
+                // TODO move this into some method like #dispose
                 ForcedChunkUtil.stopForceLoading(tardis.travel().position());
                 TravelHandlerBase.State state = tardis.travel().getState();
 
@@ -191,6 +176,8 @@ public abstract class DeprecatedServerTardisManager extends TardisManager<Server
                 }
 
                 tardis.door().closeDoors();
+                tardis.interiorChangingHandler().queued().set(false);
+                tardis.interiorChangingHandler().regenerating().set(false);
             }
 
             this.fileManager.saveTardis(server, this, tardis);

@@ -2,6 +2,7 @@ package loqor.ait.core.blocks;
 
 import java.util.Random;
 
+import dev.pavatus.lib.api.ICantBreak;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,13 +33,35 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import loqor.ait.api.ICantBreak;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineMasterVariant;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineVariant;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineZeitonVariant;
 
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
+
+    private static final VoxelShape SHAPE;
+
+    static {
+        VoxelShape shape = VoxelShapes.empty();
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0, 0, 1, 0.875, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0.875, -0.25, 1, 1, 1.25), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 1, 0, 1, 1.125, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.25, 0.875, 0, 1.25, 1, 1), BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, -0.125, 1.1875, 1, 0),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, 1, 1.1875, 1, 1.125),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(1, 0.875, -0.1875, 1.125, 1, 1.1875),
+                BooleanBiFunction.OR);
+        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.125, 0.875, -0.1875, 0, 1, 1.1875),
+                BooleanBiFunction.OR);
+
+        SHAPE = shape;
+    }
 
     public ConsoleBlock(Settings settings) {
         super(settings);
@@ -46,7 +69,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return makeShape();
+        return SHAPE;
     }
 
     @Nullable @Override
@@ -68,24 +91,6 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
         }
 
         return ActionResult.SUCCESS;
-    }
-
-    public VoxelShape makeShape() {
-        VoxelShape shape = VoxelShapes.empty();
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0, 0, 1, 0.875, 1), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 0.875, -0.25, 1, 1, 1.25), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(0, 1, 0, 1, 1.125, 1), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.25, 0.875, 0, 1.25, 1, 1), BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, -0.125, 1.1875, 1, 0),
-                BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.1875, 0.875, 1, 1.1875, 1, 1.125),
-                BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(1, 0.875, -0.1875, 1.125, 1, 1.1875),
-                BooleanBiFunction.OR);
-        shape = VoxelShapes.combine(shape, VoxelShapes.cuboid(-0.125, 0.875, -0.1875, 0, 1, 1.1875),
-                BooleanBiFunction.OR);
-
-        return shape;
     }
 
     @Override
@@ -164,6 +169,51 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
             console.onBroken();
         }
     }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+
+        if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
+
+            if (consoleBlockEntity.tardis() == null) return;
+
+            if (!consoleBlockEntity.tardis().get().fuel().hasPower()) return;
+
+            if (!(consoleBlockEntity.getVariant() instanceof CrystallineMasterVariant ||
+                    consoleBlockEntity.getVariant() instanceof CrystallineZeitonVariant ||
+                    consoleBlockEntity.getVariant() instanceof CrystallineVariant)) return;
+
+            double d = pos.getX();
+            double e = pos.getY();
+            double f = pos.getZ();
+
+            for (int i = 0; i < random.nextInt(15) + 1; ++i) {
+                boolean bl = random.nextBoolean();
+                float particleSpeed = random.nextFloat() / 15.0f;
+
+                world.addParticle(ParticleTypes.SMOKE,
+                        (double) pos.getX() + 0.5,
+                        (double) pos.getY() + 2,
+                        (double) pos.getZ() + 0.5,
+                        bl ? particleSpeed : -particleSpeed,
+                        2.2E-3,
+                        bl ? particleSpeed : -particleSpeed);
+
+                world.addParticle(ParticleTypes.CLOUD,
+                        pos.getX() + 0.5,
+                        pos.getY() + 0.5,
+                        pos.getZ() + 0.5,
+                        0.0,
+                        0.1,
+                        0.0);
+            }
+        }
+    }
+
+
+
+
 
     @Override
     public void onTryBreak(World world, BlockPos pos, BlockState state) {

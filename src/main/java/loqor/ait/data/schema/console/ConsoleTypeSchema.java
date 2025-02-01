@@ -3,11 +3,11 @@ package loqor.ait.data.schema.console;
 import java.lang.reflect.Type;
 
 import com.google.gson.*;
+import dev.pavatus.lib.api.Identifiable;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
-import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
 import loqor.ait.core.tardis.control.ControlTypes;
 import loqor.ait.data.schema.exterior.category.CapsuleCategory;

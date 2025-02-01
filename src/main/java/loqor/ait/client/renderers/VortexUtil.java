@@ -1,18 +1,16 @@
 package loqor.ait.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import org.jetbrains.annotations.ApiStatus;
 import org.joml.Matrix4f;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
 
 import loqor.ait.AITMod;
-import loqor.ait.data.vortex.VortexNode;
+
 
 /**
  * @author - ThePlaceHolder (someElseisHere), Loqor
@@ -32,38 +30,35 @@ public class VortexUtil {
     private final float speed;
     private float time = 0;
 
-    public VortexUtil(String name /* , float distortionFactor */) {
-        TEXTURE_LOCATION = new Identifier(AITMod.MOD_ID, "textures/vortex/" + name + ".png");
+    public VortexUtil(Identifier texture /* , float distortionFactor */) {
+        TEXTURE_LOCATION = texture;
         this.distortionSpeed = 0.5f;
         this.distortionSeparationFactor = 32f;
-        this.distortionFactor = 8; // distortionFactor;
-        this.scale = 21f;
+        this.distortionFactor = 2; // distortionFactor;
+        this.scale = 32f;
         this.rotationFactor = 1f;
         this.rotationSpeed = 1f;
         this.speed = 4f;
     }
+    @ApiStatus.Internal
+    @Deprecated(forRemoval = true)
+    public VortexUtil(String name) {
+        this(AITMod.id("textures/vortex/" + name + ".png"));
+    }
 
-    public void renderVortex(WorldRenderContext context) {
-        MatrixStack matrixStack = new MatrixStack();
+    public void renderVortex(MatrixStack matrixStack) {
+
+        time += MinecraftClient.getInstance().getTickDelta() / 360f;
+
         matrixStack.push();
-        Camera camera = context.camera();
-        Vec3d targetPosition = new Vec3d(0, 110, 0);
-        // Vec3d position = new Vec3d(0, 50, 0);
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
-        Vec3d transformedPosition = targetPosition.subtract(camera.getPos());
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
-        matrixStack.translate(transformedPosition.x, transformedPosition.y, transformedPosition.z);
-        RenderSystem.enableBlend();
-        RenderSystem.enableCull();
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
 
         matrixStack.scale(scale, scale, scale);
 
-        float f0 = (float) Math.toDegrees(this.rotationFactor * Math.sin(time * this.rotationSpeed));
-        float f2 = f0 / 90.0f - (int) (f0 / 90.0f);
-        // matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(f2 * 360.0f));
-        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90f));
+        float f0 = (float) Math.toDegrees(this.rotationFactor * time * this.rotationSpeed);
+        //matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 50.0f) * 360f));
+        //matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90f));
 
         /*
          * float alternate = (float) (((targetPosition.x - position.x) *
@@ -93,17 +88,13 @@ public class VortexUtil {
         // targetPosition.z, (float) position.x, (float) position.y, (float)
         // position.z);
 
-        for (int i = 0; i < 36; ++i) {
-            this.renderSection(buffer, i, time * -this.speed, (float) Math.sin(i * Math.PI / 36),
-                    (float) Math.sin((i + 1) * Math.PI / 36), matrixStack.peek().getPositionMatrix());
+        for (int i = 0; i < 32; ++i) {
+            this.renderSection(buffer, i, (MinecraftClient.getInstance().player.age / 200.0f) * -this.speed, (float) Math.sin(i * Math.PI / 32),
+                    (float) Math.sin((i + 1) * Math.PI / 32), matrixStack.peek().getPositionMatrix());
         }
 
         tessellator.draw();
-
-        RenderSystem.disableCull();
-        RenderSystem.disableBlend();
         matrixStack.pop();
-        time += MinecraftClient.getInstance().getTickDelta() / 600f;
     }
 
     public void renderSection(VertexConsumer builder, int zOffset, float textureDistanceOffset, float startScale,
@@ -214,30 +205,30 @@ public class VortexUtil {
     }
 
     private float computeDistortionFactor(float time, int t) {
-        return 0; // (float) (Math.sin(8 * this.distortionSpeed * 2.0 * Math.PI + (13 - t) *
-        // this.distortionSeparationFactor) * this.distortionFactor) / 8;
+        return (float) (Math.sin(time * this.distortionSpeed * 2.0 * Math.PI + (13 - t) *
+        this.distortionSeparationFactor) * this.distortionFactor) / 8;
     }
 
-    public void renderVortexNodes(WorldRenderContext context, VortexNode node) {
-        MatrixStack stack = context.matrixStack();
-        Matrix4f positionMatrix = stack.peek().getPositionMatrix();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        stack.push();
-        stack.translate(node.getPos().x, node.getPos().y, node.getPos().z);
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
-        buffer.vertex(positionMatrix, 20, 20, 0).color(1f, 1f, 1f, 1f).texture(0, 0).next();
-        buffer.vertex(positionMatrix, 20, 60, 0).color(1f, 0f, 0f, 1f).texture(0, 1f).next();
-        buffer.vertex(positionMatrix, 60, 60, 0).color(0f, 1f, 0f, 1f).texture(1f, 1f).next();
-        buffer.vertex(positionMatrix, 0, 20, 0).color(0f, 0f, 1f, 1f).texture(1f, 0).next();
-
-        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
-        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        tessellator.draw();
-
-        stack.pop();
-    }
+//    public void renderVortexNodes(WorldRenderContext context, VortexNode node) {
+//        MatrixStack stack = context.matrixStack();
+//        Matrix4f positionMatrix = stack.peek().getPositionMatrix();
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder buffer = tessellator.getBuffer();
+//
+//        stack.push();
+//        stack.translate(node.getPos().x, node.getPos().y, node.getPos().z);
+//        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+//        buffer.vertex(positionMatrix, 20, 20, 0).color(1f, 1f, 1f, 1f).texture(0, 0).next();
+//        buffer.vertex(positionMatrix, 20, 60, 0).color(1f, 0f, 0f, 1f).texture(0, 1f).next();
+//        buffer.vertex(positionMatrix, 60, 60, 0).color(0f, 1f, 0f, 1f).texture(1f, 1f).next();
+//        buffer.vertex(positionMatrix, 0, 20, 0).color(0f, 0f, 1f, 1f).texture(1f, 0).next();
+//
+//        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
+//        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
+//        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+//
+//        tessellator.draw();
+//
+//        stack.pop();
+//    }
 }

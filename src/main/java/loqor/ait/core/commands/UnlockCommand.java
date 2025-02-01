@@ -8,12 +8,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import dev.pavatus.lib.api.Identifiable;
+import dev.pavatus.lib.register.unlockable.Unlockable;
+import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
 import loqor.ait.core.commands.argument.IdentifierWildcardArgumentType;
 import loqor.ait.core.commands.argument.TardisArgumentType;
@@ -22,8 +24,6 @@ import loqor.ait.data.Wildcard;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class UnlockCommand {
 

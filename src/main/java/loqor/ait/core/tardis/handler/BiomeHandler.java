@@ -6,6 +6,7 @@ import java.util.Set;
 
 import dev.drtheo.gaslighter.Gaslighter3000;
 import dev.drtheo.gaslighter.impl.FakeStructureWorldAccess;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +24,7 @@ import net.minecraft.world.gen.feature.*;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
@@ -39,6 +40,10 @@ public class BiomeHandler extends KeyedTardisComponent {
     private static final Property<BiomeType> TYPE = Property.forEnum("type", BiomeType.class, BiomeType.DEFAULT);
     private final Value<BiomeType> type = TYPE.create(this);
 
+    static {
+        TardisEvents.LANDED.register(tardis -> tardis.<BiomeHandler>handler(Id.BIOME).update());
+    }
+
     public BiomeHandler() {
         super(Id.BIOME);
     }
@@ -52,7 +57,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         this.update(this.tardis.travel().position());
     }
 
-    public void update(DirectedGlobalPos.Cached globalPos) {
+    public void update(CachedDirectedGlobalPos globalPos) {
         if (globalPos == null)
             return;
 
@@ -60,6 +65,10 @@ public class BiomeHandler extends KeyedTardisComponent {
         BiomeType biome = getTagForBiome(entry);
 
         this.type.set(biome);
+    }
+
+    public void forceTypeDefault() {
+        this.type.set(BiomeType.DEFAULT);
     }
 
     public Gaslighter3000 testBiome(ServerWorld world, BlockPos pos) {
@@ -78,11 +87,18 @@ public class BiomeHandler extends KeyedTardisComponent {
         return gaslighter;
     }
 
+    static {
+        TardisEvents.DEMAT.register(tardis -> {
+            tardis.<BiomeHandler>handler(Id.BIOME).forceTypeDefault();
+            return TardisEvents.Interaction.PASS;
+        });
+    }
+
     private static final Set<Class<? extends Feature<?>>> TREES = Set.of(
             TreeFeature.class, HugeMushroomFeature.class, HugeFungusFeature.class, DesertWellFeature.class, ChorusPlantFeature.class
     );
 
-    private static final Identifier CACTUS = new Identifier(AITMod.MOD_ID, "cactus");
+    private static final Identifier CACTUS = AITMod.id("cactus");
 
     private List<ConfiguredFeature<?, ?>> findTrees(ServerWorld world, RegistryEntry<Biome> biome) {
         if (this.type.get() == BiomeType.SANDY && world.random.nextInt(5) != 0)
@@ -133,6 +149,7 @@ public class BiomeHandler extends KeyedTardisComponent {
         return this.type.get();
     }
 
+    // FIXME(PERFORMANCE)
     private static BiomeType getTagForBiome(RegistryEntry<Biome> biome) {
         if (biome.isIn(ConventionalBiomeTags.SNOWY) || biome.isIn(ConventionalBiomeTags.SNOWY_PLAINS)
                 || biome.isIn(ConventionalBiomeTags.ICY))
@@ -197,7 +214,7 @@ public class BiomeHandler extends KeyedTardisComponent {
                 return texture;
 
             String path = texture.getPath();
-            return new Identifier(AITMod.MOD_ID, path.substring(0, path.length() - 4) + this.suffix + ".png");
+            return AITMod.id(path.substring(0, path.length() - 4) + this.suffix + ".png");
         };
 
         public Identifier get(BiomeOverrides overrides) {

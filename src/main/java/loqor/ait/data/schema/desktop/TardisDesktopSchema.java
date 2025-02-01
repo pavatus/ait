@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.google.gson.*;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.Identifier;
@@ -13,7 +14,6 @@ import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.data.schema.desktop.textures.DesktopPreviewTexture;
 import loqor.ait.registry.impl.DesktopRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 public abstract class TardisDesktopSchema extends BasicSchema implements Unlockable {
 

@@ -1,16 +1,29 @@
 package loqor.ait.core;
 
+
+import static loqor.ait.core.AITItems.*;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import dev.pavatus.lib.block.ABlockSettings;
+import dev.pavatus.lib.container.impl.BlockContainer;
+import dev.pavatus.lib.container.impl.NoBlockItem;
+import dev.pavatus.lib.datagen.util.AutomaticModel;
+import dev.pavatus.lib.datagen.util.NoBlockDrop;
+import dev.pavatus.lib.datagen.util.NoEnglish;
+import dev.pavatus.lib.datagen.util.PickaxeMineable;
+import dev.pavatus.lib.item.AItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.BlockSoundGroup;
 
@@ -18,94 +31,139 @@ import loqor.ait.AITMod;
 import loqor.ait.core.blocks.*;
 import loqor.ait.core.blocks.DoorBlock;
 import loqor.ait.core.blocks.control.RedstoneControlBlock;
+import loqor.ait.core.engine.block.generic.GenericSubSystemBlock;
 
-public class AITBlocks implements BlockRegistryContainer {
+
+public class AITBlocks extends BlockContainer {
+
+    // TODO ADVENT BLOCKS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
+    public static Block SNOW_GLOBE;
 
     @NoBlockItem
+    @NoBlockDrop
+    @NoEnglish
     public static final Block EXTERIOR_BLOCK = new ExteriorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(ExteriorBlock.STATE_TO_LUMINANCE));
 
+    @PickaxeMineable
+    @NoEnglish
     public static final Block DOOR_BLOCK = new DoorBlock(FabricBlockSettings.create().nonOpaque().noCollision()
             .instrument(Instrument.BASEDRUM).requiresTool().strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
+    @NoBlockDrop
+    @NoEnglish
     public static final Block CONSOLE = new ConsoleBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().strength(-1.0f, 3600000.0f).dropsNothing()
                     .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.IGNORE));
 
+    @NoBlockDrop
     public static final Block WAYPOINT_BANK = new WaypointBankBlock(
             FabricBlockSettings.create().nonOpaque().requiresTool().instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F)
                     .pistonBehavior(PistonBehavior.IGNORE).luminance(light -> 3));
 
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @NoEnglish
     public static final Block LANDING_PAD = new LandingPadBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
-    @NoBlockItem
-    public static final Block ENGINE_BLOCK = new EngineBlock(FabricBlockSettings.create().requiresTool()
+    @NoEnglish
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    public static final Block ENGINE_BLOCK = new EngineBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).requiresTool()
             .instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
 
+    @NoEnglish
     public static final Block ENGINE_CORE_BLOCK = new EngineCoreBlock(
-            AbstractBlock.Settings.create().mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
+            ABlockSettings.create().itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR))
+                    .mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
                     .strength(3.0F).luminance((state) -> 15).nonOpaque());
+
+    @PickaxeMineable
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(Instrument.COW_BELL).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable
+    @NoEnglish
     public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(Instrument.BANJO).pistonBehavior(PistonBehavior.IGNORE));
+    @NoEnglish
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque()
             .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    @NoEnglish
     public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    @NoEnglish
     public static final Block PLAQUE_BLOCK = new PlaqueBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().instrument(Instrument.COW_BELL)
                     .strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    @NoEnglish
     public static final Block WALL_MONITOR_BLOCK = new WallMonitorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().instrument(Instrument.COW_BELL)
                     .strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+    @NoEnglish
     public static final Block DETECTOR_BLOCK = new DetectorBlock(FabricBlockSettings.create().nonOpaque()
             .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.NORMAL));
+
+    // Zeiton Blocks
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @NoEnglish
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA)
             .strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block BUDDING_ZEITON = new BuddingZeitonBlock(
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F)
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY));
+    @NoBlockDrop
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block ZEITON_CLUSTER = new AmethystClusterBlock(7, 3,
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly()
                     .sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F).luminance((state) -> 5)
                     .pistonBehavior(PistonBehavior.DESTROY));
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block LARGE_ZEITON_BUD = new AmethystClusterBlock(5, 3,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.MEDIUM_AMETHYST_BUD).solid()
                     .luminance((state) -> 4).pistonBehavior(PistonBehavior.DESTROY));
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block MEDIUM_ZEITON_BUD = new AmethystClusterBlock(4, 3,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.LARGE_AMETHYST_BUD).solid()
                     .luminance((state) -> 2).pistonBehavior(PistonBehavior.DESTROY));
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     public static final Block SMALL_ZEITON_BUD = new AmethystClusterBlock(3, 4,
             FabricBlockSettings.copyOf(ZEITON_CLUSTER).sounds(BlockSoundGroup.SMALL_AMETHYST_BUD).solid()
                     .luminance((state) -> 1).pistonBehavior(PistonBehavior.DESTROY));
 
-    // Planetary Blocks
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    @AutomaticModel
+    public static final Block COMPACT_ZEITON = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
 
-    // Mars
-    @NoBlockItem
-    public static final Block MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE));
-    @NoBlockItem
-    public static final Block MARTIAN_COBBLESTONE = new Block(AbstractBlock.Settings.copy(Blocks.COBBLESTONE));
-    @NoBlockItem
-    public static final Block MARTIAN_PILLAR = new PillarBlock(AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR));
-    @NoBlockItem
-    public static final Block CHISELED_MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.CHISELED_STONE_BRICKS));
-    @NoBlockItem
-    public static final Block CRACKED_MARTIAN_BRICKS = new Block(AbstractBlock.Settings.copy(Blocks.CRACKED_STONE_BRICKS));
-    @NoBlockItem
-    public static final Block MARTIAN_BRICKS = new Block(AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
-    @NoBlockItem
-    public static final Block POLISHED_MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.POLISHED_ANDESITE));
-    @NoBlockItem
-    public static final Block SMOOTH_MARTIAN_STONE = new Block(AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    @AutomaticModel
+    public static final Block ZEITON_COBBLE = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
 
-    @NoBlockItem
-    public static final Block PLUGBOARD = new PlugBoardBlock(
-            FabricBlockSettings.create().solid().noCollision().strength(1.0f));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @NoEnglish
+    public static final Block ZEITON_CAGE = new ZeitonCageBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
+            .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
+            .luminance(light -> 15));
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @AutomaticModel(justItem = true)
+    public static final Block POWER_CONVERTER = new PowerConverterBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
+
+    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
+    @NoEnglish
+    public static final Block GENERIC_SUBSYSTEM = new GenericSubSystemBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     @NoBlockItem
     public static final Block RADIO = new RadioBlock(FabricBlockSettings.create().nonOpaque());
@@ -115,34 +173,60 @@ public class AITBlocks implements BlockRegistryContainer {
     public static final Block MACHINE_CASING = new MachineCasingBlock(FabricBlockSettings.create().nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
-    @NoBlockItem
-    public static final Block FABRICATOR = new FabricatorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
-            .instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
+    public static final Block FABRICATOR = new FabricatorBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
+            .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F));
 
     // Control Blocks
     @NoBlockItem
+    @NoEnglish
     public static final Block REDSTONE_CONTROL_BLOCK = new RedstoneControlBlock(
             FabricBlockSettings.create().nonOpaque().strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
 
     public static final Block ENVIRONMENT_PROJECTOR = new EnvironmentProjectorBlock(FabricBlockSettings.create());
 
-    // IF I SEE PEANUT ONE MORE FUCKING TIME I'M GONNA OBLITERATE THE ENTIRETY OF AUSTRIA AND RUSSIA
-    /*
-     * public static final Block CONSOLE_ROOM_PORT_BLOCK = new
-     * ConsoleRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-     * .addItemSettings(new NeptuneItemSettings().group(() ->
-     * AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F,
-     * 6.0F)); public static final Block ENGINE_ROOM_PORT_BLOCK = new
-     * EngineRoomPortBlock(NeptuneBlockSettings.create().nonOpaque()
-     * .addItemSettings(new NeptuneItemSettings().group(() ->
-     * AITMod.AIT_ITEM_GROUP)).instrument(Instrument.IRON_XYLOPHONE).strength(1.5F,
-     * 6.0F));
-     */
+    @PickaxeMineable
     @NoBlockItem
-    public static final Block CABLE_BLOCK = new CableBlock(
-            FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
+    @NoBlockDrop
+    public static final Block PEANUT = new PeanutBlock(FabricBlockSettings.copy(Blocks.OBSIDIAN));
 
-    public static List<Block> getBlocks() {
+    // TODO ADVENT
+    static {
+        if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
+            SNOW_GLOBE = new SnowGlobeBlock(FabricBlockSettings.create().nonOpaque().instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
+        }
+    }
+
+    static {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
+            entries.addAfter(Items.AMETHYST_CLUSTER, ZEITON_BLOCK);
+            entries.addAfter(ZEITON_BLOCK, BUDDING_ZEITON);
+            entries.addAfter(BUDDING_ZEITON, SMALL_ZEITON_BUD);
+            entries.addAfter(SMALL_ZEITON_BUD, MEDIUM_ZEITON_BUD);
+            entries.addAfter(MEDIUM_ZEITON_BUD, LARGE_ZEITON_BUD);
+            entries.addAfter(LARGE_ZEITON_BUD, ZEITON_CLUSTER);
+            entries.addAfter(ZEITON_CLUSTER, CHARGED_ZEITON_CRYSTAL);
+
+            entries.addAfter(Items.RAW_GOLD, COMPACT_ZEITON);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+            entries.addAfter(Items.AMETHYST_SHARD, ZEITON_SHARD);
+            entries.addAfter(Items.SUGAR, ZEITON_DUST);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
+            entries.addAfter(Items.COBBLESTONE, ZEITON_COBBLE);
+        });
+
+    }
+
+    @NoEnglish
+    public static final Block CABLE_BLOCK = new CableBlock(ABlockSettings.create()
+            .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
+            .instrument(Instrument.GUITAR).strength(1.5F, 6.0F));
+
+    public static List<Block> get() {
         List<Block> list = new ArrayList<>();
 
         for (Block block : Registries.BLOCK) {
@@ -155,7 +239,7 @@ public class AITBlocks implements BlockRegistryContainer {
     }
 
     @Override
-    public BlockItem createBlockItem(Block block, String identifier) {
-        return new BlockItem(block, new OwoItemSettings().group(AITMod.AIT_ITEM_GROUP));
+    public Item.Settings createBlockItemSettings(Block block) {
+        return new AItemSettings().group(AITItemGroups.MAIN);
     }
 }

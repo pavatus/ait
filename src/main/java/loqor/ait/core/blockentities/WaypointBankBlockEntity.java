@@ -3,6 +3,7 @@ package loqor.ait.core.blockentities;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -31,7 +32,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.WaypointBankBlock;
 import loqor.ait.core.item.WaypointItem;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Waypoint;
 
 public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
@@ -188,7 +188,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
         return selected;
     }
 
-    public record WaypointData(int color, String name, DirectedGlobalPos.Cached pos) {
+    public record WaypointData(int color, String name, CachedDirectedGlobalPos pos) {
 
         private WaypointData(int color, Waypoint waypoint) {
             this(color, waypoint.name(), waypoint.getPos());
@@ -231,7 +231,7 @@ public class WaypointBankBlockEntity extends InteriorLinkableBlockEntity {
             int color = nbt.getInt("color");
             String name = nbt.getString("name");
 
-            DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.fromNbt(nbt.getCompound("pos"));
+            CachedDirectedGlobalPos pos = CachedDirectedGlobalPos.fromNbt(nbt.getCompound("pos"));
 
             return new WaypointData(color, name, pos);
         }

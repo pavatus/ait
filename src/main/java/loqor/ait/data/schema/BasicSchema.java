@@ -1,9 +1,10 @@
 package loqor.ait.data.schema;
 
+import dev.pavatus.lib.api.Identifiable;
+
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.api.Identifiable;
 import loqor.ait.api.Nameable;
 
 public abstract class BasicSchema implements Identifiable, Nameable {

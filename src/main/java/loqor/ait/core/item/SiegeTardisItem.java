@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -25,7 +26,6 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.SiegeHandler;
-import loqor.ait.data.DirectedGlobalPos;
 
 // todo fix so many issues with having more than one of this item
 public class SiegeTardisItem extends Item {
@@ -139,13 +139,13 @@ public class SiegeTardisItem extends Item {
         tooltip.add(Text.literal("→ " + text).formatted(Formatting.BLUE));
     }
 
-    public static DirectedGlobalPos.Cached fromItemContext(ItemUsageContext context) {
-        return DirectedGlobalPos.Cached.create((ServerWorld) context.getWorld(),
+    public static CachedDirectedGlobalPos fromItemContext(ItemUsageContext context) {
+        return CachedDirectedGlobalPos.create((ServerWorld) context.getWorld(),
                 context.getBlockPos().offset(context.getSide()), (byte) 0);
     }
 
-    public static DirectedGlobalPos.Cached fromEntity(Entity entity) {
-        return DirectedGlobalPos.Cached.create((ServerWorld) entity.getWorld(), BlockPos.ofFloored(entity.getPos()),
+    public static CachedDirectedGlobalPos fromEntity(Entity entity) {
+        return CachedDirectedGlobalPos.create((ServerWorld) entity.getWorld(), BlockPos.ofFloored(entity.getPos()),
                 (byte) 0);
     }
 
@@ -192,7 +192,7 @@ public class SiegeTardisItem extends Item {
         player.getInventory().markDirty();
     }
 
-    public static void placeTardis(Tardis tardis, DirectedGlobalPos.Cached pos) {
+    public static void placeTardis(Tardis tardis, CachedDirectedGlobalPos pos) {
         tardis.travel().forcePosition(pos);
         tardis.travel().placeExterior(false);
         tardis.setSiegeBeingHeld(null);

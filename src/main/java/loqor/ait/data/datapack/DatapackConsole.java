@@ -28,27 +28,40 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 }
  */
 public class DatapackConsole extends ConsoleVariantSchema {
+    public static final Identifier EMPTY = AITMod.id("intentionally_empty");
 
     protected final Identifier texture;
     protected final Identifier emission;
     protected final Identifier id;
     protected final List<Float> sonicRotation;
     protected final Vector3f sonicTranslation;
+    protected final List<Float> handlesRotation;
+    protected final Vector3f handlesTranslation;
     protected boolean initiallyDatapack;
 
     public static final Codec<DatapackConsole> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Identifier.CODEC.fieldOf("id").forGetter(ConsoleVariantSchema::id),
                     Identifier.CODEC.fieldOf("parent").forGetter(ConsoleVariantSchema::parentId),
                     Identifier.CODEC.fieldOf("texture").forGetter(DatapackConsole::texture),
-                    Identifier.CODEC.fieldOf("emission").forGetter(DatapackConsole::emission),
-                    Codec.list(Codec.FLOAT).optionalFieldOf("sonic_rotation", null)
+                    Identifier.CODEC.optionalFieldOf("emission", EMPTY).forGetter(DatapackConsole::emission),
+                    Codec.list(Codec.FLOAT).optionalFieldOf("sonic_rotation", List.of())
                             .forGetter(DatapackConsole::sonicRotation),
-                    MoreCodec.VECTOR3F.optionalFieldOf("sonic_translation", null).forGetter(DatapackConsole::sonicTranslation),
+                    MoreCodec.VECTOR3F.optionalFieldOf("sonic_translation", new Vector3f()).forGetter(DatapackConsole::sonicTranslation),
+                    Codec.list(Codec.FLOAT).optionalFieldOf("handles_rotation", List.of())
+                            .forGetter(DatapackConsole::handlesRotation),
+                    MoreCodec.VECTOR3F.optionalFieldOf("handles_translation", new Vector3f()).forGetter(DatapackConsole::handlesTranslation),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackConsole::wasDatapack))
             .apply(instance, DatapackConsole::new));
 
-    public DatapackConsole(Identifier id, Identifier category, Identifier texture, Identifier emission, List<Float> sonicRot, Vector3f sonicTranslation,
-            boolean isDatapack) {
+    public DatapackConsole(Identifier id,
+                           Identifier category,
+                           Identifier texture,
+                           Identifier emission,
+                           List<Float> sonicRot,
+                           Vector3f sonicTranslation,
+                           List<Float> handlesRot,
+                           Vector3f handlesTranslation,
+                           boolean isDatapack) {
         super(category, id);
         this.id = id;
         this.texture = texture;
@@ -56,6 +69,8 @@ public class DatapackConsole extends ConsoleVariantSchema {
         this.initiallyDatapack = isDatapack;
         this.sonicRotation = sonicRot;
         this.sonicTranslation = sonicTranslation;
+        this.handlesRotation = handlesRot;
+        this.handlesTranslation = handlesTranslation;
     }
 
     public boolean wasDatapack() {
@@ -79,6 +94,13 @@ public class DatapackConsole extends ConsoleVariantSchema {
     }
     public Vector3f sonicTranslation() {
         return this.sonicTranslation;
+    }
+
+    public List<Float> handlesRotation() {
+        return this.handlesRotation;
+    }
+    public Vector3f handlesTranslation() {
+        return this.handlesTranslation;
     }
 
     public static DatapackConsole fromInputStream(InputStream stream) {

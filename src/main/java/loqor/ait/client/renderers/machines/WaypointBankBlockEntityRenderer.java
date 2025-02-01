@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
+import dev.pavatus.lib.data.DirectedGlobalPos;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -20,7 +22,6 @@ import loqor.ait.core.blockentities.WaypointBankBlockEntity;
 import loqor.ait.core.blocks.WaypointBankBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -41,7 +42,7 @@ public class WaypointBankBlockEntityRenderer<T extends WaypointBankBlockEntity> 
 
         Tardis tardis = entity.tardis().get();
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             return;
 
         float facing = entity.getCachedState().get(WaypointBankBlock.FACING).asRotation();

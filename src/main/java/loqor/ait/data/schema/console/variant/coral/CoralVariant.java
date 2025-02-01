@@ -8,7 +8,7 @@ import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.type.CoralType;
 
 public class CoralVariant extends ConsoleVariantSchema {
-    public static final Identifier REFERENCE = new Identifier(AITMod.MOD_ID, "console/coral");
+    public static final Identifier REFERENCE = AITMod.id("console/coral");
 
     public CoralVariant() {
         super(CoralType.REFERENCE, REFERENCE, new Loyalty(Loyalty.Type.COMPANION));

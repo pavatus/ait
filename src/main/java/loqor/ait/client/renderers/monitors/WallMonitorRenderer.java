@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.monitors;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -24,7 +26,6 @@ import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -35,6 +36,13 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
     public WallMonitorRenderer(BlockEntityRendererFactory.Context ctx) {
         this.plaqueModel = new PlaqueModel(PlaqueModel.getTexturedModelData().createModel());
+    }
+
+    private String truncateDimensionName(String name, int maxLength) {
+        if (name.length() > maxLength) {
+            return name.substring(0, maxLength) + "...";
+        }
+        return name;
     }
 
     @Override
@@ -58,7 +66,7 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
 
         Tardis tardis = entity.tardis().get();
 
-        if (!tardis.engine().hasPower())
+        if (!tardis.fuel().hasPower())
             return;
 
         matrices.push();
@@ -70,22 +78,23 @@ public class WallMonitorRenderer<T extends WallMonitorBlockEntity> implements Bl
         matrices.translate(xVal, -35f, 35f);
 
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
-                ? travel.getProgress()
-                : travel.position();
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() == TravelHandlerBase.State.MAT
+                ? travel.position()
+                : travel.getProgress();
 
         BlockPos abppPos = abpp.getPos();
 
-        DirectedGlobalPos.Cached abpd = tardis.travel().destination();
+        CachedDirectedGlobalPos abpd = tardis.travel().destination();
         BlockPos abpdPos = abpd.getPos();
 
         String positionPosText = abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
-        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
+        Text positionDimensionText = Text.of(truncateDimensionName(WorldUtil.worldText(abpp.getDimension()).getString(), 16));
 
         String fuelText = Math.round((tardis.getFuel() / FuelHandler.TARDIS_MAX_FUEL) * 100) + "%";
 
         String destinationPosText = abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
-        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
+        Text destinationDimensionText = Text.of(truncateDimensionName(WorldUtil.worldText(abpd.getDimension()).getString(), 16));
+
 
         float v = -20f;
 

@@ -25,7 +25,7 @@ import net.minecraft.world.WorldAccess;
 
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.core.AITBlockEntityTypes;
-import loqor.ait.core.tardis.dim.TardisDimension;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
 
@@ -46,7 +46,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static void clientTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
-        if (!TardisDimension.isTardisDimension(world) || !blockEntity.isLinked())
+        if (!TardisServerWorld.isTardisDimension(world) || !blockEntity.isLinked())
             return;
 
         blockEntity.ticks++;
@@ -64,7 +64,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, EngineCoreBlockEntity blockEntity) {
-        if (!TardisDimension.isTardisDimension((ServerWorld) world) || !blockEntity.isLinked())
+        if (!TardisServerWorld.isTardisDimension((ServerWorld) world) || !blockEntity.isLinked())
             return;
 
         blockEntity.ticks++;

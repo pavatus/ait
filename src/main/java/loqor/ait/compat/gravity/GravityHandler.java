@@ -33,7 +33,7 @@ import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public class GravityHandler extends KeyedTardisComponent implements TardisTickable {
 
-    private static final Identifier SYNC = new Identifier(AITMod.MOD_ID, "sync_gravity");
+    private static final Identifier SYNC = AITMod.id("sync_gravity");
     private static final Property<Direction> DIRECTION = new Property<>(Property.Type.DIRECTION, "direction",
             Direction.DOWN);
 

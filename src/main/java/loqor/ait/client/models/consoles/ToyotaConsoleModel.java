@@ -1,6 +1,9 @@
 // Made with Blockbench 4.9.3
 package loqor.ait.client.models.consoles;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
@@ -12,18 +15,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.toyota.ToyotaAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class ToyotaConsoleModel extends ConsoleModel {
     private final ModelPart toyota;
@@ -1671,7 +1671,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
         // @TODO MONSTER THE ONE ON THE LEFT IS THE POWER NOT THE RIGHT SMH
         // Power Switch and Lights
         ModelPart power = this.toyota.getChild("panel1").getChild("controls").getChild("dooropen");
-        power.pitch = tardis.engine().hasPower() ? power.pitch : power.pitch - 1.55f;
+        power.pitch = tardis.fuel().hasPower() ? power.pitch : power.pitch - 1.55f;
 
         // Anti Gravity Control
         ModelPart antigravs = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps1")
@@ -1679,7 +1679,7 @@ public class ToyotaConsoleModel extends ConsoleModel {
         antigravs.yaw = tardis.travel().antigravs().get() ? antigravs.yaw - 1.58f : antigravs.yaw;
 
         ModelPart shield = this.toyota.getChild("panel1").getChild("controls").getChild("faucettaps2");
-        shield.yaw = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shield.yaw = tardis.shields().shielded().get()
                 ? shield.yaw - 1.58f
                 : shield.yaw;
 
@@ -1793,8 +1793,8 @@ public class ToyotaConsoleModel extends ConsoleModel {
         DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT
                 ? travel.getProgress()
                 : travel.position();
-        DirectedGlobalPos.Cached dabpd = travel.destination();
-        DirectedGlobalPos.Cached abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
+        CachedDirectedGlobalPos dabpd = travel.destination();
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
                 ? travel.getProgress()
                 : travel.position();
 
@@ -1845,13 +1845,13 @@ public class ToyotaConsoleModel extends ConsoleModel {
         matrices.scale(0.015f, 0.015f, 0.015f);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(120f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-72.5f));
-        matrices.translate(-5f, 62, -48);
         String progressText = tardis.travel().getState() == TravelHandlerBase.State.LANDED
                 ? "0%"
                 : tardis.travel().getDurationAsPercentage() + "%";
+        matrices.translate(0, 62, -49);
         /*renderer.drawWithOutline(Text.of("⏳").asOrderedText(), 0, 0, 0x00FF0F, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);*/
-        renderer.drawWithOutline(Text.of(progressText).asOrderedText(), 0, 0, 0xFFFFFF, 0x000000,
+        renderer.drawWithOutline(Text.of(progressText).asOrderedText(), 0 - renderer.getWidth(progressText) / 2, 0, 0xFFFFFF, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         matrices.pop();
     }

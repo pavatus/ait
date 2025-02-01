@@ -2,17 +2,25 @@ package loqor.ait.datagen.datagen_providers;
 
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.lib.datagen.tag.SakitusBlockTagProvider;
+import dev.pavatus.module.ModuleRegistry;
+import dev.pavatus.planet.core.PlanetBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 
 import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
 
-public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+
+public class AITBlockTagProvider extends SakitusBlockTagProvider {
     public AITBlockTagProvider(FabricDataOutput output,
             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
         super(output, registriesFuture);
@@ -20,17 +28,7 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(AITBlocks.DOOR_BLOCK).add(AITBlocks.ZEITON_BLOCK)
-                .add(AITBlocks.ZEITON_CLUSTER).add(AITBlocks.BUDDING_ZEITON).add(AITBlocks.LARGE_ZEITON_BUD)
-                .add(AITBlocks.MEDIUM_ZEITON_BUD).add(AITBlocks.SMALL_ZEITON_BUD).add(AITBlocks.MONITOR_BLOCK)
-                .add(AITBlocks.ARTRON_COLLECTOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR);
-
-        getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(AITBlocks.ZEITON_BLOCK).add(AITBlocks.BUDDING_ZEITON)
-                .add(AITBlocks.ZEITON_CLUSTER);
-
-        getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL).add(AITBlocks.LARGE_ZEITON_BUD)
-                .add(AITBlocks.MEDIUM_ZEITON_BUD).add(AITBlocks.SMALL_ZEITON_BUD).add(AITBlocks.MONITOR_BLOCK);
-
+//TODO: Make the glass tag work on this and the leafs, for now theres just glass and glass pane and the birch leafs as a temporarly thing.
         getOrCreateTagBuilder(AITTags.Blocks.SONIC_INTERACTABLE).add(Blocks.IRON_DOOR).add(Blocks.IRON_TRAPDOOR)
                 .add(Blocks.TNT).add(Blocks.CAMPFIRE).add(Blocks.CANDLE).add(Blocks.CANDLE_CAKE)
                 .add(Blocks.WHITE_CANDLE).add(Blocks.ORANGE_CANDLE).add(Blocks.MAGENTA_CANDLE)
@@ -44,10 +42,49 @@ public class AITBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(Blocks.PURPLE_CANDLE_CAKE).add(Blocks.BLUE_CANDLE_CAKE).add(Blocks.BROWN_CANDLE_CAKE)
                 .add(Blocks.GREEN_CANDLE_CAKE).add(Blocks.RED_CANDLE_CAKE).add(Blocks.BLACK_CANDLE_CAKE)
                 .add(Blocks.REDSTONE_LAMP).add(AITBlocks.EXTERIOR_BLOCK).add(AITBlocks.CONSOLE_GENERATOR)
-                .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE)
-                .add(AITBlocks.MACHINE_CASING);
+                .add(Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE).add(Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE, Blocks.NETHER_GOLD_ORE, Blocks.LAPIS_ORE,Blocks.DEEPSLATE_LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE, Blocks.DEEPSLATE_COAL_ORE, Blocks.COAL_ORE, Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE)
+                .forceAddTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "ores")))
+                .forceAddTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_panes")))
+                .forceAddTag(TagKey.of(RegistryKeys.BLOCK, new Identifier("c", "glass_blocks")))
+                .forceAddTag(BlockTags.ICE).forceAddTag(BlockTags.SNOW).forceAddTag(BlockTags.SAND).forceAddTag(BlockTags.LEAVES).forceAddTag(BlockTags.DOORS)
+                .add(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS, Blocks.NETHER_BRICK_WALL, Blocks.RED_NETHER_BRICK_WALL)
+                .add(PlanetBlocks.ANORTHOSITE_IRON_ORE, PlanetBlocks.MARTIAN_IRON_ORE, PlanetBlocks.ANORTHOSITE_GOLD_ORE, PlanetBlocks.MARTIAN_GOLD_ORE, PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE, PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE, PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE, PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE)
+                .add(AITBlocks.MACHINE_CASING, AITBlocks.CONSOLE).forceAddTag(BlockTags.STONE_BRICKS)
+                .add(Blocks.BLACK_CONCRETE,Blocks.CYAN_CONCRETE,Blocks.BLUE_CONCRETE,Blocks.BROWN_CONCRETE,Blocks.GRAY_CONCRETE,Blocks.GREEN_CONCRETE,Blocks.MAGENTA_CONCRETE,Blocks.ORANGE_CONCRETE,Blocks.PINK_CONCRETE,Blocks.RED_CONCRETE,Blocks.WHITE_CONCRETE,Blocks.PURPLE_CONCRETE,Blocks.LIGHT_GRAY_CONCRETE,Blocks.LIGHT_BLUE_CONCRETE,Blocks.LIME_CONCRETE)
+                .add(Blocks.BRICKS, Blocks.BRICK_WALL, Blocks.REDSTONE_TORCH, Blocks.DEEPSLATE_BRICKS)
+                .add(Blocks.BARREL)
+                .add(Blocks.REDSTONE_WIRE, Blocks.COMPARATOR, Blocks.REPEATER)
+                .add(Blocks.BELL, Blocks.JUKEBOX, Blocks.TRAPPED_CHEST)
+                .add(Blocks.DAYLIGHT_DETECTOR);
+
+        getOrCreateTagBuilder(BlockTags.COAL_ORES).add(PlanetBlocks.ANORTHOSITE_COAL_ORE, PlanetBlocks.MARTIAN_COAL_ORE);
+        getOrCreateTagBuilder(BlockTags.COPPER_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
+        getOrCreateTagBuilder(BlockTags.IRON_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
+        getOrCreateTagBuilder(BlockTags.GOLD_ORES).add(PlanetBlocks.ANORTHOSITE_COPPER_ORE, PlanetBlocks.MARTIAN_COPPER_ORE);
+        getOrCreateTagBuilder(BlockTags.DIAMOND_ORES).add(PlanetBlocks.ANORTHOSITE_DIAMOND_ORE, PlanetBlocks.MARTIAN_DIAMOND_ORE);
+        getOrCreateTagBuilder(BlockTags.EMERALD_ORES).add(PlanetBlocks.ANORTHOSITE_EMERALD_ORE, PlanetBlocks.MARTIAN_EMERALD_ORE);
+        getOrCreateTagBuilder(BlockTags.LAPIS_ORES).add(PlanetBlocks.ANORTHOSITE_LAPIS_ORE, PlanetBlocks.MARTIAN_LAPIS_ORE);
+        getOrCreateTagBuilder(BlockTags.REDSTONE_ORES).add(PlanetBlocks.ANORTHOSITE_REDSTONE_ORE, PlanetBlocks.MARTIAN_REDSTONE_ORE);
+
+        getOrCreateTagBuilder(BlockTags.DIRT).add(PlanetBlocks.MARTIAN_SAND).add(PlanetBlocks.REGOLITH);
 
         getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
         getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE).add(AITBlocks.EXTERIOR_BLOCK, AITBlocks.CONSOLE);
+
+        getOrCreateTagBuilder(AITTags.Blocks.FLUID_LINK_CAN_CONNECT).add(Blocks.JUKEBOX);
+
+        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
+            module.getDataGenerator().ifPresent(generator -> {
+                generator.blockTags(this);
+            });
+            module.getBlockRegistry().ifPresent(this::withBlocks);
+        });
+
+        super.configure(arg);
+    }
+
+    @Override
+    public FabricTagProvider<Block>.FabricTagBuilder getOrCreateTagBuilder(TagKey<Block> tag) {
+        return super.getOrCreateTagBuilder(tag);
     }
 }

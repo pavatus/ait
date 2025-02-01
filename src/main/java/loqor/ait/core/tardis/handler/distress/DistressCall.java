@@ -3,6 +3,8 @@ package loqor.ait.core.tardis.handler.distress;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -28,12 +30,10 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HypercubeItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.core.util.TextUtil;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.world.TardisServerWorld;
 
 public record DistressCall(Sender sender, String message, int lifetime, int creationTime, boolean isSourceCall) {
     private static final int DEFAULT_LIFETIME = 120 * 20; // 2 minute default lifetime
@@ -65,7 +65,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
     }
 
     public void summon(Tardis tardis, @Nullable ItemStack held) {
-        DirectedGlobalPos.Cached target = this.sender().position();
+        CachedDirectedGlobalPos target = this.sender().position();
 
         tardis.travel().destination(target, true);
 
@@ -192,7 +192,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
     public interface Sender {
         NbtCompound toNbt();
         UUID getUuid();
-        DirectedGlobalPos.Cached position();
+        CachedDirectedGlobalPos position();
         Text getTooltip();
         void playSoundAt(SoundEvent event, float pitch);
         default void playSoundAt(SoundEvent event) {
@@ -231,7 +231,7 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         }
 
         @Override
-        public DirectedGlobalPos.Cached position(){
+        public CachedDirectedGlobalPos position(){
             if (this.tardis().isEmpty()) return null;
 
             return this.tardis().get().travel().position();
@@ -280,13 +280,17 @@ public record DistressCall(Sender sender, String message, int lifetime, int crea
         }
 
         @Override
-        public DirectedGlobalPos.Cached position() {
-            if (TardisDimension.isTardisDimension(this.player().getWorld())) {
-                Tardis found = TardisDimension.get(this.player().getWorld()).orElse(null);
-                if (found != null) return found.travel().position();
-            }
+        public CachedDirectedGlobalPos position() {
+            if (this.player() == null) return CachedDirectedGlobalPos.create(
+                    ServerLifecycleHooks.get().getOverworld(),
+                    BlockPos.ORIGIN,
+                    (byte)0
+            );
 
-            return DirectedGlobalPos.Cached.create(
+            if (this.player().getWorld() instanceof TardisServerWorld tardisWorld)
+                return tardisWorld.getTardis().travel().position();
+
+            return CachedDirectedGlobalPos.create(
                     (ServerWorld) this.player().getWorld(),
                     this.player().getBlockPos(),
                     (byte) RotationPropertyHelper.fromYaw(this.player().getYaw())

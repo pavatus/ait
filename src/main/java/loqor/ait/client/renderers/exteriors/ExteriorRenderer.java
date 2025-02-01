@@ -1,10 +1,14 @@
 package loqor.ait.client.renderers.exteriors;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -17,6 +21,7 @@ import net.minecraft.util.profiler.Profiler;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.api.link.v2.TardisRef;
+import loqor.ait.client.boti.BOTI;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.SiegeModeModel;
 import loqor.ait.client.models.machines.ShieldsModel;
@@ -28,18 +33,18 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.OvergrownHandler;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.data.datapack.DatapackConsole;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 
-    private static final Identifier SHIELDS = new Identifier(AITMod.MOD_ID, "textures/environment/shields.png");
+    private static final Identifier SHIELDS = AITMod.id("textures/environment/shields.png");
 
     private static final SiegeModeModel SIEGE_MODEL = new SiegeModeModel(
             SiegeModeModel.getTexturedModelData().createModel());
     private static final ShieldsModel SHIELDS_MODEL = new ShieldsModel(
-            ShieldsModel.getTexturedModelData().createModel());;
+            ShieldsModel.getTexturedModelData().createModel());
 
     private ClientExteriorVariantSchema variant;
     private ExteriorModel model;
@@ -60,6 +65,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             return;
 
         Tardis tardis = optionalTardis.get();
+
+
         profiler.swap("render");
 
         if (entity.getAlpha() > 0 || !tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get())
@@ -86,7 +93,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             return;
         }
 
-        DirectedGlobalPos.Cached exteriorPos = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPos = tardis.travel().position();
 
         if (exteriorPos == null) {
             profiler.pop();
@@ -150,20 +157,22 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             return;
         }
 
-        String name = tardis.stats().getName();
-        if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
-            matrices.translate(0, 1.25f, -0.7f);
-        }
+        this.applyNameTransforms(tardis, matrices, tardis.stats().getName());
 
         if (tardis.travel().antigravs().get() && tardis.flight().falling().get()) {
             float sinFunc = (float) Math.sin((MinecraftClient.getInstance().player.age / 400f * 220f) * 0.2f + 0.2f);
             matrices.translate(0, sinFunc, 0);
         }
 
+        if (tardis.selfDestruct().isQueued())
+            matrices.scale(0.7f, 0.7f, 0.7f);
+
         model.renderWithAnimations(entity, this.model.getPart(), matrices,
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
+
+        //if (tardis.door().isOpen())
+        //    this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
 
         if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown()) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices,
@@ -175,8 +184,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         profiler.push("emission");
         boolean alarms = tardis.alarm().enabled().get();
 
-        if (alpha > 0.105f)
-            ClientLightUtil.renderEmissivable(tardis.engine().hasPower(), model::renderWithAnimations, emission, entity,
+        if (alpha > 0.105f && emission != null && !(emission.equals(DatapackConsole.EMPTY)))
+            ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations, emission, entity,
                     this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1,
                     alarms ? 0.3f : 1, alpha);
 
@@ -191,6 +200,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                         vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(biomeTexture, false)),
                         light, overlay, 1, 1, 1, alpha);
             }
+
         }
 
         profiler.pop();
@@ -222,12 +232,33 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         profiler.pop();
     }
 
+    private void renderExteriorBoti(T entity, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier texture, SinglePartEntityModel model, ModelPart mask, int light) {
+        BOTI.renderExteriorBoti(entity, variant, stack, texture, model, mask, light);
+    }
+
     private void updateModel(Tardis tardis) {
         ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
 
         if (this.variant != variant) {
             this.variant = variant;
             this.model = variant.model();
+        }
+    }
+
+    private void applyNameTransforms(Tardis tardis, MatrixStack matrices, String name) {
+        if (name.equalsIgnoreCase("grumm") || name.equalsIgnoreCase("dinnerbone")) {
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+            matrices.translate(0, tardis.stats().getYScale() + 0.25f, -0.7f);
+        }else if (name.equalsIgnoreCase("smallboi")) {
+            matrices.scale(tardis.stats().getXScale() - 0.3f, tardis.stats().getYScale() - 0.3f, tardis.stats().getZScale() - 0.3f);
+        }else if (name.equalsIgnoreCase("toy")) {
+            matrices.scale(tardis.stats().getXScale() - 0.7f, tardis.stats().getYScale() - 0.7f, tardis.stats().getZScale() - 0.7f);
+        }else if (name.equalsIgnoreCase("bigboi")) {
+            matrices.scale(tardis.stats().getXScale() + 0.1f, tardis.stats().getYScale() + 0.1f, tardis.stats().getZScale() + 0.1f);
+        }else if (name.equalsIgnoreCase("massiveboi")) {
+            matrices.scale(tardis.stats().getXScale() + 0.2f, tardis.stats().getYScale() + 0.2f, tardis.stats().getZScale() + 0.2f);
+        }else {
+            matrices.scale(tardis.stats().getXScale(), tardis.stats().getYScale(), tardis.stats().getZScale());
         }
     }
 }

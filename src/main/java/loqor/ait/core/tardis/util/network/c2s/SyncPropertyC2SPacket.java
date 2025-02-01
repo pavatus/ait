@@ -2,13 +2,13 @@ package loqor.ait.core.tardis.util.network.c2s;
 
 import java.util.UUID;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
@@ -16,12 +16,11 @@ import loqor.ait.api.TardisComponent;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisManager;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.properties.Value;
 import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public class SyncPropertyC2SPacket implements FabricPacket {
-    public static final PacketType<SyncPropertyC2SPacket> TYPE = PacketType.create(new Identifier(AITMod.MOD_ID, "send_property"), SyncPropertyC2SPacket::new);
+    public static final PacketType<SyncPropertyC2SPacket> TYPE = PacketType.create(AITMod.id("send_property"), SyncPropertyC2SPacket::new);
 
     private final UUID tardisId;
     private final String data;

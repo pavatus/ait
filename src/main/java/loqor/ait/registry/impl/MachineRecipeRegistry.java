@@ -3,13 +3,14 @@ package loqor.ait.registry.impl;
 import java.util.Collection;
 import java.util.Optional;
 
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.data.datapack.DatapackMachineRecipe;
 import loqor.ait.data.schema.MachineRecipeSchema;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class MachineRecipeRegistry extends SimpleDatapackRegistry<MachineRecipeSchema> {
 

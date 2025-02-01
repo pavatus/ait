@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.handler;
 
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.entity.ItemEntity;
@@ -18,13 +19,12 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 
 public class SonicHandler extends KeyedTardisComponent implements ArtronHolderItem, TardisTickable {
 
-    public static final Identifier CHANGE_SONIC = new Identifier(AITMod.MOD_ID, "change_sonic");
+    public static final Identifier CHANGE_SONIC = AITMod.id("change_sonic");
 
     private static final Property<ItemStack> CONSOLE_SONIC = new Property<>(Property.Type.ITEM_STACK, "console_sonic",
             (ItemStack) null);
@@ -101,7 +101,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
         world.spawnEntity(entity);
     }
 
-    public static void spawnItem(DirectedGlobalPos.Cached cached, ItemStack sonic) {
+    public static void spawnItem(CachedDirectedGlobalPos cached, ItemStack sonic) {
         spawnItem(cached.getWorld(), cached.getPos(), sonic);
     }
 
@@ -123,9 +123,9 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
                 return;
 
             // Safe to get as ^ that method runs the check for us
-            ServerTardis tardis = (ServerTardis) this.tardis();
+            ServerTardis tardis = this.tardis.asServer();
 
-            if (!tardis.engine().hasPower())
+            if (!tardis.fuel().hasPower())
                 return;
 
             this.addFuel(10, consoleSonic);
@@ -133,7 +133,7 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
         }
 
         if (exteriorSonic != null) {
-            ServerTardis tardis = (ServerTardis) this.tardis();
+            ServerTardis tardis = this.tardis.asServer();
 
             TardisCrashHandler crash = tardis.crash();
             boolean isToxic = crash.isToxic();

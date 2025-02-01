@@ -1,15 +1,19 @@
 package loqor.ait.core.tardis.control.impl;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blocks.ExteriorBlock;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.util.WorldUtil;
 
 public class DirectionControl extends Control {
 
@@ -21,7 +25,7 @@ public class DirectionControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
             boolean leftClick) {
         TravelHandler travel = tardis.travel();
-        DirectedGlobalPos.Cached dest = travel.destination();
+        CachedDirectedGlobalPos dest = travel.destination();
 
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
@@ -51,16 +55,7 @@ public class DirectionControl extends Control {
     }
 
     public static String rotationToDirection(int currentRot) {
-        return switch (currentRot) {
-            case 1, 2, 3 -> "North East";
-            case 4 -> "East";
-            case 5, 6, 7 -> "South East";
-            case 8 -> "South";
-            case 9, 10, 11 -> "South West";
-            case 12 -> "West";
-            case 13, 14, 15, 16 -> "North West";
-            default -> "North";
-        };
+        return WorldUtil.rot2Text(currentRot).getString();
     }
 
     public static int getNextGeneralizedRotation(int rotation) {
@@ -96,5 +91,10 @@ public class DirectionControl extends Control {
 
     public static byte wrap(byte value, byte max) {
         return (byte) ((value % max + max) % max);
+    }
+
+    @Override
+    public SoundEvent getSound() {
+        return AITSounds.DIRECTION;
     }
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.google.gson.*;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.joml.Vector3f;
@@ -17,7 +18,6 @@ import loqor.ait.data.schema.BasicSchema;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 /**
  * This class is for variants of a {@link ConsoleTypeSchema} and can be changed
@@ -41,6 +41,9 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
 
     public static final float[] DEFAULT_SONIC_ROTATION = new float[]{120f, 135f};
     public static final Vector3f DEFAULT_SONIC_POS = new Vector3f(0.1f, 1.2f, 0.26f);
+
+    public static final float[] DEFAULT_HANDLES_ROTATION = new float[]{120f, 135f};
+    public static final Vector3f DEFAULT_HANDLES_POS = new Vector3f(0.65f, 1.6f, 0.6f);
 
     private final Identifier parent;
     private final Identifier id;
@@ -121,7 +124,7 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = new Identifier(AITMod.MOD_ID, "console/borealis");
+                id = AITMod.id("console/borealis");
             }
 
             return ConsoleVariantRegistry.getInstance().get(id);

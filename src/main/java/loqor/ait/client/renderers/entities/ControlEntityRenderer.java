@@ -31,7 +31,7 @@ import loqor.ait.core.tardis.Tardis;
 @Environment(value = EnvType.CLIENT)
 public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEntity, ControlModel> {
 
-    private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID, "textures/entity/control/sequenced.png");
+    private static final Identifier TEXTURE = AITMod.id("textures/entity/control/sequenced.png");
 
     ControlModel model = new ControlModel(ControlModel.getTexturedModelData().createModel());
 
@@ -57,8 +57,11 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (d > 4096.0)
             return;
 
+        Text name = Text.translatable(AITMod.id(text.getString())
+                .toTranslationKey("control"));
+
         TextRenderer textRenderer = this.getTextRenderer();
-        float h = (float) -textRenderer.getWidth(text) / 2;
+        float h = (float) -textRenderer.getWidth(name) / 2;
         float f = entity.getNameLabelHeight() - 0.3f;
 
         Tardis tardis = entity.tardis().get();
@@ -76,10 +79,10 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
 
         if (hitresult != null) {
             boolean isPlayerLookingWithSonic = isPlayerLookingAtControlWithSonic(hitresult, entity);
-            OrderedText orderedText = Text.of(text.getString().toUpperCase().replace("_", " ")).asOrderedText();
+            OrderedText orderedText = name.asOrderedText();
 
             if (isPlayerLookingWithSonic) {
-                textRenderer.drawWithOutline(orderedText, h, (float) text.getString().length(), 0xF0F0F0, 0x000000,
+                textRenderer.drawWithOutline(orderedText, h, (float) name.getString().length(), 0xF0F0F0, 0x000000,
                         matrix4f, vertexConsumers, 0xFF);
             }
         }
@@ -101,43 +104,23 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         matrices.translate(0, (-2 - entity.getControlHeight() / 2) + entity.getWorld().random.nextFloat() * 0.02, 0);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MinecraftClient.getInstance().getTickDelta() % 180));
 
+        float alpha = entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f;
+        float red = entity.wasSequenced() ? 0.0f : 1.0f;
+        float green = (entity.wasSequenced()) ? 1.0f : 1 - (entity.getSequencePercentage());
+
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light,
                 OverlayTexture.DEFAULT_UV,
-                !entity.wasSequenced()
-                        ? 0.95f - (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.0f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.9f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.1f,
-                entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                red,
+                green,
+                0,
+                alpha);
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEyes(TEXTURE)), 0xFF00F0,
                 OverlayTexture.DEFAULT_UV,
-                !entity.wasSequenced()
-                        ? 0.95f - (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.5f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.9f,
-                !entity.wasSequenced()
-                        ? 0.3f + (entity.getSequenceColor() >= 1
-                                ? entity.getSequenceColor() + 1
-                                : entity.getSequenceColor() * 0.35f)
-                        : 0.5f,
-                entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+                red,
+                green,
+                0,
+                alpha);
 
         matrices.pop();
     }

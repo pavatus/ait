@@ -3,6 +3,7 @@ package loqor.ait.registry.impl.console.variant;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Vector3f;
@@ -17,21 +18,22 @@ import loqor.ait.data.schema.console.ConsoleTypeSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.alnico.AlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.BlueAlnicoVariant;
-import loqor.ait.data.schema.console.variant.coral.BlueCoralVariant;
-import loqor.ait.data.schema.console.variant.coral.CoralVariant;
-import loqor.ait.data.schema.console.variant.coral.WhiteCoralVariant;
+import loqor.ait.data.schema.console.variant.copper.CopperOreganoVariant;
+import loqor.ait.data.schema.console.variant.copper.CopperTaigaVariant;
+import loqor.ait.data.schema.console.variant.copper.CopperVariant;
+import loqor.ait.data.schema.console.variant.coral.*;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineMasterVariant;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineVariant;
+import loqor.ait.data.schema.console.variant.crystalline.CrystallineZeitonVariant;
 import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
 import loqor.ait.data.schema.console.variant.hartnell.WoodenHartnellVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamCherryVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamGildedVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamSteelVariant;
-import loqor.ait.data.schema.console.variant.steam.SteamVariant;
+import loqor.ait.data.schema.console.variant.renaissance.*;
+import loqor.ait.data.schema.console.variant.steam.*;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaLegacyVariant;
 import loqor.ait.data.schema.console.variant.toyota.ToyotaVariant;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSchema> {
     private static ConsoleVariantRegistry INSTANCE;
@@ -61,7 +63,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
             }
 
             buf.encodeAsJson(DatapackConsole.CODEC, new DatapackConsole(schema.id(), schema.parent().id(),
-                    DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, List.of(), new Vector3f(), false));
+                    DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, List.of(), new Vector3f(), List.of(), new Vector3f(),
+                    false));
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);
@@ -115,6 +118,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema CORAL;
     public static ConsoleVariantSchema CORAL_BLUE;
     public static ConsoleVariantSchema CORAL_WHITE;
+    public static ConsoleVariantSchema CORAL_SITH;
+    public static ConsoleVariantSchema CORAL_DECAYED;
     public static ConsoleVariantSchema TOYOTA;
     public static ConsoleVariantSchema TOYOTA_BLUE;
     public static ConsoleVariantSchema TOYOTA_LEGACY;
@@ -124,9 +129,21 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema STEAM_CHERRY;
     public static ConsoleVariantSchema STEAM_STEEL;
     public static ConsoleVariantSchema STEAM_GILDED;
+    public static ConsoleVariantSchema STEAM_COPPER;
+    public static ConsoleVariantSchema STEAM_PLAYPAL;
     public static ConsoleVariantSchema HUDOLIN;
     public static ConsoleVariantSchema COPPER;
+    public static ConsoleVariantSchema COPPER_TAIGA;
+    public static ConsoleVariantSchema COPPER_OREGANO;
     public static ConsoleVariantSchema BOREALIS;
+    public static ConsoleVariantSchema CRYSTALLINE;
+    public static ConsoleVariantSchema CRYSTALLINE_MASTER;
+    public static ConsoleVariantSchema CRYSTALLINE_ZEITON;
+    public static ConsoleVariantSchema RENAISSANCE;
+    public static ConsoleVariantSchema RENAISSANCE_TOKAMAK;
+    public static ConsoleVariantSchema RENAISSANCE_FIRE;
+    public static ConsoleVariantSchema RENAISSANCE_IDENTITY;
+
 
     @Override
     protected void defaults() {
@@ -141,6 +158,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         CORAL = registerStatic(new CoralVariant());
         CORAL_BLUE = registerStatic(new BlueCoralVariant());
         CORAL_WHITE = registerStatic(new WhiteCoralVariant());
+        CORAL_SITH = registerStatic(new CoralSithVariant());
+        CORAL_DECAYED = registerStatic(new CoralDecayedVariant());
 
         // Toyota variants
         TOYOTA = registerStatic(new ToyotaVariant());
@@ -156,14 +175,30 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         STEAM_CHERRY = registerStatic(new SteamCherryVariant());
         STEAM_STEEL = registerStatic(new SteamSteelVariant());
         STEAM_GILDED = registerStatic(new SteamGildedVariant());
+        STEAM_PLAYPAL = registerStatic(new SteamPlaypalVariant());
+        STEAM_COPPER = registerStatic(new SteamCopperVariant());
 
         // Hudolin variants (why am i adding this???)
         // HUDOLIN = registerStatic(new HudolinVariant());
 
         // Copper variants
-        // COPPER = registerStatic(new CopperVariant());
+        COPPER = registerStatic(new CopperVariant());
+        COPPER_TAIGA = registerStatic(new CopperTaigaVariant());
+        COPPER_OREGANO = registerStatic(new CopperOreganoVariant());
 
         // Borealis variants
         // BOREALIS = registerStatic(new BorealisVariant());
+
+        // Crystalline variants
+        CRYSTALLINE = registerStatic(new CrystallineVariant());
+        CRYSTALLINE_MASTER = registerStatic(new CrystallineMasterVariant());
+        CRYSTALLINE_ZEITON = registerStatic(new CrystallineZeitonVariant());
+
+        // Renaissance variants
+        RENAISSANCE = registerStatic(new RenaissanceVariant());
+        RENAISSANCE_TOKAMAK = registerStatic(new RenaissanceTokamakVariant());
+        RENAISSANCE_FIRE = registerStatic(new RenaissanceFireVariant());
+        RENAISSANCE_IDENTITY = registerStatic(new RenaissanceIdentityVariant());
+
     }
 }

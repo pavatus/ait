@@ -1,19 +1,30 @@
 package loqor.ait.client.models.consoles;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.coral.CoralAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
+import loqor.ait.core.tardis.control.impl.DirectionControl;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
 import loqor.ait.core.tardis.handler.FuelHandler;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.WaypointHandler;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.core.util.WorldUtil;
 import loqor.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class CoralConsoleModel extends ConsoleModel {
@@ -2452,12 +2463,12 @@ public class CoralConsoleModel extends ConsoleModel {
         }
 
         // Power Lever
-        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = tardis.engine()
+        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll = tardis.fuel()
                 .hasPower()
                         ? controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll
                         : controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone43").roll
                                 - 1.5f;
-        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = tardis.engine()
+        controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll = tardis.fuel()
                 .hasPower()
                         ? controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll
                         : controls.getChild("p_ctrl_4").getChild("bone41").getChild("lever2").getChild("bone42").roll
@@ -2508,7 +2519,7 @@ public class CoralConsoleModel extends ConsoleModel {
 
         // Shields
         ModelPart shield = controls.getChild("p_ctrl_4").getChild("bone41").getChild("pully").getChild("bone47");
-        shield.pivotX = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
+        shield.pivotX = tardis.shields().shielded().get()
                 ? shield.pivotX - 1
                 : shield.pivotX;
 
@@ -2525,6 +2536,64 @@ public class CoralConsoleModel extends ConsoleModel {
 
         super.renderWithAnimations(console, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
+    }
+
+    @Override
+    public void renderMonitorText(Tardis tardis, ConsoleBlockEntity entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        super.renderMonitorText(tardis, entity, matrices, vertexConsumers, light, overlay);
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        TextRenderer renderer = client.textRenderer;
+        TravelHandler travel = tardis.travel();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT
+                ? travel.getProgress()
+                : travel.position();
+        CachedDirectedGlobalPos dabpd = travel.destination();
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
+                ? travel.getProgress()
+                : travel.position();
+
+        BlockPos abppPos = abpp.getPos();
+        BlockPos abpdPos = abpd.getPos();
+        matrices.push();
+        // TODO dont forget to add variant.getConsoleTextPosition()!
+        matrices.translate(1.85, 0.60, 0.85);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(160f +11f));
+        matrices.scale(0.005f, 0.005f, 0.005f);
+        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(4));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(30f));
+        matrices.translate(-240f, -228, -5f);
+        String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
+        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
+        String positionDirectionText = " " + DirectionControl.rotationToDirection(abpp.getRotation()).toUpperCase();
+        String destinationPosText = " " + abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
+        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
+        String destinationDirectionText = " " + DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
+        renderer.drawWithOutline(Text.of("❌").asOrderedText(), 0, 40, 0xF00F00, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        renderer.drawWithOutline(Text.of(positionPosText).asOrderedText(), 0, 48, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        renderer.drawWithOutline(positionDimensionText.asOrderedText(), 0, 56, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        renderer.drawWithOutline(Text.of(positionDirectionText).asOrderedText(), 0, 64, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        matrices.pop();
+
+        matrices.push();
+        matrices.translate(0.81, 1.25, 0.93);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(160f +11f));
+        matrices.scale(0.007f, 0.007f, 0.007f);
+        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(4f));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(30f));
+        String progressText = tardis.travel().getState() == TravelHandlerBase.State.LANDED
+                ? "0%"
+                : tardis.travel().getDurationAsPercentage() + "%";
+        matrices.translate(0, -38, -52);
+        renderer.drawWithOutline(Text.of(progressText).asOrderedText(),
+                0 - renderer.getWidth(progressText) / 2, 0, 0xffffff, 04,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        matrices.pop();
+
     }
 
     @Override

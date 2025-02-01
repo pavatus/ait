@@ -15,18 +15,18 @@ import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 public abstract class ClientClassicBoxVariant extends ClientExteriorVariantSchema {
     private final String name;
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/classic";
-    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
-            CATEGORY_PATH + "/classic.png");
+    protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/classic.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/classic.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/classic_";
 
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
-            .with(type -> type.getTexture(CATEGORY_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
                     BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
-                    BiomeHandler.BiomeType.SANDY)
+                    BiomeHandler.BiomeType.SANDY, BiomeHandler.BiomeType.RED_SANDY, BiomeHandler.BiomeType.MUDDY)
             .build();
 
     protected ClientClassicBoxVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/classic/" + name));
+        super(AITMod.id("exterior/classic/" + name));
 
         this.name = name;
     }
@@ -38,12 +38,12 @@ public abstract class ClientClassicBoxVariant extends ClientExteriorVariantSchem
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+        return AITMod.id(TEXTURE_PATH + name + "_emission" + ".png");
     }
 
     @Override

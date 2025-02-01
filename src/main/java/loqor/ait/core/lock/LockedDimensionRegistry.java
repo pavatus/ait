@@ -3,6 +3,8 @@ package loqor.ait.core.lock;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,7 +18,6 @@ import loqor.ait.AITMod;
 import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.registry.datapack.SimpleDatapackRegistry;
 
 public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimension> {
     private static final LockedDimensionRegistry instance = new LockedDimensionRegistry();
@@ -57,7 +58,7 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
 
     public static boolean tryUnlockDimension(ServerPlayerEntity player, ItemStack held, ServerTardis tardis) {
         if (held.isEmpty()) return false;
-        if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return false;
+        if (!AITMod.CONFIG.SERVER.LOCK_DIMENSIONS) return false;
 
         List<LockedDimension> dims = getInstance().forStack(held);
 
@@ -78,11 +79,11 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
     }
 
     public boolean isUnlocked(Tardis tardis, World world) {
-        if (!AITMod.AIT_CONFIG.LOCK_DIMENSIONS()) return true;
+        if (!AITMod.CONFIG.SERVER.LOCK_DIMENSIONS)
+            return true;
 
-        if (isEnd(world)) {
+        if (isEnd(world))
             return WorldUtil.isEndDragonDead();
-        }
 
         LockedDimension dim = this.get(world);
         return dim == null || tardis.isUnlocked(dim);

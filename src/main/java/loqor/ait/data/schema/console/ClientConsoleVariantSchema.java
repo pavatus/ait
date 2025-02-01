@@ -3,6 +3,7 @@ package loqor.ait.data.schema.console;
 import java.lang.reflect.Type;
 
 import com.google.gson.*;
+import dev.pavatus.lib.api.Identifiable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.joml.Vector3f;
@@ -10,7 +11,6 @@ import org.joml.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
-import loqor.ait.api.Identifiable;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import loqor.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
@@ -65,6 +65,14 @@ public abstract class ClientConsoleVariantSchema implements Identifiable {
 
     public float[] sonicItemRotations() {
         return ConsoleVariantSchema.DEFAULT_SONIC_ROTATION;
+    }
+
+    public Vector3f handlesTranslations() {
+        return ConsoleVariantSchema.DEFAULT_HANDLES_POS;
+    }
+
+    public float[] handlesRotations() {
+        return ConsoleVariantSchema.DEFAULT_HANDLES_ROTATION;
     }
 
     private static class Serializer

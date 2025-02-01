@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -13,6 +14,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -30,7 +32,7 @@ import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.util.TardisUtil;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.enummap.EnumSet;
 import loqor.ait.data.enummap.Ordered;
@@ -117,7 +119,7 @@ public class KeyItem extends LinkableItem {
         if (tardis == null)
             return;
 
-        tardis.loyalty().subLevel(player, 5);
+        tardis.loyalty().subLevel(player, 35);
         tardis.getDesktop().playSoundAtEveryConsole(AITSounds.CLOISTER);
     }
 
@@ -135,38 +137,57 @@ public class KeyItem extends LinkableItem {
             return;
 
         if (!keyType.hasProtocol(Protocols.HAIL))
-            return;
+           return;
 
         if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
             return;
 
-        if (player.getHealth() > 4 || player.getWorld() == tardis.asServer().getInteriorWorld())
+        if (player.getHealth() > 4)
             return;
 
         World world = player.getWorld();
         BlockPos pos = player.getBlockPos();
 
-        DirectedGlobalPos.Cached globalPos = DirectedGlobalPos.Cached.create((ServerWorld) world, pos,
+        CachedDirectedGlobalPos globalPos = CachedDirectedGlobalPos.create((ServerWorld) world, pos,
                 (byte) RotationPropertyHelper.fromYaw(player.getBodyYaw()));
 
-        travel.dematerialize();
+        List<PlayerEntity> entities = TardisUtil.getLivingEntitiesInInterior(tardis.asServer())
+                .stream()
+                .filter(entity -> entity instanceof PlayerEntity)
+                .map(entity -> (PlayerEntity) entity)
+                .toList();
+
+        for (PlayerEntity entity : entities) {
+            entity.sendMessage(
+                    Text.translatable("tardis.message.protocol_813.travel").formatted(Formatting.RED),
+                    true
+            );
+        }
+        tardis.alarm().enabled().set(true);
+        tardis.travel().forceDemat();
 
         if (travel.getState() != TravelHandlerBase.State.DEMAT)
             return;
 
         travel.forceDestination(globalPos);
+        travel.decreaseFlightTime(500000);
         travel.forceRemat();
+        tardis.shields().enable();
+        tardis.shields().enableVisuals();
+        tardis.removeFuel(4250);
+
 
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 80, 3));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 6 * 20, 3));
+        ((ServerWorld) world).spawnParticles(ParticleTypes.ELECTRIC_SPARK, pos.getX(), pos.getY(), pos.getZ(), 10, 1, 1, 1, 1);
 
         player.getItemCooldownManager().set(stack.getItem(), 60 * 20);
 
         tardis.stats().hailMary().set(false);
         tardis.door().previouslyLocked().set(false);
 
-        // like a sound to show its been called
-        world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
+        // like a sound to show it's been called
+        world.playSound(null, pos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 5f, 0.1f);
         world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 5f, 0.1f);
     }
 
@@ -197,7 +218,7 @@ public class KeyItem extends LinkableItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (stack.getItem() == AITItems.SKELETON_KEY)
-            tooltip.add(Text.literal("CREATIVE ONLY ITEM: Unlock any TARDIS Exteriors with it.").formatted(Formatting.DARK_PURPLE));
+            tooltip.add(Text.translatable("tooltip.ait.skeleton_key").formatted(Formatting.DARK_PURPLE));
         super.appendTooltip(stack, world, tooltip, context);
     }
 }

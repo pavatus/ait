@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import com.google.gson.*;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -24,7 +25,6 @@ import loqor.ait.data.schema.door.DoorSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import loqor.ait.registry.unlockable.Unlockable;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model,
@@ -62,9 +62,12 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     protected ExteriorVariantSchema(Identifier category, Identifier id, Loyalty loyalty) {
         this(category, id, Optional.of(loyalty));
     }
-
     protected ExteriorVariantSchema(Identifier category, Identifier id) {
         this(category, id, Optional.empty());
+    }
+
+    public static Object serializer() {
+        return new Serializer();
     }
 
     @Override
@@ -134,14 +137,10 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
         return o instanceof ExteriorVariantSchema other && id.equals(other.id);
     }
 
-    public static Object serializer() {
-        return new Serializer();
-    }
-
     private static class Serializer
             implements
-                JsonSerializer<ExteriorVariantSchema>,
-                JsonDeserializer<ExteriorVariantSchema> {
+            JsonSerializer<ExteriorVariantSchema>,
+            JsonDeserializer<ExteriorVariantSchema> {
 
         @Override
         public ExteriorVariantSchema deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -151,7 +150,7 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = new Identifier(AITMod.MOD_ID, "capsule_default");
+                id = AITMod.id("capsule_default");
             }
 
             return ExteriorVariantRegistry.getInstance().get(id);

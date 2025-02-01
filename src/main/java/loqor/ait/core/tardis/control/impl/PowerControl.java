@@ -6,12 +6,15 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class PowerControl extends Control {
 
     private boolean noDelay = false;
+    private SoundEvent soundEvent = AITSounds.POWER_FLICK;
 
     public PowerControl() {
         super("power");
@@ -21,18 +24,24 @@ public class PowerControl extends Control {
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
-
             this.noDelay = true;
             return false;
         }
 
-        tardis.engine().togglePower();
+        tardis.fuel().togglePower();
+
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            if (isRenaissanceVariant(consoleBlockEntity)) {
+                this.soundEvent = AITSounds.RENAISSANCE_POWER_SIEGE_ALT;
+            }
+        }
+
         return false;
     }
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.HANDBRAKE_LEVER_PULL;
+        return this.soundEvent;
     }
 
     @Override
@@ -42,14 +51,18 @@ public class PowerControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return this.noDelay ? 0 : 10_000;
+        return this.noDelay ? 0 : 200;
     }
 
     @Override
     public boolean shouldHaveDelay(Tardis tardis) {
-        if (tardis.engine().hasPower())
-            return false;
+        return !tardis.fuel().hasPower() && super.shouldHaveDelay();
+    }
 
-        return super.shouldHaveDelay();
+    private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }

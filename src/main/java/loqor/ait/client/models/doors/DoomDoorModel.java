@@ -7,7 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.core.blockentities.DoorBlockEntity;
+import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class DoomDoorModel extends DoorModel {
@@ -37,17 +37,17 @@ public class DoomDoorModel extends DoorModel {
     }
 
     @Override
-    public void renderWithAnimations(DoorBlockEntity door, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
+    public void renderWithAnimations(AbstractLinkableBlockEntity linkableBlockEntity, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha) {
         matrices.push();
         matrices.translate(0, -0.75f, 0);
         matrices.scale(0.5f, 0.5f, 0.5f);
-        super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        super.renderWithAnimations(linkableBlockEntity, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
     }
 

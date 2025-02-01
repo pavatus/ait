@@ -5,12 +5,10 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 
-import loqor.ait.api.TardisComponent;
 import loqor.ait.client.animation.console.steam.SteamAnimations;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.pos.IncrementManager;
-import loqor.ait.core.tardis.handler.ShieldHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class SteamConsoleModel extends ConsoleModel {
@@ -702,12 +700,12 @@ public class SteamConsoleModel extends ConsoleModel {
                 ModelTransform.of(0.0F, 0.25F, 0.0F, 0.0F, 0.0F, 0.4363F));
 
         ModelPartData stabilizer = rot.addChild("stabilizer",
-                ModelPartBuilder.create().uv(43, 86).cuboid(-0.5F, -0.3F, -2.0F, 1.0F, 1.0F, 4.0F, new Dilation(0.1F)),
+                ModelPartBuilder.create().uv(43, 86).cuboid(-0.5F, -0.3F, -2.0F, 1.0F, 1.0F, 4.0F, new Dilation(0.0F)),
                 ModelTransform.pivot(-0.5F, 0.0F, -4.0F));
 
         ModelPartData bone26 = stabilizer.addChild("bone26",
-                ModelPartBuilder.create().uv(108, 52).cuboid(-0.5F, -0.75F, -2.0F, 1.0F, 0.0F, 4.0F, new Dilation(0.0F))
-                        .uv(30, 68).cuboid(0.0F, -0.75F, -1.5F, 0.0F, 1.0F, 3.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(108, 52).cuboid(-0.5F, -0.75F, -2.0F, 1.0F, 0.0F, 4.0F, new Dilation(0.1F))
+                        .uv(30, 68).cuboid(0.0F, -0.75F, -1.5F, 0.0F, 1.0F, 3.0F, new Dilation(0.1F)),
                 ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData panel_2 = controls.addChild("panel_2", ModelPartBuilder.create(),
@@ -1519,8 +1517,8 @@ public class SteamConsoleModel extends ConsoleModel {
 
         ModelPart shields = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever5")
                 .getChild("bone21");
-        shields.roll = tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).shielded().get()
-                ? tardis.<ShieldHandler>handler(TardisComponent.Id.SHIELDS).visuallyShielded().get() ? 0.0F : 0.4363F
+        shields.roll = tardis.shields().shielded().get()
+                ? tardis.shields().visuallyShielded().get() ? 0.0F : 0.4363F
                 : -0.5672F;
 
         ModelPart refueling = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("lever")
@@ -1533,7 +1531,7 @@ public class SteamConsoleModel extends ConsoleModel {
 
         ModelPart power = steam.getChild("controls").getChild("panel_5").getChild("rot5").getChild("lever7")
                 .getChild("bone45");
-        power.roll = power.roll + (tardis.engine().hasPower() ? 0f : 1.5f);
+        power.roll = power.roll + (tardis.fuel().hasPower() ? 0f : 1.5f);
 
         ModelPart landType = steam.getChild("controls").getChild("panel_1").getChild("rot").getChild("valve")
                 .getChild("bone9");

@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
@@ -14,7 +13,7 @@ import loqor.ait.data.schema.console.type.*;
 public class ConsoleRegistry {
 
     public static final SimpleRegistry<ConsoleTypeSchema> REGISTRY = FabricRegistryBuilder
-            .createSimple(RegistryKey.<ConsoleTypeSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "console")))
+            .createSimple(RegistryKey.<ConsoleTypeSchema>ofRegistry(AITMod.id("console")))
             .buildAndRegister();
 
     public static ConsoleTypeSchema register(ConsoleTypeSchema schema) {
@@ -28,14 +27,18 @@ public class ConsoleRegistry {
     public static ConsoleTypeSchema ALNICO;
     public static ConsoleTypeSchema STEAM;
     public static ConsoleTypeSchema HUDOLIN;
+    public static ConsoleTypeSchema CRYSTALLINE;
+    public static ConsoleTypeSchema RENAISSANCE;
 
     public static void init() {
         HARTNELL = register(new HartnellType());
         CORAL = register(new CoralType());
-        // COPPER = register(new CopperType());
+        COPPER = register(new CopperType());
         TOYOTA = register(new ToyotaType());
         ALNICO = register(new AlnicoType());
         STEAM = register(new SteamType());
         // HUDOLIN = register(new HudolinType());
+        CRYSTALLINE = register(new CrystallineType());
+        RENAISSANCE = register(new RenaissanceType());
     }
 }

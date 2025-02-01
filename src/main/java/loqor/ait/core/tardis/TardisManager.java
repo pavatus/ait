@@ -10,6 +10,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -27,18 +29,19 @@ import net.minecraft.world.World;
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
+import loqor.ait.core.engine.SubSystem;
+import loqor.ait.core.engine.registry.SubSystemRegistry;
+import loqor.ait.core.tardis.handler.SubSystemHandler;
 import loqor.ait.core.tardis.handler.permissions.Permission;
 import loqor.ait.core.tardis.handler.permissions.PermissionLike;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.data.Corners;
-import loqor.ait.data.DirectedBlockPos;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.TardisMap;
 import loqor.ait.data.gson.*;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.properties.doubl3.DoubleValue;
+import loqor.ait.data.properties.dbl.DoubleValue;
 import loqor.ait.data.properties.integer.IntValue;
 import loqor.ait.data.properties.integer.ranged.RangedIntValue;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
@@ -51,17 +54,14 @@ import loqor.ait.registry.impl.TardisComponentRegistry;
 
 public abstract class TardisManager<T extends Tardis, C> {
 
-    public static final Identifier ASK = new Identifier(AITMod.MOD_ID, "ask_tardis");
+    public static final Identifier ASK = AITMod.id("ask_tardis");
 
-    @Deprecated(forRemoval = true)
-    public static final Identifier ASK_POS = new Identifier(AITMod.MOD_ID, "ask_pos_tardis");
+    public static final Identifier SEND = AITMod.id("tardis/send");
+    public static final Identifier SEND_BULK = AITMod.id("tardis/send_bulk");
 
-    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "tardis/send");
-    public static final Identifier SEND_BULK = new Identifier(AITMod.MOD_ID, "tardis/send_bulk");
+    public static final Identifier REMOVE = AITMod.id("tardis/remove");
 
-    public static final Identifier REMOVE = new Identifier(AITMod.MOD_ID, "tardis/remove");
-
-    public static final Identifier SEND_COMPONENT = new Identifier(AITMod.MOD_ID, "tardis/send_component");
+    public static final Identifier SEND_COMPONENT = AITMod.id("tardis/send_component");
 
     public static final boolean DEMENTIA = false;
 
@@ -109,7 +109,10 @@ public abstract class TardisManager<T extends Tardis, C> {
                 .registerTypeAdapter(BlockPos.class, new BlockPosSerializer())
                 .registerTypeAdapter(RegistryKey.class, new RegistryKeySerializer())
                 .registerTypeAdapter(TardisHandlersManager.class, TardisHandlersManager.serializer())
-                .registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer());
+                .registerTypeAdapter(TardisComponent.IdLike.class, TardisComponentRegistry.idSerializer())
+                .registerTypeAdapter(SubSystemHandler.class, SubSystemHandler.serializer())
+                .registerTypeAdapter(SubSystem.IdLike.class, SubSystemRegistry.idSerializer())
+                .registerTypeAdapter(SubSystem.class, SubSystem.serializer());
     }
 
     protected GsonBuilder getNetworkGson(GsonBuilder builder) {
@@ -117,7 +120,7 @@ public abstract class TardisManager<T extends Tardis, C> {
     }
 
     protected GsonBuilder getFileGson(GsonBuilder builder) {
-        if (!AITMod.AIT_CONFIG.MINIFY_JSON())
+        if (!AITMod.CONFIG.SERVER.MINIFY_JSON)
             builder.setPrettyPrinting();
 
         return builder.registerTypeAdapter(Value.class, Value.serializer())

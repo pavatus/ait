@@ -1,41 +1,37 @@
 package loqor.ait.core.item;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
+import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.handler.EngineHandler;
 import loqor.ait.core.tardis.handler.FuelHandler;
 import loqor.ait.core.tardis.handler.LoyaltyHandler;
+import loqor.ait.core.tardis.handler.SubSystemHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.manager.TardisBuilder;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.tardis.util.DefaultThemes;
 import loqor.ait.data.Loyalty;
-import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
-import loqor.ait.data.schema.exterior.category.CapsuleCategory;
-import loqor.ait.registry.impl.CategoryRegistry;
 import loqor.ait.registry.impl.DesktopRegistry;
 import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class TardisItemBuilder extends Item {
-
-    public static final Identifier DEFAULT_INTERIOR = new Identifier(AITMod.MOD_ID, "coral");
-    public static final Identifier DEFAULT_EXTERIOR = CapsuleCategory.REFERENCE;
-
     private final Identifier exterior;
     private final Identifier desktop;
 
@@ -47,11 +43,11 @@ public class TardisItemBuilder extends Item {
     }
 
     public TardisItemBuilder(Settings settings, Identifier exterior) {
-        this(settings, exterior, DEFAULT_INTERIOR);
+        this(settings, exterior, null);
     }
 
     public TardisItemBuilder(Settings settings) {
-        this(settings, DEFAULT_EXTERIOR);
+        this(settings, null);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class TardisItemBuilder extends Item {
         if (context.getHand() != Hand.MAIN_HAND)
             return ActionResult.SUCCESS;
 
-        DirectedGlobalPos.Cached pos = DirectedGlobalPos.Cached.create(serverWorld,
+        CachedDirectedGlobalPos pos = CachedDirectedGlobalPos.create(serverWorld,
                 serverWorld.getBlockState(context.getBlockPos()).isReplaceable()
                         ? context.getBlockPos()
                         : context.getBlockPos().up(),
@@ -96,18 +92,32 @@ public class TardisItemBuilder extends Item {
             return ActionResult.SUCCESS;
         }
 
-        ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
+        // ExteriorCategorySchema category = CategoryRegistry.getInstance().get(this.exterior);
 
-        ServerTardisManager.getInstance()
-                .create(new TardisBuilder().at(pos).desktop(DesktopRegistry.getInstance().get(this.desktop))
-                        .owner(serverPlayer)
-                        .exterior(ExteriorVariantRegistry.getInstance().pickRandomWithParent(category))
-                        .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(fuel.getMaxFuel()))
-                        .<EngineHandler>with(TardisComponent.Id.ENGINE, engine -> {
-                            engine.linkEngine(0, 0);
-                            engine.enablePower();
-                        }).<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
-                                loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER))));
+        TardisBuilder builder = new TardisBuilder().at(pos)
+                .owner(serverPlayer)
+                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> {
+                    fuel.setCurrentFuel(fuel.getMaxFuel());
+                    fuel.enablePower();
+                })
+                .with(TardisComponent.Id.SUBSYSTEM, SubSystemHandler::repairAll)
+                .<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
+                        loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER)));
+
+        if (this.exterior == null || this.desktop == null) {
+            DefaultThemes.getRandom().apply(builder);
+        } else {
+            builder.exterior(ExteriorVariantRegistry.getInstance().get(this.exterior));
+            builder.desktop(DesktopRegistry.getInstance().get(this.desktop));
+        }
+
+        ServerTardis created = ServerTardisManager.getInstance()
+                .create(builder);
+
+        if (created == null) {
+            player.sendMessage(Text.translatable("message.ait.max_tardises"), true);
+            return ActionResult.FAIL;
+        }
 
         context.getStack().decrement(1);
         player.getItemCooldownManager().set(this, 20);

@@ -2,17 +2,24 @@ package loqor.ait.core.tardis.handler;
 
 import java.util.Random;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.KeyedTardisComponent;
+import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
+import loqor.ait.core.advancement.TardisCriterions;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.Exclude;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
-import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
+import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class OvergrownHandler extends KeyedTardisComponent implements TardisTickable {
     private static final BoolProperty IS_OVERGROWN_PROPERTY = new BoolProperty("is_overgrown", false);
@@ -24,6 +31,27 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
     public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private static Random random;
     private int ticks; // same as usual
+
+    static {
+        TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
+            if (!tardis.overgrown().isOvergrown() || player == null)
+                return DoorHandler.InteractionResult.CONTINUE;
+
+            // if holding an axe then break off the vegetation
+            ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+
+            if (stack.getItem() instanceof AxeItem) {
+                player.swingHand(Hand.MAIN_HAND);
+                tardis.overgrown().removeVegetation();
+                stack.setDamage(stack.getDamage() - 1);
+
+                TardisCriterions.VEGETATION.trigger(player);
+                return DoorHandler.InteractionResult.BANG;
+            }
+
+            return DoorHandler.InteractionResult.KNOCK;
+        });
+    }
 
     public OvergrownHandler() {
         super(Id.OVERGROWN);
@@ -63,11 +91,12 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         this.setTicks(0);
     }
 
+    @Environment(EnvType.CLIENT)
     public Identifier getOvergrownTexture() {
-        ExteriorCategorySchema exterior = this.tardis().getExterior().getCategory();
+        ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
 
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + exterior.toString().toLowerCase() + "/"
-                + exterior.toString().toLowerCase() + "_" + "overgrown" + ".png");
+
+        return variant.texture().withSuffixedPath("_overgrown"); // todo - best to have a fallback somehow but icr how to check if texture exists
     }
 
     public static Random random() {
@@ -79,18 +108,17 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
 
     @Override
     public void tick(MinecraftServer server) {
-
-        if (tardis().isGrowth())
+        if (tardis.isGrowth())
             return;
 
-        if (this.isOvergrown() && (this.tardis().travel().getState() == TravelHandlerBase.State.FLIGHT
-                || this.tardis().travel().getState() == TravelHandlerBase.State.MAT)) {
+        if (this.isOvergrown() && (this.tardis.travel().getState() == TravelHandlerBase.State.FLIGHT
+                || this.tardis.travel().getState() == TravelHandlerBase.State.MAT)) {
             this.setOvergrown(false);
             this.setTicks(0);
             return;
         }
 
-        if (this.isOvergrown() || this.tardis().travel().getState() != TravelHandlerBase.State.LANDED)
+        if (this.isOvergrown() || this.tardis.travel().getState() != TravelHandlerBase.State.LANDED)
             return;
 
         // We know the tardis is landed so we can start ticking away

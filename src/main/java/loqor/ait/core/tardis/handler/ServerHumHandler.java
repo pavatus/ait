@@ -11,18 +11,18 @@ import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.HumSound;
-import loqor.ait.registry.impl.HumsRegistry;
+import loqor.ait.data.hum.Hum;
+import loqor.ait.registry.impl.HumRegistry;
 
 public class ServerHumHandler extends TardisComponent {
-    public static final Identifier SEND = new Identifier(AITMod.MOD_ID, "send_hum");
-    public static final Identifier RECEIVE = new Identifier(AITMod.MOD_ID, "receive_hum");
-    private HumSound current;
+    public static final Identifier SEND = AITMod.id("send_hum");
+    public static final Identifier RECEIVE = AITMod.id("receive_hum");
+    private Hum current;
 
     static {
         ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    HumSound hum = HumSound.fromName(buf.readString(), buf.readString());
+                    Hum hum = HumRegistry.getInstance().get(buf.readIdentifier());
 
                     if (tardis == null || hum == null)
                         return;
@@ -35,15 +35,15 @@ public class ServerHumHandler extends TardisComponent {
         super(Id.HUM);
     }
 
-    public HumSound getHum() {
+    public Hum getHum() {
         if (current == null) {
-            this.current = HumsRegistry.TOYOTA;
+            this.current = HumRegistry.getInstance().getRandom();
         }
 
         return this.current;
     }
 
-    public void setHum(HumSound hum) {
+    public void setHum(Hum hum) {
         this.current = hum;
 
         this.updateClientHum();
@@ -53,7 +53,7 @@ public class ServerHumHandler extends TardisComponent {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(this.current.sound().getId());
 
-        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis().asServer())) {
+        for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             ServerPlayNetworking.send(player, SEND, buf);
         }
     }

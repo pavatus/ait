@@ -13,7 +13,12 @@ import loqor.ait.core.tardis.Tardis;
 
 public class FoggyUtils {
     public static void overrideFog() {
-        if (ClientTardisUtil.isPlayerInATardis()
+        Tardis tardis = ClientTardisUtil.getCurrentTardis();
+
+        if (tardis == null || tardis.getExterior() == null)
+            return;
+
+        if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()
                 && ClientTardisUtil.getAlarmDelta() != ClientTardisUtil.MAX_ALARM_DELTA_TICKS) {
             RenderSystem.setShaderFogStart(MathHelper.lerp(ClientTardisUtil.getAlarmDeltaForLerp(), -8, 10));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(ClientTardisUtil.getAlarmDeltaForLerp(), 11, 32));
@@ -21,11 +26,6 @@ public class FoggyUtils {
             RenderSystem.setShaderFogColor(0.5f, 0, 0, 0.5f);
             MinecraftClient.getInstance().gameRenderer.getCamera().getSubmersionType();
         }
-
-        Tardis tardis = ClientTardisUtil.getCurrentTardis();
-
-        if (tardis == null)
-            return;
 
         if (ClientTardisUtil.isPlayerInATardis() && !tardis.isGrowth()
                 && ClientTardisUtil.getPowerDelta() != ClientTardisUtil.MAX_POWER_DELTA_TICKS) {
@@ -35,7 +35,7 @@ public class FoggyUtils {
             RenderSystem.setShaderFogColor(0, 0, 0, tardis.siege().isActive() ? 0.85f : 1f);
         }
 
-        if (ClientTardisUtil.isPlayerInATardis() && tardis.crash().isToxic() && tardis.engine().hasPower()) {
+        if (ClientTardisUtil.isPlayerInATardis() && tardis.crash().isToxic() && tardis.fuel().hasPower()) {
             RenderSystem
                     .setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, -8, 24));
             RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
@@ -50,7 +50,7 @@ public class FoggyUtils {
         /*
          * if (!AITMod.AIT_CONFIG.DISABLE_LOYALTY_FOG() &&
          * ClientTardisUtil.isPlayerInATardis() && !tardis.crash().isToxic() &&
-         * !tardis.alarm().enabled().get() && tardis.engine().hasPower() ) {
+         * !tardis.alarm().enabled().get() && tardis.fuel().hasPower() ) {
          * RenderSystem.setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().
          * getTickDelta() / 100f, -8, 24));
          * RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().

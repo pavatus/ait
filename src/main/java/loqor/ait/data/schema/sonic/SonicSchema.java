@@ -5,12 +5,12 @@ import java.util.function.Consumer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 
 import net.minecraft.util.Identifier;
 
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.BasicSchema;
-import loqor.ait.registry.unlockable.Unlockable;
 
 public abstract class SonicSchema extends BasicSchema implements Unlockable {
 

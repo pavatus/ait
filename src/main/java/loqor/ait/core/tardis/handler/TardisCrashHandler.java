@@ -1,5 +1,6 @@
 package loqor.ait.core.tardis.handler;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.joml.Vector3f;
 
 import net.minecraft.entity.EquipmentSlot;
@@ -17,7 +18,6 @@ import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.integer.IntProperty;
@@ -78,7 +78,7 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
             this.state.set(state);
         }
 
-        DirectedGlobalPos.Cached exteriorPosition = tardis.travel().position();
+        CachedDirectedGlobalPos exteriorPosition = tardis.travel().position();
         ServerWorld exteriorWorld = exteriorPosition.getWorld();
 
         if (tardis.door().isOpen() && state != State.NORMAL) {
@@ -96,7 +96,7 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
                 exteriorPosition.getPos().toCenterPos().x, exteriorPosition.getPos().getY() + 0.1f,
                 exteriorPosition.getPos().toCenterPos().z, 1, 0.05D, 0.75D, 0.05D, 0.01D);
 
-        if (server.getTicks() % 40 == 0)
+        if (server.getTicks() % 40 != 0)
             return;
 
         if (TardisUtil.isInteriorEmpty(tardis.asServer()))

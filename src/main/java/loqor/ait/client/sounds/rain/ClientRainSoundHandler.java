@@ -25,11 +25,11 @@ public class ClientRainSoundHandler extends SoundHandler {
     }
 
     private LoopingSound createRainSound(ClientTardis tardis) {
-        if (tardis == null || tardis.getDesktop().doorPos().getPos() == null)
+        if (tardis == null || tardis.getDesktop().getDoorPos().getPos() == null)
             return null;
 
         return new PositionedLoopingSound(AITSounds.RAIN, SoundCategory.WEATHER,
-                tardis.getDesktop().doorPos().getPos(), 0.2f);
+                tardis.getDesktop().getDoorPos().getPos(), 0.2f);
     }
 
     public static ClientRainSoundHandler create() {
@@ -51,6 +51,10 @@ public class ClientRainSoundHandler extends SoundHandler {
                 && tardis.<ExteriorEnvironmentHandler>handler(TardisComponent.Id.ENVIRONMENT).isRaining();
     }
 
+    private boolean isDoorOpen(ClientTardis tardis) {
+        return tardis != null && tardis.door().isOpen();
+    }
+
     public void tick(MinecraftClient client) {
         ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
 
@@ -58,7 +62,12 @@ public class ClientRainSoundHandler extends SoundHandler {
             this.generate(tardis);
 
         if (this.shouldPlaySounds(tardis)) {
-            this.startIfNotPlaying(this.getRainSound(tardis));
+            LoopingSound rainSound = this.getRainSound(tardis);
+
+            if (rainSound != null) {
+                rainSound.setVolume(this.isDoorOpen(tardis) ? 2.5f : 0.4f);
+                this.startIfNotPlaying(rainSound);
+            }
         } else {
             this.stopSound(RAIN_SOUND);
         }

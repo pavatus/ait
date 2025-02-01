@@ -1,11 +1,11 @@
 package loqor.ait.registry.impl.door;
 
+
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
 import loqor.ait.data.schema.door.DoorSchema;
@@ -13,7 +13,7 @@ import loqor.ait.data.schema.door.impl.*;
 
 public class DoorRegistry {
     public static final SimpleRegistry<DoorSchema> REGISTRY = FabricRegistryBuilder
-            .createSimple(RegistryKey.<DoorSchema>ofRegistry(new Identifier(AITMod.MOD_ID, "door"))).buildAndRegister();
+            .createSimple(RegistryKey.<DoorSchema>ofRegistry(AITMod.id("door"))).buildAndRegister();
 
     public static DoorSchema register(DoorSchema schema) {
         return Registry.register(REGISTRY, schema.id(), schema);
@@ -21,11 +21,12 @@ public class DoorRegistry {
 
     public static DoorSchema TARDIM;
     public static DoorSchema CLASSIC;
+    public static DoorSchema CLASSIC_HUDOLIN;
     public static DoorSchema BOOTH;
     public static DoorSchema CAPSULE;
     public static DoorSchema BOX;
     public static DoorSchema BOX_CORAL;
-    public static DoorSchema BOX_TOKAMAK;
+    public static DoorSchema BOX_RENAISSANCE;
     public static DoorSchema HEAD;
     public static DoorSchema GROWTH;
     public static DoorSchema DOOM;
@@ -35,15 +36,20 @@ public class DoorRegistry {
     public static DoorSchema GEOMETRIC;
     public static DoorSchema STALLION;
     public static DoorSchema ADAPTIVE;
+    public static DoorSchema DALEK_MOD;
+    //public static DoorSchema JAKE;
+    public static DoorSchema PRESENT;
+    public static DoorSchema PIPE;
 
     public static void init() {
         TARDIM = register(new TardimDoorVariant());
         CLASSIC = register(new ClassicDoorVariant());
+        CLASSIC_HUDOLIN = register(new ClassicHudolinDoorVariant());
         BOOTH = register(new BoothDoorVariant());
         CAPSULE = register(new CapsuleDoorVariant());
         BOX = register(new PoliceBoxDoorVariant());
         BOX_CORAL = register(new PoliceBoxCoralDoorVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakDoorVariant());
+        BOX_RENAISSANCE = register(new PoliceBoxRenaissanceDoorVariant());
         HEAD = register(new EasterHeadDoorVariant());
         GROWTH = register(new CoralGrowthDoorVariant());
         DOOM = register(new DoomDoorVariant());
@@ -53,5 +59,9 @@ public class DoorRegistry {
         GEOMETRIC = register(new GeometricDoorVariant());
         STALLION = register(new StallionDoorVariant());
         ADAPTIVE = register(new AdaptiveDoorVariant());
+        DALEK_MOD = register(new DalekModDoorVariant());
+        //JAKE = register(new JakeDoorVariant());
+        PRESENT = register(new PresentDoorVariant());
+        PIPE = register(new PipeDoorVariant());
     }
 }

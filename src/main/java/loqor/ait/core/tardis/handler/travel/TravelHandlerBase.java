@@ -3,22 +3,26 @@ package loqor.ait.core.tardis.handler.travel;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
 
 import loqor.ait.api.KeyedTardisComponent;
 import loqor.ait.api.TardisTickable;
-import loqor.ait.core.AITSounds;
-import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
-import loqor.ait.core.util.Scheduler;
 import loqor.ait.core.util.WorldUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Exclude;
-import loqor.ait.data.TimeUnit;
+import loqor.ait.data.enummap.Ordered;
 import loqor.ait.data.properties.Property;
 import loqor.ait.data.properties.Value;
 import loqor.ait.data.properties.bool.BoolProperty;
@@ -31,12 +35,12 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final Property<State> STATE = Property.forEnum("state", State.class, State.LANDED);
     private static final BoolProperty LEAVE_BEHIND = new BoolProperty("leave_behind", false);
 
-    private static final Property<DirectedGlobalPos.Cached> POSITION = new Property<>(
-            Property.Type.CDIRECTED_GLOBAL_POS, "position", (DirectedGlobalPos.Cached) null);
-    private static final Property<DirectedGlobalPos.Cached> DESTINATION = new Property<>(
-            Property.Type.CDIRECTED_GLOBAL_POS, "destination", (DirectedGlobalPos.Cached) null);
-    private static final Property<DirectedGlobalPos.Cached> PREVIOUS_POSITION = new Property<>(
-            Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (DirectedGlobalPos.Cached) null);
+    private static final Property<CachedDirectedGlobalPos> POSITION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "position", (CachedDirectedGlobalPos) null);
+    private static final Property<CachedDirectedGlobalPos> DESTINATION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "destination", (CachedDirectedGlobalPos) null);
+    private static final Property<CachedDirectedGlobalPos> PREVIOUS_POSITION = new Property<>(
+            Property.Type.CDIRECTED_GLOBAL_POS, "previous_position", (CachedDirectedGlobalPos) null);
 
     private static final BoolProperty CRASHING = new BoolProperty("crashing", false);
     private static final BoolProperty ANTIGRAVS = new BoolProperty("antigravs", false);
@@ -49,9 +53,9 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     private static final BoolProperty HGROUND_SEARCH = new BoolProperty("hground_search", true);
 
     protected final Value<State> state = STATE.create(this);
-    protected final Value<DirectedGlobalPos.Cached> position = POSITION.create(this);
-    protected final Value<DirectedGlobalPos.Cached> destination = DESTINATION.create(this);
-    protected final Value<DirectedGlobalPos.Cached> previousPosition = PREVIOUS_POSITION.create(this);
+    protected final Value<CachedDirectedGlobalPos> position = POSITION.create(this);
+    protected final Value<CachedDirectedGlobalPos> destination = DESTINATION.create(this);
+    protected final Value<CachedDirectedGlobalPos> previousPosition = PREVIOUS_POSITION.create(this);
 
     private final BoolValue leaveBehind = LEAVE_BEHIND.create(this);
     protected final BoolValue crashing = CRASHING.create(this);
@@ -103,7 +107,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
     protected void onInit(InitContext ctx) {
         super.onInit(ctx);
 
-        Scheduler.runTaskTimer(() -> {
+        Scheduler.get().runTaskTimer(task -> {
             if (this.hammerUses > 0)
                 this.hammerUses--;
         }, TimeUnit.TICKS, 200);
@@ -141,7 +145,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return state.get();
     }
 
-    public DirectedGlobalPos.Cached position() {
+    public CachedDirectedGlobalPos position() {
         return this.position.get();
     }
 
@@ -173,25 +177,25 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         this.hammerUses = 0;
     }
 
-    public void forcePosition(DirectedGlobalPos.Cached cached) {
+    public void forcePosition(CachedDirectedGlobalPos cached) {
         cached.init(TravelHandlerBase.server());
         this.previousPosition.set(this.position);
         this.position.set(cached);
     }
 
-    public void forcePosition(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void forcePosition(Function<CachedDirectedGlobalPos, CachedDirectedGlobalPos> position) {
         this.forcePosition(position.apply(this.position()));
     }
 
-    public DirectedGlobalPos.Cached destination() {
+    public CachedDirectedGlobalPos destination() {
         return destination.get();
     }
 
-    public void destination(DirectedGlobalPos.Cached cached) {
+    public void destination(CachedDirectedGlobalPos cached) {
         this.destination(cached, false);
     }
 
-    public void destination(DirectedGlobalPos.Cached cached, boolean force) {
+    public void destination(CachedDirectedGlobalPos cached, boolean force) {
         if (!force && this.destination().equals(cached))
             return;
 
@@ -202,28 +206,27 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         cached = border.contains(pos) ? cached : cached.pos(border.clamp(pos.getX(), pos.getY(), pos.getZ()));
 
-        if (!this.antigravs.get()) {
-            cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
-        }
+        // TODO what is the point of this? the only time this should be done is on landing - unless it gets optimized enough to run here. - Loqor
+        //cached = WorldUtil.locateSafe(cached, this.vGroundSearch.get(), this.hGroundSearch.get());
 
         this.forceDestination(cached);
     }
 
-    public void forceDestination(DirectedGlobalPos.Cached cached) {
+    public void forceDestination(CachedDirectedGlobalPos cached) {
         cached.init(TravelHandlerBase.server());
         this.destination.set(cached);
     }
 
     // only use when you're sure the position you're g
-    public void destination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void destination(Function<CachedDirectedGlobalPos, CachedDirectedGlobalPos> position) {
         this.destination(position.apply(this.destination()));
     }
 
-    public void forceDestination(Function<DirectedGlobalPos.Cached, DirectedGlobalPos.Cached> position) {
+    public void forceDestination(Function<CachedDirectedGlobalPos, CachedDirectedGlobalPos> position) {
         this.forceDestination(position.apply(this.destination()));
     }
 
-    public DirectedGlobalPos.Cached previousPosition() {
+    public CachedDirectedGlobalPos previousPosition() {
         return previousPosition.get();
     }
 
@@ -239,11 +242,19 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         return WorldUtil.getOverworld().getServer();
     }
 
-    public enum State {
-        LANDED, DEMAT(AITSounds.DEMAT_ANIM, TravelHandler::finishDemat), FLIGHT(AITSounds.FLIGHT_ANIM), MAT(
-                AITSounds.MAT_ANIM, TravelHandler::finishRemat);
+    public enum State implements Ordered {
+        LANDED, DEMAT(null, TravelHandler::finishDemat), FLIGHT(), MAT(
+                null, TravelHandler::finishRemat);
 
-        private final MatSound sound;
+        public static final Codec<State> CODEC = Codecs.NON_EMPTY_STRING.flatXmap(s -> {
+            try {
+                return DataResult.success(State.valueOf(s.toUpperCase()));
+            } catch (Exception e) {
+                return DataResult.error(() -> "Invalid state: " + s + "! | " + e.getMessage());
+            }
+        }, var -> DataResult.success(var.toString()));
+
+        private final TravelSound sound;
         private final boolean animated;
 
         private final Consumer<TravelHandler> finish;
@@ -252,22 +263,23 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
             this(null);
         }
 
-        State(MatSound sound) {
+        State(TravelSound sound) {
             this(sound, null, false);
         }
 
-        State(MatSound sound, Consumer<TravelHandler> finish) {
+        State(TravelSound sound, Consumer<TravelHandler> finish) {
             this(sound, finish, true);
         }
 
-        State(MatSound sound, Consumer<TravelHandler> finish, boolean animated) {
+        State(TravelSound sound, Consumer<TravelHandler> finish, boolean animated) {
             this.sound = sound;
             this.animated = animated;
 
             this.finish = finish;
         }
 
-        public MatSound effect() {
+        @Deprecated(forRemoval = true, since = "1.2.0")
+        public TravelSound effect() {
             return this.sound;
         }
 
@@ -277,6 +289,11 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
 
         public void finish(TravelHandler handler) {
             this.finish.accept(handler);
+        }
+
+        @Override
+        public int index() {
+            return ordinal();
         }
     }
 
@@ -302,7 +319,7 @@ public abstract class TravelHandlerBase extends KeyedTardisComponent implements 
         MEDIAN {
             @Override
             public GroundSearch next() {
-                return FLOOR;
+                return NONE;
             }
         };
 

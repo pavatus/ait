@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.pavatus.lib.register.datapack.DatapackRegistry;
+import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -11,6 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.AITRegistryEvents;
 import loqor.ait.data.datapack.DatapackExterior;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
@@ -23,6 +26,7 @@ import loqor.ait.data.schema.exterior.variant.capsule.CapsuleDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.CapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.*;
 import loqor.ait.data.schema.exterior.variant.doom.DoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.EasterHeadFireVariant;
@@ -32,9 +36,11 @@ import loqor.ait.data.schema.exterior.variant.geometric.GeometricFireVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.pipe.PipeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
+import loqor.ait.data.schema.exterior.variant.present.PresentDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeCabinetVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.RenegadeTronVariant;
@@ -45,8 +51,6 @@ import loqor.ait.data.schema.exterior.variant.stallion.StallionSteelVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimFireVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.TardimSoulVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
-import loqor.ait.registry.unlockable.UnlockableRegistry;
 
 public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantSchema> {
     private static ExteriorVariantRegistry INSTANCE;
@@ -138,7 +142,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema BOX_SOUL;
     public static ExteriorVariantSchema BOX_FUTURE;
     public static ExteriorVariantSchema BOX_CORAL;
-    public static ExteriorVariantSchema BOX_TOKAMAK;
+    public static ExteriorVariantSchema BOX_RENAISSANCE;
     public static ExteriorVariantSchema BOX_CHERRY;
     public static ExteriorVariantSchema PRIME;
     public static ExteriorVariantSchema YETI;
@@ -178,9 +182,19 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
     public static ExteriorVariantSchema ADAPTIVE;
+    public static ExteriorVariantSchema DALEK_MOD_1963;
+    public static ExteriorVariantSchema DALEK_MOD_1967;
+    public static ExteriorVariantSchema DALEK_MOD_1970;
+    public static ExteriorVariantSchema DALEK_MOD_1976;
+    public static ExteriorVariantSchema DALEK_MOD_1980;
+    //public static ExteriorVariantSchema JAKE_DEFAULT;
+    public static ExteriorVariantSchema PRESENT_DEFAULT;
+    public static ExteriorVariantSchema PIPE_DEFAULT;
 
     @Override
     protected void defaults() {
+        AITRegistryEvents.EXTERIOR_DEFAULTS.invoker().defaults();
+
         // TARDIM
         TARDIM_DEFAULT = register(new TardimDefaultVariant());
         TARDIM_FIRE = register(new TardimFireVariant());
@@ -192,16 +206,16 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         BOX_FIRE = register(new PoliceBoxFireVariant());
         BOX_FUTURE = register(new PoliceBoxFuturisticVariant());
         BOX_CORAL = register(new PoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new PoliceBoxTokamakVariant());
+        BOX_RENAISSANCE = register(new PoliceBoxRenaissanceVariant());
         BOX_CHERRY = register(new PoliceBoxCherryVariant());
 
         // Classic Box
         PRIME = register(new ClassicBoxPrimeVariant());
         YETI = register(new ClassicBoxYetiVariant());
+        HUDOLIN = register(new ClassicBoxHudolinVariant());
         DEFINITIVE = register(new ClassicBoxDefinitiveVariant());
         PTORED = register(new ClassicBoxPtoredVariant());
         MINT = register(new ClassicBoxMintVariant());
-        HUDOLIN = register(new ClassicBoxHudolinVariant());
         SHALKA = register(new ClassicBoxShalkaVariant());
         EXILE = register(new ClassicBoxExileVariant());
 
@@ -256,5 +270,21 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Adaptive
         ADAPTIVE = register(new AdaptiveVariant());
+
+        // Dalek Mod
+        DALEK_MOD_1963 = register(new DalekMod1963Variant());
+        DALEK_MOD_1967 = register(new DalekMod1967Variant());
+        DALEK_MOD_1970 = register(new DalekMod1970Variant());
+        DALEK_MOD_1976 = register(new DalekMod1976Variant());
+        DALEK_MOD_1980 = register(new DalekMod1980Variant());
+
+        // Jake
+        //JAKE_DEFAULT = register(new JakeDefaultVariant());
+
+        // Present
+        PRESENT_DEFAULT = register(new PresentDefaultVariant());
+
+        // Pipe
+        PIPE_DEFAULT = register(new PipeDefaultVariant());
     }
 }

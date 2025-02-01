@@ -3,6 +3,7 @@ package loqor.ait.data.schema.exterior;
 import java.lang.reflect.Type;
 
 import com.google.gson.*;
+import dev.pavatus.lib.api.Identifiable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.joml.Vector3f;
@@ -11,7 +12,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import loqor.ait.AITMod;
-import loqor.ait.api.Identifiable;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.door.ClientDoorSchema;
@@ -98,7 +98,7 @@ public abstract class ClientExteriorVariantSchema implements Identifiable {
             try {
                 id = new Identifier(json.getAsJsonPrimitive().getAsString());
             } catch (InvalidIdentifierException e) {
-                id = new Identifier(AITMod.MOD_ID, "capsule_default");
+                id = AITMod.id("capsule_default");
             }
 
             return ClientExteriorVariantRegistry.getInstance().get(id);

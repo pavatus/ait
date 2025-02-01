@@ -34,12 +34,15 @@ public class SonicSound extends PositionedLoopingSound {
     public static boolean shouldPlay(PlayerEntity player) {
         return player.isUsingItem() && player.getActiveItem().isOf(AITItems.SONIC_SCREWDRIVER);
     }
+
     public void play() {
         MinecraftClient.getInstance().getSoundManager().play(this);
     }
+
     public boolean isPlaying() {
         return MinecraftClient.getInstance().getSoundManager().isPlaying(this);
     }
+
     public void stop() {
         MinecraftClient.getInstance().getSoundManager().stop(this);
     }
@@ -47,6 +50,7 @@ public class SonicSound extends PositionedLoopingSound {
     private void updatePosition() {
         this.setPosition(this.player.getBlockPos());
     }
+
     private void updatePitch() {
         this.setPitch(-(this.player.getPitch() / 90f) + 1f);
     }

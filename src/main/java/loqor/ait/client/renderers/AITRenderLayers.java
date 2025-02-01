@@ -37,4 +37,44 @@ public class AITRenderLayers extends RenderLayer {
             Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
     }
+
+    public static RenderLayer getBoti() {
+        MultiPhaseParameters parameters = MultiPhaseParameters.builder()
+                .texture(RenderPhase.MIPMAP_BLOCK_ATLAS_TEXTURE)
+                .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+                .layering(RenderPhase.NO_LAYERING)
+                .build(false);
+        return RenderLayer.of("boti", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT,
+                VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
+    }
+
+    public static RenderLayer getBotiInteriorEmission(Identifier texture) {
+        MultiPhaseParameters parameters = MultiPhaseParameters.builder()
+                .texture(new Texture(texture, false, false))
+                .program(ENTITY_CUTOUT_NONULL_OFFSET_Z_PROGRAM)
+                .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+                .cull(DISABLE_CULLING)
+                .layering(RenderPhase.VIEW_OFFSET_Z_LAYERING)
+                .lightmap(ENABLE_LIGHTMAP)
+                .overlay(ENABLE_OVERLAY_COLOR)
+                .depthTest(RenderPhase.LEQUAL_DEPTH_TEST)
+                .build(false);
+        return RenderLayer.of("boti_interior_emission", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+                VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
+    }
+
+    public static RenderLayer getBotiInterior(Identifier texture) {
+        MultiPhaseParameters parameters = MultiPhaseParameters.builder()
+                .texture(new Texture(texture, false, false))
+                .program(ENTITY_CUTOUT_NONULL_PROGRAM)
+                .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+                .cull(ENABLE_CULLING)
+                .layering(RenderPhase.NO_LAYERING)
+                .lightmap(ENABLE_LIGHTMAP)
+                .overlay(ENABLE_OVERLAY_COLOR)
+                .depthTest(RenderPhase.LEQUAL_DEPTH_TEST)
+                .build(false);
+        return RenderLayer.of("boti_interior", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+                VertexFormat.DrawMode.QUADS, 256, false, true, parameters);
+    }
 }

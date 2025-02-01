@@ -7,8 +7,11 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import loqor.ait.core.AITSounds;
+import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 
 public class AutoPilotControl extends Control {
@@ -18,12 +21,20 @@ public class AutoPilotControl extends Control {
         super("protocol_116");
     }
 
+    private SoundEvent soundEvent = AITSounds.PROTOCOL_116_ON;
+
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
             return false;
         }
+
+        boolean auto = tardis.travel().autopilot();
+        auto = !auto;
+
+        this.soundEvent = auto ? AITSounds.PROTOCOL_116_OFF : AITSounds.PROTOCOL_116_ON;
+        TravelHandler travel = tardis.travel();
 
         // @TODO make a real world flight control.. later
         if (leftClick && tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
@@ -36,17 +47,23 @@ public class AutoPilotControl extends Control {
                         SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
 
-            // tardis.flight().enterFlight(player);
+            world.getServer().executeSync(()
+                    -> tardis.flight().enterFlight(player));
             return true;
         }
 
         boolean autopilot = tardis.travel().autopilot();
         tardis.travel().autopilot(!autopilot);
         return true;
+
+    }
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.STABILISERS;
     }
 
     @Override
     public SoundEvent getSound() {
-        return SoundEvents.BLOCK_LEVER_CLICK;
+        return this.soundEvent;
     }
 }

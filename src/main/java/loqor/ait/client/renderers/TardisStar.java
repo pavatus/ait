@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 
@@ -22,8 +23,10 @@ public class TardisStar {
     private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0) / 2.0);
 
     public static void render(WorldRenderContext context, Tardis tardis) {
-        renderStar(context, tardis);
         renderShine(context, tardis);
+        renderStar(context, tardis);
+        if (!tardis.isGrowth() && !tardis.alarm().enabled().get() && tardis.fuel().hasPower())
+            RenderSystem.setShaderFogColor(1, 1, 1, 0);
     }
 
     public static void renderStar(WorldRenderContext context, Tardis tardis) {
@@ -31,28 +34,18 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = camera.getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x() == 0 ? camera.getPos().getX() : tardis.engine().getCorePos().x(),
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), tardis.engine().getCorePos().y() == 0 ? camera.getPos().getZ() : tardis.engine().getCorePos().y());
+        if (tardis.getDesktop() == null) return;
+
+        Vec3d targetPos = new Vec3d(camera.getPos().getX(),
+                context.world().getBottomY() - (tardis.isGrowth() ? 150 : 120), camera.getPos().getZ());
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
-        if (tardis.isGrowth()) {
-            matrixStack.translate(tardis.getDesktop().doorPos().getPos().getX(), diff.y,
-                    tardis.getDesktop().doorPos().getPos().getX());
-        } else {
-            matrixStack.translate(
-                    tardis.engine().getCorePos().x != 0
-                            ? diff.x - .5
-                            : tardis.getDesktop().doorPos().getPos().getX() - .5,
-                    diff.y,
-                    tardis.engine().getCorePos().y != 0
-                            ? diff.z - .5
-                            : tardis.getDesktop().doorPos().getPos().getX() - .5);
-        }
-        matrixStack.scale(20f, 20f, 20f);
+        matrixStack.translate(0, diff.y, 0);
+        matrixStack.scale(40f, 40f, 40f);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y
                 .rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200.0f) * 360f));
@@ -70,6 +63,8 @@ public class TardisStar {
     }
 
     public static void renderShine(WorldRenderContext context, Tardis tardis) {
+        if (tardis.getExterior() == null) return;
+
         if (tardis.isGrowth())
             return;
 
@@ -77,8 +72,8 @@ public class TardisStar {
         VertexConsumerProvider provider = context.consumers();
 
         Vec3d cameraPos = context.camera().getPos();
-        Vec3d targetPos = new Vec3d(tardis.engine().getCorePos().x(),
-                context.world().getBottomY() - (tardis.isGrowth() ? 120 : 90), tardis.engine().getCorePos().y());
+        Vec3d targetPos = new Vec3d(cameraPos.getX(),
+                context.world().getBottomY() - (tardis.isGrowth() ? 150 : 120), cameraPos.getZ());
 
         Vec3d diff = targetPos.subtract(cameraPos);
 
@@ -89,23 +84,11 @@ public class TardisStar {
         matrixStack.push();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(context.camera().getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(context.camera().getYaw() + 180.0F));
-        if (tardis.isGrowth()) {
-            matrixStack.translate(tardis.getDesktop().doorPos().getPos().getX(), diff.y,
-                    tardis.getDesktop().doorPos().getPos().getX());
-        } else {
-            matrixStack.translate(
-                    tardis.engine().getCorePos().x != 0
-                            ? diff.x - .5
-                            : tardis.getDesktop().doorPos().getPos().getX() - .5,
-                    diff.y,
-                    tardis.engine().getCorePos().y != 0
-                            ? diff.z - .5
-                            : tardis.getDesktop().doorPos().getPos().getX() - .5);
-        }
+        matrixStack.translate(0, diff.y, 0);
         if (!tardis.isRefueling())
-            matrixStack.scale(4, 4, 4);
+            matrixStack.scale(8, 8, 8);
         else
-            matrixStack.scale(4 + sinFunc, 4 + sinFunc, 4 + sinFunc);
+            matrixStack.scale(8 + sinFunc, 8 + sinFunc, 8 + sinFunc);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y
                 .rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200f) * 360f));

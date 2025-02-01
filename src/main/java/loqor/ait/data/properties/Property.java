@@ -5,6 +5,8 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.data.DirectedGlobalPos;
 import org.joml.Vector2i;
 
 import net.minecraft.item.ItemStack;
@@ -16,7 +18,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import loqor.ait.api.KeyedTardisComponent;
-import loqor.ait.data.DirectedGlobalPos;
 
 public class Property<T> {
 
@@ -71,8 +72,8 @@ public class Property<T> {
 
         public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.class,
                 (buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
-        public static final Type<DirectedGlobalPos.Cached> CDIRECTED_GLOBAL_POS = new Type<>(
-                DirectedGlobalPos.Cached.class, (buf, pos) -> pos.write(buf), DirectedGlobalPos.Cached::read);
+        public static final Type<CachedDirectedGlobalPos> CDIRECTED_GLOBAL_POS = new Type<>(
+                CachedDirectedGlobalPos.class, (buf, pos) -> pos.write(buf), CachedDirectedGlobalPos::read);
         public static final Type<Identifier> IDENTIFIER = new Type<>(Identifier.class, PacketByteBuf::writeIdentifier,
                 PacketByteBuf::readIdentifier);
 

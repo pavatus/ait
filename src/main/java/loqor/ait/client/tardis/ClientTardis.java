@@ -25,9 +25,6 @@ public class ClientTardis extends Tardis implements Disposable {
     @Exclude
     private boolean aged = false;
 
-    @Exclude
-    public int ticks = 0;
-
     private ClientTardis(UUID check) {
         super();
         this.check = check;
@@ -44,22 +41,29 @@ public class ClientTardis extends Tardis implements Disposable {
     }
 
     public void tick(MinecraftClient client) {
-        // referencing client stuff where it COULD be server causes problems
-        if (ClientShakeUtil.shouldShake(this)) {
-            ClientShakeUtil.shakeFromConsole();
-        }
+        this.getHandlers().tick(client);
 
-        if (this.equals(ClientTardisUtil.getCurrentTardis())) {
-            ClientTardisUtil.tickPowerDelta();
-            ClientTardisUtil.tickAlarmDelta();
-            ticks++;
+        if (ClientTardisUtil.getCurrentTardis() != this)
+            return;
+
+        ClientTardisUtil.tickPowerDelta();
+        ClientTardisUtil.tickAlarmDelta();
+
+        // referencing client stuff where it COULD be server causes problems
+        if (!ClientShakeUtil.shouldShake(this))
+            return;
+
+        if (this.flight().falling().get()) {
+            ClientShakeUtil.shakeFromEverywhere();
+        } else {
+            ClientShakeUtil.shakeFromConsole();
         }
     }
 
     @Override
     public <T extends TardisComponent> T handler(TardisComponent.IdLike type) {
         if (this.handlers == null) {
-            AITMod.LOGGER.error("Asked for a handler too early on {}", this);
+            AITMod.LOGGER.error("Asked for a handler too early on {}, aged? {}", this, this.aged);
             return null;
         }
 

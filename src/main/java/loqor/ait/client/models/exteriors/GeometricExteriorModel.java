@@ -6,10 +6,10 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 
-import loqor.ait.client.animation.exterior.door.DoorAnimations;
+import loqor.ait.api.link.v2.Linkable;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.entities.FallingTardisEntity;
 import loqor.ait.core.tardis.handler.DoorHandler;
 
 public class GeometricExteriorModel extends ExteriorModel {
@@ -72,23 +72,18 @@ public class GeometricExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public void renderFalling(FallingTardisEntity falling, ModelPart root, MatrixStack matrices,
-            VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    public <T extends Entity & Linkable> void renderEntity(T falling, ModelPart root, MatrixStack matrices,
+                                                           VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         matrices.push();
         matrices.scale(1F, 1F, 1F);
         matrices.translate(0, -1.5f, 0);
 
-        super.renderFalling(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        super.renderEntity(falling, root, matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
         matrices.pop();
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
-        return switch (state) {
-            case CLOSED -> DoorAnimations.EXTERIOR_BOTH_CLOSE_ANIMATION;
-            case FIRST -> DoorAnimations.EXTERIOR_FIRST_OPEN_ANIMATION;
-            case SECOND -> DoorAnimations.EXTERIOR_SECOND_OPEN_ANIMATION;
-            case BOTH -> DoorAnimations.EXTERIOR_BOTH_OPEN_ANIMATION;
-        };
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();
     }
 }

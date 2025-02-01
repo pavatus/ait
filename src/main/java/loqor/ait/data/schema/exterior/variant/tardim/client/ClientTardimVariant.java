@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.client.models.exteriors.ExteriorModel;
 import loqor.ait.client.models.exteriors.TardimExteriorModel;
+import loqor.ait.core.tardis.handler.BiomeHandler;
 import loqor.ait.data.datapack.exterior.BiomeOverrides;
 import loqor.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
@@ -16,12 +17,17 @@ public abstract class ClientTardimVariant extends ClientExteriorVariantSchema {
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/tardim";
     protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
             CATEGORY_PATH + "/tardim.png");
+    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID,CATEGORY_PATH + "/biome" + "/tardim.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/tardim_";
 
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(CATEGORY_IDENTIFIER));
+    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
+                    BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
+                    BiomeHandler.BiomeType.SANDY, BiomeHandler.BiomeType.RED_SANDY, BiomeHandler.BiomeType.MUDDY)
+            .build();
 
     protected ClientTardimVariant(String name) {
-        super(new Identifier(AITMod.MOD_ID, "exterior/tardim/" + name));
+        super(AITMod.id("exterior/tardim/" + name));
 
         this.name = name;
     }
@@ -33,12 +39,12 @@ public abstract class ClientTardimVariant extends ClientExteriorVariantSchema {
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + ".png");
+        return AITMod.id(TEXTURE_PATH + name + ".png");
     }
 
     @Override
     public Identifier emission() {
-        return new Identifier(AITMod.MOD_ID, TEXTURE_PATH + name + "_emission" + ".png");
+        return AITMod.id(TEXTURE_PATH + name + "_emission" + ".png");
     }
 
     @Override

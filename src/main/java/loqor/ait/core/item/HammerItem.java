@@ -18,8 +18,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.PeanutBlock;
 import loqor.ait.core.tardis.Tardis;
@@ -42,8 +44,13 @@ public class HammerItem extends SwordItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
+
+
         BlockPos pos = context.getBlockPos();
         PlayerEntity player = context.getPlayer();
+        ItemStack stack = context.getStack();
+
+
 
         if (!(context.getWorld() instanceof ServerWorld world))
             return ActionResult.SUCCESS;
@@ -55,20 +62,55 @@ public class HammerItem extends SwordItem {
             return ActionResult.PASS;
 
         Tardis tardis = consoleBlockEntity.tardis().get();
+        TravelHandler travel = tardis.travel();
 
         if (player == null || tardis == null)
             return ActionResult.PASS;
 
-        if (!(tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)) {
-            world.playSound(null, consoleBlockEntity.getPos(), SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS,
-                    1f, 1.0f);
-            world.playSoundFromEntity(null, player, SoundEvents.ENTITY_DOLPHIN_HURT, SoundCategory.PLAYERS, 0.2f, 0.5f);
+        if (player.getItemCooldownManager().isCoolingDown(stack.getItem()))
+            return ActionResult.PASS;
 
-            tardis.loyalty().subLevel((ServerPlayerEntity) player, 2); // safe cast since its on server already
-            return ActionResult.SUCCESS;
+        if (!(tardis.travel().getState() == TravelHandlerBase.State.FLIGHT)) {
+
+            if (!player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+
+                int hammerUses = travel.getHammerUses();
+                world.playSound(null, consoleBlockEntity.getPos(), AITSounds.HAMMER_HIT, SoundCategory.BLOCKS,
+                        1f, 1.0f);
+
+                if (hammerUses > 3) {
+                    world.playSoundFromEntity(null, player, AITSounds.HAMMER_STRIKE, SoundCategory.PLAYERS, 0.5f, 0.2f);
+
+                    tardis.door().closeDoors();
+                    tardis.door().setLocked(true);
+
+                    travel.handbrake(false);
+                    tardis.addFuel(10);
+                    travel.dematerialize();
+                    tardis.alarm().enabled();
+
+                    world.spawnParticles(ParticleTypes.SMALL_FLAME, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f,
+                            5 * hammerUses, 0, 0, 0, 0.1f * hammerUses);
+
+                    world.spawnParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f,
+                            5 * hammerUses, 0, 0, 0, 0.1f * hammerUses);
+
+                    world.spawnParticles(
+                            new DustColorTransitionParticleEffect(new Vector3f(0.75f, 0.75f, 0.75f), new Vector3f(0.1f, 0.1f, 0.1f),
+                                    1),
+                            pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 5 * hammerUses, 0, 0, 0, 0.1f * hammerUses);
+
+                    world.createExplosion(null, world.getDamageSources().outOfWorld(), null, pos.toCenterPos(), 5, true,
+                            World.ExplosionSourceType.MOB);
+
+                    tardis.loyalty().subLevel((ServerPlayerEntity) player, 35); // safe cast since its on server already
+                    player.getItemCooldownManager().set(stack.getItem(), 10 * 20);
+                    return ActionResult.SUCCESS;
+                }
+            }
         }
 
-        TravelHandler travel = tardis.travel();
+
         int targetTicks = travel.getTargetTicks();
         int currentFlightTicks = travel.getFlightTicks();
         int bonus = 500 * travel.speed();

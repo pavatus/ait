@@ -1,28 +1,27 @@
 package loqor.ait.core.world;
 
 import com.mojang.serialization.Codec;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.ChunkRandom;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.events.ServerChunkEvents;
-import loqor.ait.data.DirectedGlobalPos;
 
 @SuppressWarnings("UnstableApiUsage")
 public record RiftChunkManager(ServerWorld world) {
 
     private static final AttachmentType<Double> ARTRON = AttachmentRegistry.createPersistent(
-            new Identifier(AITMod.MOD_ID, "artron"), Codec.DOUBLE
+            AITMod.id("artron"), Codec.DOUBLE
     );
 
     private static final AttachmentType<Double> MAX_ARTRON = AttachmentRegistry.createPersistent(
-            new Identifier(AITMod.MOD_ID, "max_artron"), Codec.DOUBLE
+            AITMod.id("max_artron"), Codec.DOUBLE
     );
 
     public static void init() {
@@ -91,7 +90,7 @@ public record RiftChunkManager(ServerWorld world) {
         return RiftChunkManager.isRiftChunk(world, pos);
     }
 
-    public static boolean isRiftChunk(DirectedGlobalPos.Cached cached) {
+    public static boolean isRiftChunk(CachedDirectedGlobalPos cached) {
         return isRiftChunk(cached.getWorld(), cached.getPos());
     }
 

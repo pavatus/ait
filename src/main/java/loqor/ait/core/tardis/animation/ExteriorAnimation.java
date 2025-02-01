@@ -1,19 +1,25 @@
 package loqor.ait.core.tardis.animation;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.joml.Math;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
-import loqor.ait.core.sounds.MatSound;
+import loqor.ait.core.effects.ZeitonHighEffect;
+import loqor.ait.core.sounds.travel.TravelSound;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.CloakHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -21,7 +27,7 @@ import loqor.ait.core.tardis.util.NetworkUtil;
 
 public abstract class ExteriorAnimation {
 
-    public static final Identifier UPDATE = new Identifier(AITMod.MOD_ID, "update_setup_anim");
+    public static final Identifier UPDATE = AITMod.id("update_setup_anim");
     public static final double MAX_CLOAK_DISTANCE = 5d;
 
     protected ExteriorBlockEntity exterior;
@@ -39,13 +45,23 @@ public abstract class ExteriorAnimation {
             return 1f;
 
         if (this.exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED) {
-            if (this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
+            if (!isHigh() && this.exterior.tardis().get().<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get()) {
                 return 0.105f;
             }
             return 1.0f;
         }
 
         return this.alpha;
+    }
+
+    private static boolean isHigh() {
+        if (ServerLifecycleHooks.isServer()) return false;
+
+        return amIHigh();
+    }
+    @Environment(EnvType.CLIENT)
+    private static boolean amIHigh() {
+        return MinecraftClient.getInstance().player != null && ZeitonHighEffect.isHigh(MinecraftClient.getInstance().player);
     }
 
     public static boolean isNearTardis(PlayerEntity player, Tardis tardis, double radius) {
@@ -94,7 +110,7 @@ public abstract class ExteriorAnimation {
         };
 
         this.tellClientsToSetup(state);
-        MatSound sound = state.effect();
+        TravelSound sound = tardis.stats().getTravelEffects().get(state);
 
         if (sound == null)
             return false;
@@ -108,6 +124,17 @@ public abstract class ExteriorAnimation {
 
     public void setAlpha(float alpha) {
         this.alpha = Math.clamp(0.0F, 1.0F, alpha);
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
+    public long getRunningTime() {
+        return MathHelper.lfloor((1f - ((double) getTimeLeft() / getStartTime())) * 1000.0f / 20.0f);
     }
 
     public void tellClientsToSetup(TravelHandlerBase.State state) {

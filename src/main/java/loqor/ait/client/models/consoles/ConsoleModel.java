@@ -12,6 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
+import loqor.ait.AITMod;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -36,7 +37,7 @@ public abstract class ConsoleModel extends SinglePartEntityModel {
         // to detect different states. - Loqor
         this.getPart().traverse().forEach(ModelPart::resetTransform);
 
-        if (hasPower)
+        if (hasPower && AITMod.CONFIG.CLIENT.ANIMATE_CONSOLE)
             this.updateAnimation(console.ANIM_STATE, this.getAnimationForState(state), console.getAge());
     }
 

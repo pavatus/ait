@@ -2,10 +2,12 @@ package loqor.ait.core.tardis;
 
 import java.util.Optional;
 
-import io.wispforest.owo.ops.WorldOps;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
@@ -16,7 +18,6 @@ import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.blockentities.ExteriorBlockEntity;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.util.StackUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.schema.exterior.ExteriorCategorySchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
 import loqor.ait.registry.impl.CategoryRegistry;
@@ -24,7 +25,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class TardisExterior extends TardisComponent {
 
-    public static final Identifier CHANGE_EXTERIOR = new Identifier(AITMod.MOD_ID, "change_exterior");
+    public static final Identifier CHANGE_EXTERIOR = AITMod.id("change_exterior");
 
     private static final ExteriorCategorySchema MISSING_CATEGORY = CategoryRegistry.getInstance().fallback();
     private static final ExteriorVariantSchema MISSING_VARIANT = ExteriorVariantRegistry.getInstance().fallback();
@@ -56,8 +57,8 @@ public class TardisExterior extends TardisComponent {
         if (variantChange)
             tardis.getExterior().setVariant(variant);
 
-        DirectedGlobalPos.Cached cached = tardis.travel().position();
-        WorldOps.updateIfOnServer(cached.getWorld(), cached.getPos());
+        CachedDirectedGlobalPos cached = tardis.travel().position();
+        cached.getWorld().getChunkManager().markForUpdate(cached.getPos());
 
         TardisEvents.EXTERIOR_CHANGE.invoker().onChange(tardis);
         return true;
@@ -72,7 +73,7 @@ public class TardisExterior extends TardisComponent {
 
     private void setMissing() {
         if (this.tardis instanceof ClientTardis clientTardis)
-            ClientTardisUtil.changeExteriorWithScreen(clientTardis, MISSING_CATEGORY.id(), MISSING_VARIANT.id(), true);
+            ClientTardisUtil.changeExteriorWithScreen(clientTardis, MISSING_VARIANT.id(), true);
 
         this.category = MISSING_CATEGORY;
         this.variant = MISSING_VARIANT;
@@ -109,11 +110,27 @@ public class TardisExterior extends TardisComponent {
     }
 
     public Optional<ExteriorBlockEntity> findExteriorBlock() {
+        if (tardis.travel().position().getWorld().isClient()) return Optional.empty();
+
         BlockEntity found = tardis.travel().position().getWorld().getBlockEntity(tardis.travel().position().getPos());
 
         if (!(found instanceof ExteriorBlockEntity exterior))
             return Optional.empty();
 
         return Optional.of(exterior);
+    }
+
+    public void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+        CachedDirectedGlobalPos pos = tardis.travel().position();
+
+        pos.getWorld().playSound(null, pos.getPos(), sound, category, volume, pitch);
+    }
+
+    public void playSound(SoundEvent sound, SoundCategory category) {
+        this.playSound(sound, category, 1f, 1f);
+    }
+
+    public void playSound(SoundEvent sound) {
+        this.playSound(sound, SoundCategory.BLOCKS);
     }
 }

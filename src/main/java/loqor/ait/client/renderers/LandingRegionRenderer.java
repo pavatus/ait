@@ -21,8 +21,8 @@ public class LandingRegionRenderer {
 
     private static final int DARK_CYAN = ColorHelper.Argb.getArgb(255, 0, 155, 155);
 
-    private static final Identifier AVAILABLE = new Identifier(AITMod.MOD_ID, "textures/marker/available.png");
-    private static final Identifier OCCUPIED = new Identifier(AITMod.MOD_ID, "textures/marker/occupied.png");
+    private static final Identifier AVAILABLE = AITMod.id("textures/marker/available.png");
+    private static final Identifier OCCUPIED = AITMod.id("textures/marker/occupied.png");
 
     private final MinecraftClient client;
     private Identifier previous;
@@ -76,7 +76,7 @@ public class LandingRegionRenderer {
 
     private void renderSpot(LandingPadSpot spot, boolean forceRender) {
         Identifier text = getTexture(spot);
-        SonicRendering.renderFloorTexture(spot.getPos().add(0, 0, 1), text, forceRender ? null : this.previous, true);
+        SonicRendering.renderFloorTexture(spot.getPos().add(1, 0, 1), text, forceRender ? null : this.previous, true);
 
         forceRender = forceRender || !text.equals(this.previous);
 

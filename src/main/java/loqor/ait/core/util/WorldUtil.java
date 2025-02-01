@@ -3,7 +3,8 @@ package loqor.ait.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.pavatus.multidim.api.VoidChunkGenerator;
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -16,10 +17,10 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -27,15 +28,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 
 import loqor.ait.AITMod;
 import loqor.ait.core.AITDimensions;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.mixin.server.EnderDragonFightAccessor;
 
 @SuppressWarnings("deprecation")
@@ -49,7 +50,7 @@ public class WorldUtil {
     private static ServerWorld TIME_VORTEX;
 
     public static void init() {
-        for (String id : AITMod.AIT_CONFIG.WORLDS_BLACKLIST()) {
+        for (String id : AITMod.CONFIG.SERVER.WORLDS_BLACKLIST) {
             blacklisted.add(Identifier.tryParse(id));
         }
 
@@ -78,11 +79,9 @@ public class WorldUtil {
 
             // blacklist all tardises
             for (ServerWorld world : getDimensions(server)) {
-                if (TardisDimension.isTardisDimension(world)) blacklist(world);
+                if (TardisServerWorld.isTardisDimension(world)) blacklist(world);
             }
         });
-
-        Registry.register(Registries.CHUNK_GENERATOR, new Identifier(AITMod.MOD_ID, "void"), VoidChunkGenerator.CODEC);
     }
 
     public static ServerWorld getOverworld() {
@@ -132,8 +131,8 @@ public class WorldUtil {
         return worlds;
     }
 
-    public static DirectedGlobalPos.Cached locateSafe(DirectedGlobalPos.Cached cached,
-            TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
+    public static CachedDirectedGlobalPos locateSafe(CachedDirectedGlobalPos cached,
+                                                     TravelHandlerBase.GroundSearch vSearch, boolean hSearch) {
         ServerWorld world = cached.getWorld();
         BlockPos pos = cached.getPos();
 
@@ -353,4 +352,13 @@ public class WorldUtil {
         if (end == null) return true;
         return ((EnderDragonFightAccessor) end.getEnderDragonFight()).getDragonKilled();
     }
+
+    public static void teleportToWorld(ServerPlayerEntity player, ServerWorld target, Vec3d pos, float yaw, float pitch) {
+        player.teleport(target, pos.x, pos.y, pos.z, yaw, pitch);
+        player.addExperience(0);
+
+        player.getStatusEffects().forEach(effect -> player.networkHandler.sendPacket(
+                new EntityStatusEffectS2CPacket(player.getId(), effect)));
+    }
+
 }

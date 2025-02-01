@@ -36,6 +36,10 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
             "textures/blockentities/exteriors/siege_mode/siege_mode.png");
     public static final Identifier BRICK_TEXTURE = new Identifier(AITMod.MOD_ID,
             "textures/blockentities/exteriors/siege_mode/siege_mode_brick.png");
+    public static final Identifier COMPANION_TEXTURE = new Identifier(AITMod.MOD_ID,
+            "textures/blockentities/exteriors/siege_mode/companion_cube.png");
+    public static final Identifier APERTURE_TEXTURE = new Identifier(AITMod.MOD_ID,
+            "textures/blockentities/exteriors/siege_mode/weighted_cube.png");
 
     private static final Property<UUID> HELD_KEY = new Property<>(Property.Type.UUID, "siege_held_uuid", new UUID(0, 0));
     private static final Property<Identifier> TEXTURE = new Property<>(Property.Type.IDENTIFIER, "texture", DEFAULT_TEXTURRE);
@@ -95,6 +99,8 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 
     public void setSiegeBeingHeld(UUID playerId) {
         if (playerId != null)
+            this.tardis.door().closeDoors();
+            this.tardis.door().setLocked(true);
             this.tardis.alarm().enabled().set(true);
 
         this.heldKey.set(playerId);
@@ -112,12 +118,16 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
 
         if (siege) {
             sound = AITSounds.SIEGE_ENABLE;
-            this.tardis.engine().disablePower();
+            this.tardis.door().closeDoors();
+            this.tardis.door().setLocked(true);
+            this.tardis.fuel().disablePower();
 
             TardisUtil.giveEffectToInteriorPlayers(this.tardis.asServer(),
                     new StatusEffectInstance(StatusEffects.NAUSEA, 100, 0, false, false));
         } else {
             sound = AITSounds.SIEGE_DISABLE;
+            this.tardis.door().setDeadlocked(false);
+            this.tardis.door().setLocked(false);
             this.tardis.alarm().enabled().set(false);
 
             if (this.tardis.getExterior().findExteriorBlock().isEmpty())
@@ -129,7 +139,10 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
         }
 
         this.tardis.removeFuel(0.01 * FuelHandler.TARDIS_MAX_FUEL * this.tardis.travel().instability());
+        this.tardis().door().closeDoors();
+        this.tardis.door().setLocked(true);
         this.active.set(siege);
+
     }
 
     @Override
@@ -143,11 +156,13 @@ public class SiegeHandler extends KeyedTardisComponent implements TardisTickable
             return;
 
         boolean isHeld = this.isSiegeBeingHeld();
+        this.tardis.door().setDeadlocked(true);
 
         if (isHeld && this.tardis.getExterior().findExteriorBlock().isPresent())
             this.setSiegeBeingHeld(null);
-
-        boolean freeze = !isHeld && this.getTimeInSiegeMode() > 60 * 20;
+        this.tardis.door().closeDoors();
+        this.tardis.door().locked();
+        boolean freeze = !isHeld && this.getTimeInSiegeMode() > 60 * 20 && !this.tardis.subsystems().lifeSupport().isEnabled();
 
         for (ServerPlayerEntity player : TardisUtil.getPlayersInsideInterior(this.tardis.asServer())) {
             if (!player.isAlive())

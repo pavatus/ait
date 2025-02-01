@@ -3,6 +3,7 @@ package loqor.ait.core.tardis.control.sequences;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -25,7 +26,6 @@ import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.core.util.ServerLifecycleHooks;
 import loqor.ait.data.Exclude;
 import loqor.ait.registry.impl.SequenceRegistry;
 

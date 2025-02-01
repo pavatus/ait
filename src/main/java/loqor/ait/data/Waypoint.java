@@ -1,5 +1,7 @@
 package loqor.ait.data;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.item.ItemStack;
 
 import loqor.ait.core.item.WaypointItem;
@@ -7,14 +9,14 @@ import loqor.ait.core.item.WaypointItem;
 public class Waypoint {
 
     private String name;
-    private final DirectedGlobalPos.Cached pos;
+    private final CachedDirectedGlobalPos pos;
 
-    public Waypoint(String name, DirectedGlobalPos.Cached pos) {
+    public Waypoint(String name, CachedDirectedGlobalPos pos) {
         this.name = name;
         this.pos = pos;
     }
 
-    private Waypoint(DirectedGlobalPos.Cached pos) {
+    private Waypoint(CachedDirectedGlobalPos pos) {
         this(null, pos);
     }
 
@@ -31,11 +33,11 @@ public class Waypoint {
         return this.name != null;
     }
 
-    public DirectedGlobalPos.Cached getPos() {
+    public CachedDirectedGlobalPos getPos() {
         return pos;
     }
 
-    public static Waypoint fromPos(DirectedGlobalPos.Cached pos) {
+    public static Waypoint fromPos(CachedDirectedGlobalPos pos) {
         return new Waypoint(pos);
     }
 

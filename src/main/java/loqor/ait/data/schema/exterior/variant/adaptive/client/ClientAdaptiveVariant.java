@@ -17,7 +17,7 @@ public class ClientAdaptiveVariant extends ClientExteriorVariantSchema {
     protected static final BiomeOverrides OVERRIDES = BiomeOverrides.EMPTY;
 
     public ClientAdaptiveVariant() {
-        super(new Identifier(AITMod.MOD_ID, "exterior/adaptive"));
+        super(AITMod.id("exterior/adaptive"));
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ClientAdaptiveVariant extends ClientExteriorVariantSchema {
 
     @Override
     public Identifier texture() {
-        return new Identifier(AITMod.MOD_ID, CATEGORY_PATH + ".png");
+        return AITMod.id(CATEGORY_PATH + ".png");
     }
 
     @Override

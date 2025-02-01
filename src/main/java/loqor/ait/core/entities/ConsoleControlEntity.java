@@ -2,17 +2,17 @@ package loqor.ait.core.entities;
 
 import java.util.List;
 
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -31,6 +31,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.core.AITEntityTypes;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITSounds;
@@ -40,8 +41,6 @@ import loqor.ait.core.item.control.ControlBlockItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.control.ControlTypes;
-import loqor.ait.core.util.Scheduler;
-import loqor.ait.data.TimeUnit;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
 
 public class ConsoleControlEntity extends LinkableDummyLivingEntity {
@@ -56,8 +55,10 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             TrackedDataHandlerRegistry.VECTOR3F);
     private static final TrackedData<Boolean> PART_OF_SEQUENCE = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Integer> SEQUENCE_COLOR = DataTracker.registerData(ConsoleControlEntity.class,
+    private static final TrackedData<Integer> SEQUENCE_INDEX = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.INTEGER); // <--->
+    private static final TrackedData<Integer> SEQUENCE_LENGTH = DataTracker.registerData(ConsoleControlEntity.class,
+            TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> WAS_SEQUENCED = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> ON_DELAY = DataTracker.registerData(ConsoleControlEntity.class,
@@ -67,12 +68,17 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     private Control control;
 
     public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
+        super(entityType, world, false);
     }
 
     private ConsoleControlEntity(World world, Tardis tardis) {
         this(AITEntityTypes.CONTROL_ENTITY_TYPE, world);
         this.link(tardis);
+    }
+
+    @Override
+    public boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source) {
+        return false;
     }
 
     public static ConsoleControlEntity create(World world, Tardis tardis) {
@@ -82,7 +88,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public void remove(RemovalReason reason) {
         AITMod.LOGGER.debug("Control entity discarded as {}", reason);
-        super.remove(reason);
+        this.setRemoved(reason);
     }
 
     @Override
@@ -105,14 +111,18 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.dataTracker.startTracking(HEIGHT, 0.125f);
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
         this.dataTracker.startTracking(PART_OF_SEQUENCE, false);
-        this.dataTracker.startTracking(SEQUENCE_COLOR, 0);
+        this.dataTracker.startTracking(SEQUENCE_INDEX, 0);
+        this.dataTracker.startTracking(SEQUENCE_LENGTH, 0);
         this.dataTracker.startTracking(WAS_SEQUENCED, false);
         this.dataTracker.startTracking(ON_DELAY, false);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+        TardisRef ref = this.asRef();
+
+        if (ref != null && ref.getId() != null)
+            nbt.putUuid("tardis", ref.getId());
 
         if (consoleBlockPos != null)
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
@@ -124,7 +134,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         nbt.putFloat("offsetY", this.getOffset().y());
         nbt.putFloat("offsetZ", this.getOffset().z());
         nbt.putBoolean("partOfSequence", this.isPartOfSequence());
-        nbt.putInt("sequenceColor", this.getSequenceColor());
+        nbt.putInt("sequenceColor", this.getSequenceIndex());
         nbt.putBoolean("wasSequenced", this.wasSequenced());
     }
 
@@ -153,7 +163,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             this.setPartOfSequence(nbt.getBoolean("partOfSequence"));
 
         if (nbt.contains("sequenceColor"))
-            this.setSequenceColor(nbt.getInt("sequenceColor"));
+            this.setSequenceIndex(nbt.getInt("sequenceColor"));
 
         if (nbt.contains("wasSequenced"))
             this.setWasSequenced(nbt.getBoolean("wasSequenced"));
@@ -162,22 +172,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public void onDataTrackerUpdate(List<DataTracker.SerializedEntry<?>> dataEntries) {
         this.setScaleAndCalculate(this.getDataTracker().get(WIDTH), this.getDataTracker().get(HEIGHT));
-    }
-
-    @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
-
-        if (!this.getWorld().isClient())
-            return;
-
-        if (PART_OF_SEQUENCE.equals(data)) {
-            this.setPartOfSequence(this.getDataTracker().get(PART_OF_SEQUENCE));
-        } else if (SEQUENCE_COLOR.equals(data)) {
-            this.setSequenceColor(this.getDataTracker().get(SEQUENCE_COLOR));
-        } else if (WAS_SEQUENCED.equals(data)) {
-            this.setWasSequenced(this.getDataTracker().get(WAS_SEQUENCED));
-        }
     }
 
     @Override
@@ -202,6 +196,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+
+        if (source.getAttacker() instanceof TntEntity tnt) {
+            return false;
+        }
+
         if (source.getAttacker() instanceof PlayerEntity player) {
             if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
@@ -288,12 +287,24 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.dataTracker.set(OFFSET, offset);
     }
 
-    public int getSequenceColor() {
-        return this.dataTracker.get(SEQUENCE_COLOR);
+    public int getSequenceIndex() {
+        return this.dataTracker.get(SEQUENCE_INDEX);
     }
 
-    public void setSequenceColor(int color) {
-        this.dataTracker.set(SEQUENCE_COLOR, color);
+    public void setSequenceIndex(int i) {
+        this.dataTracker.set(SEQUENCE_INDEX, i);
+    }
+
+    public int getSequenceLength() {
+        return this.dataTracker.get(SEQUENCE_LENGTH);
+    }
+
+    public void setSequenceLength(int n) {
+        this.dataTracker.set(SEQUENCE_LENGTH, n);
+    }
+
+    public float getSequencePercentage() {
+        return (this.getSequenceIndex() + 1f) / this.getSequenceLength();
     }
 
     public boolean wasSequenced() {
@@ -348,7 +359,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.control.shouldHaveDelay(tardis) && !this.isOnDelay()) {
             this.dataTracker.set(ON_DELAY, true);
 
-            Scheduler.runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.MILLISECONDS, this.control.getDelayLength());
+            Scheduler.get().runTaskLater(() -> this.dataTracker.set(ON_DELAY, false), TimeUnit.TICKS, this.control.getDelayLength());
         }
 
         if (this.consoleBlockPos != null)
@@ -402,8 +413,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         if (this.consoleBlockPos != null) {
             Vec3d centered = this.getPos().subtract(this.consoleBlockPos.toCenterPos());
             if (this.control != null)
-                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + ", "
-                        + this.getControlHeight() + "), new Vector3f(" + centered.getX() + "f, " + centered.getY()
+                player.sendMessage(Text.literal("EntityDimensions.changing(" + this.getControlWidth() + "f, "
+                        + this.getControlHeight() + "f), new Vector3f(" + centered.getX() + "f, " + centered.getY()
                         + "f, " + centered.getZ() + "f)),"));
         }
     }

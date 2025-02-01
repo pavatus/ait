@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 
 import loqor.ait.AITMod;
 import loqor.ait.api.TardisComponent;
@@ -13,7 +16,7 @@ import loqor.ait.core.tardis.ServerTardis;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.handler.LoyaltyHandler;
 import loqor.ait.core.tardis.handler.StatsHandler;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.world.TardisServerWorld;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.schema.desktop.TardisDesktopSchema;
 import loqor.ait.data.schema.exterior.ExteriorVariantSchema;
@@ -23,7 +26,7 @@ import loqor.ait.registry.impl.exterior.ExteriorVariantRegistry;
 public class TardisBuilder {
 
     private final UUID uuid;
-    private DirectedGlobalPos.Cached pos;
+    private CachedDirectedGlobalPos pos;
     private TardisDesktopSchema desktop;
     private ExteriorVariantSchema exterior;
 
@@ -37,7 +40,7 @@ public class TardisBuilder {
         this(UUID.randomUUID());
     }
 
-    public TardisBuilder at(DirectedGlobalPos.Cached pos) {
+    public TardisBuilder at(CachedDirectedGlobalPos pos) {
         this.pos = pos;
         return this;
     }
@@ -89,6 +92,11 @@ public class TardisBuilder {
         this.validate();
 
         ServerTardis tardis = new ServerTardis(this.uuid, this.desktop, this.exterior);
+
+        long worldStart = System.currentTimeMillis();
+        ServerWorld world = TardisServerWorld.create(tardis);
+        AITMod.LOGGER.info("Created world {} in {}ms", world, System.currentTimeMillis() - worldStart);
+
         Tardis.init(tardis, TardisComponent.InitContext.createdAt(this.pos));
 
         for (Consumer<ServerTardis> consumer : this.postInit) {

@@ -1,5 +1,7 @@
 package loqor.ait.core.tardis.handler;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -18,7 +20,6 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.api.TardisTickable;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.Loyalty;
 import loqor.ait.data.properties.bool.BoolProperty;
 import loqor.ait.data.properties.bool.BoolValue;
@@ -88,19 +89,19 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
 
     @Override
     public void tick(MinecraftServer server) {
-        if (!this.shielded().get())
+        if (!this.shielded().get() || !this.tardis.subsystems().shields().isEnabled() || this.tardis().subsystems().shields().isBroken())
             return;
 
         TravelHandler travel = tardis.travel();
 
-        if (!this.tardis.engine().hasPower())
+        if (!this.tardis.fuel().hasPower())
             this.disableAll();
 
         if (travel.getState() == TravelHandlerBase.State.FLIGHT)
             return;
 
         tardis.removeFuel(2 * travel.instability()); // idle drain of 2 fuel per tick
-        DirectedGlobalPos.Cached globalExteriorPos = travel.position();
+        CachedDirectedGlobalPos globalExteriorPos = travel.position();
 
         World world = globalExteriorPos.getWorld();
         BlockPos exteriorPos = globalExteriorPos.getPos();

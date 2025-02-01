@@ -13,6 +13,14 @@ public class BoolValue extends Value<Boolean> {
         super.set(BoolProperty.normalize(value), sync);
     }
 
+    public void toggle() {
+        this.flatMap(b -> !b);
+    }
+
+    public void toggle(boolean sync) {
+        this.flatMap(b -> !b, sync);
+    }
+
     public static Object serializer() {
         return new Serializer<>(BoolProperty.TYPE, BoolValue::new);
     }

@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.pavatus.lib.register.unlockable.Unlockable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
@@ -22,7 +23,6 @@ import loqor.ait.AITMod;
 import loqor.ait.api.Nameable;
 import loqor.ait.core.util.WorldUtil;
 import loqor.ait.data.Loyalty;
-import loqor.ait.registry.unlockable.Unlockable;
 
 public record LockedDimension(Identifier dimension, ItemStack stack) implements Unlockable, Nameable {
     public static final Codec<LockedDimension> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(

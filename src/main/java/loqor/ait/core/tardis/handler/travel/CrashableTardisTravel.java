@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -23,7 +25,6 @@ import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.handler.TardisCrashHandler;
 import loqor.ait.core.tardis.util.TardisUtil;
-import loqor.ait.data.DirectedGlobalPos;
 import loqor.ait.data.properties.bool.BoolValue;
 
 public sealed interface CrashableTardisTravel permits TravelHandler {
@@ -48,11 +49,11 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
 
     void forceRemat();
 
-    DirectedGlobalPos.Cached position();
+    CachedDirectedGlobalPos position();
 
-    DirectedGlobalPos.Cached getProgress();
+    CachedDirectedGlobalPos getProgress();
 
-    void destination(DirectedGlobalPos.Cached cached);
+    void destination(CachedDirectedGlobalPos cached);
 
     /**
      * Performs a crash for the Tardis. If the Tardis is not in flight state, the

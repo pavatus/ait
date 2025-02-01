@@ -857,7 +857,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
 
         ClientTardis tardis = (ClientTardis) exterior.tardis().get();
 
-        root = tardis.interiorChangingHandler().isQueued()
+        root = tardis.interiorChangingHandler().queued().get()
                 || tardis.travel().getState() != TravelHandlerBase.State.LANDED
                         ? coral.getChild("six")
                         : coral.getChild("seven");
@@ -876,7 +876,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public Animation getAnimationForDoorState(DoorHandler.DoorStateEnum state) {
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
     }
 

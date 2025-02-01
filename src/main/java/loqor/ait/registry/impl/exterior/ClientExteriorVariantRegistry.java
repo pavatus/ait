@@ -1,5 +1,7 @@
 package loqor.ait.registry.impl.exterior;
 
+
+import dev.pavatus.lib.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import org.joml.Vector3f;
@@ -24,6 +26,7 @@ import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleDefaul
 import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleFireVariant;
 import loqor.ait.data.schema.exterior.variant.capsule.client.ClientCapsuleSoulVariant;
 import loqor.ait.data.schema.exterior.variant.classic.client.*;
+import loqor.ait.data.schema.exterior.variant.dalek_mod.client.*;
 import loqor.ait.data.schema.exterior.variant.doom.client.ClientDoomVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.client.ClientEasterHeadDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.easter_head.client.ClientEasterHeadFireVariant;
@@ -33,9 +36,11 @@ import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricFi
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import loqor.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import loqor.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
+import loqor.ait.data.schema.exterior.variant.pipe.client.ClientPipeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import loqor.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
+import loqor.ait.data.schema.exterior.variant.present.client.ClientPresentDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeTronVariant;
@@ -46,7 +51,6 @@ import loqor.ait.data.schema.exterior.variant.stallion.client.ClientStallionStee
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimDefaultVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimFireVariant;
 import loqor.ait.data.schema.exterior.variant.tardim.client.ClientTardimSoulVariant;
-import loqor.ait.registry.datapack.DatapackRegistry;
 
 public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteriorVariantSchema> implements
         SimpleSynchronousResourceReloadListener {
@@ -145,7 +149,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema BOX_FUTURE;
     public static ClientExteriorVariantSchema BOX_CORAL;
     public static ClientExteriorVariantSchema BOX_CHERRY;
-    public static ClientExteriorVariantSchema BOX_TOKAMAK;
+    public static ClientExteriorVariantSchema BOX_RENAISSANCE;
     public static ClientExteriorVariantSchema PRIME;
     public static ClientExteriorVariantSchema YETI;
     public static ClientExteriorVariantSchema DEFINITIVE;
@@ -184,6 +188,14 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema STALLION_SOUL;
     public static ClientExteriorVariantSchema STALLION_STEEL;
     public static ClientExteriorVariantSchema ADAPTIVE;
+    public static ClientExteriorVariantSchema DALEK_MOD_1963;
+    public static ClientExteriorVariantSchema DALEK_MOD_1967;
+    public static ClientExteriorVariantSchema DALEK_MOD_1970;
+    public static ClientExteriorVariantSchema DALEK_MOD_1976;
+    public static ClientExteriorVariantSchema DALEK_MOD_1980;
+    //public static ClientExteriorVariantSchema JAKE_DEFAULT;
+    public static ClientExteriorVariantSchema PRESENT_DEFAULT;
+    public static ClientExteriorVariantSchema PIPE_DEFAULT;
 
     @Override
     public void onClientInit() {
@@ -198,7 +210,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         BOX_FIRE = register(new ClientPoliceBoxFireVariant());
         BOX_FUTURE = register(new ClientPoliceBoxFuturisticVariant());
         BOX_CORAL = register(new ClientPoliceBoxCoralVariant());
-        BOX_TOKAMAK = register(new ClientPoliceBoxTokamakVariant());
+        BOX_RENAISSANCE = register(new ClientPoliceBoxRenaissanceVariant());
         BOX_CHERRY = register(new ClientPoliceBoxCherryVariant());
 
         // Classic Box
@@ -261,11 +273,25 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         STALLION_STEEL = register(new ClientStallionSteelVariant());
 
         ADAPTIVE = register(new ClientAdaptiveVariant());
+
+        // Dalek Mod
+        DALEK_MOD_1963 = register(new ClientDalekMod1963Variant());
+        DALEK_MOD_1967 = register(new ClientDalekMod1967Variant());
+        DALEK_MOD_1970 = register(new ClientDalekMod1970Variant());
+        DALEK_MOD_1976 = register(new ClientDalekMod1976Variant());
+        DALEK_MOD_1980 = register(new ClientDalekMod1980Variant());
+
+        // Jake
+        //JAKE_DEFAULT = register(new ClientJakeDefaultVariant());
+
+        // Present
+        PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
+        PIPE_DEFAULT = register(new ClientPipeDefaultVariant());
     }
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier(AITMod.MOD_ID, "client_exterior");
+        return AITMod.id("client_exterior");
     }
 
     @Override

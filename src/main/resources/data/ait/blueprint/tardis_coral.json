@@ -1,0 +1,163 @@
+{
+  "output": {
+    "id": "ait:coral_plant",
+    "Count": 1
+  },
+  "inputs": [
+    {
+      "item": "ait:door_block",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "dead_brain_coral_block",
+      "maxCount": 9,
+      "minCount": 3
+    },
+    {
+      "item": "dead_brain_coral",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ghast_tear",
+      "maxCount": 5,
+      "minCount": 3
+    },
+    {
+      "item": "heart_of_the_sea",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "end_crystal",
+      "maxCount": 3,
+      "minCount": 2
+    },
+    {
+      "item": "obsidian",
+      "maxCount": 3,
+      "minCount": 3
+    },
+    {
+      "item": "crying_obsidian",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "soul_sand",
+      "maxCount": 5,
+      "minCount": 1
+    },
+    {
+      "item": "redstone_block",
+      "maxCount": 10,
+      "minCount": 4
+    },
+    {
+      "item": "blaze_powder",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "minecraft:ender_pearl",
+      "maxCount": 4,
+      "minCount": 2
+    },
+    {
+      "item": "ait:charged_zeiton_crystal",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:zeiton_shard",
+      "maxCount": 16,
+      "minCount": 1
+    },
+    {
+      "item": "ait:zeiton_block",
+      "maxCount": 8,
+      "minCount": 5
+    },
+    {
+      "item": "ait:inductor",
+      "maxCount": 8,
+      "minCount": 5
+    },
+    {
+      "item": "ait:manipulator",
+      "maxCount": 2,
+      "minCount": 1
+    },
+    {
+      "item": "ait:console_generator",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "blaze_rod",
+      "maxCount": 5,
+      "minCount": 1
+    },
+    {
+      "item": "ender_eye",
+      "maxCount": 4,
+      "minCount": 1
+    },
+    {
+      "item": "ait:compact_zeiton",
+      "maxCount": 6,
+      "minCount": 2
+    },
+    {
+      "item": "ait:zeiton_cobble",
+      "maxCount": 2,
+      "minCount": 1
+    },
+    {
+      "item": "ait:condenser",
+      "maxCount": 5,
+      "minCount": 2
+    },
+    {
+      "item": "ait:artron_fluid_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:data_fluid_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:vortex_fluid_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:artron_mercurial_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:data_mercurial_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:vortex_mercurial_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:artron_collector_block",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "ait:budding_zeiton",
+      "maxCount": 9,
+      "minCount": 5
+    }
+  ]
+}

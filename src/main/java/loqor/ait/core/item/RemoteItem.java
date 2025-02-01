@@ -5,6 +5,7 @@ import static loqor.ait.core.tardis.handler.travel.TravelHandlerBase.State.LANDE
 import java.util.List;
 import java.util.UUID;
 
+import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -24,12 +25,12 @@ import net.minecraft.world.World;
 
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
+import loqor.ait.core.AITSounds;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.impl.DirectionControl;
-import loqor.ait.core.tardis.dim.TardisDimension;
 import loqor.ait.core.tardis.handler.travel.TravelUtil;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
-import loqor.ait.data.DirectedGlobalPos;
+import loqor.ait.core.world.TardisServerWorld;
 
 public class RemoteItem extends LinkableItem {
 
@@ -65,17 +66,20 @@ public class RemoteItem extends LinkableItem {
                         player.sendMessage(Text.translatable("message.ait.remoteitem.warning1"));
 
                     if (tardis.isRefueling())
-                        player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
+                        player.sendMessage(Text.translatable("message.ait.remoteitem.cancel.refuel"));
+
+                        //It was dematting before anyway so as a lazy fix its a feature now!!
+                        //player.sendMessage(Text.translatable("message.ait.remoteitem.warning2"));
 
                     // Check if the Tardis is already present at this location before moving
                     // it there
-                    DirectedGlobalPos.Cached currentPosition = tardis.travel().position();
+                    CachedDirectedGlobalPos currentPosition = tardis.travel().position();
 
                     if (currentPosition.getPos().equals(pos))
                         return;
 
-                    if (!TardisDimension.isTardisDimension((ServerWorld) world)) {
-                        world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS);
+                    if (!TardisServerWorld.isTardisDimension((ServerWorld) world)) {
+                        world.playSound(null, pos, AITSounds.REMOTE, SoundCategory.BLOCKS);
 
                         BlockPos temp = pos.up();
 
@@ -84,7 +88,7 @@ public class RemoteItem extends LinkableItem {
 
                         tardis.travel().speed(tardis.travel().maxSpeed().get());
 
-                        TravelUtil.travelTo(tardis, DirectedGlobalPos.Cached.create(serverWorld, temp, DirectionControl
+                        TravelUtil.travelTo(tardis, CachedDirectedGlobalPos.create(serverWorld, temp, DirectionControl
                                 .getGeneralizedRotation(RotationPropertyHelper.fromYaw(player.getBodyYaw()))));
                     } else {
                         world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F,
