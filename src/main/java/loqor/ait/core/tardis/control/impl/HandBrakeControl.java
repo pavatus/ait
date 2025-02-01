@@ -45,7 +45,6 @@ public class HandBrakeControl extends Control {
             tardis.setRefueling(false);
         }
 
-        //Waiting for classic to give me the soounds lol
         if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
             if (isRenaissanceVariant(consoleBlockEntity)) {
                 this.soundEvent = handbrake ? AITSounds.RENAISSANCE_HANDBRAKE_ALT : AITSounds.RENAISSANCE_HANDBRAKE_ALTALT;
