@@ -47,11 +47,11 @@ public class ClientRenaissanceVariant extends ClientConsoleVariantSchema {
 
     @Override
     public Vector3f handlesTranslations() {
-        return new Vector3f(0.75f, 1.25f, 0.4f);
+        return new Vector3f(-0.01f, 1.45f, -0.04f);
     }
 
     @Override
     public float[] handlesRotations() {
-        return new float[]{-90f, 120f};
+        return new float[]{-180f, 120f};
     }
 }
