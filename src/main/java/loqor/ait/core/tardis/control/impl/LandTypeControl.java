@@ -11,6 +11,7 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
+import loqor.ait.data.schema.console.variant.coral.*;
 import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class LandTypeControl extends Control {
@@ -44,10 +45,11 @@ public class LandTypeControl extends Control {
             return value;
         });
 
-
         if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
             if (isRenaissanceVariant(consoleBlockEntity)) {
                 this.soundEvent = AITSounds.RENAISSANCE_LAND_TYPE_ALT;
+            } else if (isCoralVariant(consoleBlockEntity)) {
+                this.soundEvent = AITSounds.CORAL_LAND_TYPE_ALT;
             }
         }
 
@@ -74,5 +76,13 @@ public class LandTypeControl extends Control {
                 consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
+    }
+
+    private boolean isCoralVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof CoralVariant ||
+                consoleBlockEntity.getVariant() instanceof WhiteCoralVariant ||
+                consoleBlockEntity.getVariant() instanceof CoralSithVariant ||
+                consoleBlockEntity.getVariant() instanceof BlueCoralVariant ||
+                consoleBlockEntity.getVariant() instanceof CoralDecayedVariant;
     }
 }
