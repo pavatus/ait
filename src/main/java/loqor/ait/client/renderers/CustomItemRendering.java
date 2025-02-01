@@ -60,7 +60,9 @@ public class CustomItemRendering {
             if (!this.id.equals(context.id()))
                 return original;
 
-            return new OverriddenBakedModel(original, this.override, context.sourceModel(), context.baker());
+
+            BakedModel overriden = new OverriddenBakedModel(original, this.override, context.sourceModel(), context.baker());
+            return overriden;
         }
     }
 }

@@ -5,12 +5,13 @@ import static loqor.ait.AITMod.LOGGER;
 import java.util.function.Consumer;
 
 import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
 import loqor.ait.AITMod;
-import loqor.ait.client.AITModClient;
 import loqor.ait.data.datapack.DatapackSonic;
 import loqor.ait.data.schema.sonic.BuiltinSonic;
 import loqor.ait.data.schema.sonic.SonicSchema;
@@ -31,13 +32,19 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     @Override
     public void readFromServer(PacketByteBuf buf) {
         super.readFromServer(buf);
-        AITModClient.sonicModelPredicate();
+        //AITModClient.sonicModelPredicate();
     }
 
     @Override
     public void onClientInit() {
         this.defaults();
         super.onClientInit();
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override
@@ -74,4 +81,8 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
             LOGGER.debug("Loading sonic '{}' with models: {}", schema.id(), models);
         }
     }
+
+
+
+
 }

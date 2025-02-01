@@ -280,7 +280,7 @@ public class AITModClient implements ClientModInitializer {
 
         CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"),
                 (model, stack, world, entity, seed) -> {
-                    SonicSchema.Models models = SonicItem.findSchema(stack).models();
+                    SonicSchema.Models models = SonicItem2.findSchema(stack).models();
 
                     if (entity == null || !(entity.getActiveItem() == stack && entity.isUsingItem()))
                         return models.inactive();
