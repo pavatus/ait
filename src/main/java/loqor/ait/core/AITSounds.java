@@ -129,6 +129,7 @@ public class AITSounds {
     public static final SoundEvent RENAISSANCE_ANTI_GRAV_ALT = register("controls/renaissance_anti_grav_alt");
     public static final SoundEvent RENAISSANCE_HANDBRAKE_ALT = register("controls/renaissance_handbrakealt");
     public static final SoundEvent RENAISSANCE_HANDBRAKE_ALTALT = register("controls/renaissance_handbrakealtalt");
+    public static final SoundEvent RENAISSANCE_DIMENSION_ALT = register("controls/renaissance_dimension_alt");
 
     //Alt console sounds for coral
     //Todo: make the telepathic circuits alt varient work cuz i cant get it to work lol
