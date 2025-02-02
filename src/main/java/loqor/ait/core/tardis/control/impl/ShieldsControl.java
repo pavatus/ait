@@ -11,6 +11,7 @@ import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
 import loqor.ait.core.tardis.handler.ShieldHandler;
+import loqor.ait.data.schema.console.variant.coral.*;
 import loqor.ait.data.schema.console.variant.renaissance.*;
 
 public class ShieldsControl extends Control {
@@ -29,8 +30,11 @@ public class ShieldsControl extends Control {
         }
 
         boolean isRenaissance = false;
+        boolean isCoral = false;
+
         if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
             isRenaissance = isRenaissanceVariant(consoleBlockEntity);
+            isCoral = isCoralVariant(consoleBlockEntity);
         }
 
         ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
@@ -44,9 +48,13 @@ public class ShieldsControl extends Control {
                 shields.disableVisuals();
         }
 
-        this.soundEvent = leftClick
-                ? (isRenaissance ? AITSounds.RENAISSANCE_SHIELDS_ALTALT : AITSounds.SHIELDS)
-                : (isRenaissance ? AITSounds.RENAISSANCE_SHIELDS_ALT : AITSounds.HANDBRAKE_LEVER_PULL);
+        if (isRenaissance) {
+            this.soundEvent = leftClick ? AITSounds.RENAISSANCE_SHIELDS_ALTALT : AITSounds.RENAISSANCE_SHIELDS_ALT;
+        } else if (isCoral) {
+            this.soundEvent = leftClick ? AITSounds.CORAL_SHIELDS_ALTALT : AITSounds.CORAL_SHIELDS_ALT;
+        } else {
+            this.soundEvent = leftClick ? AITSounds.SHIELDS : AITSounds.HANDBRAKE_LEVER_PULL;
+        }
 
         return true;
     }
@@ -60,6 +68,15 @@ public class ShieldsControl extends Control {
         return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIndustriousVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
+    }
+
+    private boolean isCoralVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof CoralVariant ||
+                consoleBlockEntity.getVariant() instanceof WhiteCoralVariant ||
+                consoleBlockEntity.getVariant() instanceof CoralSithVariant ||
+                consoleBlockEntity.getVariant() instanceof BlueCoralVariant ||
+                consoleBlockEntity.getVariant() instanceof CoralDecayedVariant;
     }
 }

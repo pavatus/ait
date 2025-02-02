@@ -7,22 +7,33 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import loqor.ait.core.AITSounds;
+import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.control.Control;
+import loqor.ait.data.schema.console.variant.coral.*;
 
 public class IncrementControl extends Control {
+
+    private SoundEvent soundEvent = AITSounds.CRANK;
 
     public IncrementControl() {
         super("increment");
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
-            boolean leftClick) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
             return false;
         }
+
+        boolean isCoral = false;
+
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+            isCoral = isCoralVariant(consoleBlockEntity);
+        }
+
+        this.soundEvent = isCoral ? AITSounds.CORAL_INCREMENT_ALT : AITSounds.CRANK;
 
         if (!leftClick) {
             IncrementManager.nextIncrement(tardis);
@@ -36,7 +47,7 @@ public class IncrementControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.CRANK;
+        return this.soundEvent;
     }
 
     private void messagePlayerIncrement(ServerPlayerEntity player, Tardis tardis) {
@@ -48,5 +59,13 @@ public class IncrementControl extends Control {
     @Override
     public boolean shouldHaveDelay() {
         return false;
+    }
+
+    private boolean isCoralVariant(ConsoleBlockEntity consoleBlockEntity) {
+        return consoleBlockEntity.getVariant() instanceof CoralVariant ||
+                consoleBlockEntity.getVariant() instanceof WhiteCoralVariant ||
+                consoleBlockEntity.getVariant() instanceof CoralSithVariant ||
+                consoleBlockEntity.getVariant() instanceof BlueCoralVariant ||
+                consoleBlockEntity.getVariant() instanceof CoralDecayedVariant;
     }
 }

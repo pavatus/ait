@@ -32,7 +32,7 @@ public class SonicPortControl extends Control {
         SonicHandler handler = tardis.sonic();
         ButlerHandler butler = tardis.butler();
 
-        System.out.println(handler.getConsoleSonic());
+        //System.out.println(handler.getConsoleSonic());
 
         if ((leftClick || player.isSneaking()) && (handler.getConsoleSonic() != null || butler.getHandles() != null)) {
             if (handler.getConsoleSonic() != null) {

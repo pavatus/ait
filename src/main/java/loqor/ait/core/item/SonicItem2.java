@@ -43,6 +43,22 @@ public class SonicItem2 extends LinkableItem implements ArtronHolderItem {
         return stack;
     }
 
+    public static SonicSchema findSchema(NbtCompound nbt) {
+        String rawId = nbt.getString(SONIC_TYPE);
+
+        if (rawId == null)
+            return SonicRegistry.DEFAULT;
+
+        Identifier id = Identifier.tryParse(rawId);
+        SonicSchema schema = SonicRegistry.getInstance().get(id);
+
+        return schema == null ? SonicRegistry.DEFAULT : schema;
+    }
+
+    public static SonicSchema findSchema(ItemStack stack) {
+        return findSchema(stack.getOrCreateNbt());
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);

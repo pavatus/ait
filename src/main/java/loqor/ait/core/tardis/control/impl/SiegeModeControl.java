@@ -72,6 +72,7 @@ public class SiegeModeControl extends Control {
         return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIndustriousVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
 }

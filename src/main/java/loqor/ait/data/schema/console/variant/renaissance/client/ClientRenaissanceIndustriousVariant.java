@@ -8,16 +8,16 @@ import loqor.ait.AITMod;
 import loqor.ait.client.models.consoles.ConsoleModel;
 import loqor.ait.client.models.consoles.RenaissanceConsoleModel;
 import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
-import loqor.ait.data.schema.console.variant.renaissance.RenaissanceVariant;
+import loqor.ait.data.schema.console.variant.renaissance.RenaissanceIndustriousVariant;
 
-public class ClientRenaissanceVariant extends ClientConsoleVariantSchema {
+public class ClientRenaissanceIndustriousVariant extends ClientConsoleVariantSchema {
     public static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaissance_default.png"));
+            ("textures/blockentities/consoles/renaissance_industrious.png"));
     public static final Identifier EMISSION = new Identifier(AITMod.MOD_ID,
-            ("textures/blockentities/consoles/renaissance_default_emission.png"));
+            ("textures/blockentities/consoles/renaissance_industrious_emission.png"));
 
-    public ClientRenaissanceVariant() {
-        super(RenaissanceVariant.REFERENCE, RenaissanceVariant.REFERENCE);
+    public ClientRenaissanceIndustriousVariant() {
+        super(RenaissanceIndustriousVariant.REFERENCE, RenaissanceIndustriousVariant.REFERENCE);
     }
 
     @Override

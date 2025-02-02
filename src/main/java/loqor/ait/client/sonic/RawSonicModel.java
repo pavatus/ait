@@ -10,8 +10,6 @@ import net.minecraft.util.Identifier;
 
 public class RawSonicModel extends Model {
 
-
-
     public RawSonicModel(Function<Identifier, RenderLayer> layerFactory) {
         super(layerFactory);
     }

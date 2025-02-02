@@ -27,6 +27,7 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.SonicItem2;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
 
@@ -172,10 +173,10 @@ public class SonicSettingsScreen extends ConsoleScreen {
             stack.translate(0, 0, 500f);
             context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.sonic_casing"), x + 140, y + 10,
                     0xFFFFFF);
-            context.drawCenteredTextWithShadow(this.textRenderer, SonicItem.findSchema(sonicCopy).name(), x + 140,
+            context.drawCenteredTextWithShadow(this.textRenderer, SonicItem2.findSchema(sonicCopy).name(), x + 140,
                     y + 20, 0x00FFFF);
             context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.current_au"), x + 140, y + 40, 0xFFFFFF);
-            context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem.FUEL_KEY) + " AU", x + 140,
+            context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem2.FUEL_KEY) + " AU", x + 140,
                     y + 50, 0x00FFFF);
 
             UUID tardis = LinkableItem.getTardisIdFromUuid(sonicCopy, "tardis");

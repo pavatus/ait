@@ -19,17 +19,17 @@ public class ClientLightUtil {
             T entity, ModelPart root, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay,
             float red, float green, float blue, float alpha) {
         ClientLightUtil.renderEmissivable(emissive, renderable, texture, texture, entity, root, matrices, vertices,
-                light, overlay, red, green, blue, alpha);
+                0xf000f0, overlay, red, green, blue, alpha);
     }
 
     public static <T> void renderEmissivable(boolean emissive, Renderable<T> renderable, @Nullable Identifier base,
             @Nullable Identifier glowing, T entity, ModelPart root, MatrixStack matrices,
             VertexConsumerProvider vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         if (emissive) {
-            ClientLightUtil.renderEmissive(renderable, glowing, entity, root, matrices, vertices, light, overlay, red,
+            ClientLightUtil.renderEmissive(renderable, glowing, entity, root, matrices, vertices, 0xf000f0, overlay, red,
                     green, blue, alpha);
         } else {
-            ClientLightUtil.render(renderable, base, entity, root, matrices, vertices, light, overlay, red, green, blue,
+            ClientLightUtil.render(renderable, base, entity, root, matrices, vertices, 0xf000f0, overlay, red, green, blue,
                     alpha);
         }
     }
@@ -44,8 +44,8 @@ public class ClientLightUtil {
                 ? AITRenderLayers.tardisEmissiveCullZOffset(emissive, true)
                 : AITRenderLayers.getBeaconBeam(emissive, true);
 
-        light = DependencyChecker.hasIris() ? LightmapTextureManager.MAX_LIGHT_COORDINATE : light;
-        ClientLightUtil.render(renderable, entity, root, matrices, layer, vertices, light, overlay, red, green, blue,
+        light = DependencyChecker.hasIris() ? LightmapTextureManager.MAX_LIGHT_COORDINATE : 0xf000f0;
+        ClientLightUtil.render(renderable, entity, root, matrices, layer, vertices, 0xf000f0, overlay, red, green, blue,
                 alpha);
     }
 
@@ -56,19 +56,19 @@ public class ClientLightUtil {
             return;
 
         ClientLightUtil.render(renderable, entity, root, matrices, AITRenderLayers.getEntityTranslucentCull(texture),
-                vertices, light, overlay, red, green, blue, alpha);
+                vertices, 0xf000f0, overlay, red, green, blue, alpha);
     }
 
     private static <T> void render(Renderable<T> renderable, T entity, ModelPart root, MatrixStack matrices,
             RenderLayer layer, VertexConsumerProvider vertices, int light, int overlay, float red, float green,
             float blue, float alpha) {
-        ClientLightUtil.render(renderable, entity, root, matrices, vertices.getBuffer(layer), light, overlay, red,
+        ClientLightUtil.render(renderable, entity, root, matrices, vertices.getBuffer(layer), 0xf000f0, overlay, red,
                 green, blue, alpha);
     }
 
     private static <T> void render(Renderable<T> renderable, T entity, ModelPart root, MatrixStack matrices,
             VertexConsumer consumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        renderable.render(entity, root, matrices, consumer, light, overlay, red, green, blue, alpha);
+        renderable.render(entity, root, matrices, consumer, 0xf000f0, overlay, red, green, blue, alpha);
     }
 
     @FunctionalInterface
@@ -78,7 +78,7 @@ public class ClientLightUtil {
 
         static <T> Renderable<T> create(ModelRenderable renderable) {
             return (entity, root, matrices, vertices, light, overlay, red, green, blue, alpha) -> renderable
-                    .render(matrices, vertices, light, overlay, red, green, blue, alpha);
+                    .render(matrices, vertices, 0xf000f0, overlay, red, green, blue, alpha);
         }
     }
 

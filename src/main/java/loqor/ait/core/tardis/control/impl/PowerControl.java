@@ -62,6 +62,7 @@ public class PowerControl extends Control {
     private boolean isRenaissanceVariant(ConsoleBlockEntity consoleBlockEntity) {
         return consoleBlockEntity.getVariant() instanceof RenaissanceTokamakVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceVariant ||
+                consoleBlockEntity.getVariant() instanceof RenaissanceIndustriousVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceIdentityVariant ||
                 consoleBlockEntity.getVariant() instanceof RenaissanceFireVariant;
     }
