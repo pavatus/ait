@@ -14,11 +14,8 @@ import loqor.ait.data.schema.console.ClientConsoleVariantSchema;
 import loqor.ait.data.schema.console.ConsoleVariantSchema;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientAlnicoVariant;
 import loqor.ait.data.schema.console.variant.alnico.client.ClientBlueAlnicoVariant;
-import loqor.ait.data.schema.console.variant.copper.client.ClientCopperOreganoVariant;
-import loqor.ait.data.schema.console.variant.copper.client.ClientCopperTaigaVariant;
 import loqor.ait.data.schema.console.variant.copper.client.ClientCopperVariant;
 import loqor.ait.data.schema.console.variant.coral.client.*;
-import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineMasterVariant;
 import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
 import loqor.ait.data.schema.console.variant.crystalline.client.ClientCrystallineZeitonVariant;
 import loqor.ait.data.schema.console.variant.hartnell.client.ClientHartnellVariant;
@@ -201,10 +198,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema STEAM_COPPER;
     public static ClientConsoleVariantSchema HUDOLIN;
     public static ClientConsoleVariantSchema COPPER;
-    public static ClientConsoleVariantSchema COPPER_TAIGA;
-    public static ClientConsoleVariantSchema COPPER_OREGANO;
     public static ClientConsoleVariantSchema CRYSTALLINE;
-    public static ClientConsoleVariantSchema CRYSTALLINE_MASTER;
     public static ClientConsoleVariantSchema CRYSTALLINE_ZEITON;
     public static ClientConsoleVariantSchema RENAISSANCE;
     public static ClientConsoleVariantSchema RENAISSANCE_FIRE;
@@ -251,12 +245,9 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
         // Copper variants
         COPPER = register(new ClientCopperVariant());
-        COPPER_TAIGA = register(new ClientCopperTaigaVariant());
-        COPPER_OREGANO = register(new ClientCopperOreganoVariant());
 
         // Crystalline variants
         CRYSTALLINE = register(new ClientCrystallineVariant());
-        CRYSTALLINE_MASTER = register(new ClientCrystallineMasterVariant());
         CRYSTALLINE_ZEITON = register(new ClientCrystallineZeitonVariant());
 
         //Renaissance variants

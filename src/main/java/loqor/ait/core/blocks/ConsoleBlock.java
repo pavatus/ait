@@ -37,7 +37,6 @@ import loqor.ait.core.AITSounds;
 import loqor.ait.core.blockentities.ConsoleBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.HammerItem;
-import loqor.ait.data.schema.console.variant.crystalline.CrystallineMasterVariant;
 import loqor.ait.data.schema.console.variant.crystalline.CrystallineVariant;
 import loqor.ait.data.schema.console.variant.crystalline.CrystallineZeitonVariant;
 
@@ -180,8 +179,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
             if (!consoleBlockEntity.tardis().get().fuel().hasPower()) return;
 
-            if (!(consoleBlockEntity.getVariant() instanceof CrystallineMasterVariant ||
-                    consoleBlockEntity.getVariant() instanceof CrystallineZeitonVariant ||
+            if (!(consoleBlockEntity.getVariant() instanceof CrystallineZeitonVariant ||
                     consoleBlockEntity.getVariant() instanceof CrystallineVariant)) return;
 
             double d = pos.getX();
