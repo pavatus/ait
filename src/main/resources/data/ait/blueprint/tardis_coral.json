@@ -20,13 +20,8 @@
       "minCount": 1
     },
     {
-      "item": "ghast_tear",
-      "maxCount": 5,
-      "minCount": 3
-    },
-    {
-      "item": "heart_of_the_sea",
-      "maxCount": 1,
+      "item": "netherite_scrap",
+      "maxCount": 4,
       "minCount": 1
     },
     {
