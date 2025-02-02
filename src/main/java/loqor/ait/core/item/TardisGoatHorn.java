@@ -20,7 +20,6 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.stat.Stats;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -220,7 +219,7 @@ public class TardisGoatHorn extends LinkableItem {
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        Tardis tardis = TardisGoatHorn.getTardis(world, itemStack);
+        /*Tardis tardis = TardisGoatHorn.getTardis(world, itemStack);
 
         Optional<? extends RegistryEntry<Instrument>> optional = this.getInstrument(itemStack);
         if (optional.isPresent()) {
@@ -233,9 +232,9 @@ public class TardisGoatHorn extends LinkableItem {
             TardisGoatHorn.hailMary(tardis, itemStack, user);
             return TypedActionResult.consume(itemStack);
 
-        } else {
+        } else {*/
             return TypedActionResult.fail(itemStack);
-        }
+        //}
     }
 
     public int getMaxUseTime(ItemStack stack) {
