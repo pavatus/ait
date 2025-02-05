@@ -41,9 +41,9 @@ public class FoodCreationControl extends Control {
             Vec3d spawnPosition = Vec3d.ofCenter(console).add(0, 1.5, 1);
             ItemEntity coffeeEntity = new ItemEntity(world, spawnPosition.x, spawnPosition.y, spawnPosition.z, coffeeItem);
 
-            tardis.removeFuel(1500);
+            tardis.removeFuel(500);
             world.spawnEntity(coffeeEntity);
-        }, TimeUnit.TICKS, 180);
+        }, TimeUnit.TICKS, 45);
 
         return true;
     }
