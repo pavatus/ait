@@ -117,7 +117,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
 
     public float calculateRotation(float currentRotation, boolean opening) {
         if (opening) {
-            currentRotation = (float) Math.min(currentRotation + (0.1f - currentRotation * 0.1), 1.0f);
+            currentRotation = (float) Math.min(currentRotation + (0.13f - currentRotation * 0.1), 1.0f);
         } else {
             currentRotation = Math.max(currentRotation - 0.055f, 0.0f);
         }
