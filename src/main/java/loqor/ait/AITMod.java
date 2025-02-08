@@ -79,7 +79,7 @@ public class AITMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
     public static final Random RANDOM = new Random();
 
-    public static final AITConfig CONFIG = AITConfig.createAndLoad();
+    public static AITConfig CONFIG;
     public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
             GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
@@ -111,6 +111,8 @@ public class AITMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        CONFIG = AITConfig.createAndLoad();
+
         ServerLifecycleHooks.init();
         NetworkUtil.init();
         AsyncLocatorUtil.setupExecutorService();
