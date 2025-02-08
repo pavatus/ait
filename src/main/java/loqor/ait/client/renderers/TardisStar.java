@@ -91,7 +91,7 @@ public class TardisStar {
             matrixStack.scale(8 + sinFunc, 8 + sinFunc, 8 + sinFunc);
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y
-                .rotationDegrees(((float) MinecraftClient.getInstance().player.age / 200f) * 360f));
+                .rotationDegrees(((float) MinecraftClient.getInstance().player.age / -200f) * -560f));
 
         float m = Math.min(l > 0.8f ? (l - 0.8f) / 0.2f : 0.0f, 1.0f);
 
