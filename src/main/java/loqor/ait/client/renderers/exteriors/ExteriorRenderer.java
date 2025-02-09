@@ -79,6 +79,24 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
     private void renderExterior(Profiler profiler, Tardis tardis, T entity, float tickDelta, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        final float alpha = entity.getAlpha();
+        if (tardis.areVisualShieldsActive()) {
+            profiler.push("shields");
+
+            float delta = (tickDelta + MinecraftClient.getInstance().player.age) * 0.03f;
+            VertexConsumer vertexConsumer = vertexConsumers
+                    .getBuffer(RenderLayer.getEnergySwirl(SHIELDS, delta % 1.0F, (delta * 0.1F) % 1.0F));
+
+            matrices.push();
+            matrices.translate(0.5F, 0.0F, 0.5F);
+
+            SHIELDS_MODEL.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 0f,
+                    0.25f, 0.5f, alpha);
+
+            matrices.pop();
+            profiler.pop();
+        }
+
         if (tardis.siege().isActive()) {
             profiler.push("siege");
 
@@ -105,25 +123,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
         BlockState blockState = entity.getCachedState();
         int k = blockState.get(ExteriorBlock.ROTATION);
         float h = RotationPropertyHelper.toDegrees(k);
-
-        final float alpha = entity.getAlpha();
-
-        if (tardis.areVisualShieldsActive()) {
-            profiler.push("shields");
-
-            float delta = (tickDelta + MinecraftClient.getInstance().player.age) * 0.03f;
-            VertexConsumer vertexConsumer = vertexConsumers
-                    .getBuffer(RenderLayer.getEnergySwirl(SHIELDS, delta % 1.0F, (delta * 0.1F) % 1.0F));
-
-            matrices.push();
-            matrices.translate(0.5F, 0.0F, 0.5F);
-
-            SHIELDS_MODEL.render(matrices, vertexConsumer, LightmapTextureManager.MAX_LIGHT_COORDINATE, overlay, 0f,
-                    0.25f, 0.5f, alpha);
-
-            matrices.pop();
-            profiler.pop();
-        }
 
         matrices.push();
         matrices.translate(0.5f, 0.0f, 0.5f);
