@@ -1,7 +1,5 @@
 package loqor.ait.mixin.server;
 
-import dev.drtheo.scheduler.api.ClientScheduler;
-import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.spongepowered.asm.mixin.Mixin;
@@ -62,6 +60,9 @@ public class BedInTardisMixin {
             case REJECT -> AITSounds.GROAN;
         };
 
-        ClientScheduler.get().runTaskLater(() -> player.playSound(sound, 1f, 1f), TimeUnit.TICKS, 20);
+        // todo ClientScheduler with delay of 1sec was here, but was removed for addon compat
+        // Mixin transformation of net.minecraft.block.BedBlock failed
+        // Cannot load ClientScheduler
+        player.playSound(sound, 1f, 1f);
     }
 }
