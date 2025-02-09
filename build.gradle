@@ -88,7 +88,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    modCompileOnlyApi("com.github.qouteall:GravityChanger:${project.gravity_version}") {
+    modImplementation("com.github.qouteall:GravityChanger:${project.gravity_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
@@ -98,18 +98,18 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modCompileOnlyApi "maven.modrinth:k9-mod:${project.k9_version}"
+    modImplementation "maven.modrinth:k9-mod:${project.k9_version}"
 
-    include(modImplementation("com.github.DrTheodor:mc-multidim:${project.multidim_version}")) {
+    include(modCompileOnlyApi("com.github.DrTheodor:mc-multidim:${project.multidim_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include(modImplementation("com.github.DrTheodor:mc-scheduler:${project.scheduler_version}")) {
+    include(modCompileOnlyApi("com.github.DrTheodor:mc-scheduler:${project.scheduler_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include(modImplementation("com.github.DrTheodor:mc-queue:${project.queue_version}")) {
+    include(modCompileOnlyApi("com.github.DrTheodor:mc-queue:${project.queue_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include(modImplementation("com.github.pavatus:sakitus:${project.sakitus_version}")) {
+    include(modCompileOnlyApi("com.github.pavatus:sakitus:${project.sakitus_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
 }
