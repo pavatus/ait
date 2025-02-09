@@ -154,7 +154,7 @@ public class AITBlocks extends BlockContainer {
             .luminance(light -> 15));
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
-    @AutomaticModel(justItem = true)
+    @AutomaticModel()
     public static final Block POWER_CONVERTER = new PowerConverterBlock(ABlockSettings.create()
             .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).nonOpaque()
             .requiresTool().instrument(Instrument.COW_BELL).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.DESTROY));
