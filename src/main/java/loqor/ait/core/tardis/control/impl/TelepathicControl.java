@@ -182,26 +182,6 @@ public class TelepathicControl extends Control {
             tardis.crash().addRepairTicks(1500);
             return true;
         }
-        if (held.isOf(AITItems.TEA)) {
-            tardis.door().closeDoors();
-
-            tardis.travel().handbrake(false);
-            tardis.travel().forceDemat();
-            tardis.travel().speed(1021);
-            TravelUtil.randomPos(tardis, 100000, 100000, cached -> {
-                tardis.travel().destination(cached);
-                tardis.removeFuel(0.1d * IncrementManager.increment(tardis) * tardis.travel().instability());
-            });
-            world.spawnParticles(ParticleTypes.SMALL_FLAME, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
-                    5 * 10, 0, 0, 0, 0.1f * 10);
-
-            world.spawnParticles(ParticleTypes.EXPLOSION, console.toCenterPos().getX() + 0.5f, console.toCenterPos().getY() + 1.25, console.toCenterPos().getZ() + 0.5f,
-                    5 * 10, 0, 0, 0, 0.1f * 10);
-
-            tardis.alarm().toggle();
-            tardis.crash().addRepairTicks(1500);
-            return true;
-        }
         if (held.isOf(AITItems.LATTE)) {
             tardis.door().closeDoors();
 
