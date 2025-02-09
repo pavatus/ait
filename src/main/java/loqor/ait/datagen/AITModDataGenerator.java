@@ -655,7 +655,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("control.ait.visualiser", "Visualiser");
         provider.addTranslation("control.ait.eject_waypoint", "Eject Waypoint");
         provider.addTranslation("control.ait.goto_waypoint", "Goto Waypoint");
-        provider.addTranslation("control.ait.load_waypoint", "Load Waypoint");
+        provider.addTranslation("control.ait.console_port", "Console Port");
         provider.addTranslation("control.ait.mark_waypoint", "Mark Waypoint");
         provider.addTranslation("control.ait.set_waypoint", "Set Waypoint");
         provider.addTranslation("control.ait.increment", "Increment");
