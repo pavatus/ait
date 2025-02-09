@@ -87,7 +87,6 @@ public class AITModClient implements ClientModInitializer {
         ModuleRegistry.instance().onClientInit();
 
         setupBlockRendering();
-        sonicModelPredicate();
         blockEntityRendererRegister();
         entityRenderRegister();
         chargedZeitonCrystalPredicate();

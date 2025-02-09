@@ -25,7 +25,7 @@ public class CustomItemRendering {
      *            the model to load
      */
     public static void load(Identifier model) {
-        AITMod.LOGGER.info("Loaded " + model + " to the force-load list");
+        AITMod.LOGGER.info("Loaded {} to the force-load list", model);
         MODEL_POOL.add(model);
     }
 

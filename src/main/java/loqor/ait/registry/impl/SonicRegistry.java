@@ -32,7 +32,7 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     @Override
     public void readFromServer(PacketByteBuf buf) {
         super.readFromServer(buf);
-        //AITModClient.sonicModelPredicate();
+//        AITModClient.sonicModelPredicate();
     }
 
     @Override
@@ -44,6 +44,7 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     @Override
     public void onCommonInit() {
         super.onCommonInit();
+        this.defaults();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
