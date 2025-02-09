@@ -26,10 +26,10 @@ import net.minecraft.world.World;
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.engine.link.block.FluidLinkBlock;
+import loqor.ait.core.engine.link.block.DirectionalFluidLinkBlock;
 import loqor.ait.core.engine.link.block.FluidLinkBlockEntity;
 
-public class PowerConverterBlock extends FluidLinkBlock {
+public class PowerConverterBlock extends DirectionalFluidLinkBlock {
 
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(

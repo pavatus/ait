@@ -10,6 +10,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 
 import loqor.ait.core.blockentities.FlagBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 
 @SuppressWarnings("deprecation")
 public class FlagBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {

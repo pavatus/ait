@@ -1,5 +1,6 @@
 package loqor.ait.client.renderers.machines;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -8,11 +9,13 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 
 import loqor.ait.AITMod;
 import loqor.ait.client.models.machines.PowerConverterModel;
 import loqor.ait.client.util.ClientLightUtil;
+import loqor.ait.core.blocks.PlaqueBlock;
 import loqor.ait.core.blocks.PowerConverterBlock;
 
 public class PowerConverterRenderer<T extends PowerConverterBlock.BlockEntity> implements BlockEntityRenderer<T>, ClientLightUtil.Renderable<PowerConverterBlock.BlockEntity> {
@@ -28,9 +31,15 @@ public class PowerConverterRenderer<T extends PowerConverterBlock.BlockEntity> i
     @Override
     public void render(PowerConverterBlock.BlockEntity entity, float tickDelta, MatrixStack matrices,
                        VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        BlockState blockState = entity.getCachedState();
+
         matrices.push();
         matrices.scale(1.35f, 1.35f, 1.35f);
         matrices.translate(0.38, 1.5f, 0.38);
+
+        Direction k = blockState.get(PlaqueBlock.FACING);
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(k.asRotation()));
+
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)),

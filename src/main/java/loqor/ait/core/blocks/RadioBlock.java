@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 
 import loqor.ait.core.AITBlockEntityTypes;
 import loqor.ait.core.blockentities.AITRadioBlockEntity;
+import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 
 public class RadioBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
