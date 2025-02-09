@@ -91,6 +91,11 @@ public class ServerTardis extends Tardis {
         if (this.world == null)
             this.world = TardisServerWorld.get(this);
 
+        // If its still null, its likely to be pre-1.2.0, meaning we should create a new one.
+        if (this.world == null) {
+            this.world = TardisServerWorld.create(this);
+        }
+
         return this.world;
     }
 
