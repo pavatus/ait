@@ -4,6 +4,8 @@ import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.loot.function.LootFunctionType;
 
+import loqor.ait.AITMod;
+
 
 
 public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {
@@ -12,7 +14,7 @@ public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {
     private static final BlueprintRegistry instance = new BlueprintRegistry();
 
     public BlueprintRegistry() {
-        super(BlueprintSchema::fromInputStream, BlueprintSchema.CODEC, "blueprint", true);
+        super(BlueprintSchema::fromInputStream, BlueprintSchema.CODEC, "blueprint", true, AITMod.MOD_ID);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     private static ConsoleVariantRegistry INSTANCE;
 
     protected ConsoleVariantRegistry() {
-        super(DatapackConsole::fromInputStream, null, "console_variants", "console", true);
+        super(DatapackConsole::fromInputStream, null, "console_variants", "console", true, AITMod.MOD_ID);
     }
 
     public static ConsoleVariantSchema registerStatic(ConsoleVariantSchema schema) {

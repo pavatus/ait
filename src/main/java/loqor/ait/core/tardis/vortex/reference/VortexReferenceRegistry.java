@@ -8,7 +8,7 @@ public class VortexReferenceRegistry extends SimpleDatapackRegistry<VortexRefere
     private static final VortexReferenceRegistry instance = new VortexReferenceRegistry();
 
     public VortexReferenceRegistry() {
-        super(VortexReference::fromInputStream, VortexReference.CODEC, "fx/vortex", true);
+        super(VortexReference::fromInputStream, VortexReference.CODEC, "fx/vortex", true, AITMod.MOD_ID);
     }
 
     public static VortexReference TOYOTA;

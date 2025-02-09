@@ -17,7 +17,7 @@ public class MachineRecipeRegistry extends SimpleDatapackRegistry<MachineRecipeS
     private static MachineRecipeRegistry INSTANCE;
 
     protected MachineRecipeRegistry() {
-        super(DatapackMachineRecipe::fromInputStream, DatapackMachineRecipe.CODEC, "machine_recipe", false);
+        super(DatapackMachineRecipe::fromInputStream, DatapackMachineRecipe.CODEC, "machine_recipe", false, AITMod.MOD_ID);
     }
 
     @Override

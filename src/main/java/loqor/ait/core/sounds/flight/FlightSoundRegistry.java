@@ -9,7 +9,7 @@ public class FlightSoundRegistry extends SimpleDatapackRegistry<FlightSound> {
     private static final FlightSoundRegistry instance = new FlightSoundRegistry();
 
     public FlightSoundRegistry() {
-        super(FlightSound::fromInputStream, FlightSound.CODEC, "fx/flight", true);
+        super(FlightSound::fromInputStream, FlightSound.CODEC, "fx/flight", true, AITMod.MOD_ID);
     }
 
     public static FlightSoundRegistry getInstance() {

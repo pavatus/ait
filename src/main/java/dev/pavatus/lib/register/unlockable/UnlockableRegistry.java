@@ -24,12 +24,15 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name,
-            boolean sync) {
-        super(deserializer, codec, packet, name, sync);
+            boolean sync, String modid) {
+        super(deserializer, codec, packet, name, sync, modid);
     }
 
+    protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String name, boolean sync, String modid) {
+        super(deserializer, codec, name, sync, modid);
+    }
     protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String name, boolean sync) {
-        super(deserializer, codec, name, sync);
+        this(deserializer, codec, name, sync, AITMod.MOD_ID);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class HumRegistry extends SimpleDatapackRegistry<Hum> {
     private static final HumRegistry instance = new HumRegistry();
 
     protected HumRegistry() {
-        super(DatapackHum::fromInputStream, DatapackHum.CODEC, "hum", true);
+        super(DatapackHum::fromInputStream, DatapackHum.CODEC, "hum", true, AITMod.MOD_ID);
     }
 
     public static HumRegistry getInstance() {

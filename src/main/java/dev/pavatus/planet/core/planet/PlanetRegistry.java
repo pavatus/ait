@@ -5,12 +5,14 @@ import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionTypes;
 
+import loqor.ait.AITMod;
+
 public class PlanetRegistry extends SimpleDatapackRegistry<Planet> {
 
     private static final PlanetRegistry instance = new PlanetRegistry();
 
     public PlanetRegistry() {
-        super(Planet::fromInputStream, Planet.CODEC, "planet", true);
+        super(Planet::fromInputStream, Planet.CODEC, "planet", true, AITMod.MOD_ID);
     }
 
     public static Planet OVERWORLD;

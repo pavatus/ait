@@ -16,7 +16,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
     private static CategoryRegistry INSTANCE;
 
     protected CategoryRegistry() {
-        super(DatapackCategory::fromInputStream, DatapackCategory.CODEC, "categories", true);
+        super(DatapackCategory::fromInputStream, DatapackCategory.CODEC, "categories", true, AITMod.MOD_ID);
     }
 
     @Override

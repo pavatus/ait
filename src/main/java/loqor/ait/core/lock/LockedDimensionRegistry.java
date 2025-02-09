@@ -24,7 +24,7 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
 
 
     public LockedDimensionRegistry() {
-        super(LockedDimension::fromInputStream, LockedDimension.CODEC, "locked_dimension", true);
+        super(LockedDimension::fromInputStream, LockedDimension.CODEC, "locked_dimension", true, AITMod.MOD_ID);
     }
 
     public static LockedDimension NETHER;

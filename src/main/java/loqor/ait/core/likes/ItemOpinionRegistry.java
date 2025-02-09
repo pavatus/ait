@@ -15,7 +15,7 @@ public class ItemOpinionRegistry extends SimpleDatapackRegistry<ItemOpinion> {
 
 
     public ItemOpinionRegistry() {
-        super(ItemOpinion::fromInputStream, ItemOpinion.CODEC, "opinion_item", "opinion/item", true);
+        super(ItemOpinion::fromInputStream, ItemOpinion.CODEC, "opinion_item", "opinion/item", true, AITMod.MOD_ID);
     }
 
     public static ItemOpinion LIKES_ENDER_EYE;
