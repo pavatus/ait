@@ -34,8 +34,8 @@ public class AITSounds {
     public static final SoundEvent SHUTDOWN = register("tardis/console_shutdown");
     public static final SoundEvent POWERUP = register("tardis/console_powerup");
     public static final SoundEvent WAYPOINT_ACTIVATE = register("tardis/waypoint_activate");
-    public static final SoundEvent CLASSIC_DOOR_OPEN = register("tardis/classic_door_open");
-    public static final SoundEvent CLASSIC_DOOR_CLOSE = register("tardis/classic_door_close");
+    public static final SoundEvent POLICE_BOX_DOOR_OPEN = register("tardis/police_box_door_open");
+    public static final SoundEvent POLICE_BOX_DOOR_CLOSE = register("tardis/police_box_door_close");
 
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");

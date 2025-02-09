@@ -151,7 +151,7 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
 
     public void decreaseSpeed() {
         if (this.getState() == State.LANDED && this.speed.get() == 1)
-            this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.LAND_THUD, SoundCategory.AMBIENT);
+            this.tardis.getDesktop().playSoundAtEveryConsole(AITSounds.RENAISSANCE_HANDBRAKE_ALTALT, SoundCategory.AMBIENT);
 
         this.speed(this.speed.get() - 1);
     }

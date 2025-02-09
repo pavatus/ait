@@ -52,11 +52,11 @@ public abstract class DoorSchema {
     // fixme should this be in a "DoorSounds" type thing, also i dont like these
     // method names.
     public SoundEvent openSound() {
-        return AITSounds.CLASSIC_DOOR_OPEN;
+        return AITSounds.POLICE_BOX_DOOR_OPEN;
     }
 
     public SoundEvent closeSound() {
-        return AITSounds.CLASSIC_DOOR_CLOSE;
+        return AITSounds.POLICE_BOX_DOOR_CLOSE;
     }
 
     public Vec3d adjustPortalPos(Vec3d pos, Direction direction) {
