@@ -179,6 +179,14 @@ public class AITItems extends ItemContainer {
     public static final Item MERCURY_MUSIC_DISC = new MusicDiscItem(11, AITSounds.MERCURY_MUSIC,
             new AItemSettings().maxCount(1).rarity(Rarity.RARE), 216);
 
+    @NoEnglish
+    public static final Item VENUS_MUSIC_DISC = new MusicDiscItem(1, AITSounds.VENUS_MUSIC,
+            new AItemSettings().maxCount(1).rarity(Rarity.RARE), 342);
+
+    @NoEnglish
+    public static final Item EARTH_MUSIC_DISC = new MusicDiscItem(1, AITSounds.EARTH_MUSIC,
+            new AItemSettings().maxCount(1).rarity(Rarity.RARE), 315);
+
 
 
     // Refreshments
@@ -286,6 +294,8 @@ public class AITItems extends ItemContainer {
             entries.addAfter(Items.MUSIC_DISC_RELIC, DRIFTING_MUSIC_DISC);
             entries.addAfter(DRIFTING_MUSIC_DISC, MERCURY_MUSIC_DISC);
             entries.addAfter(MERCURY_MUSIC_DISC, WONDERFUL_TIME_IN_SPACE_MUSIC_DISC);
+            entries.addAfter(WONDERFUL_TIME_IN_SPACE_MUSIC_DISC, EARTH_MUSIC_DISC);
+            entries.addAfter(EARTH_MUSIC_DISC, VENUS_MUSIC_DISC);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {

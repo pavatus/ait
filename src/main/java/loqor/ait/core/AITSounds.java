@@ -15,6 +15,8 @@ public class AITSounds {
     public static final SoundEvent DRIFTING_MUSIC = register("music/drifting_by_radio");
     public static final SoundEvent MERCURY_MUSIC = register("music/mercury_nitrogenez");
     public static final SoundEvent WONDERFUL_TIME_IN_SPACE = register("music/wonderful_time_in_space");
+    public static final SoundEvent EARTH_MUSIC = register("music/earth_nitrogenez");
+    public static final SoundEvent VENUS_MUSIC = register("music/venus_nitrogenez");
 
     // TARDIS
     public static final SoundEvent DEMAT = register("tardis/demat");
