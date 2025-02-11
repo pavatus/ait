@@ -1,5 +1,7 @@
 package loqor.ait.client.renderers.machines;
 
+import org.joml.Vector3f;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -9,6 +11,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 
 import loqor.ait.client.models.machines.GenericSubSystemModel;
 import loqor.ait.client.renderers.MultiBlockStructureRenderer;
@@ -16,8 +19,6 @@ import loqor.ait.client.util.ClientLightUtil;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.generic.GenericStructureSystemBlockEntity;
-import net.minecraft.item.ItemStack;
-import org.joml.Vector3f;
 
 public class GenericSubSystemRenderer<T extends GenericStructureSystemBlockEntity> implements BlockEntityRenderer<T>, ClientLightUtil.Renderable<T> {
     private GenericSubSystemModel model;

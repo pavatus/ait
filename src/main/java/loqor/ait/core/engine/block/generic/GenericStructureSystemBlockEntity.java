@@ -1,5 +1,7 @@
 package loqor.ait.core.engine.block.generic;
 
+import java.util.Optional;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,8 +21,6 @@ import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 import loqor.ait.core.engine.block.multi.StructureSystemBlockEntity;
 import loqor.ait.core.engine.item.SubSystemItem;
 import loqor.ait.core.util.StackUtil;
-
-import java.util.Optional;
 
 /**
  * a mutable version of the structure system block entity
