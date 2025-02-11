@@ -87,7 +87,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
 
         this.model.renderEntity(entity, this.model.getPart(), matrices, vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(getTexture(entity))), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
-        if (variant.emission() != null && tardis.engine().hasPower()) {
+        if (variant.emission() != null && tardis.fuel().hasPower()) {
             boolean alarms = tardis.alarm().enabled().get();
 
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderEntity,

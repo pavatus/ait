@@ -56,7 +56,6 @@ import loqor.ait.core.entities.FlightTardisEntity;
 import loqor.ait.core.item.blueprint.BlueprintRegistry;
 import loqor.ait.core.item.component.AbstractTardisPart;
 import loqor.ait.core.item.part.MachineItem;
-import loqor.ait.core.screen_handlers.EngineScreenHandler;
 import loqor.ait.core.tardis.manager.ServerTardisManager;
 import loqor.ait.core.tardis.util.AsyncLocatorUtil;
 import loqor.ait.core.tardis.util.NetworkUtil;
@@ -88,13 +87,6 @@ public class AITMod implements ModInitializer {
             new Identifier(MOD_ID, "zeiton_geode"));
 
     public static final Crater CRATER = new Crater(ProbabilityConfig.CODEC);
-
-    public static final ScreenHandlerType<EngineScreenHandler> ENGINE_SCREEN_HANDLER;
-
-    static {
-        ENGINE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "engine"),
-                EngineScreenHandler::new);
-    }
 
     public static final String BRANCH;
 

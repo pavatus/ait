@@ -93,6 +93,7 @@ public class TardisHandlersManager extends TardisComponent implements TardisTick
     /**
      * @deprecated Use {@link Tardis#handler(IdLike)}
      */
+    @Deprecated
     @ApiStatus.Internal
     @SuppressWarnings("unchecked")
     public <T extends TardisComponent> T get(IdLike id) {

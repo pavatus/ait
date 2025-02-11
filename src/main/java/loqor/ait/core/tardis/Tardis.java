@@ -70,7 +70,7 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     }
 
     public DoorHandler door() {
-        return this.getHandlers().get(TardisComponent.Id.DOOR);
+        return this.handler(TardisComponent.Id.DOOR);
     }
 
     public SonicHandler sonic() {
@@ -109,7 +109,10 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
         return this.handler(TardisComponent.Id.INTERIOR);
     }
 
-    public EngineHandler engine() {
+
+    // THEO - can i safely remove this without it causing errors reading from json ??
+    // you do it, im scared.
+    private EngineHandler engine() {
         return this.handler(TardisComponent.Id.ENGINE);
     }
 

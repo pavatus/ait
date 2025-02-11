@@ -165,8 +165,6 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                     this.queued.set(false);
                     this.regenerating.set(false);
 
-                    tardis.engine().unlinkEngine();
-
                     if (tardis.hasGrowthExterior()) {
                         TravelHandler travel = tardis.travel();
 

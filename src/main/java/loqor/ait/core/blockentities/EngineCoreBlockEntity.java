@@ -79,7 +79,7 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
                 SoundEvent soundEvent = bl ? SoundEvents.BLOCK_CONDUIT_ACTIVATE : SoundEvents.BLOCK_CONDUIT_DEACTIVATE;
                 world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                blockEntity.tardis().get().engine().linkEngine(pos.getX(), pos.getZ());
+                // blockEntity.tardis().get().engine().linkEngine(pos.getX(), pos.getZ());
             }
 
             blockEntity.active = bl;
@@ -173,8 +173,8 @@ public class EngineCoreBlockEntity extends InteriorLinkableBlockEntity {
         if (!this.active)
             return;
 
-        if (this.isLinked())
-            this.tardis().get().engine().unlinkEngine();
+//        if (this.isLinked())
+//            this.tardis().get().engine().unlinkEngine();
     }
 
     public enum VortexEyeState {

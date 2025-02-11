@@ -25,7 +25,7 @@ public class HADSControl extends Control {
             return false;
         }
 
-        ServerAlarmHandler alarms = tardis.getHandlers().get(TardisComponent.Id.ALARMS);
+        ServerAlarmHandler alarms = tardis.alarm();
         alarms.toggle();
 
         return true;

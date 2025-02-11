@@ -56,7 +56,6 @@ import loqor.ait.client.renderers.machines.*;
 import loqor.ait.client.renderers.monitors.MonitorRenderer;
 import loqor.ait.client.renderers.monitors.WallMonitorRenderer;
 import loqor.ait.client.screens.BlueprintFabricatorScreen;
-import loqor.ait.client.screens.EngineScreen;
 import loqor.ait.client.screens.MonitorScreen;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.tardis.manager.ClientTardisManager;
@@ -100,8 +99,6 @@ public class AITModClient implements ClientModInitializer {
         });
 
         AITKeyBinds.init();
-
-        HandledScreens.register(ENGINE_SCREEN_HANDLER, EngineScreen::new);
 
         ClientLandingManager.init();
 
