@@ -8,7 +8,7 @@ import loqor.ait.api.TardisEvents;
 import loqor.ait.core.AITTags;
 
 public abstract class DurableSubSystem extends SubSystem {
-    private float durability = 0;
+    private float durability = 1250;
 
     protected DurableSubSystem(IdLike id) {
         super(id);
@@ -28,7 +28,7 @@ public abstract class DurableSubSystem extends SubSystem {
     private void setDurability(float durability) {
         float before = this.durability;
 
-        this.durability = Math.max(0, Math.min(durability, 100));
+        this.durability = Math.max(0, Math.min(durability, 1250));
 
         this.onDurabilityChange(before, this.durability);
     }

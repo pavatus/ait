@@ -48,7 +48,7 @@ public class EngineSystem extends DurableSubSystem {
 
     @Override
     protected float cost() {
-        return 0.05f;
+        return 1f;
     }
 
     @Override

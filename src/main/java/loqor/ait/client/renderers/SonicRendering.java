@@ -178,7 +178,7 @@ public class SonicRendering {
         SubSystem system = be.system();
         if (system == null) return;
         if (system instanceof DurableSubSystem) {
-            text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 100";
+            text = (Math.round(((DurableSubSystem) be.system()).durability())) + " / 1250";
         }
         if (!system.isEnabled() && !(system instanceof EngineSystem)) {
             text = "LINK TO ENGINE VIA FLUID LINKS";
