@@ -1,14 +1,12 @@
 package loqor.ait.core.engine.impl;
 
 
-import loqor.ait.AITMod;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class DematCircuit extends DurableSubSystem implements StructureHolder {
-    private static MultiBlockStructure STRUCTURE;
 
     static {
         TardisEvents.DEMAT.register(tardis -> {
@@ -28,16 +26,12 @@ public class DematCircuit extends DurableSubSystem implements StructureHolder {
     }
 
     @Override
-    protected boolean shouldDurabilityChange() {
-        return this.tardis.travel().inFlight();
+    public MultiBlockStructure getStructure() {
+        return MultiBlockStructure.EMPTY;
     }
 
     @Override
-    public MultiBlockStructure getStructure() {
-        if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/demat"));
-        }
-
-        return STRUCTURE;
+    protected boolean shouldDurabilityChange() {
+        return this.tardis.travel().inFlight();
     }
 }
