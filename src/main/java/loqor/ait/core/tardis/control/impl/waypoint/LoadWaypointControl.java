@@ -76,10 +76,14 @@ public class LoadWaypointControl extends Control {
     private void ejectDisc(ServerPlayerEntity player, ServerWorld world, BlockPos console) {
         if (insertedDisc.isEmpty()) return;
         world.playSound(null, console, AITSounds.SLOT_IN, SoundCategory.PLAYERS, 6f, 1);
-        player.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.RECORDS));
+        StopSoundS2CPacket stopPacket = new StopSoundS2CPacket(null, SoundCategory.RECORDS);
+        for (ServerPlayerEntity otherPlayer : world.getPlayers()) {
+            otherPlayer.networkHandler.sendPacket(stopPacket);
+        }
         player.giveItemStack(insertedDisc);
         insertedDisc = ItemStack.EMPTY;
         currentMusic = null;
     }
+
 
 }
