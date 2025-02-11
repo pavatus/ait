@@ -118,7 +118,11 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
             @Override
             public ExteriorModel model() {
-                return getInstance().get(variant.getParentId()).model();
+                var parent = getInstance().get(variant.getParentId());
+
+                if (parent == null) return ClientExteriorVariantRegistry.CAPSULE_DEFAULT.model();
+
+                return parent.model();
             }
 
             @Override
