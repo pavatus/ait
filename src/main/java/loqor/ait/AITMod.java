@@ -23,6 +23,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.loot.function.ConditionalLootFunction;
+import net.minecraft.loot.function.SetNbtLootFunction;
+import net.minecraft.nbt.NbtCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -245,7 +248,8 @@ public class AITMod implements ModInitializer {
                     || id.equals(LootTables.SIMPLE_DUNGEON_CHEST) || id.equals(LootTables.STRONGHOLD_LIBRARY_CHEST)) {
 
 
-                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(AITItems.BLUEPRINT).weight(10));
+                NbtCompound nbt = new NbtCompound();
+                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(AITItems.BLUEPRINT).apply(SetNbtLootFunction.builder(nbt)).weight(10));
 
                 tableBuilder.pool(poolBuilder);
             }
