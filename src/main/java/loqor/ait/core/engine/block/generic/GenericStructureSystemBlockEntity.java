@@ -20,6 +20,8 @@ import loqor.ait.core.engine.block.multi.StructureSystemBlockEntity;
 import loqor.ait.core.engine.item.SubSystemItem;
 import loqor.ait.core.util.StackUtil;
 
+import java.util.Optional;
+
 /**
  * a mutable version of the structure system block entity
  * it can have its id changed
@@ -122,5 +124,12 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
         if (nbt.contains("SourceStack")) {
             this.idSource = ItemStack.fromNbt(nbt.getCompound("SourceStack"));
         }
+    }
+
+    /**
+     * @return the source stack that was used to set the id
+     */
+    public Optional<ItemStack> getSourceStack() {
+        return Optional.ofNullable(this.idSource);
     }
 }

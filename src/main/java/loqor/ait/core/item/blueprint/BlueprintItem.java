@@ -48,6 +48,8 @@ public class BlueprintItem extends Item {
         NbtElement element = nbt.get("Blueprint");
 
         if (element == null) {
+            AITMod.LOGGER.warn("Blueprint item has no blueprint data!");
+
             BlueprintSchema schema = BlueprintRegistry.getInstance().getRandom();
             nbt.putString("Blueprint", schema.id().toString());
             return schema;
