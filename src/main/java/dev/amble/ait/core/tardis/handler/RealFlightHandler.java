@@ -110,6 +110,7 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
         this.flying.set(false);
 
         player.setInvisible(false);
+        player.setInvulnerable(false);
         this.sendExitFlightPacket(player);
 
         tardis.travel().forcePosition(cached -> cached.rotation((byte) RotationPropertyHelper.fromYaw(player.getYaw())));

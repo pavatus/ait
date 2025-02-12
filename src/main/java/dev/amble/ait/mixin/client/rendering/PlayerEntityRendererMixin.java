@@ -21,6 +21,7 @@ import net.minecraft.util.Arm;
 
 import dev.amble.ait.client.renderers.wearables.RespiratorFeatureRenderer;
 import dev.amble.ait.client.renderers.wearables.SantaHatFeatureRenderer;
+import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.module.planet.client.models.wearables.SpacesuitModel;
 import dev.amble.ait.module.planet.client.renderers.wearables.SpacesuitFeatureRenderer;
 import dev.amble.ait.module.planet.core.item.SpacesuitItem;
@@ -70,6 +71,13 @@ public abstract class PlayerEntityRendererMixin
         } else {
             spacesuitModel.LeftArm.copyTransform(arm);
             spacesuitModel.LeftArm.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(SpacesuitFeatureRenderer.BLANK_SPACESUIT)), light, OverlayTexture.DEFAULT_UV);
+        }
+    }
+
+    @Inject(method = "render*", at = @At("HEAD"), cancellable = true)
+    public void sss(AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+        if (abstractClientPlayerEntity.getVehicle() instanceof FlightTardisEntity) {
+            ci.cancel();
         }
     }
 }

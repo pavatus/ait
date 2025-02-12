@@ -103,7 +103,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             Tardis tardisClient = this.tardis().get().asClient();
             if (client.player == this.getControllingPassenger()) {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-                //client.options.hudHidden = true;
+                client.options.hudHidden = true;
                 if (!this.groundCollision)
                     ClientShakeUtil.shake((float) (tardisClient.travel().speed() + this.getVelocity().horizontalLength()) / tardisClient.travel().maxSpeed().get());
             }
@@ -115,6 +115,9 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         if (!player.isInvisible())
             player.setInvisible(true);
+
+        if (!player.isInvulnerable())
+            player.setInvulnerable(true);
 
         boolean onGround = this.isOnGround();
 
@@ -128,7 +131,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         }
 
         if (player.isSneaking() && (onGround || tardis.travel().antigravs().get())) {
-            System.out.println(onGround);
+            //System.out.println(onGround);
             this.finishLand(tardis, player);
         }
     }
@@ -157,7 +160,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         if (this.getWorld().isClient()) {
             MinecraftClient client = MinecraftClient.getInstance();
             client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-            client.options.hudHidden = true;
+            client.options.hudHidden = false;
             return;
         }
         if (!(player instanceof ServerPlayerEntity serverPlayer))
@@ -170,6 +173,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         }
 
         tardis.flight().exitFlight(serverPlayer);
+        tardis.travel().speed(0);
         this.discard();
     }
 
