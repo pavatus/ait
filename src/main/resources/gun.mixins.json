@@ -1,13 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.pavatus.ait.module.gun.mixin",
+  "package": "dev.amble.ait.module.gun.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-    "dev.amble.ait.module.gun.mixin.client.GameRendererMixin",
-    "dev.amble.ait.module.gun.mixin.client.PlayerEntityRendererMixin"
+    "client.GameRendererMixin",
+    "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

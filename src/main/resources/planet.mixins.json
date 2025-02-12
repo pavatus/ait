@@ -1,18 +1,18 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.pavatus.ait.module.planet.mixin",
+  "package": "dev.amble.ait.module.planet.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "dev.amble.ait.module.planet.mixin.WorldMixin",
-    "dev.amble.ait.module.planet.mixin.gravity.AssortedEntityMixin",
-    "dev.amble.ait.module.planet.mixin.gravity.BoatEntityMixin",
-    "dev.amble.ait.module.planet.mixin.gravity.LivingEntityMixin"
+    "WorldMixin",
+    "gravity.AssortedEntityMixin",
+    "gravity.BoatEntityMixin",
+    "gravity.LivingEntityMixin"
   ],
   "client": [
-    "dev.amble.ait.module.planet.mixin.client.BipedEntityModelMixin",
-    "dev.amble.ait.module.planet.mixin.client.CloudMixin",
-    "dev.amble.ait.module.planet.mixin.client.PlayerEntityModelMixin"
+    "client.BipedEntityModelMixin",
+    "client.CloudMixin",
+    "client.PlayerEntityModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
