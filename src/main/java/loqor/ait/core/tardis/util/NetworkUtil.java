@@ -88,7 +88,7 @@ public class NetworkUtil {
             if (!(stack.getItem() instanceof LinkableItem))
                 continue;
 
-            if (!LinkableItem.isOf(player.getWorld(), stack, tardis))
+            if (!LinkableItem.isOfStatic(stack, tardis))
                 continue;
 
             return true;
@@ -104,10 +104,10 @@ public class NetworkUtil {
             if (stack.isEmpty())
                 continue;
 
-            if (!(stack.getItem() instanceof LinkableItem))
+            if (!(stack.getItem() instanceof LinkableItem item))
                 continue;
 
-            Tardis tardis = LinkableItem.getTardis(player.getWorld(), stack);
+            Tardis tardis = item.getTardis(player.getWorld(), stack);
 
             if (tardis == null)
                 continue;

@@ -85,7 +85,7 @@ public class KeyItem extends LinkableItem {
             if (key.hasProtocol(Protocols.SKELETON))
                 return true;
 
-            Tardis found = KeyItem.getTardis(player.getWorld(), stack);
+            Tardis found = key.getTardis(player.getWorld(), stack);
 
             if (found == tardis)
                 return true;
@@ -99,7 +99,7 @@ public class KeyItem extends LinkableItem {
         if (!(entity instanceof ServerPlayerEntity player))
             return;
 
-        Tardis tardis = KeyItem.getTardis(world, stack);
+        Tardis tardis = KeyItem.getTardisStatic(world, stack);
 
         if (tardis == null)
             return;
@@ -114,7 +114,7 @@ public class KeyItem extends LinkableItem {
         if (!(owner instanceof ServerPlayerEntity player))
             return;
 
-        Tardis tardis = KeyItem.getTardis(entity.getWorld(), entity.getStack());
+        Tardis tardis = KeyItem.getTardisStatic(entity.getWorld(), entity.getStack());
 
         if (tardis == null)
             return;

@@ -26,7 +26,7 @@ import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.block.SubSystemBlockEntity;
 import loqor.ait.core.engine.impl.EngineSystem;
-import loqor.ait.core.item.SonicItem2;
+import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.core.world.TardisServerWorld;
 
@@ -222,8 +222,8 @@ public class SonicRendering {
     }
 
     public static boolean isSonicOf(SonicMode mode, ItemStack sonic) {
-        if (sonic.getItem() instanceof SonicItem2)
-            return SonicItem2.mode(sonic) == mode;
+        if (sonic.getItem() instanceof SonicItem)
+            return SonicItem.mode(sonic) == mode;
 
         return false;
     }
@@ -247,10 +247,10 @@ public class SonicRendering {
     }
 
     public static ItemStack getSonicStack(PlayerEntity player) {
-        if (player.getMainHandStack().getItem() instanceof SonicItem2)
+        if (player.getMainHandStack().getItem() instanceof SonicItem)
             return player.getMainHandStack();
 
-        if (player.getOffHandStack().getItem() instanceof SonicItem2)
+        if (player.getOffHandStack().getItem() instanceof SonicItem)
             return player.getOffHandStack();
 
         return null;

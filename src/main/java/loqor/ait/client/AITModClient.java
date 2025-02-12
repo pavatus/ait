@@ -4,6 +4,7 @@ import static loqor.ait.AITMod.*;
 import static loqor.ait.core.AITItems.isUnlockedOnThisDay;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.UUID;
 
 import dev.pavatus.gun.core.item.BaseGunItem;
@@ -13,6 +14,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -36,7 +38,6 @@ import loqor.ait.client.commands.ConfigCommand;
 import loqor.ait.client.data.ClientLandingManager;
 import loqor.ait.client.overlays.FabricatorOverlay;
 import loqor.ait.client.overlays.SonicOverlay;
-import loqor.ait.client.renderers.CustomItemRendering;
 import loqor.ait.client.renderers.SonicRendering;
 import loqor.ait.client.renderers.TardisStar;
 import loqor.ait.client.renderers.consoles.ConsoleGeneratorRenderer;
@@ -68,7 +69,6 @@ import loqor.ait.core.tardis.animation.ExteriorAnimation;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 import loqor.ait.core.tardis.handler.travel.TravelHandlerBase;
 import loqor.ait.data.schema.console.ConsoleTypeSchema;
-import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
 import loqor.ait.registry.impl.console.ConsoleRegistry;
 import loqor.ait.registry.impl.door.ClientDoorRegistry;
@@ -271,27 +271,18 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void sonicModelPredicate() {
-        SonicRegistry.getInstance().populateModels(CustomItemRendering::load);
+        ModelLoadingPlugin.register(context -> {
+            Collection<Identifier> ids = SonicRegistry.getInstance().models();
 
-        CustomItemRendering.register(new Identifier(MOD_ID, "sonic_screwdriver"),
-                (model, stack, world, entity, seed) -> {
-                    SonicSchema.Models models = SonicItem2.findSchema(stack).models();
-
-                    if (entity == null || !(entity.getActiveItem() == stack && entity.isUsingItem()))
-                        return models.inactive();
-
-                    return SonicItem2.mode(stack).model(models);
-                });
+            LOGGER.info("Loading {}", ids);
+            context.addModels(ids.toArray(new Identifier[0]));
+        });
     }
 
     public static void waypointPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.WAYPOINT_CARTRIDGE, new Identifier("type"),
-                (itemStack, clientWorld, livingEntity, integer) -> {
-                    if (itemStack.getOrCreateNbt().contains(WaypointItem.POS_KEY))
-                        return 1.0f;
-                    else
-                        return 0f;
-                });
+                (stack, clientWorld, livingEntity, integer) ->
+                        stack.getOrCreateNbt().contains(WaypointItem.POS_KEY) ? 1 : 0);
 
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             if (tintIndex != 0)

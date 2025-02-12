@@ -41,8 +41,6 @@ public class SonicHandler extends KeyedTardisComponent implements ArtronHolderIt
                     Identifier id = buf.readIdentifier();
                     SonicItem.setSchema(tardis.sonic().getConsoleSonic(), id);
                 }));
-
-
     }
 
     public SonicHandler() {

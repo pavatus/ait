@@ -20,6 +20,7 @@ import loqor.ait.AITMod;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.link.AbstractLinkItem;
+import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.core.util.StackUtil;
 import loqor.ait.data.schema.MachineRecipeSchema;
 
@@ -100,7 +101,7 @@ public class AbstractTardisPart extends Item {
         if (!stack.getRegistryEntry().isIn(AITTags.Items.SONIC_ITEM))
             return false;
 
-        if (SonicItem.findMode(stack) != SonicItem.Mode.INTERACTION)
+        if (SonicItem.mode(stack) != SonicMode.Modes.INTERACTION)
             return false;
 
         AbstractTardisPart.disassemble(machine);

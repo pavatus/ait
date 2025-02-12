@@ -2,12 +2,14 @@ package loqor.ait.registry.impl;
 
 import static loqor.ait.AITMod.LOGGER;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 import dev.pavatus.lib.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
@@ -27,12 +29,6 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     @Override
     public SonicSchema fallback() {
         return SonicRegistry.DEFAULT;
-    }
-
-    @Override
-    public void readFromServer(PacketByteBuf buf) {
-        super.readFromServer(buf);
-//        AITModClient.sonicModelPredicate();
     }
 
     @Override
@@ -83,7 +79,16 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
         }
     }
 
+    public Collection<Identifier> models() {
+        List<Identifier> result = new ArrayList<>();
 
+        for (SonicSchema schema : REGISTRY.values()) {
+            SonicSchema.Models models = schema.models();
+            models.load(result::add);
 
+            LOGGER.debug("Loading sonic '{}' with models: {}", schema.id(), models);
+        }
 
+        return result;
+    }
 }

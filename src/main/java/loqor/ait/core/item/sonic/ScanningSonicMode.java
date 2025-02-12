@@ -13,7 +13,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import loqor.ait.core.AITSounds;
-import loqor.ait.core.item.SonicItem2;
+import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.world.LandingPadManager;
 import loqor.ait.core.world.RiftChunkManager;
@@ -59,11 +59,17 @@ public class ScanningSonicMode extends SonicMode {
     }
 
     public boolean scanRegion(ItemStack stack, World world, PlayerEntity user, BlockPos pos) {
-        if (user == null) return false;
-        if (world.isClient()) return true;
-        if (!(stack.getItem() instanceof SonicItem2)) return false;
-        Tardis tardis = SonicItem2.getTardis(world, stack);
-        if (tardis == null) return false;
+        if (world.isClient())
+            return true;
+
+        if (user == null)
+            return false;
+
+        Tardis tardis = SonicItem.getTardisStatic(world, stack);
+
+        if (tardis == null)
+            return false;
+
         LandingPadRegion region = LandingPadManager.getInstance((ServerWorld) world).getRegionAt(pos);
         if (region != null) {
             if (world.getBlockState(pos).isAir()) return true;

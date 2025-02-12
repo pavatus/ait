@@ -39,23 +39,19 @@ public class MachineCasingBlockEntity extends BlockEntity {
             return;
         }
 
-        if (!SonicItem.isSonic(stack)) {
+        if (!(stack.getItem() instanceof SonicItem)) {
             this.parts.push(stack.copyWithCount(1));
             stack.decrement(1);
-            return;
         }
+    }
 
-        // Should this be in SonicItem.Mode.INTERACTION? nah, it's fineeeee
-        if (SonicItem.findMode(stack) == SonicItem.Mode.INTERACTION) {
-            MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
-                StackUtil.spawn(world, this.pos, schema.output());
+    public void construct() {
+        MachineRecipeRegistry.getInstance().findMatching(this.parts).ifPresent(schema -> {
+            StackUtil.spawn(world, this.pos, schema.output());
 
-                world.removeBlock(this.pos, false);
-                this.markRemoved();
-            });
-
-            SonicItem.setMode(stack, SonicItem.Mode.INACTIVE);
-        }
+            world.removeBlock(this.pos, false);
+            this.markRemoved();
+        });
     }
 
     public void onBreak(World world) {

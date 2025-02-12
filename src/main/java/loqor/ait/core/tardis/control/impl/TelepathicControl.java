@@ -89,7 +89,7 @@ public class TelepathicControl extends Control {
 
 
         if (type instanceof LinkableItem linker) {
-            if (linker instanceof SonicItem2 || linker instanceof HandlesItem)
+            if (linker instanceof SonicItem || linker instanceof HandlesItem)
                 return false;
 
             linker.link(held, tardis);

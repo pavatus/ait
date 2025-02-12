@@ -23,6 +23,7 @@ import net.minecraft.registry.tag.InstrumentTags;
 import net.minecraft.util.Rarity;
 
 import loqor.ait.AITMod;
+import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.engine.SubSystem;
 import loqor.ait.core.engine.item.SubSystemItem;
 import loqor.ait.core.item.*;
@@ -55,7 +56,7 @@ public class AITItems extends ItemContainer {
             new AItemSettings().group(AITItemGroups.MAIN).fireproof().maxCount(1));
 
     @NoEnglish
-    public static final Item SIEGE_ITEM = new SiegeTardisItem(new FabricItemSettings().fireproof());
+    public static final LinkableItem SIEGE_ITEM = new SiegeTardisItem(new FabricItemSettings().fireproof());
 
     // Functional Items
     @NoEnglish
@@ -103,7 +104,7 @@ public class AITItems extends ItemContainer {
     public static final Item CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new AItemSettings().group(AITItemGroups.MAIN), "Classic Key", "Amethyst Shard");
     //public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item SONIC_SCREWDRIVER = new SonicItem2(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
 
     // Crafting items
     public static final Item ZEITON_SHARD = new ZeitonShardItem(new AItemSettings());

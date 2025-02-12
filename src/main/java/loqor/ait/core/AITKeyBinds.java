@@ -49,7 +49,7 @@ public class AITKeyBinds {
 
             for (ItemStack stack : keys) {
                 if (stack.getItem() instanceof KeyItem key && key.hasProtocol(KeyItem.Protocols.SNAP)) {
-                    Tardis tardis = KeyItem.getTardis(player.getWorld(), stack);
+                    Tardis tardis = key.getTardis(player.getWorld(), stack);
 
                     if (tardis == null)
                         return;
