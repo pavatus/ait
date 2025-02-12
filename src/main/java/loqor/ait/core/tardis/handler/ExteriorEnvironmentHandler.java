@@ -2,6 +2,7 @@ package loqor.ait.core.tardis.handler;
 
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 
+import loqor.ait.api.TardisEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +24,12 @@ public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements 
     private final BoolValue raining = RAINING.create(this);
     private final BoolValue thundering = THUNDERING.create(this);
     private final BoolValue lava = LAVA.create(this);
+
+    static {
+        TardisEvents.LANDED.register((tdis) -> {
+            tdis.<ExteriorEnvironmentHandler>handler(Id.ENVIRONMENT).updateLava();
+        });
+    }
 
     public ExteriorEnvironmentHandler() {
         super(Id.ENVIRONMENT);
@@ -60,12 +67,9 @@ public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements 
 
         if (this.isThundering() != isThundering)
             this.thundering.set(isThundering);
-
-        if (server.getTicks() % 20 == 0)
-            this.tickLava();
     }
 
-    private void tickLava() {
+    private void updateLava() {
         boolean hasLava = this.isInLava();
 
         if (this.tardis.travel().getState() != TravelHandlerBase.State.LANDED)
