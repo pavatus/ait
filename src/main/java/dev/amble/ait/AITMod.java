@@ -6,7 +6,16 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.amble.ait.core.engine.registry.SubSystemRegistry;
+import dev.amble.ait.core.likes.ItemOpinionRegistry;
+import dev.amble.ait.core.lock.LockedDimensionRegistry;
+import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
+import dev.amble.ait.core.sounds.travel.TravelSoundRegistry;
+import dev.amble.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
+import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 import dev.amble.lib.container.RegistryContainer;
+import dev.amble.lib.register.AmbleRegistries;
 import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -156,6 +165,24 @@ public class AITMod implements ModInitializer {
                 CUSTOM_GEODE_PLACED_KEY);
 
         Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
+
+        AmbleRegistries.getInstance().registerAll(
+                SonicRegistry.getInstance(),
+                DesktopRegistry.getInstance(),
+                ConsoleVariantRegistry.getInstance(),
+                MachineRecipeRegistry.getInstance(),
+                TravelSoundRegistry.getInstance(),
+                FlightSoundRegistry.getInstance(),
+                VortexReferenceRegistry.getInstance(),
+                BlueprintRegistry.getInstance(),
+                ExteriorVariantRegistry.getInstance(),
+                CategoryRegistry.getInstance(),
+                TardisComponentRegistry.getInstance(),
+                LockedDimensionRegistry.getInstance(),
+                HumRegistry.getInstance(),
+                SubSystemRegistry.getInstance(),
+                ItemOpinionRegistry.getInstance()
+        );
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);
