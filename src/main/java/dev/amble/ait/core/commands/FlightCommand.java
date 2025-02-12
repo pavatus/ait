@@ -17,7 +17,7 @@ import dev.amble.ait.core.tardis.ServerTardis;
 public class FlightCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal(AITMod.MOD_ID).then(literal("flight")
+        dispatcher.register(literal(AITMod.MOD_ID).then(literal("flight").requires(source -> source.hasPermissionLevel(2))
                         .then(argument("tardis", TardisArgumentType.tardis())
                                 .executes(FlightCommand::execute))));
 
