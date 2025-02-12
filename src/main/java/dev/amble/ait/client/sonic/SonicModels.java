@@ -40,14 +40,15 @@ public class SonicModels {
 
             @Override
             public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-                return CompletableFuture.supplyAsync(() -> manager.findResources("models/sonic",
+                /*return CompletableFuture.supplyAsync(() -> manager.findResources("models/sonic",
                         identifier -> identifier.getPath().endsWith(".json")), prepareExecutor).thenCompose(map -> {
                     map.forEach((identifier, resource) -> {
                         LOGGER.info("found potential sonic: {}", identifier);
                     });
 
                     return null;
-                });
+                });*/
+                return new CompletableFuture<>();
             }
         });
     }
