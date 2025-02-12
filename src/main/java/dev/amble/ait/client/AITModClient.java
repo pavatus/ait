@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
 
+import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -229,6 +232,9 @@ public class AITModClient implements ClientModInitializer {
 
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
+
+        AmbleRegistries.getInstance().registerAll(SonicRegistry.getInstance(), ClientExteriorVariantRegistry.getInstance(), ClientConsoleVariantRegistry.getInstance());
+        sonicModelPredicate();
     }
 
     /**
