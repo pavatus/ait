@@ -6,6 +6,8 @@ import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -22,6 +24,12 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.util.profiler.Profiler;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -282,6 +290,21 @@ public class AITModClient implements ClientModInitializer {
 
             LOGGER.info("Loading {}", ids);
             context.addModels(ids.toArray(new Identifier[0]));
+        });
+
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return ResourceReloadListenerKeys.MODELS;
+            }
+
+            @Override
+            public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+                manager.findResources("models/sonic", identifier -> identifier.getPath().endsWith(".json")).forEach((identifier, resource) -> {
+                    LOGGER.info("found potential sonic: {}", identifier);
+                });
+                return null;
+            }
         });
     }
 
