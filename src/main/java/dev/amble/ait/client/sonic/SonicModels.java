@@ -3,18 +3,10 @@ package dev.amble.ait.client.sonic;
 import static dev.amble.ait.AITMod.LOGGER;
 
 import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.profiler.Profiler;
 
 import dev.amble.ait.registry.impl.SonicRegistry;
 
@@ -32,7 +24,7 @@ public class SonicModels {
             context.addModels(ids.toArray(new Identifier[0]));
         });
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
+        /*ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
             @Override
             public Identifier getFabricId() {
                 return ResourceReloadListenerKeys.MODELS;
@@ -40,16 +32,23 @@ public class SonicModels {
 
             @Override
             public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-                /*return CompletableFuture.supplyAsync(() -> manager.findResources("models/sonic",
-                        identifier -> identifier.getPath().endsWith(".json")), prepareExecutor).thenCompose(map -> {
-                    map.forEach((identifier, resource) -> {
-                        LOGGER.info("found potential sonic: {}", identifier);
-                    });
-
-                    return null;
-                });*/
-                return new CompletableFuture<>();
+                return CompletableFuture.supplyAsync(() -> manager.findResources("models/sonic", identifier -> identifier.getPath().endsWith(".json")), prepareExecutor)
+                        .thenCompose(map -> {
+                            ArrayList<CompletableFuture<Void>> list = new ArrayList<>(map.size());
+                            for (Map.Entry<Identifier, Resource> entry : map.entrySet()) {
+                                list.add(CompletableFuture.runAsync(() -> {
+                                    try (BufferedReader ignored = entry.getValue().getReader()) {
+                                        LOGGER.info("found potential sonic: {}", entry.getKey());
+                                        // Process the model as needed here
+                                    } catch (Exception exception) {
+                                        LOGGER.error("Failed to load model {}", entry.getKey(), exception);
+                                    }
+                                }, applyExecutor));
+                            }
+                            return CompletableFuture.allOf(list.toArray(new CompletableFuture[0]));
+                        }).thenApply(v -> null);
             }
-        });
+
+        });*/
     }
 }
