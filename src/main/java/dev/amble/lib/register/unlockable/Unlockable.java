@@ -2,7 +2,7 @@ package dev.amble.lib.register.unlockable;
 
 import java.util.Optional;
 
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import dev.amble.ait.data.Loyalty;
 

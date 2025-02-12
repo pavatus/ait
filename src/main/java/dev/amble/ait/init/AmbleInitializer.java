@@ -1,7 +1,7 @@
-package dev.amble.ait.sakitus;
+package dev.amble.ait.init;
 
-import dev.pavatus.lib.api.SakitusModInitializer;
-import dev.pavatus.lib.register.api.RegistryEvents;
+import dev.amble.lib.api.AmbleKitInitializer;
+import dev.amble.lib.register.api.RegistryEvents;
 
 import dev.amble.ait.core.engine.registry.SubSystemRegistry;
 import dev.amble.ait.core.item.blueprint.BlueprintRegistry;
@@ -14,9 +14,9 @@ import dev.amble.ait.registry.impl.*;
 import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
-public class SakitusInitializer implements SakitusModInitializer {
+public class AmbleInitializer implements AmbleKitInitializer {
     @Override
-    public void onInitializeSakitus() {
+    public void onInitialize() {
         RegistryEvents.INIT.register((registries, isClient) -> {
             if (isClient) return;
 

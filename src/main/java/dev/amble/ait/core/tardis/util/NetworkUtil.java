@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;

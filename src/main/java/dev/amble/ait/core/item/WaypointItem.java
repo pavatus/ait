@@ -3,7 +3,7 @@ package dev.amble.ait.core.item;
 import java.util.List;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.data.DirectedGlobalPos;
+import dev.amble.lib.data.DirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.screen.Screen;

@@ -6,7 +6,7 @@ import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 
 import java.util.Calendar;
 
-import dev.pavatus.lib.container.impl.BlockEntityContainer;
+import dev.amble.lib.container.impl.BlockEntityContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import net.minecraft.block.entity.BlockEntityType;

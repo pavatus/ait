@@ -3,7 +3,7 @@ package dev.amble.ait.core.lock;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

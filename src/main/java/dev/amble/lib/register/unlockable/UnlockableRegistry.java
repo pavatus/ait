@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
-import dev.pavatus.lib.register.datapack.DatapackRegistry;
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.DatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.util.Identifier;
 

@@ -109,7 +109,7 @@ dependencies {
     include(modImplementation("com.github.DrTheodor:mc-queue:${project.queue_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include(modImplementation("com.github.pavatus:sakitus:${project.sakitus_version}")) {
+    include(modImplementation("com.github.amblelabs:modkit:${project.ablekit_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
     }
 }

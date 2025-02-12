@@ -1,6 +1,6 @@
 package dev.amble.ait.core.tardis.handler;
 
-import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.amble.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.util.TriState;
 import org.jetbrains.annotations.Nullable;
 

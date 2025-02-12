@@ -3,7 +3,7 @@ package dev.amble.ait.core.engine.impl;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import org.joml.Vector3f;
 
 import net.minecraft.sound.SoundEvent;

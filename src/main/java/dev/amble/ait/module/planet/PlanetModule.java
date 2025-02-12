@@ -5,13 +5,13 @@ import static net.minecraft.data.server.recipe.RecipeProvider.*;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import dev.pavatus.lib.container.RegistryContainer;
-import dev.pavatus.lib.container.impl.BlockContainer;
-import dev.pavatus.lib.container.impl.ItemContainer;
-import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
-import dev.pavatus.lib.datagen.model.SakitusModelProvider;
-import dev.pavatus.lib.itemgroup.AItemGroup;
-import dev.pavatus.lib.register.api.RegistryEvents;
+import dev.amble.lib.container.RegistryContainer;
+import dev.amble.lib.container.impl.BlockContainer;
+import dev.amble.lib.container.impl.ItemContainer;
+import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
+import dev.amble.lib.datagen.model.AmbleModelProvider;
+import dev.amble.lib.itemgroup.AItemGroup;
+import dev.amble.lib.register.api.RegistryEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -94,7 +94,7 @@ public class PlanetModule extends Module {
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.of(new DataGenerator() {
             @Override
-            public void lang(SakitusLanguageProvider provider) {
+            public void lang(AmbleLanguageProvider provider) {
                 provider.addTranslation(getItemGroup(), "AIT: Planetary Exploration");
                 provider.addTranslation("itemGroup.ait.planet", "AIT: Planetary Exploration");
                 provider.addTranslation("message.ait.oxygen", "Stored Oxygen: %s");
@@ -377,7 +377,7 @@ public class PlanetModule extends Module {
 
 
             @Override
-            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
+            public void generateItemModels(AmbleModelProvider provider, ItemModelGenerator generator) {
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_BOOTS);
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_CHESTPLATE);
                 generator.registerArmor((ArmorItem) PlanetItems.SPACESUIT_LEGGINGS);
@@ -397,7 +397,7 @@ public class PlanetModule extends Module {
             }
 
             @Override
-            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
+            public void models(AmbleModelProvider provider, BlockStateModelGenerator generator) {
                 //Martian (Slabs, Walls, etc.)
                 BlockStateModelGenerator.BlockTexturePool martian_stone_pool = generator.registerCubeAllModelTexturePool(PlanetBlocks.MARTIAN_STONE);
                 martian_stone_pool.stairs(PlanetBlocks.MARTIAN_STONE_STAIRS);

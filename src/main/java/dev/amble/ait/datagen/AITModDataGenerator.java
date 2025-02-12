@@ -7,9 +7,9 @@ import static net.minecraft.data.server.recipe.RecipeProvider.createSlabRecipe;
 import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
-import dev.pavatus.lib.datagen.lang.LanguageType;
-import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
-import dev.pavatus.lib.datagen.sound.SakitusSoundProvider;
+import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
+import dev.amble.lib.datagen.lang.LanguageType;
+import dev.amble.lib.datagen.sound.AmbleSoundProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -555,7 +555,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public void generateSoundData(FabricDataGenerator.Pack pack) {
-        pack.addProvider((((output, registriesFuture) -> new SakitusSoundProvider(output))));
+        pack.addProvider((((output, registriesFuture) -> new AmbleSoundProvider(output))));
     }
 
     public void generateItemTags(FabricDataGenerator.Pack pack) {
@@ -612,12 +612,12 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
      * @param output           The data generator output.
      * @param registriesFuture The registries future.
      * @param languageType     The language type.
-     * @return The SakitusLanguageProvider.
+     * @return The AmbleLanguageProvider.
      */
 
-    public SakitusLanguageProvider addEnglishTranslations(FabricDataOutput output,
+    public AmbleLanguageProvider addEnglishTranslations(FabricDataOutput output,
                                                           CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
+        AmbleLanguageProvider provider = new AmbleLanguageProvider(output, languageType);
 
         provider.translateBlocks(AITBlocks.class);
         provider.translateItems(AITItems.class);
@@ -1233,11 +1233,11 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
      * @param output           The data generator output.
      * @param registriesFuture The registries future.
      * @param languageType     The language type.
-     * @return The SakitusLanguageProvider.
+     * @return The AmbleLanguageProvider.
      */
-    public SakitusLanguageProvider addFrenchTranslations(FabricDataOutput output,
+    public AmbleLanguageProvider addFrenchTranslations(FabricDataOutput output,
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
+        AmbleLanguageProvider provider = new AmbleLanguageProvider(output, languageType);
 
         provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
@@ -1346,11 +1346,11 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
      * @param output           The data generator output.
      * @param registriesFuture The registries future.
      * @param languageType     The language type.
-     * @return The SakitusLanguageProvider.
+     * @return The AmbleLanguageProvider.
      */
-    public SakitusLanguageProvider addSpanishTranslations(FabricDataOutput output,
+    public AmbleLanguageProvider addSpanishTranslations(FabricDataOutput output,
                                                       CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
+        AmbleLanguageProvider provider = new AmbleLanguageProvider(output, languageType);
 
         provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
@@ -1439,9 +1439,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         return provider;
     }
 
-    public SakitusLanguageProvider addGermanTranslations(FabricDataOutput output,
+    public AmbleLanguageProvider addGermanTranslations(FabricDataOutput output,
                                                      CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
+        AmbleLanguageProvider provider = new AmbleLanguageProvider(output, languageType);
 
         provider.addTranslation(AITItemGroups.MAIN, "Abenteuer in der Zeit");
         provider.addTranslation(AITItems.TARDIS_ITEM, "TARDIS");
@@ -1538,9 +1538,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         return provider;
     }
 
-    public SakitusLanguageProvider addPortugueseTranslations(FabricDataOutput output,
+    public AmbleLanguageProvider addPortugueseTranslations(FabricDataOutput output,
                                                          CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture, LanguageType languageType) {
-        SakitusLanguageProvider provider = new SakitusLanguageProvider(output, languageType);
+        AmbleLanguageProvider provider = new AmbleLanguageProvider(output, languageType);
         return provider;
     }
 
@@ -1685,13 +1685,13 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
     }
 
     public void generate_RU_RU_Language(FabricDataGenerator.Pack pack) {
-        pack.addProvider(((output, registriesFuture) -> new SakitusLanguageProvider(output, LanguageType.RU_RU))); // ru_ru
+        pack.addProvider(((output, registriesFuture) -> new AmbleLanguageProvider(output, LanguageType.RU_RU))); // ru_ru
         // (Russian
         // Russia)
     }
 
     public void generate_UK_UA_Language(FabricDataGenerator.Pack pack) {
-        pack.addProvider(((output, registriesFuture) -> new SakitusLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
+        pack.addProvider(((output, registriesFuture) -> new AmbleLanguageProvider(output, LanguageType.UK_UA))); // uk_ua
         // (Ukrainian
         // Ukraine)
     }

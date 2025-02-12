@@ -3,7 +3,7 @@ package dev.amble.ait.api;
 import java.util.Optional;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.amble.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import org.jetbrains.annotations.Nullable;

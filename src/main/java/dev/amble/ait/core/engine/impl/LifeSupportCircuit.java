@@ -2,7 +2,7 @@ package dev.amble.ait.core.engine.impl;
 
 import java.util.List;
 
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;

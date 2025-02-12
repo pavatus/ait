@@ -1,7 +1,7 @@
 package dev.amble.ait.core;
 
 
-import dev.pavatus.lib.container.impl.PaintingContainer;
+import dev.amble.lib.container.impl.PaintingContainer;
 
 import net.minecraft.entity.decoration.painting.PaintingVariant;
 

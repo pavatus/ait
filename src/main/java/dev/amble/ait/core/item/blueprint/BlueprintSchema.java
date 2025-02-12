@@ -12,7 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

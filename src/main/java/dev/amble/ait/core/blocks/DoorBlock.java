@@ -1,7 +1,7 @@
 package dev.amble.ait.core.blocks;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;

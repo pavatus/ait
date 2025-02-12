@@ -1,10 +1,10 @@
 package dev.amble.ait.module.planet.core;
 
-import dev.pavatus.lib.container.impl.BlockContainer;
-import dev.pavatus.lib.datagen.util.AutomaticModel;
-import dev.pavatus.lib.datagen.util.NoBlockDrop;
-import dev.pavatus.lib.datagen.util.PickaxeMineable;
-import dev.pavatus.lib.item.AItemSettings;
+import dev.amble.lib.container.impl.BlockContainer;
+import dev.amble.lib.datagen.util.AutomaticModel;
+import dev.amble.lib.datagen.util.NoBlockDrop;
+import dev.amble.lib.datagen.util.PickaxeMineable;
+import dev.amble.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;

@@ -2,7 +2,7 @@ package dev.amble.ait.data.hum;
 
 import java.util.Optional;
 
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;

@@ -1,6 +1,6 @@
 package dev.amble.ait.datagen.datagen_providers.loot;
 
-import dev.pavatus.lib.datagen.loot.SakitusBlockLootTable;
+import dev.amble.lib.datagen.loot.AmbleBlockLootTable;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.enchantment.Enchantments;
@@ -18,7 +18,7 @@ import dev.amble.ait.core.AITTags;
 import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.planet.core.PlanetBlocks;
 
-public class AITBlockLootTables extends SakitusBlockLootTable {
+public class AITBlockLootTables extends AmbleBlockLootTable {
 
     public AITBlockLootTables(FabricDataOutput output) {
         super(output);

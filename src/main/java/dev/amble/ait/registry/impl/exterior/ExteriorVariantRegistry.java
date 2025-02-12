@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.amble.lib.register.datapack.DatapackRegistry;
 import dev.amble.lib.register.unlockable.UnlockableRegistry;
-import dev.pavatus.lib.register.datapack.DatapackRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 

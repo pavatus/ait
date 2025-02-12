@@ -1,7 +1,7 @@
 package dev.amble.ait.module.planet.core;
 
-import dev.pavatus.lib.container.impl.ItemContainer;
-import dev.pavatus.lib.item.AItemSettings;
+import dev.amble.lib.container.impl.ItemContainer;
+import dev.amble.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import org.jetbrains.annotations.Nullable;
 

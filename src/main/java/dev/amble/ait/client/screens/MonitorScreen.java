@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.data.DirectedGlobalPos;
+import dev.amble.lib.data.DirectedGlobalPos;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;

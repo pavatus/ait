@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

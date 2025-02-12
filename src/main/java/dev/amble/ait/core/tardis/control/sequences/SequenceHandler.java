@@ -3,7 +3,7 @@ package dev.amble.ait.core.tardis.control.sequences;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 

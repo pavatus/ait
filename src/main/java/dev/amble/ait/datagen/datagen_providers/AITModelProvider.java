@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import dev.pavatus.lib.datagen.model.SakitusModelProvider;
+import dev.amble.lib.datagen.model.AmbleModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 import net.minecraft.block.Block;
@@ -18,7 +18,7 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.module.ModuleRegistry;
 
 
-public class AITModelProvider extends SakitusModelProvider {
+public class AITModelProvider extends AmbleModelProvider {
     private final List<Block> directionalBlocksToRegister = new ArrayList<>();
     private final List<Block> simpleBlocksToRegister = new ArrayList<>();
 

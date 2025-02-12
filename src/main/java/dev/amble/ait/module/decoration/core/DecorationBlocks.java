@@ -1,8 +1,8 @@
 package dev.amble.ait.module.decoration.core;
 
-import dev.pavatus.lib.container.impl.BlockContainer;
-import dev.pavatus.lib.datagen.util.NoEnglish;
-import dev.pavatus.lib.item.AItemSettings;
+import dev.amble.lib.container.impl.BlockContainer;
+import dev.amble.lib.datagen.util.NoEnglish;
+import dev.amble.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.*;

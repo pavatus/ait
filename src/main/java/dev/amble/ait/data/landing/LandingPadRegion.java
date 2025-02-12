@@ -5,7 +5,7 @@ import java.util.*;
 import com.google.common.collect.ImmutableCollection;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.util.math.BlockPos;

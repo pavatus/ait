@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
+import dev.amble.lib.util.ServerLifecycleHooks;
 import dev.drtheo.multidim.MultiDim;
 import dev.drtheo.multidim.api.MultiDimServerWorld;
 import dev.drtheo.multidim.api.WorldBlueprint;
-import dev.pavatus.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;

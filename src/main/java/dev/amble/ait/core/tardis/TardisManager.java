@@ -10,8 +10,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.pavatus.lib.data.DirectedBlockPos;
-import dev.pavatus.lib.data.DirectedGlobalPos;
+import dev.amble.lib.data.DirectedBlockPos;
+import dev.amble.lib.data.DirectedGlobalPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;

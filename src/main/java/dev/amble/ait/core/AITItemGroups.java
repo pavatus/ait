@@ -1,7 +1,7 @@
 package dev.amble.ait.core;
 
-import dev.pavatus.lib.container.impl.ItemGroupContainer;
-import dev.pavatus.lib.itemgroup.AItemGroup;
+import dev.amble.lib.container.impl.ItemGroupContainer;
+import dev.amble.lib.itemgroup.AItemGroup;
 
 import net.minecraft.item.ItemStack;
 
