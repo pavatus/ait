@@ -73,6 +73,7 @@ import dev.amble.ait.registry.impl.console.ConsoleRegistry;
 import dev.amble.ait.registry.impl.door.DoorRegistry;
 
 public class AITMod implements ModInitializer {
+    // The PREAmble lolololol
 
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
