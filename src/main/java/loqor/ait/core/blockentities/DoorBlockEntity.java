@@ -1,8 +1,5 @@
 package loqor.ait.core.blockentities;
 
-import java.util.Objects;
-import java.util.UUID;
-
 import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import dev.pavatus.lib.data.DirectedBlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +25,6 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
 import loqor.ait.core.AITBlockEntityTypes;
@@ -98,17 +94,15 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
             return;
 
         Tardis tardis = this.tardis().get();
+        ItemStack keyStack = player.getMainHandStack();
 
         if (tardis.hasGrowthExterior())
             return;
 
         tardis.getDesktop().setDoorPos(this);
 
-        if (player.getMainHandStack().getItem() instanceof KeyItem && !tardis.siege().isActive()) {
-            ItemStack key = player.getMainHandStack();
-            UUID keyId = LinkableItem.getTardisIdFromUuid(key, "tardis");
-
-            if (key.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
+        if (keyStack.getItem() instanceof KeyItem key && !tardis.siege().isActive()) {
+            if (keyStack.isOf(AITItems.SKELETON_KEY) || key.isOf(keyStack, tardis)) {
                 tardis.door().interactToggleLock((ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);

@@ -24,6 +24,7 @@ import loqor.ait.core.blockentities.control.ControlBlockEntity;
 import loqor.ait.core.blocks.types.HorizontalDirectionalBlock;
 import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.item.control.ControlBlockItem;
+import loqor.ait.core.item.sonic.SonicMode;
 
 public abstract class ControlBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -69,19 +70,20 @@ public abstract class ControlBlock extends HorizontalDirectionalBlock implements
 
     @Override
     public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        if (world.isClient()) return;
+        if (world.isClient())
+            return;
 
-        if (!(world.getBlockEntity(pos) instanceof ControlBlockEntity be)) return;
+        if (!(world.getBlockEntity(pos) instanceof ControlBlockEntity be))
+            return;
 
-        if (isHoldingScanningSonic(player)) sendSonicMessage((ServerPlayerEntity) player, be);
+        if (isHoldingScanningSonic(player))
+            sendSonicMessage((ServerPlayerEntity) player, be);
 
         be.run((ServerPlayerEntity) player, true);
-
-        return;
     }
 
     protected static boolean isHoldingScanningSonic(PlayerEntity player) {
-        return SonicItem.findPreviousMode(player.getMainHandStack()) == SonicItem.Mode.SCANNING;
+        return SonicItem.mode(player.getMainHandStack()) == SonicMode.Modes.SCANNING;
     }
     protected static void sendSonicMessage(ServerPlayerEntity player, ControlBlockEntity entity) {
         player.sendMessage(Text.literal(entity.getControl().getId().toUpperCase()).formatted(Formatting.AQUA));

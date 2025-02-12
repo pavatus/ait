@@ -19,7 +19,7 @@ import net.minecraft.util.hit.HitResult;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITItems;
 import loqor.ait.core.AITTags;
-import loqor.ait.core.item.SonicItem2;
+import loqor.ait.core.item.SonicItem;
 
 public class SonicOverlay implements HudRenderCallback {
     @Override
@@ -42,31 +42,31 @@ public class SonicOverlay implements HudRenderCallback {
 
     private boolean playerIsLookingAtSonicInteractable(HitResult crosshairTarget, PlayerEntity player) {
         if (player != null) {
-            if (player.getMainHandStack().getItem() instanceof SonicItem2) {
+            if (player.getMainHandStack().getItem() instanceof SonicItem) {
                 ItemStack sonic = player.getMainHandStack();
                 if (sonic == null)
                     return false;
                 NbtCompound nbt = sonic.getOrCreateNbt();
-                if (!nbt.contains(SonicItem2.FUEL_KEY))
+                if (!nbt.contains(SonicItem.FUEL_KEY))
                     return false;
                 if (crosshairTarget.getType() == HitResult.Type.BLOCK) {
                     Block block = player.getWorld().getBlockState(((BlockHitResult) crosshairTarget).getBlockPos())
                             .getBlock();
-                    return !(block instanceof AirBlock) && nbt.getDouble(SonicItem2.FUEL_KEY) > 0
+                    return !(block instanceof AirBlock) && nbt.getDouble(SonicItem.FUEL_KEY) > 0
                             && player.getWorld().getBlockState(((BlockHitResult) crosshairTarget).getBlockPos())
                             .isIn(AITTags.Blocks.SONIC_INTERACTABLE);
                 }
-            } else if (player.getOffHandStack().getItem() instanceof SonicItem2) {
+            } else if (player.getOffHandStack().getItem() instanceof SonicItem) {
                 ItemStack sonic = player.getOffHandStack();
                 if (sonic == null)
                     return false;
                 NbtCompound nbt = sonic.getOrCreateNbt();
-                if (!nbt.contains(SonicItem2.FUEL_KEY))
+                if (!nbt.contains(SonicItem.FUEL_KEY))
                     return false;
                 if (crosshairTarget.getType() == HitResult.Type.BLOCK) {
                     Block block = player.getWorld().getBlockState(((BlockHitResult) crosshairTarget).getBlockPos())
                             .getBlock();
-                    return !(block instanceof AirBlock) && nbt.getDouble(SonicItem2.FUEL_KEY) > 0
+                    return !(block instanceof AirBlock) && nbt.getDouble(SonicItem.FUEL_KEY) > 0
                             && player.getWorld().getBlockState(((BlockHitResult) crosshairTarget).getBlockPos())
                             .isIn(AITTags.Blocks.SONIC_INTERACTABLE);
                 }

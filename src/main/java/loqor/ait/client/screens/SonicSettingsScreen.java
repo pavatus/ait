@@ -27,7 +27,6 @@ import loqor.ait.api.link.LinkableItem;
 import loqor.ait.client.tardis.ClientTardis;
 import loqor.ait.client.util.ClientTardisUtil;
 import loqor.ait.core.item.SonicItem;
-import loqor.ait.core.item.SonicItem2;
 import loqor.ait.data.schema.sonic.SonicSchema;
 import loqor.ait.registry.impl.SonicRegistry;
 
@@ -54,9 +53,8 @@ public class SonicSettingsScreen extends ConsoleScreen {
 
     @Override
     protected void init() {
-        NbtCompound nbt = tardis().sonic().getConsoleSonic().getOrCreateNbt();
+        SonicSchema schema = SonicItem.schema(tardis().sonic().getConsoleSonic());
 
-        SonicSchema schema = SonicItem.findSchema(nbt);
         this.selectedSonic = SonicRegistry.getInstance().toList().indexOf(schema);
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
@@ -173,13 +171,14 @@ public class SonicSettingsScreen extends ConsoleScreen {
             stack.translate(0, 0, 500f);
             context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.sonic_casing"), x + 140, y + 10,
                     0xFFFFFF);
-            context.drawCenteredTextWithShadow(this.textRenderer, SonicItem2.findSchema(sonicCopy).name(), x + 140,
+            context.drawCenteredTextWithShadow(this.textRenderer, SonicItem.schema(sonicCopy).name(), x + 140,
                     y + 20, 0x00FFFF);
             context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.current_au"), x + 140, y + 40, 0xFFFFFF);
-            context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem2.FUEL_KEY) + " AU", x + 140,
+            context.drawCenteredTextWithShadow(this.textRenderer, nbt.getDouble(SonicItem.FUEL_KEY) + " AU", x + 140,
                     y + 50, 0x00FFFF);
 
-            UUID tardis = LinkableItem.getTardisIdFromUuid(sonicCopy, "tardis");
+            UUID tardis = LinkableItem.getTardisIdStatic(sonicCopy);
+
             if (tardis != null) {
                 context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("screen.ait.linked_tardis"), x + 140, y + 70,
                         0xFFFFFF);

@@ -55,7 +55,7 @@ public class FuelHandler extends KeyedTardisComponent implements ArtronHolder, T
 
             // if holding a key and in siege mode and have an empty interior, disable siege
             // mode !!
-            if (stack.getItem() instanceof KeyItem && tardis.siege().isActive() && KeyItem.isOf(world, stack, tardis)
+            if (stack.getItem() instanceof KeyItem key && tardis.siege().isActive() && key.isOf(stack, tardis)
                     && TardisUtil.isInteriorEmpty(tardis.asServer())) {
                 player.swingHand(Hand.MAIN_HAND);
                 tardis.siege().setActive(false);

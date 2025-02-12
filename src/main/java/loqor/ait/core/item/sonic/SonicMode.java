@@ -18,14 +18,15 @@ import loqor.ait.data.schema.sonic.SonicSchema;
 public abstract class SonicMode implements Ordered {
 
     public static class Modes {
-        public static final SonicMode[] VALUES = new SonicMode[5];
+        public static final SonicMode[] VALUES = new SonicMode[4];
         private static int lastIndex = 0;
 
-        public static final SonicMode INACTIVE = register(InactiveSonicMode::new);
         public static final SonicMode INTERACTION = register(InteractionSonicMode::new);
         public static final SonicMode OVERLOAD = register(OverloadSonicMode::new);
         public static final SonicMode SCANNING = register(ScanningSonicMode::new);
         public static final SonicMode TARDIS = register(TardisSonicMode::new);
+
+        public static final SonicMode INACTIVE = new InactiveSonicMode();
 
         public static SonicMode register(Function<Integer, SonicMode> consumer) {
             SonicMode mode = consumer.apply(lastIndex);
@@ -54,7 +55,25 @@ public abstract class SonicMode implements Ordered {
         }
 
         public static SonicMode get(int index) {
+            if (index == -1)
+                return INACTIVE;
+
             return VALUES[index];
+        }
+
+        public static SonicMode getAndWrap(Integer index) {
+            if (index == null)
+                return INTERACTION;
+
+            while (index >= VALUES.length) {
+                index -= VALUES.length;
+            }
+
+            return get(index);
+        }
+
+        public static int size() {
+            return VALUES.length;
         }
     }
 

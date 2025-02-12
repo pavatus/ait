@@ -1,13 +1,11 @@
 package loqor.ait.core.engine.impl;
 
 
-import loqor.ait.AITMod;
 import loqor.ait.core.engine.DurableSubSystem;
 import loqor.ait.core.engine.StructureHolder;
 import loqor.ait.core.engine.block.multi.MultiBlockStructure;
 
 public class GravitationalCircuit extends DurableSubSystem implements StructureHolder {
-    private static MultiBlockStructure STRUCTURE;
 
     public GravitationalCircuit() {
         super(Id.GRAVITATIONAL);
@@ -25,12 +23,9 @@ public class GravitationalCircuit extends DurableSubSystem implements StructureH
 
     @Override
     public MultiBlockStructure getStructure() {
-        if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/gravity"));
-        }
-
-        return STRUCTURE;
+        return MultiBlockStructure.EMPTY;
     }
+
 
     @Override
     protected void onDisable() {

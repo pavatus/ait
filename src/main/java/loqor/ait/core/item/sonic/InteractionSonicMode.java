@@ -15,7 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
+import loqor.ait.core.AITBlocks;
 import loqor.ait.core.AITTags;
+import loqor.ait.core.blockentities.MachineCasingBlockEntity;
 import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class InteractionSonicMode extends SonicMode {
@@ -49,42 +51,15 @@ public class InteractionSonicMode extends SonicMode {
         HitResult hitResult = SonicMode.getHitResult(user);
 
         if (hitResult instanceof BlockHitResult blockHit)
-            this.overloadBlock(blockHit.getBlockPos(), world, user, ticks);
+            this.interactBlock(blockHit.getBlockPos(), world, user, ticks);
     }
 
-    private void overloadBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks) {
+    private void interactBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
         if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
-
-        if (canInteract3(ticks)
-                && block instanceof TntBlock) {
-            TntBlock.primeTnt(world, pos);
-
-            world.removeBlock(pos, false);
-            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
-            return;
-        }
-
-        if (canInteract2(ticks)
-                && block.getDefaultState().contains(BarrelBlock.OPEN)) {
-            world.setBlockState(pos, state.cycle(BarrelBlock.OPEN));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-            return;
-        }
-
-        if (canInteract1(ticks)
-                && block.getDefaultState().contains(DoorBlock.OPEN)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(DoorBlock.OPEN));
-            world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
-            return;
-        }
-
 
         if (canMakeRedstoneTweak(ticks)
                 && state.contains(DaylightDetectorBlock.INVERTED)) {
@@ -125,6 +100,23 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
+        if (canInteract1(ticks)
+                && block.getDefaultState().contains(DoorBlock.OPEN)) {
+            world.playSound(null, pos, SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0f,
+                    world.getRandom().nextFloat() * 0.4f + 0.8f);
+
+            world.setBlockState(pos, state.cycle(DoorBlock.OPEN));
+            world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
+            return;
+        }
+
+        if (canInteract2(ticks)
+                && block.getDefaultState().contains(BarrelBlock.OPEN)) {
+            world.setBlockState(pos, state.cycle(BarrelBlock.OPEN));
+            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
+            return;
+        }
+
         if (canInteract3(ticks)
                 && block.getDefaultState().contains(BellBlock.FACING)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 1.0f,
@@ -132,8 +124,26 @@ public class InteractionSonicMode extends SonicMode {
 
             world.setBlockState(pos, state.cycle(BellBlock.FACING));
             world.emitGameEvent(user, GameEvent.ENTITY_INTERACT, pos);
+        }
+
+
+        if (canInteract3(ticks)
+                && block == AITBlocks.MACHINE_CASING) {
+            ((MachineCasingBlockEntity) world.getBlockEntity(pos)).construct();
             return;
         }
+
+        if (canInteract3(ticks)
+                && block instanceof TntBlock) {
+            TntBlock.primeTnt(world, pos);
+
+            world.removeBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+        }
+    }
+
+    private static boolean canMakeRedstoneTweak(int ticks) {
+        return ticks >= 5;
     }
 
     private static boolean canInteract1(int ticks) {
@@ -146,10 +156,6 @@ public class InteractionSonicMode extends SonicMode {
 
     private static boolean canInteract3(int ticks) {
         return ticks >= 30;
-    }
-
-    private static boolean canMakeRedstoneTweak(int ticks) {
-        return ticks >= 5;
     }
 
     @Override

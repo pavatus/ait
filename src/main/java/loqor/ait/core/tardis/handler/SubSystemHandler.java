@@ -142,7 +142,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         for (SubSystem next : this) {
             if (next == null) continue;
             if (next instanceof DurableSubSystem)
-                ((DurableSubSystem) next).addDurability(100);
+                ((DurableSubSystem) next).addDurability(1250);
             next.setEnabled(true);
         }
     }

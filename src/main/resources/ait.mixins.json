@@ -44,7 +44,8 @@
     "client.rendering.PlayerEntityRendererMixin",
     "client.rendering.SkyboxMixin",
     "client.rendering.framebuffer.MixinMainFramebufferTarget",
-    "client.rendering.framebuffer.MixinRenderFramebufferTarget"
+    "client.rendering.framebuffer.MixinRenderFramebufferTarget",
+    "client.sonic.SonicItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

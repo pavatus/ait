@@ -74,7 +74,7 @@ public class SecurityControl extends Control {
         Collection<ItemStack> keys = KeyItem.getKeysInInventory(player);
 
         for (ItemStack stack : keys) {
-            Tardis found = KeyItem.getTardis(player.getWorld(), stack);
+            Tardis found = KeyItem.getTardisStatic(player.getWorld(), stack);
 
             if (stack.getItem() == AITItems.SKELETON_KEY) {
                 return true;

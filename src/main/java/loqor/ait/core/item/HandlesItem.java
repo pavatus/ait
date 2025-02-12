@@ -48,17 +48,13 @@ public class HandlesItem extends LinkableItem {
         for (int i = 0; i < player.getInventory().size(); i++) {
             stack = player.getInventory().getStack(i);
 
-            if (stack.getItem() instanceof HandlesItem item) {
+            if (stack.getItem() instanceof HandlesItem item && item.isLinked(stack)) {
+                Tardis tardis = item.getTardis(player.getWorld(), stack);
+                HandlesResponses response = item.getHandlesResponses(messageSignedContent);
 
-                if (item.isLinked(stack)) {
-
-                    Tardis tardis = HandlesItem.getTardis(player.getWorld(), stack);
-                    HandlesResponses response = item.getHandlesResponses(messageSignedContent);
-
-                    if (tardis.butler().getHandles() == null)
-                        respond(tardis, player, response, stack);
-                    break;
-                }
+                if (tardis.butler().getHandles() == null)
+                    respond(tardis, player, response, stack);
+                break;
             }
         }
 

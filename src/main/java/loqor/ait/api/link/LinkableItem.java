@@ -2,6 +2,8 @@ package loqor.ait.api.link;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -22,22 +24,17 @@ import loqor.ait.core.tardis.TardisManager;
 public abstract class LinkableItem extends Item {
 
     private final boolean showTooltip;
+    private final String path;
 
     public LinkableItem(Settings settings, boolean showTooltip) {
+        this(settings, "tardis", showTooltip);
+    }
+
+    public LinkableItem(Settings settings, String path, boolean showTooltip) {
         super(settings);
+
+        this.path = path;
         this.showTooltip = showTooltip;
-    }
-
-    public void link(ItemStack stack, Tardis tardis) {
-        this.link(stack, tardis.getUuid());
-    }
-
-    public void link(ItemStack stack, UUID uuid) {
-        stack.getOrCreateNbt().putUuid("tardis", uuid);
-    }
-
-    public boolean isLinked(ItemStack stack) {
-        return stack.getOrCreateNbt().contains("tardis");
     }
 
     @Override
@@ -50,7 +47,7 @@ public abstract class LinkableItem extends Item {
         if (!showTooltip)
             return;
 
-        UUID id = LinkableItem.getTardisIdFromUuid(stack, "tardis");
+        UUID id = this.getTardisId(stack);
 
         if (id == null)
             return;
@@ -71,15 +68,26 @@ public abstract class LinkableItem extends Item {
         });
     }
 
-    public static boolean isOf(World world, ItemStack stack, Tardis tardis) {
-        return LinkableItem.getTardis(world, stack) == tardis;
+    public void link(ItemStack stack, Tardis tardis) {
+        this.link(stack, tardis.getUuid());
     }
 
-    public static Tardis getTardis(World world, ItemStack stack) {
-        return LinkableItem.getTardisFromUuid(world, stack, "tardis");
+    public void link(ItemStack stack, UUID uuid) {
+        stack.getOrCreateNbt().putUuid(this.path, uuid);
     }
 
-    public static UUID getTardisIdFromUuid(ItemStack stack, String path) {
+    public boolean isLinked(ItemStack stack) {
+        return stack.getOrCreateNbt().contains(this.path);
+    }
+
+    public boolean isOf(ItemStack stack, Tardis tardis) {
+        if (tardis == null)
+            return false;
+
+        return tardis.getUuid().equals(this.getTardisId(stack));
+    }
+
+    public UUID getTardisId(ItemStack stack) {
         NbtCompound nbt = stack.getOrCreateNbt();
         NbtElement element = nbt.get(path);
 
@@ -98,19 +106,49 @@ public abstract class LinkableItem extends Item {
         return nbt.getUuid(path);
     }
 
-    public static Tardis getTardisFromUuid(World world, ItemStack stack, String path) {
-        return LinkableItem.getTardis(world, LinkableItem.getTardisIdFromUuid(stack, path));
+    public Tardis getTardis(World world, ItemStack stack) {
+        if (world == null)
+            return null;
+
+        return TardisManager.with(world, (o, manager) ->
+                manager.demandTardis(o, this.getTardisId(stack)));
     }
 
-    public static <C> Tardis getTardisFromUuid(TardisManager<?, C> manager, C c, ItemStack stack, String path) {
-        return LinkableItem.getTardis(LinkableItem.getTardisIdFromUuid(stack, path), c, manager);
+    public static <T> T apply(ItemStack stack, BiFunction<LinkableItem, ItemStack, T> f) {
+        if (!(stack.getItem() instanceof LinkableItem linkable))
+            throw new IllegalArgumentException("Not a linkable!");
+
+        return f.apply(linkable, stack);
     }
 
-    public static Tardis getTardis(World world, UUID uuid) {
-        return TardisManager.with(world, (o, manager) -> LinkableItem.getTardis(uuid, o, manager));
+    public static void accept(ItemStack stack, BiConsumer<LinkableItem, ItemStack> c) {
+        if (!(stack.getItem() instanceof LinkableItem linkable))
+            throw new IllegalArgumentException("Not a linkable!");
+
+        c.accept(linkable, stack);
     }
 
-    public static <C> Tardis getTardis(UUID uuid, C c, TardisManager<?, C> manager) {
-        return manager.demandTardis(c, uuid);
+    public static void linkStatic(ItemStack stack, Tardis tardis) {
+        accept(stack, (i, s) -> i.link(s, tardis));
+    }
+
+    public static void linkStatic(ItemStack stack, UUID id) {
+        accept(stack, (i, s) -> i.link(s, id));
+    }
+
+    public static boolean isLinkedStatic(ItemStack stack) {
+        return apply(stack, LinkableItem::isLinked);
+    }
+
+    public static boolean isOfStatic(ItemStack stack, Tardis tardis) {
+        return apply(stack, (i, s) -> i.isOf(s, tardis));
+    }
+
+    public static UUID getTardisIdStatic(ItemStack stack) {
+        return apply(stack, LinkableItem::getTardisId);
+    }
+
+    public static Tardis getTardisStatic(World world, ItemStack stack) {
+        return apply(stack, (i, s) -> i.getTardis(world, s));
     }
 }

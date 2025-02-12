@@ -5,7 +5,6 @@ import dev.pavatus.lib.data.CachedDirectedGlobalPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 
-import loqor.ait.AITMod;
 import loqor.ait.api.ArtronHolder;
 import loqor.ait.api.TardisEvents;
 import loqor.ait.core.engine.StructureHolder;
@@ -15,7 +14,6 @@ import loqor.ait.core.item.RiftScannerItem;
 import loqor.ait.core.tardis.handler.travel.TravelHandler;
 
 public class EmergencyPower extends SubSystem implements ArtronHolder, StructureHolder {
-    private static MultiBlockStructure STRUCTURE;
     private double fuel;
 
     static {
@@ -58,10 +56,6 @@ public class EmergencyPower extends SubSystem implements ArtronHolder, Structure
 
     @Override
     public MultiBlockStructure getStructure() {
-        if (STRUCTURE == null) {
-            STRUCTURE = MultiBlockStructure.from(AITMod.id("multiblock/emergency_power"));
-        }
-
-        return STRUCTURE;
+        return MultiBlockStructure.EMPTY;
     }
 }

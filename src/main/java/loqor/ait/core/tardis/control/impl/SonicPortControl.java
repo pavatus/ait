@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import loqor.ait.api.link.LinkableItem;
 import loqor.ait.core.AITSounds;
 import loqor.ait.core.item.HandlesItem;
-import loqor.ait.core.item.SonicItem2;
+import loqor.ait.core.item.SonicItem;
 import loqor.ait.core.tardis.Tardis;
 import loqor.ait.core.tardis.TardisDesktop;
 import loqor.ait.core.tardis.control.Control;
@@ -45,7 +45,7 @@ public class SonicPortControl extends Control {
 
         ItemStack stack = player.getMainHandStack();
 
-        if (!((stack.getItem() instanceof SonicItem2) || (stack.getItem() instanceof HandlesItem))) return false;
+        if (!((stack.getItem() instanceof SonicItem) || (stack.getItem() instanceof HandlesItem))) return false;
 
         LinkableItem linker = (LinkableItem) stack.getItem();
 
@@ -65,7 +65,7 @@ public class SonicPortControl extends Control {
         if (handler.getConsoleSonic() == null && stack.getItem() instanceof HandlesItem) {
             butler.insertHandles(stack, console);
             player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-        } else if (butler.getHandles() == null && stack.getItem() instanceof SonicItem2) {
+        } else if (butler.getHandles() == null && stack.getItem() instanceof SonicItem) {
             handler.insertConsoleSonic(stack, console);
             player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }

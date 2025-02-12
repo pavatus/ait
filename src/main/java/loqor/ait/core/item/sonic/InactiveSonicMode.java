@@ -8,8 +8,8 @@ import loqor.ait.data.schema.sonic.SonicSchema;
 
 public class InactiveSonicMode extends SonicMode {
 
-    protected InactiveSonicMode(int index) {
-        super(index);
+    protected InactiveSonicMode() {
+        super(-1);
     }
 
     @Override
@@ -25,5 +25,15 @@ public class InactiveSonicMode extends SonicMode {
     @Override
     public Identifier model(SonicSchema.Models models) {
         return models.inactive();
+    }
+
+    @Override
+    public SonicMode next() {
+        return Modes.get(0);
+    }
+
+    @Override
+    public SonicMode previous() {
+        return Modes.get(Modes.VALUES.length - 1);
     }
 }

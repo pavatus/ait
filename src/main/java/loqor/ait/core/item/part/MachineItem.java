@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 import loqor.ait.AITMod;
 import loqor.ait.core.AITTags;
 import loqor.ait.core.item.SonicItem;
+import loqor.ait.core.item.sonic.SonicMode;
 import loqor.ait.data.schema.MachineRecipeSchema;
 
 public class MachineItem extends Item {
@@ -38,7 +39,7 @@ public class MachineItem extends Item {
         if (!stack.getRegistryEntry().isIn(AITTags.Items.SONIC_ITEM))
             return false;
 
-        if (SonicItem.findMode(stack) != SonicItem.Mode.INTERACTION)
+        if (SonicItem.mode(stack) != SonicMode.Modes.INTERACTION)
             return false;
 
         MachineItem.disassemble(machine);

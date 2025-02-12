@@ -1,8 +1,5 @@
 package loqor.ait.core.blockentities;
 
-import java.util.Objects;
-import java.util.UUID;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -21,7 +18,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import loqor.ait.api.link.LinkableItem;
 import loqor.ait.api.link.v2.TardisRef;
 import loqor.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import loqor.ait.compat.DependencyChecker;
@@ -70,11 +66,9 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         boolean hasSonic = handler.getExteriorSonic() != null;
         boolean shouldEject = player.isSneaking();
 
-        if (hand.getItem() instanceof KeyItem && !tardis.siege().isActive()
+        if (hand.getItem() instanceof KeyItem key && !tardis.siege().isActive()
                 && !tardis.interiorChangingHandler().queued().get()) {
-            UUID keyId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
-
-            if (hand.isOf(AITItems.SKELETON_KEY) || Objects.equals(tardis.getUuid(), keyId)) {
+            if (hand.isOf(AITItems.SKELETON_KEY) || key.isOf(hand, tardis)) {
                 tardis.door().interactToggleLock((ServerPlayerEntity) player);
             } else {
                 world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BIT.value(), SoundCategory.BLOCKS, 1F, 0.2F);
@@ -100,32 +94,33 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
         }
 
-        if (hand.getItem() instanceof SonicItem && !tardis.siege().isActive()
-                && !tardis.interiorChangingHandler().queued().get()
-                && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
-            UUID sonicId = LinkableItem.getTardisIdFromUuid(hand, "tardis");
+        if (hand.getItem() instanceof SonicItem sonic && sonic.isOf(hand, tardis)) {
+            if (!tardis.siege().isActive()
+                    && !tardis.interiorChangingHandler().queued().get()
+                    && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
+                if (sonic.isOf(hand, tardis)) {
+                    handler.insertExteriorSonic(hand);
 
-            if (Objects.equals(tardis.getUuid(), sonicId)) {
-                handler.insertExteriorSonic(hand);
+                    player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                    world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
+                } else {
+                    world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
+                            0.2F);
+                    player.sendMessage(Text.translatable("tardis.tool.cannot_repair"), true); // Unable to repair TARDIS
+                    // with current tool!
+                }
 
-                player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
-            } else {
-                world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
-                        0.2F);
-                player.sendMessage(Text.translatable("tardis.tool.cannot_repair"), true); // Unable to repair TARDIS
-                                                                                            // with current tool!
+                return;
             }
 
-            return;
-        }
+            // try to stop phasing
+            EngineSystem.Phaser phasing = tardis.subsystems().engine().phaser();
 
-        // try to stop phasing
-        EngineSystem.Phaser phasing = tardis.subsystems().engine().phaser();
-        if (phasing.isPhasing() && SonicItem.isSonic(hand) && SonicItem.isOf(world, hand, tardis)) {
-            world.playSound(null, pos, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1F, 1F);
-            phasing.cancel();
-            return;
+            if (phasing.isPhasing()) {
+                world.playSound(null, pos, AITSounds.SONIC_USE, SoundCategory.PLAYERS, 1F, 1F);
+                phasing.cancel();
+                return;
+            }
         }
 
         if (sneaking && tardis.siege().isActive() && !tardis.isSiegeBeingHeld()) {
