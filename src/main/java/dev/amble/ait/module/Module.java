@@ -3,12 +3,12 @@ package dev.amble.ait.module;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import dev.pavatus.lib.api.Identifiable;
-import dev.pavatus.lib.container.impl.BlockContainer;
-import dev.pavatus.lib.container.impl.ItemContainer;
-import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
-import dev.pavatus.lib.datagen.model.SakitusModelProvider;
-import dev.pavatus.lib.itemgroup.AItemGroup;
+import dev.amble.lib.api.Identifiable;
+import dev.amble.lib.container.impl.BlockContainer;
+import dev.amble.lib.container.impl.ItemContainer;
+import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
+import dev.amble.lib.datagen.model.AmbleModelProvider;
+import dev.amble.lib.itemgroup.AItemGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -97,14 +97,14 @@ public abstract class Module implements Identifiable {
         /**
          * Called when the ENGLISH language provider is generating
          */
-        void lang(SakitusLanguageProvider provider);
+        void lang(AmbleLanguageProvider provider);
         void recipes(AITRecipeProvider provider);
         void blockTags(AITBlockTagProvider provider);
         void itemTags(AITItemTagProvider provider);
 
-        void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator);
+        void generateItemModels(AmbleModelProvider provider, ItemModelGenerator generator);
 
-        void models(SakitusModelProvider provider, BlockStateModelGenerator generator);
+        void models(AmbleModelProvider provider, BlockStateModelGenerator generator);
 
         void advancements(Consumer<Advancement> consumer);
     }

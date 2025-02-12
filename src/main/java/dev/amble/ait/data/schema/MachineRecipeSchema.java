@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;

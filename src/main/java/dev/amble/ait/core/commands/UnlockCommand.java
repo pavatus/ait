@@ -8,9 +8,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import dev.amble.lib.api.Identifiable;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.register.unlockable.UnlockableRegistry;
-import dev.pavatus.lib.api.Identifiable;
 
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;

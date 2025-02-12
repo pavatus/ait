@@ -6,8 +6,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-import dev.pavatus.lib.container.RegistryContainer;
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.container.RegistryContainer;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;

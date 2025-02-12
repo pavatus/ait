@@ -2,7 +2,7 @@ package dev.amble.ait.core.entities;
 
 import java.util.function.Predicate;
 
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;

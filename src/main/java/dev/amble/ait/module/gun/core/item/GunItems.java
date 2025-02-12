@@ -1,6 +1,6 @@
 package dev.amble.ait.module.gun.core.item;
 
-import dev.pavatus.lib.container.impl.ItemContainer;
+import dev.amble.lib.container.impl.ItemContainer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 

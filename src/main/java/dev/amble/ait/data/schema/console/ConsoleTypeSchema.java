@@ -3,7 +3,7 @@ package dev.amble.ait.data.schema.console;
 import java.lang.reflect.Type;
 
 import com.google.gson.*;
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;

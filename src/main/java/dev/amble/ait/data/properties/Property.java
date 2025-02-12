@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.data.DirectedGlobalPos;
+import dev.amble.lib.data.DirectedGlobalPos;
 import org.joml.Vector2i;
 
 import net.minecraft.item.ItemStack;

@@ -1,7 +1,7 @@
 package dev.amble.ait.registry.impl;
 
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.network.PacketByteBuf;
 

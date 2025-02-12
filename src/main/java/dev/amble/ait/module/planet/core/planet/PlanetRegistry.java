@@ -1,6 +1,6 @@
 package dev.amble.ait.module.planet.core.planet;
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionTypes;

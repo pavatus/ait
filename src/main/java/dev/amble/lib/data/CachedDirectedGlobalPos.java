@@ -1,6 +1,5 @@
 package dev.amble.lib.data;
 
-import dev.pavatus.lib.data.DirectedGlobalPos;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;

@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.amble.lib.data.DirectedBlockPos;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;

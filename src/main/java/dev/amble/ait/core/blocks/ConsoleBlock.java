@@ -2,7 +2,7 @@ package dev.amble.ait.core.blocks;
 
 import java.util.Random;
 
-import dev.pavatus.lib.api.ICantBreak;
+import dev.amble.lib.api.ICantBreak;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

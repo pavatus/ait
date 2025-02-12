@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import dev.pavatus.lib.container.impl.ItemContainer;
-import dev.pavatus.lib.datagen.util.NoEnglish;
-import dev.pavatus.lib.item.AItemSettings;
+import dev.amble.lib.container.impl.ItemContainer;
+import dev.amble.lib.datagen.util.NoEnglish;
+import dev.amble.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 

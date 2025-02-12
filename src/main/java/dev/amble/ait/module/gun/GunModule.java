@@ -3,11 +3,11 @@ package dev.amble.ait.module.gun;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import dev.pavatus.lib.container.RegistryContainer;
-import dev.pavatus.lib.container.impl.ItemContainer;
-import dev.pavatus.lib.datagen.lang.SakitusLanguageProvider;
-import dev.pavatus.lib.datagen.model.SakitusModelProvider;
-import dev.pavatus.lib.itemgroup.AItemGroup;
+import dev.amble.lib.container.RegistryContainer;
+import dev.amble.lib.container.impl.ItemContainer;
+import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
+import dev.amble.lib.datagen.model.AmbleModelProvider;
+import dev.amble.lib.itemgroup.AItemGroup;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
@@ -90,7 +90,7 @@ public class GunModule extends Module {
     public Optional<DataGenerator> getDataGenerator() {
         return Optional.of(new DataGenerator() {
             @Override
-            public void lang(SakitusLanguageProvider provider) {
+            public void lang(AmbleLanguageProvider provider) {
                 // provider.addTranslation(getItemGroup(), "AIT: Combat");
             }
 
@@ -110,12 +110,12 @@ public class GunModule extends Module {
             }
 
             @Override
-            public void generateItemModels(SakitusModelProvider provider, ItemModelGenerator generator) {
+            public void generateItemModels(AmbleModelProvider provider, ItemModelGenerator generator) {
 
             }
 
             @Override
-            public void models(SakitusModelProvider provider, BlockStateModelGenerator generator) {
+            public void models(AmbleModelProvider provider, BlockStateModelGenerator generator) {
 
             }
 

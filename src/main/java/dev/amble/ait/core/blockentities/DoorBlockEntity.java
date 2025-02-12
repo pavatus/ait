@@ -1,7 +1,7 @@
 package dev.amble.ait.core.blockentities;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import dev.pavatus.lib.data.DirectedBlockPos;
+import dev.amble.lib.data.DirectedBlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;

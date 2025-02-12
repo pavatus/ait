@@ -2,10 +2,10 @@ package dev.amble.ait.core.tardis;
 
 import java.util.*;
 
+import dev.amble.lib.data.DirectedBlockPos;
 import dev.drtheo.queue.api.ActionQueue;
 import dev.drtheo.queue.api.util.block.ChunkEraser;
 import dev.drtheo.queue.api.util.structure.QueuedStructureTemplate;
-import dev.pavatus.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.Block;

@@ -1,6 +1,6 @@
 package dev.amble.ait.module;
 
-import dev.pavatus.lib.register.datapack.DatapackRegistry;
+import dev.amble.lib.register.datapack.DatapackRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

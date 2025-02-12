@@ -1,6 +1,6 @@
 package dev.amble.ait.core.item.blueprint;
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.loot.function.LootFunctionType;
 

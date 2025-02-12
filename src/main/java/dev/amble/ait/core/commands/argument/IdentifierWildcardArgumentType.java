@@ -11,8 +11,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.pavatus.lib.api.Identifiable;
-import dev.pavatus.lib.register.datapack.DatapackRegistry;
+import dev.amble.lib.api.Identifiable;
+import dev.amble.lib.register.datapack.DatapackRegistry;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;

@@ -2,7 +2,7 @@ package dev.amble.ait.core.likes;
 
 import java.util.Optional;
 
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;

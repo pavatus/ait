@@ -1,6 +1,6 @@
 package dev.amble.ait.registry.impl.console.variant;
 
-import dev.pavatus.lib.register.datapack.DatapackRegistry;
+import dev.amble.lib.register.datapack.DatapackRegistry;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;

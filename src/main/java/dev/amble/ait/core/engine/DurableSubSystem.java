@@ -1,6 +1,6 @@
 package dev.amble.ait.core.engine;
 
-import dev.pavatus.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.ServerLifecycleHooks;
 
 import net.minecraft.item.ItemStack;
 

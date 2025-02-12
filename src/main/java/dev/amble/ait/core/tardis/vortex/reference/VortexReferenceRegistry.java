@@ -1,6 +1,6 @@
 package dev.amble.ait.core.tardis.vortex.reference;
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import dev.amble.ait.AITMod;
 

@@ -2,7 +2,7 @@ package dev.amble.ait.core.likes;
 
 import java.util.Optional;
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

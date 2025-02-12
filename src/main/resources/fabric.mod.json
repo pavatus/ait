@@ -59,11 +59,11 @@
 		"modmenu": [
 			"dev.amble.ait.config.AITModMenu"
 		],
-		"sakitus-main": [
-          "dev.amble.ait.sakitus.SakitusInitializer"
+		"amblekit-main": [
+          "dev.amble.ait.init.AmbleInitializer"
 		],
-		"sakitus-client": [
-          "dev.amble.ait.sakitus.client.SakitusClientInitializer"
+		"amblekit-client": [
+          "dev.amble.ait.init.client.AmbleClientInitializer"
 		]
 	},
 	"mixins": [
@@ -89,7 +89,7 @@
 				"name": "Adventures In Time",
 				"description": "Adds the TARDIS from Doctor Who into Minecraft 1.20.1.",
 				"icon": "assets/ait/icon.png",
-				"badges": [ "Pavatus", "Doctor WHO" ]
+				"badges": [ "amble", "Doctor WHO" ]
 			},
 			"update_checker": true
 		}

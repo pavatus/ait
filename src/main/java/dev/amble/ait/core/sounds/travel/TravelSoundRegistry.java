@@ -1,6 +1,6 @@
 package dev.amble.ait.core.sounds.travel;
 
-import dev.pavatus.lib.register.datapack.SimpleDatapackRegistry;
+import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;

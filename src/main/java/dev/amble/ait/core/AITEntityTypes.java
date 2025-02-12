@@ -1,7 +1,7 @@
 package dev.amble.ait.core;
 
-import dev.pavatus.lib.container.AssignedName;
-import dev.pavatus.lib.container.impl.EntityContainer;
+import dev.amble.lib.container.AssignedName;
+import dev.amble.lib.container.impl.EntityContainer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 import net.minecraft.entity.EntityDimensions;

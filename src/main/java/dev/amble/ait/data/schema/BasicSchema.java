@@ -1,6 +1,6 @@
 package dev.amble.ait.data.schema;
 
-import dev.pavatus.lib.api.Identifiable;
+import dev.amble.lib.api.Identifiable;
 
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
