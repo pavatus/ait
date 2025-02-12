@@ -1,17 +1,13 @@
-![AIT Logo](https://github.com/pavatus/ait/blob/main/src/main/resources/assets/ait_logo.png?raw=true)
+![AIT Logo](https://github.com/amblelabs/ait/blob/main/src/main/resources/assets/ait_logo.png?raw=true)
 
-![GitHub Release](https://img.shields.io/github/v/release/M-D-Team/ait-fabric-1.20.1?include_prereleases)
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/ait?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait%2Fversions)
 
-![Modrinth Downloads](https://img.shields.io/modrinth/dt/ait?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait)
-![CurseForge Downloads](https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fadventures-in-time)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/ait?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait) ![CurseForge Downloads](https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fadventures-in-time)
 
 ![Wiki](https://img.shields.io/badge/wiki-grey?logo=gitbook&logoColor=white&link=https%3A%2F%2Floqor.dev%2Fait%2F)
 
 
-**by [pavatus](https://pavatus.github.io)**
-
-**Requires [OwoLib](https://modrinth.com/mod/owo-lib)**
+**by [Amble Labs](https://amblelabs.github.io)**
 
 ## Summary
 **Apparatus Vivi. Living machine. TARDIS from Doctor Who. Whatever you call it, it grows with you. It learns with you, and flies the way you fly. Sure, you might be the pilot, but despite that, it does with that what it may.**
@@ -70,7 +66,7 @@ Recommended to have 8GB of RAM **allocated** to the multiplayer servers.
 ## Links
 [Wiki](https://pavatus.github.io/ait-wiki/)
 
-[Github](https://github.com/loqor/ait/)
+[Github](https://github.com/amblelabs/ait/)
 
 [Curseforge](https://www.curseforge.com/minecraft/mc-mods/adventures-in-time)
 

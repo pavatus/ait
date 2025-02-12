@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "loqor.ait.mixin",
+  "package": "dev.amble.ait.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "loqor.ait.compat.AITMixinPlugin",
+  "plugin": "dev.amble.ait.compat.AITMixinPlugin",
   "mixins": [
     "LivingEntityMixin",
     "UseActionMixin",
