@@ -4,10 +4,7 @@ import static dev.amble.ait.AITMod.*;
 import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ClientModInitializer;
@@ -15,16 +12,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -34,12 +27,9 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.profiler.Profiler;
 
 import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
@@ -64,6 +54,7 @@ import dev.amble.ait.client.renderers.monitors.MonitorRenderer;
 import dev.amble.ait.client.renderers.monitors.WallMonitorRenderer;
 import dev.amble.ait.client.screens.BlueprintFabricatorScreen;
 import dev.amble.ait.client.screens.MonitorScreen;
+import dev.amble.ait.client.sonic.SonicModels;
 import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.tardis.manager.ClientTardisManager;
 import dev.amble.ait.client.util.ClientTardisUtil;
@@ -285,27 +276,7 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void sonicModelPredicate() {
-        ModelLoadingPlugin.register(context -> {
-            Collection<Identifier> ids = SonicRegistry.getInstance().models();
-
-            LOGGER.info("Loading {}", ids);
-            context.addModels(ids.toArray(new Identifier[0]));
-        });
-
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return ResourceReloadListenerKeys.MODELS;
-            }
-
-            @Override
-            public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-                manager.findResources("models/sonic", identifier -> identifier.getPath().endsWith(".json")).forEach((identifier, resource) -> {
-                    LOGGER.info("found potential sonic: {}", identifier);
-                });
-                return null;
-            }
-        });
+        SonicModels.init();
     }
 
     public static void waypointPredicate() {
