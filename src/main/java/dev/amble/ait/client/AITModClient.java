@@ -9,8 +9,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -27,9 +25,6 @@ import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.profiler.Profiler;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -39,9 +34,12 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.profiler.Profiler;
 
 import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
@@ -82,7 +80,9 @@ import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.gun.core.item.BaseGunItem;
 import dev.amble.ait.registry.impl.SonicRegistry;
 import dev.amble.ait.registry.impl.console.ConsoleRegistry;
+import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
+import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
