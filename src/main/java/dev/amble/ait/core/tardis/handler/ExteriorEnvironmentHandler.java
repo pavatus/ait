@@ -54,8 +54,8 @@ public class ExteriorEnvironmentHandler extends KeyedTardisComponent implements 
 
         boolean snowy = tardis.<BiomeHandler>handler(Id.BIOME).getBiomeKey() == BiomeHandler.BiomeType.SNOWY;
 
-        boolean isRaining = exterior.isRaining() && !snowy;
-        boolean isThundering = exterior.isThundering() && !snowy;
+        boolean isRaining = exterior.hasRain(travel.position().getPos()) && exterior.isRaining() && !snowy;
+        boolean isThundering = exterior.hasRain(travel.position().getPos()) && exterior.isThundering() && !snowy;
 
         if (travel.getState() != TravelHandlerBase.State.LANDED) {
             isRaining = false;
