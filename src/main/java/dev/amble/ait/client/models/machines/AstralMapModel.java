@@ -14,6 +14,7 @@ public class AstralMapModel extends SinglePartEntityModel {
     }
     public AstralMapModel() {
         this(getTexturedModelData().createModel());
+
     }
 
     public static TexturedModelData getTexturedModelData() {
@@ -26,11 +27,12 @@ public class AstralMapModel extends SinglePartEntityModel {
                 .uv(68, 36).cuboid(-4.0455F, -13.5F, 7.5918F, 8.0F, 3.0F, 1.0F, new Dilation(0.0F))
                 .uv(68, 36).cuboid(-4.0455F, -13.5F, -5.2646F, 8.0F, 3.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 40).cuboid(-0.0455F, -16.0F, -8.2895F, 0.0F, 16.0F, 5.0F, new Dilation(0.0F))
-                .uv(0, 14).cuboid(-7.5455F, -27.9F, -4.1895F, 15.0F, 0.0F, 12.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+                .uv(0, 14).cuboid(-7.5455F, -27.9F, -4.1895F, 15.0F, 0.0F, 12.0F, new Dilation(0.0F))
+                .uv(-11, -7).cuboid(-5.0F, -27.5F, -3.0F, 10.0F, 9.0F, 9.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-        ModelPartData cube_r1 = bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(2, 1).cuboid(0.0F, 0.7F, -0.8F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.2636F, -16.8117F, -10.5184F, 0.9553F, 0.5236F, 0.6155F));
+        ModelPartData cube_r1 = bb_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 3).cuboid(0.0F, 0.7F, -0.8F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-0.2636F, -16.8117F, -10.5184F, 0.9553F, 0.5236F, 0.6155F));
 
-        ModelPartData cube_r2 = bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(2, 1).cuboid(0.0F, 0.1F, -0.9F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-2.1929F, -16.4375F, -10.0442F, 0.9553F, 0.5236F, 0.6155F));
+        ModelPartData cube_r2 = bb_main.addChild("cube_r2", ModelPartBuilder.create().uv(0, 3).cuboid(0.0F, 0.1F, -0.9F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-2.1929F, -16.4375F, -10.0442F, 0.9553F, 0.5236F, 0.6155F));
 
         ModelPartData cube_r3 = bb_main.addChild("cube_r3", ModelPartBuilder.create().uv(0, 0).cuboid(-1.0F, -5.9F, -3.9F, 2.0F, 1.0F, 2.0F, new Dilation(-0.1F))
                 .uv(0, 0).cuboid(-3.0F, -5.9F, -3.9F, 2.0F, 1.0F, 2.0F, new Dilation(-0.1F))
