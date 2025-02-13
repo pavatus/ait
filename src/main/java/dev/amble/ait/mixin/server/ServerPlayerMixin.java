@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.core.world.TardisServerWorld;
 
@@ -22,5 +23,12 @@ public class ServerPlayerMixin {
             TardisUtil.teleportInside(tardisWorld.getTardis(), player);
             player.fallDistance = 0;
         }
+    }
+
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    public void ait$attack(CallbackInfo ci) {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        if (player.hasVehicle() && player.getVehicle() instanceof FlightTardisEntity)
+            ci.cancel();
     }
 }

@@ -178,6 +178,11 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     }
 
     @Override
+    public boolean doesRenderOnFire() {
+        return false;
+    }
+
+    @Override
     public Iterable<ItemStack> getArmorItems() {
         return EMPTY;
     }
