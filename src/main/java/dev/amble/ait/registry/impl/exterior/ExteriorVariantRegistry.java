@@ -89,7 +89,6 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         PacketByteBuf copy = PacketByteBufs.copy(buf);
         ClientExteriorVariantRegistry.getInstance().readFromServer(copy);
 
-        REGISTRY.clear();
         this.defaults();
 
         int size = buf.readInt();
