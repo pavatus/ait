@@ -188,12 +188,12 @@ public class AddonExterior extends ExteriorVariantSchema {
         }
         @Override
         public Identifier texture() {
-            return new Identifier(server.modid, "textures/blockentities/exteriors/" + server.name + server.name + ".png");
+            return new Identifier(server.modid, "textures/blockentities/exteriors/" + server.name + "/" + server.name + ".png");
         }
 
         @Override
         public Identifier emission() {
-            Identifier id = new Identifier(server.modid, "textures/blockentities/exteriors/" + server.name + server.name + "_emission.png");
+            Identifier id = new Identifier(server.modid, "textures/blockentities/exteriors/" + server.name + "/" + server.name + "_emission.png");
 
             if (!checkedEmission && MinecraftClient.getInstance().getResourceManager() != null) {
                 this.hasEmission = InteriorSettingsScreen.doesTextureExist(id);
@@ -290,12 +290,12 @@ public class AddonExterior extends ExteriorVariantSchema {
 
     @Environment(EnvType.CLIENT)
     public static class ClientDoor extends ClientDoorSchema {
-        protected final Door parent;
+        protected final Door clientDoor;
         private final DoorModel model;
 
         public ClientDoor(Door parent, DoorModel model) {
             super(parent.id());
-            this.parent = parent;
+            this.clientDoor = parent;
             this.model = model;
         }
 
@@ -311,7 +311,7 @@ public class AddonExterior extends ExteriorVariantSchema {
         }
 
         public Door toServer() {
-            return this.parent;
+            return this.clientDoor;
         }
     }
 }
