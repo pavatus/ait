@@ -214,7 +214,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
 
     @Override
     public void tick(World world, BlockPos pos, BlockState state, ConsoleBlockEntity blockEntity) {
-        if (world.getRegistryKey().equals(World.OVERWORLD)) {
+        if (!TardisServerWorld.isTardisDimension(world)) {
             return;
         }
 
@@ -231,7 +231,7 @@ public class ConsoleBlockEntity extends InteriorLinkableBlockEntity implements B
         if (!TardisServerWorld.isTardisDimension((ServerWorld) this.getWorld()))
             this.markRemoved();
 
-        if (this.tardis().isEmpty())
+        if (this.tardis() == null || this.tardis().isEmpty())
             return;
 
         SequenceHandler handler = this.tardis().get().sequence();

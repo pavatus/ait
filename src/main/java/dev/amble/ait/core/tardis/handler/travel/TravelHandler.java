@@ -276,7 +276,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         // Play dematerialize sound at the position
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
-        System.out.println(tardis.stats().getTravelEffects().get(this.getState()).soundId());
+        //System.out.println(tardis.stats().getTravelEffects().get(this.getState()).soundId());
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 2f, 1f);
         this.runAnimations();
 
@@ -354,7 +354,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         this.position().getWorld().playSound(null, this.position().getPos(), sound, SoundCategory.BLOCKS);
 
         this.tardis.getDesktop().playSoundAtEveryConsole(sound, SoundCategory.BLOCKS, 2f, 1f);
-        System.out.println(sound.getId());
+        //System.out.println(sound.getId());
         this.placeExterior(true); // we schedule block update in #finishRemat
     }
 

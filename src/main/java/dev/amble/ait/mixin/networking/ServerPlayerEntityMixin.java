@@ -22,7 +22,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     }
 
     @Inject(method = "sendUnloadChunkPacket", at = @At("TAIL"))
-    public void sendUnloadChunkPacket(ChunkPos chunkPos, CallbackInfo ci) {
+    public void ait$sendUnloadChunkPacket(ChunkPos chunkPos, CallbackInfo ci) {
         if (this.isAlive())
             TardisEvents.UNLOAD_TARDIS.invoker().unload((ServerPlayerEntity) (Object) this, chunkPos);
     }

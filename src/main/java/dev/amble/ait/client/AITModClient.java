@@ -4,7 +4,6 @@ import static dev.amble.ait.AITMod.*;
 import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.UUID;
 
 import dev.amble.lib.register.AmbleRegistries;
@@ -13,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -57,6 +55,7 @@ import dev.amble.ait.client.renderers.monitors.WallMonitorRenderer;
 import dev.amble.ait.client.screens.AstralMapScreen;
 import dev.amble.ait.client.screens.BlueprintFabricatorScreen;
 import dev.amble.ait.client.screens.MonitorScreen;
+import dev.amble.ait.client.sonic.SonicModels;
 import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.tardis.manager.ClientTardisManager;
 import dev.amble.ait.client.util.ClientTardisUtil;
@@ -279,12 +278,7 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void sonicModelPredicate() {
-        ModelLoadingPlugin.register(context -> {
-            Collection<Identifier> ids = SonicRegistry.getInstance().models();
-
-            LOGGER.info("Loading {}", ids);
-            context.addModels(ids.toArray(new Identifier[0]));
-        });
+        SonicModels.init();
     }
 
     public static void waypointPredicate() {

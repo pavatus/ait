@@ -30,6 +30,7 @@ import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.impl.DirectionControl;
 import dev.amble.ait.core.tardis.util.TardisUtil;
+import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.mixin.rwf.LivingEntityAccessor;
 
 public class FlightTardisEntity extends LinkableLivingEntity implements JumpingMount {
@@ -103,7 +104,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             Tardis tardisClient = this.tardis().get().asClient();
             if (client.player == this.getControllingPassenger()) {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-                //client.options.hudHidden = true;
+                client.options.hudHidden = true;
                 if (!this.groundCollision)
                     ClientShakeUtil.shake((float) (tardisClient.travel().speed() + this.getVelocity().horizontalLength()) / tardisClient.travel().maxSpeed().get());
             }
@@ -115,6 +116,9 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         if (!player.isInvisible())
             player.setInvisible(true);
+
+        if (!player.isInvulnerable())
+            player.setInvulnerable(true);
 
         boolean onGround = this.isOnGround();
 
@@ -128,7 +132,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         }
 
         if (player.isSneaking() && (onGround || tardis.travel().antigravs().get())) {
-            System.out.println(onGround);
+            //System.out.println(onGround);
             this.finishLand(tardis, player);
         }
     }
@@ -157,7 +161,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         if (this.getWorld().isClient()) {
             MinecraftClient client = MinecraftClient.getInstance();
             client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-            client.options.hudHidden = true;
+            client.options.hudHidden = false;
             return;
         }
         if (!(player instanceof ServerPlayerEntity serverPlayer))
@@ -170,7 +174,13 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         }
 
         tardis.flight().exitFlight(serverPlayer);
+        tardis.travel().speed(0);
         this.discard();
+    }
+
+    @Override
+    public boolean doesRenderOnFire() {
+        return false;
     }
 
     @Override
@@ -266,7 +276,13 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putLong("InteriorPos", this.interiorPos.asLong());
+
+        BlockPos consolePos = this.tardis().get().getDesktop().getConsolePos().iterator().next();
+        BlockPos pos = WorldUtil.findSafeXZ(this.tardis().get().asServer().getInteriorWorld(), consolePos, 2);
+        nbt.putLong("InteriorPos", this.interiorPos == null
+                ? pos == null
+                ? new BlockPos(0, 0, 0).asLong() :
+                pos.asLong() : this.interiorPos.asLong());
     }
 
     public static DefaultAttributeContainer.Builder createDummyAttributes() {
