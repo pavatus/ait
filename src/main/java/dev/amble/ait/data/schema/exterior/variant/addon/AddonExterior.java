@@ -38,7 +38,7 @@ import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
  * Now in a client-sided init ( eg your client initializer ), you can set the client versions <br>
  * setting exterior model - <code>MyMod.MY_EXTERIOR.setModel(new MyExteriorModel()).toClient().register()</code> <br>
  * setting door model - <code>MyMod.MY_EXTERIOR.toDoor().setModel(new MyDoorModel()).toClient().register()</code> <br>
- * and then you place your textures in assets/my_mod/textures/exterior/my_exterior.png and assets/my_mod/textures/exterior/my_exterior_emission.png
+ * and then you place your textures in assets/my_mod/textures/blockentites/exteriors/my_exterior/my_exterior.png and assets/my_mod/textures/blockentites/exteriors/my_exterior/my_exterior_emission.png
  *
  * @see ExteriorModel
  * @see DoorModel
