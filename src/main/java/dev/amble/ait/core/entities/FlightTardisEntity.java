@@ -30,6 +30,7 @@ import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.impl.DirectionControl;
 import dev.amble.ait.core.tardis.util.TardisUtil;
+import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.mixin.rwf.LivingEntityAccessor;
 
 public class FlightTardisEntity extends LinkableLivingEntity implements JumpingMount {
@@ -275,7 +276,10 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putLong("InteriorPos", this.interiorPos.asLong());
+        BlockPos pos = WorldUtil.findSafeXZ(this.tardis().get().asServer().getInteriorWorld(),this.tardis().get().getDesktop().getConsolePos().stream().toList().getFirst().offset(AITMod.RANDOM.nextBoolean() ? Direction.NORTH : Direction.WEST, 2), 2);
+        if (pos == null)
+            pos = new BlockPos(0, 0, 0);
+        nbt.putLong("InteriorPos", this.interiorPos == null ? pos.asLong() : this.interiorPos.asLong());
     }
 
     public static DefaultAttributeContainer.Builder createDummyAttributes() {
