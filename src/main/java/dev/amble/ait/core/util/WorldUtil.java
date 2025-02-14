@@ -159,7 +159,7 @@ public class WorldUtil {
         return cached.pos(x, y, z);
     }
 
-    private static BlockPos findSafeXZ(ServerWorld world, BlockPos original, int radius) {
+    public static BlockPos findSafeXZ(ServerWorld world, BlockPos original, int radius) {
         BlockPos.Mutable pos = original.mutableCopy();
 
         int minX = pos.getX() - radius;
