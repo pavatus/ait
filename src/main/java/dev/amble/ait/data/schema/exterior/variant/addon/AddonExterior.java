@@ -70,6 +70,51 @@ public class AddonExterior extends ExteriorVariantSchema {
         return this;
     }
 
+    public AddonExterior copy(String modid, String name, boolean register) {
+        AddonExterior copy = new AddonExterior(this.categoryId(), modid, name);
+
+        // copy door stuff
+        if (this.door != null) {
+            copy.setDoor(new Door(copy, this.door.isDouble(), this.door.openSound(), this.door.closeSound()));
+
+            if (register) {
+                copy.toDoor().register();
+            }
+        }
+
+        if (register) {
+            copy.register();
+        }
+
+        return copy;
+    }
+    @Environment(EnvType.CLIENT)
+    public AddonExterior copyClient(AddonExterior source, boolean register) {
+        if (source.client != null) {
+            this.setClient(new ClientExterior(this, source.client.model, source.client.sonicItemTranslations, source.client.biomeOverrides));
+
+            if (register) {
+                this.toClient().register();
+            }
+        }
+        if (this.door != null && source.door != null && source.door.client != null) {
+            this.toDoor().setModel(source.door.client.model);
+
+            if (register) {
+                this.toDoor().toClient().register();
+            }
+        }
+
+        return this;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public AddonExterior setClient(ClientExterior client) {
+        this.client = client;
+
+        return this;
+    }
+
     @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
         return new PulsatingAnimation(exterior);
