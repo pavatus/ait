@@ -22,6 +22,7 @@ import dev.amble.ait.data.schema.door.ClientDoorSchema;
 import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
+import dev.amble.ait.registry.impl.CategoryRegistry;
 import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
 import dev.amble.ait.registry.impl.door.DoorRegistry;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -46,6 +47,7 @@ import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 public class AddonExterior extends ExteriorVariantSchema {
     protected final String modid;
     protected final String name;
+    protected final Identifier categoryId;
 
     @Environment(EnvType.CLIENT)
     private ClientExterior client;
@@ -56,6 +58,7 @@ public class AddonExterior extends ExteriorVariantSchema {
     public AddonExterior(Identifier category, String modid, String name) {
         super(category, new Identifier(modid, "exterior/" + name), Loyalty.fromLevel(Loyalty.Type.OWNER.level));
 
+        this.categoryId = category; //just for the fuck of it
         this.modid = modid;
         this.name = name;
     }
@@ -184,7 +187,7 @@ public class AddonExterior extends ExteriorVariantSchema {
         }
         public ClientExterior(AddonExterior parent, ExteriorModel model) {
             this(parent, model, parent.sonicItemTranslations != null ? parent.sonicItemTranslations :
-                    parent.category().getDefaultVariant().getClient().sonicItemTranslations(), BiomeOverrides.builder().build());
+                    CategoryRegistry.getInstance().get(parent.categoryId).getDefaultVariant().getClient().sonicItemTranslations(), BiomeOverrides.builder().build());
         }
         @Override
         public Identifier texture() {
