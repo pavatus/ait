@@ -166,7 +166,7 @@ public class AddonExterior extends ExteriorVariantSchema {
 
     @Environment(EnvType.CLIENT)
     public static class ClientExterior extends ClientExteriorVariantSchema {
-        protected final AddonExterior parent;
+        protected final AddonExterior server;
         private boolean hasEmission;
         private boolean checkedEmission = false;
         private final Vector3f sonicItemTranslations;
@@ -176,7 +176,7 @@ public class AddonExterior extends ExteriorVariantSchema {
         public ClientExterior(AddonExterior parent, ExteriorModel model, Vector3f sonicItemTranslations, BiomeOverrides biomeOverrides) {
             super(parent.id());
 
-            this.parent = parent;
+            this.server = parent;
 
             this.sonicItemTranslations = sonicItemTranslations;
             this.biomeOverrides = biomeOverrides;
@@ -188,12 +188,12 @@ public class AddonExterior extends ExteriorVariantSchema {
         }
         @Override
         public Identifier texture() {
-            return new Identifier(parent.modid, "textures/blockentities/exteriors/" + parent.name + ".png");
+            return new Identifier(server.modid, "textures/blockentities/exteriors/" + server.name + server.name + ".png");
         }
 
         @Override
         public Identifier emission() {
-            Identifier id = new Identifier(parent.modid, "textures/blockentities/exteriors/" + parent.name + "_emission.png");
+            Identifier id = new Identifier(server.modid, "textures/blockentities/exteriors/" + server.name + server.name + "_emission.png");
 
             if (!checkedEmission && MinecraftClient.getInstance().getResourceManager() != null) {
                 this.hasEmission = InteriorSettingsScreen.doesTextureExist(id);
@@ -224,12 +224,12 @@ public class AddonExterior extends ExteriorVariantSchema {
         }
 
         public AddonExterior toServer() {
-            return parent;
+            return server;
         }
     }
 
     public static class Door extends DoorSchema {
-        protected final AddonExterior parent;
+        protected final AddonExterior doorParent;
         private final boolean isDouble;
         private final SoundEvent open;
         private final SoundEvent close;
@@ -240,7 +240,7 @@ public class AddonExterior extends ExteriorVariantSchema {
         public Door(AddonExterior exterior, boolean isDouble, SoundEvent open, SoundEvent close) {
             super(exterior.id());
 
-            this.parent = exterior;
+            this.doorParent = exterior;
             this.isDouble = isDouble;
             this.open = open;
             this.close = close;
@@ -268,7 +268,7 @@ public class AddonExterior extends ExteriorVariantSchema {
         }
 
         public AddonExterior toExterior() {
-            return this.parent;
+            return this.doorParent;
         }
 
         @Environment(EnvType.CLIENT)
