@@ -16,7 +16,7 @@ import net.minecraft.util.Hand;
 
 import dev.amble.ait.module.gun.core.item.BaseGunItem;
 
-@Mixin(PlayerEntityRenderer.class)
+@Mixin(value = PlayerEntityRenderer.class, priority = 1002)
 public abstract class PlayerEntityRendererMixin
         extends
         LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {

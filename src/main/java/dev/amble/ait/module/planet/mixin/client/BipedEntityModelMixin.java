@@ -12,7 +12,7 @@ import net.minecraft.entity.LivingEntity;
 
 import dev.amble.ait.module.planet.core.item.SpacesuitItem;
 
-@Mixin(BipedEntityModel.class)
+@Mixin(value = BipedEntityModel.class, priority = 1001)
 public class BipedEntityModelMixin<T extends LivingEntity> {
     @Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("HEAD"))
     private void ait$setAngles(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {

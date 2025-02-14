@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import dev.amble.ait.module.planet.core.planet.Planet;
 import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
 
-@Mixin(WorldRenderer.class)
+@Mixin(value = WorldRenderer.class, priority = 1001)
 public abstract class CloudMixin {
 
     @Inject(method="renderClouds(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FDDD)V", at = @At("HEAD"), cancellable = true)
