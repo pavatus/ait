@@ -24,6 +24,7 @@ public class SkyboxUtil extends WorldRenderer {
 
     private static final Identifier TARDIS_SKY = AITMod.id("textures/environment/tardis_sky.png");
     private static final Identifier MOON_SKY = AITMod.id("textures/environment/tardis_sky.png");
+    private static final Identifier SPACE_SKY = AITMod.id("textures/environment/space_sky.png");
     private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
 
     private static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
@@ -170,7 +171,7 @@ public class SkyboxUtil extends WorldRenderer {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-
+        float texSize = 128.0f / 384.0f; // 128 is the size of each square, 384 is the total width/height of the texture
 
         for (int i = 0; i < 6; i++) {
             matrices.push();
@@ -184,13 +185,15 @@ public class SkyboxUtil extends WorldRenderer {
             Matrix4f matrix4f = matrices.peek().getPositionMatrix();
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 
-            bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -100.0f).texture(0.0f, 0.0f).color(0, 0, 0, 255).next();
+            float u0 = (i % 3) * texSize;
+            float v0 = ((float) i / 3) * texSize;
+            float u1 = u0 + texSize;
+            float v1 = v0 + texSize;
 
-            bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(0.0f, 16.0f).color(0, 0, 0, 255).next();
-
-            bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, 100.0f).texture(16.0f, 16.0f).color(0, 0, 0, 255).next();
-
-            bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, -100.0f).texture(16.0f, 0.0f).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -100.0f).texture(u0, v0).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(u0, v1).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, 100.0f).texture(u1, v1).color(0, 0, 0, 255).next();
+            bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, -100.0f).texture(u1, v0).color(0, 0, 0, 255).next();
 
             tessellator.draw();
             matrices.pop();
@@ -201,7 +204,6 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.setShaderTexture(0, new Identifier("textures/environment/sun.png"));
 
         Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
-        //make smaller moon size
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
         bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
         bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();
