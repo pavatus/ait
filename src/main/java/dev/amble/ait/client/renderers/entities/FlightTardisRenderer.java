@@ -14,7 +14,9 @@ import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.client.models.exteriors.ExteriorModel;
 import dev.amble.ait.client.models.machines.ShieldsModel;
 import dev.amble.ait.client.renderers.AITRenderLayers;
+import dev.amble.ait.client.renderers.VortexUtil;
 import dev.amble.ait.client.util.ClientLightUtil;
+import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
@@ -56,12 +58,14 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         if (tardis.door().isClosed() && !entity.groundCollision)
             matrices.translate(0, 0.25f * -vec3d2.getY(), 0);
 
-        /*VortexUtil vortexUtil = tardis.stats().getVortexEffects().toUtil();
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin(0.2 * tickDelta)));
-        matrices.translate(0, 0, 500);
-        vortexUtil.renderVortex(matrices);
-        matrices.pop();*/
+        if (tardis.travel().position().getDimension() == AITDimensions.TIME_VORTEX_WORLD) {
+            VortexUtil vortexUtil = tardis.stats().getVortexEffects().toUtil();
+            matrices.push();
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin(0.2 * tickDelta)));
+            matrices.translate(0, 0, 500);
+            vortexUtil.renderVortex(matrices);
+            matrices.pop();
+        }
 
         if (d > 0.0 && e > 0.0) {
             double l = (vec3d2.x * vec3d.x + vec3d2.z * vec3d.z) / Math.sqrt(d * e);
