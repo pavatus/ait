@@ -50,6 +50,8 @@ public class AddonExterior extends ExteriorVariantSchema {
     @Environment(EnvType.CLIENT)
     private ClientExterior client;
     private Door door;
+    @Environment(EnvType.CLIENT)
+    private Vector3f sonicItemTranslations;
 
     public AddonExterior(Identifier category, String modid, String name) {
         super(category, new Identifier(modid, "exterior/" + name), Loyalty.fromLevel(Loyalty.Type.OWNER.level));
@@ -85,6 +87,14 @@ public class AddonExterior extends ExteriorVariantSchema {
 
         return this;
     }
+
+    @Environment(EnvType.CLIENT)
+    public AddonExterior setSonicItemTranslations(Vector3f translations) {
+        this.sonicItemTranslations = translations;
+
+        return this;
+    }
+
     @Environment(EnvType.CLIENT)
     public ClientExterior toClient() {
         if (this.client == null) {
@@ -128,17 +138,17 @@ public class AddonExterior extends ExteriorVariantSchema {
             this.model = model;
         }
         public ClientExterior(AddonExterior parent, ExteriorModel model) {
-            this(parent, model, new Vector3f(0, 0, 0), BiomeOverrides.builder().build());
+            this(parent, model, parent.sonicItemTranslations != null ? parent.sonicItemTranslations :
+                    parent.category().getDefaultVariant().getClient().sonicItemTranslations(), BiomeOverrides.builder().build());
         }
-
         @Override
         public Identifier texture() {
-            return new Identifier(parent.modid, "textures/exterior/" + parent.name);
+            return new Identifier(parent.modid, "textures/blockentities/exteriors/" + parent.name + ".png");
         }
 
         @Override
         public Identifier emission() {
-            Identifier id = new Identifier(parent.modid, "textures/exterior/" + parent.name + "_emission");
+            Identifier id = new Identifier(parent.modid, "textures/blockentities/exteriors/" + parent.name + "_emission.png");
 
             if (!checkedEmission && MinecraftClient.getInstance().getResourceManager() != null) {
                 this.hasEmission = InteriorSettingsScreen.doesTextureExist(id);
