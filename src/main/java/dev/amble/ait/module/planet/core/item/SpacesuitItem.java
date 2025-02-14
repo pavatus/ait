@@ -34,7 +34,7 @@ public class SpacesuitItem extends RenderableArmorItem {
         }
         ItemStack stack = new ItemStack(this);
         NbtCompound compound = stack.getOrCreateNbt();
-        compound.putDouble(OXYGEN_KEY, 0.0D);
+        compound.putDouble(OXYGEN_KEY, MAX_OXYGEN);
         return stack;
     }
 

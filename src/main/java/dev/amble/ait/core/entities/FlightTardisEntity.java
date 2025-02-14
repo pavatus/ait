@@ -276,6 +276,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
+        if (this.getWorld().isClient()) return;
 
         BlockPos consolePos = this.tardis().get().getDesktop().getConsolePos().iterator().next();
         BlockPos pos = WorldUtil.findSafeXZ(this.tardis().get().asServer().getInteriorWorld(), consolePos, 2);

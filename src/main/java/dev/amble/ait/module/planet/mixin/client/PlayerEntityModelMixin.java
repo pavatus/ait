@@ -11,7 +11,7 @@ import net.minecraft.entity.LivingEntity;
 
 import dev.amble.ait.module.planet.core.item.SpacesuitItem;
 
-@Mixin(PlayerEntityModel.class)
+@Mixin(value = PlayerEntityModel.class, priority = 1001)
 public class PlayerEntityModelMixin<T extends LivingEntity> {
 
     @Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("HEAD"))

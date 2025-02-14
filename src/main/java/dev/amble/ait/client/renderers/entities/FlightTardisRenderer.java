@@ -1,5 +1,6 @@
 package dev.amble.ait.client.renderers.entities;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -61,7 +62,7 @@ public class FlightTardisRenderer extends EntityRenderer<FlightTardisEntity> {
         if (tardis.travel().position().getDimension() == AITDimensions.TIME_VORTEX_WORLD) {
             VortexUtil vortexUtil = tardis.stats().getVortexEffects().toUtil();
             matrices.push();
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin(0.2 * tickDelta)));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
             matrices.translate(0, 0, 500);
             vortexUtil.renderVortex(matrices);
             matrices.pop();

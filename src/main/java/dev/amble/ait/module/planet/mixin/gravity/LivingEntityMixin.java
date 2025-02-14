@@ -1,7 +1,6 @@
 package dev.amble.ait.module.planet.mixin.gravity;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,12 +28,8 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.module.planet.core.planet.Planet;
 import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
 
-@Mixin(LivingEntity.class)
+@Mixin(value = LivingEntity.class, priority = 1001)
 public abstract class LivingEntityMixin extends Entity {
-
-    @Shadow protected abstract boolean tryUseTotem(DamageSource source);
-
-    @Shadow public abstract void takeKnockback(double strength, double x, double z);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);

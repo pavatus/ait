@@ -11,7 +11,7 @@ import dev.amble.lib.container.impl.ItemContainer;
 import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
 import dev.amble.lib.datagen.model.AmbleModelProvider;
 import dev.amble.lib.itemgroup.AItemGroup;
-import dev.amble.lib.register.api.RegistryEvents;
+import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -55,9 +55,7 @@ public class PlanetModule extends Module {
     @Override
     public void init() {
         PlanetCustomTrades.registerCustomTrades();
-        RegistryEvents.SUBSCRIBE.register((registries, env) -> {
-            env.init(PlanetRegistry.getInstance());
-        });
+        AmbleRegistries.getInstance().register(PlanetRegistry.getInstance());
 
         RegistryContainer.register(PlanetItems.class, AITMod.MOD_ID);
         RegistryContainer.register(PlanetBlocks.class, AITMod.MOD_ID);
