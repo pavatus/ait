@@ -46,15 +46,16 @@ public class CelestialBodyRenderer {
 
         BackgroundRenderer.clearFog();
         RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
+
         TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
-                provider.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(texture, false)),
-                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.5f);
+                provider.getBuffer(AITRenderLayers.getEntityTranslucent(overlayTexture, false)),
+                0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
         provider.draw();
 
-        matrixStack.scale(0.9f, 0.9f, 0.9f);
+        matrixStack.scale(1.1f, 1.1f, 1.1f);
         TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
-                provider.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(overlayTexture, false)),
-                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
+                provider.getBuffer(AITRenderLayers.getEntityTranslucent(texture, true)),
+                0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.5f);
         provider.draw();
         RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
