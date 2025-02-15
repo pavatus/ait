@@ -27,6 +27,7 @@ public class SkyboxUtil extends WorldRenderer {
     private static final Identifier MOON_SKY = AITMod.id("textures/environment/tardis_sky.png");
     private static final Identifier SPACE_SKY = AITMod.id("textures/environment/space_sky.png");
     private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
+    private static final Identifier MARS = AITMod.id("textures/block/martian_sand.png");
 
     public static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
             RotationAxis.POSITIVE_X.rotationDegrees(-90.0f), RotationAxis.POSITIVE_X.rotationDegrees(180.0f),
@@ -86,7 +87,6 @@ public class SkyboxUtil extends WorldRenderer {
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
         matrices.push();
-        //matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 1000f) * 360));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-35f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(22f));
 
@@ -99,43 +99,50 @@ public class SkyboxUtil extends WorldRenderer {
                 new Vector3f(4f, 4f, 4f),
                 id, true, new Vector3f(1, 1, 1f));
 
-        Identifier id1 = AITMod.id("textures/environment/earth.png");
+        Identifier id1 = EARTH;
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(20f));
         CelestialBodyRenderer.renderFarAwayBody(new Vec3d(100, -22f, 0),
                 new Vector3f(10f, 10f, 10f),
                 id1, true, new Vector3f(0.18f, 0.35f, 0.60f));
+        matrices.pop();
     }
 
     public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-
         matrices.push();
-        //matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 1000f) * 360));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-35f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(22f));
-        matrices.scale(5,  5, 5);
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
+        matrices.scale(5, 5, 5);
 
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
         cubeMap.draw(tessellator, bufferBuilder, matrices);
         matrices.pop();
 
-        Identifier id1 = AITMod.id("textures/environment/earth.png");
+        Identifier id1 = EARTH;
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(300f));
         CelestialBodyRenderer.renderComprehendableBody(new Vec3d(0, 0, 0),
                 new Vector3f(900f, 900f, 900f),
                 id1, true, new Vector3f(0.18f, 0.35f, 0.60f));
+        matrices.pop();
 
         Identifier id2 = AITMod.id("textures/block/anorthosite.png");
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(250f));
         CelestialBodyRenderer.renderComprehendableBody(new Vec3d(2000, 0, 0),
                 new Vector3f(150f, 150f, 150f),
                 id2, true, new Vector3f(0.5f, 0.5f, 0.5f));
+        matrices.pop();
 
+        Identifier id3 = MARS;
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(45));
-        Identifier id = AITMod.id("textures/environment/tardis_star.png");
-        CelestialBodyRenderer.renderFarAwayBody(new Vec3d(2200, 0, 0),
-                new Vector3f(238, 238, 238),
-                id, true, new Vector3f(0.5f, 1f, 1));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-400f));
+        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(-2500, 300, 0),
+                new Vector3f(500f, 500f, 500f),
+                id3, false, new Vector3f(1f, 0.2f, 0.2f));
         matrices.pop();
     }
 }
