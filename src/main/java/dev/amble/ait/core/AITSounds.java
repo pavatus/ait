@@ -17,6 +17,7 @@ public class AITSounds {
     public static final SoundEvent WONDERFUL_TIME_IN_SPACE = register("music/wonderful_time_in_space");
     public static final SoundEvent EARTH_MUSIC = register("music/earth_nitrogenez");
     public static final SoundEvent VENUS_MUSIC = register("music/venus_nitrogenez");
+    public static final SoundEvent SPACE = register("music/space");
 
     // TARDIS
     public static final SoundEvent DEMAT = register("tardis/demat");
@@ -214,8 +215,8 @@ public class AITSounds {
     public static final SoundEvent HANDLES_PARDON = register("tardis/handles/pardon");
     public static final SoundEvent HANDLES_WHEN = register("tardis/handles/when");
 
-    //Mobs
-    //Cybermen2005
+    // Mobs
+    // Cybermen2005
     public static final SoundEvent DELETE = register("mobs/cybermen/2005/delete");
     public static final SoundEvent UNNECESSARY = register("mobs/cybermen/2005/unnecessary");
     public static final SoundEvent SUPERIOR = register("mobs/cybermen/2005/superior");
@@ -228,7 +229,7 @@ public class AITSounds {
     public static final SoundEvent CYBER_FIRE = register("mobs/cybermen/2005/cyber_fire");
     public static final SoundEvent ELECTRIC_HIT = register("mobs/cybermen/2005/electric_hit");
 
-    //Nightmare in silver
+    // Nightmare in silver
     public static final SoundEvent UPGRADE_IN_PROGRESS = register("mobs/cybermen/nightmare/upgrade_in_progress");
     public static final SoundEvent UPGRADE_IN_PROGRESS_ALT = register("mobs/cybermen/nightmare/upgrade_in_progress_alt");
     public static final SoundEvent SILVER_STOMP_LOOP = register("mobs/cybermen/nightmare/silver_stomp_loop");

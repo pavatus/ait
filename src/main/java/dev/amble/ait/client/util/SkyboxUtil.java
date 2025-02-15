@@ -9,6 +9,8 @@ import org.joml.Vector3f;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.module.planet.client.renderers.CelestialBodyRenderer;
 import dev.amble.ait.module.planet.client.renderers.SpaceSkyRenderer;
+
 
 public class SkyboxUtil extends WorldRenderer {
 
@@ -121,28 +124,27 @@ public class SkyboxUtil extends WorldRenderer {
         cubeMap.draw(tessellator, bufferBuilder, matrices);
         matrices.pop();
 
-        Identifier id1 = EARTH;
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(300f));
-        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(0, 0, 0),
-                new Vector3f(900f, 900f, 900f),
-                id1, true, new Vector3f(0.18f, 0.35f, 0.60f));
-        matrices.pop();
 
-        Identifier id2 = AITMod.id("textures/block/anorthosite.png");
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(250f));
-        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(2000, 0, 0),
-                new Vector3f(150f, 150f, 150f),
-                id2, true, new Vector3f(0.5f, 0.5f, 0.5f));
-        matrices.pop();
 
-        Identifier id3 = MARS;
+        // Planet Rendering
+        renderCelestialBody(matrices, EARTH, new Vec3d(0, 0, 0), new Vector3f(900f, 900f, 900f), 300f, true, new Vector3f(0.18f, 0.35f, 0.60f));
+        renderCelestialBody(matrices, AITMod.id("textures/block/anorthosite.png"), new Vec3d(2000, 0, 0), new Vector3f(150f, 150f, 150f), 250f, true, new Vector3f(0.5f, 0.5f, 0.5f));
+        renderCelestialBody(matrices, MARS, new Vec3d(-2500, 300, 0), new Vector3f(500f, 500f, 500f), -400f, false, new Vector3f(1f, 0.2f, 0.2f));
+    }
+
+    /**
+     * Renders a celestial body in space.
+     */
+    private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, float rotation, boolean atmosphere, Vector3f color) {
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-400f));
-        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(-2500, 300, 0),
-                new Vector3f(500f, 500f, 500f),
-                id3, false, new Vector3f(1f, 0.2f, 0.2f));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation));
+        CelestialBodyRenderer.renderComprehendableBody(position, scale, texture, atmosphere, color);
         matrices.pop();
     }
+
+
+
+
+
+
 }
