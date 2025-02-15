@@ -82,90 +82,8 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-        RenderSystem.setShaderTexture(0, MOON_SKY);
-
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-
-        for (int i = 0; i < 6; i++) {
-            matrices.push();
-
-            Quaternionf rot = LOOKUP[i];
-
-            if (rot != null) {
-                matrices.multiply(rot);
-            }
-
-            Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-
-            bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, -100.0f).texture(0.0f, 0.0f).color(0, 0, 0, 255).next();
-
-            bufferBuilder.vertex(matrix4f, -100.0f, -100.0f, 100.0f).texture(0.0f, 16.0f).color(0, 0, 0, 255).next();
-
-            bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, 100.0f).texture(16.0f, 16.0f).color(0, 0, 0, 255).next();
-
-            bufferBuilder.vertex(matrix4f, 100.0f, -100.0f, -100.0f).texture(16.0f, 0.0f).color(0, 0, 0, 255).next();
-
-            tessellator.draw();
-            matrices.pop();
-        }
-
-        float k = 20.0f;
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderTexture(0, new Identifier("textures/environment/sun.png"));
-
-        matrices.push();
-        matrices.translate(0, 25, 0);
-        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(90.0f));
-        Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
-        //make smaller moon size
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
-        bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();
-        bufferBuilder.vertex(matrix4f2, k, 100.0f, k).texture(1.0f, 1.0f).next();
-        bufferBuilder.vertex(matrix4f2, -k, 100.0f, k).texture(0.0f, 1.0f).next();
-        matrices.pop();
-
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
-
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        BackgroundRenderer.clearFog();
-
-        starsBuffer.bind();
-        starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
-                GameRenderer.getPositionProgram());
-
-        VertexBuffer.unbind();
-        fogCallback.run();
-
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.defaultBlendFunc();
-        matrices.pop();
-
-        Identifier id = AITMod.id("textures/environment/earth.png");
-        CelestialBodyRenderer.render(new Vec3d(100, 0, 0),
-                new Vector3f(10f, 10f, 10f),
-                id,
-                id);
-
-        RenderSystem.depthMask(true);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-
-        RenderSystem.depthMask(true);
-        RenderSystem.disableBlend();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-    }
-
-    public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-
 
         matrices.push();
         //matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 1000f) * 360));
@@ -177,9 +95,47 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
 
         Identifier id = AITMod.id("textures/environment/tardis_star.png");
-        CelestialBodyRenderer.render(new Vec3d(100, 0, 0),
+        CelestialBodyRenderer.renderFarAwayBody(new Vec3d(100, 50, 0),
+                new Vector3f(4f, 4f, 4f),
+                id, true, new Vector3f(1, 1, 1f));
+
+        Identifier id1 = AITMod.id("textures/environment/earth.png");
+        CelestialBodyRenderer.renderFarAwayBody(new Vec3d(100, -22f, 0),
                 new Vector3f(10f, 10f, 10f),
-                id,
-                id);
+                id1, true, new Vector3f(0.18f, 0.35f, 0.60f));
+    }
+
+    public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+
+
+        matrices.push();
+        //matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((MinecraftClient.getInstance().player.age / 1000f) * 360));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-35f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(22f));
+        matrices.scale(5,  5, 5);
+
+        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
+        cubeMap.draw(tessellator, bufferBuilder, matrices);
+        matrices.pop();
+
+        Identifier id1 = AITMod.id("textures/environment/earth.png");
+        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(0, 0, 0),
+                new Vector3f(900f, 900f, 900f),
+                id1, true, new Vector3f(0.18f, 0.35f, 0.60f));
+
+        Identifier id2 = AITMod.id("textures/block/anorthosite.png");
+        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(2000, 0, 0),
+                new Vector3f(150f, 150f, 150f),
+                id2, true, new Vector3f(0.5f, 0.5f, 0.5f));
+
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(45));
+        Identifier id = AITMod.id("textures/environment/tardis_star.png");
+        CelestialBodyRenderer.renderFarAwayBody(new Vec3d(2200, 0, 0),
+                new Vector3f(238, 238, 238),
+                id, true, new Vector3f(0.5f, 1f, 1));
+        matrices.pop();
     }
 }

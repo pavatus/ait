@@ -132,9 +132,9 @@ public abstract class LivingEntityMixin extends Entity {
                     if (flightTardis.tardis() == null) return;
                     if (y >= tpHeightA && entityWorld == worldA) {
                         moveToWorldWithPassenger(flightTardis, tardis, player, worldB);
-                    } else if (y >= tpHeightB && entityWorld == worldB) {
+                    }/* else if (y >= tpHeightB && entityWorld == worldB) {
                         moveToWorldWithPassenger(flightTardis, tardis, player, worldA);
-                    }
+                    }*/
                     return;
                 }
             }
@@ -142,9 +142,9 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (y >= tpHeightA && entityWorld == worldA) {
             entity.moveToWorld(worldB);
-        } else if (y >= tpHeightB && entityWorld == worldB) {
+        }/* else if (y >= tpHeightB && entityWorld == worldB) {
             entity.moveToWorld(worldA);
-        }
+        }*/
     }
 
     @Unique private static void moveToWorldWithPassenger(FlightTardisEntity tardisEntity, Tardis tardis, PlayerEntity player, ServerWorld b) {

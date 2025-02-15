@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -12,20 +13,13 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
-import dev.amble.ait.client.models.decoration.TardisStarModel;
 import dev.amble.ait.client.renderers.AITRenderLayers;
+import dev.amble.ait.module.planet.client.models.CelestialBodyModel;
 
 
 public class CelestialBodyRenderer {
 
-    public static final Identifier TARDIS_STAR_TEXTURE = AITMod.id("textures/environment/tardis_star.png");
-    private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0) / 2.0);
-
-    public static void render(Vec3d targetPosition, Vector3f scale, Identifier texture, Identifier overlayTexture) {
-        renderStar(targetPosition, scale, texture, overlayTexture);
-    }
-
-    public static void renderStar(Vec3d targetPosition, Vector3f scale, Identifier texture, Identifier overlayTexture) {
+    public static void renderFarAwayBody(Vec3d targetPosition, Vector3f scale, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
         MinecraftClient mc = MinecraftClient.getInstance();
         Camera camera = mc.gameRenderer.getCamera();
         VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
@@ -45,18 +39,77 @@ public class CelestialBodyRenderer {
         matrixStack.scale(scale.x, scale.y, scale.z);
 
         BackgroundRenderer.clearFog();
-        RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
 
-        TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
-                provider.getBuffer(AITRenderLayers.getEntityTranslucent(overlayTexture, false)),
+        CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
+                provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
                 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
         provider.draw();
 
-        matrixStack.scale(1.1f, 1.1f, 1.1f);
-        TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
-                provider.getBuffer(AITRenderLayers.getEntityTranslucent(texture, true)),
-                0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.5f);
+        if (hasAtmosphere) {
+            atmosphereRenderer(matrixStack, atmosphereColor, provider);
+            provider.draw();
+        }
         provider.draw();
+    }
+
+    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        Camera camera = mc.gameRenderer.getCamera();
+        VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
+
+        Vec3d cameraPos = camera.getPos();
+
+        Vec3d targetPos = new Vec3d(targetPosition.getX(),targetPosition.getY(),targetPosition.getZ());
+
+        Vec3d diff = targetPos.subtract(cameraPos);
+
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
+        matrixStack.translate(diff.x, diff.y, diff.z);
+        matrixStack.scale(scale.x, scale.y, scale.z);
+
+        BackgroundRenderer.clearFog();
+        RenderSystem.depthMask(true);
+        RenderSystem.depthFunc(GL11.GL_NEVER);
+
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+
+        CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
+                provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
+                0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
+        provider.draw();
+
+        if (hasAtmosphere) {
+            atmosphereRenderer(matrixStack, atmosphereColor, provider);
+            provider.draw();
+        }
         RenderSystem.depthFunc(GL11.GL_EQUAL);
+    }
+
+    public static void atmosphereRenderer(MatrixStack matrixStack, Vector3f color, VertexConsumerProvider.Immediate provider) {
+        ModelPart model = CelestialBodyModel.getTexturedModelData().createModel();
+        for (int i = 0; i < 5; i++) {
+            float alpha = (float) (0.16f - Math.log(i + 1) * 0.02f);
+            matrixStack.push();
+            float gg = 1.0f + ((i != 0 ? i : i + 1) * 0.01f);
+            matrixStack.scale(gg, gg, gg);
+            Identifier texture = i == 1 ? new Identifier("textures/environment/clouds.png") : AITMod.id("textures/environment/atmosphere.png");
+            RenderSystem.setShaderTexture(0, texture);
+            if (i != 1) {
+                model.render(matrixStack,
+                        provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, true)),
+                        0xf000f0, OverlayTexture.DEFAULT_UV, color.x + (0.05f * i + i), color.y + (0.05f * i + i), color.z + (0.05f * i + i), alpha);
+            } else if (color.x != 0.5) {
+                model.render(matrixStack,
+                        provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, true)),
+                        0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.6f);
+                matrixStack.scale(1.01f, 1.01f, 1.01f);
+                model.render(matrixStack,
+                        provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, true)),
+                        0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.6f);
+            }
+            matrixStack.pop();
+        }
     }
 }
