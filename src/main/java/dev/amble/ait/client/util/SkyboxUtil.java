@@ -151,8 +151,4 @@ public class SkyboxUtil extends WorldRenderer {
     }
 
 
-
-
-
-
 }
