@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 
+import dev.amble.ait.client.tardis.ClientTardis;
+import dev.amble.ait.client.util.ClientTardisUtil;
 import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.world.TardisServerWorld;
 
@@ -17,7 +19,12 @@ public class GameRendererMixin {
     private void ait$getFarPlaneDistance(CallbackInfoReturnable<Float> cir) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null) return;
-        if (mc.world.getRegistryKey().equals(AITDimensions.SPACE) || TardisServerWorld.isTardisDimension(mc.world))
-            cir.setReturnValue((32.0F * 16.0F) * 64.0F);
+        boolean ifTardisWorld = TardisServerWorld.isTardisDimension(mc.world);
+        ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
+        if (mc.world.getRegistryKey().equals(AITDimensions.SPACE) || ifTardisWorld) {
+            float f = (ifTardisWorld && tardis != null && tardis.door() != null && tardis.door().isOpen() ? mc.options.getClampedViewDistance() : 32.0F) * 16.0F;
+            float mult = ifTardisWorld ? 8.0F : 64.0F;
+            cir.setReturnValue(f * mult);
+        }
     }
 }
