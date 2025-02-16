@@ -2,6 +2,7 @@ package dev.amble.ait.core.util;
 
 import java.util.*;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -12,6 +13,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITDimensions;
+import dev.amble.ait.core.entities.FlightTardisEntity;
+import dev.amble.ait.core.tardis.Tardis;
 
 public class TeleportUtils {
     public static void checkPlayerTeleportation(ServerWorld world) {
@@ -48,8 +51,20 @@ public class TeleportUtils {
             }
         }
 
+        playersToTeleport.forEach(player -> {
+            if (player.getVehicle() instanceof FlightTardisEntity entity) {
+                if (entity.tardis() == null) return;
+                Tardis tardis = entity.tardis().get();
+                tardis.flight().flying().set(false);
+            }
+            if (player.getVehicle() instanceof LivingEntity entity) {
+                teleportVehicle(entity);
+            }
+        });
+
         for (ServerPlayerEntity player : playersToTeleport) {
             teleportPlayer(player);
+            playersToTeleport.remove(player);
         }
     }
 
@@ -62,7 +77,7 @@ public class TeleportUtils {
     private static void teleportPlayer(ServerPlayerEntity player) {
         MinecraftServer server = player.getServer();
         if (server != null) {
-            String dimension = getDimensionForPlayer(player);
+            String dimension = getDimensionForEntity(player);
             if (dimension == null) return;
 
             String[] parts = dimension.split(":");
@@ -85,11 +100,37 @@ public class TeleportUtils {
         }
     }
 
-    private static String getDimensionForPlayer(ServerPlayerEntity player) {
-        Vec3d playerPos = player.getPos();
+    private static void teleportVehicle(LivingEntity entity) {
+        MinecraftServer server = entity.getServer();
+        if (server != null) {
+            String dimension = getDimensionForEntity(entity);
+            if (dimension == null) return;
+
+            String[] parts = dimension.split(":");
+            if (parts.length != 2) {
+                System.err.println("Invalid dimension format! Use 'namespace:dimension' or AITDimensions.<dimension>.getString()");
+                return;
+            }
+
+            String namespace = parts[0];
+            String dimName = parts[1];
+
+            RegistryKey<World> targetWorldKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(namespace, dimName));
+            ServerWorld targetWorld = server.getWorld(targetWorldKey);
+
+            if (targetWorld != null) {
+                entity.teleport(targetWorld, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYaw(), entity.getPitch());
+            } else {
+                System.err.println("Dimension " + dimension + " not found!");
+            }
+        }
+    }
+
+    private static String getDimensionForEntity(LivingEntity entity) {
+        Vec3d playerPos = entity.getPos();
         Map<Vec3d, PlanetInfo> planetData = Map.of(
                 new Vec3d(0, 0, 0), new PlanetInfo("minecraft:overworld", 900, 200),
-                new Vec3d(2000, 0, 0), new PlanetInfo(AITDimensions.MOON.toString(), 150, 100),
+                new Vec3d(8240, 459, 0), new PlanetInfo(AITDimensions.MOON.toString(), 150, 140),
                 new Vec3d(-2500, 300, 0), new PlanetInfo(AITDimensions.MARS.toString(), 500, 150)
         );
 

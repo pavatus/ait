@@ -6,6 +6,7 @@ import static dev.amble.ait.client.renderers.entities.GallifreyFallsPaintingEnti
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
@@ -14,6 +15,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -33,6 +35,7 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
+import dev.amble.ait.module.planet.client.renderers.CelestialBodyRenderer;
 
 
 public class BOTI {
@@ -183,6 +186,13 @@ public class BOTI {
 
         ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
         //((DoorModel) frame).render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+        botiProvider.draw();
+        stack.pop();
+
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+
+        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(100, 0, 0), new Vector3f(4, 4, 4), new Vector2f(0, 0), AITMod.id("textures/environment/earth.png"), true, true, new Vector3f(1, 1, 1));
         botiProvider.draw();
         stack.pop();
 
