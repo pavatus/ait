@@ -2,7 +2,11 @@ package dev.amble.ait.core.util;
 
 import java.util.*;
 
+import org.spongepowered.asm.mixin.Unique;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -15,6 +19,7 @@ import net.minecraft.world.World;
 import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.core.tardis.Tardis;
+
 
 public class TeleportUtils {
     public static void checkPlayerTeleportation(ServerWorld world) {
@@ -66,12 +71,64 @@ public class TeleportUtils {
             teleportPlayer(player);
             playersToTeleport.remove(player);
         }
+
+        for (Entity entity : world.iterateEntities()) {
+            hitDimensionThreshold(entity, 600, AITDimensions.MOON, AITDimensions.SPACE);
+            hitDimensionThreshold(entity, World.OVERWORLD, 600, AITDimensions.SPACE, 256);
+            hitDimensionThreshold(entity, 500, AITDimensions.MARS, AITDimensions.SPACE);
+        }
+    }
+
+    @Unique private static void hitDimensionThreshold(Entity entity, int tpHeight, RegistryKey<World> worldKeyA, RegistryKey<World> worldKeyB) {
+        hitDimensionThreshold(entity, worldKeyA, tpHeight, worldKeyB, tpHeight);
+    }
+
+    @Unique private static void hitDimensionThreshold(Entity entity, RegistryKey<World> worldKeyA, int tpHeightA, RegistryKey<World> worldKeyB, int tpHeightB) {
+        if (!(entity.getWorld() instanceof ServerWorld entityWorld))
+            return;
+
+        MinecraftServer server = entityWorld.getServer();
+        int y = entity.getBlockY();
+
+        ServerWorld worldA = server.getWorld(worldKeyA);
+        ServerWorld worldB = server.getWorld(worldKeyB);
+
+        if (entity.hasVehicle()) {
+            if (entity instanceof PlayerEntity player) {
+                Entity tardisEntity = player.getVehicle();
+                if (tardisEntity instanceof FlightTardisEntity flightTardis) {
+                    Tardis tardis = flightTardis.tardis().get();
+                    if (flightTardis.tardis() == null) return;
+                    if (y >= tpHeightA && entityWorld == worldA) {
+                        moveToWorldWithPassenger(flightTardis, tardis, player, worldB);
+                    }/* else if (y >= tpHeightB && entityWorld == worldB) {
+                        moveToWorldWithPassenger(flightTardis, tardis, player, worldA);
+                    }*/
+                    return;
+                }
+            }
+        }
+
+        if (y >= tpHeightA && entityWorld == worldA) {
+            entity.moveToWorld(worldB);
+        }/* else if (y >= tpHeightB && entityWorld == worldB) {
+            entity.moveToWorld(worldA);
+        }*/
+    }
+
+    @Unique private static void moveToWorldWithPassenger(FlightTardisEntity tardisEntity, Tardis tardis, PlayerEntity player, ServerWorld b) {
+        player.stopRiding();
+        tardis.flight().flying().set(false);
+        player.moveToWorld(b);
+        tardisEntity.moveToWorld(b);
+        tardis.flight().flying().set(true);
+        player.startRiding(tardisEntity);
     }
 
     private static void applySuction(ServerPlayerEntity player, Vec3d planetPos) {
         Vec3d playerPos = player.getPos();
 
-        // Amosphere succ goes here
+        // Atmosphere succ goes here
     }
 
     private static void teleportPlayer(ServerPlayerEntity player) {
