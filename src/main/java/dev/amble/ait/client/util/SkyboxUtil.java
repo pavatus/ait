@@ -30,7 +30,7 @@ public class SkyboxUtil extends WorldRenderer {
     private static final Identifier MOON_SKY = AITMod.id("textures/environment/tardis_sky.png");
     private static final Identifier SPACE_SKY = AITMod.id("textures/environment/space_sky.png");
     private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
-    private static final Identifier MARS = AITMod.id("textures/block/martian_sand.png");
+    private static final Identifier MARS = AITMod.id("textures/environment/mars.png");
 
     public static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
             RotationAxis.POSITIVE_X.rotationDegrees(-90.0f), RotationAxis.POSITIVE_X.rotationDegrees(180.0f),
