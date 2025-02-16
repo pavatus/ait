@@ -70,6 +70,7 @@ public class CelestialBodyRenderer {
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
+        matrixStack.push();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
         matrixStack.translate(diff.x, diff.y, diff.z);
@@ -80,7 +81,8 @@ public class CelestialBodyRenderer {
         RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
 
 
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.getY()));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.getX()));
 
         CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
                 provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
@@ -92,6 +94,7 @@ public class CelestialBodyRenderer {
             provider.draw();
         }
         RenderSystem.depthFunc(GL11.GL_EQUAL);
+        matrixStack.pop();
     }
 
     public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector2f rotation, Identifier texture, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor) {
@@ -106,6 +109,7 @@ public class CelestialBodyRenderer {
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
+        matrixStack.push();
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
         matrixStack.translate(diff.x, diff.y, diff.z);
@@ -113,12 +117,12 @@ public class CelestialBodyRenderer {
 
         BackgroundRenderer.clearFog();
         RenderSystem.depthMask(true);
-        RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
 
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.getY()));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.getX()));
 
         CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
-                provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
+                provider.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
                 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
         provider.draw();
 
@@ -126,7 +130,7 @@ public class CelestialBodyRenderer {
             atmosphereRenderer(matrixStack, atmosphereColor, provider, false, hasClouds);
             provider.draw();
         }
-        RenderSystem.depthFunc(GL11.GL_EQUAL);
+        matrixStack.pop();
     }
 
     public static void atmosphereRenderer(MatrixStack matrixStack, Vector3f color, VertexConsumerProvider.Immediate provider, boolean isStar, boolean hasClouds) {
@@ -145,7 +149,7 @@ public class CelestialBodyRenderer {
                 model.render(matrixStack,
                         provider.getBuffer(isStar && (i == 2 || i == 3 || i == 4) ?
                                 AITRenderLayers.getEyes(texture) : AITRenderLayers.getBeaconBeam(texture, true)),
-                        0, OverlayTexture.DEFAULT_UV,  Math.min(color.x + (0.015f * i), 5.0f),  Math.min(color.y + (0.015f * i), 5.0f), Math.min(color.z + (0.015f * i), 5.0f), alpha);
+                        0, OverlayTexture.DEFAULT_UV,  1 + Math.min(color.x + (0.015f * i), 5.0f), 1 + Math.min(color.y + (0.015f * i), 5.0f), 1 + Math.min(color.z + (0.015f * i), 5.0f), alpha);
             } else if (hasClouds) {
                 model.render(matrixStack,
                         provider.getBuffer(renderLayer),

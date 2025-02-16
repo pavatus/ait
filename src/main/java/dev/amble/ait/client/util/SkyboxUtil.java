@@ -130,12 +130,12 @@ public class SkyboxUtil extends WorldRenderer {
 
 
         // Planet Rendering
-        renderStarBody(matrices, AITMod.id("textures/environment/tardis_star.png"), new Vec3d(31240, 1000, 0), new Vector3f(650f, 650f, 650f), new Vector2f(0, 0), true, new Vector3f(0.5f, 1, 1));
-        renderCelestialBody(matrices, EARTH, new Vec3d(0, 0, 0), new Vector3f(900f, 900f, 900f), new Vector2f(0, 0), true, true, new Vector3f(0.18f, 0.35f, 0.60f));
-        renderCelestialBody(matrices, MOON, new Vec3d(8240, 459f, 0), new Vector3f(150f, 150f, 150f), new Vector2f(0, 0), false, true, new Vector3f(0.5f, 0.5f, 0.5f));
-        renderCelestialBody(matrices, MARS, new Vec3d(-2500, 1400, 10000), new Vector3f(500f, 500f, 500f), new Vector2f(0, 0), false, true, new Vector3f(0.5f, 1, 1));
-        renderCelestialBody(matrices, SATURN, new Vec3d(4500, 1400, 4500), new Vector3f(500f, 500f, 500f), new Vector2f(0, 0), false, false, new Vector3f(0.5f, 0, 1));
-        renderCelestialBody(matrices, SATURN_RING, new Vec3d(4500, 1200, 4500), new Vector3f(1000f, 20, 1000f), new Vector2f(0, 0), false, false, new Vector3f(0.5f, 1, 1));
+        renderStarBody(matrices, AITMod.id("textures/environment/tardis_star.png"), new Vec3d(31240, 1000, 0), new Vector3f(650f, 650f, 650f), new Vector2f(12, 45), false, new Vector3f(0.5f, 0, 0f));
+        renderCelestialBody(matrices, EARTH, new Vec3d(0, 0, 0), new Vector3f(900f, 900f, 900f), new Vector2f(-22.5f, 45f), true, true, new Vector3f(0.18f, 0.35f, 0.60f));
+        renderCelestialBody(matrices, MOON, new Vec3d(8240, 459f, 0), new Vector3f(150f, 150f, 150f), new Vector2f(22.5f, 45f), false, true, new Vector3f(0.5f, 0.5f, 0.5f));
+        renderCelestialBody(matrices, MARS, new Vec3d(-2500, 1400, 10000), new Vector3f(500f, 500f, 500f), new Vector2f(55, 12), false, true, new Vector3f(0.5f, 1, 1));
+        renderCelestialBody(matrices, SATURN_RING, new Vec3d(4500, 1200, 4500), new Vector3f(1000f, 1, 1000f), new Vector2f(0, 0), false, false, new Vector3f(0.5f, 1, 1));
+        renderCelestialBody(matrices, SATURN, new Vec3d(4500, 1400, 4500), new Vector3f(500f, 500f, 500f), new Vector2f(22.5f, 22.5f), false, true, new Vector3f(0.55f, 0.4f, 0.2f));
     }
 
     /**
