@@ -59,7 +59,7 @@ public enum DefaultThemes {
     public TardisBuilder apply(TardisBuilder builder) {
         builder.exterior(exterior());
         builder.desktop(desktop());
-        builder.<ServerHumHandler>with(TardisComponent.Id.HUM, handler -> handler.setHum(this.hum()));
+        builder.<ServerHumHandler>with(TardisComponent.Id.HUM, handler -> handler.set(this.hum()));
 
         return builder;
     }
