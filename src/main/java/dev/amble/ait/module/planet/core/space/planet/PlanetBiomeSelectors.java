@@ -1,4 +1,4 @@
-package dev.amble.ait.module.planet.core.planet;
+package dev.amble.ait.module.planet.core.space.planet;
 
 import java.util.function.Predicate;
 

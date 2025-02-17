@@ -1,7 +1,6 @@
 package dev.amble.ait;
 
-import static dev.amble.ait.core.util.TeleportUtils.checkPlayerTeleportation;
-import static dev.amble.ait.module.planet.core.planet.Crater.CRATER_ID;
+import static dev.amble.ait.module.planet.core.space.planet.Crater.CRATER_ID;
 
 import java.util.Optional;
 import java.util.Random;
@@ -14,7 +13,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -68,6 +66,7 @@ import dev.amble.ait.core.tardis.util.NetworkUtil;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import dev.amble.ait.core.util.CustomTrades;
+import dev.amble.ait.core.util.SpaceUtils;
 import dev.amble.ait.core.util.StackUtil;
 import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.core.world.LandingPadManager;
@@ -76,7 +75,7 @@ import dev.amble.ait.data.landing.LandingPadRegion;
 import dev.amble.ait.data.schema.MachineRecipeSchema;
 import dev.amble.ait.datagen.datagen_providers.loot.SetBlueprintLootFunction;
 import dev.amble.ait.module.ModuleRegistry;
-import dev.amble.ait.module.planet.core.planet.Crater;
+import dev.amble.ait.module.planet.core.space.planet.Crater;
 import dev.amble.ait.registry.impl.*;
 import dev.amble.ait.registry.impl.console.ConsoleRegistry;
 import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
@@ -116,7 +115,6 @@ public class AITMod implements ModInitializer {
     @Override
     public void onInitialize() {
         CONFIG = AITConfig.createAndLoad();
-        ServerTickEvents.END_WORLD_TICK.register(AITMod::onWorldTick);
 
         ServerLifecycleHooks.init();
         NetworkUtil.init();
@@ -163,6 +161,8 @@ public class AITMod implements ModInitializer {
         TardisCriterions.init();
 
         entityAttributeRegister();
+
+        SpaceUtils.init();
 
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
                 CUSTOM_GEODE_PLACED_KEY);
@@ -282,10 +282,6 @@ public class AITMod implements ModInitializer {
                 tableBuilder.pool(poolBuilder);
             }
         });
-    }
-
-    private static void onWorldTick(ServerWorld world) {
-        checkPlayerTeleportation(world);
     }
 
     public void entityAttributeRegister() {

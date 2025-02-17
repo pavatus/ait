@@ -32,8 +32,8 @@ import dev.amble.ait.core.tardis.control.impl.DirectionControl;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.mixin.rwf.LivingEntityAccessor;
-import dev.amble.ait.module.planet.core.planet.Planet;
-import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
 public class FlightTardisEntity extends LinkableLivingEntity implements JumpingMount {
 

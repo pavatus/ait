@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITStatusEffects;
 import dev.amble.ait.module.planet.core.PlanetBlockEntities;
-import dev.amble.ait.module.planet.core.planet.Planet;
-import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
 public class OxygenatorBlockEntity extends BlockEntity {
     public OxygenatorBlockEntity(BlockPos pos, BlockState state) {

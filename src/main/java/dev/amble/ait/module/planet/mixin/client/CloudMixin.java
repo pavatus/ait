@@ -10,8 +10,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
-import dev.amble.ait.module.planet.core.planet.Planet;
-import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
 @Mixin(value = WorldRenderer.class, priority = 1001)
 public abstract class CloudMixin {
@@ -28,7 +28,7 @@ public abstract class CloudMixin {
         if (planet == null)
             return;
 
-        if (!planet.hasClouds())
+        if (!planet.render().clouds())
             ci.cancel();
     }
 }
