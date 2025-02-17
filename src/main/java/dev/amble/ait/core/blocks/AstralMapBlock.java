@@ -36,8 +36,10 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlockEntityTypes;
 import dev.amble.ait.core.blockentities.AstralMapBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
+import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.control.impl.TelepathicControl;
 import dev.amble.ait.core.tardis.util.AsyncLocatorUtil;
+import dev.amble.ait.core.world.TardisServerWorld;
 
 public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
     public static final Identifier REQUEST_SEARCH = AITMod.id("c2s/request_search");
@@ -89,6 +91,7 @@ public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockE
         player.sendMessage(Text.literal("SEARCHING FOR STRUCTURE..."), false);
 
         ServerWorld world = player.getServerWorld();
+        BlockPos pos = player.getBlockPos();
 
         RegistryEntry.Reference<Structure> targetStructure = getStructure(world, target).orElse(null);
 
@@ -97,8 +100,17 @@ public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockE
             return;
         }
 
-        AsyncLocatorUtil.locate(world, RegistryEntryList.of(targetStructure), player.getBlockPos(), TelepathicControl.RADIUS, false).thenOnServerThread(pos -> {
-            BlockPos newPos = pos != null ? pos.getFirst() : null;
+        if (TardisServerWorld.isTardisDimension(world)) {
+            ServerTardis tardis = ((TardisServerWorld) world).getTardis();
+
+            var tPos = tardis.travel().position();
+
+            world = tPos.getWorld();
+            pos = tPos.getPos();
+        }
+
+        AsyncLocatorUtil.locate(world, RegistryEntryList.of(targetStructure), pos, TelepathicControl.RADIUS, false).thenOnServerThread(pPos -> {
+            BlockPos newPos = pPos != null ? pPos.getFirst() : null;
             if (newPos != null) {
                 player.sendMessage(Text.literal("SUCCESS! FOUND AT " + newPos.getX() + ", " + newPos.getY() + ", " + newPos.getZ() + " ( " + Math.round(Math.sqrt(newPos.getSquaredDistance(player.getPos()))) + " blocks away )"), false);
             } else {
