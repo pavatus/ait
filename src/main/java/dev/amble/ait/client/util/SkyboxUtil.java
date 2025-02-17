@@ -31,10 +31,10 @@ import dev.amble.ait.module.planet.core.space.system.Space;
 public class SkyboxUtil extends WorldRenderer {
 
     private static final Identifier TARDIS_SKY = AITMod.id("textures/environment/tardis_sky.png");
-    private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
-    private static final Identifier MONDAS = AITMod.id("textures/environment/mondas.png");
-    private static final Identifier MOON = AITMod.id("textures/environment/moon.png");
-    private static final Identifier MARS = AITMod.id("textures/environment/mars.png");
+//    private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
+//    private static final Identifier MONDAS = AITMod.id("textures/environment/mondas.png");
+//    private static final Identifier MOON = AITMod.id("textures/environment/moon.png");
+//    private static final Identifier MARS = AITMod.id("textures/environment/mars.png");
     private static final Identifier SATURN = AITMod.id("textures/environment/saturn.png");
     private static final Identifier SATURN_RING = AITMod.id("textures/environment/saturn_ring.png");
     private static final Identifier SUN = AITMod.id("textures/environment/tardis_star.png");
@@ -131,11 +131,11 @@ public class SkyboxUtil extends WorldRenderer {
                         Vector3f(12f, 12f, 12f),
                 new Vector3f(12, 45, 0), false,
                 new Vector3f(0.5f, 0, 0f));
-        renderSkyBody(matrices, EARTH,
-                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new
-                        Vector3f(76f, 76f, 76f),
-                new Vector3f(-22.5f, 45f, 0), true, true,
-                new Vector3f(0.18f, 0.35f, 0.60f));
+//        renderSkyBody(matrices, EARTH,
+//                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new
+//                        Vector3f(76f, 76f, 76f),
+//                new Vector3f(-22.5f, 45f, 0), true, true,
+//                new Vector3f(0.18f, 0.35f, 0.60f));
         //RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
@@ -187,17 +187,17 @@ public class SkyboxUtil extends WorldRenderer {
                 renderCelestialBody(matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color());
             }
         }
-
-        renderCelestialBody(matrices, MONDAS,
-                new Vec3d(0, 0, 6000), new
-                        Vector3f(900f, 900f, 900f),
-                new Vector3f(-22.5f, 45f, 0), true, true,
-                new Vector3f(0.7f, 0.7f, 0.7f));
-        renderCelestialBody(matrices, MOON,
-                new Vec3d(8240, 459f, 0), new
-                        Vector3f(150f, 150f, 150f),
-                new Vector3f(22.5f, 45f, 0), false, true,
-                new Vector3f(0.5f, 0.5f, 0.5f));
+//
+//        renderCelestialBody(matrices, MONDAS,
+//                new Vec3d(0, 0, 6000), new
+//                        Vector3f(900f, 900f, 900f),
+//                new Vector3f(-22.5f, 45f, 0), true, true,
+//                new Vector3f(0.7f, 0.7f, 0.7f));
+//        renderCelestialBody(matrices, MOON,
+//                new Vec3d(8240, 459f, 0), new
+//                        Vector3f(150f, 150f, 150f),
+//                new Vector3f(22.5f, 45f, 0), false, true,
+//                new Vector3f(0.5f, 0.5f, 0.5f));
         renderCelestialBody(matrices, SATURN_RING,
                 new Vec3d(4500, 1200, 4500), new
                         Vector3f(1000f, 1, 1000f),

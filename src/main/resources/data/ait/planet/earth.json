@@ -1,0 +1,21 @@
+{
+  "dimension": "minecraft:overworld",
+  "gravity": 0,
+  "has_oxygen": true,
+  "temperature": 288,
+  "render": {
+    "texture": "ait:textures/environment/earth.png",
+    "position": [76, 76, 76],
+    "scale": [900, 900, 900],
+    "rotation": [-22.5, 45, 0],
+    "clouds": true,
+    "atmosphere": true,
+    "color": [0.18, 0.35, 0.60],
+    "radius": 900,
+    "suction_radius": 1000
+  },
+  "transition": {
+    "target": "ait:space",
+    "height": 1250
+  }
+}

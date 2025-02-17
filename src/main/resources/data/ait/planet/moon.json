@@ -1,7 +1,21 @@
 {
-  "dimension": "ait:moon",
+ "dimension": "ait:moon",
   "gravity": 0.075,
   "has_oxygen": false,
-  "temperature": 90,
-  "has_clouds": false
+  "temperature": 400,
+  "render": {
+    "texture": "ait:textures/environment/moon.png",
+    "position": [8240, 459, 0],
+    "scale": [150, 150, 150],
+    "rotation": [22, 45, 0],
+    "clouds": false,
+    "atmosphere": true,
+    "color": [0.5, 0.5, 0.5],
+    "radius": 150,
+    "suction_radius": 250
+  },
+  "transition": {
+    "target": "ait:space",
+    "height": 450
+  }
 }
