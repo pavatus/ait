@@ -10,8 +10,9 @@ import dev.amble.ait.client.sounds.console.ClientConsoleAmbientSoundsHandler;
 import dev.amble.ait.client.sounds.drifting.ClientDriftingSoundHandler;
 import dev.amble.ait.client.sounds.fall.ClientFallSoundHandler;
 import dev.amble.ait.client.sounds.flight.ClientFlightHandler;
-import dev.amble.ait.client.sounds.hum.ClientCreakHandler;
-import dev.amble.ait.client.sounds.hum.ClientHumHandler;
+import dev.amble.ait.client.sounds.hum.exterior.ExteriorHumHandler;
+import dev.amble.ait.client.sounds.hum.interior.ClientCreakHandler;
+import dev.amble.ait.client.sounds.hum.interior.ClientHumHandler;
 import dev.amble.ait.client.sounds.lava.ClientLavaSoundHandler;
 import dev.amble.ait.client.sounds.rain.ClientRainSoundHandler;
 import dev.amble.ait.client.sounds.rain.ClientThunderSoundHandler;
@@ -36,6 +37,7 @@ public class ClientSoundManager {
     private static ClientFallSoundHandler fallSound;
     private static ClientDriftingSoundHandler driftingSound;
     private static ClientConsoleAmbientSoundsHandler ambientSound;
+    private static ExteriorHumHandler exteriorHum;
 
     public static ClientHumHandler getHum() {
         if (hum == null)
@@ -121,6 +123,13 @@ public class ClientSoundManager {
         return driftingSound;
     }
 
+    public static ExteriorHumHandler getExteriorHum() {
+        if (exteriorHum == null)
+            exteriorHum = ExteriorHumHandler.create();
+
+        return exteriorHum;
+    }
+
     public static void tick(MinecraftClient client) {
         if (getAlarm() != null)
             getAlarm().tick(client);
@@ -154,5 +163,7 @@ public class ClientSoundManager {
 
         if (getDriftingSound() != null)
             getDriftingSound().tick(client);
+
+        getExteriorHum().tick(client);
     }
 }

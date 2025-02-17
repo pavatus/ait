@@ -1,4 +1,4 @@
-package dev.amble.ait.client.sounds.hum;
+package dev.amble.ait.client.sounds.hum.interior;
 
 import static dev.amble.ait.AITMod.CONFIG;
 

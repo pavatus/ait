@@ -1,4 +1,4 @@
-package dev.amble.ait.client.sounds.hum;
+package dev.amble.ait.client.sounds.hum.interior;
 
 import static dev.amble.ait.AITMod.CONFIG;
 
@@ -71,7 +71,7 @@ public class ClientHumHandler extends SoundHandler {
     public LoopingSound getHum(ClientTardis tardis) {
         if (this.current == null)
             this.current = (LoopingSound) findSoundByEvent(
-                    tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum().sound());
+                    tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).get().sound());
 
         return this.current;
     }
