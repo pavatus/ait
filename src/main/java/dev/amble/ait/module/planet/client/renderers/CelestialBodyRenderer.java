@@ -9,7 +9,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -58,7 +57,7 @@ public class CelestialBodyRenderer {
         RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
-    public static void renderStarBody(Vec3d targetPosition, Vector3f scale, Vector2f rotation, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
+    public static void renderStarBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
         MinecraftClient mc = MinecraftClient.getInstance();
         Camera camera = mc.gameRenderer.getCamera();
         VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
@@ -77,12 +76,11 @@ public class CelestialBodyRenderer {
         matrixStack.scale(scale.x, scale.y, scale.z);
 
         BackgroundRenderer.clearFog();
-        RenderSystem.depthMask(true);
-        RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
 
 
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.getY()));
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.getX()));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.y()));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.x()));
+        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation.z()));
 
         CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
                 provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
@@ -93,11 +91,11 @@ public class CelestialBodyRenderer {
             atmosphereRenderer(matrixStack, atmosphereColor, provider, true,false);
             provider.draw();
         }
-        RenderSystem.depthFunc(GL11.GL_EQUAL);
+        //RenderSystem.depthFunc(GL11.GL_EQUAL);
         matrixStack.pop();
     }
 
-    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector2f rotation, Identifier texture, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor) {
+    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor) {
         MinecraftClient mc = MinecraftClient.getInstance();
         Camera camera = mc.gameRenderer.getCamera();
         VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
@@ -116,10 +114,13 @@ public class CelestialBodyRenderer {
         matrixStack.scale(scale.x, scale.y, scale.z);
 
         BackgroundRenderer.clearFog();
-        RenderSystem.depthMask(true);
+        RenderSystem.depthMask(false);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_ALWAYS);
 
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.getY()));
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.getX()));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.y()));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.x()));
+        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation.z()));
 
         CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
                 provider.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
@@ -130,34 +131,36 @@ public class CelestialBodyRenderer {
             atmosphereRenderer(matrixStack, atmosphereColor, provider, false, hasClouds);
             provider.draw();
         }
+        RenderSystem.depthMask(true);
+        GL11.glDepthFunc(GL11.GL_EQUAL);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         matrixStack.pop();
     }
 
     public static void atmosphereRenderer(MatrixStack matrixStack, Vector3f color, VertexConsumerProvider.Immediate provider, boolean isStar, boolean hasClouds) {
         ModelPart model = CelestialBodyModel.getTexturedModelData().createModel();
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 6; i++) {
             float alpha = (float) (0.06f - Math.log(i + 1) * 0.001f);
             matrixStack.push();
-            float gg = 1.0f + ((i != 0 ? i : i + 1) * 0.01f);
+            float gg = 1.0f + ((i != 0 ? i : i + 1) * 0.005f);
             matrixStack.scale(gg, gg, gg);
             float delta = (MinecraftClient.getInstance().getTickDelta() + MinecraftClient.getInstance().player.age) * 0.00001f;
-            RenderLayer renderLayer = RenderLayer.getEnergySwirl(new Identifier("textures/environment/clouds.png"), delta % 1.0F, (delta * 0.1F) % 1.0F);
-            Identifier texture = i == 1 && hasClouds ? new Identifier("textures/environment/clouds.png") : AITMod.id("textures/environment/atmosphere.png");
-            RenderSystem.setShaderTexture(0, texture);
+            RenderLayer renderLayer = AITRenderLayers.getItemEntityTranslucentCull(new Identifier("textures/environment/clouds.png"));//RenderLayer.getEnergySwirl(new Identifier("textures/environment/clouds.png"), delta % 1.0F, (delta * 0.1F) % 1.0F);
+            Identifier texture = AITMod.id("textures/environment/atmosphere.png");
             if (i != 1) {
                 //System.out.println("min" + (Math.min(color.z + (0.05f * i + i), 1.0f)));
                 model.render(matrixStack,
                         provider.getBuffer(isStar && (i == 2 || i == 3 || i == 4) ?
                                 AITRenderLayers.getEyes(texture) : AITRenderLayers.getBeaconBeam(texture, true)),
-                        0, OverlayTexture.DEFAULT_UV,  1 + Math.min(color.x + (0.015f * i), 5.0f), 1 + Math.min(color.y + (0.015f * i), 5.0f), 1 + Math.min(color.z + (0.015f * i), 5.0f), alpha);
+                        15728864, OverlayTexture.DEFAULT_UV,  1 + Math.min(color.x + (0.015f * i), 5.0f), 1 + Math.min(color.y + (0.015f * i), 5.0f), 1 + Math.min(color.z + (0.015f * i), 5.0f), -1 + alpha);
             } else if (hasClouds) {
                 model.render(matrixStack,
                         provider.getBuffer(renderLayer),
-                        0xf000f00, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.2f);
+                        15728864, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1F);
                 matrixStack.scale(1.01f, 1.01f, 1.01f);
                 model.render(matrixStack,
                         provider.getBuffer(renderLayer),
-                        0xf000f00, OverlayTexture.DEFAULT_UV, 1, 1, 1, 0.2f);
+                        15728864, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1F);
             }
             matrixStack.pop();
         }

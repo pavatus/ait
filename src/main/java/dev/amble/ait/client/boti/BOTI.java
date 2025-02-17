@@ -15,7 +15,6 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -192,7 +191,7 @@ public class BOTI {
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
 
-        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(100, 0, 0), new Vector3f(4, 4, 4), new Vector2f(0, 0), AITMod.id("textures/environment/earth.png"), true, true, new Vector3f(1, 1, 1));
+        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(100, 0, 0), new Vector3f(4, 4, 4), new Vector3f(0, 0, 0), AITMod.id("textures/environment/earth.png"), true, true, new Vector3f(1, 1, 1));
         botiProvider.draw();
         stack.pop();
 

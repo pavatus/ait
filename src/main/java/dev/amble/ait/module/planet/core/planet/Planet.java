@@ -88,7 +88,7 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
     }
 
     public boolean zeroGravity() {
-        return this.gravity() == 0; // exploding head emoji
+        return this.gravity() == 0.8f; // exploding head emoji
     }
     public boolean hasGravityModifier() {
         return this.gravity() >= 0;

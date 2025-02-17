@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -14,7 +15,6 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -28,13 +28,13 @@ import dev.amble.ait.module.planet.client.renderers.SpaceSkyRenderer;
 public class SkyboxUtil extends WorldRenderer {
 
     private static final Identifier TARDIS_SKY = AITMod.id("textures/environment/tardis_sky.png");
-    private static final Identifier MOON_SKY = AITMod.id("textures/environment/tardis_sky.png");
-    private static final Identifier SPACE_SKY = AITMod.id("textures/environment/space_sky.png");
     private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
+    private static final Identifier MONDAS = AITMod.id("textures/environment/mondas.png");
     private static final Identifier MOON = AITMod.id("textures/environment/moon.png");
     private static final Identifier MARS = AITMod.id("textures/environment/mars.png");
     private static final Identifier SATURN = AITMod.id("textures/environment/saturn.png");
     private static final Identifier SATURN_RING = AITMod.id("textures/environment/saturn_ring.png");
+    private static final Identifier SUN = AITMod.id("textures/environment/tardis_star.png");
 
     public static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
             RotationAxis.POSITIVE_X.rotationDegrees(-90.0f), RotationAxis.POSITIVE_X.rotationDegrees(180.0f),
@@ -87,32 +87,53 @@ public class SkyboxUtil extends WorldRenderer {
     }
 
     public static void renderMoonSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
-        RenderSystem.enableBlend();
-        RenderSystem.depthMask(false);
-
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-35f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(22f));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
+        matrices.scale(5, 5, 5);
 
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
         cubeMap.draw(tessellator, bufferBuilder, matrices);
-        matrices.pop();
 
-        Identifier id = AITMod.id("textures/environment/tardis_star.png");
-        CelestialBodyRenderer.renderStarBody(new Vec3d(100, 50, 0),
-                new Vector3f(4f, 4f, 4f), new Vector2f(0, 0),
-                id, true, new Vector3f(1, 1, 1f));
-
-        Identifier id1 = EARTH;
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(20f));
-        CelestialBodyRenderer.renderFarAwayBody(new Vec3d(100, -22f, 0),
-                new Vector3f(10f, 10f, 10f),
-                id1, true, true, new Vector3f(0.18f, 0.35f, 0.60f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
+
+        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+        BackgroundRenderer.clearFog();
+
+        starsBuffer.bind();
+        starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
+                GameRenderer.getPositionProgram());
+
+        VertexBuffer.unbind();
+        fogCallback.run();
+
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.defaultBlendFunc();
         matrices.pop();
+        matrices.pop();
+
+
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+
+
+        // Planet Rendering
+        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        renderStarBody(matrices, SUN,
+                new Vec3d(cameraPos.getX() + 270, cameraPos.getY() + 200, cameraPos.getZ() + 30), new
+                        Vector3f(12f, 12f, 12f),
+                new Vector3f(12, 45, 0), false,
+                new Vector3f(0.5f, 0, 0f));
+        renderCelestialBody(matrices, EARTH,
+                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 20, cameraPos.getZ() + 10), new
+                        Vector3f(76f, 76f, 76f),
+                new Vector3f(-22.5f, 45f, 0), true, true,
+                new Vector3f(0.18f, 0.35f, 0.60f));
+        RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
     public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
@@ -126,28 +147,78 @@ public class SkyboxUtil extends WorldRenderer {
 
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
         cubeMap.draw(tessellator, bufferBuilder, matrices);
+
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
+
+        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+        BackgroundRenderer.clearFog();
+
+        starsBuffer.bind();
+        starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
+                GameRenderer.getPositionProgram());
+
+        VertexBuffer.unbind();
+        fogCallback.run();
+
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.defaultBlendFunc();
+        matrices.pop();
         matrices.pop();
 
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
         // Planet Rendering
-        renderStarBody(matrices, AITMod.id("textures/environment/tardis_star.png"), new Vec3d(31240, 1000, 0), new Vector3f(650f, 650f, 650f), new Vector2f(12, 45), false, new Vector3f(0.5f, 0, 0f));
-        renderCelestialBody(matrices, EARTH, new Vec3d(0, 0, 0), new Vector3f(900f, 900f, 900f), new Vector2f(-22.5f, 45f), true, true, new Vector3f(0.18f, 0.35f, 0.60f));
-        renderCelestialBody(matrices, MOON, new Vec3d(8240, 459f, 0), new Vector3f(150f, 150f, 150f), new Vector2f(22.5f, 45f), false, true, new Vector3f(0.5f, 0.5f, 0.5f));
-        renderCelestialBody(matrices, MARS, new Vec3d(-2500, 1400, 10000), new Vector3f(500f, 500f, 500f), new Vector2f(55, 12), false, true, new Vector3f(0.5f, 1, 1));
-        renderCelestialBody(matrices, SATURN_RING, new Vec3d(4500, 1200, 4500), new Vector3f(1000f, 1, 1000f), new Vector2f(0, 0), false, false, new Vector3f(0.5f, 1, 1));
-        renderCelestialBody(matrices, SATURN, new Vec3d(4500, 1400, 4500), new Vector3f(500f, 500f, 500f), new Vector2f(0, 0), false, true, new Vector3f(0.55f, 0.4f, 0.2f));
+        renderStarBody(matrices, SUN,
+                new Vec3d(31240, 1000, 0), new
+                        Vector3f(650f, 650f, 650f),
+                new Vector3f(12, 45, 0), false,
+                new Vector3f(0.5f, 0, 0f));
+        renderCelestialBody(matrices, EARTH,
+                new Vec3d(0, 0, 0), new
+                        Vector3f(900f, 900f, 900f),
+                new Vector3f(-22.5f, 45f, 0), true, true,
+                new Vector3f(0.18f, 0.35f, 0.60f));
+        renderCelestialBody(matrices, MONDAS,
+                new Vec3d(0, 0, 6000), new
+                        Vector3f(900f, 900f, 900f),
+                new Vector3f(-22.5f, 45f, 0), true, true,
+                new Vector3f(0.7f, 0.7f, 0.7f));
+        renderCelestialBody(matrices, MOON,
+                new Vec3d(8240, 459f, 0), new
+                        Vector3f(150f, 150f, 150f),
+                new Vector3f(22.5f, 45f, 0), false, true,
+                new Vector3f(0.5f, 0.5f, 0.5f));
+        renderCelestialBody(matrices, MARS,
+                new Vec3d(-2500, 1400, 10000), new
+                        Vector3f(500f, 500f, 500f),
+                new Vector3f(55, 12, 0), false, true,
+                new Vector3f(0.3f, 1, 1));
+        renderCelestialBody(matrices, SATURN_RING,
+                new Vec3d(4500, 1200, 4500), new
+                        Vector3f(1000f, 1, 1000f),
+                new Vector3f(0, 0, 0), false, false,
+                new Vector3f(0.5f, 1, 1));
+        renderCelestialBody(matrices, SATURN,
+                new Vec3d(4500, 1400, 4500),
+                new Vector3f(500f, 500f, 500f),
+                new Vector3f(0, 0, 0), false, true,
+                new Vector3f(0.55f, 0.4f, 0.2f));
+
+        RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
     /**
      * Renders a celestial body in space.
      */
-    private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector2f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
+    private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
         matrices.push();
         CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, clouds, atmosphere, color);
         matrices.pop();
     }
 
-    private static void renderStarBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector2f rotation, boolean atmosphere, Vector3f color) {
+    private static void renderStarBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean atmosphere, Vector3f color) {
         matrices.push();
         CelestialBodyRenderer.renderStarBody(position, scale, rotation, texture, atmosphere, color);
         matrices.pop();

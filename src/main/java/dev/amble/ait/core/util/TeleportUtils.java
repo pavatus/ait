@@ -2,8 +2,6 @@ package dev.amble.ait.core.util;
 
 import java.util.*;
 
-import org.spongepowered.asm.mixin.Unique;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,17 +11,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITDimensions;
-import dev.amble.ait.core.entities.FlightTardisEntity;
-import dev.amble.ait.core.tardis.Tardis;
 
 
 public class TeleportUtils {
     public static void checkPlayerTeleportation(ServerWorld world) {
         List<ServerPlayerEntity> playersToTeleport = new ArrayList<>();
+        List<ServerPlayerEntity> playersToSuck = new ArrayList<>();
 
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (!(player.getWorld().getRegistryKey() == AITDimensions.SPACE)) {
@@ -33,43 +32,33 @@ public class TeleportUtils {
             Vec3d playerPos = player.getPos();
 
             Map<Vec3d, PlanetInfo> planetData = Map.of(
-                    new Vec3d(0, 0, 0), new PlanetInfo("minecraft:overworld", 900, 200), // Overworld
-                    new Vec3d(2000, 0, 0), new PlanetInfo(AITDimensions.MOON.toString(), 150, 100), // Moon
-                    new Vec3d(-2500, 300, 0), new PlanetInfo(AITDimensions.MARS.toString(), 500, 150) // Mars
+                    new Vec3d(0, 0, 0), new PlanetInfo("minecraft:overworld", 1200, 800), // Overworld
+                    new Vec3d(8240, 459f, 0), new PlanetInfo("ait:moon", 150, 400), // Moon
+                    new Vec3d(-2500, 1400, 10000), new PlanetInfo(AITDimensions.MARS.toString(), 500, 600) // Mars
             );
 
             for (Map.Entry<Vec3d, PlanetInfo> entry : planetData.entrySet()) {
                 Vec3d planetPos = entry.getKey();
                 PlanetInfo planetInfo = entry.getValue();
-                String dimension = planetInfo.getDimension();
                 double planetRadius = planetInfo.getRadius();
                 double suctionRadius = planetInfo.getSuctionRadius();
 
                 double distance = planetPos.distanceTo(playerPos);
 
+                if (distance < suctionRadius) {
+                    playersToSuck.add(player);
+                    applySuction(playersToSuck, planetPos);
+                }
                 if (distance < planetRadius) {
+                    playersToSuck.remove(player);
                     playersToTeleport.add(player);
                     break;
-                } else if (distance < suctionRadius) {
-                    applySuction(player, planetPos);
                 }
             }
         }
 
-        playersToTeleport.forEach(player -> {
-            if (player.getVehicle() instanceof FlightTardisEntity entity) {
-                if (entity.tardis() == null) return;
-                Tardis tardis = entity.tardis().get();
-                tardis.flight().flying().set(false);
-            }
-            if (player.getVehicle() instanceof LivingEntity entity) {
-                teleportVehicle(entity);
-            }
-        });
-
         for (ServerPlayerEntity player : playersToTeleport) {
             teleportPlayer(player);
-            playersToTeleport.remove(player);
         }
 
         for (Entity entity : world.iterateEntities()) {
@@ -79,11 +68,12 @@ public class TeleportUtils {
         }
     }
 
-    @Unique private static void hitDimensionThreshold(Entity entity, int tpHeight, RegistryKey<World> worldKeyA, RegistryKey<World> worldKeyB) {
+    private static void hitDimensionThreshold(Entity entity, int tpHeight, RegistryKey<World> worldKeyA, RegistryKey<World> worldKeyB) {
         hitDimensionThreshold(entity, worldKeyA, tpHeight, worldKeyB, tpHeight);
     }
 
-    @Unique private static void hitDimensionThreshold(Entity entity, RegistryKey<World> worldKeyA, int tpHeightA, RegistryKey<World> worldKeyB, int tpHeightB) {
+    private static void hitDimensionThreshold(Entity entity, RegistryKey<World> worldKeyA, int tpHeightA, RegistryKey<World> worldKeyB, int tpHeightB) {
+        if (entity == null) return;
         if (!(entity.getWorld() instanceof ServerWorld entityWorld))
             return;
 
@@ -93,42 +83,28 @@ public class TeleportUtils {
         ServerWorld worldA = server.getWorld(worldKeyA);
         ServerWorld worldB = server.getWorld(worldKeyB);
 
-        if (entity.hasVehicle()) {
-            if (entity instanceof PlayerEntity player) {
-                Entity tardisEntity = player.getVehicle();
-                if (tardisEntity instanceof FlightTardisEntity flightTardis) {
-                    Tardis tardis = flightTardis.tardis().get();
-                    if (flightTardis.tardis() == null) return;
-                    if (y >= tpHeightA && entityWorld == worldA) {
-                        moveToWorldWithPassenger(flightTardis, tardis, player, worldB);
-                    }/* else if (y >= tpHeightB && entityWorld == worldB) {
-                        moveToWorldWithPassenger(flightTardis, tardis, player, worldA);
-                    }*/
-                    return;
-                }
-            }
-        }
-
         if (y >= tpHeightA && entityWorld == worldA) {
-            entity.moveToWorld(worldB);
+            teleportEntity(entity, worldB);
         }/* else if (y >= tpHeightB && entityWorld == worldB) {
-            entity.moveToWorld(worldA);
+            teleportEntity(entity, worldA);
         }*/
     }
 
-    @Unique private static void moveToWorldWithPassenger(FlightTardisEntity tardisEntity, Tardis tardis, PlayerEntity player, ServerWorld b) {
-        player.stopRiding();
-        tardis.flight().flying().set(false);
-        player.moveToWorld(b);
-        tardisEntity.moveToWorld(b);
-        tardis.flight().flying().set(true);
-        player.startRiding(tardisEntity);
+    private static void teleportEntity(Entity entity, ServerWorld targetWorld) {
+        if (entity instanceof PlayerEntity player) {
+            player.teleport(targetWorld, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYaw(), entity.getPitch());
+            return;
+        }
+        entity.teleport(targetWorld, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYaw(), entity.getPitch());
     }
 
-    private static void applySuction(ServerPlayerEntity player, Vec3d planetPos) {
-        Vec3d playerPos = player.getPos();
-
-        // Atmosphere succ goes here
+    private static void applySuction(List<ServerPlayerEntity> player, Vec3d planetPos) {
+        player.forEach(entity -> {
+            Vec3d motion = planetPos.subtract(entity.getPos()).normalize().multiply(0.25f);
+            entity.setVelocity(entity.getVelocity().add(motion));
+            entity.velocityDirty = true;
+            entity.velocityModified = true;
+        });
     }
 
     private static void teleportPlayer(ServerPlayerEntity player) {
@@ -139,7 +115,7 @@ public class TeleportUtils {
 
             String[] parts = dimension.split(":");
             if (parts.length != 2) {
-                System.err.println("Invalid dimension format! Use 'namespace:dimension' or AITDimensions.<dimension>.getString()");
+                System.err.println(dimension + "Invalid dimension format! Use 'namespace:dimension' or AITDimensions.<dimension>.getString()");
                 return;
             }
 
@@ -150,7 +126,8 @@ public class TeleportUtils {
             ServerWorld targetWorld = server.getWorld(targetWorldKey);
 
             if (targetWorld != null) {
-                player.teleport(targetWorld, player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+                BlockPos pos = new BlockPos((int) player.getX(), (int) player.getY(), (int) player.getZ());
+                player.teleport(targetWorld, player.getX(), targetWorld.getChunk(pos).sampleHeightmap(Heightmap.Type.MOTION_BLOCKING, (int) player.getX(), (int) player.getZ()), player.getZ(), Set.of(), player.getYaw(), player.getPitch());
             } else {
                 System.err.println("Dimension " + dimension + " not found!");
             }
@@ -176,7 +153,8 @@ public class TeleportUtils {
             ServerWorld targetWorld = server.getWorld(targetWorldKey);
 
             if (targetWorld != null) {
-                entity.teleport(targetWorld, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYaw(), entity.getPitch());
+                BlockPos pos = new BlockPos((int) entity.getX(), (int) entity.getY(), (int) entity.getZ());
+                entity.teleport(targetWorld, entity.getX(), targetWorld.getChunk(pos).sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (int) entity.getX(), (int) entity.getZ()), entity.getZ(), Set.of(), entity.getYaw(), entity.getPitch());
             } else {
                 System.err.println("Dimension " + dimension + " not found!");
             }
@@ -187,7 +165,7 @@ public class TeleportUtils {
         Vec3d playerPos = entity.getPos();
         Map<Vec3d, PlanetInfo> planetData = Map.of(
                 new Vec3d(0, 0, 0), new PlanetInfo("minecraft:overworld", 900, 200),
-                new Vec3d(8240, 459, 0), new PlanetInfo(AITDimensions.MOON.toString(), 150, 140),
+                new Vec3d(8240, 459, 0), new PlanetInfo("ait:moon", 150, 140),
                 new Vec3d(-2500, 300, 0), new PlanetInfo(AITDimensions.MARS.toString(), 500, 150)
         );
 
@@ -213,7 +191,7 @@ public class TeleportUtils {
         public PlanetInfo(String dimension, double radius, double suctionRadius) {
             this.dimension = dimension;
             this.radius = radius;
-            this.suctionRadius = suctionRadius;
+            this.suctionRadius = radius + suctionRadius;
         }
 
         public String getDimension() {
