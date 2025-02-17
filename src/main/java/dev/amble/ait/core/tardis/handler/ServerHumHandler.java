@@ -22,12 +22,12 @@ public class ServerHumHandler extends TardisComponent {
     static {
         ServerPlayNetworking.registerGlobalReceiver(ServerHumHandler.RECEIVE,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    Hum hum = HumRegistry.getInstance().get(buf.readIdentifier());
+                    Hum hum = HumRegistry.getInstance().get(buf.readIdentifier()); // todo use theos properties
 
                     if (tardis == null || hum == null)
                         return;
 
-                    tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).setHum(hum);
+                    tardis.hum().set(hum);
                 }));
     }
 
@@ -35,7 +35,7 @@ public class ServerHumHandler extends TardisComponent {
         super(Id.HUM);
     }
 
-    public Hum getHum() {
+    public Hum get() {
         if (current == null) {
             this.current = HumRegistry.getInstance().getRandom();
         }
@@ -43,7 +43,7 @@ public class ServerHumHandler extends TardisComponent {
         return this.current;
     }
 
-    public void setHum(Hum hum) {
+    public void set(Hum hum) {
         this.current = hum;
 
         this.updateClientHum();

@@ -2,7 +2,9 @@ package dev.amble.ait.client.util;
 
 import static dev.amble.ait.core.tardis.util.TardisUtil.*;
 
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -11,8 +13,10 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import dev.amble.ait.api.ClientWorldEvents;
 import dev.amble.ait.api.link.v2.TardisRef;
@@ -115,6 +119,48 @@ public class ClientTardisUtil {
             return null;
 
         return (ClientTardis) currentTardis.get();
+    }
+
+    public static Optional<ClientTardis> getNearestTardis(double radius) {
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (player == null)
+            return Optional.empty();
+
+        BlockPos pos = player.getBlockPos();
+        RegistryKey<World> dimension = player.getWorld().getRegistryKey();
+
+        // doesnt find nearest, only finds if within radius.
+        // could be more performant though
+        /*
+        return ClientTardisManager.getInstance().find(tardis -> {
+            if (!tardis.travel().position().getDimension().equals(dimension))
+                return false;
+
+            BlockPos tPos = tardis.travel().position().getPos();
+            double distance = Math.sqrt(pos.getSquaredDistance(tPos));
+
+            return distance < radius;
+        });
+        */
+
+        AtomicReference<ClientTardis> nearestTardis = new AtomicReference<>();
+        AtomicReference<Double> nearestDistance = new AtomicReference<>(Double.MAX_VALUE);
+
+        ClientTardisManager.getInstance().forEach(tardis -> {
+            if (!tardis.travel().position().getDimension().equals(dimension))
+                return;
+
+            BlockPos tPos = tardis.travel().position().getPos();
+            double distance = Math.sqrt(pos.getSquaredDistance(tPos));
+
+            if (distance < radius && distance < nearestDistance.get()) {
+                nearestDistance.set(distance);
+                nearestTardis.set(tardis);
+            }
+        });
+
+        return Optional.ofNullable(nearestTardis.get());
     }
 
     public static double distanceFromConsole() {

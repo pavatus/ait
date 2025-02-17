@@ -106,7 +106,9 @@ public abstract class Tardis extends Initializable<TardisComponent.InitContext> 
     public InteriorChangingHandler interiorChangingHandler() {
         return this.handler(TardisComponent.Id.INTERIOR);
     }
-
+    public ServerHumHandler hum() {
+        return this.handler(TardisComponent.Id.HUM);
+    }
 
     // THEO - can i safely remove this without it causing errors reading from json ??
     // you do it, im scared.

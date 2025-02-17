@@ -58,7 +58,7 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             super(HumSwitcher::next, HumSwitcher::previous, HumSwitcher::sync, current, "hum");
         }
         public HumSwitcher(Tardis tardis) {
-            this(tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).getHum());
+            this(tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).get());
         }
 
         private static Hum next(Hum current) {
