@@ -1,14 +1,18 @@
 package dev.amble.ait.data.codec;
 
+import java.util.List;
+
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.joml.Vector3f;
+
+import net.minecraft.util.Util;
 
 public class MoreCodec {
 
-    public static final Codec<Vector3f> VECTOR3F = RecordCodecBuilder.create(instance -> instance
-            .group(Codec.FLOAT.fieldOf("x").forGetter(Vector3f::x),
-                    Codec.FLOAT.fieldOf("y").forGetter(Vector3f::y),
-                    Codec.FLOAT.fieldOf("z").forGetter(Vector3f::z))
-            .apply(instance, Vector3f::new));
+    public static final Codec<Vector3f> VECTOR3F = Codec.FLOAT
+            .listOf()
+            .comapFlatMap(
+                    coordinates -> Util.decodeFixedLengthList(coordinates, 3).map(coords -> new Vector3f(coords.get(0), coords.get(1), coords.get(2))),
+                    vec -> List.of(vec.x(), vec.y(), vec.z())
+            );
 }

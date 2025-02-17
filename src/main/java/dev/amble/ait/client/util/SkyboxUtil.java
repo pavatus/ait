@@ -198,11 +198,6 @@ public class SkyboxUtil extends WorldRenderer {
                         Vector3f(150f, 150f, 150f),
                 new Vector3f(22.5f, 45f, 0), false, true,
                 new Vector3f(0.5f, 0.5f, 0.5f));
-        renderCelestialBody(matrices, MARS,
-                new Vec3d(-2500, 1400, 10000), new
-                        Vector3f(500f, 500f, 500f),
-                new Vector3f(55, 12, 0), false, true,
-                new Vector3f(0.3f, 1, 1));
         renderCelestialBody(matrices, SATURN_RING,
                 new Vec3d(4500, 1200, 4500), new
                         Vector3f(1000f, 1, 1000f),
