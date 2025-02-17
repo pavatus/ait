@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -148,11 +149,15 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
-        matrices.scale(200, 200, 200);
+        matrices.scale(100, 100, 100);
 
+        RenderSystem.setShaderColor(0.25f, 0.25f, 0.25f, 1);
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
         cubeMap.draw(tessellator, bufferBuilder, matrices);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1);
 
+        RenderSystem.depthMask(false);
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
@@ -170,6 +175,7 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.defaultBlendFunc();
         matrices.pop();
+        RenderSystem.depthFunc(GL11.GL_EQUAL);
         matrices.pop();
 
         // Planet Rendering todo - move info into PlanetRenderInfo !!!
@@ -209,7 +215,6 @@ public class SkyboxUtil extends WorldRenderer {
                 new Vector3f(0, 0, 0), false, true,
                 new Vector3f(0.55f, 0.4f, 0.2f));
 
-        RenderSystem.depthMask(true);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         RenderSystem.depthMask(true);
