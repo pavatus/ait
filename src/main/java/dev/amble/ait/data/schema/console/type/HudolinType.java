@@ -12,7 +12,7 @@ import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
 import dev.amble.ait.core.tardis.control.impl.pos.YControl;
 import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.LoadWaypointControl;
+import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
@@ -70,7 +70,7 @@ public class HudolinType extends ConsoleTypeSchema {
                     new Vector3f(0.7781250039115548f, 0.44999980740249157f, 0.18984374683350325f)),
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.125f, 0.1375f),
                     new Vector3f(-0.3109375163912773f, 0.4875005716457963f, -0.5468750149011612f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.16250001f, 0.0875f),
+            new ControlTypes(new ConsolePortControl(), EntityDimensions.changing(0.16250001f, 0.0875f),
                     new Vector3f(-0.838281256146729f, 0.4000003784894943f, 0.0046874964609742165f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.074999996f, 0.1f),
                     new Vector3f(-0.7125000134110451f, 0.47500038146972656f, 0.1789062386378646f)),

@@ -12,7 +12,7 @@ import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
 import dev.amble.ait.core.tardis.control.impl.pos.YControl;
 import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.LoadWaypointControl;
+import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
@@ -85,7 +85,7 @@ public class ToyotaType extends ConsoleTypeSchema {
                     new Vector3f(0.18828124087303877f, 0.5750003820285201f, -1.4593750229105353f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.06249999f, 0.112500004f),
                     new Vector3f(0.15078124031424522f, 0.7000003838911653f, -1.0609375154599547f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.125f, 0.1125f),
+            new ControlTypes(new ConsolePortControl(), EntityDimensions.changing(0.125f, 0.1125f),
                     new Vector3f(0.0015624891966581345f, 0.737500574439764f, -0.7953125154599547f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.099999994f, 0.1125f),
                     new Vector3f(0.8273437675088644f, 0.7500003837049007f, -0.16093750949949026f)),
