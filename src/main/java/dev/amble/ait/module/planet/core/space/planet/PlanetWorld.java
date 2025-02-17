@@ -1,4 +1,4 @@
-package dev.amble.ait.module.planet.core.planet;
+package dev.amble.ait.module.planet.core.space.planet;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;

@@ -22,6 +22,10 @@ import net.minecraft.util.math.Vec3d;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.module.planet.client.renderers.CelestialBodyRenderer;
 import dev.amble.ait.module.planet.client.renderers.SpaceSkyRenderer;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRenderInfo;
+import dev.amble.ait.module.planet.core.space.system.SolarSystem;
+import dev.amble.ait.module.planet.core.space.system.Space;
 
 
 public class SkyboxUtil extends WorldRenderer {
@@ -168,17 +172,22 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
         matrices.pop();
 
-        // Planet Rendering
+        // Planet Rendering todo - move info into PlanetRenderInfo !!!
         renderStarBody(matrices, SUN,
                 new Vec3d(31240, 1000, 0), new
                         Vector3f(650f, 650f, 650f),
                 new Vector3f(12, 45, 0), false,
                 new Vector3f(0.5f, 0, 0f));
-        renderCelestialBody(matrices, EARTH,
-                new Vec3d(0, 0, 0), new
-                        Vector3f(900f, 900f, 900f),
-                new Vector3f(-22.5f, 45f, 0), true, true,
-                new Vector3f(0.18f, 0.35f, 0.60f));
+
+        for (SolarSystem system : Space.getInstance().systems) {
+            for (Planet planet : system) {
+                PlanetRenderInfo render = planet.render();
+                if (render.isEmpty()) continue;
+
+                renderCelestialBody(matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color());
+            }
+        }
+
         renderCelestialBody(matrices, MONDAS,
                 new Vec3d(0, 0, 6000), new
                         Vector3f(900f, 900f, 900f),

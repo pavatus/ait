@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.world.World;
 
-import dev.amble.ait.module.planet.core.planet.Planet;
-import dev.amble.ait.module.planet.core.planet.PlanetWorld;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetWorld;
 
 @Mixin(World.class)
 public class WorldMixin implements PlanetWorld {

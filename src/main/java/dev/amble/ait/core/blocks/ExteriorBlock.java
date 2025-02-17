@@ -50,8 +50,8 @@ import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
-import dev.amble.ait.module.planet.core.planet.Planet;
-import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 @SuppressWarnings("deprecation")

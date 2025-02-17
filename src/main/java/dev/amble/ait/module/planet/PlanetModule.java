@@ -43,7 +43,7 @@ import dev.amble.ait.module.Module;
 import dev.amble.ait.module.planet.client.SpaceSuitOverlay;
 import dev.amble.ait.module.planet.core.PlanetBlocks;
 import dev.amble.ait.module.planet.core.PlanetItems;
-import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 import dev.amble.ait.module.planet.core.util.PlanetCustomTrades;
 
 

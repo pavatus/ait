@@ -12,8 +12,8 @@ import net.minecraft.text.Text;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.config.AITConfig;
 import dev.amble.ait.module.planet.core.item.SpacesuitItem;
-import dev.amble.ait.module.planet.core.planet.Planet;
-import dev.amble.ait.module.planet.core.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
 public class SpaceSuitOverlay implements HudRenderCallback {
 
