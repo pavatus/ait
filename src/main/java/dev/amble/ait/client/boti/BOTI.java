@@ -6,7 +6,6 @@ import static dev.amble.ait.client.renderers.entities.GallifreyFallsPaintingEnti
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
@@ -34,7 +33,6 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import dev.amble.ait.module.planet.client.renderers.CelestialBodyRenderer;
 
 
 public class BOTI {
@@ -191,7 +189,7 @@ public class BOTI {
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
 
-        CelestialBodyRenderer.renderComprehendableBody(new Vec3d(100, 0, 0), new Vector3f(4, 4, 4), new Vector3f(0, 0, 0), AITMod.id("textures/environment/earth.png"), true, true, new Vector3f(1, 1, 1));
+        //CelestialBodyRenderer.renderComprehendableBody(new Vec3d(100, 0, 0), new Vector3f(4, 4, 4), new Vector3f(0, 0, 0), AITMod.id("textures/environment/earth.png"), true, true, new Vector3f(1, 1, 1));
         botiProvider.draw();
         stack.pop();
 
