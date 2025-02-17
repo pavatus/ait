@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -118,7 +117,7 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
 
 
-        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+        //RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
 
         // Planet Rendering
@@ -128,22 +127,24 @@ public class SkyboxUtil extends WorldRenderer {
                         Vector3f(12f, 12f, 12f),
                 new Vector3f(12, 45, 0), false,
                 new Vector3f(0.5f, 0, 0f));
-        renderCelestialBody(matrices, EARTH,
-                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 20, cameraPos.getZ() + 10), new
+        renderSkyBody(matrices, EARTH,
+                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new
                         Vector3f(76f, 76f, 76f),
                 new Vector3f(-22.5f, 45f, 0), true, true,
                 new Vector3f(0.18f, 0.35f, 0.60f));
-        RenderSystem.depthFunc(GL11.GL_EQUAL);
+        //RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
     public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
+        RenderSystem.enableBlend();
+        RenderSystem.depthMask(false);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
-        matrices.scale(5, 5, 5);
+        matrices.scale(200, 200, 200);
 
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
         cubeMap.draw(tessellator, bufferBuilder, matrices);
@@ -166,8 +167,6 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.defaultBlendFunc();
         matrices.pop();
         matrices.pop();
-
-        RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
         // Planet Rendering
         renderStarBody(matrices, SUN,
@@ -206,15 +205,27 @@ public class SkyboxUtil extends WorldRenderer {
                 new Vector3f(0, 0, 0), false, true,
                 new Vector3f(0.55f, 0.4f, 0.2f));
 
-        RenderSystem.depthFunc(GL11.GL_EQUAL);
+        RenderSystem.depthMask(true);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     /**
      * Renders a celestial body in space.
      */
+
+    private static void renderSkyBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
+        matrices.push();
+        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, true, clouds, atmosphere, color);
+        matrices.pop();
+    }
+
     private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
         matrices.push();
-        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, clouds, atmosphere, color);
+        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, false, clouds, atmosphere, color);
         matrices.pop();
     }
 

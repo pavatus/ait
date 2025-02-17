@@ -40,7 +40,7 @@ public class CelestialBodyRenderer {
         matrixStack.scale(scale.x, scale.y, scale.z);
 
         BackgroundRenderer.clearFog();
-        RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
+        //RenderSystem.depthFunc(GL11.GL_NOTEQUAL);
         RenderSystem.setProjectionMatrix(matrixStack.peek().getPositionMatrix().perspective(90, 1, 0.05f, 10000000), VertexSorter.BY_Z);
 
         CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
@@ -54,7 +54,7 @@ public class CelestialBodyRenderer {
         }
         provider.draw();
         RenderSystem.restoreProjectionMatrix();
-        RenderSystem.depthFunc(GL11.GL_EQUAL);
+        //RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
     public static void renderStarBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
@@ -95,7 +95,7 @@ public class CelestialBodyRenderer {
         matrixStack.pop();
     }
 
-    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor) {
+    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean isSkyRendered, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor) {
         MinecraftClient mc = MinecraftClient.getInstance();
         Camera camera = mc.gameRenderer.getCamera();
         VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
@@ -114,9 +114,12 @@ public class CelestialBodyRenderer {
         matrixStack.scale(scale.x, scale.y, scale.z);
 
         BackgroundRenderer.clearFog();
-        RenderSystem.depthMask(false);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthFunc(GL11.GL_ALWAYS);
+        //RenderSystem.depthMask(true);
+        if (isSkyRendered) {
+            RenderSystem.depthMask(true);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glDepthFunc(GL11.GL_ALWAYS);
+        }
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.y()));
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.x()));
@@ -131,9 +134,12 @@ public class CelestialBodyRenderer {
             atmosphereRenderer(matrixStack, atmosphereColor, provider, false, hasClouds);
             provider.draw();
         }
-        RenderSystem.depthMask(true);
-        GL11.glDepthFunc(GL11.GL_EQUAL);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        if (isSkyRendered) {
+            RenderSystem.depthMask(false);
+            GL11.glDepthFunc(GL11.GL_EQUAL);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+        }
         matrixStack.pop();
     }
 
@@ -142,7 +148,7 @@ public class CelestialBodyRenderer {
         for (int i = 0; i < 6; i++) {
             float alpha = (float) (0.06f - Math.log(i + 1) * 0.001f);
             matrixStack.push();
-            float gg = 1.0f + ((i != 0 ? i : i + 1) * 0.005f);
+            float gg = 1.0f + ((i != 0 ? i : i + 1) * 0.01f);
             matrixStack.scale(gg, gg, gg);
             float delta = (MinecraftClient.getInstance().getTickDelta() + MinecraftClient.getInstance().player.age) * 0.00001f;
             RenderLayer renderLayer = AITRenderLayers.getItemEntityTranslucentCull(new Identifier("textures/environment/clouds.png"));//RenderLayer.getEnergySwirl(new Identifier("textures/environment/clouds.png"), delta % 1.0F, (delta * 0.1F) % 1.0F);
