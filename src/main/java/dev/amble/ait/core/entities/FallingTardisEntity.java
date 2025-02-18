@@ -49,6 +49,8 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.core.util.ForcedChunkUtil;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
 public class FallingTardisEntity extends LinkableDummyEntity {
 
@@ -125,7 +127,9 @@ public class FallingTardisEntity extends LinkableDummyEntity {
             tardis.getDesktop().getConsolePos().forEach(console -> this.getWorld().playSound(null, console,
                     SoundEvents.ITEM_ELYTRA_FLYING, SoundCategory.BLOCKS, 0.25F, 1.0F));
 
-        if (tardis.travel().antigravs().get()) {
+        Planet planet = PlanetRegistry.getInstance().get(this.getWorld());
+        boolean canFall = this.tardis().get().travel().antigravs().get() || planet != null && planet.zeroGravity();
+        if (canFall) {
             this.stopFalling(true);
             return;
         }

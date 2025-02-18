@@ -233,7 +233,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? speedVal :
                 controllingPlayer.isSneaking() ? -speedVal :
-                        this.tardis().get().travel().antigravs().get() ? 0.0f : f > 0 || g > 0 ? -0.5f : -2f;
+                        canFall ? 0.0f : f > 0 || g > 0 ? -0.5f : -2f;
 
         if (v < 0 && this.isOnGround())
             return Vec3d.ZERO.add(0, -0.4f, 0);

@@ -52,15 +52,10 @@ public class GenericSubSystemRenderer<T extends GenericStructureSystemBlockEntit
             matrices.push();
             double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
 
-            // mm yes render the model twice
-//            cube.visible = true;
-//            this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(GenericSubSystemModel.TEXTURE)),
-//                    light, overlay, 1.0F, 1.0F, 1.0F, (float) Math.abs(offset) + 0.1f);
-
             matrices.translate(0, 0.85f + (offset / 2), 0);
 
             Vector3f scale = MinecraftClient.getInstance().getItemRenderer().getModel(stack, entity.getWorld(), null, 0).getTransformation().firstPersonRightHand.scale;
-            matrices.scale(0.7f, 0.7f, 0.7f);
+            matrices.scale(0.9f, 0.9f, 0.9f);
             matrices.scale(scale.x, scale.y, scale.z);
 
             MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
