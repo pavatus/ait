@@ -1,0 +1,21 @@
+{
+  "dimension": "ait:neptune",
+  "gravity": 0.05,
+  "has_oxygen": false,
+  "temperature": 210,
+  "render": {
+    "texture": "ait:textures/environment/neptune.png",
+    "position": [-12300, 76, 1500],
+    "scale": [500, 500, 500],
+    "rotation": [55, 12, 0],
+    "clouds": false,
+    "atmosphere": true,
+    "color": [0.6, 0.7, 0.85],
+    "radius": 700,
+    "suction_radius": 600
+  },
+  "transition": {
+    "target": "ait:space",
+    "height": 500
+  }
+}
