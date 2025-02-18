@@ -2,6 +2,7 @@
   "dimension": "ait:venus",
   "gravity": 0.91,
   "has_oxygen": false,
+  "has_landable_surface": false,
   "temperature": 467,
   "render": {
     "texture": "ait:textures/environment/venus.png",

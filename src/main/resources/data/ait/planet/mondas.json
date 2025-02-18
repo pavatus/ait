@@ -2,6 +2,7 @@
   "dimension": "ait:mondas",
   "gravity": 0.05,
   "has_oxygen": false,
+  "has_landable_surface": false,
   "temperature": 210,
   "render": {
     "texture": "ait:textures/environment/mondas.png",

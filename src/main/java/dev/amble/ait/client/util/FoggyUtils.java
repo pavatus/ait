@@ -4,16 +4,50 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.FogShape;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.MathHelper;
 
+import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITTags;
 import dev.amble.ait.core.tardis.Tardis;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.space.system.Space;
 
 public class FoggyUtils {
     public static void overrideFog() {
+        MinecraftClient mc = MinecraftClient.getInstance();
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
+
+        if (mc.player != null && !mc.player.isSpectator() && mc.world != null && mc.world.getRegistryKey().equals(AITDimensions.SPACE)) {
+            for (Planet planet : Space.getInstance().getPlanets()) {
+                //System.out.println(planet + ":" + (planet.render().position().distanceTo(mc.player.getPos()) /*< planet.render().radius()*/) + ":" + planet.render().radius());
+                if (planet != PlanetRegistry.getInstance().get(mc.world) && planet.render().position().distanceTo(mc.player.getPos()) < planet.render().radius()) {
+                    //System.out.println(planet);
+                    MatrixStack stack = new MatrixStack();
+                    stack.push();
+                    stack.translate(0, 0, -2);
+                    stack.scale(2000, 20000, 1);
+                    for (int i = 0; i < 7; i++) {
+                        MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(Items.WHITE_STAINED_GLASS_PANE),
+                                ModelTransformationMode.GROUND, 0xf, OverlayTexture.DEFAULT_UV, stack, MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers(), mc.world, 0);
+                    }
+                    stack.pop();
+                    RenderSystem
+                            .setShaderFogStart(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 1, 1));
+                    RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 1, 1));
+                    RenderSystem.setShaderFogShape(FogShape.SPHERE);
+                    RenderSystem.setShaderFogColor(planet.render().color().x(),
+                            planet.render().color().y(),
+                            planet.render().color().z(), 1f);
+                }
+            }
+        }
 
         if (tardis == null || tardis.getExterior() == null)
             return;
@@ -41,7 +75,7 @@ public class FoggyUtils {
             RenderSystem.setShaderFogEnd(MathHelper.lerp(MinecraftClient.getInstance().getTickDelta() / 100f, 11, 32));
             RenderSystem.setShaderFogShape(FogShape.SPHERE);
 
-            ItemStack stack = MinecraftClient.getInstance().player.getEquippedStack(EquipmentSlot.HEAD);
+            ItemStack stack = mc.player.getEquippedStack(EquipmentSlot.HEAD);
 
             RenderSystem.setShaderFogColor(0.2f, 0.2f, 0.2f,
                     stack.isIn(AITTags.Items.FULL_RESPIRATORS) ? 0.015f : 0.35f);

@@ -2,6 +2,7 @@
   "dimension": "ait:mars",
   "gravity": 0.05,
   "has_oxygen": false,
+  "has_landable_surface": true,
   "temperature": 210,
   "render": {
     "texture": "ait:textures/environment/mars.png",

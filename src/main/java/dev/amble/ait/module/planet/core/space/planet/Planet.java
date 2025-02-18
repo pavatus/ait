@@ -24,12 +24,13 @@ import net.minecraft.util.dynamic.Codecs;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.module.planet.core.item.SpacesuitItem;
 
-public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int temperature,
+public record Planet(Identifier dimension, float gravity, boolean hasOxygen, boolean hasLandableSurface, int temperature,
                      PlanetRenderInfo render, PlanetTransition transition) implements Identifiable {
     public static final Codec<Planet> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("dimension").forGetter(Planet::dimension),
             Codec.FLOAT.optionalFieldOf("gravity", -1f).forGetter(Planet::gravity),
             Codec.BOOL.fieldOf("has_oxygen").forGetter(Planet::hasOxygen),
+            Codec.BOOL.fieldOf("has_landable_surface").forGetter(Planet::hasLandableSurface),
             Codec.INT.optionalFieldOf("temperature", 288).forGetter(Planet::temperature),
             PlanetRenderInfo.CODEC.optionalFieldOf("render", PlanetRenderInfo.EMPTY).forGetter(Planet::render),
             PlanetTransition.CODEC.optionalFieldOf("transition", PlanetTransition.EMPTY).forGetter(Planet::transition)
@@ -107,6 +108,6 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, int
     }
 
     public Planet with(Identifier dimension) {
-        return new Planet(dimension, this.gravity, this.hasOxygen, this.temperature, this.render, this.transition);
+        return new Planet(dimension, this.gravity, this.hasOxygen, this.hasLandableSurface, this.temperature, this.render, this.transition);
     }
 }

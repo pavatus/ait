@@ -2,6 +2,7 @@
  "dimension": "ait:moon",
   "gravity": 0.075,
   "has_oxygen": false,
+  "has_landable_surface": true,
   "temperature": 400,
   "render": {
     "texture": "ait:textures/environment/moon.png",

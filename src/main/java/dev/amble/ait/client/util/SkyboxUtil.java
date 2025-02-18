@@ -231,6 +231,8 @@ public class SkyboxUtil extends WorldRenderer {
                 new Vector3f(0.5f, 0, 0f));
 
         for (SolarSystem system : Space.getInstance().systems) {
+            RenderSystem.depthMask(true);
+            RenderSystem.depthFunc(GL11.GL_LESS);
             for (Planet planet : system) {
                 PlanetRenderInfo render = planet.render();
                 if (render.isEmpty()) continue;

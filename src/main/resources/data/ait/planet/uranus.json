@@ -2,6 +2,7 @@
   "dimension": "ait:uranus",
   "gravity": 0.89,
   "has_oxygen": false,
+  "has_landable_surface": false,
   "temperature": 76,
   "render": {
     "texture": "ait:textures/environment/uranus.png",

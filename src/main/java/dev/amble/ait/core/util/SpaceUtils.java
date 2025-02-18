@@ -90,7 +90,9 @@ public class SpaceUtils {
 
     private static void applySuction(List<ServerPlayerEntity> player, Vec3d planetPos) {
         player.forEach(entity -> {
-            Vec3d motion = planetPos.subtract(entity.getPos()).normalize().multiply(0.25f);
+            if (entity.isSpectator())
+                return;
+            Vec3d motion = planetPos.subtract(entity.getPos()).normalize().multiply(0.1f);
             entity.setVelocity(entity.getVelocity().add(motion));
             entity.velocityDirty = true;
             entity.velocityModified = true;
@@ -127,7 +129,7 @@ public class SpaceUtils {
 
             double distance = planetPos.distanceTo(entity.getPos());
 
-            if (distance < planetRadius) {
+            if (distance < planetRadius && planet.hasLandableSurface()) {
                 return Optional.of(planet.dimension());
             }
         }

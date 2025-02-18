@@ -2,6 +2,7 @@
   "dimension": "ait:mercury",
   "gravity": 0.38,
   "has_oxygen": false,
+  "has_landable_surface": false,
   "temperature": 430,
   "render": {
     "texture": "ait:textures/environment/mercury.png",
