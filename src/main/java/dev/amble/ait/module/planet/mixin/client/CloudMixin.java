@@ -1,5 +1,6 @@
 package dev.amble.ait.module.planet.mixin.client;
 
+import dev.amble.ait.core.world.TardisServerWorld;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,6 +23,11 @@ public abstract class CloudMixin {
 
         if (mc.player == null)
             return;
+
+        if (TardisServerWorld.isTardisDimension(mc.player.getWorld())) {
+            ci.cancel();
+            return;
+        }
 
         Planet planet = PlanetRegistry.getInstance().get(mc.player.getWorld());
 
