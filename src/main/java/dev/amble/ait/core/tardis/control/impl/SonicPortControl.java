@@ -34,11 +34,9 @@ public class SonicPortControl extends Control {
 
         if ((leftClick || player.isSneaking()) && (handler.getConsoleSonic() != null || butler.getHandles() != null)) {
             if (handler.getConsoleSonic() != null) {
-                player.setStackInHand(Hand.MAIN_HAND, handler.getConsoleSonic());
-                //SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
+                player.setStackInHand(Hand.MAIN_HAND, handler.takeConsoleSonic());
             } else {
                 player.setStackInHand(Hand.MAIN_HAND, butler.takeHandles());
-                //ButlerHandler.spawnItem(world, console, butler.takeHandles());
             }
             return true;
         }
