@@ -188,13 +188,6 @@ public class BOTI {
 
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-
-        //CelestialBodyRenderer.renderComprehendableBody(new Vec3d(100, 0, 0), new Vector3f(4, 4, 4), new Vector3f(0, 0, 0), AITMod.id("textures/environment/earth.png"), true, true, new Vector3f(1, 1, 1));
-        botiProvider.draw();
-        stack.pop();
-
-        stack.push();
-        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         if (variant.emission() != null)
             ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
             //((DoorModel) frame).render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);

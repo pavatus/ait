@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -88,7 +89,6 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
     }
-
     public static void renderMoonSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
@@ -115,14 +115,12 @@ public class SkyboxUtil extends WorldRenderer {
         VertexBuffer.unbind();
         fogCallback.run();
 
+        RenderSystem.depthMask(false);
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.defaultBlendFunc();
         matrices.pop();
         matrices.pop();
-
-
-        //RenderSystem.depthFunc(GL11.GL_ALWAYS);
-
 
         // Planet Rendering
         Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
@@ -131,12 +129,60 @@ public class SkyboxUtil extends WorldRenderer {
                         Vector3f(12f, 12f, 12f),
                 new Vector3f(12, 45, 0), false,
                 new Vector3f(0.5f, 0, 0f));
-//        renderSkyBody(matrices, EARTH,
-//                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new
-//                        Vector3f(76f, 76f, 76f),
-//                new Vector3f(-22.5f, 45f, 0), true, true,
-//                new Vector3f(0.18f, 0.35f, 0.60f));
-        //RenderSystem.depthFunc(GL11.GL_EQUAL);
+
+        renderSkyBody(matrices, AITMod.id("textures/environment/earth.png"),
+                new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new
+                        Vector3f(76f, 76f, 76f),
+                new Vector3f(-22.5f, 45f, 0), true, true,
+                new Vector3f(0.18f, 0.35f, 0.60f));
+        RenderSystem.depthMask(true);
+        RenderSystem.depthFunc(GL11.GL_LESS);
+    }
+
+    public static void renderMarsSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
+        RenderSystem.setShaderColor(1, 1, 1, 0.1f);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
+        matrices.scale(5, 5, 5);
+
+        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
+        cubeMap.draw(tessellator, bufferBuilder, matrices);
+
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
+        RenderSystem.setShaderColor(1, 1, 1, 1f);
+        RenderSystem.setShaderColor(0.85f, 0.85f, 0.85f, 1);
+        BackgroundRenderer.clearFog();
+
+        starsBuffer.bind();
+        starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
+                GameRenderer.getPositionProgram());
+
+        VertexBuffer.unbind();
+        fogCallback.run();
+
+        RenderSystem.depthMask(false);
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+        RenderSystem.defaultBlendFunc();
+        matrices.pop();
+        matrices.pop();
+        RenderSystem.setShaderColor(1, 1, 1, 1f);
+
+        // Planet Rendering
+        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        renderStarBody(matrices, SUN,
+                new Vec3d(cameraPos.getX() + 270, cameraPos.getY() + 200, cameraPos.getZ() + 30), new
+                        Vector3f(12f, 12f, 12f),
+                new Vector3f(12, 45, 0), false,
+                new Vector3f(0.5f, 0, 0f));
+        RenderSystem.setShaderColor(1, 1, 1, 1f);
+        RenderSystem.depthMask(true);
+        RenderSystem.depthFunc(GL11.GL_LESS);
     }
 
     public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
@@ -148,11 +194,15 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
-        matrices.scale(200, 200, 200);
+        matrices.scale(100, 100, 100);
 
+        RenderSystem.setShaderColor(0.25f, 0.25f, 0.25f, 1);
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
         cubeMap.draw(tessellator, bufferBuilder, matrices);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1);
 
+        RenderSystem.depthMask(false);
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
@@ -170,6 +220,7 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.defaultBlendFunc();
         matrices.pop();
+        RenderSystem.depthFunc(GL11.GL_EQUAL);
         matrices.pop();
 
         // Planet Rendering todo - move info into PlanetRenderInfo !!!
@@ -199,17 +250,16 @@ public class SkyboxUtil extends WorldRenderer {
 //                new Vector3f(22.5f, 45f, 0), false, true,
 //                new Vector3f(0.5f, 0.5f, 0.5f));
         renderCelestialBody(matrices, SATURN_RING,
-                new Vec3d(4500, 1200, 4500), new
+                new Vec3d(-31240 / 2, 1200, -15500), new
                         Vector3f(1000f, 1, 1000f),
                 new Vector3f(0, 0, 0), false, false,
                 new Vector3f(0.5f, 1, 1));
         renderCelestialBody(matrices, SATURN,
-                new Vec3d(4500, 1400, 4500),
+                new Vec3d(-31240 / 2, 1400, -15500),
                 new Vector3f(500f, 500f, 500f),
                 new Vector3f(0, 0, 0), false, true,
                 new Vector3f(0.55f, 0.4f, 0.2f));
 
-        RenderSystem.depthMask(true);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         RenderSystem.depthMask(true);

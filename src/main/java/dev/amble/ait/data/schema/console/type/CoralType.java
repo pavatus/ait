@@ -12,7 +12,7 @@ import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
 import dev.amble.ait.core.tardis.control.impl.pos.YControl;
 import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.LoadWaypointControl;
+import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
@@ -72,7 +72,7 @@ public class CoralType extends ConsoleTypeSchema {
                     new Vector3f(0.80078125f, 0.537500761449337f, 0.07656250149011612f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.074999996f),
                     new Vector3f(0.8007812770083547f, 0.5375005733221769f, -0.02343749813735485f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.1375f, 0.1125f),
+            new ControlTypes(new ConsolePortControl(), EntityDimensions.changing(0.1375f, 0.1125f),
                     new Vector3f(0.7257812488824129f, 0.5875006653368473f, 0.2390625039115548f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.1375f, 0.1375f),
                     new Vector3f(-0.3484375160187483f, 0.600000855512917f, 0.4757812535390258f)),

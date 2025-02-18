@@ -17,12 +17,12 @@ import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.data.Waypoint;
 
-public class LoadWaypointControl extends Control {
+public class ConsolePortControl extends Control {
 
     private ItemStack insertedDisc = ItemStack.EMPTY;
     private SoundEvent currentMusic = null;
 
-    public LoadWaypointControl() {
+    public ConsolePortControl() {
         super("console_port");
     }
 
@@ -55,7 +55,6 @@ public class LoadWaypointControl extends Control {
 
             return true;
         }
-
 
         if (itemStack.getItem() instanceof WaypointItem) {
             if (WaypointItem.getPos(itemStack) == null)

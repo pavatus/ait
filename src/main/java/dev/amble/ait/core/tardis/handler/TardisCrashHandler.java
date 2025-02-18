@@ -53,6 +53,7 @@ public class TardisCrashHandler extends KeyedTardisComponent implements TardisTi
 
     @Override
     public void tick(MinecraftServer server) {
+        if (tardis.isGrowth()) return;
         State state = this.state.get();
         int repairTicks = this.repairTicks.get();
 

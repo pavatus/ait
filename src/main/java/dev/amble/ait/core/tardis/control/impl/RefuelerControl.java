@@ -7,6 +7,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 import dev.amble.ait.core.AITSounds;
+import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.control.Control;
@@ -50,5 +51,10 @@ public class RefuelerControl extends Control {
     @Override
     public boolean requiresPower() {
         return false;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return null;
     }
 }

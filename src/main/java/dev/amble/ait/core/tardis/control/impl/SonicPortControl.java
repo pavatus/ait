@@ -32,13 +32,13 @@ public class SonicPortControl extends Control {
         SonicHandler handler = tardis.sonic();
         ButlerHandler butler = tardis.butler();
 
-        //System.out.println(handler.getConsoleSonic());
-
         if ((leftClick || player.isSneaking()) && (handler.getConsoleSonic() != null || butler.getHandles() != null)) {
             if (handler.getConsoleSonic() != null) {
-                SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
+                player.setStackInHand(Hand.MAIN_HAND, handler.getConsoleSonic());
+                //SonicHandler.spawnItem(world, console, handler.takeConsoleSonic());
             } else {
-                ButlerHandler.spawnItem(world, console, butler.takeHandles());
+                player.setStackInHand(Hand.MAIN_HAND, butler.takeHandles());
+                //ButlerHandler.spawnItem(world, console, butler.takeHandles());
             }
             return true;
         }

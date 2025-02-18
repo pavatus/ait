@@ -13,7 +13,7 @@ import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
 import dev.amble.ait.core.tardis.control.impl.pos.YControl;
 import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.LoadWaypointControl;
+import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
@@ -103,7 +103,7 @@ public class RenaissanceType extends ConsoleTypeSchema {
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.099999994f),
                     new Vector3f(-0.9867179952561855f, 0.599999618716538f, -0.2929679760709405f)),
             // yes
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.1375f, 0.125f),
+            new ControlTypes(new ConsolePortControl(), EntityDimensions.changing(0.1375f, 0.125f),
                     new Vector3f(-0.7367179915308952f, 0.599999618716538f, -0.43046797811985016f)),
 
             //yes

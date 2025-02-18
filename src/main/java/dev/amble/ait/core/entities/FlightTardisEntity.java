@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.link.LinkableLivingEntity;
 import dev.amble.ait.client.util.ClientShakeUtil;
+import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITEntityTypes;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.tardis.ServerTardis;
@@ -84,7 +85,8 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
     protected float getOffGroundSpeed() {
         if (this.tardis() != null)
             if (this.getVelocity().horizontalLength() > 0.1f) {
-                return this.getMovementSpeed() * (this.tardis().get().travel().speed() * 0.03f);
+            float spaceSpeed = this.getWorld().getRegistryKey().equals(AITDimensions.SPACE) ? 0.1f : 0.03f;
+                return this.getMovementSpeed() * (this.tardis().get().travel().speed() * spaceSpeed);
             }
         return super.getOffGroundSpeed();
     }
@@ -233,7 +235,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         double v = ((LivingEntityAccessor) controllingPlayer).getJumping() ? speedVal :
                 controllingPlayer.isSneaking() ? -speedVal :
-                        this.tardis().get().travel().antigravs().get() ? 0.0f : f > 0 || g > 0 ? -0.5f : -2f;
+                        canFall ? 0.0f : f > 0 || g > 0 ? -0.5f : -2f;
 
         if (v < 0 && this.isOnGround())
             return Vec3d.ZERO.add(0, -0.4f, 0);
