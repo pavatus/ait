@@ -146,7 +146,7 @@ public class SkyboxUtil extends WorldRenderer {
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f + 300f));
         matrices.scale(5, 5, 5);
 
         SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
@@ -154,7 +154,7 @@ public class SkyboxUtil extends WorldRenderer {
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
+        //matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
         RenderSystem.setShaderColor(1, 1, 1, 1f);
         RenderSystem.setShaderColor(0.85f, 0.85f, 0.85f, 1);
         BackgroundRenderer.clearFog();
