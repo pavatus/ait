@@ -48,6 +48,9 @@ public class AITItems extends ItemContainer {
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
             .statusEffect(new StatusEffectInstance(StatusEffects.WITHER, 500, 1), 0.5F)
+            .statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 25, 1), 0.1F)
+            .statusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 45, 1), 0.7F)
+            .statusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 65, 1), 0.3F)
             .build();
 
     // TARDIS
