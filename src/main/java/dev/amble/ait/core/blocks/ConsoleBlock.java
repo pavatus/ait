@@ -175,7 +175,7 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
         if (blockEntity instanceof ConsoleBlockEntity consoleBlockEntity) {
 
-            if (consoleBlockEntity.tardis() == null) return;
+            if (!consoleBlockEntity.isLinked()) return;
 
             if (!consoleBlockEntity.tardis().get().fuel().hasPower()) return;
 
