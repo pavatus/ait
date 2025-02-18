@@ -1,0 +1,21 @@
+{
+  "dimension": "ait:mondas",
+  "gravity": 0.05,
+  "has_oxygen": false,
+  "temperature": 210,
+  "render": {
+    "texture": "ait:textures/environment/mondas.png",
+    "position": [2300, 76, 17500],
+    "scale": [500, 500, 500],
+    "rotation": [55, 12, 0],
+    "clouds": false,
+    "atmosphere": true,
+    "color": [0.9, 0.9, 0.9],
+    "radius": 700,
+    "suction_radius": 600
+  },
+  "transition": {
+    "target": "ait:space",
+    "height": 500
+  }
+}
