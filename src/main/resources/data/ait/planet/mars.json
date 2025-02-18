@@ -5,17 +5,17 @@
   "temperature": 210,
   "render": {
     "texture": "ait:textures/environment/mars.png",
-    "position": [-2500, 1400, 10000],
+    "position": [-15000, 76, 18000],
     "scale": [500, 500, 500],
     "rotation": [55, 12, 0],
     "clouds": false,
     "atmosphere": true,
-    "color": [0.3, 1, 1],
-    "radius": 500,
+    "color": [0.5, 1, 1],
+    "radius": 700,
     "suction_radius": 600
   },
   "transition": {
     "target": "ait:space",
-    "height": 750
+    "height": 500
   }
 }

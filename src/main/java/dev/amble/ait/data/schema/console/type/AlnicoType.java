@@ -12,7 +12,7 @@ import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
 import dev.amble.ait.core.tardis.control.impl.pos.YControl;
 import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.LoadWaypointControl;
+import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
@@ -76,7 +76,7 @@ public class AlnicoType extends ConsoleTypeSchema {
                     new Vector3f(-1.0492187775671482f, 0.4625003803521395f, 0.5886718826368451f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.099999994f, 0.29999998f),
                     new Vector3f(-1.1242187786847353f, 0.4625003803521395f, 0.45156250707805157f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.22500002f, 0.22500002f),
+            new ControlTypes(new ConsolePortControl(), EntityDimensions.changing(0.22500002f, 0.22500002f),
                     new Vector3f(0.701562499627471f, 0.3625005688518286f, 1.2007812643423676f)),
             new ControlTypes(new CloakControl(), EntityDimensions.changing(0.15f, 0.15f),
                     new Vector3f(0.7523437663912773f, 0.5250003803521395f, -0.9609375214204192f)),

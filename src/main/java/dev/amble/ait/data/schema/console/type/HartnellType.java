@@ -12,7 +12,7 @@ import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
 import dev.amble.ait.core.tardis.control.impl.pos.YControl;
 import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.LoadWaypointControl;
+import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
@@ -70,7 +70,7 @@ public class HartnellType extends ConsoleTypeSchema {
                     new Vector3f(0.516015631146729f, 0.5750001845881343f, 0.40332030411809683f)),
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.125f, 0.1f),
                     new Vector3f(0.7906250040978193f, 0.5250002853572369f, 0.45234375074505806f)),
-            new ControlTypes(new LoadWaypointControl(), EntityDimensions.changing(0.16250001f, 0.0875f),
+            new ControlTypes(new ConsolePortControl(), EntityDimensions.changing(0.16250001f, 0.0875f),
                     new Vector3f(-0.42500000912696123f, 0.6000001896172762f, 0.24140623956918716f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.074999996f, 0.0875f),
                     new Vector3f(0.18749999906867743f, 0.47500019054859877f, 0.940820312127471f)),
