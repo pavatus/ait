@@ -22,8 +22,7 @@ public class GameRendererMixin {
         boolean ifTardisWorld = TardisServerWorld.isTardisDimension(mc.world);
         ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
         if (mc.world.getRegistryKey().equals(AITDimensions.SPACE) || ifTardisWorld) {
-            float f = (ifTardisWorld && tardis != null && tardis.door() != null ? mc.options.getClampedViewDistance() : 64.0F) * 16.0F;
-            cir.setReturnValue(f * 64.0F);
+            cir.setReturnValue(64.0F * 64.0F);
         }
     }
 }
