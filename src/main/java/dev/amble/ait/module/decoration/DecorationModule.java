@@ -8,14 +8,12 @@ import dev.amble.lib.container.impl.BlockContainer;
 import dev.amble.lib.container.impl.ItemContainer;
 import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
 import dev.amble.lib.datagen.model.AmbleModelProvider;
-import dev.amble.lib.itemgroup.AItemGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import dev.amble.ait.AITMod;
@@ -39,10 +37,6 @@ public class DecorationModule extends Module {
         RegistryContainer.register(DecorationBlocks.class, AITMod.MOD_ID);
     }
 
-    @Override
-    protected AItemGroup.Builder buildItemGroup() {
-        return AItemGroup.builder(id()).icon(() -> new ItemStack(DecorationBlocks.MINT_ROUNDEL));
-    }
 
     @Environment(EnvType.CLIENT)
     @Override
@@ -72,17 +66,6 @@ public class DecorationModule extends Module {
             public void lang(AmbleLanguageProvider provider) {
                 provider.addTranslation(getItemGroup(), "AIT: Decoration");
                 provider.addTranslation("itemGroup.ait.decoration", "AIT: Decoration");
-                provider.addTranslation(DecorationBlocks.MINT_ROUNDEL, "Roundel");
-                provider.addTranslation(DecorationBlocks.DARK_OAK_ROUNDEL, "Roundel");
-                provider.addTranslation(DecorationBlocks.WHITE_ROUNDEL, "Roundel");
-                provider.addTranslation(DecorationBlocks.TARDIM_ROUNDEL, "Roundel");
-                provider.addTranslation(DecorationBlocks.RENAISSANCE_ROUNDEL, "Roundel");
-                provider.addTranslation(DecorationBlocks.RENAISSANCE_ROUNDEL_SIDE, "Roundel");
-                provider.addTranslation(DecorationBlocks.MINT_ROUNDEL_SIDE, "Roundel");
-                provider.addTranslation(DecorationBlocks.DARK_OAK_ROUNDEL_SIDE, "Roundel");
-                provider.addTranslation(DecorationBlocks.WHITE_ROUNDEL_SIDE, "Roundel");
-                provider.addTranslation(DecorationBlocks.TARDIM_ROUNDEL_SIDE, "Roundel");
-                provider.addTranslation(DecorationBlocks.CRYSTALLINE_BLOCK, "Crystalline");
 
             }
 
