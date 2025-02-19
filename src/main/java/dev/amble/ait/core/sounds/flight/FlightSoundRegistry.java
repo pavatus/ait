@@ -11,6 +11,7 @@ import dev.amble.ait.core.AITSounds;
 public class FlightSoundRegistry extends SimpleDatapackRegistry<FlightSound> {
     private static final FlightSoundRegistry instance = new FlightSoundRegistry();
 
+    // just for spotless apply to apply
     public FlightSoundRegistry() {
         super(FlightSound::fromInputStream, FlightSound.CODEC, "fx/flight", true, AITMod.MOD_ID);
     }
