@@ -220,10 +220,12 @@ public class SkyboxUtil extends WorldRenderer {
 
         // Planet Rendering todo - move info into PlanetRenderInfo !!!
         renderStarBody(matrices, SUN,
-                new Vec3d(31240, 1000, 0), new
-                        Vector3f(650f, 650f, 650f),
-                new Vector3f(12, 45, 0), false,
+                new Vec3d(0, 1000, 0),
+                new Vector3f(1000f, 1000f, 1000f),
+                new Vector3f(12, 45, 0),
+                false,
                 new Vector3f(0.5f, 0, 0f));
+
 
         for (SolarSystem system : Space.getInstance().systems) {
             RenderSystem.depthMask(true);
@@ -235,27 +237,23 @@ public class SkyboxUtil extends WorldRenderer {
                 renderCelestialBody(matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color());
             }
         }
-//
-//        renderCelestialBody(matrices, MONDAS,
-//                new Vec3d(0, 0, 6000), new
-//                        Vector3f(900f, 900f, 900f),
-//                new Vector3f(-22.5f, 45f, 0), true, true,
-//                new Vector3f(0.7f, 0.7f, 0.7f));
-//        renderCelestialBody(matrices, MOON,
-//                new Vec3d(8240, 459f, 0), new
-//                        Vector3f(150f, 150f, 150f),
-//                new Vector3f(22.5f, 45f, 0), false, true,
-//                new Vector3f(0.5f, 0.5f, 0.5f));
+
         renderCelestialBody(matrices, SATURN_RING,
-                new Vec3d(-31240 / 2, 1200, -15500), new
-                        Vector3f(1000f, 1, 1000f),
-                new Vector3f(0, 0, 0), false, false,
+                new Vec3d(-29000, 1300, -21000),
+                new Vector3f(2500f, 2, 2500f),
+                new Vector3f(0, 0, 0),
+                false, false,
                 new Vector3f(0.5f, 1, 1));
+
         renderCelestialBody(matrices, SATURN,
-                new Vec3d(-31240 / 2, 1400, -15500),
-                new Vector3f(500f, 500f, 500f),
-                new Vector3f(0, 0, 0), false, true,
+                new Vec3d(-29000, 2000, -21000),
+                new Vector3f(1400f, 1400f, 1400f),
+                new Vector3f(0, 0, 0),
+                false, true,
                 new Vector3f(0.55f, 0.4f, 0.2f));
+
+
+
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
 

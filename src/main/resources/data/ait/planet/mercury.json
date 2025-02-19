@@ -6,8 +6,8 @@
   "temperature": 430,
   "render": {
     "texture": "ait:textures/environment/mercury.png",
-    "position": [5000, 300, -8000],
-    "scale": [450, 450, 450],
+    "position": [1650, 300, -1000],
+    "scale": [400, 400, 400],
     "rotation": [0, 10, 0],
     "clouds": false,
     "atmosphere": false,
