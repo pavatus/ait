@@ -65,7 +65,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             if (schema.equals(s))
                 continue;
 
-            if (s.parent().parent().id().equals(schema.parent().parent().id()))
+            if (s.parent().parentId().equals(schema.parent().parentId()))
                 return s;
         }
 
