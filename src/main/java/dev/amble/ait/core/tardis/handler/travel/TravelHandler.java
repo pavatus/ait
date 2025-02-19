@@ -109,7 +109,7 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
             return;
         }
 
-        if (speed != 0 || this.getState() != State.FLIGHT)
+        if (speed != 0 || this.getState() != State.FLIGHT || this.tardis.flight().isFlying())
             return;
 
         if (this.tardis.crash().getState() == TardisCrashHandler.State.UNSTABLE)
