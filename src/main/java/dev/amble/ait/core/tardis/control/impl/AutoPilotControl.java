@@ -1,5 +1,7 @@
 package dev.amble.ait.core.tardis.control.impl;
 
+import static dev.amble.ait.core.engine.SubSystem.Id.GRAVITATIONAL;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -37,7 +39,7 @@ public class AutoPilotControl extends Control {
         TravelHandler travel = tardis.travel();
 
         // @TODO make a real world flight control.. later
-        if (leftClick && tardis.travel().getState() == TravelHandlerBase.State.LANDED) {
+        if (leftClick && tardis.travel().getState() == TravelHandlerBase.State.LANDED && tardis.subsystems().get(GRAVITATIONAL).isEnabled()) {
             if (tardis.door().isOpen()) {
                 world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F,
                         1.0F);
