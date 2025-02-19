@@ -104,6 +104,7 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                         return;
 
                     tardis.interiorChangingHandler().queueInteriorChange(desktop);
+                    tardis.alarm().enable();
                 })));
     }
 

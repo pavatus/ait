@@ -46,6 +46,14 @@ public class ServerAlarmHandler extends KeyedTardisComponent implements TardisTi
         return enabled;
     }
 
+    public void enable() {
+        this.enabled.set(true);
+    }
+
+    public void disable() {
+        this.enabled.set(false);
+    }
+
     public BoolValue hostilePresence() {
         return hostilePresence;
     }
