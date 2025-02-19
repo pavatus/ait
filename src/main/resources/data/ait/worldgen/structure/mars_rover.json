@@ -6,7 +6,7 @@
   "size": 1,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": 1
+    "absolute": 2
   },
   "start_pool": "ait:mars_rover",
   "step": "surface_structures",
