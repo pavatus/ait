@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import dev.amble.lib.register.unlockable.UnlockableRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
-import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
 import dev.amble.ait.AITMod;

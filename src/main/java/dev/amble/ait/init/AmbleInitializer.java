@@ -1,5 +1,8 @@
 package dev.amble.ait.init;
 
+import dev.amble.lib.api.AmbleKitInitializer;
+import dev.amble.lib.register.AmbleRegistries;
+
 import dev.amble.ait.core.engine.registry.SubSystemRegistry;
 import dev.amble.ait.core.item.blueprint.BlueprintRegistry;
 import dev.amble.ait.core.likes.ItemOpinionRegistry;
@@ -10,8 +13,6 @@ import dev.amble.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import dev.amble.ait.registry.impl.*;
 import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
-import dev.amble.lib.api.AmbleKitInitializer;
-import dev.amble.lib.register.AmbleRegistries;
 
 public class AmbleInitializer implements AmbleKitInitializer {
 

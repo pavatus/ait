@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import dev.amble.lib.container.RegistryContainer;
-import dev.amble.lib.register.AmbleRegistries;
 import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -50,21 +49,15 @@ import dev.amble.ait.config.AITConfig;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.commands.*;
-import dev.amble.ait.core.engine.registry.SubSystemRegistry;
 import dev.amble.ait.core.entities.ConsoleControlEntity;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.core.item.blueprint.BlueprintRegistry;
 import dev.amble.ait.core.item.component.AbstractTardisPart;
 import dev.amble.ait.core.item.part.MachineItem;
-import dev.amble.ait.core.likes.ItemOpinionRegistry;
-import dev.amble.ait.core.lock.LockedDimensionRegistry;
-import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
-import dev.amble.ait.core.sounds.travel.TravelSoundRegistry;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.tardis.util.AsyncLocatorUtil;
 import dev.amble.ait.core.tardis.util.NetworkUtil;
 import dev.amble.ait.core.tardis.util.TardisUtil;
-import dev.amble.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import dev.amble.ait.core.util.CustomTrades;
 import dev.amble.ait.core.util.SpaceUtils;
 import dev.amble.ait.core.util.StackUtil;
@@ -78,9 +71,7 @@ import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.planet.core.space.planet.Crater;
 import dev.amble.ait.registry.impl.*;
 import dev.amble.ait.registry.impl.console.ConsoleRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 import dev.amble.ait.registry.impl.door.DoorRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
     // The PREAmble lolololol
