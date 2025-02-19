@@ -13,10 +13,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +49,7 @@ import dev.amble.ait.client.renderers.exteriors.ExteriorRenderer;
 import dev.amble.ait.client.renderers.machines.*;
 import dev.amble.ait.client.renderers.monitors.MonitorRenderer;
 import dev.amble.ait.client.renderers.monitors.WallMonitorRenderer;
+import dev.amble.ait.client.renderers.sky.MarsSkyProperties;
 import dev.amble.ait.client.screens.AstralMapScreen;
 import dev.amble.ait.client.screens.BlueprintFabricatorScreen;
 import dev.amble.ait.client.screens.MonitorScreen;
@@ -119,6 +117,8 @@ public class AITModClient implements ClientModInitializer {
          * vortex.renderVortexNodes(context, node); } } } });
          */
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
+
+        DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
