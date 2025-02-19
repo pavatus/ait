@@ -41,6 +41,7 @@ import dev.amble.ait.datagen.datagen_providers.AITItemTagProvider;
 import dev.amble.ait.datagen.datagen_providers.AITRecipeProvider;
 import dev.amble.ait.module.Module;
 import dev.amble.ait.module.planet.client.SpaceSuitOverlay;
+import dev.amble.ait.module.planet.core.PlanetBlockEntities;
 import dev.amble.ait.module.planet.core.PlanetBlocks;
 import dev.amble.ait.module.planet.core.PlanetItems;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
@@ -59,6 +60,7 @@ public class PlanetModule extends Module {
 
         RegistryContainer.register(PlanetItems.class, AITMod.MOD_ID);
         RegistryContainer.register(PlanetBlocks.class, AITMod.MOD_ID);
+        RegistryContainer.register(PlanetBlockEntities.class, AITMod.MOD_ID);
     }
 
     @Override
