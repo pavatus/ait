@@ -1,14 +1,15 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "loqor.ait.mixin",
+  "package": "dev.amble.ait.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "loqor.ait.compat.AITMixinPlugin",
+  "plugin": "dev.amble.ait.compat.AITMixinPlugin",
   "mixins": [
     "LivingEntityMixin",
     "UseActionMixin",
     "artron.ServerWorldMixin",
     "client.experimental_screen.LevelSummaryMixin",
+    "client.rendering.EntityMixin",
     "compat.gravity.EntityTagsMixin",
     "lookup.EntityTrackingSectionAccessor",
     "lookup.SectionedEntityCacheAccessor",
@@ -20,19 +21,15 @@
     "rwf.DismountEntityMixin",
     "rwf.LivingEntityAccessor",
     "server.BedInTardisMixin",
-    "server.ChunkSectionMixin",
     "server.EnderDragonFightAccessor",
     "server.ItemEntityMixin",
     "server.MinecraftServerMixin",
-    "server.ServerPlayerInteractionManagerMixin",
     "server.ServerPlayerMixin",
     "server.ServerWorldMixin",
     "server.StructureTemplateMixin",
-    "server.WorldChunkMixin",
     "server.structure.StructureTemplateAccessor"
   ],
   "client": [
-    "client.ClientPlayerInteractionManagerMixin",
     "client.DefaultLogoMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
@@ -48,7 +45,8 @@
     "client.rendering.PlayerEntityRendererMixin",
     "client.rendering.SkyboxMixin",
     "client.rendering.framebuffer.MixinMainFramebufferTarget",
-    "client.rendering.framebuffer.MixinRenderFramebufferTarget"
+    "client.rendering.framebuffer.MixinRenderFramebufferTarget",
+    "client.sonic.SonicItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

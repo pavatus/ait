@@ -5,6 +5,7 @@
 	"name": "Adventures In Time",
 	"description": "Adventures In Time - Apparatus Vivi. Living machine. TARDIS from Doctor Who. Whatever you call it, it grows with you. It learns with you, and flies the way you fly. Sure, you might be the pilot, but despite that, it does with that what it may.",
 	"authors": [
+		"AMBLE LABS: \n",
 		"Developers: \n",
 		"Loqor",
 		"DrTheo",
@@ -34,38 +35,41 @@
 		"Saturn & Maketendo (wiki)"
 	],
 	"contact": {
-		"homepage": "https://pavatus.github.io",
-		"sources": "https://github.com/pavatus/ait/",
-		"issues": "https://github.com/pavatus/ait/issues"
+		"homepage": "https://amblelabs.github.io",
+		"sources": "https://github.com/amblelabs/ait/",
+		"issues": "https://github.com/amblelabs/ait/issues"
 	},
 	"license": "Apache-2.0",
 	"icon": "assets/ait/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"loqor.ait.AITMod",
-          "dev.pavatus.multidim.MultiDimMod"
+          "dev.amble.ait.AITMod"
 		],
 		"client": [
-			"loqor.ait.client.AITModClient",
-			"loqor.ait.compat.Compat"
+          "dev.amble.ait.client.AITModClient",
+          "dev.amble.ait.compat.Compat"
 		],
 		"fabric-datagen": [
-			"loqor.ait.datagen.AITModDataGenerator"
+          "dev.amble.ait.datagen.AITModDataGenerator"
 		],
 		"ait-main": [
-			"loqor.ait.compat.Compat"
+          "dev.amble.ait.compat.Compat"
 		],
 		"modmenu": [
-			"dev.pavatus.config.AITModMenu"
+			"dev.amble.ait.config.AITModMenu"
+		],
+		"amblekit-main": [
+          "dev.amble.ait.init.AmbleInitializer"
+		],
+		"amblekit-client": [
+          "dev.amble.ait.init.client.AmbleClientInitializer"
 		]
 	},
 	"mixins": [
 		"ait.mixins.json",
 		"gaslighter.mixins.json",
-		"multidim.mixins.json",
-		"planet.mixins.json",
-		"pavatuslib.mixins.json"
+		"planet.mixins.json"
 	],
 	"accessWidener": "ait.accesswidener",
 	"depends": {
@@ -85,7 +89,7 @@
 				"name": "Adventures In Time",
 				"description": "Adds the TARDIS from Doctor Who into Minecraft 1.20.1.",
 				"icon": "assets/ait/icon.png",
-				"badges": [ "Pavatus", "Doctor WHO" ]
+				"badges": [ "amble", "Doctor WHO" ]
 			},
 			"update_checker": true
 		}

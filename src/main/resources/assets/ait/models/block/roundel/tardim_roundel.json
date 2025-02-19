@@ -6,6 +6,7 @@
     "east": "ait:block/decoration/roundels/tardim",
     "west": "ait:block/decoration/roundels/tardim",
     "up": "ait:block/decoration/roundels/tardim",
-    "down": "ait:block/decoration/roundels/tardim"
+    "down": "ait:block/decoration/roundels/tardim",
+    "particle": "ait:block/decoration/roundels/tardim"
   }
 }
