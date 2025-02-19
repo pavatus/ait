@@ -8,10 +8,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 
-import dev.amble.ait.client.tardis.ClientTardis;
-import dev.amble.ait.client.util.ClientTardisUtil;
-import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.world.TardisServerWorld;
+import dev.amble.ait.module.planet.core.space.planet.Planet;
+import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
@@ -20,8 +19,8 @@ public class GameRendererMixin {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null) return;
         boolean ifTardisWorld = TardisServerWorld.isTardisDimension(mc.world);
-        ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
-        if (mc.world.getRegistryKey().equals(AITDimensions.SPACE) || ifTardisWorld) {
+        Planet planet = PlanetRegistry.getInstance().get(mc.world);
+        if (planet != null || ifTardisWorld) {
             cir.setReturnValue((64.0F * 16.0F) * 64.0F);
         }
     }
