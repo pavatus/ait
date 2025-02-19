@@ -45,10 +45,20 @@ public record PlanetTransition(Identifier target, int height) {
                 return false;
             }
 
+            //if (entity.hasVehicle())
+            //    if (entity.getVehicle() instanceof FlightTardisEntity)
+            //        FabricDimensions.teleport(entity.getVehicle(), getTargetWorld(),
+            //                new TeleportTarget(planet.render().position().add(0, height, 0),
+            //                        entity.getVelocity(), entity.getBodyYaw(), entity.getPitch()));
             TeleportUtil.teleport(entity, getTargetWorld(), planet.render().position().add(0, height, 0), entity.getBodyYaw());
             return true;
         }
 
+        //if (entity.hasVehicle())
+        //    if (entity.getVehicle() instanceof FlightTardisEntity)
+        //        FabricDimensions.teleport(entity.getVehicle(), getTargetWorld(),
+        //                new TeleportTarget(new Vec3d(entity.getX(), height, entity.getZ()),
+        //                        entity.getVelocity(), entity.getBodyYaw(), entity.getPitch()));
         TeleportUtil.teleport(entity, getTargetWorld(), new Vec3d(entity.getX(), height, entity.getZ()), entity.getBodyYaw()); // height might not be the right place to teleport here, im not sure.
         return true;
     }
