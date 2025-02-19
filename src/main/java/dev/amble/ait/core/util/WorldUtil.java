@@ -298,7 +298,7 @@ public class WorldUtil {
         return fakeTranslate(id.getPath());
     }
 
-    private static String fakeTranslate(String path) {
+    public static String fakeTranslate(String path) {
         // Split the string into words
         String[] words = path.split("_");
 

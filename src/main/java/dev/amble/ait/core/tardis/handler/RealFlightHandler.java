@@ -1,5 +1,7 @@
 package dev.amble.ait.core.tardis.handler;
 
+import static dev.amble.ait.core.engine.SubSystem.Id.GRAVITATIONAL;
+
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -19,6 +21,7 @@ import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
 import dev.amble.ait.core.AITSounds;
+import dev.amble.ait.core.engine.impl.GravitationalCircuit;
 import dev.amble.ait.core.entities.FallingTardisEntity;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.core.tardis.util.TardisUtil;
@@ -63,6 +66,12 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     public void tickFlight(ServerPlayerEntity player) {
         tardis.travel().forcePosition(cached -> cached.pos(player.getBlockPos())
                 .rotation((byte) RotationPropertyHelper.fromYaw(player.getYaw())));
+        if (player.age % 20 != 0) {
+            GravitationalCircuit circuit = tardis.subsystems().get(GRAVITATIONAL);
+            if (circuit.isEnabled()) {
+                circuit.removeDurability(0.5f);
+            }
+        }
     }
 
     public void onLanding(ServerWorld world, BlockPos pos) {
