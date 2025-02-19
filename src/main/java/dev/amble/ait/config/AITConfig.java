@@ -28,7 +28,6 @@ public class AITConfig implements ConfigData {
 
     public static class Server {
         public boolean MINIFY_JSON = false;
-
         public boolean GHOST_MONUMENT = true;
         public boolean LOCK_DIMENSIONS = true;
 
@@ -43,7 +42,7 @@ public class AITConfig implements ConfigData {
     }
 
     public static class Client {
-        public float INTERIOR_HUM_VOLUME = 0.2f;
+        public float INTERIOR_HUM_VOLUME = 0.5f;
 
         public boolean CUSTOM_MENU = true;
         public boolean SHOW_EXPERIMENTAL_WARNING = false;
@@ -51,7 +50,7 @@ public class AITConfig implements ConfigData {
         public boolean DISABLE_LOYALTY_FOG = false;
         public boolean DISABLE_LOYALTY_SLEEPING_ACTIONBAR = false;
         public boolean ENABLE_TARDIS_BOTI = true;
-        public boolean I_HATE_GL = true;
+        public boolean SHOW_CONTROL_HITBOXES = false;
         public boolean ANIMATE_CONSOLE = true;
         public boolean ANIMATE_DOORS = true;
         /*public int DOOR_ANIMATION_SPEED = 2;*/

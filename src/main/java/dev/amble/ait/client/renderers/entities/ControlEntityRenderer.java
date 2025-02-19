@@ -81,7 +81,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
             boolean isPlayerLookingWithSonic = isPlayerLookingAtControlWithSonic(hitresult, entity);
             OrderedText orderedText = name.asOrderedText();
 
-            if (isPlayerLookingWithSonic) {
+            if (isPlayerLookingWithSonic && AITMod.CONFIG.CLIENT.SHOW_CONTROL_HITBOXES) {
                 textRenderer.drawWithOutline(orderedText, h, (float) name.getString().length(), 0xF0F0F0, 0x000000,
                         matrix4f, vertexConsumers, 0xFF);
             }

@@ -305,7 +305,7 @@ public class BOTI {
     }
 
     private static boolean checkBoti() {
-        if (DependencyChecker.hasNvidiaCard() || !AITMod.CONFIG.CLIENT.I_HATE_GL)
+        if (DependencyChecker.hasNvidiaCard())
             return true;
 
         sendNvidiaWarning();

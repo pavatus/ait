@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITDimensions;
+import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRenderInfo;
@@ -92,10 +93,18 @@ public class SpaceUtils {
         player.forEach(entity -> {
             if (entity.isSpectator())
                 return;
-            Vec3d motion = planetPos.subtract(entity.getPos()).normalize().multiply(0.1f);
-            entity.setVelocity(entity.getVelocity().add(motion));
-            entity.velocityDirty = true;
-            entity.velocityModified = true;
+            if (entity.getVehicle() instanceof FlightTardisEntity tardis) {
+                if (tardis.tardis() != null && tardis.tardis().get().travel().antigravs().get()) return;
+                Vec3d motion = planetPos.subtract(tardis.getPos()).normalize().multiply(0.1f);
+                tardis.setVelocity(tardis.getVelocity().add(motion));
+                tardis.velocityDirty = true;
+                tardis.velocityModified = true;
+            } else {
+                Vec3d motion = planetPos.subtract(entity.getPos()).normalize().multiply(0.1f);
+                entity.setVelocity(entity.getVelocity().add(motion));
+                entity.velocityDirty = true;
+                entity.velocityModified = true;
+            }
         });
     }
 
