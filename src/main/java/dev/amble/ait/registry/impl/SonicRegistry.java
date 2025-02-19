@@ -32,19 +32,6 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
     }
 
     @Override
-    public void onClientInit() {
-        this.defaults();
-        super.onClientInit();
-    }
-
-    @Override
-    public void onCommonInit() {
-        super.onCommonInit();
-        this.defaults();
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
-    }
-
-    @Override
     protected void defaults() {
         DEFAULT = register(BuiltinSonic.create("prime"));
 

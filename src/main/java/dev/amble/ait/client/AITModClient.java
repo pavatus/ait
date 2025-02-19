@@ -233,7 +233,6 @@ public class AITModClient implements ClientModInitializer {
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
 
-        AmbleRegistries.getInstance().registerAll(SonicRegistry.getInstance(), ClientExteriorVariantRegistry.getInstance(), ClientConsoleVariantRegistry.getInstance());
         sonicModelPredicate();
     }
 

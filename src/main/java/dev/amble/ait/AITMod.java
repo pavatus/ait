@@ -169,24 +169,6 @@ public class AITMod implements ModInitializer {
 
         Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
 
-        AmbleRegistries.getInstance().registerAll(
-                SonicRegistry.getInstance(),
-                DesktopRegistry.getInstance(),
-                ConsoleVariantRegistry.getInstance(),
-                MachineRecipeRegistry.getInstance(),
-                TravelSoundRegistry.getInstance(),
-                FlightSoundRegistry.getInstance(),
-                VortexReferenceRegistry.getInstance(),
-                BlueprintRegistry.getInstance(),
-                ExteriorVariantRegistry.getInstance(),
-                CategoryRegistry.getInstance(),
-                TardisComponentRegistry.getInstance(),
-                LockedDimensionRegistry.getInstance(),
-                HumRegistry.getInstance(),
-                SubSystemRegistry.getInstance(),
-                ItemOpinionRegistry.getInstance()
-        );
-
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);
             SummonTardisCommand.register(dispatcher);
