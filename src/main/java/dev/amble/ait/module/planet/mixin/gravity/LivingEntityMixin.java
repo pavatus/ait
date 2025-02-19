@@ -49,6 +49,11 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity.getType() == EntityType.BOAT || entity.getType() == EntityType.CHEST_BOAT)
             return;
 
+        boolean oxygenated = entity.hasStatusEffect(AITStatusEffects.OXYGENATED);
+
+        if (oxygenated)
+            return;
+
         Vec3d movement = entity.getVelocity();
         entity.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
     }
