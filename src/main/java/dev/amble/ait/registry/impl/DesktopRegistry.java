@@ -1,6 +1,9 @@
 package dev.amble.ait.registry.impl;
 
 import dev.amble.lib.register.unlockable.UnlockableRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
+import net.minecraft.resource.ResourceType;
 
 import dev.amble.ait.data.datapack.DatapackDesktop;
 import dev.amble.ait.data.schema.desktop.DefaultCaveDesktop;
@@ -13,6 +16,13 @@ public class DesktopRegistry extends UnlockableRegistry<TardisDesktopSchema> {
 
     protected DesktopRegistry() {
         super(DatapackDesktop::fromInputStream, DatapackDesktop.CODEC, "desktop", true);
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override

@@ -2,8 +2,10 @@ package dev.amble.ait.registry.impl;
 
 
 import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceType;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.sounds.ClientSoundManager;
@@ -24,6 +26,13 @@ public class HumRegistry extends SimpleDatapackRegistry<Hum> {
 
     public static Hum CORAL;
     public static Hum CHRISTMAS;
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
+    }
 
     @Override
     protected void defaults() {

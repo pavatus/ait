@@ -1,6 +1,9 @@
 package dev.amble.ait.core.sounds.travel;
 
 import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
+import net.minecraft.resource.ResourceType;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
@@ -24,6 +27,13 @@ public class TravelSoundRegistry extends SimpleDatapackRegistry<TravelSound> {
     public static TravelSound PHASING_DEMAT;
     public static TravelSound PHASING_REMAT;
     public static TravelSound EMPTY;
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
+    }
 
     @Override
     protected void defaults() {

@@ -5,6 +5,9 @@ package dev.amble.ait.registry.impl;
 import java.util.Random;
 
 import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
+import net.minecraft.resource.ResourceType;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.data.datapack.DatapackCategory;
@@ -17,6 +20,13 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
 
     protected CategoryRegistry() {
         super(DatapackCategory::fromInputStream, DatapackCategory.CODEC, "categories", true, AITMod.MOD_ID);
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override

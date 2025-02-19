@@ -6,9 +6,11 @@ import java.util.List;
 import dev.amble.lib.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import org.joml.Vector3f;
 
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import dev.amble.ait.AITMod;
@@ -65,6 +67,13 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override

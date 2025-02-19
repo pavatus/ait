@@ -8,8 +8,10 @@ import dev.amble.lib.register.datapack.DatapackRegistry;
 import dev.amble.lib.register.unlockable.UnlockableRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import dev.amble.ait.AITMod;
@@ -62,6 +64,13 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     @Override
     public ExteriorVariantSchema fallback() {
         return ExteriorVariantRegistry.CAPSULE_DEFAULT;
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override

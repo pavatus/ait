@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -28,6 +30,13 @@ public class LockedDimensionRegistry extends SimpleDatapackRegistry<LockedDimens
     }
 
     public static LockedDimension NETHER;
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
+    }
 
     @Override
     protected void defaults() {

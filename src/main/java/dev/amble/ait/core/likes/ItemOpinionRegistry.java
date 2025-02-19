@@ -3,10 +3,12 @@ package dev.amble.ait.core.likes;
 import java.util.Optional;
 
 import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.resource.ResourceType;
 
 import dev.amble.ait.AITMod;
 
@@ -23,6 +25,13 @@ public class ItemOpinionRegistry extends SimpleDatapackRegistry<ItemOpinion> {
     @Override
     protected void defaults() {
         LIKES_ENDER_EYE = register(new ItemOpinion(AITMod.id("likes_ender_eye"), Items.ENDER_EYE.getDefaultStack(), 10));
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override

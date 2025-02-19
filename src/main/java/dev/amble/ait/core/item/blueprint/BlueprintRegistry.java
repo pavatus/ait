@@ -1,11 +1,12 @@
 package dev.amble.ait.core.item.blueprint;
 
 import dev.amble.lib.register.datapack.SimpleDatapackRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
 import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.resource.ResourceType;
 
 import dev.amble.ait.AITMod;
-
 
 
 public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {
@@ -15,6 +16,13 @@ public class BlueprintRegistry extends SimpleDatapackRegistry<BlueprintSchema> {
 
     public BlueprintRegistry() {
         super(BlueprintSchema::fromInputStream, BlueprintSchema.CODEC, "blueprint", true, AITMod.MOD_ID);
+    }
+
+    @Override
+    public void onCommonInit() {
+        super.onCommonInit();
+        this.defaults();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     @Override
