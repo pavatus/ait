@@ -96,10 +96,9 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
-        matrices.scale(5, 5, 5);
+        matrices.scale(100, 100, 100);
 
-        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
-        cubeMap.draw(tessellator, bufferBuilder, matrices);
+        drawSpace(tessellator, bufferBuilder, matrices);
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
@@ -147,10 +146,9 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f + 300f));
-        matrices.scale(5, 5, 5);
+        matrices.scale(100, 100, 100);
 
-        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
-        cubeMap.draw(tessellator, bufferBuilder, matrices);
+        drawSpace(tessellator, bufferBuilder, matrices);
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
@@ -196,10 +194,7 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
         matrices.scale(100, 100, 100);
 
-        RenderSystem.setShaderColor(0.25f, 0.25f, 0.25f, 1);
-        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
-        cubeMap.draw(tessellator, bufferBuilder, matrices);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1);
+        drawSpace(tessellator, bufferBuilder, matrices);
 
         RenderSystem.depthMask(false);
         RenderSystem.depthFunc(GL11.GL_ALWAYS);
@@ -291,5 +286,10 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
     }
 
-
+    private static void drawSpace(Tessellator tessellator, BufferBuilder bufferBuilder, MatrixStack matrices) {
+        RenderSystem.setShaderColor(0.25f, 0.25f, 0.25f, 1);
+        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
+        cubeMap.draw(tessellator, bufferBuilder, matrices);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1);
+    }
 }
