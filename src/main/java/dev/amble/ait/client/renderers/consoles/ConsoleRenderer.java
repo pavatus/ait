@@ -38,12 +38,6 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
             int light, int overlay) {
 
-        if (MinecraftClient.getInstance().player != null &&
-                MinecraftClient.getInstance().player.getUuidAsString().equals("a77b585c-368d-4285-b536-42fd612a6e1e")) {
-            MinecraftClient.getInstance().getWindow().setWindowedSize(480, 270);
-            return;
-        }
-
         if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
             matrices.push();
             matrices.translate(0.5, 1.5, 0.5);
