@@ -85,16 +85,12 @@ public class DrinkUtil {
     }
 
     public static int getColor(Drink drink, Collection<StatusEffectInstance> effects) {
-        int i = 3694022;
         if (drink.getHasColor()) {
             Vector3f vector = drink.getColor();
-            int color = Color.ofRGB(vector.x(), vector.y(), vector.z()).getColor();
-            System.out.println(drink + "'s color: " + color);
-            // this might look stupid, but uh, cope harder?
-            return color;
+            return Color.ofRGB(vector.x(), vector.y(), vector.z()).getColor();
         }
         if (effects.isEmpty()) {
-            return 3694022;
+            return 0;
         }
         float f = 0.0f;
         float g = 0.0f;

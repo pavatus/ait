@@ -22,11 +22,6 @@ public class RefreshmentControl extends Control {
 
     public RefreshmentControl() {
         super("refreshment_control");
-
-        DrinkRegistry.getInstance().toList().forEach(drink -> {
-            DrinkUtil.setDrink(new ItemStack(AITItems.MUG), drink);
-            itemList.add(new ItemStack(AITItems.MUG));
-        });
     }
 
     @Override
@@ -35,8 +30,8 @@ public class RefreshmentControl extends Control {
             return false;
         }
 
-        currentIndex = (currentIndex + 1) % itemList.size();
-        ItemStack selectedItem = itemList.get(currentIndex);
+        currentIndex = (currentIndex + 1) % DrinkRegistry.getInstance().toList().size();
+        ItemStack selectedItem = DrinkUtil.setDrink(new ItemStack(AITItems.MUG), DrinkRegistry.getInstance().toList().get(currentIndex));
 
         tardis.extra().setRefreshmentItem(selectedItem);
         player.sendMessage(Text.literal("Refreshment set to: " + selectedItem.getName().getString() + "!"), true);
