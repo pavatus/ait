@@ -31,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
 import dev.amble.ait.client.overlays.FabricatorOverlay;
+import dev.amble.ait.client.overlays.RWFOverlay;
 import dev.amble.ait.client.overlays.SonicOverlay;
 import dev.amble.ait.client.renderers.SonicRendering;
 import dev.amble.ait.client.renderers.TardisStar;
@@ -109,6 +110,7 @@ public class AITModClient implements ClientModInitializer {
         ClientLandingManager.init();
 
         HudRenderCallback.EVENT.register(new SonicOverlay());
+        HudRenderCallback.EVENT.register(new RWFOverlay());
         HudRenderCallback.EVENT.register(new FabricatorOverlay());
 
         /*
