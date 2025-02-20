@@ -44,7 +44,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
             VertexConsumerProvider vertexConsumerProvider, int light) {
         super.render(livingEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
 
-        if (SonicRendering.isPlayerHoldingScanningSonic()) {
+        if (SonicRendering.isPlayerHoldingScanningSonic() && AITMod.CONFIG.CLIENT.SHOW_CONTROL_HITBOXES) {
             renderOutline(livingEntity, matrixStack, vertexConsumerProvider);
         }
     }
@@ -81,7 +81,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
             boolean isPlayerLookingWithSonic = isPlayerLookingAtControlWithSonic(hitresult, entity);
             OrderedText orderedText = name.asOrderedText();
 
-            if (isPlayerLookingWithSonic && AITMod.CONFIG.CLIENT.SHOW_CONTROL_HITBOXES) {
+            if (isPlayerLookingWithSonic) {
                 textRenderer.drawWithOutline(orderedText, h, (float) name.getString().length(), 0xF0F0F0, 0x000000,
                         matrix4f, vertexConsumers, 0xFF);
             }
