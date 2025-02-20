@@ -1,0 +1,23 @@
+{
+  "id": "ait:iced_coffee",
+  "has_custom_color": true,
+  "color": [145, 110, 102],
+  "potion_instances": [
+    {
+    "id": "minecraft:speed",
+    "duration": 340,
+    "amplifier": 2,
+    "ambient": false,
+    "show_particles": true,
+    "show_icon": true
+    },
+    {
+      "id": "ait:zeiton_high",
+      "duration": 340,
+      "amplifier": 2,
+      "ambient": false,
+      "show_particles": true,
+      "show_icon": true
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.tardis.control.ControlTypes;
-import dev.amble.ait.core.tardis.control.LightManipulatorControl;
+import dev.amble.ait.core.tardis.control.RefreshmentControl;
 import dev.amble.ait.core.tardis.control.impl.*;
 import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
 import dev.amble.ait.core.tardis.control.impl.pos.XControl;
@@ -85,7 +85,7 @@ public class RenaissanceType extends ConsoleTypeSchema {
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1375f, 0.1375f),
                     new Vector3f(7.816394791007042E-4f, 0.6499996222555637f, -0.9929687511175871f)),
             // yes
-            new ControlTypes(new LightManipulatorControl(), EntityDimensions.changing(0.08750002f, 0.099999994f),
+            new ControlTypes(new RefreshmentControl(), EntityDimensions.changing(0.08750002f, 0.099999994f),
                     new Vector3f(-0.18750076554715633f, 0.5625003818422556f, 1.2484375070780516f)),
             // yes
             new ControlTypes(new PowerControl(), EntityDimensions.changing(0.13750003f, 0.1375f),

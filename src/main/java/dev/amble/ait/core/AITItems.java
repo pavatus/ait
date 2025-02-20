@@ -8,6 +8,7 @@ import dev.amble.lib.container.impl.ItemContainer;
 import dev.amble.lib.datagen.util.NoEnglish;
 import dev.amble.lib.item.AItemSettings;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -24,6 +25,8 @@ import net.minecraft.util.Rarity;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.link.LinkableItem;
+import dev.amble.ait.core.drinks.DrinkRegistry;
+import dev.amble.ait.core.drinks.DrinkUtil;
 import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.engine.item.SubSystemItem;
 import dev.amble.ait.core.item.*;
@@ -42,7 +45,9 @@ public class AITItems extends ItemContainer {
     public static Item COBBLED_SNOWBALL;
     public static Item HOT_CHOCOLATE_POWDER;
     public static Item HOT_CHOCOLATE;
-    public static Item MUG;
+
+    @NoEnglish
+    public static final Item MUG = new DrinkItem(new AItemSettings().maxCount(1));
     public static Item SANTA_HAT;
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
@@ -194,22 +199,6 @@ public class AITItems extends ItemContainer {
 
 
     // Refreshments
-    @NoEnglish
-    public static final Item MUG_EMPTY = new MugEmptyItem(new AItemSettings());
-    @NoEnglish
-    public static final Item COFFEE = new CoffeeItem(new AItemSettings());
-    @NoEnglish
-    public static final Item TEA = new TeaItem(new AItemSettings());
-    @NoEnglish
-    public static final Item LATTE = new LatteItem(new AItemSettings());
-    @NoEnglish
-    public static final Item MILK = new MilkItem(new AItemSettings());
-    @NoEnglish
-    public static final Item WATER = new WaterItem(new AItemSettings());
-    @NoEnglish
-    public static final Item ICE_COFFEE = new IceCoffeeItem(new AItemSettings());
-    @NoEnglish
-    public static final Item COCO_MILK = new CocoMilkItem(new AItemSettings());
 
     public static final Item IRON_GOAT_HORN = new TardisGoatHorn(new AItemSettings().group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
 
@@ -228,39 +217,21 @@ public class AITItems extends ItemContainer {
      // Advent Items
 
     static {
-        if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
             SANTA_HAT = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
             new AItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(80), true);
-        }
-
-        if (isUnlockedOnThisDay(Calendar.DECEMBER, 29)) {
             COBBLED_SNOWBALL = new CobbledSnowballItem(new AItemSettings().group(AITItemGroups.MAIN).maxCount(16));
-        }
-       if (isUnlockedOnThisDay(Calendar.JANUARY, 2)) {
             HOT_CHOCOLATE_POWDER = new Item(new AItemSettings().group(AITItemGroups.MAIN).food(ZEITON_DUST_FOOD));
-            HOT_CHOCOLATE = new HotChocolateItem(new AItemSettings().group(AITItemGroups.MAIN));
-            MUG = new Item(new AItemSettings().group(AITItemGroups.MAIN));
-        }
-        /*if (isUnlockedAdvent2024(4)) {
-            // TODO SONIC CANDY CANE
-        }*/
+            //HOT_CHOCOLATE = new HotChocolateItem(new AItemSettings().group(AITItemGroups.MAIN));
     }
 
     public static boolean isUnlockedOnThisDay(int month, int day) {
         return getAdventDates(month, Calendar.JANUARY, day, 6);
     }
 
-    public static boolean isUnlockedAdvent2024(int day) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-
-        // Check if the year is 2024 and the date is within December 26th to January 6th
-        if (year == 2024) {
-            return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, 26, 6);
-        } else {
-            // If the year is greater than 2024, always return true
-            return true;
-        }
+    private static void addDrinks(FabricItemGroupEntries entries) {
+        DrinkRegistry.getInstance().toList().stream()/*.filter(entry -> entry != DrinkRegistry.EMPTY_MUG)*/
+                .map(entry -> DrinkUtil.setDrink(new ItemStack(AITItems.MUG),
+                        entry)).forEach(stack -> entries.add(stack, ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS));
     }
 
     public static boolean getAdventDates(int monthBegin, int monthEnd, int dayBegin, int dayEnd) {
@@ -303,18 +274,12 @@ public class AITItems extends ItemContainer {
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
-            entries.addAfter(Items.MILK_BUCKET, COFFEE);
-            entries.addAfter(COFFEE, TEA);
-            entries.addAfter(TEA, LATTE);
-            entries.addAfter(LATTE, MILK);
-            entries.addAfter(MILK, WATER);
-            entries.addAfter(WATER, ICE_COFFEE);
-            entries.addAfter(ICE_COFFEE, COCO_MILK);
+            addDrinks(entries);
         });
 
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
-            entries.addAfter(Items.BUCKET, MUG_EMPTY);
-        });
+        /*ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.addAfter(Items.BUCKET);
+        });*/
 
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, AITItemGroups.FABRICATOR.id())).register(entries -> {
             for (BlueprintSchema schema : BlueprintRegistry.getInstance().toList()) {

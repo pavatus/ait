@@ -1,0 +1,23 @@
+{
+  "id": "ait:latte",
+  "has_custom_color": true,
+  "color": [133, 109, 86],
+  "potion_instances": [
+    {
+    "id": "minecraft:speed",
+    "duration": 340,
+    "amplifier": 2,
+    "ambient": false,
+    "show_particles": true,
+    "show_icon": true
+    },
+    {
+      "id": "ait:zeiton_high",
+      "duration": 340,
+      "amplifier": 2,
+      "ambient": false,
+      "show_particles": true,
+      "show_icon": true
+    }
+  ]
+}

@@ -60,6 +60,8 @@ import dev.amble.ait.client.util.ClientTardisUtil;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+import dev.amble.ait.core.drinks.DrinkRegistry;
+import dev.amble.ait.core.drinks.DrinkUtil;
 import dev.amble.ait.core.item.*;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
@@ -83,6 +85,7 @@ public class AITModClient implements ClientModInitializer {
 
         AmbleRegistries.getInstance().registerAll(
                 SonicRegistry.getInstance(),
+                DrinkRegistry.getInstance(),
                 ClientExteriorVariantRegistry.getInstance(),
                 ClientConsoleVariantRegistry.getInstance()
         );
@@ -100,6 +103,7 @@ public class AITModClient implements ClientModInitializer {
         hammerPredicate();
         siegeItemPredicate();
         adventItemPredicates();
+        registerItemColors();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             ConfigCommand.register(dispatcher);
@@ -433,5 +437,10 @@ public class AITModClient implements ClientModInitializer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
         }
+    }
+
+    public void registerItemColors() {
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) ->tintIndex > 0 ? -1 :
+                DrinkUtil.getColor(stack), AITItems.MUG);
     }
 }

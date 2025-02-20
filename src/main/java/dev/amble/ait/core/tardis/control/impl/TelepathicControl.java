@@ -28,9 +28,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.link.LinkableItem;
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
+import dev.amble.ait.core.drinks.DrinkRegistry;
+import dev.amble.ait.core.drinks.DrinkUtil;
 import dev.amble.ait.core.item.HandlesItem;
 import dev.amble.ait.core.item.HypercubeItem;
 import dev.amble.ait.core.item.KeyItem;
@@ -144,7 +147,7 @@ public class TelepathicControl extends Control {
             return true;
         }
 
-        if (held.isOf(AITItems.COFFEE)) {
+        if (held.isOf(AITItems.MUG) && DrinkUtil.getDrink(held) == DrinkRegistry.getInstance().get(AITMod.id("coffee"))) {
 
             tardis.door().closeDoors();
 
@@ -165,7 +168,7 @@ public class TelepathicControl extends Control {
             tardis.crash().addRepairTicks(1500);
             return true;
         }
-        if (held.isOf(AITItems.WATER)) {
+        if (held.isOf(AITItems.MUG) && DrinkUtil.getDrink(held) == DrinkRegistry.getInstance().get(AITMod.id("water"))) {
             tardis.door().closeDoors();
 
             tardis.travel().handbrake(false);
@@ -185,7 +188,7 @@ public class TelepathicControl extends Control {
             tardis.crash().addRepairTicks(1500);
             return true;
         }
-        if (held.isOf(AITItems.LATTE)) {
+        if (held.isOf(AITItems.MUG) && DrinkUtil.getDrink(held) == DrinkRegistry.getInstance().get(AITMod.id("latte"))) {
             tardis.door().closeDoors();
 
             tardis.travel().handbrake(false);
@@ -205,7 +208,7 @@ public class TelepathicControl extends Control {
             tardis.crash().addRepairTicks(1500);
             return true;
         }
-        if (held.isOf(AITItems.ICE_COFFEE)) {
+        if (held.isOf(AITItems.MUG) && DrinkUtil.getDrink(held) == DrinkRegistry.getInstance().get(AITMod.id("iced_coffee"))) {
             tardis.door().closeDoors();
 
             tardis.travel().handbrake(false);
@@ -225,7 +228,7 @@ public class TelepathicControl extends Control {
             tardis.crash().addRepairTicks(1500);
             return true;
         }
-        if (held.isOf(AITItems.MILK)) {
+        if (held.isOf(AITItems.MUG) && DrinkUtil.getDrink(held) == DrinkRegistry.getInstance().get(AITMod.id("milk"))) {
             tardis.door().closeDoors();
 
             tardis.travel().handbrake(false);

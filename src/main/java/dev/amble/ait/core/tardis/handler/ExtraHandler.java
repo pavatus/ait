@@ -2,8 +2,12 @@ package dev.amble.ait.core.tardis.handler;
 
 import net.minecraft.item.ItemStack;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.core.AITItems;
+import dev.amble.ait.core.drinks.Drink;
+import dev.amble.ait.core.drinks.DrinkRegistry;
+import dev.amble.ait.core.drinks.DrinkUtil;
 import dev.amble.ait.data.properties.Property;
 import dev.amble.ait.data.properties.Value;
 
@@ -20,7 +24,10 @@ public class ExtraHandler extends KeyedTardisComponent {
 
     @Override
     public void onCreate() {
-        this.setRefreshmentItem(AITItems.COFFEE.getDefaultStack());
+        Drink drink = DrinkRegistry.getInstance().get(AITMod.id("coffee"));
+        ItemStack stack = new ItemStack(AITItems.MUG);
+        DrinkUtil.setDrink(stack, drink);
+        this.setRefreshmentItem(stack);
         this.setInsertedDisc(ItemStack.EMPTY);
     }
 

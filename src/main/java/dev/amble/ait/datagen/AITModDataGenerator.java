@@ -717,14 +717,15 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.GALLIFREY_FALLS_PAINTING, "Painting");
-        provider.addTranslation(AITItems.COFFEE, "Cup of Coffee");
-        provider.addTranslation(AITItems.TEA, "Cup of Tea");
-        provider.addTranslation(AITItems.LATTE, "Cup of Latte");
-        provider.addTranslation(AITItems.MILK, "Cup of Milk");
-        provider.addTranslation(AITItems.WATER, "Cup of Water");
-        provider.addTranslation(AITItems.ICE_COFFEE, "Cup of Ice Coffee");
-        provider.addTranslation(AITItems.COCO_MILK, "Cup of Hot Coco Milk");
-        provider.addTranslation(AITItems.MUG_EMPTY, "Empty Mug");
+        provider.addTranslation("ait.item.drink.empty_mug", "Empty Mug");
+        provider.addTranslation("ait.item.drink.hot_cocoa", "Hot Cocoa");
+        provider.addTranslation("ait.item.drink.tea", "Tea");
+        provider.addTranslation("ait.item.drink.latte", "Latte");
+        provider.addTranslation("ait.item.drink.milk", "Milk");
+        provider.addTranslation("ait.item.drink.water", "Water");
+        provider.addTranslation("ait.item.drink.iced_coffee", "Iced Coffee");
+        provider.addTranslation("ait.item.drink.coffee", "Coffee");
+        provider.addTranslation("ait.item.drink.chocolate_milk", "Chocolate Milk");
 
         // Exteriors
         provider.addTranslation("exterior.ait.capsule", "Capsule");

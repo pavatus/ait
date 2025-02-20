@@ -1,8 +1,9 @@
 package dev.amble.ait.core.tardis.control;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -11,23 +12,21 @@ import net.minecraft.util.math.BlockPos;
 
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
+import dev.amble.ait.core.drinks.DrinkRegistry;
+import dev.amble.ait.core.drinks.DrinkUtil;
 import dev.amble.ait.core.tardis.Tardis;
 
-public class LightManipulatorControl extends Control {
-
-    private final List<Item> itemList = List.of(
-            AITItems.COFFEE,
-            AITItems.TEA,
-            AITItems.LATTE,
-            AITItems.MILK,
-            AITItems.WATER,
-            AITItems.ICE_COFFEE,
-            AITItems.COCO_MILK
-    );
+public class RefreshmentControl extends Control {
+    private final List<ItemStack> itemList = new ArrayList<>();
     private int currentIndex = 0;
 
-    public LightManipulatorControl() {
-        super("light_manipulator");
+    public RefreshmentControl() {
+        super("refreshment_control");
+
+        DrinkRegistry.getInstance().toList().forEach(drink -> {
+            DrinkUtil.setDrink(new ItemStack(AITItems.MUG), drink);
+            itemList.add(new ItemStack(AITItems.MUG));
+        });
     }
 
     @Override
@@ -37,9 +36,9 @@ public class LightManipulatorControl extends Control {
         }
 
         currentIndex = (currentIndex + 1) % itemList.size();
-        Item selectedItem = itemList.get(currentIndex);
+        ItemStack selectedItem = itemList.get(currentIndex);
 
-        tardis.extra().setRefreshmentItem(selectedItem.getDefaultStack());
+        tardis.extra().setRefreshmentItem(selectedItem);
         player.sendMessage(Text.literal("Refreshment set to: " + selectedItem.getName().getString() + "!"), true);
         return true;
     }

@@ -50,6 +50,7 @@ import dev.amble.ait.config.AITConfig;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.commands.*;
+import dev.amble.ait.core.drinks.DrinkRegistry;
 import dev.amble.ait.core.engine.registry.SubSystemRegistry;
 import dev.amble.ait.core.entities.ConsoleControlEntity;
 import dev.amble.ait.core.entities.FlightTardisEntity;
@@ -83,7 +84,6 @@ import dev.amble.ait.registry.impl.door.DoorRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
-    // The PREAmble lolololol
 
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
@@ -143,7 +143,8 @@ public class AITMod implements ModInitializer {
                 LockedDimensionRegistry.getInstance(),
                 HumRegistry.getInstance(),
                 SubSystemRegistry.getInstance(),
-                ItemOpinionRegistry.getInstance()
+                ItemOpinionRegistry.getInstance(),
+                DrinkRegistry.getInstance()
         );
 
         // For all the addon devs
