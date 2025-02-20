@@ -4,7 +4,7 @@
   "custom_color": [1, 0.988, 0.98],
   "potion_instances": [
     {
-    "id": "minecraft:speed",
+    "id": "minecraft:regeneration",
     "duration": 340,
     "amplifier": 2,
     "ambient": false,
