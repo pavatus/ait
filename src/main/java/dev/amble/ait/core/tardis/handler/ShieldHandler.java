@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
+import dev.amble.ait.core.AITDimensions;
+import dev.amble.ait.core.AITStatusEffects;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.Loyalty;
@@ -111,10 +113,16 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
                 .filter(entity -> !(entity instanceof ServerPlayerEntity player
                         && tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players with loyalty
                 .forEach(entity -> {
-                    if (entity instanceof ServerPlayerEntity player && entity.isSubmergedInWater())
-                        player.addStatusEffect(
-                                new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
-
+                    if (entity instanceof ServerPlayerEntity player) {
+                        if (entity.isSubmergedInWater()) {
+                            player.addStatusEffect(
+                                    new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
+                        }
+                        if (entity.getWorld().getRegistryKey().equals(AITDimensions.SPACE)) {
+                            player.addStatusEffect(
+                                    new StatusEffectInstance(AITStatusEffects.OXYGENATED, 15, 3, true, false, true));
+                        }
+                    }
                     if (this.visuallyShielded().get()) {
                         Vec3d centerExteriorPos = exteriorPos.toCenterPos();
 
