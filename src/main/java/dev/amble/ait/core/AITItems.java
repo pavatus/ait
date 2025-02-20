@@ -41,14 +41,8 @@ import dev.amble.ait.core.item.part.MachinePartItem;
 
 public class AITItems extends ItemContainer {
 
-    // TODO ADVENT ITEMS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
-    public static Item COBBLED_SNOWBALL;
-    public static Item HOT_CHOCOLATE_POWDER;
-    public static Item HOT_CHOCOLATE;
-
     @NoEnglish
     public static final Item MUG = new DrinkItem(new AItemSettings().maxCount(1));
-    public static Item SANTA_HAT;
     public static final FoodComponent ZEITON_DUST_FOOD = new FoodComponent.Builder().hunger(4).saturationModifier(0.3f)
             .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000, 3), 1.0F)
             .statusEffect(new StatusEffectInstance(AITStatusEffects.ZEITON_HIGH, 500, 1), 1.0F)
@@ -196,10 +190,6 @@ public class AITItems extends ItemContainer {
     public static final Item EARTH_MUSIC_DISC = new MusicDiscItem(1, AITSounds.EARTH_MUSIC,
             new AItemSettings().maxCount(1).rarity(Rarity.RARE), 315);
 
-
-
-    // Refreshments
-
     public static final Item IRON_GOAT_HORN = new TardisGoatHorn(new AItemSettings().group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
 
     public static final Item GOLD_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.UNCOMMON).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
@@ -213,17 +203,6 @@ public class AITItems extends ItemContainer {
      public static final Item REDSTONE_CONTROL = new
              GenericControlBlockItem(AITBlocks.REDSTONE_CONTROL_BLOCK, new
      AItemSettings().group(AITItemGroups.MAIN));
-
-     // Advent Items
-
-    static {
-            SANTA_HAT = new RenderableArmorItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET,
-            new AItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(80), true);
-            COBBLED_SNOWBALL = new CobbledSnowballItem(new AItemSettings().group(AITItemGroups.MAIN).maxCount(16));
-            HOT_CHOCOLATE_POWDER = new Item(new AItemSettings().group(AITItemGroups.MAIN).food(ZEITON_DUST_FOOD));
-            //HOT_CHOCOLATE = new HotChocolateItem(new AItemSettings().group(AITItemGroups.MAIN));
-    }
-
     public static boolean isUnlockedOnThisDay(int month, int day) {
         return getAdventDates(month, Calendar.JANUARY, day, 6);
     }
@@ -248,7 +227,6 @@ public class AITItems extends ItemContainer {
     }
 
     public static boolean isInAdvent() {
-
         return getAdventDates(Calendar.DECEMBER, Calendar.JANUARY, 26, 6);
     }
 
