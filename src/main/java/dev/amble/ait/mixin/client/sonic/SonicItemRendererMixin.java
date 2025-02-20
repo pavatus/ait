@@ -46,7 +46,6 @@ public class SonicItemRendererMixin {
 
     @Unique private BakedModel getOrMissing(Identifier id) {
         BakedModel model = this.models.getModelManager().getModel(
-                //new ModelIdentifier(id, "inventory")
                 id
         );
 

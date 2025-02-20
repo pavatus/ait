@@ -52,7 +52,7 @@ import dev.amble.ait.client.renderers.monitors.WallMonitorRenderer;
 import dev.amble.ait.client.screens.AstralMapScreen;
 import dev.amble.ait.client.screens.BlueprintFabricatorScreen;
 import dev.amble.ait.client.screens.MonitorScreen;
-import dev.amble.ait.client.sonic.SonicModels;
+import dev.amble.ait.client.sonic.SonicModelLoader;
 import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.tardis.manager.ClientTardisManager;
 import dev.amble.ait.client.util.ClientTardisUtil;
@@ -240,7 +240,7 @@ public class AITModClient implements ClientModInitializer {
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
 
-        sonicModelPredicate();
+        SonicModelLoader.init();
     }
 
     /**
@@ -281,10 +281,6 @@ public class AITModClient implements ClientModInitializer {
 
                     return 0.0F;
                 });
-    }
-
-    public static void sonicModelPredicate() {
-        SonicModels.init();
     }
 
     public static void waypointPredicate() {
