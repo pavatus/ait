@@ -1,8 +1,5 @@
 package dev.amble.ait.client.renderers.machines;
 
-import static dev.amble.ait.client.boti.BOTI.AIT_BUF_BUILDER_STORAGE;
-
-import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -14,7 +11,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 
 import dev.amble.ait.AITMod;
@@ -28,11 +24,9 @@ public class AstralMapRenderer<T extends AstralMapBlockEntity> implements BlockE
             "textures/blockentities/machines/astral_map.png");
 
     private final AstralMapModel model;
-    private final Optional voidCube;
 
     public AstralMapRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.model = new AstralMapModel();
-        this.voidCube = this.model.getChild("void");
+        this.model = new AstralMapModel(AstralMapModel.getTexturedModelData().createModel());
     }
 
     @Override
@@ -42,19 +36,25 @@ public class AstralMapRenderer<T extends AstralMapBlockEntity> implements BlockE
 
         matrices.push();
         matrices.scale(1f, 1f, 1f);
-        matrices.translate(0.5, 1.5f, 0.5);
 
-        Direction facing = blockState.get(HorizontalFacingBlock.FACING);
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(facing.asRotation()));
 
+        float k = blockState.get(HorizontalFacingBlock.FACING).asRotation();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrices.translate(0.5, -1.5f, -0.5);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k));
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
+        matrices.pop();
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrices.translate(0.5, 0, -0.5);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(k));
 
-        VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
-
+        this.model.void_cube.render(matrices,
+                vertexConsumers.getBuffer(RenderLayer.getEndGateway()),
+                light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         matrices.pop();
     }
 
