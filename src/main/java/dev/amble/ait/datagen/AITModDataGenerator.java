@@ -44,6 +44,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         generateLanguages(pack);
         generateItemTags(pack);
         generateBlockTags(pack);
+        generatePaintingTags(pack);
         generateEntityTypeTags(pack);
         generateRecipes(pack);
         generateBlockModels(pack);
@@ -564,6 +565,10 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
 
     public void generateBlockTags(FabricDataGenerator.Pack pack) {
         pack.addProvider(AITBlockTagProvider::new);
+    }
+
+    public void generatePaintingTags(FabricDataGenerator.Pack pack) {
+        pack.addProvider(AITPaintingVariantTagProvider::new);
     }
 
     public void generateEntityTypeTags(FabricDataGenerator.Pack pack) {

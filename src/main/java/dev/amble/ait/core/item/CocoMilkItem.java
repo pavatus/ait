@@ -9,8 +9,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
+import net.minecraft.potion.Drinks;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
@@ -29,7 +29,7 @@ public class CocoMilkItem extends Item {
 
     @Override
     public ItemStack getDefaultStack() {
-        return PotionUtil.setPotion(super.getDefaultStack(), Potions.WATER);
+        return PotionUtil.setPotion(super.getDefaultStack(), Drinks.WATER);
     }
 
     @Override
