@@ -1,7 +1,7 @@
 {
   "id": "ait:chocolate_milk",
   "has_custom_color": true,
-  "color": [64, 40, 25],
+  "color": [0.49, 0.337, 0.337],
   "potion_instances": [
     {
     "id": "minecraft:speed",

@@ -35,6 +35,14 @@ public record Drink(Identifier id, Optional<Boolean> hasCustomColor, Optional<Ve
         return this.id;
     }
 
+    public Vector3f getColor() {
+        return this.color().orElse(new Vector3f());
+    }
+
+    public boolean getHasColor() {
+        return this.hasCustomColor().orElse(false);
+    }
+
     public static Drink fromInputStream(InputStream stream) {
         return fromJson(JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject());
     }
