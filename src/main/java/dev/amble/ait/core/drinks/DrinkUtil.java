@@ -90,7 +90,7 @@ public class DrinkUtil {
             return Color.ofRGB(vector.x(), vector.y(), vector.z()).getColor();
         }
         if (effects.isEmpty()) {
-            return Color.ofRGB(0, 0, 0).getColor();
+            return Color.ofRGB(0.824f, 0.89f, 0.988f).getColor();
         }
         float f = 0.0f;
         float g = 0.0f;
