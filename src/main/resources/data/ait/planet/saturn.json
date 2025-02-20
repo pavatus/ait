@@ -1,17 +1,17 @@
 {
-  "dimension": "ait:neptune",
+  "dimension": "ait:saturn",
   "gravity": 0.05,
   "has_oxygen": false,
   "has_landable_surface": false,
   "temperature": 210,
   "render": {
-    "texture": "ait:textures/environment/neptune.png",
-    "position": [-17000, 1000, 3000],
-    "scale": [850, 850, 850],
-    "rotation": [55, 12, 90],
+    "texture": "ait:textures/environment/saturn.png",
+    "position": [-29000, 2000, -21000],
+    "scale": [1400, 1400, 1400],
+    "rotation": [45, 22.5, 22],
     "clouds": false,
     "atmosphere": true,
-    "color": [0.5, 0.6, 0.7],
+    "color": [0.55, 0.4, 0.2],
     "radius": 1200,
     "suction_radius": 1000,
     "has_rings": true

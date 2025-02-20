@@ -6,7 +6,6 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -82,7 +81,9 @@ public class CelestialBodyRenderer {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.x()));
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation.z()));
 
-        CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
+        CelestialBodyModel model = new CelestialBodyModel(CelestialBodyModel.getTexturedModelData().createModel());
+
+        model.render(matrixStack,
                 provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
                 0xf000f00, OverlayTexture.DEFAULT_UV, 1f, 1f, 1f, 1f);
         provider.draw();
@@ -95,7 +96,7 @@ public class CelestialBodyRenderer {
         matrixStack.pop();
     }
 
-    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean isSkyRendered, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor) {
+    public static void renderComprehendableBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean isSkyRendered, boolean hasClouds, boolean hasAtmosphere, Vector3f atmosphereColor, boolean hasRings) {
         MinecraftClient mc = MinecraftClient.getInstance();
         Camera camera = mc.gameRenderer.getCamera();
         VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
@@ -125,9 +126,14 @@ public class CelestialBodyRenderer {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.x()));
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation.z()));
 
-        CelestialBodyModel.getTexturedModelData().createModel().render(matrixStack,
+        CelestialBodyModel celestialBodyModel = new CelestialBodyModel(CelestialBodyModel.getTexturedModelData().createModel());
+        celestialBodyModel.render(matrixStack,
                 provider.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
                 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
+        if (hasRings)
+            celestialBodyModel.ring.render(matrixStack,
+                    provider.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)),
+                    0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1f);
         provider.draw();
 
         if (hasAtmosphere) {
@@ -144,7 +150,7 @@ public class CelestialBodyRenderer {
     }
 
     public static void atmosphereRenderer(MatrixStack matrixStack, Vector3f color, VertexConsumerProvider.Immediate provider, boolean isStar, boolean hasClouds) {
-        ModelPart model = CelestialBodyModel.getTexturedModelData().createModel();
+        CelestialBodyModel model = new CelestialBodyModel(CelestialBodyModel.getTexturedModelData().createModel());
         for (int i = 0; i < 6; i++) {
             float alpha = (float) (0.06f - Math.log(i + 1) * 0.001f);
             matrixStack.push();

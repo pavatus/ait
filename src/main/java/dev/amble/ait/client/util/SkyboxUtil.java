@@ -234,26 +234,9 @@ public class SkyboxUtil extends WorldRenderer {
                 PlanetRenderInfo render = planet.render();
                 if (render.isEmpty()) continue;
 
-                renderCelestialBody(matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color());
+                renderCelestialBody(matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color(), render.hasRings());
             }
         }
-
-        renderCelestialBody(matrices, SATURN_RING,
-                new Vec3d(-29000, 1300, -21000),
-                new Vector3f(2500f, 2, 2500f),
-                new Vector3f(0, 0, 0),
-                false, false,
-                new Vector3f(0.5f, 1, 1));
-
-        renderCelestialBody(matrices, SATURN,
-                new Vec3d(-29000, 2000, -21000),
-                new Vector3f(1400f, 1400f, 1400f),
-                new Vector3f(0, 0, 0),
-                false, true,
-                new Vector3f(0.55f, 0.4f, 0.2f));
-
-
-
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
@@ -268,13 +251,13 @@ public class SkyboxUtil extends WorldRenderer {
 
     private static void renderSkyBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
         matrices.push();
-        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, true, clouds, atmosphere, color);
+        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, true, clouds, atmosphere, color, false);
         matrices.pop();
     }
 
-    private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
+    private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color, boolean hasRings) {
         matrices.push();
-        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, false, clouds, atmosphere, color);
+        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, false, clouds, atmosphere, color, hasRings);
         matrices.pop();
     }
 
