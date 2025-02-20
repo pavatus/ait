@@ -7,17 +7,9 @@
     "fog_color": 5197647,
     "water_color": 4159204,
     "water_fog_color": 329011,
-    "music": [
-      {
-        "weight": 1,
-        "data": {
-          "sound": "ait:music/space",
-          "min_delay": 12000,
-          "max_delay": 24000,
-          "replace_current_music": true
-        }
-      }
-    ]
+    "ambient_sound": {
+      "sound_id": "ait:music/space"
+    }
   },
   "spawners": {},
   "spawn_costs": {},
