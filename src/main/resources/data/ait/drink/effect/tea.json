@@ -1,7 +1,7 @@
 {
   "id": "ait:tea",
   "has_custom_color": true,
-  "color": [0.929, 0.784, 0.6],
+  "custom_color": [0.929, 0.784, 0.6],
   "potion_instances": [
     {
     "id": "minecraft:speed",

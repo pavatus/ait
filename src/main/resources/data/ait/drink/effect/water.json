@@ -1,7 +1,7 @@
 {
   "id": "ait:water",
   "has_custom_color": true,
-  "color": [0.824, 0.89, 0.988],
+  "custom_color": [0.824, 0.89, 0.988],
   "potion_instances": [
     {
     "id": "minecraft:speed",

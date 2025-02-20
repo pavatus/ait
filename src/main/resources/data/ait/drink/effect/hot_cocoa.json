@@ -1,7 +1,7 @@
 {
   "id": "ait:hot_cocoa",
   "has_custom_color": true,
-  "color": [0.62, 0.38, 0.38],
+  "custom_color": [0.62, 0.38, 0.38],
   "potion_instances": [
     {
     "id": "minecraft:speed",

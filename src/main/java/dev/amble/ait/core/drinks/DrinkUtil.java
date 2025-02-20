@@ -88,8 +88,10 @@ public class DrinkUtil {
         int i = 3694022;
         if (drink.getHasColor()) {
             Vector3f vector = drink.getColor();
+            int color = Color.ofRGB(vector.x(), vector.y(), vector.z()).getColor();
+            System.out.println(drink + "'s color: " + color);
             // this might look stupid, but uh, cope harder?
-            return Color.ofRGB(vector.x, vector.y, vector.z).getColor();
+            return color;
         }
         if (effects.isEmpty()) {
             return 3694022;

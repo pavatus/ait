@@ -22,11 +22,11 @@ import net.minecraft.util.dynamic.Codecs;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.data.codec.MoreCodec;
 
-public record Drink(Identifier id, Optional<Boolean> hasCustomColor, Optional<Vector3f> color, List<DatapackPotion> potionInstances) implements Identifiable {
+public record Drink(Identifier id, Optional<Boolean> hasCustomColor, Optional<Vector3f> custom_color, List<DatapackPotion> potionInstances) implements Identifiable {
     public static final Codec<Drink> CODEC = Codecs.exceptionCatching(RecordCodecBuilder.create(instance -> instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(Drink::id),
                     Codec.BOOL.optionalFieldOf("has_custom_color").forGetter(Drink::hasCustomColor),
-                    MoreCodec.VECTOR3F.optionalFieldOf("custom_color").forGetter(Drink::color),
+                    MoreCodec.VECTOR3F.optionalFieldOf("custom_color").forGetter(Drink::custom_color),
                     DatapackPotion.CODEC.listOf().fieldOf("potion_instances").forGetter(Drink::potionInstances))
             .apply(instance, Drink::new)));
 
@@ -36,7 +36,7 @@ public record Drink(Identifier id, Optional<Boolean> hasCustomColor, Optional<Ve
     }
 
     public Vector3f getColor() {
-        return this.color().orElse(new Vector3f());
+        return this.custom_color().orElse(new Vector3f());
     }
 
     public boolean getHasColor() {

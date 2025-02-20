@@ -1,7 +1,7 @@
 {
   "id": "ait:latte",
   "has_custom_color": true,
-  "color": [0.761, 0.573, 0.404],
+  "custom_color": [0.761, 0.573, 0.404],
   "potion_instances": [
     {
     "id": "minecraft:speed",
