@@ -56,6 +56,11 @@ public abstract class GeometricVariant extends ExteriorVariantSchema {
     }
 
     @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
+    }
+
+    @Override
     public double portalHeight() {
         return 2.2d;
     }

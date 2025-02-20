@@ -61,6 +61,7 @@ import dev.amble.ait.core.likes.ItemOpinionRegistry;
 import dev.amble.ait.core.lock.LockedDimensionRegistry;
 import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
 import dev.amble.ait.core.sounds.travel.TravelSoundRegistry;
+import dev.amble.ait.core.tardis.handler.SeatHandler;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.tardis.util.AsyncLocatorUtil;
 import dev.amble.ait.core.tardis.util.NetworkUtil;
@@ -84,6 +85,7 @@ import dev.amble.ait.registry.impl.door.DoorRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
+    // The PREAmble lolololol
 
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
@@ -119,6 +121,7 @@ public class AITMod implements ModInitializer {
         ServerLifecycleHooks.init();
         NetworkUtil.init();
         AsyncLocatorUtil.setupExecutorService();
+        SeatHandler.init();
 
         ConsoleRegistry.init();
         CreakRegistry.init();

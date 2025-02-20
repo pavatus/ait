@@ -110,7 +110,7 @@ public class MoodEventPoolRegistry {
                         tardis -> tardis.waypoint().gotoWaypoint(), 1, TardisMood.Alignment.NEUTRAL));
 
         //TODO: Fix
-        //KICK_PLAYER_OUT = register(
+        //KICK_PLAYER_OUT = init(
                 //MoodDictatedEvent.Builder.create(AITMod.id("kick_player_out"), tardis -> {
                     //tardis.door().setLocked(false);
                     //tardis.door().openDoors();
@@ -124,7 +124,7 @@ public class MoodEventPoolRegistry {
                                 //SoundEvents.BLOCK_WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1f, 1f);
                 //}, 1, TardisMood.Alignment.NEUTRAL));
 
-        //SHIELD_ACTIVATION = register(
+        //SHIELD_ACTIVATION = init(
               //  MoodDictatedEvent.Builder.create(AITMod.id("shield_activation"), tardis -> {
                 //    ShieldHandler shields = tardis.handler(TardisComponent.Id.SHIELDS);
                   //  shields.enable();
@@ -138,7 +138,7 @@ public class MoodEventPoolRegistry {
                     tardis.cloak().cloaked().set(true);
                     }, 1, TardisMood.Alignment.NEGATIVE));
 
-       // ACTIVATE_AUTOPILOT = register(
+       // ACTIVATE_AUTOPILOT = init(
                // MoodDictatedEvent.Builder.create(AITMod.id("activate_autopilot"),
                     //    tardis -> tardis.travel().autopilot(true), 1, TardisMood.Alignment.NEUTRAL));
 
@@ -168,7 +168,7 @@ public class MoodEventPoolRegistry {
                 }, 1, TardisMood.Alignment.POSITIVE));
 
         // TODO: should make this happen when a low loyalty player approaches the TARDIS
-        //LOCK_DOORS = register(MoodDictatedEvent.Builder.create(AITMod.id("lock_doors"), tardis -> {
+        //LOCK_DOORS = init(MoodDictatedEvent.Builder.create(AITMod.id("lock_doors"), tardis -> {
          //   tardis.door().setLocked(true);
          //   if (tardis.getDesktop().getDoorPos() != null)
              //   tardis.getInteriorWorld().playSound(null, tardis.getDesktop().getDoorPos().getPos(),

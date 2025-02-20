@@ -59,4 +59,9 @@ public class CoralGrowthVariant extends ExteriorVariantSchema {
     public double portalWidth() {
         return 0.6d;
     }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
+    }
 }

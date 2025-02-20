@@ -71,7 +71,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     public static final VoxelShape PORTALS_SHAPE_DIAGONAL = VoxelShapes.union(
             Block.createCuboidShape(11.0, 0.0, 11.0, 16.0, 32.0, 16.0), Block.createCuboidShape(0, 0, -3.5, 16, 1, 16));
     public static final VoxelShape SIEGE_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 8.0, 12.0);
-
     public static final VoxelShape DIAGONAL_SHAPE;
 
     static {
@@ -284,21 +283,33 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-            BlockHitResult hit) {
+                              BlockHitResult hit) {
+
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
+
         if (blockEntity instanceof ExteriorBlockEntity exterior) {
-            if (world.isClient())
+
+            exterior.sitOn(state, world, pos, player, hand, hit);
+
+            if (world.isClient()) {
                 return ActionResult.SUCCESS;
+            }
 
-            if (exterior.tardis().isEmpty())
+            if (exterior.tardis().isEmpty()) {
                 return ActionResult.FAIL;
-
-            exterior.useOn((ServerWorld) world, player.isSneaking(), player);
+            }
+            if (hit.getSide() != Direction.UP) {
+                exterior.useOn((ServerWorld) world, player.isSneaking(), player);
+            }
         }
 
-        return ActionResult.CONSUME;
+        return ActionResult.CONSUME; // Consume the event regardless of the outcome
     }
+
+
+
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
@@ -448,4 +459,17 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.with(ROTATION, mirror.mirror(state.get(ROTATION), MAX_ROTATIONS));
     }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof ExteriorBlockEntity exterior) {
+            Entity seat = exterior.getSeatEntity(world);
+            if (seat != null) {
+                seat.remove(Entity.RemovalReason.DISCARDED);
+            }
+        }
+        super.onBreak(world, pos, state, player);
+    }
+
 }

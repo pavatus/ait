@@ -48,6 +48,9 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
     private final Identifier id;
     private final Loyalty loyalty;
 
+    public static final double DEFAULT_SEAT_FORWARD_TRANSLATION = 0.5;
+    public static final Vec3d DEFAULT_SEAT_POS = new Vec3d(0.5, 1, 0.5);
+
     @Environment(EnvType.CLIENT)
     private ClientExteriorVariantSchema cachedSchema;
 
@@ -87,6 +90,12 @@ public abstract class ExteriorVariantSchema extends BasicSchema implements Unloc
 
     public Identifier categoryId() {
         return this.category;
+    }
+
+    public abstract Vec3d seatTranslations();
+
+    public double seatForwardTranslation() {
+        return DEFAULT_SEAT_FORWARD_TRANSLATION;
     }
 
     public ExteriorCategorySchema category() {
