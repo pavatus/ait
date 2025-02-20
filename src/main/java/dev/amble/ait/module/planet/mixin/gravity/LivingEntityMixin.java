@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITStatusEffects;
+import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
@@ -56,6 +58,14 @@ public abstract class LivingEntityMixin extends Entity {
 
         Vec3d movement = entity.getVelocity();
         entity.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
+    }
+
+    @Inject(method = "tickInVoid", at = @At("HEAD"), cancellable = true)
+    public void ait$tickInVoid(CallbackInfo ci) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.player == null || !mc.player.hasVehicle()) return;
+        if (mc.player.getVehicle() instanceof FlightTardisEntity)
+            ci.cancel();
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
