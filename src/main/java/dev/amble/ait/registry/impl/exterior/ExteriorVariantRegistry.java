@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.AITRegistryEvents;
@@ -87,7 +88,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
             buf.encodeAsJson(DatapackExterior.CODEC,
                     new DatapackExterior(schema.id(), schema.categoryId(), schema.id(),
                             DatapackExterior.DEFAULT_TEXTURE, DatapackExterior.DEFAULT_TEXTURE, schema.requirement(),
-                            BiomeOverrides.EMPTY, false));
+                            BiomeOverrides.EMPTY,new Vec3d(0.5, 1, 0.5), false));
         }
 
         ServerPlayNetworking.send(player, this.packet, buf);
@@ -287,7 +288,7 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         DALEK_MOD_1980 = register(new DalekMod1980Variant());
 
         // Jake
-        //JAKE_DEFAULT = register(new JakeDefaultVariant());
+        //JAKE_DEFAULT = init(new JakeDefaultVariant());
 
         // Present
         PRESENT_DEFAULT = register(new PresentDefaultVariant());

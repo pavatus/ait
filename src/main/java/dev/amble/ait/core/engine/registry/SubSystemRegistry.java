@@ -29,7 +29,7 @@ public class SubSystemRegistry implements Registry {
         REGISTRY.put(id.name(), id);
 
         if (frozen)
-            AITMod.LOGGER.error("Tried to register a component id after the registry got frozen: {}", id);
+            AITMod.LOGGER.error("Tried to init a component id after the registry got frozen: {}", id);
     }
 
     public void register(SubSystem.IdLike[] idLikes) {

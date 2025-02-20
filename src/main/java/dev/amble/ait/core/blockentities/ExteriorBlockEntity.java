@@ -1,11 +1,15 @@
 package dev.amble.ait.core.blockentities;
 
+import java.util.UUID;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,7 +19,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationPropertyHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import dev.amble.ait.api.link.v2.TardisRef;
@@ -37,10 +44,13 @@ import dev.amble.ait.core.tardis.handler.SonicHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.tardis.util.TardisUtil;
+import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 
 public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements BlockEntityTicker<ExteriorBlockEntity> {
 
     private ExteriorAnimation animation;
+    private ExteriorVariantSchema variant;
+    private UUID seatEntityUUID = null;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -49,6 +59,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     public ExteriorBlockEntity(BlockPos pos, BlockState state, Tardis tardis) {
         this(pos, state);
         this.link(tardis);
+
     }
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
@@ -133,6 +144,65 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         tardis.door().interact((ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
     }
+
+    public void sitOn(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient()) return;
+
+        ServerTardis tardis = this.tardis().get().asServer();
+        ExteriorVariantSchema variant = tardis.getExterior().getVariant();
+
+        float playerPitch = player.getPitch(1.0F);
+        if (variant == null) return;
+
+        if (playerPitch > 50.0F) {
+            Vec3d seatPos = new Vec3d(
+                    variant.seatTranslations().x + pos.getX(),
+                    variant.seatTranslations().y + pos.getY(),
+                    variant.seatTranslations().z + pos.getZ()
+            );
+
+
+            byte rotation = tardis.travel().position().getRotation();
+            float yaw = RotationPropertyHelper.toDegrees(rotation) + 180.0F;
+            Vec3d adjustedPos = moveForward(seatPos, yaw, variant.seatForwardTranslation());
+
+            summonSeatEntity(world, adjustedPos, player, yaw);
+        }
+    }
+
+    // Moves the seat forward based on yaw direction
+    private Vec3d moveForward(Vec3d pos, float yaw, double distance) {
+        double radians = Math.toRadians(yaw);
+        double offsetX = -Math.sin(radians) * distance;
+        double offsetZ = Math.cos(radians) * distance;
+
+        return pos.add(offsetX, 0, offsetZ);
+    }
+
+    private void summonSeatEntity(World world, Vec3d pos, PlayerEntity player, float yaw) {
+        ArmorStandEntity seat = new ArmorStandEntity(EntityType.ARMOR_STAND, world);
+        seat.setPosition(pos.x, pos.y, pos.z);
+        seat.setInvisible(true);
+        seat.setNoGravity(true);
+        seat.setInvulnerable(true);
+        seat.setYaw(yaw);
+
+        world.spawnEntity(seat);
+
+        player.startRiding(seat, true);
+
+        this.setSeatEntity(seat.getUuid());
+    }
+
+    public void setSeatEntity(UUID seatUUID) {
+        this.seatEntityUUID = seatUUID;
+    }
+
+    public Entity getSeatEntity(World world) {
+        if (seatEntityUUID == null) return null;
+        return ((ServerWorld) world).getEntity(seatEntityUUID);
+    }
+
 
     public void onEntityCollision(Entity entity) {
         TardisRef ref = this.tardis();

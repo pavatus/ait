@@ -1,6 +1,8 @@
 package dev.amble.ait.data.schema.exterior.variant.easter_head;
 
 
+import net.minecraft.util.math.Vec3d;
+
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
@@ -34,5 +36,10 @@ public abstract class EasterHeadVariant extends ExteriorVariantSchema {
     @Override
     public boolean hasPortals() {
         return false;
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
     }
 }

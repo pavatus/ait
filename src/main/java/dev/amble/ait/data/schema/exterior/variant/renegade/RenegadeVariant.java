@@ -61,4 +61,9 @@ public abstract class RenegadeVariant extends ExteriorVariantSchema {
     public double portalWidth() {
         return 1d;
     }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
+    }
 }

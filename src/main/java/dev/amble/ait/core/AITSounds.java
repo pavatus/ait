@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import dev.amble.ait.AITMod;
 
 public class AITSounds {
-    // public static final SoundEvent SECRET_MUSIC = register("music/secret_music"); // removed for its large size - if you bring it back, COMPRESS IT
+    // public static final SoundEvent SECRET_MUSIC = init("music/secret_music"); // removed for its large size - if you bring it back, COMPRESS IT
     public static final SoundEvent EVEN_MORE_SECRET_MUSIC = register("music/even_more_secret_music");
     public static final SoundEvent DRIFTING_MUSIC = register("music/drifting_by_radio");
     public static final SoundEvent MERCURY_MUSIC = register("music/mercury_nitrogenez");

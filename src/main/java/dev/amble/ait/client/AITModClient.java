@@ -118,7 +118,7 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new FabricatorOverlay());
 
         /*
-         * ClientVortexDataHandler.init(); WorldRenderEvents.END.register(context -> {
+         * ClientVortexDataHandler.init(); WorldRenderEvents.END.init(context -> {
          * MinecraftClient client = MinecraftClient.getInstance(); World world =
          * client.player.getWorld(); if(world.getRegistryKey() ==
          * AITDimensions.TIME_VORTEX_WORLD) { System.out.println("rendering");

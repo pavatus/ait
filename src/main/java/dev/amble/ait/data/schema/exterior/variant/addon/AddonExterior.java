@@ -9,6 +9,7 @@ import org.joml.Vector3f;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.client.models.doors.DoorModel;
 import dev.amble.ait.client.models.exteriors.ExteriorModel;
@@ -52,6 +53,7 @@ public class AddonExterior extends ExteriorVariantSchema {
     private Door door;
     @Environment(EnvType.CLIENT)
     private Vector3f sonicItemTranslations;
+    private Vec3d seatTranslations;
 
     public AddonExterior(Identifier category, String modid, String name) {
         super(category, new Identifier(modid, "exterior/" + name), Loyalty.fromLevel(Loyalty.Type.OWNER.level));
@@ -113,6 +115,11 @@ public class AddonExterior extends ExteriorVariantSchema {
         this.client = client;
 
         return this;
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return this.seatTranslations = seatTranslations();
     }
 
     @Override

@@ -49,7 +49,7 @@ public class MonitorControl extends Control {
             AITMod.openScreen(player, 0, tardis.getUuid(), console);
             return true;
         } else {
-            player.sendMessage(Text.literal(Text.of("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + WorldUtil.worldText(abpd.getDimension()).getString()) + " Fuel: " + tardis.getFuel() + "/15000"), true);
+            player.sendMessage(Text.of("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + WorldUtil.worldText(abpd.getDimension()).getString() + " Fuel: " + tardis.getFuel() + "/15000"), true);
             return true;
         }
     }

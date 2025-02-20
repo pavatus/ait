@@ -86,7 +86,7 @@ public class CategoryRegistry extends SimpleDatapackRegistry<ExteriorCategorySch
         STALLION = register(new StallionCategory());
         ADAPTIVE = register(new AdaptiveCategory());
         DALEK_MOD = register(new DalekModCategory());
-        //JAKE = register(new JakeCategory());
+        //JAKE = init(new JakeCategory());
         PRESENT = register(new PresentCategory());
         PIPE = register(new PipeCategory());
     }
