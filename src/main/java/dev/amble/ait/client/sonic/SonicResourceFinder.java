@@ -7,11 +7,11 @@ import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
-public class ParentedResourceFinder extends ResourceFinder {
+public class SonicResourceFinder extends ResourceFinder {
 
     private final ResourceFinder parent;
 
-    public ParentedResourceFinder(ResourceFinder parent, String directoryName, String fileExtension) {
+    public SonicResourceFinder(ResourceFinder parent, String directoryName, String fileExtension) {
         super(directoryName, fileExtension);
         this.parent = parent;
     }
@@ -22,10 +22,14 @@ public class ParentedResourceFinder extends ResourceFinder {
     }
 
     @Override
+    public Identifier toResourceId(Identifier path) {
+        return parent.toResourceId(path);
+    }
+
+    @Override
     public Map<Identifier, Resource> findResources(ResourceManager resourceManager) {
         Map<Identifier, Resource> map = parent.findResources(resourceManager);
-        map.putAll(super.findResources(resourceManager));
-
+        SonicModelLoader.fromMap(this, super.findResources(resourceManager));
         return map;
     }
 }

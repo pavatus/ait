@@ -65,7 +65,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             if (schema.equals(s))
                 continue;
 
-            if (s.parent().parent().id().equals(schema.parent().parent().id()))
+            if (s.parent().parentId().equals(schema.parent().parentId()))
                 return s;
         }
 
@@ -89,7 +89,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             this.register(convertDatapack(buf.decodeAsJson(DatapackConsole.CODEC)));
         }
 
-        AITMod.LOGGER.info("Read {} console variants from server", size);
+        AITMod.LOGGER.info("Read {} client console variants from server", size);
     }
 
     public static ClientConsoleVariantSchema convertDatapack(DatapackConsole variant) {
@@ -97,7 +97,15 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             return convertNonDatapack(variant);
 
         return new ClientConsoleVariantSchema(variant.id()) {
-            private final ClientConsoleVariantSchema parentVariant = withSameParent(this);
+            private ClientConsoleVariantSchema sameParent; // a variant with the same parent as this one, so we have the same models n that
+
+            private ClientConsoleVariantSchema getSameParent() {
+                if (sameParent == null) {
+                    sameParent = withSameParent(this);
+                }
+
+                return sameParent;
+            }
 
             @Override
             public Identifier texture() {
@@ -111,13 +119,13 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
 
             @Override
             public ConsoleModel model() {
-                return parentVariant.model();
+                return getSameParent().model();
             }
 
             @Override
             public float[] sonicItemRotations() {
                 if (variant.sonicRotation().isEmpty()) {
-                    return parentVariant.sonicItemRotations();
+                    return getSameParent().sonicItemRotations();
                 }
 
                 float[] result = new float[2];
@@ -132,7 +140,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             @Override
             public Vector3f sonicItemTranslations() {
                 if (variant.sonicTranslation().equals(0,0,0)) {
-                    return parentVariant.sonicItemTranslations();
+                    return getSameParent().sonicItemTranslations();
                 }
 
                 return variant.sonicTranslation();
@@ -141,7 +149,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             @Override
             public float[] handlesRotations() {
                 if (variant.handlesRotation().isEmpty()) {
-                    return parentVariant.handlesRotations();
+                    return getSameParent().handlesRotations();
                 }
 
                 float[] result = new float[2];
@@ -156,7 +164,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
             @Override
             public Vector3f handlesTranslations() {
                 if (variant.handlesTranslation().equals(0,0,0)) {
-                    return parentVariant.handlesTranslations();
+                    return getSameParent().handlesTranslations();
                 }
 
                 return variant.handlesTranslation();

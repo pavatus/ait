@@ -341,6 +341,8 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
 
         pos = WorldUtil.locateSafe(pos, this.vGroundSearch.get(), this.hGroundSearch.get());
 
+        this.tardis.door().closeDoors();
+
         this.state.set(State.MAT);
         SoundEvent sound = tardis.stats().getTravelEffects().get(this.getState()).sound();
 

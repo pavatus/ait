@@ -87,6 +87,10 @@ public abstract class ConsoleVariantSchema extends BasicSchema implements Unlock
         return this.parent;
     }
 
+    /**
+     * @implNote If called too early (after datapacks, but before registries), this will return null!
+     * @return The parent {@link ConsoleTypeSchema} of this variant
+     */
     public ConsoleTypeSchema parent() {
         return ConsoleRegistry.REGISTRY.get(this.parentId());
     }

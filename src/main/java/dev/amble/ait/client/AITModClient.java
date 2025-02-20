@@ -6,6 +6,7 @@ import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 import java.util.UUID;
 
+import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
 import dev.amble.ait.client.overlays.FabricatorOverlay;
+import dev.amble.ait.client.overlays.RWFOverlay;
 import dev.amble.ait.client.overlays.SonicOverlay;
 import dev.amble.ait.client.renderers.SonicRendering;
 import dev.amble.ait.client.renderers.TardisStar;
@@ -51,7 +53,7 @@ import dev.amble.ait.client.renderers.monitors.WallMonitorRenderer;
 import dev.amble.ait.client.screens.AstralMapScreen;
 import dev.amble.ait.client.screens.BlueprintFabricatorScreen;
 import dev.amble.ait.client.screens.MonitorScreen;
-import dev.amble.ait.client.sonic.SonicModels;
+import dev.amble.ait.client.sonic.SonicModelLoader;
 import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.tardis.manager.ClientTardisManager;
 import dev.amble.ait.client.util.ClientTardisUtil;
@@ -66,8 +68,11 @@ import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
 import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.gun.core.item.BaseGunItem;
+import dev.amble.ait.registry.impl.SonicRegistry;
 import dev.amble.ait.registry.impl.console.ConsoleRegistry;
+import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
 import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
+import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
@@ -75,6 +80,13 @@ public class AITModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // TODO move to Registries
+
+        AmbleRegistries.getInstance().registerAll(
+                SonicRegistry.getInstance(),
+                ClientExteriorVariantRegistry.getInstance(),
+                ClientConsoleVariantRegistry.getInstance()
+        );
+
         ClientDoorRegistry.init();
         ClientTardisManager.init();
 
@@ -98,6 +110,7 @@ public class AITModClient implements ClientModInitializer {
         ClientLandingManager.init();
 
         HudRenderCallback.EVENT.register(new SonicOverlay());
+        HudRenderCallback.EVENT.register(new RWFOverlay());
         HudRenderCallback.EVENT.register(new FabricatorOverlay());
 
         /*
@@ -229,7 +242,7 @@ public class AITModClient implements ClientModInitializer {
         WorldRenderEvents.END.register((context) -> SonicRendering.getInstance().renderWorld(context));
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
 
-        sonicModelPredicate();
+        SonicModelLoader.init();
     }
 
     /**
@@ -270,10 +283,6 @@ public class AITModClient implements ClientModInitializer {
 
                     return 0.0F;
                 });
-    }
-
-    public static void sonicModelPredicate() {
-        SonicModels.init();
     }
 
     public static void waypointPredicate() {
