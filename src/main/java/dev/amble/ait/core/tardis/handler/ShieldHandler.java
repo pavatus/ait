@@ -22,7 +22,6 @@ import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITStatusEffects;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
-import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.properties.bool.BoolProperty;
 import dev.amble.ait.data.properties.bool.BoolValue;
 
@@ -110,8 +109,6 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
 
         world.getOtherEntities(null, new Box(exteriorPos).expand(8f)).stream()
                 .filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
-                .filter(entity -> !(entity instanceof ServerPlayerEntity player
-                        && tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))) // Exclude players with loyalty
                 .forEach(entity -> {
                     if (entity instanceof ServerPlayerEntity player) {
                         if (entity.isSubmergedInWater()) {
@@ -119,8 +116,9 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
                                     new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
                         }
                         if (entity.getWorld().getRegistryKey().equals(AITDimensions.SPACE)) {
+                            System.out.println("hello?");
                             player.addStatusEffect(
-                                    new StatusEffectInstance(AITStatusEffects.OXYGENATED, 15, 3, true, false, true));
+                                    new StatusEffectInstance(AITStatusEffects.OXYGENATED, 20, 1, true, false));
                         }
                     }
                     if (this.visuallyShielded().get()) {

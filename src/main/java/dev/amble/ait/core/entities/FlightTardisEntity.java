@@ -83,11 +83,10 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
     @Override
     protected float getOffGroundSpeed() {
-        if (this.tardis() != null)
-            if (this.getVelocity().horizontalLength() > 0.1f) {
-            float spaceSpeed = this.getWorld().getRegistryKey().equals(AITDimensions.SPACE) ? 0.1f : 0.03f;
-                return this.getMovementSpeed() * (this.tardis().get().travel().speed() * spaceSpeed);
-            }
+        if (this.tardis() != null) {
+            float spaceSpeed = this.getWorld().getRegistryKey().equals(AITDimensions.SPACE) ? 0.1f : 0.05f;
+            return this.getMovementSpeed() * (this.tardis().get().travel().speed() * spaceSpeed);
+        }
         return super.getOffGroundSpeed();
     }
 
@@ -108,7 +107,7 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             Tardis tardisClient = this.tardis().get().asClient();
             if (client.player == this.getControllingPassenger()) {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-                client.options.hudHidden = true;
+                //client.options.hudHidden = true;
                 if (!this.groundCollision)
                     ClientShakeUtil.shake((float) (tardisClient.travel().speed() + this.getVelocity().horizontalLength()) / tardisClient.travel().maxSpeed().get());
             }
