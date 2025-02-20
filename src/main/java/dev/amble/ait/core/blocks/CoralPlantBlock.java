@@ -157,7 +157,8 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         TardisBuilder builder = new TardisBuilder().at(CachedDirectedGlobalPos.create(world, pos, (byte) 0))
                 .owner(player)
-                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(0))
+                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(5000))
+                .with(TardisComponent.Id.TRAVEL, travel -> travel.tardis().travel().autopilot(false))
                 .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
                 .desktop(DesktopRegistry.DEFAULT_CAVE);
 

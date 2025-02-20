@@ -158,7 +158,7 @@ public class DrinkUtil {
             list.add(NONE_TEXT);
         } else {
             for (StatusEffectInstance statusEffectInstance : statusEffects) {
-                MutableText mutableText = Text.translatable(statusEffectInstance.getTranslationKey());
+                MutableText mutableText = statusEffectInstance.getTranslationKey() == null ? Text.empty() : Text.translatable(statusEffectInstance.getTranslationKey());
                 StatusEffect statusEffect = statusEffectInstance.getEffectType();
                 Map<EntityAttribute, EntityAttributeModifier> map = statusEffect.getAttributeModifiers();
                 if (!map.isEmpty()) {
