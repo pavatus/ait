@@ -12,7 +12,7 @@
     "show_icon": true
     },
     {
-      "id": "regeneration",
+      "id": "ait:zeiton_high",
       "duration": 340,
       "amplifier": 2,
       "ambient": false,
