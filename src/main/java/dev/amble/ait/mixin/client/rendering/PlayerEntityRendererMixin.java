@@ -20,7 +20,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Arm;
 
 import dev.amble.ait.client.renderers.wearables.RespiratorFeatureRenderer;
-import dev.amble.ait.client.renderers.wearables.SantaHatFeatureRenderer;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.module.planet.client.models.wearables.SpacesuitModel;
 import dev.amble.ait.module.planet.client.renderers.wearables.SpacesuitFeatureRenderer;
@@ -45,7 +44,7 @@ public abstract class PlayerEntityRendererMixin
 
         this.addFeature(new RespiratorFeatureRenderer<>(renderer, ctx.getModelLoader()));
         this.addFeature(new SpacesuitFeatureRenderer<>(renderer, ctx.getModelLoader()));
-        this.addFeature(new SantaHatFeatureRenderer<>(renderer, ctx.getModelLoader()));
+        //this.addFeature(new SantaHatFeatureRenderer<>(renderer, ctx.getModelLoader()));
     }
 
     @Inject(method = "renderArm", at = @At("HEAD"), cancellable = true)
