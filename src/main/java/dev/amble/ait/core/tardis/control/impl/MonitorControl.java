@@ -1,7 +1,7 @@
 package dev.amble.ait.core.tardis.control.impl;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import net.minecraft.client.util.telemetry.TelemetrySender;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -14,6 +14,7 @@ import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
+import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.data.schema.console.variant.coral.*;
 
 public class MonitorControl extends Control {
@@ -29,7 +30,7 @@ public class MonitorControl extends Control {
         CachedDirectedGlobalPos abpd = tardis.travel().destination();
         BlockPos abpdPos = abpd.getPos();
 
-        if (player.isSneaking()) {
+        if (!player.isSneaking()) {
             boolean isCoral = false;
 
             if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
@@ -48,7 +49,7 @@ public class MonitorControl extends Control {
             AITMod.openScreen(player, 0, tardis.getUuid(), console);
             return true;
         } else {
-            player.sendMessage(Text.of(Text.literal("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + abpd.getDimension()).getString() + " Fuel: " + tardis.getFuel() + "/15000"), true);
+            player.sendMessage(Text.of(Text.literal("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + WorldUtil.worldText(abpd.getDimension()).getString()) + " Fuel: " + tardis.getFuel() + "/15000"), true);
             return true;
         }
     }

@@ -19,7 +19,7 @@ public class ExtraHandler extends KeyedTardisComponent {
     }
 
     @Override
-    public void onCreate() { 
+    public void onCreate() {
         this.setRefreshmentItem(AITItems.COFFEE.getDefaultStack());
         this.setInsertedDisc(ItemStack.EMPTY);
     }
