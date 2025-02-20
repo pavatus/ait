@@ -135,7 +135,8 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             );
         }
 
-        if (player.isSneaking() && (onGround || tardis.travel().antigravs().get()) && this.getY() > this.getWorld().getBottomY() && this.getY() < this.getWorld().getTopY()) {
+        if (player.isSneaking() && (onGround || tardis.travel().antigravs().get())
+                && this.getY() > this.getWorld().getBottomY() && this.getY() < this.getWorld().getTopY()) {
             //System.out.println(onGround);
             this.finishLand(tardis, player);
         }
