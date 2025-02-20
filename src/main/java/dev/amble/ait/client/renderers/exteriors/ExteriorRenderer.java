@@ -73,7 +73,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         if (entity.getAlpha() > 0 || !tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get())
             this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
-
         profiler.pop();
 
         profiler.pop();
@@ -207,10 +206,12 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
             u = hs[2];
         }
 
+        float colorAlpha = 1 - alpha;
+
         if (alpha > 0.105f && emission != null && !(emission.equals(DatapackConsole.EMPTY)))
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations, emission, entity,
-                    this.model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, s, alarms ? 0.3f : t,
-                    alarms ? 0.3f : u, alpha);
+                    this.model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, s - colorAlpha, alarms ? 0.3f : t - colorAlpha,
+                    alarms ? 0.3f : u - colorAlpha, alpha);
 
         profiler.swap("biome");
 

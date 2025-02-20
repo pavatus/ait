@@ -22,5 +22,16 @@ public class SeatHandler {
                 }
             }
         });
+        /*TardisEvents.DEMAT.register((tardis) -> {
+            ServerWorld world = tardis.travel().position().getWorld();
+            if (entity instanceof ArmorStandEntity seat) {
+                BlockPos blockPos = seat.getBlockPos();
+                BlockEntity block = world.getBlockEntity(blockPos);
+
+                seat.remove(Entity.RemovalReason.DISCARDED);
+                exterior.setSeatEntity(null);
+            }
+            return TardisEvents.Interaction.PASS;
+        });*/
     }
 }
