@@ -9,16 +9,19 @@ import dev.amble.ait.data.properties.Value;
 
 public class ExtraHandler extends KeyedTardisComponent {
     private static final Property<ItemStack> SET_REFRESHMENT_ITEM = new Property<>(Property.Type.ITEM_STACK, "set_refreshment_item", (ItemStack) null);
+    private static final Property<ItemStack> INSERTED_DISC = new Property<>(Property.Type.ITEM_STACK, "inserted_disc", (ItemStack) null);
 
     private final Value<ItemStack> setRefreshmentItemValue = SET_REFRESHMENT_ITEM.create(this);
+    private final Value<ItemStack> setInsertedDiscValue = INSERTED_DISC.create(this);
 
     public ExtraHandler() {
         super(Id.EXTRAS);
     }
 
     @Override
-    public void onCreate() {
+    public void onCreate() { 
         this.setRefreshmentItem(AITItems.COFFEE.getDefaultStack());
+        this.setInsertedDisc(ItemStack.EMPTY);
     }
 
     @Override
@@ -34,4 +37,14 @@ public class ExtraHandler extends KeyedTardisComponent {
     public void setRefreshmentItem(ItemStack item) {
         setRefreshmentItemValue.set(item);
     }
+
+    public ItemStack getInsertedDisc() {
+        ItemStack itemStack = setInsertedDiscValue.get();
+        return itemStack != null ? itemStack : ItemStack.EMPTY;
+    }
+
+    public void setInsertedDisc(ItemStack item) {
+        setInsertedDiscValue.set(item);
+    }
+
 }
