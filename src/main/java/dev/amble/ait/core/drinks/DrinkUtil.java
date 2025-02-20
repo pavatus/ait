@@ -27,7 +27,7 @@ public class DrinkUtil {
     public static final String CUSTOM_DRINK_EFFECTS_KEY = "CustomDrinkEffects";
     public static final String CUSTOM_DRINK_COLOR_KEY = "CustomDrinkColor";
     public static final String DRINK_KEY = "Drink";
-    private static final int DEFAULT_COLOR = Color.ofRGB(100, 100, 255).getColor();
+    private static final int DEFAULT_COLOR = Color.ofRGB(0.824f, 0.89f, 0.988f).getColor();
     private static final Text NONE_TEXT = Text.translatable("effect.none").formatted(Formatting.GRAY);
     private static final Drink EMPTY = DrinkRegistry.EMPTY_MUG;
 
@@ -90,7 +90,7 @@ public class DrinkUtil {
             return Color.ofRGB(vector.x(), vector.y(), vector.z()).getColor();
         }
         if (effects.isEmpty()) {
-            return Color.ofRGB(0.824f, 0.89f, 0.988f).getColor();
+            return DEFAULT_COLOR;
         }
         float f = 0.0f;
         float g = 0.0f;
