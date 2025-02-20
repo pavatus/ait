@@ -10,14 +10,6 @@
     "ambient": false,
     "show_particles": true,
     "show_icon": true
-    },
-    {
-      "id": "ait:zeiton_high",
-      "duration": 340,
-      "amplifier": 2,
-      "ambient": false,
-      "show_particles": true,
-      "show_icon": true
     }
   ]
 }
