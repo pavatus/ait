@@ -152,7 +152,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
 
         TravelHandler travel = tardis.travel();
 
-        if (travel.getState() == TravelHandlerBase.State.FLIGHT) {
+        if (travel.getState() == TravelHandlerBase.State.FLIGHT && !tardis.areShieldsActive()) {
             TardisUtil.dropOutside(tardis, entity);
             return;
         }
