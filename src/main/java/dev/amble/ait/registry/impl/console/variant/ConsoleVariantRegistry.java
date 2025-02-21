@@ -28,6 +28,9 @@ import dev.amble.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.WoodenHartnellVariant;
+import dev.amble.ait.data.schema.console.variant.hudolin.HudolinNatureVariant;
+import dev.amble.ait.data.schema.console.variant.hudolin.HudolinShalkaVariant;
+import dev.amble.ait.data.schema.console.variant.hudolin.HudolinVariant;
 import dev.amble.ait.data.schema.console.variant.renaissance.*;
 import dev.amble.ait.data.schema.console.variant.steam.*;
 import dev.amble.ait.data.schema.console.variant.toyota.ToyotaBlueVariant;
@@ -138,6 +141,8 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema STEAM_COPPER;
     public static ConsoleVariantSchema STEAM_PLAYPAL;
     public static ConsoleVariantSchema HUDOLIN;
+    public static ConsoleVariantSchema HUDOLIN_SHALKA;
+    public static ConsoleVariantSchema HUDOLIN_NATURE;
     public static ConsoleVariantSchema COPPER;
     public static ConsoleVariantSchema BOREALIS;
     public static ConsoleVariantSchema CRYSTALLINE;
@@ -182,8 +187,10 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         STEAM_PLAYPAL = registerStatic(new SteamPlaypalVariant());
         STEAM_COPPER = registerStatic(new SteamCopperVariant());
 
-        // Hudolin variants (why am i adding this???)
-        // HUDOLIN = registerStatic(new HudolinVariant());
+        // Hudolin variants
+        HUDOLIN = registerStatic(new HudolinVariant());
+        HUDOLIN_NATURE = registerStatic(new HudolinNatureVariant());
+        HUDOLIN_SHALKA = registerStatic(new HudolinShalkaVariant());
 
         // Copper variants
         COPPER = registerStatic(new CopperVariant());
