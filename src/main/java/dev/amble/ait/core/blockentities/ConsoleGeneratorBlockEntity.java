@@ -52,14 +52,17 @@ public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
         if (!TardisServerWorld.isTardisDimension(world))
             return;
 
+        if (tardis() == null)
+            return;
+
         ItemStack stack = player.getMainHandStack();
 
-        if (stack.getItem() == AITItems.SONIC_SCREWDRIVER) {
+        if (stack.getItem() == AITItems.SONIC_SCREWDRIVER && tardis().get().isUnlocked(this.getConsoleVariant())) {
             this.createConsole(player);
             return;
         }
 
-        if (stack.isOf(Items.BLAZE_POWDER)) {
+        if (stack.isOf(Items.BLAZE_POWDER) && tardis().get().isUnlocked(this.getConsoleVariant())) {
             stack.decrement(1);
 
             this.createConsole(player);
@@ -85,6 +88,7 @@ public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     private void createConsole(PlayerEntity player) {
+        if (this.getWorld() != null && this.getWorld().isClient()) return;
         ConsoleBlockEntity consoleBlockEntity = new ConsoleBlockEntity(pos, AITBlocks.CONSOLE.getDefaultState());
 
         consoleBlockEntity.setType(this.getConsoleSchema());
