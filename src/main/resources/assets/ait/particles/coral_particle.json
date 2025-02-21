@@ -1,0 +1,8 @@
+{
+  "textures": ["ait:textures/particles/coral.png"],
+  "frame": {
+    "count": 1,
+    "time": 1,
+    "interpolate": true
+  }
+}
