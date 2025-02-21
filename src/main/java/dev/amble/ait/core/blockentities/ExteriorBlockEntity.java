@@ -314,4 +314,5 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         this.getWorld().setBlockState(pos, blockState.with(ExteriorBlock.LEVEL_4, Math.round(this.getAlpha() * 4)));
     }
+
 }
