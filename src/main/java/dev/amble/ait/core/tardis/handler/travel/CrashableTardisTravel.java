@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Random;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
+import dev.amble.lib.util.ServerLifecycleHooks;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -69,18 +72,23 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         List<Explosion> explosions = new ArrayList<>();
 
         ServerWorld world = tardis.asServer().getInteriorWorld();
+        MinecraftServer server = ServerLifecycleHooks.get();
         tardis.getDesktop().getConsolePos().forEach(console -> {
             TardisDesktop.playSoundAtConsole(world, console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3f, 1f);
 
             Explosion explosion = world.createExplosion(null, null, new ExplosionBehavior() {
                         @Override
                         public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
-                            return false; // no destroying blocks guys
+                            return false;
                         }
                     },
                     console.toCenterPos(), 3f * power, false, World.ExplosionSourceType.MOB);
 
             explosions.add(explosion);
+
+            if (server.getGameRules().getBoolean(AITMod.TARDIS_FIRE_GRIEFING)) {
+                this.fireExplosionEffect(tardis, console);
+            }
         });
 
         if (tardis.sequence().hasActiveSequence())
@@ -139,4 +147,51 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
 
         TardisEvents.CRASH.invoker().onCrash(tardis);
     }
+
+    default void fireExplosionEffect(Tardis tardis, BlockPos consolePos) {
+        World world = tardis.asServer().getInteriorWorld();
+
+        // Play explosion sound (for visual & audio effects)
+        world.playSound(null, consolePos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+
+        // Number of fire blocks to place in the area
+        int fireRadius = 6;  // Adjust radius for desired fire spread range
+        Random random = new Random();
+
+        // Loop through blocks around the console
+        for (int x = -fireRadius; x <= fireRadius; x++) {
+            for (int y = -fireRadius; y <= fireRadius; y++) {
+                for (int z = -fireRadius; z <= fireRadius; z++) {
+                    BlockPos targetPos = consolePos.add(x, y, z);
+
+                    // Calculate distance from the console
+                    double distance = consolePos.getSquaredDistance(targetPos);
+
+                    // We make the probability based on the distance from the console
+                    float probability = calculateFireProbability(distance, fireRadius);
+
+                    // Random chance to place fire based on distance
+                    if (random.nextFloat() < probability) {
+                        // Only place fire on air or flammable blocks
+                        if (world.getBlockState(targetPos).isAir() || world.getBlockState(targetPos).isBurnable()) {
+                            world.setBlockState(targetPos, Blocks.FIRE.getDefaultState());  // Place fire
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private float calculateFireProbability(double distance, int maxRadius) {
+        // Normalize the distance based on the max radius, then apply a higher probability further out
+        // Closer to the console (smaller distance), fire is less common
+        // Farther from the console (greater distance), fire is more common
+
+        float normalizedDistance = (float) (distance / (maxRadius * maxRadius));  // Normalize to a [0, 1] range
+        // Reverse it: closer (smaller distance) should be less likely to have fire
+        float probability = Math.max(0.0f, 1.0f - normalizedDistance);  // Higher probability farther out
+
+        return probability;  // Return probability for the fire to appear
+    }
+
 }
