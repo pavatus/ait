@@ -24,6 +24,8 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.client.renderers.VortexUtil;
+import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.module.planet.client.renderers.CelestialBodyRenderer;
 import dev.amble.ait.module.planet.client.renderers.SpaceSkyRenderer;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
@@ -54,6 +56,17 @@ public class SkyboxUtil extends WorldRenderer {
 
     public static void renderTardisSky(WorldRenderContext context) {
         SkyboxUtil.renderTardisSky(context.matrixStack());
+    }
+
+    public static void renderVortexSky(MatrixStack matrices, Tardis tardis) {
+        VortexUtil util = tardis.stats().getVortexEffects().toUtil();
+        matrices.push();
+        float scale = 100f;
+        float zOffset = 500 * scale;
+        matrices.translate(0, 0, zOffset);
+        matrices.scale(scale, scale, scale);
+        util.renderVortex(matrices);
+        matrices.pop();
     }
 
     public static void renderTardisSky(MatrixStack matrices) {
@@ -133,7 +146,7 @@ public class SkyboxUtil extends WorldRenderer {
                 new Vector3f(12, 45, 0), false,
                 new Vector3f(0.5f, 0, 0f));
 
-        renderSkyBody(matrices, AITMod.id("textures/environment/earth.png"),
+        renderSkyBody(false, matrices, AITMod.id("textures/environment/earth.png"),
                 new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new
                         Vector3f(76f, 76f, 76f),
                 new Vector3f(-22.5f, 45f, 0), true, true,
@@ -272,7 +285,7 @@ public class SkyboxUtil extends WorldRenderer {
         ci.cancel();*/
     }
 
-    public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
+    public static void renderSpaceSky(boolean isTardisSkybox, MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
         Tessellator tessellator = Tessellator.getInstance();
@@ -312,8 +325,8 @@ public class SkyboxUtil extends WorldRenderer {
                 new Vec3d(0, 1000, 0),
                 new Vector3f(1000f, 1000f, 1000f),
                 new Vector3f(12, 45, 0),
-                false,
-                new Vector3f(0.5f, 0, 0f));
+                true,
+                new Vector3f(0.1f, 0.05f, 0.0f));
 
 
         for (SolarSystem system : Space.getInstance().systems) {
@@ -323,7 +336,7 @@ public class SkyboxUtil extends WorldRenderer {
                 PlanetRenderInfo render = planet.render();
                 if (render.isEmpty()) continue;
 
-                renderCelestialBody(matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color(), render.hasRings());
+                renderCelestialBody(isTardisSkybox, matrices, render.texture(), render.position(), render.scale(), render.rotation(), render.clouds(), render.atmosphere(), render.color(), render.hasRings());
             }
         }
 
@@ -338,15 +351,15 @@ public class SkyboxUtil extends WorldRenderer {
      * Renders a celestial body in space.
      */
 
-    private static void renderSkyBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
+    private static void renderSkyBody(boolean isTardisSkybox, MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color) {
         matrices.push();
-        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, true, clouds, atmosphere, color, false);
+        CelestialBodyRenderer.renderComprehendableBody(isTardisSkybox, position, scale, rotation, texture, true, clouds, atmosphere, color, false);
         matrices.pop();
     }
 
-    private static void renderCelestialBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color, boolean hasRings) {
+    private static void renderCelestialBody(boolean isTardisSkybox, MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean clouds, boolean atmosphere, Vector3f color, boolean hasRings) {
         matrices.push();
-        CelestialBodyRenderer.renderComprehendableBody(position, scale, rotation, texture, false, clouds, atmosphere, color, hasRings);
+        CelestialBodyRenderer.renderComprehendableBody(isTardisSkybox, position, scale, rotation, texture, false, clouds, atmosphere, color, hasRings);
         matrices.pop();
     }
 
