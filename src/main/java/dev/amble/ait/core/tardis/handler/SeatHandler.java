@@ -1,17 +1,11 @@
 package dev.amble.ait.core.tardis.handler;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.util.math.BlockPos;
 
-import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 
 public class SeatHandler {
     public static void init() {
-        ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
+        /*ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
             if (entity instanceof ArmorStandEntity seat) {
                 BlockPos blockPos = seat.getBlockPos();
                 BlockEntity block = world.getBlockEntity(blockPos);
@@ -21,7 +15,7 @@ public class SeatHandler {
                     exterior.setSeatEntity(null);
                 }
             }
-        });
+        });*/
         /*TardisEvents.DEMAT.register((tardis) -> {
             ServerWorld world = tardis.travel().position().getWorld();
             if (entity instanceof ArmorStandEntity seat) {

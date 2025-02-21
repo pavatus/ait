@@ -289,7 +289,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
 
         if (blockEntity instanceof ExteriorBlockEntity exterior) {
 
-            exterior.sitOn(state, world, pos, player, hand, hit);
+            //exterior.sitOn(state, world, pos, player, hand, hit);
 
             if (world.isClient()) {
                 return ActionResult.SUCCESS;
