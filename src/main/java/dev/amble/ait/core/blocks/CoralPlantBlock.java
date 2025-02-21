@@ -27,6 +27,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -34,6 +35,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.AITSounds;
@@ -103,6 +105,19 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         }
 
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+
+        Vec3d centre = pos.up().toCenterPos();
+        for (int i = 0; i < getAge(state); i++) {
+            double offsetX = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
+            double offsetY = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
+            double offsetZ = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
+            world.addParticle(AITMod.CORAL_PARTICLE, centre.getX(), centre.getY() , centre.getZ(), offsetX, offsetY, offsetZ);
+        }
     }
 
     @Override

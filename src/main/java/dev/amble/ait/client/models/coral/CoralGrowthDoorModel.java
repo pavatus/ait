@@ -4,6 +4,7 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.RotationAxis;
 
 import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import dev.amble.ait.client.models.doors.DoorModel;
@@ -106,7 +107,10 @@ public class CoralGrowthDoorModel extends DoorModel {
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red,
             float green, float blue, float alpha) {
+        matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
         coral.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        matrices.pop();
     }
 
     @Override
@@ -116,7 +120,7 @@ public class CoralGrowthDoorModel extends DoorModel {
             return;
 
         matrices.push();
-        matrices.translate(0, -1.5f, 0);
+        matrices.translate(0, -1.5f, 0.5f);
 
         super.renderWithAnimations(door, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 

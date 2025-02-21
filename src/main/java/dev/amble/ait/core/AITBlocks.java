@@ -89,7 +89,7 @@ public class AITBlocks extends BlockContainer {
                     .instrument(Instrument.BANJO).pistonBehavior(PistonBehavior.IGNORE));
     @NoEnglish
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque()
-            .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+            .noCollision().breakInstantly().luminance(light -> 0).sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @NoEnglish
     public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()

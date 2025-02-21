@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
+import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.core.tardis.handler.ShieldHandler;
@@ -57,6 +58,11 @@ public class ShieldsControl extends Control {
         }
 
         return true;
+    }
+
+    @Override
+    protected SubSystem.IdLike requiredSubSystem() {
+        return SubSystem.Id.SHIELDS;
     }
 
     @Override

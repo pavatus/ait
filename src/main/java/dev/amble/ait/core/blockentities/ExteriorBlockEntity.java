@@ -249,7 +249,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
         }
 
-        if (!tardis.travel().isLanded() && this.getAlpha() > 0.105f) {
+        if (!tardis.travel().isLanded() && this.getAlpha() > 0.105f && AITMod.CONFIG.CLIENT.RENDER_DEMAT_PARTICLES) {
             for (int ji = 0; ji < 4; ji++) {
                 double offsetX = AITMod.RANDOM.nextGaussian() * 0.125f;
                 double offsetY = AITMod.RANDOM.nextGaussian() * 0.125f;
