@@ -119,6 +119,9 @@ public abstract class SkyboxMixin {
             return;
         }
 
+        if (this.world == null)
+            return;
+
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
         if (tardis == null || tardis.stats() == null || tardis.stats().skybox() == null)
@@ -142,6 +145,23 @@ public abstract class SkyboxMixin {
 
         if (skyboxWorld == World.NETHER) {
             ci.cancel();
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.SPACE) {
+            SkyboxUtil.renderSpaceSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            ci.cancel();
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.MOON) {
+            SkyboxUtil.renderMoonSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            ci.cancel();
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.MARS) {
+            SkyboxUtil.renderMarsSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix, ci);
             return;
         }
 

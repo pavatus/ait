@@ -52,14 +52,14 @@ public class TardisStar {
 
         TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
                 provider.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(TARDIS_STAR_TEXTURE, true)),
-                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, tardis.isGrowth() ? 0.1f : 1,
-                tardis.isGrowth() ? 0.1f : 1, tardis.isGrowth() ? 0.1f : 1, 0.5f);
+                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, tardis.isGrowth() ? 0.1f : 1f,
+                tardis.isGrowth() ? 0.1f : 0, tardis.isGrowth() ? 0.1f : 0, 0.5f);
 
         matrixStack.scale(0.9f, 0.9f, 0.9f);
         TardisStarModel.getTexturedModelData().createModel().render(matrixStack,
                 provider.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(TARDIS_STAR_TEXTURE, true)),
-                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, tardis.isGrowth() ? 0.2f : 1,
-                tardis.isGrowth() ? 0f : 1, 1f);
+                LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, tardis.isGrowth() ? 0.2f : 0.25f,
+                tardis.isGrowth() ? 0f : 0, 1f);
     }
 
     public static void renderShine(WorldRenderContext context, Tardis tardis) {
