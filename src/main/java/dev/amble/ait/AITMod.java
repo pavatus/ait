@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.loot.function.SetNbtLootFunction;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -102,6 +104,11 @@ public class AITMod implements ModInitializer {
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
             new Identifier(MOD_ID, "zeiton_geode"));
 
+    // This DefaultParticleType gets called when you want to use your particle in code.
+    public static final DefaultParticleType CORAL_PARTICLE = FabricParticleTypes.simple();
+
+    // Register our custom particle type in the mod initializer.
+
     public static final Crater CRATER = new Crater(ProbabilityConfig.CODEC);
 
     public static final String BRANCH;
@@ -115,6 +122,10 @@ public class AITMod implements ModInitializer {
 
     public static boolean isUnsafeBranch() {
         return !BRANCH.equals("release");
+    }
+
+    public void registerParticles() {
+        Registry.register(Registries.PARTICLE_TYPE, id("coral_particle"), CORAL_PARTICLE);
     }
 
     @Override
@@ -152,6 +163,8 @@ public class AITMod implements ModInitializer {
                 ItemOpinionRegistry.getInstance(),
                 DrinkRegistry.getInstance()
         );
+
+        registerParticles();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
