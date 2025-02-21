@@ -1,11 +1,13 @@
 package dev.amble.ait.client.util;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -17,6 +19,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
@@ -27,6 +30,7 @@ import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRenderInfo;
 import dev.amble.ait.module.planet.core.space.system.SolarSystem;
 import dev.amble.ait.module.planet.core.space.system.Space;
+
 
 
 public class SkyboxUtil extends WorldRenderer {
@@ -95,7 +99,7 @@ public class SkyboxUtil extends WorldRenderer {
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(300f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f + 300f));
         matrices.scale(100, 100, 100);
 
         drawSpace(tessellator, bufferBuilder, matrices);
@@ -138,19 +142,103 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.depthFunc(GL11.GL_LESS);
     }
 
-    public static void renderMarsSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
-        RenderSystem.setShaderColor(1, 1, 1, 0.1f);
+    public static void renderMarsSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix, CallbackInfo ci) {
+        float q;
+        float p;
+        float o;
+        float k;
+        float i;
+        fogCallback.run();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-
+        Vec3d vec3d = world.getSkyColor(MinecraftClient.getInstance().gameRenderer.getCamera().getPos(), tickDelta);
+        float f = (float)vec3d.x;
+        float g = (float)vec3d.y;
+        float h = (float)vec3d.z;
+        BackgroundRenderer.setFogBlack();
+        RenderSystem.depthMask(false);
+        RenderSystem.setShaderColor(f, g, h, 1.0f);
+        VertexBuffer.unbind();
+        RenderSystem.enableBlend();
+        float[] fs = world.getDimensionEffects().getFogColorOverride(world.getSkyAngle(tickDelta), tickDelta);
+        if (fs != null) {
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            matrices.push();
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
+            i = MathHelper.sin(world.getSkyAngleRadians(tickDelta)) < 0.0f ? 180.0f : 0.0f;
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(i));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0f));
+            float j = fs[0];
+            k = fs[1];
+            float l = fs[2];
+            Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+            bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+            bufferBuilder.vertex(matrix4f, 0.0f, 100.0f, 0.0f).color(j, k, l, fs[3]).next();
+            int m = 16;
+            for (int n = 0; n <= 16; ++n) {
+                o = (float)n * ((float)Math.PI * 2) / 16.0f;
+                p = MathHelper.sin(o);
+                q = MathHelper.cos(o);
+                bufferBuilder.vertex(matrix4f, p * 120.0f, q * 120.0f, -q * 40.0f * fs[3]).color(fs[0], fs[1], fs[2], 0.0f).next();
+            }
+            BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+            matrices.pop();
+        }
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-405f));
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f + 300f));
         matrices.scale(100, 100, 100);
 
-        drawSpace(tessellator, bufferBuilder, matrices);
+        if (fs != null)
+            RenderSystem.setShaderColor(fs[0] + 0.45f, fs[1] + 0.45f, fs[2] + 0.45f, 0.1f);
+        else
+            RenderSystem.setShaderColor(0.8f, 1.0f, 1.0f, 0.1f);
+        SpaceSkyRenderer cubeMap = new SpaceSkyRenderer(AITMod.id("textures/environment/space_sky/panorama"));
+        cubeMap.draw(tessellator, bufferBuilder, matrices);
+        RenderSystem.setShaderColor(1, 1, 1, 1f);
 
         matrices.push();
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
+        //matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
+        BackgroundRenderer.clearFog();
+
+        starsBuffer.bind();
+        starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
+                GameRenderer.getPositionProgram());
+
+        VertexBuffer.unbind();
+        fogCallback.run();
+
+        RenderSystem.depthMask(true);
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+        RenderSystem.defaultBlendFunc();
+        matrices.pop();
+        RenderSystem.setShaderColor(1, 1, 1, 1f);
+
+        matrices.pop();
+        matrices.push();
+        i = 1.0f;
+        if (fs != null)
+            RenderSystem.setShaderColor(fs[0] + 0.45f, fs[1] + 0.45f, fs[2] + 0.45f, i);
+        else
+            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, i);
+        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        renderStarBody(matrices, SUN,
+                new Vec3d(cameraPos.getX(), cameraPos.getY() + 250, cameraPos.getZ() + 0), new
+                        Vector3f(6f, 6f, 6f),
+                new Vector3f(45, 12, 12), false,
+                new Vector3f(0f, 0.03f, 0.03f));
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+        matrices.pop();
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.depthMask(true);
+        ci.cancel();
+        /*RenderSystem.depthMask(true);
+        RenderSystem.depthFunc(GL11.GL_GREATER);*/
+       /* matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
         //matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
         RenderSystem.setShaderColor(1, 1, 1, 1f);
@@ -181,6 +269,7 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.setShaderColor(1, 1, 1, 1f);
         RenderSystem.depthMask(true);
         RenderSystem.depthFunc(GL11.GL_LESS);
+        ci.cancel();*/
     }
 
     public static void renderSpaceSky(MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {

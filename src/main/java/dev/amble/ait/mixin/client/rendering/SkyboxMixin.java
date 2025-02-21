@@ -101,8 +101,7 @@ public abstract class SkyboxMixin {
         }
 
         if (this.world.getRegistryKey() == AITDimensions.MARS) {
-            SkyboxUtil.renderMarsSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
-            ci.cancel();
+            SkyboxUtil.renderMarsSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix, ci);
         }
 
         if (this.world.getRegistryKey() == AITDimensions.SPACE) {

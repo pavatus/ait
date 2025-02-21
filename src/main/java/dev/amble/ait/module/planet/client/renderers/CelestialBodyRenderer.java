@@ -68,9 +68,15 @@ public class CelestialBodyRenderer {
         Vec3d diff = targetPos.subtract(cameraPos);
 
         MatrixStack matrixStack = new MatrixStack();
+
+        if (mc.world == null)
+            return;
+
         matrixStack.push();
+
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
+        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(mc.world.getSkyAngle(mc.getTickDelta()) * 360.0f));
         matrixStack.translate(diff.x, diff.y, diff.z);
         matrixStack.scale(scale.x, scale.y, scale.z);
 
@@ -85,10 +91,12 @@ public class CelestialBodyRenderer {
 
         RenderSystem.depthMask(true);
 
+        //RenderSystem.setShaderColor(atmosphereColor.x + 0.25f, atmosphereColor.y + 0.25f, atmosphereColor.z + 0.25f, 1f);
         model.render(matrixStack,
                 provider.getBuffer(AITRenderLayers.getBeaconBeam(texture, false)),
-                0xf000f00, OverlayTexture.DEFAULT_UV, 1f, 1f, 1f, 1f);
+                0xf000f00, OverlayTexture.DEFAULT_UV, 1 - atmosphereColor.x, 1 - atmosphereColor.y, 1 - atmosphereColor.z, 1f);
         provider.draw();
+        //RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         if (hasAtmosphere) {
             atmosphereRenderer(matrixStack, atmosphereColor, provider, true,false);
