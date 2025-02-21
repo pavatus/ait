@@ -49,7 +49,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
                     BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),
-                    Vec3d.CODEC.fieldOf("seat_translations").forGetter(DatapackExterior::seatTranslations),
+                    Vec3d.CODEC.optionalFieldOf("seat_translations", new Vec3d(0.5, 1, 0.5)).forGetter(DatapackExterior::seatTranslations),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack))
             .apply(instance, DatapackExterior::new));
 
