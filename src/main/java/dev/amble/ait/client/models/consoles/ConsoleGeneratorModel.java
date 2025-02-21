@@ -63,27 +63,27 @@ public class ConsoleGeneratorModel extends SinglePartEntityModel {
                 10.0F, 1.0F, 11.0F, new Dilation(0.005F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
         ModelPartData bone14 = bone7.addChild("bone14",
-                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.01F)),
                 ModelTransform.pivot(0.0F, -0.1F, 0.0F));
 
         ModelPartData bone3 = bone14.addChild("bone3",
-                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.01F)),
                 ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
         ModelPartData bone4 = bone3.addChild("bone4",
-                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.01F)),
                 ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
         ModelPartData bone5 = bone4.addChild("bone5",
-                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.01F)),
                 ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
         ModelPartData bone6 = bone5.addChild("bone6",
-                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.01F)),
                 ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
         ModelPartData bone9 = bone6.addChild("bone9",
-                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.0F)),
+                ModelPartBuilder.create().uv(0, 13).cuboid(11.95F, 0.0F, -7.5F, 1.0F, 0.0F, 15.0F, new Dilation(0.01F)),
                 ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
         ModelPartData bone84 = bone7.addChild("bone84", ModelPartBuilder.create(),

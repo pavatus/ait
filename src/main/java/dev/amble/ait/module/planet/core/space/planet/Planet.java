@@ -100,7 +100,7 @@ public record Planet(Identifier dimension, float gravity, boolean hasOxygen, boo
         return this.gravity() >= 0;
     }
     public boolean hasNoFallDamage() {
-        return this.hasGravityModifier() && this.gravity() < 1;
+        return this.hasGravityModifier() && this.gravity() < 1 && this.gravity() != 0;
     }
 
     public ServerWorld toWorld() {

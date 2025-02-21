@@ -17,6 +17,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -26,6 +27,7 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.core.AITBlocks;
+import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
@@ -61,6 +63,13 @@ public class TardisDesktop extends TardisComponent {
                     server.execute(() -> {
                         if (tardis == null)
                             return;
+
+                        if (tardis.sonic() != null && tardis.sonic().getConsoleSonic() != null) {
+                            player.getWorld().playSound(null, player.getBlockPos(), AITSounds.BWEEP,
+                                    SoundCategory.PLAYERS, 1f, 1f);
+                            player.sendMessage(Text.translatable("tardis.message.console.has_sonic_in_port"), true);
+                            return;
+                        }
 
                         tardis.getDesktop().cacheConsole(console);
                     });
