@@ -725,6 +725,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("ait.item.drink.water", "Water");
         provider.addTranslation("ait.item.drink.iced_coffee", "Iced Coffee");
         provider.addTranslation("ait.item.drink.coffee", "Coffee");
+        provider.addTranslation("ait.item.drink.vodka", "Vodka");
         provider.addTranslation("ait.item.drink.chocolate_milk", "Chocolate Milk");
 
         // Exteriors

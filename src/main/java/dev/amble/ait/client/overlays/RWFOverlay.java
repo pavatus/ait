@@ -13,7 +13,6 @@ import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
-import dev.amble.ait.AITMod;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.core.tardis.Tardis;
 
@@ -31,8 +30,9 @@ public class RWFOverlay implements HudRenderCallback {
             Tardis tardis = entity.tardis().get();
             Yaw.render(drawContext, mc.player);
             Position.render(drawContext, mc.player, mc);
+            Position.Y.render(drawContext, mc.player, mc);
             Speed.render(drawContext, mc.player, mc);
-            this.renderOverlay(drawContext, AITMod.id("textures/gui/tardis/rwf_gui.png"));
+            //this.renderOverlay(drawContext, AITMod.id("textures/gui/tardis/rwf_gui.png"));
         }
     }
 
@@ -134,7 +134,7 @@ public class RWFOverlay implements HudRenderCallback {
 
                 line(context, range / 2d, bottom, range, false);
                 line(context, range / 4d, bottom, range, false);
-                line(context, 0d, bottom, range, false);
+                line(context, 0d, 128, range, false);
 
                 line(context, player.getY(), bottom, range, true);
             }

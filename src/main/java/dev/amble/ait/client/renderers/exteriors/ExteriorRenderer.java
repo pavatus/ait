@@ -11,7 +11,9 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
@@ -71,7 +73,6 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         if (entity.getAlpha() > 0 || !tardis.<CloakHandler>handler(TardisComponent.Id.CLOAK).cloaked().get())
             this.renderExterior(profiler, tardis, entity, tickDelta, matrices, vertexConsumers, light, overlay);
-
         profiler.pop();
 
         profiler.pop();
@@ -182,11 +183,35 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         profiler.push("emission");
         boolean alarms = tardis.alarm().enabled().get();
+        float u;
+        float t;
+        float s;
+
+        if (tardis.stats().getName() != null && "partytardis".equals(tardis.stats().getName().toLowerCase())) {
+            int m = 25;
+            int n = MinecraftClient.getInstance().player.age / 25 + MinecraftClient.getInstance().player.getId();
+            int o = DyeColor.values().length;
+            int p = n % o;
+            int q = (n + 1) % o;
+            float r = ((float)(MinecraftClient.getInstance().player.age % 25) + h) / 25f;
+            float[] fs = SheepEntity.getRgbColor(DyeColor.byId(p));
+            float[] gs = SheepEntity.getRgbColor(DyeColor.byId(q));
+            s = fs[0] * (1f - r) + gs[0] * r;
+            t = fs[1] * (1f - r) + gs[1] * r;
+            u = fs[2] * (1f - r) + gs[2] * r;
+        } else {
+            float[] hs = new float[]{ 1.0f, 1.0f, 1.0f };
+            s = hs[0];
+            t = hs[1];
+            u = hs[2];
+        }
+
+        float colorAlpha = 1 - alpha;
 
         if (alpha > 0.105f && emission != null && !(emission.equals(DatapackConsole.EMPTY)))
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations, emission, entity,
-                    this.model.getPart(), matrices, vertexConsumers, light, overlay, 1, alarms ? 0.3f : 1,
-                    alarms ? 0.3f : 1, alpha);
+                    this.model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, s - colorAlpha, alarms ? 0.3f : t - colorAlpha,
+                    alarms ? 0.3f : u - colorAlpha, alpha);
 
         profiler.swap("biome");
 

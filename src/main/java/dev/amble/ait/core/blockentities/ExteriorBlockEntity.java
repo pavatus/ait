@@ -12,6 +12,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -20,11 +22,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationPropertyHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.link.v2.TardisRef;
 import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import dev.amble.ait.compat.DependencyChecker;
@@ -246,6 +247,28 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 world.scheduleBlockTick(this.getPos(), AITBlocks.EXTERIOR_BLOCK, 2);
 
             return;
+        }
+
+        if (!tardis.travel().isLanded() && this.getAlpha() > 0.105f) {
+            for (int ji = 0; ji < 4; ji++) {
+                double offsetX = AITMod.RANDOM.nextGaussian() * 0.125f;
+                double offsetY = AITMod.RANDOM.nextGaussian() * 0.125f;
+                double offsetZ = AITMod.RANDOM.nextGaussian() * 0.125f;
+                Vec3d vec = new Vec3d(offsetX, offsetY, offsetZ);
+                float offsetMultiplier = -0.1f;
+                Vec3d vec3d = Vec3d.ofCenter(pos);
+                int i = Direction.UP.getOffsetX();
+                int j = Direction.UP.getOffsetY();
+                int k = Direction.UP.getOffsetZ();
+                double d = vec3d.x + (i == 0 ? MathHelper.nextDouble(world.random, -0.5, 0.5) : (double) i * offsetMultiplier);
+                double e = vec3d.y + (j == 0 ? MathHelper.nextDouble(world.random, -0.5, 0.5) : (double) j * offsetMultiplier) - 0.35f;
+                double f = vec3d.z + (k == 0 ? MathHelper.nextDouble(world.random, -0.5, 0.5) : (double) k * offsetMultiplier);
+                double g = i == 0 ? vec.getX() : 0.0;
+                double h = j == 0 ? vec.getY() : 0.0;
+                double l = k == 0 ? vec.getZ() : 0.0;
+                world.addParticle(ParticleTypes.CLOUD, d, e, f, g, h, l);
+                world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(pos.down())), d, e, f, g, h, l);
+            }
         }
 
         if (state.animated())

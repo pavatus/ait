@@ -6,7 +6,7 @@
   "temperature": 400,
   "render": {
     "texture": "ait:textures/environment/moon.png",
-    "position": [12000, 100, -8700],
+    "position": [16000, 100, -9000],
     "scale": [200, 200, 200],
     "rotation": [22, 45, 0],
     "clouds": false,

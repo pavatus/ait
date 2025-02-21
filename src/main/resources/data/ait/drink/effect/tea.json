@@ -4,20 +4,12 @@
   "custom_color": [0.929, 0.784, 0.6],
   "potion_instances": [
     {
-    "id": "minecraft:speed",
+    "id": "minecraft:regeneration",
     "duration": 340,
     "amplifier": 2,
     "ambient": false,
     "show_particles": true,
     "show_icon": true
-    },
-    {
-      "id": "ait:zeiton_high",
-      "duration": 340,
-      "amplifier": 2,
-      "ambient": false,
-      "show_particles": true,
-      "show_icon": true
     }
   ]
 }
