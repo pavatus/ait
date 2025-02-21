@@ -1,22 +1,16 @@
 package dev.amble.ait.core.tardis.control;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.tardis.Tardis;
-import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.control.impl.SecurityControl;
 import dev.amble.ait.core.util.WorldUtil;
 
@@ -108,16 +102,7 @@ public class Control {
         if (dependent != null) {
             boolean bool = tardis.subsystems().get(dependent).isEnabled();
             if (!bool)
-                user.sendMessage(
-                        Text.translatable("warning.ait.needs_subsystem", WorldUtil.fakeTranslate(dependent.toString()))
-                                .formatted(Formatting.RED)
-                );
-
-            tardis.alarm().enable();
-
-            PacketByteBuf buf = PacketByteBufs.create();
-                ClientPlayNetworking.send(TardisDesktop.CONSOLE_SPARK, buf);
-
+                user.sendMessage(Text.translatable("warning.ait.needs_subsystem", WorldUtil.fakeTranslate(dependent.toString())));
             return bool;
         }
 

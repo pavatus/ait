@@ -11,14 +11,12 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -28,7 +26,6 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.core.AITBlocks;
-import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
@@ -42,7 +39,6 @@ public class TardisDesktop extends TardisComponent {
 
     private static final StructurePlacementData SETTINGS = new StructurePlacementData().setUpdateNeighbors(false);
     public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
-    public static final Identifier CONSOLE_SPARK = AITMod.id("console_spark");
 
     private TardisDesktopSchema schema;
 
@@ -59,25 +55,6 @@ public class TardisDesktop extends TardisComponent {
         CORNERS = new Corners(first.multiply(-1), first);
 
         ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CACHE_CONSOLE,
-                ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
-                    BlockPos console = buf.readBlockPos();
-
-                    server.execute(() -> {
-                        if (tardis == null)
-                            return;
-
-                        if (tardis.sonic().getConsoleSonic() != null) {
-                            player.getWorld().playSound(null, player.getBlockPos(), AITSounds.BWEEP,
-                                    SoundCategory.PLAYERS, 1f, 1f);
-                            player.sendMessage(Text.translatable("tardis.message.console.has_sonic_in_port"), true);
-                            return;
-                        }
-
-                        tardis.getDesktop().cacheConsole(console);
-                    });
-                }));
-
-        ServerPlayNetworking.registerGlobalReceiver(TardisDesktop.CONSOLE_SPARK,
                 ServerTardisManager.receiveTardis((tardis, server, player, handler, buf, responseSender) -> {
                     BlockPos console = buf.readBlockPos();
 
@@ -186,8 +163,8 @@ public class TardisDesktop extends TardisComponent {
                 BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, world.getRandom(), Block.FORCE_STATE);
 
         optionalQueue.ifPresentOrElse(queue -> queue.thenRun(
-                () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
-                        System.currentTimeMillis() - start)),
+                        () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
+                                System.currentTimeMillis() - start)),
                 () -> AITMod.LOGGER.error("Failed to generate interior for {}",
                         this.tardis.getUuid())
         );
@@ -253,34 +230,8 @@ public class TardisDesktop extends TardisComponent {
         dim.addBlockEntity(generator);
     }
 
-    public void sparkConsole(BlockPos consolePos) {
-        World dim = this.tardis.asServer().getInteriorWorld();
-
-        dim.playSound(null, consolePos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.5f, 1.0f);
-        TardisDesktop.playSoundAtConsole(tardis.asServer().getInteriorWorld(), consolePos, AITSounds.STASER, SoundCategory.BLOCKS, 10, 1);
-
-
-        int particleCount = 200;
-        double spread = 1.0;
-        float velocity = 0.2f;
-
-        // Spawn electric spark particles around the console position
-        tardis.asServer().getInteriorWorld().spawnParticles(
-                ParticleTypes.ELECTRIC_SPARK,
-                consolePos.getX() + 0.5f,
-                consolePos.getY() + 1.25,
-                consolePos.getZ() + 0.5f,
-                particleCount,
-                (Math.random() - 0.5) * spread,
-                (Math.random() - 0.5) * spread,
-                (Math.random() - 0.5) * spread,
-                velocity
-        );
-    }
-
-
     public static void playSoundAtConsole(World dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
-            float pitch) {
+                                          float pitch) {
         dim.playSound(null, console, sound, category, volume, pitch);
     }
 
