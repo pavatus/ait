@@ -291,8 +291,15 @@ public class AITMod implements ModInitializer {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (source.isBuiltin()
                     && (id.equals(LootTables.NETHER_BRIDGE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
-                    || id.equals(LootTables.VILLAGE_ARMORER_CHEST))
+                    || id.equals(LootTables.VILLAGE_ARMORER_CHEST) || id.equals(LootTables.RUINED_PORTAL_CHEST))
                     || id.equals(LootTables.END_CITY_TREASURE_CHEST) || id.equals(LootTables.SHIPWRECK_MAP_CHEST)
+                    || id.equals(LootTables.ABANDONED_MINESHAFT_CHEST) || id.equals(LootTables.VILLAGE_CARTOGRAPHER_CHEST)
+                    || id.equals(LootTables.VILLAGE_TOOLSMITH_CHEST) || id.equals(LootTables.SHIPWRECK_TREASURE_CHEST)
+                    || id.equals(LootTables.ANCIENT_CITY_CHEST) || id.equals(LootTables.ANCIENT_CITY_ICE_BOX_CHEST)
+                    || id.equals(LootTables.BURIED_TREASURE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_ARCHAEOLOGY)
+                    || id.equals(LootTables.DESERT_WELL_ARCHAEOLOGY) || id.equals(LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY)
+                    || id.equals(LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY) || id.equals(LootTables.TRAIL_RUINS_RARE_ARCHAEOLOGY)
+                    || id.equals(LootTables.FISHING_TREASURE_GAMEPLAY) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
                     || id.equals(LootTables.SIMPLE_DUNGEON_CHEST) || id.equals(LootTables.STRONGHOLD_LIBRARY_CHEST)) {
 
 
