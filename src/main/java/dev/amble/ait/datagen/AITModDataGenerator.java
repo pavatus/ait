@@ -802,6 +802,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("sonic.ait.song", "Song");
         provider.addTranslation("sonic.ait.singularity", "Singularity");
         provider.addTranslation("sonic.ait.candy_cane", "Candy Cane");
+        provider.addTranslation("sonic.ait.type_100", "Type 100");
 
         // Blocks
         provider.addTranslation(AITBlocks.LANDING_PAD, "Landing Marker");
