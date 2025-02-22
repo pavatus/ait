@@ -12,7 +12,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
@@ -103,7 +102,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             BlockPos pos = globalPos.getPos();
             World world = globalPos.getWorld();
 
-            if (world != null) {
+            /*if (world != null) {
                 int lightConst = 524296;
                 int i = world.getLightLevel(LightType.SKY, pos);
                 int j = world.getLightLevel(LightType.BLOCK, pos);
@@ -114,7 +113,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                                 ? (i / 15) + j > 0 ? j + 13 : j
                                 : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j))
                         * lightConst;
-            }
+            }*/
         }
 
         matrices.push();
@@ -156,7 +155,10 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         }
 
         if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth())
-            this.renderDoorBoti(entity, variant, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+            BOTI.DOOR_RENDER_QUEUE.add(entity);
+        //    this.renderDoorBoti(entity, variant, null,
+        //                    profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+
 
         matrices.pop();
         profiler.pop();

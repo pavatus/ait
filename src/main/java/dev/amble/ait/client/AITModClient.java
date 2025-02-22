@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -26,12 +27,21 @@ import net.minecraft.client.particle.EndRodParticle;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 
+import dev.amble.ait.AITMod;
+import dev.amble.ait.client.boti.BOTI;
 import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
+import dev.amble.ait.client.models.boti.BotiPortalModel;
+import dev.amble.ait.client.models.doors.DoorModel;
 import dev.amble.ait.client.overlays.ExteriorAxeOverlay;
 import dev.amble.ait.client.overlays.FabricatorOverlay;
 import dev.amble.ait.client.overlays.RWFOverlay;
@@ -63,6 +73,7 @@ import dev.amble.ait.client.tardis.manager.ClientTardisManager;
 import dev.amble.ait.client.util.ClientTardisUtil;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import dev.amble.ait.core.blockentities.DoorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.drinks.DrinkRegistry;
 import dev.amble.ait.core.drinks.DrinkUtil;
@@ -71,7 +82,9 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
+import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.gun.core.item.BaseGunItem;
 import dev.amble.ait.registry.impl.SonicRegistry;
@@ -135,6 +148,47 @@ public class AITModClient implements ClientModInitializer {
          * vortex.renderVortexNodes(context, node); } } } });
          */
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
+        WorldRenderEvents.END.register(context -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player == null || client.world == null) return;
+            ClientWorld world = client.world;
+            boolean bl = TardisServerWorld.isTardisDimension(world);
+            if (bl) {
+                Tardis tardis = ClientTardisUtil.getCurrentTardis();
+                if (tardis == null || tardis.getDesktop() == null) return;
+                ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
+                DoorModel model = variant.getDoor().model();
+                for (DoorBlockEntity door : BOTI.DOOR_RENDER_QUEUE) {
+                    if (door == null) continue;
+                    BlockPos pos = door.getPos();
+                    MatrixStack stack = context.matrixStack();
+                    stack.push();
+                    stack.translate(0.5, 0, 0.5);
+                    stack.translate(pos.getX() - context.camera().getPos().getX(), pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+                    stack.scale(1, -1, -1);
+                    stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(door.getCachedState().get(DoorBlock.FACING).asRotation()));
+                    int light = world.getLightLevel(pos.up());
+                    if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
+                        int lightConst = 524296;
+                        int i = world.getLightLevel(LightType.SKY, pos);
+                        int j = world.getLightLevel(LightType.BLOCK, pos);
+
+                        light = (i + j > 15
+                                ? (15 * 2) + (j > 0 ? 0 : -5)
+                                : world.isNight()
+                                ? (i / 15) + j > 0 ? j + 13 : j
+                                : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j))
+                                * lightConst;
+                        BOTI.renderInteriorDoorBoti(tardis, door, variant, stack,
+                                AITMod.id("textures/environment/tardis_sky.png"), model,
+                                BotiPortalModel.getTexturedModelData().createModel(), light);
+                    }
+                    stack.pop();
+                }
+                BOTI.DOOR_RENDER_QUEUE.clear();
+            }
+            return;
+        });
 
         // @TODO idk why but this gets rid of other important stuff, not sure
         DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
