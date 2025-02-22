@@ -2,7 +2,6 @@ package dev.amble.ait.client.util;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -37,14 +36,7 @@ import dev.amble.ait.module.planet.core.space.system.Space;
 
 
 public class SkyboxUtil extends WorldRenderer {
-
     private static final Identifier TARDIS_SKY = AITMod.id("textures/environment/tardis_sky.png");
-//    private static final Identifier EARTH = AITMod.id("textures/environment/earth.png");
-//    private static final Identifier MONDAS = AITMod.id("textures/environment/mondas.png");
-//    private static final Identifier MOON = AITMod.id("textures/environment/moon.png");
-//    private static final Identifier MARS = AITMod.id("textures/environment/mars.png");
-    private static final Identifier SATURN = AITMod.id("textures/environment/saturn.png");
-    private static final Identifier SATURN_RING = AITMod.id("textures/environment/saturn_ring.png");
     private static final Identifier SUN = AITMod.id("textures/environment/tardis_star.png");
 
     public static final Quaternionf[] LOOKUP = new Quaternionf[]{null, RotationAxis.POSITIVE_X.rotationDegrees(90.0f),
@@ -53,10 +45,6 @@ public class SkyboxUtil extends WorldRenderer {
 
     public SkyboxUtil(MinecraftClient client, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, BufferBuilderStorage bufferBuilders) {
         super(client, entityRenderDispatcher, blockEntityRenderDispatcher, bufferBuilders);
-    }
-
-    public static void renderTardisSky(WorldRenderContext context) {
-        SkyboxUtil.renderTardisSky(context.matrixStack());
     }
 
     public static void renderVortexSky(MatrixStack matrices, Tardis tardis) {
@@ -256,40 +244,6 @@ public class SkyboxUtil extends WorldRenderer {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.depthMask(true);
         ci.cancel();
-        /*RenderSystem.depthMask(true);
-        RenderSystem.depthFunc(GL11.GL_GREATER);*/
-       /* matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
-        //matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(world.getSkyAngle(tickDelta) * 360.0f));
-        RenderSystem.setShaderColor(1, 1, 1, 1f);
-        RenderSystem.setShaderColor(0.85f, 0.85f, 0.85f, 1);
-        BackgroundRenderer.clearFog();
-
-        starsBuffer.bind();
-        starsBuffer.draw(matrices.peek().getPositionMatrix(), projectionMatrix,
-                GameRenderer.getPositionProgram());
-
-        VertexBuffer.unbind();
-        fogCallback.run();
-
-        RenderSystem.depthMask(false);
-        RenderSystem.depthFunc(GL11.GL_ALWAYS);
-        RenderSystem.defaultBlendFunc();
-        matrices.pop();
-        matrices.pop();
-        RenderSystem.setShaderColor(1, 1, 1, 1f);
-
-        // Planet Rendering
-        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-        renderStarBody(matrices, SUN,
-                new Vec3d(cameraPos.getX() + 270, cameraPos.getY() + 200, cameraPos.getZ() + 30), new
-                        Vector3f(12f, 12f, 12f),
-                new Vector3f(12, 45, 0), false,
-                new Vector3f(0.5f, 0, 0f));
-        RenderSystem.setShaderColor(1, 1, 1, 1f);
-        RenderSystem.depthMask(true);
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        ci.cancel();*/
     }
 
     public static void renderSpaceSky(boolean isTardisSkybox, MatrixStack matrices, Runnable fogCallback, VertexBuffer starsBuffer, ClientWorld world, float tickDelta, Matrix4f projectionMatrix) {
