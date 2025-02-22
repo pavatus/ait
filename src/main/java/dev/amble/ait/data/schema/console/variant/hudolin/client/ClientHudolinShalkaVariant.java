@@ -1,5 +1,7 @@
 package dev.amble.ait.data.schema.console.variant.hudolin.client;
 
+import org.joml.Vector3f;
+
 import net.minecraft.util.Identifier;
 
 import dev.amble.ait.AITMod;
@@ -31,5 +33,23 @@ public class ClientHudolinShalkaVariant extends ClientConsoleVariantSchema {
     @Override
     public ConsoleModel model() {
         return new HudolinConsoleModel(HudolinConsoleModel.getTexturedModelData().createModel());
+    }
+    @Override
+    public Vector3f sonicItemTranslations() {
+        return new Vector3f(-0.495f, 1.05f, 0.225f);
+    }
+
+    @Override
+    public float[] sonicItemRotations() {
+        return new float[]{29f, 46.25f};
+    }
+    @Override
+    public Vector3f handlesTranslations() {
+        return new Vector3f(-0.305f, 0.45f, -0.125f);
+    }
+
+    @Override
+    public float[] handlesRotations() {
+        return new float[]{29f, 46.25f};
     }
 }
