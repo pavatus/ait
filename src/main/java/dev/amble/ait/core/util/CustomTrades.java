@@ -43,7 +43,7 @@ public class CustomTrades {
         TradeOfferHelper.registerVillagerOffers(AITVillagers.FABRICATOR_ENGINEER, 2,
                 factories -> {
                     factories.add((entity, random) -> new TradeOffer(
-                            new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL, 1),
+                            new ItemStack(AITItems.ZEITON_SHARD, 3),
                             new ItemStack(AITItems.ARTRON_FLUID_LINK, 1),
                             4, 3, 0.025f));
                 });
@@ -60,6 +60,13 @@ public class CustomTrades {
                             new ItemStack(AITItems.CHARGED_ZEITON_CRYSTAL, 3),
                             new ItemStack(AITItems.ARTRON_FLUID_LINK, 1),
                             4, 2, 0.075f));
+                });
+        TradeOfferHelper.registerVillagerOffers(AITVillagers.FABRICATOR_ENGINEER, 2,
+                factories -> {
+                    factories.add((entity, random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, 3),
+                            new ItemStack(AITItems.SONIC_SCREWDRIVER, 1),
+                            1, 2, 0.075f));
                 });
         // Level 3
 
@@ -84,5 +91,6 @@ public class CustomTrades {
                             new ItemStack(AITItems.BLUEPRINT, 1),
                             4, 2, 0.075f));
                 });
+
     }
 }
