@@ -30,7 +30,6 @@ import dev.amble.ait.client.models.decoration.GallifreyFallsModel;
 import dev.amble.ait.client.models.doors.DoorModel;
 import dev.amble.ait.client.renderers.AITRenderLayers;
 import dev.amble.ait.client.renderers.VortexUtil;
-import dev.amble.ait.compat.DependencyChecker;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
@@ -115,7 +114,7 @@ public class BOTI {
     public static void renderInteriorDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
         if (!variant.parent().hasPortals()) return;
 
-        if (!checkTardisBoti())
+        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             return;
 
         if (MinecraftClient.getInstance().world == null
@@ -212,7 +211,7 @@ public class BOTI {
     public static void renderInteriorDoorBoti(Tardis tardis1, DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
         if (!variant.parent().hasPortals()) return;
 
-        if (!checkTardisBoti())
+        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             return;
 
         if (MinecraftClient.getInstance().world == null
@@ -307,7 +306,7 @@ public class BOTI {
     }
 
     public static void renderExteriorBoti(ExteriorBlockEntity exterior, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
-        if (!checkTardisBoti())
+        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             return;
 
         if (MinecraftClient.getInstance().world == null
@@ -396,21 +395,6 @@ public class BOTI {
         GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, src.fbo);
         GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, dest.fbo);
         GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT, GlConst.GL_NEAREST);
-    }
-
-    private static boolean checkTardisBoti() {
-        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
-            return false;
-
-        return checkBoti();
-    }
-
-    private static boolean checkBoti() {
-        if (DependencyChecker.hasNvidiaCard())
-            return true;
-
-        sendNvidiaWarning();
-        return false;
     }
 
     private static void sendNvidiaWarning() {
