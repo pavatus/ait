@@ -40,28 +40,28 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData cube_r3 = hudolin.addChild("cube_r3", ModelPartBuilder.create().uv(0, -5).cuboid(0.0F, -63.0F, 5.0F, 0.0F, 12.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
-        ModelPartData bone = hudolin.addChild("bone", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.001F))
-                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.001F))
-                .uv(78, 0).cuboid(-3.0F, -23.0F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0F))
-                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(0.0F))
-                .uv(0, 72).cuboid(-3.5F, -53.0F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 4.0F, 6.0F, new Dilation(0.003F))
-                .uv(64, 58).cuboid(-4.0F, -60.0F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.001F))
+        ModelPartData bone = hudolin.addChild("bone", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.085F))
+                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.041F))
+                .uv(78, 0).cuboid(-3.0F, -22.925F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0725F))
+                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(-0.081F))
+                .uv(0, 72).cuboid(-3.5F, -52.9F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(-0.086F))
+                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 5.0F, 6.0F, new Dilation(-0.085F))
+                .uv(64, 58).cuboid(-4.0F, -59.95F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.026F))
                 .uv(64, 58).cuboid(-4.0F, -61.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
                 .uv(64, 58).cuboid(-4.0F, -62.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
                 .uv(64, 58).cuboid(-4.0F, -63.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
-                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.25F))
+                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.27F))
                 .uv(0, 81).cuboid(-2.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-0.5F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-                .uv(49, 92).cuboid(-3.5F, -51.25F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.25F))
-                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.25F))
+                .uv(49, 92).cuboid(-3.5F, -51.2F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.225F))
+                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.29F))
                 .uv(76, 19).cuboid(-3.0F, -14.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
+                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.075F))
                 .uv(0, 79).cuboid(-2.5F, -6.0F, -4.75F, 5.0F, 3.0F, 4.0F, new Dilation(0.0F))
-                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(0.001F))
-                .uv(88, 10).cuboid(-2.5F, -12.0F, -4.35F, 5.0F, 6.0F, 0.0F, new Dilation(0.001F))
-                .uv(54, 58).cuboid(-2.5F, -49.5F, -4.3F, 5.0F, 25.0F, 0.0F, new Dilation(0.001F))
+                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(-0.019F))
+                .uv(88, 10).cuboid(-2.5F, -12.0F, -4.325F, 5.0F, 6.0F, 0.0F, new Dilation(0.0F))
+                .uv(54, 58).cuboid(-2.5F, -49.4F, -4.325F, 5.0F, 25.0F, 0.0F, new Dilation(-0.001F))
                 .uv(0, 81).cuboid(-1.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(0.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-2.75F, -50.75F, -5.9F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
@@ -128,30 +128,30 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData cube_r22 = bone3.addChild("cube_r22", ModelPartBuilder.create().uv(0, 50).cuboid(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 13.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -16.75F, 0.5498F, 0.0F, 0.0F));
 
-        ModelPartData bone9 = hudolin.addChild("bone9", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.0F))
-                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.0F))
-                .uv(78, 0).cuboid(-3.0F, -23.0F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0F))
-                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(0.0F))
-                .uv(0, 72).cuboid(-3.5F, -53.0F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 4.0F, 6.0F, new Dilation(0.0F))
-                .uv(64, 58).cuboid(-4.0F, -60.0F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.0F))
+        ModelPartData bone9 = hudolin.addChild("bone9", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.085F))
+                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.041F))
+                .uv(78, 0).cuboid(-3.0F, -22.925F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0725F))
+                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(-0.081F))
+                .uv(0, 72).cuboid(-3.5F, -52.9F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(-0.086F))
+                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 5.0F, 6.0F, new Dilation(-0.085F))
+                .uv(64, 58).cuboid(-4.0F, -59.95F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.026F))
                 .uv(64, 58).cuboid(-4.0F, -61.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
                 .uv(64, 58).cuboid(-4.0F, -62.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
                 .uv(64, 58).cuboid(-4.0F, -63.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
-                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.249F))
-                .uv(49, 92).cuboid(-3.5F, -51.25F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.25F))
+                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.27F))
+                .uv(49, 92).cuboid(-3.5F, -51.2F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.225F))
                 .uv(0, 81).cuboid(-2.75F, -50.75F, -5.9F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-0.5F, -50.75F, -5.9F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.75F, -50.75F, -5.9F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.25F))
+                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.29F))
                 .uv(76, 19).cuboid(-3.0F, -14.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
+                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.075F))
                 .uv(0, 79).cuboid(-2.5F, -6.0F, -4.75F, 5.0F, 3.0F, 4.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-1.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(0.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(0.0F))
-                .uv(78, 10).cuboid(-2.5F, -12.0F, -4.35F, 5.0F, 6.0F, 0.0F, new Dilation(0.001F))
-                .uv(54, 58).cuboid(-2.5F, -49.5F, -4.3F, 5.0F, 25.0F, 0.0F, new Dilation(0.001F))
+                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(-0.019F))
+                .uv(78, 10).cuboid(-2.5F, -12.0F, -4.325F, 5.0F, 6.0F, 0.0F, new Dilation(0.0F))
+                .uv(54, 58).cuboid(-2.5F, -49.4F, -4.325F, 5.0F, 25.0F, 0.0F, new Dilation(-0.001F))
                 .uv(0, 81).cuboid(1.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-0.5F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-2.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
@@ -204,7 +204,7 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData waypoint_disc_port_whatever = bone9.addChild("waypoint_disc_port_whatever", ModelPartBuilder.create().uv(1, 1).cuboid(-0.75F, -22.5F, -7.5F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-        ModelPartData bone5 = hudolin.addChild("bone5", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.0F))
+        ModelPartData bone5 = hudolin.addChild("bone5", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.085F))
                 .uv(0, 19).cuboid(2.2F, -16.2F, -18.15F, 5.0F, 1.0F, 3.0F, new Dilation(0.0F))
                 .uv(14, 3).cuboid(2.2F, -17.4F, -18.15F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
                 .uv(14, 3).cuboid(2.2F, -17.4F, -17.15F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
@@ -212,27 +212,27 @@ public class HudolinConsoleModel extends ConsoleModel {
                 .uv(14, 3).cuboid(6.2F, -17.4F, -16.15F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
                 .uv(14, 3).cuboid(6.2F, -17.4F, -18.15F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
                 .uv(14, 3).cuboid(6.2F, -17.4F, -17.15F, 1.0F, 2.0F, 1.0F, new Dilation(-0.3F))
-                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.0F))
-                .uv(78, 0).cuboid(-3.0F, -23.0F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0F))
-                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(0.0F))
+                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.041F))
+                .uv(78, 0).cuboid(-3.0F, -22.925F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0725F))
+                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(-0.085F))
                 .uv(0, 81).cuboid(-2.75F, -56.0F, -6.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(-0.5F, -56.0F, -6.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.75F, -56.0F, -6.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-                .uv(0, 72).cuboid(-3.5F, -53.0F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 4.0F, 6.0F, new Dilation(0.0F))
-                .uv(64, 58).cuboid(-4.0F, -60.0F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.0F))
+                .uv(0, 72).cuboid(-3.5F, -52.9F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(-0.086F))
+                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 5.0F, 6.0F, new Dilation(-0.085F))
+                .uv(64, 58).cuboid(-4.0F, -59.95F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.026F))
                 .uv(64, 58).cuboid(-4.0F, -61.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
                 .uv(64, 58).cuboid(-4.0F, -62.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
                 .uv(64, 58).cuboid(-4.0F, -63.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
-                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.249F))
-                .uv(49, 92).cuboid(-3.5F, -51.25F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.25F))
-                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.25F))
+                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.27F))
+                .uv(49, 92).cuboid(-3.5F, -51.2F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.225F))
+                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.29F))
                 .uv(76, 19).cuboid(-3.0F, -14.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
+                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.075F))
                 .uv(0, 79).cuboid(-2.5F, -6.0F, -4.75F, 5.0F, 3.0F, 4.0F, new Dilation(0.0F))
-                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(0.0F))
-                .uv(78, 10).cuboid(-2.5F, -12.0F, -4.35F, 5.0F, 6.0F, 0.0F, new Dilation(0.001F))
-                .uv(54, 58).cuboid(-2.5F, -49.5F, -4.3F, 5.0F, 25.0F, 0.0F, new Dilation(0.001F))
+                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(-0.019F))
+                .uv(78, 10).cuboid(-2.5F, -12.0F, -4.325F, 5.0F, 6.0F, 0.0F, new Dilation(0.0F))
+                .uv(54, 58).cuboid(-2.5F, -49.4F, -4.325F, 5.0F, 25.0F, 0.0F, new Dilation(-0.001F))
                 .uv(0, 81).cuboid(-1.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(0.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
@@ -367,7 +367,7 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData bone6 = bone5.addChild("bone6", ModelPartBuilder.create(), ModelTransform.of(0.0F, -16.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
 
-        ModelPartData donottexture_r3 = bone6.addChild("donottexture_r3", ModelPartBuilder.create().uv(42, 57).cuboid(-1.5F, -1.0F, 12.0F, 2.0F, 5.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.5F, 14.025F, -13.5F, 1.5708F, 0.0F, 0.0F));
+        ModelPartData donottexture_r3 = bone6.addChild("donottexture_r3", ModelPartBuilder.create().uv(42, 57).cuboid(-1.5F, -1.0F, 12.0F, 2.0F, 5.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.5F, 14.125F, -13.5F, 1.5708F, 0.0F, 0.0F));
 
         ModelPartData donottexture_r4 = bone6.addChild("donottexture_r4", ModelPartBuilder.create().uv(28, 50).cuboid(-0.5F, 0.0F, 0.0F, 1.0F, 3.0F, 12.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 10.0F, -5.5F, 2.3998F, 0.0F, 0.0F));
 
@@ -375,25 +375,25 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData cube_r69 = bone6.addChild("cube_r69", ModelPartBuilder.create().uv(0, 50).cuboid(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 13.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -16.75F, 0.5498F, 0.0F, 0.0F));
 
-        ModelPartData bone11 = hudolin.addChild("bone11", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.001F))
-                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.002F))
-                .uv(78, 0).cuboid(-3.0F, -23.0F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0F))
-                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(0.0F))
-                .uv(0, 72).cuboid(-3.5F, -53.0F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 4.0F, 6.0F, new Dilation(0.001F))
-                .uv(64, 58).cuboid(-4.0F, -60.0F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.001F))
+        ModelPartData bone11 = hudolin.addChild("bone11", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.085F))
+                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.041F))
+                .uv(78, 0).cuboid(-3.0F, -22.925F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0725F))
+                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(-0.081F))
+                .uv(0, 72).cuboid(-3.5F, -52.9F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(-0.086F))
+                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 5.0F, 6.0F, new Dilation(-0.085F))
+                .uv(64, 58).cuboid(-4.0F, -59.95F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.026F))
                 .uv(64, 58).cuboid(-4.0F, -61.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
                 .uv(64, 58).cuboid(-4.0F, -62.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
                 .uv(64, 58).cuboid(-4.0F, -63.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
-                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.25F))
-                .uv(49, 92).cuboid(-3.5F, -51.25F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.25F))
-                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.25F))
+                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.27F))
+                .uv(49, 92).cuboid(-3.5F, -51.2F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.225F))
+                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.29F))
                 .uv(76, 19).cuboid(-3.0F, -14.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
+                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.075F))
                 .uv(0, 79).cuboid(-2.5F, -6.0F, -4.75F, 5.0F, 3.0F, 4.0F, new Dilation(0.0F))
-                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(0.001F))
-                .uv(88, 10).cuboid(-2.5F, -12.0F, -4.35F, 5.0F, 6.0F, 0.0F, new Dilation(0.001F))
-                .uv(54, 58).cuboid(-2.5F, -49.5F, -4.3F, 5.0F, 25.0F, 0.0F, new Dilation(0.001F))
+                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(-0.019F))
+                .uv(88, 10).cuboid(-2.5F, -12.0F, -4.325F, 5.0F, 6.0F, 0.0F, new Dilation(0.0F))
+                .uv(54, 58).cuboid(-2.5F, -49.4F, -4.325F, 5.0F, 25.0F, 0.0F, new Dilation(-0.001F))
                 .uv(0, 81).cuboid(-1.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(0.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
@@ -463,25 +463,25 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData cube_r89 = bone12.addChild("cube_r89", ModelPartBuilder.create().uv(0, 50).cuboid(-0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 13.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -16.75F, 0.5498F, 0.0F, 0.0F));
 
-        ModelPartData bone7 = hudolin.addChild("bone7", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.001F))
-                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.002F))
-                .uv(78, 0).cuboid(-3.0F, -23.0F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0F))
-                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(0.0F))
-                .uv(0, 72).cuboid(-3.5F, -53.0F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 4.0F, 6.0F, new Dilation(0.002F))
-                .uv(64, 58).cuboid(-4.0F, -60.0F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.001F))
+        ModelPartData bone7 = hudolin.addChild("bone7", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.085F))
+                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.041F))
+                .uv(78, 0).cuboid(-3.0F, -22.925F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0725F))
+                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(-0.085F))
+                .uv(0, 72).cuboid(-3.5F, -52.9F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(-0.086F))
+                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 5.0F, 6.0F, new Dilation(-0.085F))
+                .uv(64, 58).cuboid(-4.0F, -59.95F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.026F))
                 .uv(64, 58).cuboid(-4.0F, -61.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
                 .uv(64, 58).cuboid(-4.0F, -62.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
                 .uv(64, 58).cuboid(-4.0F, -63.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.001F))
-                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.25F))
-                .uv(49, 92).cuboid(-3.5F, -51.25F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.25F))
-                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.25F))
+                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.27F))
+                .uv(49, 92).cuboid(-3.5F, -51.2F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.225F))
+                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.29F))
                 .uv(76, 19).cuboid(-3.0F, -14.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
+                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.075F))
                 .uv(0, 79).cuboid(-2.5F, -6.0F, -4.75F, 5.0F, 3.0F, 4.0F, new Dilation(0.0F))
-                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(0.001F))
-                .uv(88, 10).cuboid(-2.5F, -12.0F, -4.35F, 5.0F, 6.0F, 0.0F, new Dilation(0.001F))
-                .uv(54, 58).cuboid(-2.5F, -49.5F, -4.3F, 5.0F, 25.0F, 0.0F, new Dilation(0.001F))
+                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(-0.019F))
+                .uv(88, 10).cuboid(-2.5F, -12.0F, -4.325F, 5.0F, 6.0F, 0.0F, new Dilation(0.0F))
+                .uv(54, 58).cuboid(-2.5F, -49.4F, -4.325F, 5.0F, 25.0F, 0.0F, new Dilation(-0.001F))
                 .uv(0, 81).cuboid(-1.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(0.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
@@ -534,25 +534,25 @@ public class HudolinConsoleModel extends ConsoleModel {
                 .uv(10, 1).cuboid(-2.5F, -0.825F, 2.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.001F))
                 .uv(10, 1).cuboid(0.5F, -0.825F, 2.0F, 1.0F, 1.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.6109F, 0.0F, 0.0F));
 
-        ModelPartData bone13 = hudolin.addChild("bone13", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.0F))
-                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.0F))
-                .uv(78, 0).cuboid(-3.0F, -23.0F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0F))
-                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(0.0F))
-                .uv(0, 72).cuboid(-3.5F, -53.0F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 4.0F, 6.0F, new Dilation(0.0F))
-                .uv(64, 58).cuboid(-4.0F, -60.0F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.0F))
+        ModelPartData bone13 = hudolin.addChild("bone13", ModelPartBuilder.create().uv(0, 0).cuboid(-10.5F, -16.0F, -18.25F, 21.0F, 1.0F, 18.0F, new Dilation(0.085F))
+                .uv(0, 19).cuboid(-10.0F, -15.0F, -17.35F, 20.0F, 1.0F, 18.0F, new Dilation(0.041F))
+                .uv(78, 0).cuboid(-3.0F, -22.925F, -5.25F, 6.0F, 1.0F, 5.0F, new Dilation(0.0725F))
+                .uv(64, 66).cuboid(-3.5F, -57.0F, -6.0F, 7.0F, 3.0F, 5.0F, new Dilation(-0.081F))
+                .uv(0, 72).cuboid(-3.5F, -52.9F, -6.0F, 7.0F, 2.0F, 5.0F, new Dilation(-0.086F))
+                .uv(58, 38).cuboid(-3.5F, -64.0F, -6.0F, 7.0F, 6.0F, 6.0F, new Dilation(-0.085F))
+                .uv(64, 58).cuboid(-4.0F, -59.95F, -6.95F, 8.0F, 3.0F, 5.0F, new Dilation(0.026F))
                 .uv(64, 58).cuboid(-4.0F, -61.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
                 .uv(64, 58).cuboid(-4.0F, -62.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
                 .uv(64, 58).cuboid(-4.0F, -63.0F, -6.95F, 8.0F, 0.0F, 5.0F, new Dilation(0.0F))
-                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.249F))
-                .uv(49, 92).cuboid(-3.5F, -51.25F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.25F))
-                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.25F))
+                .uv(26, 65).cuboid(-3.0F, -24.75F, -5.0F, 6.0F, 2.0F, 6.0F, new Dilation(-0.27F))
+                .uv(49, 92).cuboid(-3.5F, -51.2F, -5.9F, 7.0F, 2.0F, 7.0F, new Dilation(-0.225F))
+                .uv(24, 73).cuboid(-3.5F, -54.5F, -5.85F, 7.0F, 2.0F, 5.0F, new Dilation(-0.29F))
                 .uv(76, 19).cuboid(-3.0F, -14.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
-                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F))
+                .uv(76, 26).cuboid(-3.0F, -3.0F, -5.25F, 6.0F, 2.0F, 5.0F, new Dilation(0.075F))
                 .uv(0, 79).cuboid(-2.5F, -6.0F, -4.75F, 5.0F, 3.0F, 4.0F, new Dilation(0.0F))
-                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(0.0F))
-                .uv(78, 10).cuboid(-2.5F, -12.0F, -4.35F, 5.0F, 6.0F, 0.0F, new Dilation(0.001F))
-                .uv(54, 58).cuboid(-2.5F, -49.5F, -4.3F, 5.0F, 25.0F, 0.0F, new Dilation(0.001F))
+                .uv(54, 50).cuboid(-3.5F, -1.0F, -6.05F, 7.0F, 1.0F, 7.0F, new Dilation(-0.019F))
+                .uv(78, 10).cuboid(-2.5F, -12.0F, -4.325F, 5.0F, 6.0F, 0.0F, new Dilation(0.0F))
+                .uv(54, 58).cuboid(-2.5F, -49.4F, -4.325F, 5.0F, 25.0F, 0.0F, new Dilation(-0.001F))
                 .uv(0, 81).cuboid(-1.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(0.5F, -5.0F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
                 .uv(0, 81).cuboid(1.25F, -24.25F, -5.0F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
@@ -610,17 +610,17 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData rotation = bone13.addChild("rotation", ModelPartBuilder.create().uv(1, 1).cuboid(-4.25F, -18.25F, -12.75F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-        ModelPartData rotor = hudolin.addChild("rotor", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, 12.5F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -24.5F, 0.0F));
+        ModelPartData rotor = hudolin.addChild("rotor", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, 12.5F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.05F)), ModelTransform.pivot(0.0F, -24.5F, 0.0F));
 
-        ModelPartData cube_r107 = rotor.addChild("cube_r107", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 0.0F, -1.0472F, 0.0F));
+        ModelPartData cube_r107 = rotor.addChild("cube_r107", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.05F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-        ModelPartData cube_r108 = rotor.addChild("cube_r108", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 3.1416F, -1.0472F, -3.1416F));
+        ModelPartData cube_r108 = rotor.addChild("cube_r108", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.05F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 3.1416F, -1.0472F, -3.1416F));
 
-        ModelPartData cube_r109 = rotor.addChild("cube_r109", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 0.0F, 1.0472F, 0.0F));
+        ModelPartData cube_r109 = rotor.addChild("cube_r109", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.05F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
-        ModelPartData cube_r110 = rotor.addChild("cube_r110", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 3.1416F, 1.0472F, 3.1416F));
+        ModelPartData cube_r110 = rotor.addChild("cube_r110", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.05F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 3.1416F, 1.0472F, 3.1416F));
 
-        ModelPartData cube_r111 = rotor.addChild("cube_r111", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 3.1416F, 0.0F, 3.1416F));
+        ModelPartData cube_r111 = rotor.addChild("cube_r111", ModelPartBuilder.create().uv(84, 40).cuboid(-2.0F, -11.0F, -3.5F, 4.0F, 6.0F, 4.0F, new Dilation(0.05F)), ModelTransform.of(0.0F, 23.5F, 0.0F, 3.1416F, 0.0F, 3.1416F));
 
         ModelPartData bone2 = rotor.addChild("bone2", ModelPartBuilder.create().uv(98, 53).cuboid(-2.0F, -5.975F, -3.5F, 4.0F, 1.0F, 4.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, -0.5F, 0.0F));
 
@@ -658,29 +658,29 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData cube_r128 = bone2.addChild("cube_r128", ModelPartBuilder.create().uv(0, 86).cuboid(-0.5F, -7.0F, -0.5F, 1.0F, 14.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -4.475F, -2.5F, 0.0F, 0.0F, -3.1416F));
 
-        ModelPartData glass = bone2.addChild("glass", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, 0.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, -11.5F, 0.0F));
+        ModelPartData glass = bone2.addChild("glass", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, 0.0F, -4.325F, 5.0F, 13.0F, 0.0F, new Dilation(-0.001F)), ModelTransform.pivot(0.0F, -11.5F, 0.0F));
 
-        ModelPartData glass_r1 = glass.addChild("glass_r1", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, -1.0472F, 3.1416F));
+        ModelPartData glass_r1 = glass.addChild("glass_r1", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0223F, 0.003F, 0.0094F, 1.5708F, -1.0472F, 3.1416F));
 
-        ModelPartData glass_r2 = glass.addChild("glass_r2", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, -1.0472F, 0.0F));
+        ModelPartData glass_r2 = glass.addChild("glass_r2", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0225F, 0.0F, -0.013F, -1.5708F, -1.0472F, 0.0F));
 
-        ModelPartData glass_r3 = glass.addChild("glass_r3", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, 1.0472F, 3.1416F));
+        ModelPartData glass_r3 = glass.addChild("glass_r3", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(-0.0193F, 0.003F, 0.0146F, 1.5708F, 1.0472F, 3.1416F));
 
-        ModelPartData glass_r4 = glass.addChild("glass_r4", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 3.1416F));
+        ModelPartData glass_r4 = glass.addChild("glass_r4", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.002F, 0.002F, 0.026F, 1.5708F, 0.0F, 3.1416F));
 
-        ModelPartData glass_r5 = glass.addChild("glass_r5", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 1.0472F, 0.0F));
+        ModelPartData glass_r5 = glass.addChild("glass_r5", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(-0.0225F, 0.0F, -0.013F, -1.5708F, 1.0472F, 0.0F));
 
-        ModelPartData glass_r6 = glass.addChild("glass_r6", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 0.0F, 0.0F));
+        ModelPartData glass_r6 = glass.addChild("glass_r6", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(-0.001F, 0.001F, -0.024F, -1.5708F, 0.0F, 0.0F));
 
-        ModelPartData glass_r7 = glass.addChild("glass_r7", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
+        ModelPartData glass_r7 = glass.addChild("glass_r7", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.325F, 5.0F, 13.0F, 0.0F, new Dilation(-0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
 
-        ModelPartData glass_r8 = glass.addChild("glass_r8", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, 0.0F, 3.1416F));
+        ModelPartData glass_r8 = glass.addChild("glass_r8", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.325F, 5.0F, 13.0F, 0.0F, new Dilation(-0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, 0.0F, 3.1416F));
 
-        ModelPartData glass_r9 = glass.addChild("glass_r9", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
+        ModelPartData glass_r9 = glass.addChild("glass_r9", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.325F, 5.0F, 13.0F, 0.0F, new Dilation(-0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
-        ModelPartData glass_r10 = glass.addChild("glass_r10", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, 2.0944F, 0.0F));
+        ModelPartData glass_r10 = glass.addChild("glass_r10", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.325F, 5.0F, 13.0F, 0.0F, new Dilation(-0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, 2.0944F, 0.0F));
 
-        ModelPartData glass_r11 = glass.addChild("glass_r11", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
+        ModelPartData glass_r11 = glass.addChild("glass_r11", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.325F, 5.0F, 13.0F, 0.0F, new Dilation(-0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
         ModelPartData bone4 = rotor.addChild("bone4", ModelPartBuilder.create().uv(4, 86).cuboid(-0.5F, -9.525F, -3.0F, 1.0F, 14.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -17.5F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
@@ -820,7 +820,7 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData glass_r29 = glass3.addChild("glass_r29", ModelPartBuilder.create().uv(70, 87).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 12.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
 
-        ModelPartData glass_r30 = glass3.addChild("glass_r30", ModelPartBuilder.create().uv(70, 87).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 12.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, 0.0F, 3.1416F));
+        ModelPartData glass_r30 = glass3.addChild("glass_r30", ModelPartBuilder.create().uv(70, 87).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 12.0F, 0.0F, new Dilation(-0.01F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, 0.0F, 3.1416F));
 
         ModelPartData glass_r31 = glass3.addChild("glass_r31", ModelPartBuilder.create().uv(70, 87).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 12.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, 0.0F, -1.0472F, 0.0F));
 
