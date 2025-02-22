@@ -1,7 +1,6 @@
 package dev.amble.ait.client.renderers.entities;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -83,7 +82,7 @@ public class FallingTardisRenderer extends EntityRenderer<FallingTardisEntity> {
         if (emission != null)
             model.renderEntity(entity, model.getPart(), matrices,
                     vertexConsumers.getBuffer(AITRenderLayers.tardisEmissiveCullZOffset(emission, true)),
-                    LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+                    0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 
         if (!exteriorVariant.equals(ClientExteriorVariantRegistry.CORAL_GROWTH)) {
             BiomeHandler handler = tardis.handler(TardisComponent.Id.BIOME);

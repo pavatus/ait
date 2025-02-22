@@ -88,7 +88,7 @@ public class CelestialBodyRenderer {
 
 
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.y()));
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180 + rotation.x()));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotation.x()));
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotation.z()));
 
         CelestialBodyModel model = new CelestialBodyModel(CelestialBodyModel.getTexturedModelData().createModel());
