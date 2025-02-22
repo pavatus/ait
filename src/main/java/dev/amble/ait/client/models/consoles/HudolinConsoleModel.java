@@ -660,17 +660,17 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData glass = bone2.addChild("glass", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, 0.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.pivot(0.0F, -11.5F, 0.0F));
 
-        ModelPartData glass_r1 = glass.addChild("glass_r1", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, -1.0472F, 3.1416F));
+        ModelPartData glass_r1 = glass.addChild("glass_r1", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, -1.0472F, 3.1416F));
 
         ModelPartData glass_r2 = glass.addChild("glass_r2", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, -1.0472F, 0.0F));
 
-        ModelPartData glass_r3 = glass.addChild("glass_r3", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, 1.0472F, 3.1416F));
+        ModelPartData glass_r3 = glass.addChild("glass_r3", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, 1.0472F, 3.1416F));
 
         ModelPartData glass_r4 = glass.addChild("glass_r4", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 3.1416F));
 
         ModelPartData glass_r5 = glass.addChild("glass_r5", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.299F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 1.0472F, 0.0F));
 
-        ModelPartData glass_r6 = glass.addChild("glass_r6", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 0.0F, 0.0F));
+        ModelPartData glass_r6 = glass.addChild("glass_r6", ModelPartBuilder.create().uv(44, 58).cuboid(-2.5F, 0.3F, 0.0F, 5.0F, 4.0F, 0.0F, new Dilation(0.002F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 0.0F, 0.0F));
 
         ModelPartData glass_r7 = glass.addChild("glass_r7", ModelPartBuilder.create().uv(47, 38).cuboid(-2.5F, -10.0F, -4.3F, 5.0F, 13.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 10.0F, 0.0F, -3.1416F, -1.0472F, 3.1416F));
 
