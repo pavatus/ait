@@ -44,4 +44,13 @@ public class ClientHudolinVariant extends ClientConsoleVariantSchema {
     public float[] sonicItemRotations() {
         return new float[]{29f, 46.25f};
     }
+        @Override
+        public Vector3f handlesTranslations() {
+            return new Vector3f(-0.305f, 0.45f, -0.125f);
+        }
+
+        @Override
+        public float[] handlesRotations() {
+            return new float[]{29f, 46.25f};
+        }
 }
