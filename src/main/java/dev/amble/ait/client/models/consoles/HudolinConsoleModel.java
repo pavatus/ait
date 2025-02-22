@@ -1,14 +1,26 @@
 package dev.amble.ait.client.models.consoles;
 
+import dev.amble.lib.data.CachedDirectedGlobalPos;
+import dev.amble.lib.data.DirectedGlobalPos;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
 
 import dev.amble.ait.client.animation.console.hudolin.HudolinAnimations;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
+import dev.amble.ait.core.tardis.control.impl.DirectionControl;
+import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.core.util.WorldUtil;
 
 public class HudolinConsoleModel extends ConsoleModel {
     private final ModelPart hudolin;
@@ -866,6 +878,44 @@ public class HudolinConsoleModel extends ConsoleModel {
 
         ModelPartData bone16 = rotorouro3.addChild("bone16", ModelPartBuilder.create().uv(14, 79).cuboid(-1.0F, -1.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -12.5F, 0.0F));
         return TexturedModelData.of(modelData, 256, 256);
+    }
+
+    @Override
+    public void renderMonitorText(Tardis tardis, ConsoleBlockEntity entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        super.renderMonitorText(tardis, entity, matrices, vertexConsumers, light, overlay);
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        TextRenderer renderer = client.textRenderer;
+        TravelHandler travel = tardis.travel();
+        DirectedGlobalPos abpd = travel.getState() == TravelHandlerBase.State.FLIGHT
+                ? travel.getProgress()
+                : travel.position();
+        CachedDirectedGlobalPos dabpd = travel.destination();
+        CachedDirectedGlobalPos abpp = travel.isLanded() || travel.getState() != TravelHandlerBase.State.MAT
+                ? travel.getProgress()
+                : travel.position();
+
+        BlockPos abppPos = abpp.getPos();
+        BlockPos abpdPos = abpd.getPos();
+        matrices.push();
+        // TODO dont forget to add variant.getConsoleTextPosition()!
+        matrices.translate(0.31, 0.70, 1.62);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(160f +20f));
+        matrices.scale(0.003f, 0.003f, 0.003f);
+        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(4));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(-59f));
+        matrices.translate(-240f, -228, -5f);
+        String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
+        Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
+        String positionDirectionText = " " + DirectionControl.rotationToDirection(abpp.getRotation()).toUpperCase();
+        String destinationPosText = " " + abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
+        Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
+        String destinationDirectionText = " " + DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
+        renderer.drawWithOutline(positionDimensionText.asOrderedText(), -69, 76, 0xFFFFFF, 0x000000,
+                matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
+        matrices.pop();
+
+
     }
 
     @Override
