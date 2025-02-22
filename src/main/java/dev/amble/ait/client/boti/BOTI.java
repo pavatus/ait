@@ -45,7 +45,7 @@ public class BOTI {
     public static Queue<DoorBlockEntity> DOOR_RENDER_QUEUE = new LinkedList<>();
 
     public static void renderGallifreyFallsPainting(MatrixStack stack, SinglePartEntityModel singlePartEntityModel, int light, VertexConsumerProvider provider) {
-        if (!checkBoti())
+        if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             return;
 
         if (MinecraftClient.getInstance().world == null
