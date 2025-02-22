@@ -1,0 +1,28 @@
+{
+  "output": {
+    "id": "ait:astral_map",
+    "Count": 1
+  },
+  "inputs": [
+    {
+      "item": "quartz",
+      "maxCount": 5,
+      "minCount": 3
+    },
+    {
+      "item": "ait:data_fluid_link",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "compass",
+      "maxCount": 1,
+      "minCount": 1
+    },
+    {
+      "item": "minecraft:glass_pane",
+      "maxCount": 7,
+      "minCount": 7
+    }
+  ]
+}
