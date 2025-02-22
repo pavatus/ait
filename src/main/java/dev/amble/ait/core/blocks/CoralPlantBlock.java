@@ -189,23 +189,27 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!(placer instanceof ServerPlayerEntity player))
             return;
 
-        if (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos))
+        if (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos)) {
+            world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
+        }
 
-        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock))
+        if (TardisServerWorld.isTardisDimension((ServerWorld) world)) {
+            world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
+        }
 
-        if (!TardisServerWorld.isTardisDimension((ServerWorld) world)) {
+        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
         }
 
         if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
-            coral.creator = player.getUuid();
-            coral.markDirty();
+            if (player.getUuid() != null)
+                coral.creator = player.getUuid();
+                coral.markDirty();
+            TardisCriterions.PLACE_CORAL.trigger(player);
         }
-
-        TardisCriterions.PLACE_CORAL.trigger(player);
     }
 
     @Override

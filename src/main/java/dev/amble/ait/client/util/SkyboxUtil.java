@@ -26,6 +26,7 @@ import net.minecraft.util.math.Vec3d;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.renderers.VortexUtil;
 import dev.amble.ait.core.tardis.Tardis;
+import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.module.planet.client.renderers.CelestialBodyRenderer;
 import dev.amble.ait.module.planet.client.renderers.SpaceSkyRenderer;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
@@ -63,8 +64,14 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.push();
         float scale = 100f;
         float zOffset = 500 * scale;
+        if (!tardis.travel().autopilot() && tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / tardis.travel().speed()) * 360f));
+        if (!tardis.crash().isNormal())
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
         matrices.translate(0, 0, zOffset);
         matrices.scale(scale, scale, scale);
+
         util.renderVortex(matrices);
         matrices.pop();
     }
@@ -140,7 +147,7 @@ public class SkyboxUtil extends WorldRenderer {
 
         // Planet Rendering
         Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-        renderStarBody(matrices, SUN,
+        renderStarBody(false, matrices, SUN,
                 new Vec3d(cameraPos.getX() + 270, cameraPos.getY() + 200, cameraPos.getZ() + 30), new
                         Vector3f(12f, 12f, 12f),
                 new Vector3f(12, 45, 0), false,
@@ -238,7 +245,7 @@ public class SkyboxUtil extends WorldRenderer {
         else
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, i);
         Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-        renderStarBody(matrices, SUN,
+        renderStarBody(false, matrices, SUN,
                 new Vec3d(cameraPos.getX(), cameraPos.getY() + 250, cameraPos.getZ() + 0), new
                         Vector3f(6f, 6f, 6f),
                 new Vector3f(45, 12, 12), false,
@@ -321,7 +328,7 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
 
         // Planet Rendering todo - move info into PlanetRenderInfo !!!
-        renderStarBody(matrices, SUN,
+        renderStarBody(isTardisSkybox, matrices, SUN,
                 new Vec3d(0, 1000, 0),
                 new Vector3f(1000f, 1000f, 1000f),
                 new Vector3f(12, 45, 0),
@@ -363,9 +370,9 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
     }
 
-    private static void renderStarBody(MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean atmosphere, Vector3f color) {
+    private static void renderStarBody(boolean isTardisSkybox, MatrixStack matrices, Identifier texture, Vec3d position, Vector3f scale, Vector3f rotation, boolean atmosphere, Vector3f color) {
         matrices.push();
-        CelestialBodyRenderer.renderStarBody(position, scale, rotation, texture, atmosphere, color);
+        CelestialBodyRenderer.renderStarBody(isTardisSkybox, position, scale, rotation, texture, atmosphere, color);
         matrices.pop();
     }
 

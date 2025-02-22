@@ -13,7 +13,6 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.boti.BOTI;
@@ -37,14 +36,7 @@ public class GallifreyFallsPaintingEntityRenderer
 
     @Override
     public void render(GallifreyFallsPaintingEntity paintingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        matrixStack.push();
-        matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180));
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(paintingEntity.getBodyYaw()));
-        matrixStack.translate(0, -0.5, 0.5);
-
-        BOTI.renderGallifreyFallsPainting(matrixStack, frame, this.getLight(paintingEntity, i), vertexConsumerProvider);
-
-        matrixStack.pop();
+        BOTI.PAINTING_RENDER_QUEUE.add(paintingEntity);
     }
 
     @Override

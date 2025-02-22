@@ -14,7 +14,6 @@ import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.renderers.AITRenderLayers;
-import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.module.planet.client.models.CelestialBodyModel;
 
 
@@ -57,7 +56,7 @@ public class CelestialBodyRenderer {
         //RenderSystem.depthFunc(GL11.GL_EQUAL);
     }
 
-    public static void renderStarBody(Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
+    public static void renderStarBody(boolean isTardisSkybox, Vec3d targetPosition, Vector3f scale, Vector3f rotation, Identifier texture, boolean hasAtmosphere, Vector3f atmosphereColor) {
         MinecraftClient mc = MinecraftClient.getInstance();
         Camera camera = mc.gameRenderer.getCamera();
         VertexConsumerProvider.Immediate provider = mc.getBufferBuilders().getEntityVertexConsumers();
@@ -78,7 +77,7 @@ public class CelestialBodyRenderer {
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(mc.world.getSkyAngle(mc.getTickDelta()) * 360.0f));
-        if (TardisServerWorld.isTardisDimension(mc.world)) {
+        if (isTardisSkybox) {
             matrixStack.translate(0, -4000, 0);
             matrixStack.scale(0.25f, 0.25f, 0.25f);
         }
