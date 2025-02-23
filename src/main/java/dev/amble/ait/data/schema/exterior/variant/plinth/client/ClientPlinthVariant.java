@@ -17,19 +17,18 @@ public abstract class ClientPlinthVariant extends ClientExteriorVariantSchema {
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/plinth";
     protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
             CATEGORY_PATH + "/plinth.png");
-    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/plinth.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/plinth_";
 
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
-            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
-                    BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
-                    BiomeHandler.BiomeType.SANDY, BiomeHandler.BiomeType.RED_SANDY, BiomeHandler.BiomeType.MUDDY)
-            .build();
 
     protected ClientPlinthVariant(String name) {
         super(AITMod.id("exterior/plinth/" + name));
 
         this.name = name;
+    }
+
+    @Override
+    public BiomeOverrides overrides() {
+        return null;
     }
 
     @Override
@@ -52,8 +51,4 @@ public abstract class ClientPlinthVariant extends ClientExteriorVariantSchema {
         return new Vector3f(0.5f, 1.2f, 1.05f);
     }
 
-    @Override
-    public BiomeOverrides overrides() {
-        return OVERRIDES;
-    }
 }

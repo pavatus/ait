@@ -1,5 +1,6 @@
 package dev.amble.ait.data.schema.exterior.variant.renegade;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
@@ -16,7 +17,6 @@ import dev.amble.ait.registry.impl.door.DoorRegistry;
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class RenegadeVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/renegade/renegade_";
-
     protected RenegadeVariant(String name) {
         super(RenegadeCategory.REFERENCE, AITMod.id("exterior/renegade/" + name),
                 new Loyalty(Loyalty.Type.PILOT));

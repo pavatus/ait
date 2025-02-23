@@ -1,5 +1,7 @@
 package dev.amble.ait.data.schema.exterior.variant.box.client;
 
+import dev.amble.ait.AITMod;
+import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
 import dev.amble.ait.core.tardis.handler.BiomeHandler;

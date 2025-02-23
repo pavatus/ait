@@ -16,14 +16,7 @@ public abstract class ClientPipeVariant extends ClientExteriorVariantSchema {
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/pipe";
     protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
             CATEGORY_PATH + "/pipe.png");
-    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/pipe.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/pipe_";
-
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.builder()
-            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY,
-                    BiomeHandler.BiomeType.SCULK, BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.CHERRY,
-                    BiomeHandler.BiomeType.SANDY, BiomeHandler.BiomeType.RED_SANDY, BiomeHandler.BiomeType.MUDDY)
-            .build();
 
     protected ClientPipeVariant(String name) {
         super(AITMod.id("exterior/pipe/" + name));
@@ -34,6 +27,11 @@ public abstract class ClientPipeVariant extends ClientExteriorVariantSchema {
     @Override
     public ExteriorModel model() {
         return new PipeExteriorModel(PipeExteriorModel.getTexturedModelData().createModel());
+    }
+
+    @Override
+    public BiomeOverrides overrides() {
+        return null;
     }
 
     @Override
@@ -51,8 +49,4 @@ public abstract class ClientPipeVariant extends ClientExteriorVariantSchema {
         return new Vector3f(0.50f, 2.04f, 1.9f);
     }
 
-    @Override
-    public BiomeOverrides overrides() {
-        return OVERRIDES;
-    }
 }
