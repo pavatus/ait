@@ -1003,7 +1003,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.remoteitem.warning2",
                 "The TARDIS is refueling and is unable to dematerialise");
         provider.addTranslation("message.ait.remoteitem.cancel.refuel",
-                "Refuling process halted, TARDIS dematerializing");
+                "Refueling process halted, TARDIS dematerializing");
         provider.addTranslation("message.ait.remoteitem.warning3", "Cannot translocate exterior to interior dimension");
         provider.addTranslation("message.ait.remoteitem.success1", "Dematerialized TARDIS");
         provider.addTranslation("message.ait.remoteitem.success2", "Activated refueler and handbrake");
