@@ -39,11 +39,16 @@ import dev.amble.ait.data.schema.exterior.variant.geometric.GeometricFireVariant
 import dev.amble.ait.data.schema.exterior.variant.geometric.GeometricGildedVariant;
 import dev.amble.ait.data.schema.exterior.variant.geometric.GeometricSoulVariant;
 import dev.amble.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
+import dev.amble.ait.data.schema.exterior.variant.pipe.PipeBlueVariant;
 import dev.amble.ait.data.schema.exterior.variant.pipe.PipeDefaultVariant;
+import dev.amble.ait.data.schema.exterior.variant.pipe.PipeRedVariant;
+import dev.amble.ait.data.schema.exterior.variant.pipe.PipeYellowVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.PlinthDefaultVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.PlinthFireVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.PlinthSoulVariant;
+import dev.amble.ait.data.schema.exterior.variant.present.PresentBlueVariant;
 import dev.amble.ait.data.schema.exterior.variant.present.PresentDefaultVariant;
+import dev.amble.ait.data.schema.exterior.variant.present.PresentGreenVariant;
 import dev.amble.ait.data.schema.exterior.variant.renegade.RenegadeCabinetVariant;
 import dev.amble.ait.data.schema.exterior.variant.renegade.RenegadeDefaultVariant;
 import dev.amble.ait.data.schema.exterior.variant.renegade.RenegadeTronVariant;
@@ -198,7 +203,12 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema DALEK_MOD_1980;
     //public static ExteriorVariantSchema JAKE_DEFAULT;
     public static ExteriorVariantSchema PRESENT_DEFAULT;
+    public static ExteriorVariantSchema PRESENT_GREEN;
+    public static ExteriorVariantSchema PRESENT_BLUE;
     public static ExteriorVariantSchema PIPE_DEFAULT;
+    public static ExteriorVariantSchema PIPE_RED;
+    public static ExteriorVariantSchema PIPE_YELLOW;
+    public static ExteriorVariantSchema PIPE_BLUE;
 
     @Override
     protected void defaults() {
@@ -292,8 +302,13 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
 
         // Present
         PRESENT_DEFAULT = register(new PresentDefaultVariant());
+        PRESENT_GREEN = register(new PresentGreenVariant());
+        PRESENT_BLUE = register(new PresentBlueVariant());
 
         // Pipe
         PIPE_DEFAULT = register(new PipeDefaultVariant());
+        PIPE_RED = register(new PipeRedVariant());
+        PIPE_YELLOW = register(new PipeYellowVariant());
+        PIPE_BLUE = register(new PipeBlueVariant());
     }
 }

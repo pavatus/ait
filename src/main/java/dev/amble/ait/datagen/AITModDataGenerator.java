@@ -1120,6 +1120,9 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("exterior.ait.steel", "Steel");
         provider.addTranslation("exterior.ait.geometric_blue", "Biscay");
         provider.addTranslation("exterior.ait.geometric_green", "War Games");
+        provider.addTranslation("exterior.ait.green", "Green");
+        provider.addTranslation("exterior.ait.red", "Red");
+        provider.addTranslation("exterior.ait.yellow", "Yellow");
 
         // Police box specific
         provider.addTranslation("exterior.ait.renaissance", "Renaissance");
