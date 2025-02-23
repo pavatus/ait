@@ -8,7 +8,7 @@ import dev.amble.ait.data.datapack.exterior.BiomeOverrides;
 public class ClientPoliceBoxRenaissanceVariant extends ClientPoliceBoxVariant {
 
     private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientPoliceBoxVariant.OVERRIDES)
-            .with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.SNOWY, BiomeHandler.BiomeType.CHORUS,
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SNOWY, BiomeHandler.BiomeType.CHORUS,
                     BiomeHandler.BiomeType.SCULK)
             .build();
 

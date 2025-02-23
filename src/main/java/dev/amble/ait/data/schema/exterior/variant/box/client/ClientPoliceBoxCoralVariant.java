@@ -11,7 +11,7 @@ public class ClientPoliceBoxCoralVariant extends ClientPoliceBoxVariant {
     }
 
     private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientPoliceBoxVariant.OVERRIDES)
-            .with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.SANDY).build();
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.SANDY).build();
 
     @Override
     public ExteriorModel model() {

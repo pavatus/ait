@@ -8,7 +8,7 @@ import dev.amble.ait.data.datapack.exterior.BiomeOverrides;
 public class ClientClassicBoxMintVariant extends ClientClassicBoxVariant {
 
     private final BiomeOverrides OVERRIDES = BiomeOverrides.builder(ClientClassicBoxVariant.OVERRIDES)
-            .with(type -> type.getTexture(this.texture()), BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.SNOWY,
+            .with(type -> type.getTexture(BIOME_IDENTIFIER), BiomeHandler.BiomeType.CHORUS, BiomeHandler.BiomeType.SNOWY,
                     BiomeHandler.BiomeType.SCULK)
             .build();
 
