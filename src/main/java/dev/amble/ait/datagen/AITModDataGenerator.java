@@ -478,6 +478,16 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('B', Items.NETHERITE_INGOT)
                     .criterion(hasItem(Items.NETHERITE_INGOT), conditionsFromItem(Items.NETHERITE_INGOT)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_GOAT_HORN)
+                    .pattern("OOO")
+                    .pattern("OSO")
+                    .pattern("OOO")
+                    .input('S', Items.GOAT_HORN)
+                    .criterion(hasItem(Items.GOAT_HORN), conditionsFromItem(Items.GOAT_HORN))
+                    .input('I', Items.IRON_INGOT)
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT)));
+
+
             generateSmithingRecipes(provider);
             return provider;
         })));
