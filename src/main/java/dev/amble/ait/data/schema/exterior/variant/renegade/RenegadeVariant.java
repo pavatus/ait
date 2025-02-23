@@ -1,6 +1,5 @@
 package dev.amble.ait.data.schema.exterior.variant.renegade;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
