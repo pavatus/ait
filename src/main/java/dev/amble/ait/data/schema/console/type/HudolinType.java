@@ -22,9 +22,9 @@ import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 public class HudolinType extends ConsoleTypeSchema {
     public static final Identifier REFERENCE = AITMod.id("console/hudolin");
     private static final ControlTypes[] TYPES = new ControlTypes[]{
-            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.16249998f, 0.31249997f),
+            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.16249998f, 0.31249997f),
                     new Vector3f(-0.48203126061707735f, 0.48750004917383194f, 0.5136718945577741f)),
-            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.15f, 0.18750001f),
+            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.15f, 0.18750001f),
                     new Vector3f(0.5609371401369572f, 0.5000000968575478f, -0.6234378945082426f)),
             new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.1375f, 0.1875f),
                     new Vector3f(0.5476560769602656f, 0.4624997144564986f, 0.5855467021465302f)),

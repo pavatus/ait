@@ -215,7 +215,7 @@ public class MonitorScreen extends ConsoleScreen {
                 .stream().toList();
 
         int idx = list.indexOf(getCurrentVariant().parent());
-        idx = (idx - 1) % list.size();
+        idx = (idx - 1 + list.size()) % list.size();
         return list.get(idx);
     }
 

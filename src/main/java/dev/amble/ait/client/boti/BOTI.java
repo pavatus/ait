@@ -79,7 +79,7 @@ public class BOTI {
 
         RenderSystem.depthMask(true);
         stack.push();
-        ((GallifreyFallsFrameModel) singlePartEntityModel).renderWithFbo(stack, botiProvider, null, light, OverlayTexture.DEFAULT_UV, 0, 0, 0, 1);
+        ((GallifreyFallsFrameModel) singlePartEntityModel).renderWithFbo(stack, botiProvider, null, 0xf000f0, OverlayTexture.DEFAULT_UV, 0, 0, 0, 1);
         botiProvider.draw();
         copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
         // RenderSystem.depthMask(false);

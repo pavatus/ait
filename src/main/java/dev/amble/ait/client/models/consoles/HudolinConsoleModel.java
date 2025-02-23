@@ -899,11 +899,11 @@ public class HudolinConsoleModel extends ConsoleModel {
         BlockPos abpdPos = abpd.getPos();
         matrices.push();
         // TODO dont forget to add variant.getConsoleTextPosition()!
-        matrices.translate(0.31, 0.70, 1.62);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(160f +20f));
+        matrices.translate(0.26, 0.6675, 1.62);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
         matrices.scale(0.003f, 0.003f, 0.003f);
-        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(4));
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(-59f));
+        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(0));
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(-60f));
         matrices.translate(-240f, -228, -5f);
         String positionPosText = " " + abppPos.getX() + ", " + abppPos.getY() + ", " + abppPos.getZ();
         Text positionDimensionText = WorldUtil.worldText(abpp.getDimension());
@@ -911,11 +911,9 @@ public class HudolinConsoleModel extends ConsoleModel {
         String destinationPosText = " " + abpdPos.getX() + ", " + abpdPos.getY() + ", " + abpdPos.getZ();
         Text destinationDimensionText = WorldUtil.worldText(abpd.getDimension());
         String destinationDirectionText = " " + DirectionControl.rotationToDirection(abpd.getRotation()).toUpperCase();
-        renderer.drawWithOutline(positionDimensionText.asOrderedText(), -69, 76, 0xFFFFFF, 0x000000,
+        renderer.drawWithOutline(positionDimensionText.asOrderedText(), -43 - renderer.getWidth(positionDimensionText) / 2, 76, 0xFFFFFF, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         matrices.pop();
-
-
     }
 
     @Override
