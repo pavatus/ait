@@ -17,8 +17,6 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
@@ -397,15 +395,5 @@ public class BOTI {
         GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, src.fbo);
         GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, dest.fbo);
         GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT, GlConst.GL_NEAREST);
-    }
-
-    private static void sendNvidiaWarning() {
-        if (!warningSent) {
-            warningSent = true;
-
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("An Nvidia Videocard is HIGHLY reccomended for the BOTI effect, the BOTI effect is very picky and sometimes will just not work with certain video cards.").formatted(Formatting.RED), false);
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("If you have a videocard that is not Nvidia, please install the indium mod and disable I HATE GL in the ait config. This SHOULD fix BOTI being broken. ").formatted(Formatting.RED), false);
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("MACS DO NOT WORK AS THEY DROPPED THAT SUPPORT IN FAVOR OF METAL").formatted(Formatting.RED), false);
-        }
     }
 }

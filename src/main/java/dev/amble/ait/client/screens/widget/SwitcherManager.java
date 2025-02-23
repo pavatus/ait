@@ -65,18 +65,16 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<Hum> list = HumRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx < 0 || idx + 1 == list.size())
-                return list.get(0);
-            return list.get(idx + 1);
+            idx = (idx + 1) % list.size();
+            return list.get(idx);
         }
 
         private static Hum previous(Hum current) {
             List<Hum> list = HumRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx <= 0)
-                return list.get(list.size() - 1);
-            return list.get(idx - 1);
+            idx = (idx - 1 + list.size()) % list.size();
+            return list.get(idx);
         }
 
         private static void sync(Hum current, ClientTardis tardis) {
@@ -96,18 +94,16 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<VortexReference> list = VortexReferenceRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx < 0 || idx + 1 == list.size())
-                return list.get(0);
-            return list.get(idx + 1);
+            idx = (idx + 1) % list.size();
+            return list.get(idx);
         }
 
         private static VortexReference previous(VortexReference current) {
             List<VortexReference> list = VortexReferenceRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx <= 0)
-                return list.get(list.size() - 1);
-            return list.get(idx - 1);
+            idx = (idx - 1) % list.size();
+            return list.get(idx);
         }
 
         private static void sync(VortexReference current, ClientTardis tardis) {
@@ -140,9 +136,8 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<TravelSound> list = TravelSoundRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx < 0 || idx + 1 == list.size())
-                return list.get(0);
-            return list.get(idx + 1);
+            idx = (idx + 1) % list.size();
+            return list.get(idx);
         }
 
         private static TravelSound previous(TravelSound current, TravelHandlerBase.State target) {
@@ -158,9 +153,8 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<TravelSound> list = TravelSoundRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx <= 0)
-                return list.get(list.size() - 1);
-            return list.get(idx - 1);
+            idx = (idx - 1) % list.size();
+            return list.get(idx);
         }
 
         private static void sync(TravelSound current, ClientTardis tardis) {
@@ -180,18 +174,16 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<FlightSound> list = FlightSoundRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx < 0 || idx + 1 == list.size())
-                return list.get(0);
-            return list.get(idx + 1);
+            idx = (idx + 1) % list.size();
+            return list.get(idx);
         }
 
         private static FlightSound previous(FlightSound current) {
             List<FlightSound> list = FlightSoundRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            if (idx <= 0)
-                return list.get(list.size() - 1);
-            return list.get(idx - 1);
+            idx = (idx - 1) % list.size();
+            return list.get(idx);
         }
 
         private static void sync(FlightSound current, ClientTardis tardis) {

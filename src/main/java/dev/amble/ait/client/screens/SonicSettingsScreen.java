@@ -191,13 +191,11 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     public void getNextSelectedSonic() {
-        this.selectedSonic = this.selectedSonic + 1 >= SonicRegistry.getInstance().size() ? 0 : this.selectedSonic + 1;
+        this.selectedSonic = (this.selectedSonic + 1) % SonicRegistry.getInstance().size();
     }
 
     public void getLastSelectedSonic() {
-        this.selectedSonic = this.selectedSonic - 1 < 0
-                ? SonicRegistry.getInstance().size() - 1
-                : this.selectedSonic - 1;
+        this.selectedSonic = (this.selectedSonic - 1 + SonicRegistry.getInstance().size()) % SonicRegistry.getInstance().size();
     }
 
     @Override

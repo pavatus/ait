@@ -99,22 +99,14 @@ public class AstralMapScreen extends Screen {
         }
 
         private static IdentifierToName next(IdentifierToName id, List<Identifier> list) {
-            int index = list.indexOf(id.id()) + 1;
-
-            if (index >= list.size()) {
-                return new IdentifierToName(list.get(0));
-            }
-
-            return new IdentifierToName(list.get(index));
+            int idx =  list.indexOf(id.id());
+            idx = (idx + 1) % list.size();
+            return new IdentifierToName(list.get(idx));
         }
         private static IdentifierToName prev(IdentifierToName id, List<Identifier> list) {
-            int index = list.indexOf(id.id()) - 1;
-
-            if (index < 0) {
-                return new IdentifierToName(list.get(list.size() - 1));
-            }
-
-            return new IdentifierToName(list.get(index));
+            int idx = list.indexOf(id.id());
+            idx = (idx - 1 + list.size()) % list.size();
+            return new IdentifierToName(list.get(idx));
         }
     }
 }
