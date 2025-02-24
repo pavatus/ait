@@ -1,5 +1,7 @@
 package dev.amble.ait.core.tardis.control.impl;
 
+import java.text.DecimalFormat;
+
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,8 +18,6 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.data.schema.console.variant.coral.*;
-
-import java.text.DecimalFormat;
 
 public class MonitorControl extends Control {
 
