@@ -462,6 +462,9 @@ public class AITModClient implements ClientModInitializer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
         }
+        map.putBlock(AITBlocks.TARDIS_CORAL_BLOCK, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.TARDIS_CORAL_FAN, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.TARDIS_CORAL_WALL_FAN, RenderLayer.getCutout());
     }
 
     public void registerItemColors() {
