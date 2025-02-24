@@ -74,12 +74,15 @@ public class HartnellType extends ConsoleTypeSchema {
                     new Vector3f(-0.42500000912696123f, 0.6000001896172762f, 0.24140623956918716f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.074999996f, 0.0875f),
                     new Vector3f(0.18749999906867743f, 0.47500019054859877f, 0.940820312127471f)),
+            new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.17500001f, 0.0875f),
+                    new Vector3f(-0.8250000150874257f, 0.47500014305114746f, 0.5783206885680556f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.1f),
                     new Vector3f(-0.9609375260770321f, 0.4625005563721061f, -0.2228515725582838f)),
             new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f),
                     new Vector3f(-0.4359374921768904f, 0.6249999944120646f, -0.26015625055879354f)),
             new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.099999994f, 0.07499999f),
                     new Vector3f(-0.5734374923631549f, 0.5374997593462467f, 0.662500019185245f)),};
+
 
     public HartnellType() {
         super(REFERENCE, "hartnell");

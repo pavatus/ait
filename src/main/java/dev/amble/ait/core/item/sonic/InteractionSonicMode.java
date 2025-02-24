@@ -100,23 +100,6 @@ public class InteractionSonicMode extends SonicMode {
             return;
         }
 
-        if (canInteract1(ticks)
-                && block.getDefaultState().contains(DoorBlock.OPEN)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(DoorBlock.OPEN));
-            world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
-            return;
-        }
-
-        if (canInteract2(ticks)
-                && block.getDefaultState().contains(BarrelBlock.OPEN)) {
-            world.setBlockState(pos, state.cycle(BarrelBlock.OPEN));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-            return;
-        }
-
         if (canInteract3(ticks)
                 && block.getDefaultState().contains(BellBlock.FACING)) {
             world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 1.0f,

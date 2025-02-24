@@ -74,6 +74,8 @@ public class HudolinType extends ConsoleTypeSchema {
                     new Vector3f(-7.816189900040627E-4f, 0.7500003390014172f, -0.3578126961365342f)),
             new ControlTypes(new MarkWaypointControl(), EntityDimensions.changing(0.17500001f, 0.1f),
                     new Vector3f(0.08750039339065552f, 0.5250003822147846f, -0.8335935743525624f)),
+            new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.17500001f, 0.1f),
+                    new Vector3f(0.08750039339065552f, 0.5250003822147846f, -0.8335935743525624f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.16250001f, 0.1125f),
                     new Vector3f(0.11406230926513672f, 0.5750004760921001f, -0.6726560592651367f)),
             new ControlTypes(new SonicPortControl(),EntityDimensions.changing(0.21250002f, 0.15f),
