@@ -36,11 +36,16 @@ import dev.amble.ait.data.schema.exterior.variant.geometric.client.ClientGeometr
 import dev.amble.ait.data.schema.exterior.variant.geometric.client.ClientGeometricGildedVariant;
 import dev.amble.ait.data.schema.exterior.variant.geometric.client.ClientGeometricSoulVariant;
 import dev.amble.ait.data.schema.exterior.variant.growth.client.ClientGrowthVariant;
+import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeBlueVariant;
 import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeDefaultVariant;
+import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeRedVariant;
+import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeYellowVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
+import dev.amble.ait.data.schema.exterior.variant.present.client.ClientPresentBlueVariant;
 import dev.amble.ait.data.schema.exterior.variant.present.client.ClientPresentDefaultVariant;
+import dev.amble.ait.data.schema.exterior.variant.present.client.ClientPresentGreenVariant;
 import dev.amble.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeCabinetVariant;
 import dev.amble.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeDefaultVariant;
 import dev.amble.ait.data.schema.exterior.variant.renegade.client.ClientRenegadeTronVariant;
@@ -199,7 +204,12 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema DALEK_MOD_1980;
     //public static ClientExteriorVariantSchema JAKE_DEFAULT;
     public static ClientExteriorVariantSchema PRESENT_DEFAULT;
+    public static ClientExteriorVariantSchema PRESENT_GREEN;
+    public static ClientExteriorVariantSchema PRESENT_BLUE;
     public static ClientExteriorVariantSchema PIPE_DEFAULT;
+    public static ClientExteriorVariantSchema PIPE_YELLOW;
+    public static ClientExteriorVariantSchema PIPE_RED;
+    public static ClientExteriorVariantSchema PIPE_BLUE;
 
     @Override
     public void onClientInit() {
@@ -290,7 +300,14 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
 
         // Present
         PRESENT_DEFAULT = register(new ClientPresentDefaultVariant());
+        PRESENT_GREEN = register(new ClientPresentGreenVariant());
+        PRESENT_BLUE = register(new ClientPresentBlueVariant());
+
+        // Pipe
         PIPE_DEFAULT = register(new ClientPipeDefaultVariant());
+        PIPE_RED = register(new ClientPipeRedVariant());
+        PIPE_BLUE = register(new ClientPipeBlueVariant());
+        PIPE_YELLOW = register(new ClientPipeYellowVariant());
     }
 
     @Override
