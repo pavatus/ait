@@ -1,5 +1,12 @@
 ![AIT Logo](https://github.com/amblelabs/ait/blob/main/src/main/resources/assets/ait_logo.png?raw=true)
 
+[<img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg">](https://www.curseforge.com/minecraft/mc-mods/adventures-in-time) <!-- SVG version -->
+[<img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg">](https://modrinth.com/mod/ait) <!-- SVG version -->
+[<img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg">](https://fabricmc.net/) <!-- SVG version -->
+[<img alt="forge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/forge_vector.svg">](https://files.minecraftforge.net) <!-- SVG version -->
+
+
+
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/ait?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait%2Fversions)
 
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/ait?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fait) ![CurseForge Downloads](https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fadventures-in-time)
