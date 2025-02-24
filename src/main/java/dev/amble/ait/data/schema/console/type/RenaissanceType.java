@@ -46,8 +46,8 @@ public class RenaissanceType extends ConsoleTypeSchema {
             new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.08750002f, 0.1125f),
                     new Vector3f(-0.0750007638707757f, 0.5375003814697266f, 1.260937507264316f)),
 
-            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.36249992f, 0.31249997f),
-                    new Vector3f(-0.9890632722526789f, 0.9250007625669241f, -0.012109747156500816f)),
+            new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.275f, 0.33749995f),
+                    new Vector3f(-0.8140632603317499f, 0.9250006675720215f, -0.012109756469726562f)),
 
             new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.18750001f, 0.03749999f),
                     new Vector3f(0.3039060728624463f, 0.5249996166676283f, -1.3980470867827535f)),
@@ -72,6 +72,9 @@ public class RenaissanceType extends ConsoleTypeSchema {
 
             new ControlTypes(new RandomiserControl(), EntityDimensions.changing(0.15f, 0.099999994f),
                     new Vector3f(0.6390628833323717f, 0.6625000033527613f, -0.7867185575887561f)),
+
+            new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.16250001f, 0.08749999f),
+                    new Vector3f(-1.0265632634982467f, 0.912500667385757f, -0.17460975889116526f)),
 
             new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1375f, 0.1375f),
                     new Vector3f(-0.4367179935798049f, 0.5874996175989509f, -1.0304685598239303f)),
