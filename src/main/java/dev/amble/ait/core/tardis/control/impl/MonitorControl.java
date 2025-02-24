@@ -17,6 +17,8 @@ import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.data.schema.console.variant.coral.*;
 
+import java.text.DecimalFormat;
+
 public class MonitorControl extends Control {
 
     private SoundEvent soundEvent = AITSounds.MONITOR;
@@ -49,7 +51,9 @@ public class MonitorControl extends Control {
             AITMod.openScreen(player, 0, tardis.getUuid(), console);
             return true;
         } else {
-            player.sendMessage(Text.of("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + WorldUtil.worldText(abpd.getDimension()).getString() + " Fuel: " + tardis.getFuel() + "/15000"), true);
+            DecimalFormat df = new DecimalFormat("#.##");
+            String formattedNumber = df.format(tardis.getFuel());
+            player.sendMessage(Text.of("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + WorldUtil.worldText(abpd.getDimension()).getString() + " Fuel: " + formattedNumber + "/50000"), true);
             return true;
         }
     }
