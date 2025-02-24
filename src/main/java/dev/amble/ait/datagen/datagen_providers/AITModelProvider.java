@@ -16,6 +16,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.module.ModuleRegistry;
 
 
@@ -69,6 +70,10 @@ public class AITModelProvider extends AmbleModelProvider {
             module.getDataGenerator().ifPresent(data -> data.models(this, generator));
             module.getBlockRegistry().ifPresent(this::withBlocks);
         });
+
+        BlockStateModelGenerator.BlockTexturePool tardis_coral_pool = generator.registerCubeAllModelTexturePool(AITBlocks.TARDIS_CORAL_BLOCK);
+        tardis_coral_pool.stairs(AITBlocks.TARDIS_CORAL_STAIRS);
+        tardis_coral_pool.slab(AITBlocks.TARDIS_CORAL_SLAB);
 
         super.generateBlockStateModels(generator);
     }

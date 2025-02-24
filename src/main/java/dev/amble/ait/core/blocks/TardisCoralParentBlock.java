@@ -1,5 +1,8 @@
 package dev.amble.ait.core.blocks;
 
+import net.minecraft.fluid.Fluids;
+import net.minecraft.state.property.Property;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -24,13 +27,32 @@ public class TardisCoralParentBlock
 
     public TardisCoralParentBlock(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, true));
+        this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(WATERLOGGED, true));
     }
 
-    @Override
-    @Nullable public BlockState getPlacementState(ItemPlacementContext ctx) {
+    @Nullable
+    protected static boolean isInWater(BlockState state, BlockView world, BlockPos pos) {
+        if ((Boolean)state.get(WATERLOGGED)) {
+            return true;
+        } else {
+            Direction[] var3 = Direction.values();
+            int var4 = var3.length;
+
+            for(int var5 = 0; var5 < var4; ++var5) {
+                Direction direction = var3[var5];
+                if (world.getFluidState(pos.offset(direction)).isIn(FluidTags.WATER)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    @Nullable
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return this.getDefaultState().with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
+        return (BlockState)this.getDefaultState().with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
 
     @Override
@@ -39,26 +61,43 @@ public class TardisCoralParentBlock
     }
 
     @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().isTicking(pos, Fluids.WATER);
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (direction == Direction.DOWN && !this.canPlaceAt(state, world, pos)) {
+
+        if (!this.canPlaceAt(state, world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
+
+
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos blockPos = pos.down();
-        return world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, Direction.UP);
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = pos.offset(direction.getOpposite());
+            if (world.getBlockState(neighborPos).isSideSolidFullSquare(world, neighborPos, direction)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    @Override
+
+    @Nullable
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
+        builder.add(new Property[]{WATERLOGGED});
     }
 
-    @Override
+    @Nullable
     public FluidState getFluidState(BlockState state) {
-        return super.getFluidState(state);
+        return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 }
