@@ -24,7 +24,7 @@ public class VisualiserControl extends Control {
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean rightClick) {
 
-        if (rightClick && tardis.travel().getState() == TravelHandlerBase.State.LANDED && tardis.subsystems().get(GRAVITATIONAL).isEnabled()) {
+        if (!player.isSneaking() && tardis.travel().getState() == TravelHandlerBase.State.LANDED && tardis.subsystems().get(GRAVITATIONAL).isEnabled()) {
             if (tardis.door().isOpen()) {
 
                 world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_CHAIN_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
