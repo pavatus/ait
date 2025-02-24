@@ -680,6 +680,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("control.ait.y", "Y");
         provider.addTranslation("control.ait.z", "Z");
         provider.addTranslation("control.ait.shields", "Shields");
+        provider.addTranslation("control.ait.engine_overload", "Engine Overload");
 
         // Tabs
         provider.addTranslation(AITItemGroups.MAIN, "Adventures In Time");
