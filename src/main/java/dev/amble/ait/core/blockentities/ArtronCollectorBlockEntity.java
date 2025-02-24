@@ -111,7 +111,7 @@ public class ArtronCollectorBlockEntity extends BlockEntity implements BlockEnti
         if (world.isClient())
             return;
 
-        if (world.getServer().getTicks() % 10 == 0)
+        if (world.getServer().getTicks() % 3 == 0)
             return;
 
         RiftChunkManager manager = RiftChunkManager.getInstance((ServerWorld) this.world);

@@ -39,7 +39,6 @@ import dev.amble.ait.data.schema.exterior.variant.growth.client.ClientGrowthVari
 import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeBlueVariant;
 import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeDefaultVariant;
 import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeRedVariant;
-import dev.amble.ait.data.schema.exterior.variant.pipe.client.ClientPipeYellowVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.client.ClientPlinthDefaultVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.client.ClientPlinthFireVariant;
 import dev.amble.ait.data.schema.exterior.variant.plinth.client.ClientPlinthSoulVariant;
@@ -207,7 +206,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
     public static ClientExteriorVariantSchema PRESENT_GREEN;
     public static ClientExteriorVariantSchema PRESENT_BLUE;
     public static ClientExteriorVariantSchema PIPE_DEFAULT;
-    public static ClientExteriorVariantSchema PIPE_YELLOW;
+    //public static ClientExteriorVariantSchema PIPE_YELLOW;
     public static ClientExteriorVariantSchema PIPE_RED;
     public static ClientExteriorVariantSchema PIPE_BLUE;
 
@@ -307,7 +306,7 @@ public class ClientExteriorVariantRegistry extends DatapackRegistry<ClientExteri
         PIPE_DEFAULT = register(new ClientPipeDefaultVariant());
         PIPE_RED = register(new ClientPipeRedVariant());
         PIPE_BLUE = register(new ClientPipeBlueVariant());
-        PIPE_YELLOW = register(new ClientPipeYellowVariant());
+        //PIPE_YELLOW = register(new ClientPipeYellowVariant());
     }
 
     @Override
