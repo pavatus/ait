@@ -2,6 +2,7 @@ package dev.amble.ait.core.tardis.control.impl.waypoint;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MusicDiscItem;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -16,6 +17,7 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.data.Waypoint;
+import dev.amble.ait.module.gun.core.item.StaserBoltMagazine;
 
 public class ConsolePortControl extends Control {
 
@@ -55,6 +57,22 @@ public class ConsolePortControl extends Control {
             return true;
         }
 
+        if (itemStack.getItem() instanceof StaserBoltMagazine) {
+            NbtCompound nbt = itemStack.getOrCreateNbt();
+            double currentFuel = nbt.getDouble(StaserBoltMagazine.FUEL_KEY);
+            double maxFuel = StaserBoltMagazine.MAX_FUEL;
+
+            if (currentFuel < maxFuel) {
+                double newFuel = Math.min(currentFuel + 500, maxFuel);
+                nbt.putDouble(StaserBoltMagazine.FUEL_KEY, newFuel);
+                tardis.removeFuel(500);
+
+                TardisDesktop.playSoundAtConsole(world, console, AITSounds.SLOT_IN, SoundCategory.PLAYERS, 6f, 1);
+                return true;
+            }
+        }
+
+
         if (itemStack.getItem() instanceof WaypointItem) {
             if (WaypointItem.getPos(itemStack) == null)
                 WaypointItem.setPos(itemStack, tardis.travel().position());
@@ -69,6 +87,7 @@ public class ConsolePortControl extends Control {
 
         return false;
     }
+
 
     private void ejectDisc(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
         if (tardis.extra().getInsertedDisc().isEmpty()) return;
