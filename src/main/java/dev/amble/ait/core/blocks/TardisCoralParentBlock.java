@@ -1,21 +1,21 @@
 package dev.amble.ait.core.blocks;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.state.property.Property;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
@@ -30,8 +30,7 @@ public class TardisCoralParentBlock
         this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(WATERLOGGED, true));
     }
 
-    @Nullable
-    protected static boolean isInWater(BlockState state, BlockView world, BlockPos pos) {
+    @Nullable protected static boolean isInWater(BlockState state, BlockView world, BlockPos pos) {
         if ((Boolean)state.get(WATERLOGGED)) {
             return true;
         } else {
@@ -49,8 +48,7 @@ public class TardisCoralParentBlock
         }
     }
 
-    @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+    @Nullable public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return (BlockState)this.getDefaultState().with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
@@ -91,13 +89,11 @@ public class TardisCoralParentBlock
     }
 
 
-    @Nullable
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    @Nullable protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(new Property[]{WATERLOGGED});
     }
 
-    @Nullable
-    public FluidState getFluidState(BlockState state) {
+    @Nullable public FluidState getFluidState(BlockState state) {
         return (Boolean)state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 }
