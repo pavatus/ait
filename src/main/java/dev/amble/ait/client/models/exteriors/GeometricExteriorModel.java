@@ -63,9 +63,8 @@ public class GeometricExteriorModel extends ExteriorModel {
         matrices.scale(1F, 1F, 1F);
         matrices.translate(0, -1.5f, 0);
 
-        DoorHandler door = exterior.tardis().get().door();
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha, false);
 
-        this.geometric.getChild("door").pivotZ = door.isOpen() ? -16f : 0f;
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
 
         matrices.pop();
@@ -85,5 +84,22 @@ public class GeometricExteriorModel extends ExteriorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
+    }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty()) return;
+
+        DoorHandler door = exterior.tardis().get().door();
+
+        this.geometric.getChild("door").pivotZ = door.isOpen() ? -16f : 0f;
+
+        if (isBOTI) {
+            matrices.push();
+            matrices.scale(1F, 1F, 1F);
+            matrices.translate(0, -1.5f, 0);
+            this.geometric.getChild("door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
     }
 }

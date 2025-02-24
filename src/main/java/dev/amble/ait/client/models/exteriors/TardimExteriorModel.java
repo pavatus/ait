@@ -71,6 +71,23 @@ public class TardimExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha, false);
+
+        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+
+        matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();
+    }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty())
+            return;
+
         if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
             DoorHandler handler = exterior.tardis().get().door();
 
@@ -82,14 +99,13 @@ public class TardimExteriorModel extends ExteriorModel {
             this.tardis.getChild("right_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
         }
 
-        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-
-        matrices.pop();
-    }
-
-    @Override
-    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return Animation.Builder.create(0).build();
+        if (isBOTI) {
+            matrices.push();
+            matrices.translate(0, -1.5f, 0);
+            this.tardis.getChild("left_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            this.tardis.getChild("right_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
     }
 
     @Override

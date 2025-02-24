@@ -13,6 +13,7 @@ import net.minecraft.world.BlockRenderView;
 
 import dev.amble.ait.core.engine.block.multi.MultiBlockStructure;
 
+
 public class MultiBlockStructureRenderer {
 
     private final MinecraftClient client;
@@ -37,15 +38,15 @@ public class MultiBlockStructureRenderer {
         profiler.push("multi_block_structure");
         profiler.push("iterate_offsets");
         structure.forEach(offset -> renderOffsetInterior(offset, centre, view, matrices, provider, holographic));
+        profiler.pop();
+        profiler.pop();
     }
 
     public void renderOffsetInterior(MultiBlockStructure.BlockOffset offset, BlockPos centre, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider, boolean holographic) {
         ClientWorld world = MinecraftClient.getInstance().world;
-
         if (world == null) return;
 
         BlockPos pos = centre.add(offset.offset());
-
         BlockPos diff = pos.subtract(centre);
         BlockState state = this.getBlock(offset.block()).getDefaultState();
         BlockEntity entity = world.getBlockEntity(offset.offset());
@@ -59,13 +60,14 @@ public class MultiBlockStructureRenderer {
         }
 
         renderCulledBlocks(state, pos, view, matrices, provider);
-        if (entity != null)
+        if (entity != null) {
             renderBlockEntities(entity, matrices, provider);
+        }
         matrices.pop();
     }
 
     private void renderCulledBlocks(BlockState state, BlockPos pos, BlockRenderView view, MatrixStack matrices, VertexConsumerProvider provider) {
-        client.getBlockRenderManager().getModelRenderer().render(view, client.getBlockRenderManager().getModel(state), state, pos, matrices, provider.getBuffer(RenderLayers.getBlockLayer(state)), true, client.world.random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
+        client.getBlockRenderManager().renderBlock(state, pos, view, matrices, provider.getBuffer(RenderLayers.getBlockLayer(state)), true, client.world.random);
     }
 
     private void renderBlockEntities(BlockEntity entity,  MatrixStack matrices, VertexConsumerProvider provider) {

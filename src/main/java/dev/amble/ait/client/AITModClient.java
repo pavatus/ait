@@ -34,6 +34,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -44,7 +45,9 @@ import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
 import dev.amble.ait.client.models.boti.BotiPortalModel;
 import dev.amble.ait.client.models.decoration.GallifreyFallsFrameModel;
+import dev.amble.ait.client.models.decoration.RiftModel;
 import dev.amble.ait.client.models.doors.DoorModel;
+import dev.amble.ait.client.models.exteriors.ExteriorModel;
 import dev.amble.ait.client.overlays.ExteriorAxeOverlay;
 import dev.amble.ait.client.overlays.FabricatorOverlay;
 import dev.amble.ait.client.overlays.RWFOverlay;
@@ -58,10 +61,7 @@ import dev.amble.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import dev.amble.ait.client.renderers.decoration.PlaqueRenderer;
 import dev.amble.ait.client.renderers.decoration.SnowGlobeRenderer;
 import dev.amble.ait.client.renderers.doors.DoorRenderer;
-import dev.amble.ait.client.renderers.entities.ControlEntityRenderer;
-import dev.amble.ait.client.renderers.entities.FallingTardisRenderer;
-import dev.amble.ait.client.renderers.entities.FlightTardisRenderer;
-import dev.amble.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer;
+import dev.amble.ait.client.renderers.entities.*;
 import dev.amble.ait.client.renderers.exteriors.ExteriorRenderer;
 import dev.amble.ait.client.renderers.machines.*;
 import dev.amble.ait.client.renderers.monitors.MonitorRenderer;
@@ -78,9 +78,11 @@ import dev.amble.ait.core.*;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+import dev.amble.ait.core.blocks.ExteriorBlock;
 import dev.amble.ait.core.drinks.DrinkRegistry;
 import dev.amble.ait.core.drinks.DrinkUtil;
 import dev.amble.ait.core.entities.GallifreyFallsPaintingEntity;
+import dev.amble.ait.core.entities.RiftEntity;
 import dev.amble.ait.core.item.*;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
@@ -152,8 +154,10 @@ public class AITModClient implements ClientModInitializer {
          * vortex.renderVortexNodes(context, node); } } } });
          */
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
+        WorldRenderEvents.END.register(this::exteriorBOTI);
         WorldRenderEvents.END.register(this::doorBOTI);
         WorldRenderEvents.END.register(this::paintingBOTI);
+        WorldRenderEvents.END.register(this::riftBOTI);
 
         // @TODO idk why but this gets rid of other important stuff, not sure
         DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
@@ -443,6 +447,7 @@ public class AITModClient implements ClientModInitializer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
             EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
         }
+        EntityRendererRegistry.register(AITEntityTypes.RIFT_ENTITY, RiftEntityRenderer::new);
     }
 
     public static void setupBlockRendering() {
@@ -474,6 +479,43 @@ public class AITModClient implements ClientModInitializer {
 
     public void registerParticles() {
         ParticleFactoryRegistry.getInstance().register(CORAL_PARTICLE, EndRodParticle.Factory::new);
+    }
+
+    public void exteriorBOTI(WorldRenderContext context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+        ClientWorld world = client.world;
+        MatrixStack stack = context.matrixStack();
+        for (ExteriorBlockEntity exterior : BOTI.EXTERIOR_RENDER_QUEUE) {
+            if (exterior == null || exterior.tardis() == null || exterior.tardis().isEmpty()) continue;
+            Tardis tardis = exterior.tardis().get();
+            if (tardis == null) return;
+            ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
+            ExteriorModel model = variant.model();
+            BlockPos pos = exterior.getPos();
+            stack.push();
+            stack.translate(0.5, 0, 0.5);
+            stack.translate(pos.getX() - context.camera().getPos().getX(), pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+            stack.scale(1, -1, -1);
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(RotationPropertyHelper.toDegrees(exterior.getCachedState().get(ExteriorBlock.ROTATION))));
+            int light = world.getLightLevel(pos);
+            if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
+                int lightConst = 524296;
+                int i = world.getLightLevel(LightType.SKY, pos);
+                int j = world.getLightLevel(LightType.BLOCK, pos);
+                light = (i + j > 15
+                        ? (15 * 2) + (j > 0 ? 0 : -5)
+                        : world.isNight()
+                        ? (i / 15) + j > 0 ? j + 13 : j
+                        : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j))
+                        * lightConst;
+                BOTI.renderExteriorBoti(exterior, variant, stack,
+                        AITMod.id("textures/environment/tardis_sky.png"), model,
+                        BotiPortalModel.getTexturedModelData().createModel(), light);
+            }
+            stack.pop();
+        }
+        BOTI.EXTERIOR_RENDER_QUEUE.clear();
     }
 
     public void doorBOTI(WorldRenderContext context) {
@@ -538,5 +580,27 @@ public class AITModClient implements ClientModInitializer {
             stack.pop();
         }
         BOTI.PAINTING_RENDER_QUEUE.clear();
+    }
+
+    public void riftBOTI(WorldRenderContext context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+        ClientWorld world = client.world;
+        MatrixStack stack = context.matrixStack();
+        for (RiftEntity rift : BOTI.RIFT_RENDERING_QUEUE) {
+            if (rift == null) continue;
+            Vec3d pos = rift.getPos();
+            stack.push();
+            stack.translate(pos.getX() - context.camera().getPos().getX(),
+                    pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rift.getBodyYaw()));
+            stack.translate(0, -0.5f, 0.5);
+            RiftModel riftModel = new RiftModel(RiftModel.getTexturedModelData().createModel());
+            BlockPos blockPos = BlockPos.ofFloored(rift.getClientCameraPosVec(client.getTickDelta()));
+            BOTI.renderRiftBoti(stack, riftModel, LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, blockPos), world.getLightLevel(LightType.SKY, blockPos)));
+            stack.pop();
+        }
+        BOTI.RIFT_RENDERING_QUEUE.clear();
     }
 }

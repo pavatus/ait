@@ -134,6 +134,22 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
         matrices.scale(0.64F, 0.64F, 0.64F);
         matrices.translate(0, -1.5f, 0);
 
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha, false);
+
+        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        matrices.pop();
+    }
+
+    @Override
+    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
+        return Animation.Builder.create(0).build();
+    }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty())
+            return;
+
         if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
             DoorHandler door = exterior.tardis().get().door();
 
@@ -149,13 +165,13 @@ public class ClassicHudolinExteriorModel extends ExteriorModel {
             this.classic.getChild("Doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot * door.getRightRot());
         }
 
-        super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-        matrices.pop();
-    }
-
-    @Override
-    public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return Animation.Builder.create(0).build();
+        if (isBOTI) {
+            matrices.push();
+            matrices.scale(0.64F, 0.64F, 0.64F);
+            matrices.translate(0, -1.5f, 0);
+            this.classic.getChild("Doors").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
     }
 
     @Override

@@ -92,14 +92,7 @@ public class RenegadeExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
-            renegade.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? 1.75f : 0f;
-        else {
-            float maxRot = 90f;
-
-            DoorHandler door = exterior.tardis().get().door();
-            renegade.getChild("door").yaw = -(float) Math.toRadians(maxRot * door.getLeftRot());
-        }
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha, false);
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
@@ -124,5 +117,26 @@ public class RenegadeExteriorModel extends ExteriorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
+    }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty()) return;
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            renegade.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? 1.75f : 0f;
+        else {
+            float maxRot = 90f;
+
+            DoorHandler door = exterior.tardis().get().door();
+            renegade.getChild("door").yaw = -(float) Math.toRadians(maxRot * door.getLeftRot());
+        }
+
+        if (isBOTI) {
+            matrices.push();
+            matrices.translate(0, -1.5f, 0);
+            renegade.getChild("door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
     }
 }

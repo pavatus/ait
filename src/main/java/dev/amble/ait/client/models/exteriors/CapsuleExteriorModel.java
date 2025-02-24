@@ -135,18 +135,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
         matrices.push();
         matrices.translate(0, -1.5f, 0);
 
-        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
-            DoorHandler handler = exterior.tardis().get().door();
-
-            this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
-            this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.areBothOpen())
-                    ? 5F
-                    : 0.0F;
-        } else {
-            float maxRot = 90f;
-            this.body.getChild("doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
-            this.body.getChild("doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
-        }
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha, false);
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
@@ -182,6 +171,32 @@ public class CapsuleExteriorModel extends ExteriorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
+    }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty())
+            return;
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
+            DoorHandler handler = exterior.tardis().get().door();
+
+            this.body.getChild("doors").getChild("left_door").yaw = (handler.isLeftOpen() || handler.isOpen()) ? -5F : 0.0F;
+            this.body.getChild("doors").getChild("right_door").yaw = (handler.isRightOpen() || handler.areBothOpen())
+                    ? 5F
+                    : 0.0F;
+        } else {
+            float maxRot = 90f;
+            this.body.getChild("doors").getChild("left_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+            this.body.getChild("doors").getChild("right_door").yaw = -(float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
+        }
+
+        if (isBOTI) {
+            matrices.push();
+            matrices.translate(0, -1.5f, 0);
+            this.body.getChild("doors").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
     }
 
     @Override

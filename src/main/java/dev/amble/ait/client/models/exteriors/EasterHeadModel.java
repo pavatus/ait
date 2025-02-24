@@ -91,4 +91,9 @@ public class EasterHeadModel extends ExteriorModel {
             default -> Animation.Builder.create(0).build();
         };
     }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+
+    }
 }

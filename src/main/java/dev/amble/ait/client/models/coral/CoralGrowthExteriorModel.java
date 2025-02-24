@@ -880,6 +880,11 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
         return Animation.Builder.create(0).build();
     }
 
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+
+    }
+
     public ModelPart getCurrentAge(int age, CoralGrowthExteriorModel coralModel) {
         return switch (age) {
             case 1 -> coralModel.coral.getChild("two");

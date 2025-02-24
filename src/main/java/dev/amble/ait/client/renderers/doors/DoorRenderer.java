@@ -1,7 +1,6 @@
 package dev.amble.ait.client.renderers.doors;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -14,10 +13,8 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
 
-import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.client.boti.BOTI;
-import dev.amble.ait.client.models.boti.BotiPortalModel;
 import dev.amble.ait.client.models.doors.DoomDoorModel;
 import dev.amble.ait.client.models.doors.DoorModel;
 import dev.amble.ait.client.renderers.AITRenderLayers;
@@ -71,12 +68,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         this.renderDoor(profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
         profiler.pop();
 
-        profiler.pop();
-    }
-
-    private void renderDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        profiler.push("boti");
-        BOTI.renderInteriorDoorBoti(door, variant, matrices, AITMod.id("textures/environment/tardis_sky.png"), model, BotiPortalModel.getTexturedModelData().createModel(), light);
         profiler.pop();
     }
 

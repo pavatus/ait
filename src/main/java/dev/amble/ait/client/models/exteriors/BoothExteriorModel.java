@@ -93,14 +93,9 @@ public class BoothExteriorModel extends ExteriorModel {
             return;
 
         matrices.push();
-        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
-            this.k2.getChild("Door").yaw = exterior.tardis().get().door().isOpen() ? 1.575F : 0.0F;
-        else {
-            float maxRot = 90f;
-            this.k2.getChild("Door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
-        }
         matrices.scale(1f, 1f, 1f);
         matrices.translate(0, -1.5f, 0);
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha, false);
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         matrices.pop();
@@ -109,6 +104,27 @@ public class BoothExteriorModel extends ExteriorModel {
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
         return Animation.Builder.create(0).build();
+    }
+
+    @Override
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty())
+            return;
+
+        if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS)
+            this.k2.getChild("Door").yaw = exterior.tardis().get().door().isOpen() ? 1.575F : 0.0F;
+        else {
+            float maxRot = 90f;
+            this.k2.getChild("Door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getLeftRot());
+        }
+
+        if (isBOTI) {
+            matrices.push();
+            matrices.scale(1f, 1f, 1f);
+            matrices.translate(0, -1.5f, 0);
+            this.k2.getChild("Door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
     }
 
     @Override

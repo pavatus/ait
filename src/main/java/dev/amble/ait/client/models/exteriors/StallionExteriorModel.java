@@ -107,10 +107,8 @@ public class StallionExteriorModel extends ExteriorModel {
     }
 
     @Override
-    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        matrices.push();
-        matrices.scale(0.95f, 0.95f, 0.95f);
-        matrices.translate(0, -1.5f, 0);
+    public void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI) {
+        if (exterior.tardis().isEmpty()) return;
 
         if (!AITMod.CONFIG.CLIENT.ANIMATE_DOORS) {
             body.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? -1.35f : 0f;
@@ -121,6 +119,24 @@ public class StallionExteriorModel extends ExteriorModel {
             body.getChild("door").yaw = -(float) Math.toRadians(maxLeftRot * exterior.tardis().get().door().getLeftRot());
             body.getChild("door").getChild("door_two").yaw = (float) Math.toRadians(maxRightRot * exterior.tardis().get().door().getLeftRot());
         }
+
+        if (isBOTI) {
+            matrices.push();
+            matrices.scale(0.95f, 0.95f, 0.95f);
+            matrices.translate(0, -1.5f, 0);
+            body.getChild("door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+            matrices.pop();
+        }
+
+    }
+
+    @Override
+    public void renderWithAnimations(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+        matrices.push();
+        matrices.scale(0.95f, 0.95f, 0.95f);
+        matrices.translate(0, -1.5f, 0);
+
+        this.renderDoors(exterior, root, matrices, vertices, light, overlay, red, green, blue, alpha, false);
 
         super.renderWithAnimations(exterior, root, matrices, vertices, light, overlay, red, green, blue, alpha);
         matrices.pop();
