@@ -1,8 +1,6 @@
 package dev.amble.ait.core.tardis.control.impl;
 
 import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.drtheo.scheduler.api.Scheduler;
@@ -11,7 +9,6 @@ import dev.drtheo.scheduler.api.TimeUnit;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +23,6 @@ public class EngineOverload extends Control {
 
     private static final Random RANDOM = new Random();
     private static final String[] SPINNER = {"/", "-", "\\", "|"};
-    private static final ConcurrentHashMap<UUID, Boolean> cooldowns = new ConcurrentHashMap<>();
 
     public EngineOverload() {
         super("engine_overload");
@@ -34,14 +30,6 @@ public class EngineOverload extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        UUID tardisId = tardis.getUuid();
-
-        if (cooldowns.getOrDefault(tardisId, false)) {
-            player.sendMessage(Text.literal("§cERROR, ENGINE OVERLOAD IS ON COOLDOWN."), true);
-            world.playSound(null, player.getBlockPos(), AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return false;
-        }
-
         boolean isInFlight = tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
 
         if (!isInFlight) {
@@ -49,18 +37,8 @@ public class EngineOverload extends Control {
             tardis.travel().finishDemat();
         }
 
-        if (tardis.fuel().getCurrentFuel() < 25000) {
-            world.playSound(null, player.getBlockPos(), AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            player.sendMessage(Text.literal("§cERROR, TARDIS REQUIRES 25000 FUEL TO EXECUTE THIS ACTION."), true);
-            return false;
-        }
-
-        cooldowns.put(tardisId, true);
-        Scheduler.get().runTaskLater(() -> cooldowns.remove(tardisId), TimeUnit.MINUTES, 1440);
-
         runDumpingArtronSequence(player, () -> {
             world.getServer().execute(() -> {
-                tardis.removeFuel(25000);
                 tardis.travel().decreaseFlightTime(99999999);
 
                 if (!isInFlight) {
@@ -87,6 +65,8 @@ public class EngineOverload extends Control {
 
         return true;
     }
+
+
 
     private void runDumpingArtronSequence(ServerPlayerEntity player, Runnable onFinish) {
         for (int i = 0; i < 3; i++) {
@@ -140,6 +120,11 @@ public class EngineOverload extends Control {
     @Override
     protected SubSystem.IdLike requiredSubSystem() {
         return SubSystem.Id.ENGINE;
+    }
+
+    @Override
+    public long getDelayLength() {
+        return 72000;
     }
 
     @Override
