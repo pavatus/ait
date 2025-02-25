@@ -69,6 +69,6 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.25d;
+        return 2.7d;
     }
 }

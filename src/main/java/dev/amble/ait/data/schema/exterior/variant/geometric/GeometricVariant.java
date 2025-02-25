@@ -62,6 +62,6 @@ public abstract class GeometricVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.2d;
+        return 3d;
     }
 }

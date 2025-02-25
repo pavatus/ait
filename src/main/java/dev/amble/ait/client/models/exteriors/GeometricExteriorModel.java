@@ -97,7 +97,7 @@ public class GeometricExteriorModel extends ExteriorModel {
         if (isBOTI) {
             matrices.push();
             matrices.scale(1F, 1F, 1F);
-            matrices.translate(0, -1.5f, 0);
+            matrices.translate(0f, 0f, -4f);
             this.geometric.getChild("door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             matrices.pop();
         }

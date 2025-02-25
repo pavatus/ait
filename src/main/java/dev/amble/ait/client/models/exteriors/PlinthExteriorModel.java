@@ -90,7 +90,7 @@ public class PlinthExteriorModel extends ExteriorModel {
             plinth.getChild("door").yaw = exterior.tardis().get().door().isOpen() ? -1.75f : 0f;
         else {
             float maxRot = 90f;
-            plinth.getChild("door").yaw = (float) Math.toRadians(maxRot*exterior.tardis().get().door().getLeftRot());
+            plinth.getChild("door").yaw = -(float) Math.toRadians(maxRot*exterior.tardis().get().door().getLeftRot());
         }
 
         if (isBOTI) {
