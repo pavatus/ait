@@ -33,20 +33,19 @@ public class EngineOverload extends Control {
         boolean isInFlight = tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
 
         if (!isInFlight) {
-            tardis.travel().forceDemat();
             tardis.travel().finishDemat();
         }
 
         runDumpingArtronSequence(player, () -> {
             world.getServer().execute(() -> {
-                tardis.travel().decreaseFlightTime(99999999);
+                tardis.travel().decreaseFlightTime(999999999);
 
                 if (!isInFlight) {
-                    tardis.travel().forceRemat();
-                    tardis.travel().finishRemat();
+                    tardis.travel().finishDemat();
+                    tardis.travel().decreaseFlightTime(999999999);
+
                 } else {
-                    tardis.travel().forceRemat();
-                    tardis.travel().finishRemat();
+                    tardis.travel().decreaseFlightTime(999999999);
                     tardis.travel().cancelDemat();
                     tardis.travel().handbrake(true);
                 }
@@ -57,6 +56,7 @@ public class EngineOverload extends Control {
                 tardis.subsystems().shields().removeDurability(325);
                 tardis.subsystems().lifeSupport().removeDurability(100);
                 tardis.subsystems().engine().removeDurability(750);
+                tardis.fuel().removeFuel(500000);
 
                 spawnParticles(world, console);
                 spawnExteriorParticles(tardis);
@@ -65,8 +65,6 @@ public class EngineOverload extends Control {
 
         return true;
     }
-
-
 
     private void runDumpingArtronSequence(ServerPlayerEntity player, Runnable onFinish) {
         for (int i = 0; i < 3; i++) {
