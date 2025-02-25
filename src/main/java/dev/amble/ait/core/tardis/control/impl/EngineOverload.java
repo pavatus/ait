@@ -40,23 +40,19 @@ public class EngineOverload extends Control {
         boolean isInFlight = tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
 
         if (!isInFlight) {
-            tardis.travel().dematerialize();
             tardis.travel().finishDemat();
         }
 
         runDumpingArtronSequence(player, () -> {
             world.getServer().execute(() -> {
-                tardis.fuel().removeFuel(500000);
                 tardis.travel().decreaseFlightTime(999999999);
+                tardis.removeFuel(5000000);
 
                 if (!isInFlight) {
                     tardis.travel().finishDemat();
                     tardis.travel().decreaseFlightTime(999999999);
-
                 } else {
                     tardis.travel().decreaseFlightTime(999999999);
-                    tardis.travel().cancelDemat();
-                    tardis.travel().handbrake(true);
                 }
 
                 tardis.alarm().enable();
@@ -67,7 +63,8 @@ public class EngineOverload extends Control {
                 tardis.subsystems().engine().removeDurability(750);
 
                 spawnParticles(world, console);
-                spawnExteriorParticles(tardis);
+
+                Scheduler.get().runTaskLater(() -> spawnExteriorParticles(tardis), TimeUnit.SECONDS, 3);
             });
         });
 
@@ -75,12 +72,12 @@ public class EngineOverload extends Control {
     }
 
     private void runDumpingArtronSequence(ServerPlayerEntity player, Runnable onFinish) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) { // Spinner now runs twice as fast
             int delay = i + 1;
             Scheduler.get().runTaskLater(() -> {
                 String frame = SPINNER[delay % SPINNER.length];
                 player.sendMessage(Text.literal("§6DUMPING ARTRON " + frame), true);
-            }, TimeUnit.SECONDS, delay);
+            }, TimeUnit.SECONDS, delay * 1);
         }
 
         Scheduler.get().runTaskLater(() -> runFlashingFinalMessage(player, onFinish), TimeUnit.SECONDS, 3);
