@@ -9,6 +9,7 @@ import dev.drtheo.scheduler.api.TimeUnit;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +31,12 @@ public class EngineOverload extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+        if (tardis.fuel().getCurrentFuel() < 25000) {
+            player.sendMessage(Text.literal("§cERROR, TARDIS REQUIRES AT LEAST 25K ARTRON TO EXECUTE THIS ACTION."), true);
+            world.playSound(null, player.getBlockPos(), AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return false;
+        }
+
         boolean isInFlight = tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
 
         if (!isInFlight) {
@@ -38,6 +45,7 @@ public class EngineOverload extends Control {
 
         runDumpingArtronSequence(player, () -> {
             world.getServer().execute(() -> {
+                tardis.fuel().removeFuel(500000);
                 tardis.travel().decreaseFlightTime(999999999);
 
                 if (!isInFlight) {
@@ -56,7 +64,6 @@ public class EngineOverload extends Control {
                 tardis.subsystems().shields().removeDurability(325);
                 tardis.subsystems().lifeSupport().removeDurability(100);
                 tardis.subsystems().engine().removeDurability(750);
-                tardis.fuel().removeFuel(500000);
 
                 spawnParticles(world, console);
                 spawnExteriorParticles(tardis);
