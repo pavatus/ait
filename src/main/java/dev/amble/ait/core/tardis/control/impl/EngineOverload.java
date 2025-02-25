@@ -71,6 +71,7 @@ public class EngineOverload extends Control {
         tardis.subsystems().shields().removeDurability(325);
         tardis.subsystems().lifeSupport().removeDurability(100);
         tardis.subsystems().engine().removeDurability(750);
+        tardis.crash().addRepairTicks(999999999);
 
         spawnParticles(world, console);
         Scheduler.get().runTaskLater(() -> spawnExteriorParticles(tardis), TimeUnit.SECONDS, 3);
