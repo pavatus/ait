@@ -54,7 +54,7 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.7d;
+        return 4.3d;
     }
 
     @Override

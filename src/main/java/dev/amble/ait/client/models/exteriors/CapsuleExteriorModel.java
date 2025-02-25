@@ -193,7 +193,7 @@ public class CapsuleExteriorModel extends ExteriorModel {
 
         if (isBOTI) {
             matrices.push();
-            matrices.translate(0, -1.5f, 0);
+            matrices.translate(0, -1.32f, 0);
             this.body.getChild("doors").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             matrices.pop();
         }

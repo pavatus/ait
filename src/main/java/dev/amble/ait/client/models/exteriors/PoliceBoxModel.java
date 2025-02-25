@@ -240,7 +240,7 @@ public class PoliceBoxModel extends ExteriorModel {
         if (isBOTI) {
             matrices.push();
             matrices.scale(0.63F, 0.63F, 0.63F);
-            matrices.translate(0, -1.5f, 0);
+            matrices.translate(0, 0f, -0);
             this.TARDIS.getChild("Doors").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             matrices.pop();
         }

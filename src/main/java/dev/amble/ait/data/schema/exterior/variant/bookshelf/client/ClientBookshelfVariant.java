@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.models.exteriors.BookshelfExteriorModel;
 import dev.amble.ait.client.models.exteriors.ExteriorModel;
-import dev.amble.ait.data.datapack.exterior.BiomeOverrides;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public abstract class ClientBookshelfVariant extends ClientExteriorVariantSchema {
@@ -15,10 +14,7 @@ public abstract class ClientBookshelfVariant extends ClientExteriorVariantSchema
     protected static final String CATEGORY_PATH = "textures/blockentities/exteriors/bookshelf";
     protected static final Identifier CATEGORY_IDENTIFIER = new Identifier(AITMod.MOD_ID,
             CATEGORY_PATH + "/bookshelf.png");
-    protected static final Identifier BIOME_IDENTIFIER = new Identifier(AITMod.MOD_ID, CATEGORY_PATH + "/biome" + "/bookshelf.png");
     protected static final String TEXTURE_PATH = CATEGORY_PATH + "/bookshelf_";
-
-    protected static final BiomeOverrides OVERRIDES = BiomeOverrides.of(type -> type.getTexture(BIOME_IDENTIFIER));
 
     protected ClientBookshelfVariant(String name) {
         super(AITMod.id("exterior/bookshelf/" + name));
@@ -46,8 +42,4 @@ public abstract class ClientBookshelfVariant extends ClientExteriorVariantSchema
         return new Vector3f(0.56f, 1.2f, 1.2f);
     }
 
-    @Override
-    public BiomeOverrides overrides() {
-        return OVERRIDES;
-    }
 }

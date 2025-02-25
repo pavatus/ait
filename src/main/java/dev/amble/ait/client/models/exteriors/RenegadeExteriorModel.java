@@ -129,7 +129,7 @@ public class RenegadeExteriorModel extends ExteriorModel {
             float maxRot = 90f;
 
             DoorHandler door = exterior.tardis().get().door();
-            renegade.getChild("door").yaw = -(float) Math.toRadians(maxRot * door.getLeftRot());
+            renegade.getChild("door").yaw = (float) Math.toRadians(maxRot * door.getLeftRot());
         }
 
         if (isBOTI) {

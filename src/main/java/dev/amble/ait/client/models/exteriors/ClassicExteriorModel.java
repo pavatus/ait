@@ -175,7 +175,7 @@ public class ClassicExteriorModel extends ExteriorModel {
         if (isBOTI) {
             matrices.push();
             matrices.scale(0.64F, 0.64F, 0.64F);
-            matrices.translate(0, -1.5f, 0);
+            matrices.translate(0, 0f, 0);
             this.classic.getChild("Doors").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             matrices.pop();
         }

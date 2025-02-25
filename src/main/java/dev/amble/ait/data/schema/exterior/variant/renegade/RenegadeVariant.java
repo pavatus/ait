@@ -53,7 +53,7 @@ public abstract class RenegadeVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.3d;
+        return 2.8d;
     }
 
     @Override
