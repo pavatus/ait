@@ -158,10 +158,10 @@ public class EngineSystem extends DurableSubSystem {
                     (phaser) -> {
                         Tardis tardis1 = system.tardis();
                         TravelHandler travel = tardis1.travel();
-                        TravelUtil.randomPos(tardis1, 10, 100, cached -> {
+                        TravelUtil.randomPos(tardis1, 1, 250, cached -> {
                             travel.forceDestination(cached);
                             if (travel.isLanded()) {
-                                system.tardis().subsystems().demat().removeDurability(100);
+                                system.tardis().subsystems().demat().removeDurability(300);
 
                                 system.tardis().getDesktop().playSoundAtEveryConsole(AITSounds.UNSTABLE_FLIGHT_LOOP);
                                 system.tardis().getExterior().playSound(AITSounds.UNSTABLE_FLIGHT_LOOP);
@@ -172,14 +172,14 @@ public class EngineSystem extends DurableSubSystem {
                         });
                     },
                     (phaser) -> {
-                        SoundEvent sound = (phaser.countdown < (phaser.initial - (100))) ? AITSounds.HOP_MAT : AITSounds.LAND_THUD;
+                        SoundEvent sound = (phaser.countdown < (phaser.initial - (250))) ? AITSounds.HOP_MAT : AITSounds.LAND_THUD;
 
                         system.tardis().getDesktop().playSoundAtEveryConsole(sound);
                         system.tardis().getExterior().playSound(sound);
 
                         system.tardis().alarm().enabled().set(false);
                     },
-                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().durability() < 100 && !system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 1024) == 1
+                    (phaser) -> system.tardis().travel().isLanded() && system.tardis().subsystems().demat().durability() < 250 && !system.tardis().subsystems().demat().isBroken() && !system.tardis().travel().handbrake() && !system.tardis().isGrowth() && AITMod.RANDOM.nextInt(0, 1024) == 1
             );
         }
     }

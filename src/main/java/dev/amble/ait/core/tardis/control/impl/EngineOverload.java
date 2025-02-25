@@ -65,12 +65,13 @@ public class EngineOverload extends Control {
     private void triggerExplosion(ServerWorld world, BlockPos console, Tardis tardis, int stage) {
         if (stage <= 0) return;
 
+        //DONT BUFF THE DAMAGE, THIS HAPPENS EACH TIME THE CONSOLE EXPLODES SO 4x IT
         tardis.alarm().enable();
-        tardis.subsystems().demat().removeDurability(500);
-        tardis.subsystems().chameleon().removeDurability(75);
-        tardis.subsystems().shields().removeDurability(325);
-        tardis.subsystems().lifeSupport().removeDurability(100);
-        tardis.subsystems().engine().removeDurability(750);
+        tardis.subsystems().demat().removeDurability(250);
+        tardis.subsystems().chameleon().removeDurability(250);
+        tardis.subsystems().shields().removeDurability(250);
+        tardis.subsystems().lifeSupport().removeDurability(250);
+        tardis.subsystems().engine().removeDurability(250);
         tardis.crash().addRepairTicks(999999999);
 
         spawnParticles(world, console);
