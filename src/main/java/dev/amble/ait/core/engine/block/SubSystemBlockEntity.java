@@ -72,7 +72,7 @@ public class SubSystemBlockEntity extends FluidLinkBlockEntity {
     public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
         if (this.system() instanceof DurableSubSystem durable) {
             if (durable.isRepairItem(hand) && durable.durability() < 1250) {
-                durable.addDurability(25);
+                durable.addDurability(10);
                 hand.decrement(1);
                 world.playSound(null, this.getPos(), AITSounds.ENGINE_REFUEL, SoundCategory.BLOCKS, 0.5f, 1f);
                 return ActionResult.SUCCESS;

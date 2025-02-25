@@ -76,6 +76,10 @@ public class RenaissanceType extends ConsoleTypeSchema {
             new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.16250001f, 0.08749999f),
                     new Vector3f(-1.0265632634982467f, 0.912500667385757f, -0.17460975889116526f)),
 
+            new ControlTypes(new EngineOverload(), EntityDimensions.changing(0.08750002f, 0.1125f),
+                    new Vector3f(0.1874992409721017f, 0.5375003814697266f, 1.2609376907348633f)),
+
+
             new ControlTypes(new DirectionControl(), EntityDimensions.changing(0.1375f, 0.1375f),
                     new Vector3f(-0.4367179935798049f, 0.5874996175989509f, -1.0304685598239303f)),
             // not added

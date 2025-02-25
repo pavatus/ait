@@ -51,7 +51,7 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
         getOrCreateTagBuilder(AITTags.Items.GOAT_HORN).add(AITItems.IRON_GOAT_HORN, AITItems.GOLD_GOAT_HORN, AITItems.CLASSIC_GOAT_HORN,
                 AITItems.NETHERITE_GOAT_HORN);
 
-        getOrCreateTagBuilder(AITTags.Items.REPAIRS_SUBSYSTEM).add(Items.IRON_INGOT, AITItems.ZEITON_SHARD, Items.REDSTONE, Items.COPPER_INGOT, Items.AMETHYST_SHARD);
+        getOrCreateTagBuilder(AITTags.Items.REPAIRS_SUBSYSTEM).add(Items.IRON_INGOT, AITItems.ZEITON_SHARD, Items.COPPER_INGOT, Items.AMETHYST_SHARD);
 
         getOrCreateTagBuilder(AITTags.Items.IS_TARDIS_FUEL).add(AITItems.ZEITON_DUST, AITItems.ZEITON_SHARD);
         getOrCreateTagBuilder(AITTags.Items.IS_TARDIS_FUEL).forceAddTag(ItemTags.LOGS_THAT_BURN);
