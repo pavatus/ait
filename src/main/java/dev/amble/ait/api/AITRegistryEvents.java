@@ -16,7 +16,7 @@ public class AITRegistryEvents {
     });
 
     /**
-     * Called when a Registries is initialised
+     * Called when registries are initialized
      */
     @FunctionalInterface
     public interface Defaults {

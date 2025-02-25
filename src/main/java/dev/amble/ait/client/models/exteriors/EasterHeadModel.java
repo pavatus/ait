@@ -7,7 +7,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 
 import dev.amble.ait.api.link.v2.Linkable;
-import dev.amble.ait.client.animation.exterior.door.easter_head.EasterHeadAnimations;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.handler.DoorHandler;
 
@@ -85,11 +84,7 @@ public class EasterHeadModel extends ExteriorModel {
 
     @Override
     public Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state) {
-        return switch (state) {
-            case CLOSED -> EasterHeadAnimations.EASTER_HEAD_EXTERIOR_CLOSE_ANIMATION;
-            case FIRST -> EasterHeadAnimations.EASTER_HEAD_EXTERIOR_OPEN_ANIMATION;
-            default -> Animation.Builder.create(0).build();
-        };
+        return Animation.Builder.create(0).build();
     }
 
     @Override

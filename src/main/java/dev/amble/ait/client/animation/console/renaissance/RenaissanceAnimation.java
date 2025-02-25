@@ -1,15 +1,9 @@
-package dev.amble.ait.client.animation.console.renaissance;// Save this class in your mod and generate all required imports
+package dev.amble.ait.client.animation.console.renaissance;
 
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
-
-/**
- * Made with Blockbench 4.12.1
- * Exported for Minecraft version 1.19 or later with Yarn mappings
- * @author makefarttendo
- */
 public class RenaissanceAnimation {
     public static final Animation RENAISSANCE_FLIGHT = Animation.Builder.create(4.0F).looping()
         .addBoneAnimation("rotorlight", new Transformation(Transformation.Targets.TRANSLATE,

@@ -1,8 +1,6 @@
 package dev.amble.ait.core.tardis.control.impl;
 
 import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.drtheo.scheduler.api.Scheduler;
@@ -26,7 +24,6 @@ public class EngineOverload extends Control {
 
     private static final Random RANDOM = new Random();
     private static final String[] SPINNER = {"/", "-", "\\", "|"};
-    private static final ConcurrentHashMap<UUID, Boolean> cooldowns = new ConcurrentHashMap<>();
 
     public EngineOverload() {
         super("engine_overload");
@@ -34,10 +31,8 @@ public class EngineOverload extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        UUID tardisId = tardis.getUuid();
-
-        if (cooldowns.getOrDefault(tardisId, false)) {
-            player.sendMessage(Text.literal("§cERROR, ENGINE OVERLOAD IS ON COOLDOWN."), true);
+        if (tardis.fuel().getCurrentFuel() < 25000) {
+            player.sendMessage(Text.literal("§cERROR, TARDIS REQUIRES AT LEAST 25K ARTRON TO EXECUTE THIS ACTION."), true);
             world.playSound(null, player.getBlockPos(), AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
             return false;
         }
@@ -45,51 +40,48 @@ public class EngineOverload extends Control {
         boolean isInFlight = tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
 
         if (!isInFlight) {
-            tardis.travel().forceDemat();
             tardis.travel().finishDemat();
         }
 
-        if (tardis.fuel().getCurrentFuel() < 25000) {
-            world.playSound(null, player.getBlockPos(), AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            player.sendMessage(Text.literal("§cERROR, TARDIS REQUIRES 25000 FUEL TO EXECUTE THIS ACTION."), true);
-            return false;
-        }
-
-        cooldowns.put(tardisId, true);
-        Scheduler.get().runTaskLater(() -> cooldowns.remove(tardisId), TimeUnit.MINUTES, 1440);
-
         runDumpingArtronSequence(player, () -> {
             world.getServer().execute(() -> {
-                tardis.removeFuel(25000);
-                tardis.travel().decreaseFlightTime(99999999);
+                tardis.travel().decreaseFlightTime(999999999);
+                tardis.removeFuel(5000000);
 
                 if (!isInFlight) {
-                    tardis.travel().forceRemat();
-                    tardis.travel().finishRemat();
+                    tardis.travel().finishDemat();
+                    tardis.travel().decreaseFlightTime(999999999);
                 } else {
-                    tardis.travel().forceRemat();
-                    tardis.travel().finishRemat();
-                    tardis.travel().cancelDemat();
-                    tardis.travel().handbrake(true);
+                    tardis.travel().decreaseFlightTime(999999999);
                 }
 
-                tardis.alarm().enable();
-                tardis.subsystems().demat().removeDurability(500);
-                tardis.subsystems().chameleon().removeDurability(75);
-                tardis.subsystems().shields().removeDurability(325);
-                tardis.subsystems().lifeSupport().removeDurability(100);
-                tardis.subsystems().engine().removeDurability(750);
-
-                spawnParticles(world, console);
-                spawnExteriorParticles(tardis);
+                Scheduler.get().runTaskLater(() -> triggerExplosion(world, console, tardis, 4), TimeUnit.SECONDS, 0);
             });
         });
 
         return true;
     }
 
+    private void triggerExplosion(ServerWorld world, BlockPos console, Tardis tardis, int stage) {
+        if (stage <= 0) return;
+
+        tardis.alarm().enable();
+        tardis.subsystems().demat().removeDurability(500);
+        tardis.subsystems().chameleon().removeDurability(75);
+        tardis.subsystems().shields().removeDurability(325);
+        tardis.subsystems().lifeSupport().removeDurability(100);
+        tardis.subsystems().engine().removeDurability(750);
+        tardis.crash().addRepairTicks(999999999);
+
+        spawnParticles(world, console);
+        Scheduler.get().runTaskLater(() -> spawnExteriorParticles(tardis), TimeUnit.SECONDS, 3);
+
+        int nextDelay = (stage == 4) ? 2 : 3;
+        Scheduler.get().runTaskLater(() -> triggerExplosion(world, console, tardis, stage - 1), TimeUnit.SECONDS, nextDelay);
+    }
+
     private void runDumpingArtronSequence(ServerPlayerEntity player, Runnable onFinish) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             int delay = i + 1;
             Scheduler.get().runTaskLater(() -> {
                 String frame = SPINNER[delay % SPINNER.length];
@@ -143,7 +135,12 @@ public class EngineOverload extends Control {
     }
 
     @Override
+    public long getDelayLength() {
+        return 360000;
+    }
+
+    @Override
     public SoundEvent getSound() {
-        return AITSounds.DING;
+        return AITSounds.ENGINE_OVERLOAD;
     }
 }

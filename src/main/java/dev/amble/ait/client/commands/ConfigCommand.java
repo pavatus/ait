@@ -15,7 +15,6 @@ import dev.amble.ait.config.AITConfig;
 
 
 public class ConfigCommand {
-
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal(AITMod.MOD_ID + "-config").executes(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
