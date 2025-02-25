@@ -136,7 +136,7 @@ public class EngineOverload extends Control {
 
     @Override
     public long getDelayLength() {
-        return 1728000;
+        return 360000;
     }
 
     @Override
