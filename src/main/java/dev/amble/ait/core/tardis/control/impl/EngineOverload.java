@@ -40,6 +40,7 @@ public class EngineOverload extends Control {
         boolean isInFlight = tardis.travel().getState() == TravelHandlerBase.State.FLIGHT;
 
         if (!isInFlight) {
+            tardis.travel().dematerialize();
             tardis.travel().finishDemat();
         }
 
