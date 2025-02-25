@@ -195,8 +195,8 @@ public class BOTI {
 
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        if (variant.emission() != null)
-            ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
+        if (variant.emission() != null && tardis.fuel().hasPower())
+            ((DoorModel) frame).renderWithAnimations(door, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, tardis.alarms().get().isEnabled() ? 0.3f : 1F, tardis.alarms().get().isEnabled() ? 3.0f : 1.0F, 1.0F);
         //((DoorModel) frame).render(stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F);
         botiProvider.draw();
         stack.pop();
@@ -274,8 +274,8 @@ public class BOTI {
 
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        if (variant.emission() != null)
-            ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
+        if (variant.emission() != null && tardis.fuel().hasPower())
+            ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInteriorEmission(variant.emission())), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, tardis.alarms().get().isEnabled() ? 0.3f : 1F, tardis.alarms().get().isEnabled() ? 0.3f : 1.0F, 1.0F, true);
         botiProvider.draw();
         stack.pop();
 
