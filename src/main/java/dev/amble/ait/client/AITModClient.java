@@ -143,17 +143,6 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new FabricatorOverlay());
         HudRenderCallback.EVENT.register(new ExteriorAxeOverlay());
 
-        /*
-         * ClientVortexDataHandler.init(); WorldRenderEvents.END.init(context -> {
-         * MinecraftClient client = MinecraftClient.getInstance(); World world =
-         * client.player.getWorld(); if(world.getRegistryKey() ==
-         * AITDimensions.TIME_VORTEX_WORLD) { System.out.println("rendering");
-         * VortexUtil vortex = new VortexUtil("space"); VortexData vortexData =
-         * ClientVortexDataHandler.getCachedVortexData(WorldUtil.getName(client));
-         *
-         * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
-         * vortex.renderVortexNodes(context, node); } } } });
-         */
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
         WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; exteriorBOTI(context);});
         WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; doorBOTI(context);});
@@ -264,10 +253,6 @@ public class AITModClient implements ClientModInitializer {
                     });
                 });
 
-        // does all this clientplaynetwrokigng shite really have to go in here, theres
-        // probably
-        // somewhere else it can go
-        // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
                 responseSender) -> {
             ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
@@ -283,10 +268,6 @@ public class AITModClient implements ClientModInitializer {
 
         SonicModelLoader.init();
     }
-
-    /**
-     * This is for screens without a tardis
-     */
     public static Screen screenFromId(int id) {
         return screenFromId(id, null, null);
     }

@@ -26,7 +26,6 @@ import dev.amble.ait.data.landing.LandingPadSpot;
 public final class TardisEvents {
 
     // Flight
-
     public static final Event<Demat> DEMAT = EventFactory.createArrayBacked(Demat.class, callbacks -> tardis -> {
         for (Demat callback : callbacks) {
             Interaction value = callback.onDemat(tardis);
