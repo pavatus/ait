@@ -100,7 +100,7 @@ public class DalekModExteriorModel extends ExteriorModel {
         if (isBOTI) {
             matrices.push();
             matrices.scale(0.945F, 0.945F, 0.945F);
-            matrices.translate(0, -1.5f, 0);
+            matrices.translate(-0.002, -0.0012f, -0.004);
             this.dalekmod.getChild("Doors").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             matrices.pop();
         }
@@ -114,7 +114,7 @@ public class DalekModExteriorModel extends ExteriorModel {
 
         matrices.push();
         matrices.scale(0.945F, 0.945F, 0.945F);
-        matrices.translate(0, -1.5f, 0);
+        matrices.translate(1, -1.5f, 0);
 
         DoorHandler door = falling.tardis().get().door();
 
