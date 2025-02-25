@@ -55,29 +55,37 @@ public class EngineOverload extends Control {
                     tardis.travel().decreaseFlightTime(999999999);
                 }
 
-                tardis.alarm().enable();
-                tardis.subsystems().demat().removeDurability(500);
-                tardis.subsystems().chameleon().removeDurability(75);
-                tardis.subsystems().shields().removeDurability(325);
-                tardis.subsystems().lifeSupport().removeDurability(100);
-                tardis.subsystems().engine().removeDurability(750);
-
-                spawnParticles(world, console);
-
-                Scheduler.get().runTaskLater(() -> spawnExteriorParticles(tardis), TimeUnit.SECONDS, 3);
+                Scheduler.get().runTaskLater(() -> triggerExplosion(world, console, tardis, 4), TimeUnit.SECONDS, 0);
             });
         });
 
         return true;
     }
 
+    private void triggerExplosion(ServerWorld world, BlockPos console, Tardis tardis, int stage) {
+        if (stage <= 0) return;
+
+        tardis.alarm().enable();
+        tardis.subsystems().demat().removeDurability(500);
+        tardis.subsystems().chameleon().removeDurability(75);
+        tardis.subsystems().shields().removeDurability(325);
+        tardis.subsystems().lifeSupport().removeDurability(100);
+        tardis.subsystems().engine().removeDurability(750);
+
+        spawnParticles(world, console);
+        Scheduler.get().runTaskLater(() -> spawnExteriorParticles(tardis), TimeUnit.SECONDS, 3);
+
+        int nextDelay = (stage == 4) ? 2 : 3;
+        Scheduler.get().runTaskLater(() -> triggerExplosion(world, console, tardis, stage - 1), TimeUnit.SECONDS, nextDelay);
+    }
+
     private void runDumpingArtronSequence(ServerPlayerEntity player, Runnable onFinish) {
-        for (int i = 0; i < 6; i++) { // Spinner now runs twice as fast
+        for (int i = 0; i < 6; i++) {
             int delay = i + 1;
             Scheduler.get().runTaskLater(() -> {
                 String frame = SPINNER[delay % SPINNER.length];
                 player.sendMessage(Text.literal("§6DUMPING ARTRON " + frame), true);
-            }, TimeUnit.SECONDS, delay * 1);
+            }, TimeUnit.SECONDS, delay);
         }
 
         Scheduler.get().runTaskLater(() -> runFlashingFinalMessage(player, onFinish), TimeUnit.SECONDS, 3);
@@ -132,6 +140,6 @@ public class EngineOverload extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.DING;
+        return AITSounds.ENGINE_OVERLOAD;
     }
 }
