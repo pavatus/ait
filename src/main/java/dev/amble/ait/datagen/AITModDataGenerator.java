@@ -461,8 +461,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.LEATHER), conditionsFromItem(Items.LEATHER))
                     .input('P', Items.PAPER)
                     .criterion(hasItem(Items.PAPER), conditionsFromItem(Items.PAPER))
-                    .input('B', AITItems.ZEITON_DUST)
-                    .criterion(hasItem(AITItems.ZEITON_DUST), conditionsFromItem(AITItems.ZEITON_DUST)));
+                    .input('B', Items.ENDER_EYE)
+                    .criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE)));
 
 
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
