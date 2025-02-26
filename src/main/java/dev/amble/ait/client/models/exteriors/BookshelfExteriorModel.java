@@ -213,13 +213,13 @@ public class BookshelfExteriorModel extends ExteriorModel {
             this.bookshelf.getChild("right_door").yaw = (float) Math.toRadians(maxRot * exterior.tardis().get().door().getRightRot());
         }
 
-        if (isBOTI) {
-            matrices.push();
-            matrices.scale(1F, 1F, 1F);
-            matrices.translate(0, -1.5f, 0);
-            this.bookshelf.getChild("left_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
-            this.bookshelf.getChild("right_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
-            matrices.pop();
-        }
+//        if (isBOTI) {
+//            matrices.push();
+//            matrices.scale(1F, 1F, 1F);
+//            matrices.translate(0.04, -1.26f, -0.36);
+//            this.bookshelf.getChild("left_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+//            this.bookshelf.getChild("right_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+//            matrices.pop();
+//        }
     }
 }

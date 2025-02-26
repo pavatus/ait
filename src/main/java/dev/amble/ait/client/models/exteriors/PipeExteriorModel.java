@@ -76,8 +76,8 @@ public class PipeExteriorModel extends ExteriorModel {
 
         this.tardis.pivotY = !tardis.door().isOpen() ? -14F : 0;
 
-        if (isBOTI) {
-            this.tardis.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
-        }
+//        if (isBOTI) {
+//            this.tardis.render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
+//        }
     }
 }
