@@ -683,7 +683,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("control.ait.sonic_port", "Sonic Port");
         provider.addTranslation("control.ait.telepathic_circuit", "Telepathic Circuit");
         provider.addTranslation("control.ait.throttle", "Throttle");
-        provider.addTranslation("control.ait.visualiser", "Visualiser");
+        provider.addTranslation("control.ait.visualiser", "Real World Flight");
         provider.addTranslation("control.ait.eject_waypoint", "Eject Waypoint");
         provider.addTranslation("control.ait.goto_waypoint", "Goto Waypoint");
         provider.addTranslation("control.ait.console_port", "Console Port");
