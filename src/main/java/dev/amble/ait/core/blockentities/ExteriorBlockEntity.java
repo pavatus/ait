@@ -114,7 +114,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                     handler.insertExteriorSonic(hand);
 
                     player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-                    world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1F, 0.2F);
+                    world.playSound(null, pos, AITSounds.SONIC_MENDING, SoundCategory.BLOCKS, 1F, 1F);
                 } else {
                     world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
                             0.2F);

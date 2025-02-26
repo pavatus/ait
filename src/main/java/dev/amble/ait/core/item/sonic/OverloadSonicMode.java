@@ -2,7 +2,6 @@ package dev.amble.ait.core.item.sonic;
 
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -95,9 +94,6 @@ public class OverloadSonicMode extends SonicMode {
                     || block == Blocks.LIGHT_GRAY_CONCRETE
                     || block == Blocks.LIGHT_BLUE_CONCRETE
                     || block == Blocks.LIME_CONCRETE)) {
-                world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                        new ItemStack(Items.AIR, 4)));
-
                 world.breakBlock(pos, false);
                 world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
                 return;

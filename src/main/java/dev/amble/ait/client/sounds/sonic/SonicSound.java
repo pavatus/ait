@@ -5,6 +5,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.world.World;
 
 import dev.amble.ait.client.sounds.PositionedLoopingSound;
 import dev.amble.ait.core.AITItems;
@@ -43,7 +44,7 @@ public class SonicSound extends PositionedLoopingSound {
 
     public void play() {
         if (!hasPlayedOnSound) {
-            playSound(AITSounds.SONIC_ON);
+            playSoundAtPlayer(AITSounds.SONIC_ON);
             hasPlayedOnSound = true;
             hasPlayedOffSound = false;
         }
@@ -59,7 +60,7 @@ public class SonicSound extends PositionedLoopingSound {
         MinecraftClient.getInstance().getSoundManager().stop(this);
 
         if (!hasPlayedOffSound) {
-            playSound(AITSounds.SONIC_OFF);
+            playSoundAtPlayer(AITSounds.SONIC_OFF);
             hasPlayedOffSound = true;
             hasPlayedOnSound = false;
         }
@@ -97,9 +98,13 @@ public class SonicSound extends PositionedLoopingSound {
         this.stop();
     }
 
-    private void playSound(SoundEvent sound) {
-        if (MinecraftClient.getInstance().getSoundManager() != null) {
-            MinecraftClient.getInstance().player.playSound(sound, 1f, 1f);
+    private void playSoundAtPlayer(SoundEvent sound) {
+        World world = MinecraftClient.getInstance().world;
+        if (world != null) {
+            world.playSound(
+                    this.player.getX(), this.player.getY(), this.player.getZ(),
+                    sound, SoundCategory.PLAYERS, 1.0f, 1.0f, false
+            );
         }
     }
 
