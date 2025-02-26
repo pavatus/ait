@@ -3,28 +3,19 @@ package dev.amble.ait.core.tardis.handler.travel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.TimerTask;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.util.ServerLifecycleHooks;
 
-import dev.drtheo.scheduler.api.ClientScheduler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisEvents;
@@ -137,9 +128,6 @@ public sealed interface CrashableTardisTravel permits TravelHandler {
         world.playSound(null, console, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 3.0f, 1.0f);
         world.playSound(null, console, SoundEvents.ENTITY_WITHER_HURT, SoundCategory.BLOCKS, 3.0f, 1.0f);
 
-        int explosionRadius = 15;
-        int fireRadius = 12;
-        int durationTicks = 20 * (power * 10);
     }
 
     private float calculateFireProbability(double distance, int maxRadius) {
