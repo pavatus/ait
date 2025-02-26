@@ -61,44 +61,6 @@ public class InteractionSonicMode extends SonicMode {
         if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-        if (canMakeRedstoneTweak(ticks)
-                && state.contains(DaylightDetectorBlock.INVERTED)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.with(DaylightDetectorBlock.POWER, 15));
-            world.emitGameEvent(user, GameEvent.BLOCK_ACTIVATE, pos);
-        }
-
-        if (canMakeRedstoneTweak(ticks)
-                && block.getDefaultState().contains(RedstoneLampBlock.LIT)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(RedstoneLampBlock.LIT));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-            return;
-        }
-
-        if (canMakeRedstoneTweak(ticks)
-                && block.getDefaultState().contains(ComparatorBlock.MODE)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(ComparatorBlock.POWERED));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-            return;
-        }
-
-        if (canMakeRedstoneTweak(ticks)
-                && block.getDefaultState().contains(RepeaterBlock.POWERED)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(RepeaterBlock.POWERED));
-            world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-            return;
-        }
 
         if (canInteract3(ticks)
                 && block.getDefaultState().contains(BellBlock.FACING)) {
@@ -125,9 +87,6 @@ public class InteractionSonicMode extends SonicMode {
         }
     }
 
-    private static boolean canMakeRedstoneTweak(int ticks) {
-        return ticks >= 5;
-    }
 
     private static boolean canInteract1(int ticks) {
         return ticks >= 10;

@@ -195,6 +195,10 @@ public class AITSounds {
     // Sonic
     public static final SoundEvent SONIC_USE = register("sonic/use");
     public static final SoundEvent SONIC_SWITCH = register("sonic/switch");
+    public static final SoundEvent SONIC_ON = register("sonic/sonic_on");
+    public static final SoundEvent SONIC_OFF = register("sonic/sonic_off");
+    public static final SoundEvent SONIC_TWEAK = register("sonic/sonic_tweak");
+    public static final SoundEvent SONIC_MENDING = register("sonic/sonic_mending");
 
     // Secret
     public static final SoundEvent DOOM_DOOR_OPEN = register("tardis/secret/doom_door_open");
