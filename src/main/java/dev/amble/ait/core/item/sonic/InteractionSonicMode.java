@@ -4,8 +4,6 @@ import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -61,15 +59,6 @@ public class InteractionSonicMode extends SonicMode {
         if (!world.getBlockState(pos).isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-
-        if (canInteract3(ticks)
-                && block.getDefaultState().contains(BellBlock.FACING)) {
-            world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 1.0f,
-                    world.getRandom().nextFloat() * 0.4f + 0.8f);
-
-            world.setBlockState(pos, state.cycle(BellBlock.FACING));
-            world.emitGameEvent(user, GameEvent.ENTITY_INTERACT, pos);
-        }
 
 
         if (canInteract3(ticks)
