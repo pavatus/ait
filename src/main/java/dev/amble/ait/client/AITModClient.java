@@ -37,7 +37,6 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.boti.BOTI;
@@ -487,15 +486,7 @@ public class AITModClient implements ClientModInitializer {
             stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(RotationPropertyHelper.toDegrees(exterior.getCachedState().get(ExteriorBlock.ROTATION))));
             int light = world.getLightLevel(pos);
             if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
-                int lightConst = 524296;
-                int i = world.getLightLevel(LightType.SKY, pos);
-                int j = world.getLightLevel(LightType.BLOCK, pos);
-                light = (i + j > 15
-                        ? (15 * 2) + (j > 0 ? 0 : -5)
-                        : world.isNight()
-                        ? (i / 15) + j > 0 ? j + 13 : j
-                        : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j))
-                        * lightConst;
+                light = LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos));
                 BOTI.renderExteriorBoti(exterior, variant, stack,
                         AITMod.id("textures/environment/tardis_sky.png"), model,
                         BotiPortalModel.getTexturedModelData().createModel(), light);
@@ -526,16 +517,7 @@ public class AITModClient implements ClientModInitializer {
                 stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(door.getCachedState().get(DoorBlock.FACING).asRotation()));
                 int light = world.getLightLevel(pos.up());
                 if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
-                    int lightConst = 524296;
-                    int i = world.getLightLevel(LightType.SKY, pos);
-                    int j = world.getLightLevel(LightType.BLOCK, pos);
-
-                    light = (i + j > 15
-                            ? (15 * 2) + (j > 0 ? 0 : -5)
-                            : world.isNight()
-                            ? (i / 15) + j > 0 ? j + 13 : j
-                            : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j))
-                            * lightConst;
+                    light = LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos));
                     BOTI.renderInteriorDoorBoti(tardis, door, variant, stack,
                             AITMod.id("textures/environment/tardis_sky.png"), model,
                             BotiPortalModel.getTexturedModelData().createModel(), light);

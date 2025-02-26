@@ -209,8 +209,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
 
         if (alpha > 0.105f && emission != null && !(emission.equals(DatapackConsole.EMPTY)))
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations, emission, entity,
-                    this.model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, s - colorAlpha, alarms ? 0.3f : t - colorAlpha,
-                    alarms ? 0.3f : u - colorAlpha, alpha);
+                    this.model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, alarms ? !tardis.fuel().hasPower() ? 0.25f : s - colorAlpha : s - colorAlpha, alarms ? !tardis.fuel().hasPower() ? 0.01f : 0.3f : t - colorAlpha,
+                    alarms ? !tardis.fuel().hasPower() ? 0.01f : 0.3f : u - colorAlpha, alpha);
 
         profiler.swap("biome");
 

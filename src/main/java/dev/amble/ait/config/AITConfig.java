@@ -50,6 +50,7 @@ public class AITConfig implements ConfigData {
         public boolean DISABLE_LOYALTY_FOG = false;
         public boolean DISABLE_LOYALTY_SLEEPING_ACTIONBAR = false;
         public boolean ENABLE_TARDIS_BOTI = true;
+        public boolean SHOULD_RENDER_BOTI_INTERIOR = false;
         public boolean SHOW_CONTROL_HITBOXES = false;
         public boolean RENDER_DEMAT_PARTICLES = true;
         public boolean ANIMATE_CONSOLE = true;
