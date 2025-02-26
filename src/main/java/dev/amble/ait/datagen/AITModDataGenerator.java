@@ -451,6 +451,20 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('B', Blocks.BLACK_WOOL)
                     .criterion(hasItem(Blocks.BLACK_WOOL), conditionsFromItem(Blocks.BLACK_WOOL)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.PSYCHPAPER)
+                    .pattern("SOS")
+                    .pattern("BPB")
+                    .pattern("SOS")
+                    .input('O', Items.STRING)
+                    .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                    .input('S', Items.BLACK_WOOL)
+                    .criterion(hasItem(Items.NETHER_STAR), conditionsFromItem(Items.NETHER_STAR))
+                    .input('P', Items.PAPER)
+                    .criterion(hasItem(Items.PAPER), conditionsFromItem(Items.PAPER))
+                    .input('B', AITItems.ZEITON_DUST)
+                    .criterion(hasItem(AITItems.ZEITON_DUST), conditionsFromItem(AITItems.ZEITON_DUST)));
+
+
             provider.addShapelessRecipe(ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_COBBLE)
                     .input(Blocks.COBBLESTONE).criterion(hasItem(Blocks.COBBLESTONE), conditionsFromItem(Blocks.COBBLESTONE))
                     .input(AITItems.ZEITON_SHARD).criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
@@ -729,6 +743,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.NETHERITE_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         provider.addTranslation(AITItems.CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+        provider.addTranslation(AITItems.PSYCHPAPER, "Psychic Paper");
         provider.addTranslation(AITItems.GALLIFREY_FALLS_PAINTING, "Painting");
         provider.addTranslation("ait.item.drink.mug_empty", "Empty Mug");
         provider.addTranslation("ait.item.drink.hot_cocoa", "Hot Cocoa");
