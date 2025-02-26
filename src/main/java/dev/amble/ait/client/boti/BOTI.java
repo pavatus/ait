@@ -13,12 +13,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.amble.lib.data.DirectedBlockPos;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
@@ -57,6 +63,7 @@ public class BOTI {
     }*/
     public static final Queue<RiftEntity> RIFT_RENDERING_QUEUE = new LinkedList<>();
     public static BOTIHandler BOTI_HANDLER = new BOTIHandler();
+    public static BOTIVBO BOTIVBO = new BOTIVBO();
     public static AITBufferBuilderStorage AIT_BUF_BUILDER_STORAGE = new AITBufferBuilderStorage();
     public static Queue<DoorBlockEntity> DOOR_RENDER_QUEUE = new LinkedList<>();
     public static Queue<GallifreyFallsPaintingEntity> PAINTING_RENDER_QUEUE = new LinkedList<>();
@@ -91,6 +98,63 @@ public class BOTI {
         tessellator.draw();
         //BLOCK_RENDER_QUEUE.clear();
     }*/
+
+    public static void structureRendering(MatrixStack stack, MultiBlockStructure structure, int light, int overlay, float ticks) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.world == null) return;
+        stack.push();
+        client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+
+        for (RenderLayer layer : RenderLayer.getBlockLayers()) {
+            BOTIVBO.begin(layer);
+            layer.startDrawing();
+            BufferBuilder builder = BOTIVBO.getBufferBuilder(layer);
+
+            if (!builder.isBuilding())
+                builder.begin(VertexFormat.DrawMode.QUADS, dev.amble.ait.client.boti.BOTIVBO.format);
+
+            boolean hasRenderedLayer = false;
+
+            MatrixStack secondaryStack = new MatrixStack();
+
+            for (MultiBlockStructure.BlockOffset blockOffset : structure) {
+                BlockState state = client.world.getBlockState(blockOffset.offset());
+                if (state.equals(Blocks.AIR.getDefaultState())) continue;
+                FluidState fluidState = client.world.getFluidState(blockOffset.offset());
+                secondaryStack.push();
+                secondaryStack.translate(blockOffset.offset().getX() & 0xF, blockOffset.offset().getY() & 0xF, blockOffset.offset().getZ() & 0xF);
+                if (state.getFluidState().isEmpty()) {
+                    client.getBlockRenderManager().renderBlock(state, blockOffset.offset(),
+                            client.world, secondaryStack, builder, true, client.world.getRandom());
+                    BlockEntity entity = client.world.getBlockEntity(blockOffset.offset());
+                    if (entity != null) {
+                        BlockEntityRenderer<BlockEntity> blockEntityRenderer = client.getBlockEntityRenderDispatcher().get(entity);
+                        if (blockEntityRenderer != null) {
+                            blockEntityRenderer.render(entity, client.getTickDelta(),
+                                    secondaryStack, VertexConsumerProvider.immediate(builder), light, overlay);
+                        }
+                        hasRenderedLayer = true;
+                    }
+                } else {
+                    if (!builder.isBuilding())
+                        builder.begin(VertexFormat.DrawMode.QUADS, dev.amble.ait.client.boti.BOTIVBO.format);
+                    client.getBlockRenderManager().renderFluid(blockOffset.offset(), client.world, builder, state, fluidState);
+                    hasRenderedLayer = true;
+                }
+                secondaryStack.pop();
+            }
+
+            if (hasRenderedLayer) {
+                BOTIVBO.upload(layer);
+            }
+            BOTIVBO.unbind(layer);
+            layer.endDrawing();
+        }
+        stack.push();
+        BOTIVBO.draw();
+        stack.pop();
+        stack.pop();
+    }
 
     public static void renderGallifreyFallsPainting(MatrixStack stack, SinglePartEntityModel singlePartEntityModel, int light) {
         if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
@@ -268,6 +332,9 @@ public class BOTI {
 
         BOTI_HANDLER.setupFramebuffer();
 
+        Vec3d skyColor = MinecraftClient.getInstance().world.getSkyColor(MinecraftClient.getInstance().player.getPos(), MinecraftClient.getInstance().getTickDelta());
+        BOTI.setFramebufferColor(BOTI_HANDLER.afbo, (float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 0);
+
         BOTI.copyFramebuffer(MinecraftClient.getInstance().getFramebuffer(), BOTI_HANDLER.afbo);
 
         VertexConsumerProvider.Immediate botiProvider = AIT_BUF_BUILDER_STORAGE.getBotiVertexConsumer();
@@ -305,8 +372,10 @@ public class BOTI {
             DirectedBlockPos pos = exterior.tardis().get().getDesktop().getDoorPos();
             stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(pos.toMinecraftDirection().asRotation()));
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-
-            stack.translate(0, 0.1, -0.5);
+            /*structureRendering(stack, (MultiBlockStructure.
+                    testInteriorRendering(AITMod.id("interiors/" +
+                            exterior.tardis().get().getDesktop().getSchema().id().getPath()))),
+                    light, OverlayTexture.DEFAULT_UV, MinecraftClient.getInstance().getTickDelta());*/
             MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(AITMod.id("interiors/" + exterior.tardis().get().getDesktop().getSchema().id().getPath())), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
             //renderBlockVertexBuffer(stack);
             //botiProvider.draw();
@@ -416,5 +485,9 @@ public class BOTI {
         GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, src.fbo);
         GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, dest.fbo);
         GlStateManager._glBlitFrameBuffer(0, 0, src.textureWidth, src.textureHeight, 0, 0, dest.textureWidth, dest.textureHeight, GlConst.GL_DEPTH_BUFFER_BIT, GlConst.GL_NEAREST);
+    }
+
+    private static void setFramebufferColor(Framebuffer src, float r, float g, float b, float a) {
+        src.setClearColor(r, g, b, a);
     }
 }

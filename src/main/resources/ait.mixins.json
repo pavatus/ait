@@ -44,6 +44,7 @@
     "client.rendering.HeldItemRendererMixin",
     "client.rendering.PlayerEntityRendererMixin",
     "client.rendering.SkyboxMixin",
+    "client.rendering.VertexBufferWrapper",
     "client.rendering.framebuffer.MixinMainFramebufferTarget",
     "client.rendering.framebuffer.MixinRenderFramebufferTarget",
     "client.sonic.SonicItemRendererMixin",
