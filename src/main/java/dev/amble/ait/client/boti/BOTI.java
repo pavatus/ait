@@ -16,9 +16,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -47,12 +45,52 @@ import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class BOTI {
 
+    /*static {
+        ClientPlayNetworking.registerGlobalReceiver(INTERIOR_UPDATE, (client, handler, buf, responseSender) -> {
+            if (client.world == null) return;
+            //System.out.println("WHAT");
+            BlockPos pos = buf.readBlockPos();
+            BlockState state = client.world.getBlockState(pos);
+            if (BOTI.BLOCK_RENDER_QUEUE.isEmpty())
+                BOTI.BLOCK_RENDER_QUEUE.add(new Pair<>(pos, state));
+        });
+    }*/
     public static final Queue<RiftEntity> RIFT_RENDERING_QUEUE = new LinkedList<>();
     public static BOTIHandler BOTI_HANDLER = new BOTIHandler();
     public static AITBufferBuilderStorage AIT_BUF_BUILDER_STORAGE = new AITBufferBuilderStorage();
     public static Queue<DoorBlockEntity> DOOR_RENDER_QUEUE = new LinkedList<>();
     public static Queue<GallifreyFallsPaintingEntity> PAINTING_RENDER_QUEUE = new LinkedList<>();
     public static Queue<ExteriorBlockEntity> EXTERIOR_RENDER_QUEUE = new LinkedList<>();
+    //public static Queue<Pair<BlockPos, BlockState>> BLOCK_RENDER_QUEUE = new LinkedList<>();
+
+    /*public static void renderBlockVertexBuffer(MatrixStack stack) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.world == null) return;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(builder);
+        builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
+        //System.out.println(BLOCK_RENDER_QUEUE);
+        for (Pair<BlockPos, BlockState> block : BLOCK_RENDER_QUEUE) {
+            //System.out.println("WHAT");
+            if (!builder.isBuilding()) {
+                stack.push();
+                stack.scale(100, 100, 100);
+                stack.translate(block.getLeft().getX() & 0xF, block.getLeft().getY() & 0xF, block.getLeft().getZ() & 0xF);
+                client.getBlockRenderManager().renderBlock(block.getRight(), block.getLeft(),
+                        client.world, stack, immediate.getBuffer(RenderLayers.getBlockLayer(block.getRight()))
+                        , true, client.world.random);
+                BlockEntity entity = client.world.getBlockEntity(block.getLeft());
+                if (entity != null) {
+                    client.getBlockEntityRenderDispatcher().render(entity, client.getTickDelta(), stack, immediate);
+                }
+                stack.pop();
+            }
+        }
+        //immediate.draw();
+        tessellator.draw();
+        //BLOCK_RENDER_QUEUE.clear();
+    }*/
 
     public static void renderGallifreyFallsPainting(MatrixStack stack, SinglePartEntityModel singlePartEntityModel, int light) {
         if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
@@ -262,7 +300,7 @@ public class BOTI {
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
-        if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR){
+        if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
             stack.push();
             DirectedBlockPos pos = exterior.tardis().get().getDesktop().getDoorPos();
             stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(pos.toMinecraftDirection().asRotation()));
@@ -270,7 +308,8 @@ public class BOTI {
 
             stack.translate(0, 0.1, -0.5);
             MultiBlockStructureRenderer.instance().renderForInterior(MultiBlockStructure.testInteriorRendering(AITMod.id("interiors/" + exterior.tardis().get().getDesktop().getSchema().id().getPath())), exterior.getPos(), exterior.getWorld(), stack, botiProvider, false);
-            botiProvider.draw();
+            //renderBlockVertexBuffer(stack);
+            //botiProvider.draw();
             stack.pop();
         }
 

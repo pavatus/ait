@@ -41,11 +41,9 @@ public class TardisDesktop extends TardisComponent {
 
     private static final StructurePlacementData SETTINGS = new StructurePlacementData().setUpdateNeighbors(false);
     public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
-
+    public static final Identifier INTERIOR_UPDATE = AITMod.id("interior_update");
     private TardisDesktopSchema schema;
-
     private DirectedBlockPos doorPos;
-
     private final Corners corners;
     private final Set<BlockPos> consolePos;
 
@@ -74,7 +72,33 @@ public class TardisDesktop extends TardisComponent {
                         tardis.getDesktop().cacheConsole(console);
                     });
                 }));
+
+        /*TardisEvents.DOOR_OPEN.register(tardis -> {
+            NetworkUtil.getSubscribedPlayers(tardis.asServer()).forEach(player -> {
+                ServerWorld serverWorld = tardis.asServer().getInteriorWorld();
+
+                for (int x = -RADIUS; x <= RADIUS; x += 16) {
+                    for (int z = -RADIUS; z <= RADIUS; z += 16) {
+                        boolean bl = serverWorld.getChunkManager().isChunkLoaded(x, z);
+                        if (!bl) continue;
+                        WorldChunk chunk = serverWorld.getChunk(x >> 4, z >> 4);
+                        for (BlockPos pos : BlockPos.iterate(chunk.getPos().getStartPos(),
+                                new BlockPos(chunk.getPos().getEndX(), 0, chunk.getPos().getEndZ()))) {
+                            sendInteriorChunkUpdate(pos, player);
+                        }
+                    }
+                }
+            });
+        });*/
     }
+
+   /* public static void sendInteriorChunkUpdate(BlockPos pos, ServerPlayerEntity player) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeBlockPos(pos);
+
+        if (BOTI.BLOCK_RENDER_QUEUE.isEmpty())
+            ServerPlayNetworking.send(player, INTERIOR_UPDATE, data);
+    }*/
 
     public TardisDesktop(TardisDesktopSchema schema) {
         super(Id.DESKTOP);
