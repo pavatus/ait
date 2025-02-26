@@ -106,7 +106,7 @@ public class PresentExteriorModel extends ExteriorModel {
 
         if (isBOTI) {
             matrices.push();
-            matrices.translate(0, -1.5f, 0);
+            matrices.translate(0, -1.5f, -3);
             this.present.getChild("left_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             this.present.getChild("right_door").render(matrices, vertices, light, overlay, red, green, blue, pAlpha);
             matrices.pop();
