@@ -2,6 +2,8 @@ package dev.amble.ait.core.blockentities;
 
 import java.util.UUID;
 
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -112,20 +114,21 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                     && tardis.door().isClosed() && tardis.crash().getRepairTicks() > 0) {
                 if (sonic.isOf(hand, tardis)) {
                     handler.insertExteriorSonic(hand);
-
                     player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                    world.playSound(null, pos, AITSounds.SONIC_ON, SoundCategory.BLOCKS, 1F, 1F);
                     world.playSound(null, pos, AITSounds.SONIC_MENDING, SoundCategory.BLOCKS, 1F, 1F);
-                } else {
-                    world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
-                            0.2F);
-                    player.sendMessage(Text.translatable("tardis.tool.cannot_repair"), true); // Unable to repair TARDIS
-                    // with current tool!
-                }
+                    Scheduler.get().runTaskLater(() -> {
+                        world.playSound(null, pos, AITSounds.TARDIS_BLING, SoundCategory.BLOCKS, 1F, 1F);
+                    }, TimeUnit.SECONDS, 15);
 
+                } else {
+                    world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F, 0.2F);
+                    player.sendMessage(Text.translatable("tardis.tool.cannot_repair"), true);
+                }
                 return;
             }
 
-            // try to stop phasing
+        // try to stop phasing
             EngineSystem.Phaser phasing = tardis.subsystems().engine().phaser();
 
             if (phasing.isPhasing()) {
