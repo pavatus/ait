@@ -19,6 +19,7 @@ import dev.amble.ait.data.schema.console.variant.coral.client.*;
 import dev.amble.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
 import dev.amble.ait.data.schema.console.variant.crystalline.client.ClientCrystallineZeitonVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.client.*;
+import dev.amble.ait.data.schema.console.variant.hourglass.client.ClientHourglassVariant;
 import dev.amble.ait.data.schema.console.variant.hudolin.client.ClientHudolinNatureVariant;
 import dev.amble.ait.data.schema.console.variant.hudolin.client.ClientHudolinShalkaVariant;
 import dev.amble.ait.data.schema.console.variant.hudolin.client.ClientHudolinVariant;
@@ -210,6 +211,7 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
     public static ClientConsoleVariantSchema RENAISSANCE_TOKAMAK;
     public static ClientConsoleVariantSchema RENAISSANCE_IDENTITY;
     public static ClientConsoleVariantSchema RENAISSANCE_INDUSTRIOUS;
+    public static ClientConsoleVariantSchema HOURGLASS;
 
 
 
@@ -257,11 +259,14 @@ public class ClientConsoleVariantRegistry extends DatapackRegistry<ClientConsole
         CRYSTALLINE = register(new ClientCrystallineVariant());
         CRYSTALLINE_ZEITON = register(new ClientCrystallineZeitonVariant());
 
-        //Renaissance variants
+        // Renaissance variants
         RENAISSANCE = register(new ClientRenaissanceVariant());
         RENAISSANCE_TOKAMAK = register(new ClientRenaissanceTokamakVariant());
         RENAISSANCE_FIRE = register(new ClientRenaissanceFireVariant());
         RENAISSANCE_IDENTITY = register(new ClientRenaissanceIdentityVariant());
         RENAISSANCE_INDUSTRIOUS = register(new ClientRenaissanceIndustriousVariant());
+
+        // Hourglass variants
+        HOURGLASS = register(new ClientHourglassVariant());
     }
 }

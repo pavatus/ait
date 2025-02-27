@@ -28,6 +28,7 @@ import dev.amble.ait.data.schema.console.variant.hartnell.HartnellVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.KeltHartnellVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.MintHartnellVariant;
 import dev.amble.ait.data.schema.console.variant.hartnell.WoodenHartnellVariant;
+import dev.amble.ait.data.schema.console.variant.hourglass.HourglassVariant;
 import dev.amble.ait.data.schema.console.variant.hudolin.HudolinNatureVariant;
 import dev.amble.ait.data.schema.console.variant.hudolin.HudolinShalkaVariant;
 import dev.amble.ait.data.schema.console.variant.hudolin.HudolinVariant;
@@ -152,6 +153,7 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
     public static ConsoleVariantSchema RENAISSANCE_FIRE;
     public static ConsoleVariantSchema RENAISSANCE_IDENTITY;
     public static ConsoleVariantSchema RENAISSANCE_INDUSTRIOUS;
+    public static ConsoleVariantSchema HOURGLASS;
 
 
     @Override
@@ -208,6 +210,9 @@ public class ConsoleVariantRegistry extends UnlockableRegistry<ConsoleVariantSch
         RENAISSANCE_FIRE = registerStatic(new RenaissanceFireVariant());
         RENAISSANCE_IDENTITY = registerStatic(new RenaissanceIdentityVariant());
         RENAISSANCE_INDUSTRIOUS = registerStatic(new RenaissanceIndustriousVariant());
+
+        // Hourglass variants
+        HOURGLASS = registerStatic(new HourglassVariant());
 
     }
 }
