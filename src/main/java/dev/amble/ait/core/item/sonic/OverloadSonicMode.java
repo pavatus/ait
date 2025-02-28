@@ -68,43 +68,49 @@ public class OverloadSonicMode extends SonicMode {
         if (!state.isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-        if (canMakeRedstoneTweak(ticks)) {
-            if (state.contains(DaylightDetectorBlock.INVERTED)) {
-                activateBlock(world, pos, user, state.with(DaylightDetectorBlock.POWER, 15));
-            } else if (state.contains(RedstoneLampBlock.LIT)) {
-                activateBlock(world, pos, user, state.cycle(RedstoneLampBlock.LIT));
-            } else if (state.contains(ComparatorBlock.MODE)) {
-                activateBlock(world, pos, user, state.cycle(ComparatorBlock.POWERED));
-            } else if (state.contains(RepeaterBlock.POWERED)) {
-                activateBlock(world, pos, user, state.cycle(RepeaterBlock.POWERED));
-            }
-            if (canResonateConcrete(ticks)
-                    && (block == Blocks.BLACK_CONCRETE
-                    || block == Blocks.CYAN_CONCRETE
-                    || block == Blocks.BLUE_CONCRETE
-                    || block == Blocks.BROWN_CONCRETE
-                    || block == Blocks.GRAY_CONCRETE
-                    || block == Blocks.GREEN_CONCRETE
-                    || block == Blocks.MAGENTA_CONCRETE
-                    || block == Blocks.ORANGE_CONCRETE
-                    || block == Blocks.PINK_CONCRETE
-                    || block == Blocks.RED_CONCRETE
-                    || block == Blocks.WHITE_CONCRETE
-                    || block == Blocks.PURPLE_CONCRETE
-                    || block == Blocks.LIGHT_GRAY_CONCRETE
-                    || block == Blocks.LIGHT_BLUE_CONCRETE
-                    || block == Blocks.LIME_CONCRETE)) {
-                world.breakBlock(pos, false);
-                world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
-                return;
-            }
+        if (!canMakeRedstoneTweak(ticks))
+            return;
 
-
-
+        if (state.contains(DaylightDetectorBlock.INVERTED)) {
+            activateBlock(world, pos, user, state.with(DaylightDetectorBlock.POWER, 15));
+        } else if (state.contains(RedstoneLampBlock.LIT)) {
+            activateBlock(world, pos, user, state.cycle(RedstoneLampBlock.LIT));
+        } else if (state.contains(ComparatorBlock.MODE)) {
+            activateBlock(world, pos, user, state.cycle(ComparatorBlock.POWERED));
+        } else if (state.contains(RepeaterBlock.POWERED)) {
+            activateBlock(world, pos, user, state.cycle(RepeaterBlock.POWERED));
         }
-        if (canLit(ticks) && block instanceof TntBlock) {
+
+        if (!canLit(ticks))
+            return;
+
+        if (block instanceof TntBlock) {
             TntBlock.primeTnt(world, pos);
             world.removeBlock(pos, false);
+            world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
+            return;
+        }
+
+        if (!canResonateConcrete(ticks))
+            return;
+
+        // TODO: concrete tag
+        if (block == Blocks.BLACK_CONCRETE
+                || block == Blocks.CYAN_CONCRETE
+                || block == Blocks.BLUE_CONCRETE
+                || block == Blocks.BROWN_CONCRETE
+                || block == Blocks.GRAY_CONCRETE
+                || block == Blocks.GREEN_CONCRETE
+                || block == Blocks.MAGENTA_CONCRETE
+                || block == Blocks.ORANGE_CONCRETE
+                || block == Blocks.PINK_CONCRETE
+                || block == Blocks.RED_CONCRETE
+                || block == Blocks.WHITE_CONCRETE
+                || block == Blocks.PURPLE_CONCRETE
+                || block == Blocks.LIGHT_GRAY_CONCRETE
+                || block == Blocks.LIGHT_BLUE_CONCRETE
+                || block == Blocks.LIME_CONCRETE) {
+            world.breakBlock(pos, false);
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
         }
     }
