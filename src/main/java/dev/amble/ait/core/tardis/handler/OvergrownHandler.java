@@ -34,11 +34,9 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
     @Exclude
     private static final int TIME_TO_OVERGROW = 24000;
 
-    public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
     private int ticks = 24000;
     private boolean ticking = false;
     private int soundCooldown = 0;
-
 
     private static final SoundEvent[] MOODY_SOUNDS = {
             AITSounds.MOODY1,
@@ -50,7 +48,7 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
 
     static {
         TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
-            if (!tardis.overgrown().isOvergrown() || player == null)
+            if (!tardis.overgrown().overgrown().get() || player == null)
                 return DoorHandler.InteractionResult.CONTINUE;
 
             ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
@@ -77,16 +75,12 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         overgrown.of(this, IS_OVERGROWN_PROPERTY);
     }
 
-    public boolean isOvergrown() {
-        return overgrown.get();
-    }
-
-    public void setOvergrown(boolean var) {
-        overgrown.set(var);
+    public BoolValue overgrown() {
+        return overgrown;
     }
 
     public void removeVegetation() {
-        this.setOvergrown(false);
+        overgrown.set(false);
         this.ticks = 0;
         this.ticking = false;
         this.soundCooldown = 0;
@@ -110,7 +104,7 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         Tardis tardis = this.tardis();
 
         if (!tardis.fuel().hasPower()) {
-            if (tardis.isGrowth() || this.isOvergrown()) {
+            if (tardis.isGrowth() || overgrown.get()) {
                 this.ticking = false;
                 playMoodySounds(tardis);
                 return;
@@ -122,7 +116,7 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
             }
 
             if (tardis.travel().getState() == TravelHandlerBase.State.FLIGHT) {
-                this.setOvergrown(false);
+                overgrown.set(false);
                 this.ticking = false;
                 this.ticks = 0;
                 return;
@@ -134,7 +128,7 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
             }
 
             if (++this.ticks >= TIME_TO_OVERGROW) {
-                this.setOvergrown(true);
+                overgrown.set(true);
                 this.ticking = false;
             }
         } else {
@@ -142,9 +136,8 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         }
     }
 
-
     private void playMoodySounds(Tardis tardis) {
-        if (!isOvergrown() || tardis == null)
+        if (!overgrown.get() || tardis == null)
             return;
 
         if (soundCooldown > 0) {
