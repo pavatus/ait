@@ -60,15 +60,14 @@ public class AITSounds {
     public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
 
 
-
-
-
     // APPARATUS VIVI
+    public static final SoundEvent MOODY = register("tardis/moody/moody");
     public static final SoundEvent MOODY1 = register("tardis/moody/moody1");
     public static final SoundEvent MOODY2 = register("tardis/moody/moody2");
     public static final SoundEvent MOODY3 = register("tardis/moody/moody3");
     public static final SoundEvent MOODY4 = register("tardis/moody/moody4");
     public static final SoundEvent MOODY5 = register("tardis/moody/moody5");
+
     public static final SoundEvent HAMMER_STRIKE = register("tardis/hammer_strike");
     public static final SoundEvent OWNER_BED = register("tardis/bed/owner");
     public static final SoundEvent PILOT_BED = register("tardis/bed/pilot");
