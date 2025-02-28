@@ -82,7 +82,6 @@ public class AITModClient implements ClientModInitializer {
         // TODO move to Registries
 
         AmbleRegistries.getInstance().registerAll(
-                SonicRegistry.getInstance(),
                 ClientExteriorVariantRegistry.getInstance(),
                 ClientConsoleVariantRegistry.getInstance()
         );

@@ -2,6 +2,8 @@ package dev.amble.ait.core.blockentities.control;
 
 import java.util.Optional;
 
+import dev.amble.ait.AITMod;
+import dev.amble.ait.registry.AITRegistries;
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 
@@ -55,12 +57,12 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
     }
 
     public void setControl(String id) {
-        Optional<Control> found = ControlRegistry.fromId(id);
+        Control found = AITRegistries.CONTROL.get(AITMod.id(id));
 
-        if (found.isEmpty())
+        if (found == null)
             return;
 
-        this.control = found.get();
+        this.control = found;
     }
 
     public boolean run(ServerPlayerEntity user, boolean isMine) {

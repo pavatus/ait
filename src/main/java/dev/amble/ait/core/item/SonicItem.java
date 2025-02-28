@@ -2,6 +2,7 @@ package dev.amble.ait.core.item;
 
 import java.util.List;
 
+import dev.amble.ait.registry.AITRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.item.TooltipContext;
@@ -43,7 +44,7 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         nbt.putInt(MODE_KEY, -1);
         nbt.putDouble(FUEL_KEY, getMaxFuel(stack));
 
-        if (SonicRegistry.DEFAULT != null)
+        if (AITRegistries.SONIC_DEFAULT != null)
             nbt.putString(SONIC_TYPE, SonicRegistry.DEFAULT.id().toString());
 
         return stack;
@@ -183,12 +184,12 @@ public class SonicItem extends LinkableItem implements ArtronHolderItem {
         String rawId = nbt.getString(SONIC_TYPE);
 
         if (rawId == null)
-            return SonicRegistry.DEFAULT;
+            return AITRegistries.SONIC_DEFAULT;
 
         Identifier id = Identifier.tryParse(rawId);
-        SonicSchema schema = SonicRegistry.getInstance().get(id);
+        SonicSchema schema = AITRegistries.SONIC.get(id);
 
-        return schema == null ? SonicRegistry.DEFAULT : schema;
+        return schema == null ? AITRegistries.SONIC_DEFAULT : schema;
     }
 
     public static void setSchema(ItemStack stack, Identifier id) {

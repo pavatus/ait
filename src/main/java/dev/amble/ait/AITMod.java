@@ -125,11 +125,9 @@ public class AITMod implements ModInitializer {
         SequenceRegistry.init();
         MoodEventPoolRegistry.init();
         LandingPadManager.init();
-        ControlRegistry.init();
         RiftChunkManager.init();
 
         AmbleRegistries.getInstance().registerAll(
-                SonicRegistry.getInstance(),
                 DesktopRegistry.getInstance(),
                 ConsoleVariantRegistry.getInstance(),
                 MachineRecipeRegistry.getInstance(),

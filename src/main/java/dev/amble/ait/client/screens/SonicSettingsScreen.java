@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import dev.amble.ait.registry.AITRegistries;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -17,6 +18,7 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -41,9 +43,12 @@ public class SonicSettingsScreen extends ConsoleScreen {
     private final Screen parent;
     private int selectedSonic;
 
+    private final Registry<SonicSchema> registry;
+
     public SonicSettingsScreen(ClientTardis tardis, BlockPos console, Screen parent) {
         super(Text.translatable("screen.ait.sonicsettings.title"), tardis, console);
         this.parent = parent;
+        this.registry = AITRegistries.SONIC.get(client.world);
     }
 
     @Override
@@ -55,7 +60,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
     protected void init() {
         SonicSchema schema = SonicItem.schema(tardis().sonic().getConsoleSonic());
 
-        this.selectedSonic = SonicRegistry.getInstance().toList().indexOf(schema);
+        this.selectedSonic = registry.getRawId(schema);
         this.top = (this.height - this.bgHeight) / 2; // this means everythings centered and scaling, same for below
         this.left = (this.width - this.bgWidth) / 2;
         this.createButtons();
@@ -93,7 +98,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
         if (this.tardis().sonic().getConsoleSonic() == null)
             return;
 
-        SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
+        SonicSchema schema = registry.get(this.selectedSonic);
 
         if (!this.tardis().isUnlocked(schema))
             return;
@@ -136,7 +141,7 @@ public class SonicSettingsScreen extends ConsoleScreen {
             MatrixStack stack = context.getMatrices();
 
             ItemStack sonicCopy = sonic.copy();
-            SonicSchema schema = SonicRegistry.getInstance().toList().get(this.selectedSonic);
+            SonicSchema schema = registry.get(selectedSonic);
 
             SonicItem.setSchema(sonicCopy, schema);
 
@@ -191,13 +196,12 @@ public class SonicSettingsScreen extends ConsoleScreen {
     }
 
     public void getNextSelectedSonic() {
-        this.selectedSonic = this.selectedSonic + 1 >= SonicRegistry.getInstance().size() ? 0 : this.selectedSonic + 1;
+        this.selectedSonic = this.selectedSonic + 1 >= registry.size() ? 0 : this.selectedSonic + 1;
     }
 
     public void getLastSelectedSonic() {
         this.selectedSonic = this.selectedSonic - 1 < 0
-                ? SonicRegistry.getInstance().size() - 1
-                : this.selectedSonic - 1;
+                ? registry.size() - 1 : this.selectedSonic - 1;
     }
 
     @Override
