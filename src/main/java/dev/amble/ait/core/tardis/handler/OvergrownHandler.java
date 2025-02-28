@@ -94,8 +94,6 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
     @Environment(EnvType.CLIENT)
     public Identifier getOvergrownTexture() {
         ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
-
-
         return variant.texture().withSuffixedPath("_overgrown"); // todo - best to have a fallback somehow but icr how to check if texture exists
     }
 
@@ -111,14 +109,20 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         if (tardis.isGrowth())
             return;
 
-        if (this.isOvergrown() && (this.tardis.travel().getState() == TravelHandlerBase.State.FLIGHT
-                || this.tardis.travel().getState() == TravelHandlerBase.State.MAT)) {
+        boolean overgrown = this.isOvergrown();
+        TravelHandlerBase.State state = this.tardis.travel().getState();
+
+        if (overgrown && (state == TravelHandlerBase.State.FLIGHT
+                || state == TravelHandlerBase.State.MAT)) {
             this.setOvergrown(false);
             this.setTicks(0);
             return;
         }
 
-        if (this.isOvergrown() || this.tardis.travel().getState() != TravelHandlerBase.State.LANDED)
+        if (overgrown)
+            return;
+
+        if (state != TravelHandlerBase.State.LANDED)
             return;
 
         // We know the tardis is landed so we can start ticking away
