@@ -1,8 +1,6 @@
 package dev.amble.ait.core.tardis.handler;
 
-import java.util.Random;
 
-import dev.amble.ait.AITMod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -14,6 +12,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
