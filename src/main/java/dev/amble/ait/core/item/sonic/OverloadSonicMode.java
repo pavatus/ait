@@ -2,6 +2,7 @@ package dev.amble.ait.core.item.sonic;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -51,55 +52,66 @@ public class OverloadSonicMode extends SonicMode {
         HitResult hitResult = SonicMode.getHitResult(user);
 
         if (hitResult instanceof BlockHitResult blockHit)
-            this.overloadBlock(blockHit.getBlockPos(), world, user, ticks);
+            this.overloadBlock(blockHit.getBlockPos(), world, user, ticks, blockHit);
     }
 
-    private void overloadBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks) {
+    private void overloadBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks, BlockHitResult blockHit) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
         if (!state.isIn(AITTags.Blocks.SONIC_INTERACTABLE))
             return;
 
-        if (canMakeRedstoneTweak(ticks)) {
-            if (block instanceof DaylightDetectorBlock) {
-                activateBlock(world, pos, user, state.with(Properties.POWER, 15));
-            } else if (block instanceof RedstoneLampBlock) {
-                activateBlock(world, pos, user, state.cycle(Properties.LIT));
-            } else if (block instanceof ComparatorBlock) {
-                activateBlock(world, pos, user, state.with(Properties.POWERED, true));
-                forceRedstonePower(world, pos, 5 * 20);
-            } else if (block instanceof RepeaterBlock) {
-                activateBlock(world, pos, user, state.with(Properties.POWERED, true));
-                forceRedstonePower(world, pos, 5 * 20);
-            } else if (block == Blocks.REDSTONE_WIRE) {
-                int newPower = (state.get(Properties.POWER) == 0) ? 15 : 0;
-                activateBlock(world, pos, user, state.with(Properties.POWER, newPower));
-                world.updateNeighbors(pos, block);
-            }
+        if (!canMakeRedstoneTweak(ticks))
+            return;
+
+        if (block instanceof DaylightDetectorBlock) {
+            activateBlock(world, pos, user, state, blockHit);
+            this.playFx(world, pos);
+            return;
         }
 
-        if (canLit(ticks) && block instanceof TntBlock) {
+        if (block instanceof RedstoneLampBlock) {
+            world.setBlockState(pos, state.cycle(Properties.LIT));
+            this.playFx(world, pos);
+            return;
+        }
+
+        if (block instanceof RedstoneWireBlock
+                || block instanceof AbstractRedstoneGateBlock) {
+            forceRedstonePower(world, pos, state, 5 * 20);
+            return;
+        }
+
+        if (block instanceof ButtonBlock) {
+            activateBlock(world, pos, user, state, blockHit);
+            return;
+        }
+
+        if (!canLit(ticks))
+            return;
+
+        if (block instanceof TntBlock) {
             TntBlock.primeTnt(world, pos);
             world.removeBlock(pos, false);
             world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
         }
     }
 
-    private void activateBlock(ServerWorld world, BlockPos pos, LivingEntity user, BlockState newState) {
-        world.setBlockState(pos, newState, Block.NOTIFY_ALL);
-        world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
-        world.playSound(null, pos, AITSounds.SONIC_TWEAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
-        world.updateNeighbors(pos, newState.getBlock());
-        spawnParticles(world, pos);
+    private void activateBlock(ServerWorld world, BlockPos pos, LivingEntity user, BlockState state, BlockHitResult blockHitResult) {
+        state.onUse(world, (PlayerEntity) user, user.getActiveHand(), blockHitResult);
+        this.playFx(world, pos);
     }
 
-    private void forceRedstonePower(ServerWorld world, BlockPos pos, int durationTicks) {
-        BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
-        world.setBlockState(pos, state.with(Properties.POWERED, true), Block.NOTIFY_ALL);
-        world.updateNeighbors(pos, block);
-        world.scheduleBlockTick(pos, block, durationTicks);
+    private void forceRedstonePower(ServerWorld world, BlockPos pos, BlockState state, int durationTicks) {
+        // uhh... womp womp
+        this.playFx(world, pos);
+        world.updateNeighbors(pos, state.getBlock());
+    }
+
+    private void playFx(ServerWorld world, BlockPos pos) {
+        world.playSound(null, pos, AITSounds.SONIC_TWEAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        this.spawnParticles(world, pos);
     }
 
     private void spawnParticles(ServerWorld world, BlockPos pos) {
