@@ -1,13 +1,12 @@
 package dev.amble.ait.core.item.sonic;
 
 import net.minecraft.block.*;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -22,12 +21,6 @@ import dev.amble.ait.core.AITTags;
 import dev.amble.ait.data.schema.sonic.SonicSchema;
 
 public class OverloadSonicMode extends SonicMode {
-
-    private static final ItemStack TOOL = new ItemStack(Items.DIAMOND_PICKAXE);
-
-    static {
-        TOOL.addEnchantment(Enchantments.FORTUNE, 5);
-    }
 
     protected OverloadSonicMode(int index) {
         super(index);
@@ -56,9 +49,9 @@ public class OverloadSonicMode extends SonicMode {
 
     private void process(ServerWorld world, LivingEntity user, int ticks) {
         HitResult hitResult = SonicMode.getHitResult(user);
-
-        if (hitResult instanceof BlockHitResult blockHit)
+        if (hitResult instanceof BlockHitResult blockHit) {
             this.overloadBlock(blockHit.getBlockPos(), world, user, ticks);
+        }
     }
 
     private void overloadBlock(BlockPos pos, ServerWorld world, LivingEntity user, int ticks) {
@@ -69,39 +62,23 @@ public class OverloadSonicMode extends SonicMode {
             return;
 
         if (canMakeRedstoneTweak(ticks)) {
-            if (state.contains(DaylightDetectorBlock.INVERTED)) {
-                activateBlock(world, pos, user, state.with(DaylightDetectorBlock.POWER, 15));
-            } else if (state.contains(RedstoneLampBlock.LIT)) {
-                activateBlock(world, pos, user, state.cycle(RedstoneLampBlock.LIT));
-            } else if (state.contains(ComparatorBlock.MODE)) {
-                activateBlock(world, pos, user, state.cycle(ComparatorBlock.POWERED));
-            } else if (state.contains(RepeaterBlock.POWERED)) {
-                activateBlock(world, pos, user, state.cycle(RepeaterBlock.POWERED));
+            if (block instanceof DaylightDetectorBlock) {
+                activateBlock(world, pos, user, state.with(Properties.POWER, 15));
+            } else if (block instanceof RedstoneLampBlock) {
+                activateBlock(world, pos, user, state.cycle(Properties.LIT));
+            } else if (block instanceof ComparatorBlock) {
+                activateBlock(world, pos, user, state.with(Properties.POWERED, true));
+                forceRedstonePower(world, pos, 5 * 20);
+            } else if (block instanceof RepeaterBlock) {
+                activateBlock(world, pos, user, state.with(Properties.POWERED, true));
+                forceRedstonePower(world, pos, 5 * 20);
+            } else if (block == Blocks.REDSTONE_WIRE) {
+                int newPower = (state.get(Properties.POWER) == 0) ? 15 : 0;
+                activateBlock(world, pos, user, state.with(Properties.POWER, newPower));
+                world.updateNeighbors(pos, block);
             }
-            if (canResonateConcrete(ticks)
-                    && (block == Blocks.BLACK_CONCRETE
-                    || block == Blocks.CYAN_CONCRETE
-                    || block == Blocks.BLUE_CONCRETE
-                    || block == Blocks.BROWN_CONCRETE
-                    || block == Blocks.GRAY_CONCRETE
-                    || block == Blocks.GREEN_CONCRETE
-                    || block == Blocks.MAGENTA_CONCRETE
-                    || block == Blocks.ORANGE_CONCRETE
-                    || block == Blocks.PINK_CONCRETE
-                    || block == Blocks.RED_CONCRETE
-                    || block == Blocks.WHITE_CONCRETE
-                    || block == Blocks.PURPLE_CONCRETE
-                    || block == Blocks.LIGHT_GRAY_CONCRETE
-                    || block == Blocks.LIGHT_BLUE_CONCRETE
-                    || block == Blocks.LIME_CONCRETE)) {
-                world.breakBlock(pos, false);
-                world.emitGameEvent(user, GameEvent.BLOCK_DESTROY, pos);
-                return;
-            }
-
-
-
         }
+
         if (canLit(ticks) && block instanceof TntBlock) {
             TntBlock.primeTnt(world, pos);
             world.removeBlock(pos, false);
@@ -113,12 +90,21 @@ public class OverloadSonicMode extends SonicMode {
         world.setBlockState(pos, newState, Block.NOTIFY_ALL);
         world.emitGameEvent(user, GameEvent.BLOCK_CHANGE, pos);
         world.playSound(null, pos, AITSounds.SONIC_TWEAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.updateNeighbors(pos, newState.getBlock());
         spawnParticles(world, pos);
     }
 
+    private void forceRedstonePower(ServerWorld world, BlockPos pos, int durationTicks) {
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        world.setBlockState(pos, state.with(Properties.POWERED, true), Block.NOTIFY_ALL);
+        world.updateNeighbors(pos, block);
+        world.scheduleBlockTick(pos, block, durationTicks);
+    }
 
     private void spawnParticles(ServerWorld world, BlockPos pos) {
-        world.spawnParticles(ParticleTypes.LAVA, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 5, 0.2, 0.2, 0.2, 0.01);
+        world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 5, 0.2, 0.2, 0.2, 0.01);
+        world.spawnParticles(ParticleTypes.LAVA, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0.01);
     }
 
     private static boolean canLit(int ticks) {
@@ -126,22 +112,6 @@ public class OverloadSonicMode extends SonicMode {
     }
 
     private static boolean canMakeRedstoneTweak(int ticks) {
-        return ticks >= 10;
-    }
-
-    private static boolean canResonateConcrete(int ticks) {
-        return ticks >= 250;
-    }
-
-    private static boolean toggleRedstoneDust(int ticks) {
-        return ticks >= 10;
-    }
-
-    private static boolean pressButton(int ticks) {
-        return ticks >= 10;
-    }
-
-    private static boolean toggleLever(int ticks) {
         return ticks >= 10;
     }
 
