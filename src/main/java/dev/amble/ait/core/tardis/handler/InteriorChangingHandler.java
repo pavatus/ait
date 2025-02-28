@@ -43,19 +43,21 @@ import dev.amble.ait.data.properties.Property;
 import dev.amble.ait.data.properties.Value;
 import dev.amble.ait.data.properties.bool.BoolProperty;
 import dev.amble.ait.data.properties.bool.BoolValue;
+import dev.amble.ait.data.properties.integer.IntProperty;
+import dev.amble.ait.data.properties.integer.IntValue;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
 import dev.amble.ait.registry.impl.CategoryRegistry;
 import dev.amble.ait.registry.impl.DesktopRegistry;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
-
     public static final Identifier CHANGE_DESKTOP = AITMod.id("change_desktop");
-
     private static final Property<Identifier> QUEUED_INTERIOR_PROPERTY = new Property<>(Property.Type.IDENTIFIER, "queued_interior", new Identifier(""));
     private static final BoolProperty QUEUED = new BoolProperty("queued");
     private static final BoolProperty REGENERATING = new BoolProperty("regenerating");
-
+    public static final int MAX_PLASMIC_MATERIAL_AMOUNT = 8;
     private final Value<Identifier> queuedInterior = QUEUED_INTERIOR_PROPERTY.create(this);
+    private static final IntProperty PLASMIC_MATERIAL_AMOUNT = new IntProperty("plasmic_material_amount");
+    private final IntValue plasmicMaterialAmount = PLASMIC_MATERIAL_AMOUNT.create(this);
     private final BoolValue queued = QUEUED.create(this);
     private final BoolValue regenerating = REGENERATING.create(this);
 
@@ -110,6 +112,18 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     public BoolValue queued() {
         return queued;
+    }
+
+    public int plasmicMaterialAmount() {
+        return plasmicMaterialAmount.get();
+    }
+
+    public void setPlasmicMaterialAmount(int amount) {
+        plasmicMaterialAmount.set(amount);
+    }
+
+    public void addPlasmicMaterial(int amount) {
+        plasmicMaterialAmount.set(Math.min(plasmicMaterialAmount() + amount, MAX_PLASMIC_MATERIAL_AMOUNT));
     }
 
     public BoolValue regenerating() {
@@ -260,7 +274,16 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         }
     }
 
+    public boolean hasEnoughPlasmicMaterial() {
+        return this.plasmicMaterialAmount() == MAX_PLASMIC_MATERIAL_AMOUNT;
+    }
+
     protected void generateInteriorWithItem() {
+        if (!hasEnoughPlasmicMaterial()) {
+            TardisUtil.sendMessageToInterior(tardis.asServer(), Text.translatable("tardis.message.interiorchange.not_enough_plasmic_material", this.plasmicMaterialAmount()).formatted(Formatting.GRAY));
+            return;
+        }
+
         TardisUtil.getEntitiesInInterior(this.tardis, 50).stream()
                 .filter(entity -> entity instanceof ItemEntity item
                         && (item.getStack().getItem() == Items.NETHER_STAR || isChargedCrystal(item.getStack()))

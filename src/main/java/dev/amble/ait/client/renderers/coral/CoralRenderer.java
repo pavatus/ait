@@ -44,12 +44,12 @@ public class CoralRenderer<T extends CoralBlockEntity> implements BlockEntityRen
 
     public ModelPart getCurrentAge(int age, CoralGrowthModel coralModel) {
         return switch (age) {
-            case 1 -> coralModel.coral.getChild("two");
-            case 2 -> coralModel.coral.getChild("three");
-            case 3 -> coralModel.coral.getChild("four");
-            case 4 -> coralModel.coral.getChild("five");
-            case 5, 7, 6 -> coralModel.coral.getChild("six");
-            default -> coralModel.coral.getChild("one");
+            case 1 -> coralModel.two;
+            case 2 -> coralModel.three;
+            case 3 -> coralModel.four;
+            case 4 -> coralModel.five;
+            case 5, 6, 7 -> coralModel.six;
+            default -> coralModel.one;
         };
     }
 }

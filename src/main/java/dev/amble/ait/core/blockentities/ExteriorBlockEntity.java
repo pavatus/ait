@@ -1,5 +1,7 @@
 package dev.amble.ait.core.blockentities;
 
+import static dev.amble.ait.core.tardis.handler.InteriorChangingHandler.MAX_PLASMIC_MATERIAL_AMOUNT;
+
 import java.util.UUID;
 
 import dev.drtheo.scheduler.api.Scheduler;
@@ -70,13 +72,22 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
 
         ServerTardis tardis = (ServerTardis) this.tardis().get();
+        ItemStack hand = player.getMainHandStack();
 
-        if (tardis.isGrowth())
-            return;
+        if (tardis.isGrowth()) {
+            if (hand.getItem() == AITItems.PLASMIC_MATERIAL) {
+                int plasmic = tardis.interiorChangingHandler().plasmicMaterialAmount();
+                if (plasmic < MAX_PLASMIC_MATERIAL_AMOUNT) {
+                    tardis.interiorChangingHandler().addPlasmicMaterial(1);
+                    world.playSound(null, pos, SoundEvents.ENTITY_MAGMA_CUBE_SQUISH, SoundCategory.BLOCKS, 1F, (float) plasmic / 8);
+                    hand.decrement(1);
+                }
+            }
+         return;
+        }
 
         SonicHandler handler = tardis.sonic();
 
-        ItemStack hand = player.getMainHandStack();
         boolean hasSonic = handler.getExteriorSonic() != null;
         boolean shouldEject = player.isSneaking();
 

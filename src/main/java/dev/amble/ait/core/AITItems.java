@@ -115,6 +115,9 @@ public class AITItems extends ItemContainer {
             new AItemSettings().group(AITItemGroups.MAIN).maxCount(1));
     public static final Item ZEITON_DUST = new Item(
             new AItemSettings().food(ZEITON_DUST_FOOD));
+    public static final Item SUPERHEATED_ZEITON = new Item(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item PLASMIC_MATERIAL = new Item(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item CORAL_FRAGMENT = new Item(new AItemSettings().group(AITItemGroups.MAIN));
 
     // Machine parts
     public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON,

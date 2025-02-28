@@ -12,6 +12,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.blocks.ExteriorBlock;
 
 public class ExteriorAxeOverlay implements HudRenderCallback {
@@ -32,7 +33,10 @@ public class ExteriorAxeOverlay implements HudRenderCallback {
         Block block = mc.player.getWorld()
                 .getBlockState(((BlockHitResult) mc.crosshairTarget).getBlockPos())
                 .getBlock();
-        if (block instanceof ExteriorBlock && mc.player.getMainHandStack().getItem() instanceof AxeItem) {
+        if (!(block instanceof ExteriorBlock)) return;
+        ExteriorBlockEntity exterior = (ExteriorBlockEntity) mc.player.getWorld().getBlockEntity(((BlockHitResult) mc.crosshairTarget).getBlockPos());
+        if (exterior == null || exterior.tardis() == null) return;
+        if (!exterior.tardis().get().isGrowth() && !exterior.tardis().get().fuel().hasPower() && exterior.tardis().get().door().locked() && !(mc.player.getMainHandStack().getItem() instanceof AxeItem)) {
             stack.push();
             stack.translate((float) drawContext.getScaledWindowWidth() / 2 - 8f,
                     (float) drawContext.getScaledWindowHeight() / 2 - 8f,

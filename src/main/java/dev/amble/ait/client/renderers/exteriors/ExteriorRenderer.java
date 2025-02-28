@@ -169,7 +169,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
 
-        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth())
+        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth() && tardis.travel().isLanded())
             BOTI.EXTERIOR_RENDER_QUEUE.add(entity);
             //this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
 

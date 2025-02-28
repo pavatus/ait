@@ -22,6 +22,7 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     public HashMap<SmithingTransformRecipeJsonBuilder, Identifier> smithingTransformRecipes = new HashMap<>();
     public HashMap<ShapelessRecipeJsonBuilder, Identifier> shapelessRecipesWithNameHashMap = new HashMap<>();
     public HashMap<SingleItemRecipeJsonBuilder, Identifier> stonecutting = new HashMap<>();
+    public List<CookingRecipeJsonBuilder> blasting = new ArrayList<>();
 
 
     public AITRecipeProvider(FabricDataOutput output) {
@@ -46,6 +47,10 @@ public class AITRecipeProvider extends FabricRecipeProvider {
         stonecutting.forEach((stonecuttingRecipeJsonBuilder, identifier) -> {
             stonecuttingRecipeJsonBuilder.offerTo(exporter, identifier);
         });
+
+        for (CookingRecipeJsonBuilder cookingRecipeJsonBuilder : blasting) {
+            cookingRecipeJsonBuilder.offerTo(exporter);
+        }
     }
 
     public void addShapelessRecipe(ShapelessRecipeJsonBuilder builder) {
@@ -83,5 +88,11 @@ public class AITRecipeProvider extends FabricRecipeProvider {
     }
     private String fixupBlockKey(String key) {
         return key.substring(key.lastIndexOf(".") + 1);
+    }
+
+    public void addBlastFurnaceRecipe(CookingRecipeJsonBuilder cookingBuilder) {
+        if (!blasting.contains(cookingBuilder)) {
+            blasting.add(cookingBuilder);
+        }
     }
 }

@@ -54,7 +54,8 @@ public class ServerTardis extends Tardis {
 
         // tell interior players how to fix growth every 10 seconds
         if (this.isGrowth() && server.getTicks() % 200 == 0 && !this.interiorChangingHandler().queued().get()) {
-            this.getInteriorWorld().getPlayers().forEach(player -> player.sendMessage(Text.translatable("tardis.message.growth.hint").formatted(Formatting.DARK_GRAY,Formatting.ITALIC), true));
+            if (this.interiorChangingHandler().hasEnoughPlasmicMaterial())
+                this.getInteriorWorld().getPlayers().forEach(player -> player.sendMessage(Text.translatable("tardis.message.growth.hint").formatted(Formatting.DARK_GRAY,Formatting.ITALIC), true));
         }
     }
 

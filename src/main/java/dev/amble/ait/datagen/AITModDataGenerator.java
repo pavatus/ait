@@ -94,6 +94,21 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Items.ENDER_PEARL), conditionsFromItem(Items.ENDER_PEARL))
                     .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AITItems.PLASMIC_MATERIAL, 4)
+                    .pattern("CCC")
+                    .pattern("SBS")
+                    .pattern("CCC")
+                    .input('B', Items.SLIME_BALL)
+                    .input('S', AITItems.SUPERHEATED_ZEITON)
+                    .input('C', Items.LIGHT_GRAY_CONCRETE_POWDER)
+                    .criterion(hasItem(Items.SLIME_BALL), conditionsFromItem(Items.SLIME_BALL))
+                    .criterion(hasItem(AITItems.SUPERHEATED_ZEITON), conditionsFromItem(AITItems.SUPERHEATED_ZEITON))
+                    .criterion(hasItem(Items.LIGHT_GRAY_CONCRETE_POWDER), conditionsFromItem(Items.LIGHT_GRAY_CONCRETE_POWDER)));
+
+            provider.addBlastFurnaceRecipe(CookingRecipeJsonBuilder.createBlasting(Ingredient.ofItems(AITItems.ZEITON_SHARD),
+                            RecipeCategory.MISC, AITItems.SUPERHEATED_ZEITON, 0.2f, 500)
+                    .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
+
             provider.addShapedRecipe(
                     ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, AITBlocks.ZEITON_BLOCK, 1)
                             .pattern("ZZ ").pattern("ZZ ").pattern("   ").input('Z', AITItems.ZEITON_SHARD)
@@ -917,6 +932,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
         provider.addTranslation("warning.ait.needs_subsystem", "ERROR, REQUIRES ACTIVE SUBSYSTEM: %s");
         provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal or nether star to bootstrap...");
+        provider.addTranslation("tardis.message.interiorchange.not_enough_plasmic_material", "Not enough Plasmic Material for shell: %s / 8");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
         provider.addTranslation("message.ait.loyalty_amount", "Loyalty Level: %s");
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
