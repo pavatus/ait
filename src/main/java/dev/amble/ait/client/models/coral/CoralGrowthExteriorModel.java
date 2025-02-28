@@ -581,7 +581,7 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
         boolean isNotLanded = tardis.interiorChangingHandler().queued().get() || tardis.travel().getState() != TravelHandlerBase.State.LANDED;
 
         seven.getChild("corallybits").visible = tardis.interiorChangingHandler().plasmicMaterialAmount() == 0;
-        seven.getChild("sixcorallybits").visible = isNotLanded;
+        six.getChild("sixcorallybits").visible = isNotLanded;
 
         door.visible = isNotLanded;
 
