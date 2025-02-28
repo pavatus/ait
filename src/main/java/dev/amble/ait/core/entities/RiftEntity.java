@@ -1,6 +1,5 @@
 package dev.amble.ait.core.entities;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,16 +14,19 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITEntityTypes;
 import dev.amble.ait.core.AITItems;
+import dev.amble.ait.core.entities.base.DummyLivingEntity;
 
-public class RiftEntity extends Entity {
+
+public class RiftEntity extends DummyLivingEntity {
     private int interactAmount = 0;
     public RiftEntity(EntityType<?> type, World world) {
-        super(AITEntityTypes.RIFT_ENTITY, world);
+        super(AITEntityTypes.RIFT_ENTITY, world, false);
     }
 
     @Override
     protected void initDataTracker() {
-
+        super.initDataTracker();
+        //this.getDataTracker().startTracking(this.getTracked(), Optional.empty());
     }
 
     @Override
@@ -37,16 +39,13 @@ public class RiftEntity extends Entity {
             return ActionResult.FAIL;
         }
         interactAmount += 1;
-        if (player.isSneaking()) {
-            if (this.getWorld().getRandom().nextBoolean() && this.getWorld().getRandom().nextBetween(0, 5) == 2) {
-                player.damage(this.getWorld().getDamageSources().hotFloor(), 4);
-                spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(AITItems.CORAL_FRAGMENT));
-                this.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
-                        SoundCategory.MASTER, 1f, 1f);
-                this.discard();
-                return ActionResult.SUCCESS;
-            }
-            return ActionResult.PASS;
+        if (this.getWorld().getRandom().nextBoolean()) {
+            player.damage(this.getWorld().getDamageSources().hotFloor(), 4);
+            spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(AITItems.CORAL_FRAGMENT));
+            this.getWorld().playSound(null, player.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
+                    SoundCategory.MASTER, 1f, 1f);
+            this.discard();
+            return ActionResult.SUCCESS;
         }
         return super.interact(player, hand);
     }
@@ -57,12 +56,14 @@ public class RiftEntity extends Entity {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
         interactAmount = nbt.getInt("interactAmount");
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
         nbt.putInt("interactAmount", interactAmount);
     }
 }

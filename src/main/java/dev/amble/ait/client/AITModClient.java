@@ -143,15 +143,17 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new ExteriorAxeOverlay());
 
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; exteriorBOTI(context);});
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; doorBOTI(context);});
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; paintingBOTI(context);});
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; riftBOTI(context);});
-
-        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; exteriorBOTI(context);});
-        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; doorBOTI(context);});
-        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; paintingBOTI(context);});
-        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; riftBOTI(context);});
+        if (DependencyChecker.hasIris()) {
+            WorldRenderEvents.END.register(this::exteriorBOTI);
+            WorldRenderEvents.END.register(this::doorBOTI);
+            WorldRenderEvents.END.register(this::paintingBOTI);
+            WorldRenderEvents.END.register(this::riftBOTI);
+        } else {
+            WorldRenderEvents.AFTER_ENTITIES.register(this::exteriorBOTI);
+            WorldRenderEvents.AFTER_ENTITIES.register(this::doorBOTI);
+            WorldRenderEvents.AFTER_ENTITIES.register(this::paintingBOTI);
+            WorldRenderEvents.AFTER_ENTITIES.register(this::riftBOTI);
+        }
 
         // @TODO idk why but this gets rid of other important stuff, not sure
         DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
