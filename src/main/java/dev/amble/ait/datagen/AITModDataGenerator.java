@@ -105,6 +105,13 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(AITItems.SUPERHEATED_ZEITON), conditionsFromItem(AITItems.SUPERHEATED_ZEITON))
                     .criterion(hasItem(Items.LIGHT_GRAY_CONCRETE_POWDER), conditionsFromItem(Items.LIGHT_GRAY_CONCRETE_POWDER)));
 
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.CORAL_PLANT, 1)
+                    .pattern("CCC")
+                    .pattern("CCC")
+                    .pattern("CCC")
+                    .input('C', AITItems.CORAL_FRAGMENT)
+                    .criterion(hasItem(AITItems.CORAL_FRAGMENT), conditionsFromItem(AITItems.CORAL_FRAGMENT)));
+
             provider.addBlastFurnaceRecipe(CookingRecipeJsonBuilder.createBlasting(Ingredient.ofItems(AITItems.ZEITON_SHARD),
                             RecipeCategory.MISC, AITItems.SUPERHEATED_ZEITON, 0.2f, 500)
                     .criterion(hasItem(AITItems.ZEITON_SHARD), conditionsFromItem(AITItems.ZEITON_SHARD)));
@@ -222,6 +229,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .input('B', Blocks.IRON_BARS)
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                     .criterion(hasItem(Blocks.IRON_BARS), conditionsFromItem(Blocks.IRON_BARS)));
+
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_GOAT_HORN, 1)
                     .pattern("III")
