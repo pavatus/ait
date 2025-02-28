@@ -47,7 +47,7 @@ public class RiftEntity extends DummyLivingEntity {
             this.discard();
             return ActionResult.SUCCESS;
         }
-        return super.interact(player, hand);
+        return ActionResult.CONSUME;
     }
 
     public static void spawnItem(World world, BlockPos pos, ItemStack stack) {
