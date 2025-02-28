@@ -37,6 +37,7 @@ public class DatapackExterior extends ExteriorVariantSchema {
     protected final Identifier texture;
     protected final Identifier emission;
     protected final BiomeOverrides overrides;
+    protected final Vec3d seatTranslations;
     protected final boolean initiallyDatapack;
 
     public static final Codec<DatapackExterior> CODEC = RecordCodecBuilder.create(instance -> instance
@@ -48,15 +49,17 @@ public class DatapackExterior extends ExteriorVariantSchema {
                     Loyalty.CODEC.optionalFieldOf("loyalty").forGetter(DatapackExterior::requirement),
                     BiomeOverrides.CODEC.fieldOf("overrides").orElse(BiomeOverrides.EMPTY)
                             .forGetter(DatapackExterior::overrides),
+                    Vec3d.CODEC.optionalFieldOf("seat_translations", new Vec3d(0.5, 1, 0.5)).forGetter(DatapackExterior::seatTranslations),
                     Codec.BOOL.optionalFieldOf("isDatapack", true).forGetter(DatapackExterior::wasDatapack))
             .apply(instance, DatapackExterior::new));
 
     public DatapackExterior(Identifier id, Identifier category, Identifier parent, Identifier texture,
-            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, boolean isDatapack) {
+                            Identifier emission, Optional<Loyalty> loyalty, BiomeOverrides overrides, Vec3d seatTranslations, boolean isDatapack) {
         super(category, id, loyalty);
         this.parent = parent;
         this.texture = texture;
         this.emission = emission;
+        this.seatTranslations = seatTranslations;
         this.initiallyDatapack = isDatapack;
         this.overrides = overrides;
     }
@@ -96,6 +99,11 @@ public class DatapackExterior extends ExteriorVariantSchema {
 
     public BiomeOverrides overrides() {
         return overrides;
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return seatTranslations;
     }
 
     @Override

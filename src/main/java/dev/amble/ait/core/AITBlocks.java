@@ -87,9 +87,20 @@ public class AITBlocks extends BlockContainer {
     public static final Block ARTRON_COLLECTOR_BLOCK = new ArtronCollectorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)
                     .instrument(Instrument.BANJO).pistonBehavior(PistonBehavior.IGNORE));
+
+    // Coral Blocks
+
     @NoEnglish
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque()
-            .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+            .noCollision().breakInstantly().luminance(light -> 0).sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block TARDIS_CORAL_BLOCK = new Block(FabricBlockSettings.create().mapColor(MapColor.GOLD).solid().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5f, 6.0f));
+    public static final Block TARDIS_CORAL_STAIRS = new StairsBlock(TARDIS_CORAL_BLOCK.getDefaultState(), FabricBlockSettings.create().mapColor(MapColor.GOLD).solid().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5f, 6.0f));
+    public static final Block TARDIS_CORAL_SLAB = new SlabBlock(FabricBlockSettings.create().mapColor(MapColor.GOLD).solid().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5f, 6.0f));
+    public static final Block TARDIS_CORAL_FAN = new TardisCoralFanBlock(FabricBlockSettings.create().mapColor(MapColor.GOLD).noCollision().breakInstantly().sounds(BlockSoundGroup.WET_GRASS).pistonBehavior(PistonBehavior.DESTROY));
+    @NoBlockItem
+    public static final Block TARDIS_CORAL_WALL_FAN = new TardisCoralWallBlock(FabricBlockSettings.create().mapColor(MapColor.GOLD).noCollision().breakInstantly().sounds(BlockSoundGroup.WET_GRASS).pistonBehavior(PistonBehavior.DESTROY));
+    // TARDIS Blocks
+
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @NoEnglish
     public static final Block MONITOR_BLOCK = new MonitorBlock(FabricBlockSettings.create().nonOpaque().requiresTool()

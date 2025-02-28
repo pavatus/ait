@@ -13,7 +13,8 @@
     "atmosphere": true,
     "color": [0.9, 0.7, 0.5],
     "radius": 1600,
-    "suction_radius": 1300
+    "suction_radius": 1300,
+    "has_rings": false
   },
   "transition": {
     "target": "ait:space",

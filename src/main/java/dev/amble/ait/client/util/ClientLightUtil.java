@@ -3,7 +3,6 @@ package dev.amble.ait.client.util;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -44,7 +43,7 @@ public class ClientLightUtil {
                 ? AITRenderLayers.tardisEmissiveCullZOffset(emissive, true)
                 : AITRenderLayers.getBeaconBeam(emissive, true);
 
-        light = DependencyChecker.hasIris() ? LightmapTextureManager.MAX_LIGHT_COORDINATE : 0xf000f0;
+        light = 0xf000f0;
         ClientLightUtil.render(renderable, entity, root, matrices, layer, vertices, 0xf000f0, overlay, red, green, blue,
                 alpha);
     }

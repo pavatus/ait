@@ -74,7 +74,7 @@ public class TardisUtil {
 
                 if (!tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT))
                     return;
-                if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
+                if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).overgrown().get())
                     return;
 
                 player.getWorld().playSound(null, player.getBlockPos(), AITSounds.SNAP, SoundCategory.PLAYERS, 4f, 1f);

@@ -2,6 +2,7 @@ package dev.amble.ait.core.tardis.control.impl.waypoint;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MusicDiscItem;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -16,10 +17,10 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.data.Waypoint;
+import dev.amble.ait.module.gun.core.item.StaserBoltMagazine;
 
 public class ConsolePortControl extends Control {
 
-    private ItemStack insertedDisc = ItemStack.EMPTY;
     private SoundEvent currentMusic = null;
 
     public ConsolePortControl() {
@@ -32,8 +33,8 @@ public class ConsolePortControl extends Control {
 
 
         if (leftClick) {
-            if (!insertedDisc.isEmpty()) {
-                ejectDisc(player, world, console);
+            if (!tardis.extra().getInsertedDisc().isEmpty()) {
+                ejectDisc(tardis, player, world, console);
                 return true;
             }
 
@@ -45,9 +46,9 @@ public class ConsolePortControl extends Control {
 
 
         if (itemStack.getItem() instanceof MusicDiscItem musicDisc) {
-            if (!insertedDisc.isEmpty()) return false;
+            if (!tardis.extra().getInsertedDisc().isEmpty()) return false;
 
-            insertedDisc = itemStack.copy();
+            tardis.extra().setInsertedDisc(itemStack.copy());
             currentMusic = musicDisc.getSound();
 
             world.playSound(null, console, currentMusic, SoundCategory.RECORDS, 6f, 1);
@@ -55,6 +56,22 @@ public class ConsolePortControl extends Control {
 
             return true;
         }
+
+        if (itemStack.getItem() instanceof StaserBoltMagazine) {
+            NbtCompound nbt = itemStack.getOrCreateNbt();
+            double currentFuel = nbt.getDouble(StaserBoltMagazine.FUEL_KEY);
+            double maxFuel = StaserBoltMagazine.MAX_FUEL;
+
+            if (currentFuel < maxFuel) {
+                double newFuel = Math.min(currentFuel + 500, maxFuel);
+                nbt.putDouble(StaserBoltMagazine.FUEL_KEY, newFuel);
+                tardis.removeFuel(500);
+
+                TardisDesktop.playSoundAtConsole(world, console, AITSounds.SLOT_IN, SoundCategory.PLAYERS, 6f, 1);
+                return true;
+            }
+        }
+
 
         if (itemStack.getItem() instanceof WaypointItem) {
             if (WaypointItem.getPos(itemStack) == null)
@@ -72,17 +89,15 @@ public class ConsolePortControl extends Control {
     }
 
 
-    private void ejectDisc(ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        if (insertedDisc.isEmpty()) return;
+    private void ejectDisc(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+        if (tardis.extra().getInsertedDisc().isEmpty()) return;
         world.playSound(null, console, AITSounds.SLOT_IN, SoundCategory.PLAYERS, 6f, 1);
         StopSoundS2CPacket stopPacket = new StopSoundS2CPacket(null, SoundCategory.RECORDS);
         for (ServerPlayerEntity otherPlayer : world.getPlayers()) {
             otherPlayer.networkHandler.sendPacket(stopPacket);
         }
-        player.giveItemStack(insertedDisc);
-        insertedDisc = ItemStack.EMPTY;
+        player.giveItemStack(tardis.extra().getInsertedDisc());
+        tardis.extra().setInsertedDisc(ItemStack.EMPTY);
         currentMusic = null;
     }
-
-
 }

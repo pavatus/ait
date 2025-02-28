@@ -182,18 +182,16 @@ public class MonitorScreen extends ConsoleScreen {
         List<ExteriorCategorySchema> list = CategoryRegistry.getInstance().toList();
 
         int idx = list.indexOf(getCategory());
-        if (idx < 0 || idx + 1 == list.size())
-            return list.get(0);
-        return list.get(idx + 1);
+        idx = (idx + 1) % list.size();
+        return list.get(idx);
     }
 
     public ExteriorCategorySchema previousCategory() {
         List<ExteriorCategorySchema> list = CategoryRegistry.getInstance().toList();
 
         int idx = list.indexOf(getCategory());
-        if (idx <= 0)
-            return list.get(list.size() - 1);
-        return list.get(idx - 1);
+        idx = (idx - 1 + list.size()) % list.size();
+        return list.get(idx);
     }
 
     public void whichDirectionVariant(boolean direction) {
@@ -208,9 +206,8 @@ public class MonitorScreen extends ConsoleScreen {
                 .stream().toList();
 
         int idx = list.indexOf(getCurrentVariant().parent());
-        if (idx < 0 || idx + 1 == list.size())
-            return list.get(0);
-        return list.get(idx + 1);
+        idx = (idx + 1) % list.size();
+        return list.get(idx);
     }
 
     public ExteriorVariantSchema previousVariant() {
@@ -218,9 +215,8 @@ public class MonitorScreen extends ConsoleScreen {
                 .stream().toList();
 
         int idx = list.indexOf(getCurrentVariant().parent());
-        if (idx <= 0)
-            return list.get(list.size() - 1);
-        return list.get(idx - 1);
+        idx = (idx - 1 + list.size()) % list.size();
+        return list.get(idx);
     }
 
     final int UV_BASE = 160;

@@ -12,6 +12,7 @@ import net.minecraft.entity.mob.BlazeEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -24,7 +25,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITEntityTypes;
-import dev.amble.ait.core.AITItems;
 
 public class CobbledSnowballEntity extends ThrownItemEntity {
     public CobbledSnowballEntity(EntityType<? extends CobbledSnowballEntity> entityType, World world) {
@@ -37,7 +37,7 @@ public class CobbledSnowballEntity extends ThrownItemEntity {
 
     @Override
     protected Item getDefaultItem() {
-        return AITItems.COBBLED_SNOWBALL;
+        return Items.SNOWBALL;
     }
 
     private ParticleEffect getParticleParameters() {

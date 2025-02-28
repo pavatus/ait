@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.loot.function.SetNbtLootFunction;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -50,6 +52,7 @@ import dev.amble.ait.config.AITConfig;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.commands.*;
+import dev.amble.ait.core.drinks.DrinkRegistry;
 import dev.amble.ait.core.engine.registry.SubSystemRegistry;
 import dev.amble.ait.core.entities.ConsoleControlEntity;
 import dev.amble.ait.core.entities.FlightTardisEntity;
@@ -60,6 +63,7 @@ import dev.amble.ait.core.likes.ItemOpinionRegistry;
 import dev.amble.ait.core.lock.LockedDimensionRegistry;
 import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
 import dev.amble.ait.core.sounds.travel.TravelSoundRegistry;
+import dev.amble.ait.core.tardis.handler.SeatHandler;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.tardis.util.AsyncLocatorUtil;
 import dev.amble.ait.core.tardis.util.NetworkUtil;
@@ -93,9 +97,17 @@ public class AITMod implements ModInitializer {
     public static final GameRules.Key<GameRules.BooleanRule> TARDIS_GRIEFING = GameRuleRegistry.register("tardisGriefing",
             GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
+    public static final GameRules.Key<GameRules.BooleanRule> TARDIS_FIRE_GRIEFING = GameRuleRegistry.register("tardisFireGriefing",
+            GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
+
 
     public static final RegistryKey<PlacedFeature> CUSTOM_GEODE_PLACED_KEY = RegistryKey.of(RegistryKeys.PLACED_FEATURE,
             new Identifier(MOD_ID, "zeiton_geode"));
+
+    // This DefaultParticleType gets called when you want to use your particle in code.
+    public static final DefaultParticleType CORAL_PARTICLE = FabricParticleTypes.simple();
+
+    // Register our custom particle type in the mod initializer.
 
     public static final Crater CRATER = new Crater(ProbabilityConfig.CODEC);
 
@@ -112,6 +124,10 @@ public class AITMod implements ModInitializer {
         return !BRANCH.equals("release");
     }
 
+    public void registerParticles() {
+        Registry.register(Registries.PARTICLE_TYPE, id("coral_particle"), CORAL_PARTICLE);
+    }
+
     @Override
     public void onInitialize() {
         CONFIG = AITConfig.createAndLoad();
@@ -119,6 +135,7 @@ public class AITMod implements ModInitializer {
         ServerLifecycleHooks.init();
         NetworkUtil.init();
         AsyncLocatorUtil.setupExecutorService();
+        SeatHandler.init();
 
         ConsoleRegistry.init();
         CreakRegistry.init();
@@ -143,8 +160,11 @@ public class AITMod implements ModInitializer {
                 LockedDimensionRegistry.getInstance(),
                 HumRegistry.getInstance(),
                 SubSystemRegistry.getInstance(),
-                ItemOpinionRegistry.getInstance()
+                ItemOpinionRegistry.getInstance(),
+                DrinkRegistry.getInstance()
         );
+
+        registerParticles();
 
         // For all the addon devs
         FabricLoader.getInstance().invokeEntrypoints("ait-main", AITModInitializer.class,
@@ -271,8 +291,15 @@ public class AITMod implements ModInitializer {
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if (source.isBuiltin()
                     && (id.equals(LootTables.NETHER_BRIDGE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
-                    || id.equals(LootTables.VILLAGE_ARMORER_CHEST))
+                    || id.equals(LootTables.VILLAGE_ARMORER_CHEST) || id.equals(LootTables.RUINED_PORTAL_CHEST))
                     || id.equals(LootTables.END_CITY_TREASURE_CHEST) || id.equals(LootTables.SHIPWRECK_MAP_CHEST)
+                    || id.equals(LootTables.ABANDONED_MINESHAFT_CHEST) || id.equals(LootTables.VILLAGE_CARTOGRAPHER_CHEST)
+                    || id.equals(LootTables.VILLAGE_TOOLSMITH_CHEST) || id.equals(LootTables.SHIPWRECK_TREASURE_CHEST)
+                    || id.equals(LootTables.ANCIENT_CITY_CHEST) || id.equals(LootTables.ANCIENT_CITY_ICE_BOX_CHEST)
+                    || id.equals(LootTables.BURIED_TREASURE_CHEST) || id.equals(LootTables.DESERT_PYRAMID_ARCHAEOLOGY)
+                    || id.equals(LootTables.DESERT_WELL_ARCHAEOLOGY) || id.equals(LootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY)
+                    || id.equals(LootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY) || id.equals(LootTables.TRAIL_RUINS_RARE_ARCHAEOLOGY)
+                    || id.equals(LootTables.FISHING_TREASURE_GAMEPLAY) || id.equals(LootTables.DESERT_PYRAMID_CHEST)
                     || id.equals(LootTables.SIMPLE_DUNGEON_CHEST) || id.equals(LootTables.STRONGHOLD_LIBRARY_CHEST)) {
 
 

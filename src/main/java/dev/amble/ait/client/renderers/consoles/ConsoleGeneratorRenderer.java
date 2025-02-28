@@ -72,6 +72,16 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         }
 
         matrices.push();
+
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+        matrices.translate(0.5f, -1.5f, -0.5f);
+
+        this.generator.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light,
+                overlay, 1, 1, 1, 1);
+
+        matrices.pop();
+
+        matrices.push();
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
 
@@ -93,16 +103,6 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
 
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        matrices.pop();
-
-        matrices.push();
-
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-        matrices.translate(0.5f, -1.5f, -0.5f);
-
-        this.generator.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)), light,
-                overlay, 1, 1, 1, 1);
-
         matrices.pop();
     }
 }

@@ -101,12 +101,11 @@ public abstract class SkyboxMixin {
         }
 
         if (this.world.getRegistryKey() == AITDimensions.MARS) {
-            SkyboxUtil.renderMarsSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
-            ci.cancel();
+            SkyboxUtil.renderMarsSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix, ci);
         }
 
         if (this.world.getRegistryKey() == AITDimensions.SPACE) {
-            SkyboxUtil.renderSpaceSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            SkyboxUtil.renderSpaceSky(false, matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
             ci.cancel();
         }
     }
@@ -119,6 +118,9 @@ public abstract class SkyboxMixin {
 
             return;
         }
+
+        if (this.world == null)
+            return;
 
         Tardis tardis = ClientTardisUtil.getCurrentTardis();
 
@@ -142,6 +144,29 @@ public abstract class SkyboxMixin {
         }
 
         if (skyboxWorld == World.NETHER) {
+            ci.cancel();
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.SPACE) {
+            SkyboxUtil.renderSpaceSky(true, matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            ci.cancel();
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.MOON) {
+            SkyboxUtil.renderMoonSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix);
+            ci.cancel();
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.MARS) {
+            SkyboxUtil.renderMarsSky(matrices, fogCallback, this.starsBuffer, world, tickDelta, projectionMatrix, ci);
+            return;
+        }
+
+        if (skyboxWorld == AITDimensions.TIME_VORTEX_WORLD) {
+            SkyboxUtil.renderVortexSky(matrices, tardis);
             ci.cancel();
             return;
         }

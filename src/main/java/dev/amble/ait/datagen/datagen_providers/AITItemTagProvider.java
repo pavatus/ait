@@ -1,8 +1,6 @@
 package dev.amble.ait.datagen.datagen_providers;
 
-import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 
-import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -43,9 +41,9 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
 
         getOrCreateTagBuilder(AITTags.Items.HALF_RESPIRATORS).add(AITItems.FACELESS_RESPIRATOR);
 
-        if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
+        /*if (isUnlockedOnThisDay(Calendar.DECEMBER, 27)) {
             getOrCreateTagBuilder(AITTags.Items.HALF_RESPIRATORS).add(AITItems.SANTA_HAT);
-        }
+        }*/
 
         getOrCreateTagBuilder(AITTags.Items.KEY).add(AITItems.IRON_KEY, AITItems.GOLD_KEY, AITItems.CLASSIC_KEY,
                 AITItems.NETHERITE_KEY, AITItems.SKELETON_KEY);
@@ -53,7 +51,7 @@ public class AITItemTagProvider extends FabricTagProvider<Item> {
         getOrCreateTagBuilder(AITTags.Items.GOAT_HORN).add(AITItems.IRON_GOAT_HORN, AITItems.GOLD_GOAT_HORN, AITItems.CLASSIC_GOAT_HORN,
                 AITItems.NETHERITE_GOAT_HORN);
 
-        getOrCreateTagBuilder(AITTags.Items.REPAIRS_SUBSYSTEM).add(Items.IRON_INGOT, AITItems.ZEITON_SHARD, Items.REDSTONE, Items.COPPER_INGOT, Items.AMETHYST_SHARD);
+        getOrCreateTagBuilder(AITTags.Items.REPAIRS_SUBSYSTEM).add(Items.IRON_INGOT, AITItems.ZEITON_SHARD, Items.COPPER_INGOT, Items.AMETHYST_SHARD);
 
         getOrCreateTagBuilder(AITTags.Items.IS_TARDIS_FUEL).add(AITItems.ZEITON_DUST, AITItems.ZEITON_SHARD);
         getOrCreateTagBuilder(AITTags.Items.IS_TARDIS_FUEL).forceAddTag(ItemTags.LOGS_THAT_BURN);

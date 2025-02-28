@@ -93,30 +93,32 @@ public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockE
         ServerWorld world = player.getServerWorld();
         BlockPos pos = player.getBlockPos();
 
-        RegistryEntry.Reference<Structure> targetStructure = getStructure(world, target).orElse(null);
-
-        if (targetStructure == null) {
-            AITMod.LOGGER.error("Structure not found: {}", target);
-            return;
-        }
-
         if (TardisServerWorld.isTardisDimension(world)) {
             ServerTardis tardis = ((TardisServerWorld) world).getTardis();
 
             var tPos = tardis.travel().position();
 
             world = tPos.getWorld();
-            pos = tPos.getPos();
-        }
 
-        AsyncLocatorUtil.locate(world, RegistryEntryList.of(targetStructure), pos, TelepathicControl.RADIUS, false).thenOnServerThread(pPos -> {
-            BlockPos newPos = pPos != null ? pPos.getFirst() : null;
-            if (newPos != null) {
-                player.sendMessage(Text.literal("SUCCESS! FOUND AT " + newPos.getX() + ", " + newPos.getY() + ", " + newPos.getZ() + " ( " + Math.round(Math.sqrt(newPos.getSquaredDistance(player.getPos()))) + " blocks away )"), false);
-            } else {
-                player.sendMessage(Text.literal("404: STRUCTURE NOT FOUND"), false);
+            RegistryEntry.Reference<Structure> targetStructure = getStructure(world, target).orElse(null);
+
+            if (targetStructure == null) {
+                AITMod.LOGGER.error("Structure not found: {}", target);
+                return;
             }
-        });
+
+            pos = tPos.getPos();
+
+            AsyncLocatorUtil.locate(world, RegistryEntryList.of(targetStructure), pos, TelepathicControl.RADIUS, false).thenOnServerThread(pPos -> {
+                BlockPos newPos = pPos != null ? pPos.getFirst() : null;
+                if (newPos != null) {
+                    player.sendMessage(Text.literal("SUCCESS! FOUND AT " + newPos.getX() + ", " + newPos.getY() + ", " + newPos.getZ() + " ( " + Math.round(Math.sqrt(newPos.getSquaredDistance(player.getPos()))) + " blocks away )"), false);
+                    tardis.travel().destination(destination -> destination.pos(newPos));
+                } else {
+                    player.sendMessage(Text.literal("404: STRUCTURE NOT FOUND"), false);
+                }
+            });
+        }
     }
 
     private static void sendStructures(ServerWorld world, ServerPlayerEntity target) {

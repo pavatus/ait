@@ -38,6 +38,10 @@ public class CopperType extends ConsoleTypeSchema {
                     new Vector3f(-1.2503906358033419f, 1.3125017127022147f, 0.008984364569187164f)),
             new ControlTypes(new TelepathicControl(), EntityDimensions.changing(0.34999996f, 0.20000002f),
                     new Vector3f(0.17499694786965847f, 0.46249985694885254f, 1.189068604260683f)),
+            new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.125f, 0.33749995f),
+                    new Vector3f(-0.6742191342636943f, 0.4750005714595318f, 1.1015651691704988f)),
+            new ControlTypes(new EngineOverload(), EntityDimensions.changing(0.099999994f, 0.17500001f),
+                    new Vector3f(0.8148471852764487f, 0.5249999985098839f, 1.0312561066821218f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.15f, 0.17500001f),
                     new Vector3f(-0.48671876825392246f, 1.065000157803297f, -0.26874999795109034f)),
             new ControlTypes(new IncrementControl(), EntityDimensions.changing(0.06249999f, 0.125f),
@@ -78,6 +82,15 @@ public class CopperType extends ConsoleTypeSchema {
                     new Vector3f(0.9898498551920056f, 0.4750000424683094f, 0.5812560999765992f)),
             new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.099999994f, 0.18750001f),
                     new Vector3f(0.8171813935041428f, 0.7625001901760697f, -0.1843719482421875f)),
+
+            //CONSOLE UNDERSIDE CONTROLS
+            new ControlTypes(new ThrottleControl(), EntityDimensions.changing(0.2375f, 0.23750003f),
+                    new Vector3f(0.015625005587935448f, -0.4750000163912773f, 0.7984344754368067f)),
+            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.3624999f, 0.23750003f),
+                    new Vector3f(-0.7218750054016709f, -0.5000000167638063f, 0.44843447022140026f)),
+            new ControlTypes(new HandBrakeControl(), EntityDimensions.changing(0.3624999f, 0.23750003f),
+                    new Vector3f(0.7656250167638063f, -0.48750001657754183f, -0.4515655431896448f)),
+
     };
 
     public CopperType() {

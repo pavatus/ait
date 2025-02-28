@@ -54,11 +54,16 @@ public abstract class PlinthVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.7d;
+        return 4.3d;
     }
 
     @Override
     public double portalWidth() {
         return 0.75d;
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
     }
 }

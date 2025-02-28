@@ -1,6 +1,8 @@
 package dev.amble.ait.data.schema.exterior.variant.dalek_mod;
 
 
+import net.minecraft.util.math.Vec3d;
+
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
@@ -22,6 +24,21 @@ public abstract class DalekModVariant extends ExteriorVariantSchema {
     }
 
     @Override
+    public Vec3d adjustPortalPos(Vec3d pos, byte direction) {
+        return switch (direction) {
+            case 0 -> pos.add(0, 0.207, -0.59); // NORTH
+            case 1, 2, 3 -> pos.add(0.43, 0.207, -0.45); // NORTH EAST p n
+            case 4 -> pos.add(0.628, 0.207, 0); // EAST
+            case 5, 6, 7 -> pos.add(0.43, 0.207, 0.45); // SOUTH EAST p p
+            case 8 -> pos.add(0, 0.207, 0.628); // SOUTH
+            case 9, 10, 11 -> pos.add(-0.43, 0.207, 0.45); // SOUTH WEST n p
+            case 12 -> pos.add(-0.628, 0.207, 0); // WEST
+            case 13, 14, 15 -> pos.add(-0.43, 0.207, -0.45); // NORTH WEST n n
+            default -> pos;
+        };
+    }
+
+    @Override
     public ExteriorAnimation animation(ExteriorBlockEntity exterior) {
         return new PulsatingAnimation(exterior);
     }
@@ -31,6 +48,10 @@ public abstract class DalekModVariant extends ExteriorVariantSchema {
         return DoorRegistry.REGISTRY.get(DalekModDoorVariant.REFERENCE);
     }
 
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
+    }
 
     @Override
     public boolean hasPortals() {

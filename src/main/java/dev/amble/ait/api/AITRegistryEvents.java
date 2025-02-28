@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.event.EventFactory;
 
 public class AITRegistryEvents {
     /**
-     * @deprecated You can just statically register to the registry instead now
-     * ExteriorVariantRegistry#register(Identifier, ExteriorVariant)
+     * @deprecated You can just statically init to the registry instead now
+     * ExteriorVariantRegistry#init(Identifier, ExteriorVariant)
      */
     @Deprecated(forRemoval = true)
     public static final Event<Defaults> EXTERIOR_DEFAULTS = EventFactory.createArrayBacked(Defaults.class, callbacks -> () -> {
@@ -16,7 +16,7 @@ public class AITRegistryEvents {
     });
 
     /**
-     * Called when a Registries is initialised
+     * Called when registries are initialized
      */
     @FunctionalInterface
     public interface Defaults {

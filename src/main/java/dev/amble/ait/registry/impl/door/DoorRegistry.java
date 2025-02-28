@@ -60,7 +60,7 @@ public class DoorRegistry {
         STALLION = register(new StallionDoorVariant());
         ADAPTIVE = register(new AdaptiveDoorVariant());
         DALEK_MOD = register(new DalekModDoorVariant());
-        //JAKE = register(new JakeDoorVariant());
+        //JAKE = init(new JakeDoorVariant());
         PRESENT = register(new PresentDoorVariant());
         PIPE = register(new PipeDoorVariant());
     }

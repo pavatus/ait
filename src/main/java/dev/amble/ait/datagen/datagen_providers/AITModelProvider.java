@@ -12,15 +12,18 @@ import net.minecraft.data.client.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.module.ModuleRegistry;
 
 
 public class AITModelProvider extends AmbleModelProvider {
     private final List<Block> directionalBlocksToRegister = new ArrayList<>();
     private final List<Block> simpleBlocksToRegister = new ArrayList<>();
+    private final List<Pair<Block, Block>> coralFanBlocksToRegister = new ArrayList<>();
 
     public AITModelProvider(FabricDataOutput output) {
         super(output);
@@ -59,10 +62,18 @@ public class AITModelProvider extends AmbleModelProvider {
             generator.registerSimpleCubeAll(block);
         }
 
+        for (Pair<Block, Block> pair : coralFanBlocksToRegister) {
+            generator.registerCoralFan(pair.getLeft(), pair.getRight());
+        }
+
         ModuleRegistry.instance().iterator().forEachRemaining(module -> {
             module.getDataGenerator().ifPresent(data -> data.models(this, generator));
             module.getBlockRegistry().ifPresent(this::withBlocks);
         });
+
+        BlockStateModelGenerator.BlockTexturePool tardis_coral_pool = generator.registerCubeAllModelTexturePool(AITBlocks.TARDIS_CORAL_BLOCK);
+        tardis_coral_pool.stairs(AITBlocks.TARDIS_CORAL_STAIRS);
+        tardis_coral_pool.slab(AITBlocks.TARDIS_CORAL_SLAB);
 
         super.generateBlockStateModels(generator);
     }
@@ -80,6 +91,10 @@ public class AITModelProvider extends AmbleModelProvider {
 
     public void registerDirectionalBlock(Block block) {
         directionalBlocksToRegister.add(block);
+    }
+
+    public void registerCoralFanBlock(Block fanBlock, Block wallFanBlock) {
+        coralFanBlocksToRegister.add(new Pair<>(fanBlock, wallFanBlock));
     }
 
     public void registerSimpleBlock(Block block) {

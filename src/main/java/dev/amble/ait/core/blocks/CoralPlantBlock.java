@@ -27,6 +27,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -34,6 +35,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.AITSounds;
@@ -106,6 +108,19 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
     }
 
     @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+
+        Vec3d centre = pos.up().toCenterPos();
+        for (int i = 0; i < getAge(state); i++) {
+            double offsetX = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
+            double offsetY = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
+            double offsetZ = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
+            world.addParticle(AITMod.CORAL_PARTICLE, centre.getX(), centre.getY() , centre.getZ(), offsetX, offsetY, offsetZ);
+        }
+    }
+
+    @Override
     public boolean hasRandomTicks(BlockState state) {
         return true;
     }
@@ -157,7 +172,8 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
         TardisBuilder builder = new TardisBuilder().at(CachedDirectedGlobalPos.create(world, pos, (byte) 0))
                 .owner(player)
-                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(0))
+                .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(5000))
+                .with(TardisComponent.Id.TRAVEL, travel -> travel.tardis().travel().autopilot(false))
                 .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
                 .desktop(DesktopRegistry.DEFAULT_CAVE);
 
@@ -173,19 +189,27 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!(placer instanceof ServerPlayerEntity player))
             return;
 
-        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)
-                || (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos)
-                        && !TardisServerWorld.isTardisDimension((ServerWorld) world))) {
+        if (!RiftChunkManager.isRiftChunk((ServerWorld) world, pos)) {
+            world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
+            return;
+        }
+
+        if (TardisServerWorld.isTardisDimension((ServerWorld) world)) {
+            world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
+            return;
+        }
+
+        if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)) {
             world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
             return;
         }
 
         if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral) {
-            coral.creator = player.getUuid();
-            coral.markDirty();
+            if (player.getUuid() != null)
+                coral.creator = player.getUuid();
+                coral.markDirty();
+            TardisCriterions.PLACE_CORAL.trigger(player);
         }
-
-        TardisCriterions.PLACE_CORAL.trigger(player);
     }
 
     @Override

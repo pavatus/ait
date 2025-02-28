@@ -95,35 +95,28 @@ public class MultiBlockStructure extends ArrayList<MultiBlockStructure.BlockOffs
         StructureTemplate template = WorldUtil.getOverworld().getStructureTemplateManager()
                 .getTemplate(structure).orElse(null);
 
-        MultiBlockStructure created = new MultiBlockStructure();
         if (template == null) {
             AITMod.LOGGER.error("Failed to find structure template {}", structure);
-            return created;
+            return EMPTY;
         }
 
         List<StructureTemplate.StructureBlockInfo> list = ((StructureTemplateAccessor) template).getBlockInfo().get(0).getAll();
-        BlockPos center = null;
-        for (StructureTemplate.StructureBlockInfo info : list) {
-            if (info.state().isOf(AITBlocks.DOOR_BLOCK)) {
-                center = info.pos();
-                break;
-            }
-        }
+        BlockPos center = list.stream()
+                .filter(info -> info.state().isOf(AITBlocks.DOOR_BLOCK))
+                .map(StructureTemplate.StructureBlockInfo::pos)
+                .findFirst()
+                .orElse(null);
 
         if (center == null) {
             AITMod.LOGGER.error("No general subsystem block found in template, {}", structure);
-            return created;
+            return EMPTY;
         }
 
-        // double iterationwow
-        for (StructureTemplate.StructureBlockInfo info : list) {
-            if (info.state().isOf(AITBlocks.DOOR_BLOCK)) continue;
-            if (info.state().isAir()) continue;
-
-            BlockPos offset = info.pos().subtract(center);
-            BlockOffset blockOffset = new BlockOffset(new AllowedBlocks(info.state().getBlock()), offset);
-            created.add(blockOffset);
-        }
+        MultiBlockStructure created = new MultiBlockStructure();
+        list.stream()
+                .filter(info -> !info.state().isOf(AITBlocks.DOOR_BLOCK) && !info.state().isAir())
+                .map(info -> new BlockOffset(new AllowedBlocks(info.state().getBlock()), info.pos().subtract(center)))
+                .forEach(created::add);
 
         return created;
     }

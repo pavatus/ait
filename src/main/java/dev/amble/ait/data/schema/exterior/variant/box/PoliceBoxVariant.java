@@ -40,16 +40,21 @@ public abstract class PoliceBoxVariant extends ExteriorVariantSchema {
     @Override
     public Vec3d adjustPortalPos(Vec3d pos, byte direction) {
         return switch (direction) {
-            case 0 -> pos.add(0, 0.207, -0.628); // NORTH
-            case 1, 2, 3 -> pos.add(0.43, 0.207, -0.43); // NORTH EAST p n
-            case 4 -> pos.add(0.628, 0.207, 0); // EAST
-            case 5, 6, 7 -> pos.add(0.43, 0.207, 0.43); // SOUTH EAST p p
-            case 8 -> pos.add(0, 0.207, 0.628); // SOUTH
-            case 9, 10, 11 -> pos.add(-0.43, 0.207, 0.43); // SOUTH WEST n p
-            case 12 -> pos.add(-0.628, 0.207, 0); // WEST
-            case 13, 14, 15 -> pos.add(-0.43, 0.207, -0.43); // NORTH WEST n n
+            case 0 -> pos.add(0, 0, -0.628); // NORTH
+            case 1, 2, 3 -> pos.add(0.43, 0, -0.43); // NORTH EAST p n
+            case 4 -> pos.add(0.628, 0, 0); // EAST
+            case 5, 6, 7 -> pos.add(0.43, 0, 0.43); // SOUTH EAST p p
+            case 8 -> pos.add(0, 0, 0.628); // SOUTH
+            case 9, 10, 11 -> pos.add(-0.43, 0, 0.43); // SOUTH WEST n p
+            case 12 -> pos.add(-0.628, 0, 0); // WEST
+            case 13, 14, 15 -> pos.add(-0.43, 0, -0.43); // NORTH WEST n n
             default -> pos;
         };
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
     }
 
     @Override

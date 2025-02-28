@@ -35,7 +35,7 @@ public class FoodCreationControl extends Control {
                 return;
             }
 
-            ItemStack coffeeItem = new ItemStack((tardis.extra().getRefreshmentItem()).getItem());
+            ItemStack coffeeItem = tardis.extra().getRefreshmentItem();
 
 
             Vec3d spawnPosition = Vec3d.ofCenter(console).add(0, 1.5, 1);

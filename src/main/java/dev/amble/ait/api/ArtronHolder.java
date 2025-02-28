@@ -37,7 +37,4 @@ public interface ArtronHolder {
     default boolean isFull() {
         return this.getCurrentFuel() >= this.getMaxFuel();
     }
-
-    // boolean isRefueling();
-    // void setRefueling(boolean var);
 }

@@ -2,19 +2,24 @@ package dev.amble.ait.core.tardis.handler;
 
 import java.util.Random;
 
+import dev.amble.ait.AITMod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
+import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.advancement.TardisCriterions;
+import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.Exclude;
 import dev.amble.ait.data.properties.bool.BoolProperty;
@@ -22,28 +27,28 @@ import dev.amble.ait.data.properties.bool.BoolValue;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class OvergrownHandler extends KeyedTardisComponent implements TardisTickable {
+
     private static final BoolProperty IS_OVERGROWN_PROPERTY = new BoolProperty("is_overgrown", false);
     private final BoolValue overgrown = IS_OVERGROWN_PROPERTY.create(this);
 
     @Exclude
-    public static final int MAXIMUM_TICKS = 600;
+    private static final int TIME_TO_OVERGROW = 24000;
 
-    public static String TEXTURE_PATH = "textures/blockentities/exteriors/";
-    private static Random random;
-    private int ticks; // same as usual
+    private int ticks = 24000;
+    private boolean ticking = false;
+    private int soundCooldown = 0;
 
     static {
         TardisEvents.USE_DOOR.register((tardis, interior, world, player, pos) -> {
-            if (!tardis.overgrown().isOvergrown() || player == null)
+            if (!tardis.overgrown().overgrown().get() || player == null)
                 return DoorHandler.InteractionResult.CONTINUE;
 
-            // if holding an axe then break off the vegetation
             ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
 
-            if (stack.getItem() instanceof AxeItem) {
+            if (stack.getItem() instanceof ShearsItem) {
                 player.swingHand(Hand.MAIN_HAND);
                 tardis.overgrown().removeVegetation();
-                stack.setDamage(stack.getDamage() - 1);
+                stack.damage(1, player, (p) -> p.sendToolBreakStatus(Hand.MAIN_HAND));
 
                 TardisCriterions.VEGETATION.trigger(player);
                 return DoorHandler.InteractionResult.BANG;
@@ -62,74 +67,82 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
         overgrown.of(this, IS_OVERGROWN_PROPERTY);
     }
 
-    public int getTicks() {
-        return this.ticks;
-    }
-
-    private void setTicks(int ticks) {
-        this.ticks = ticks;
-    }
-
-    private void addTick() {
-        this.setTicks(this.getTicks() + 1);
-    }
-
-    private boolean hasReachedMaxTicks() {
-        return this.getTicks() >= MAXIMUM_TICKS;
-    }
-
-    public boolean isOvergrown() {
-        return overgrown.get();
-    }
-
-    public void setOvergrown(boolean var) {
-        overgrown.set(var);
+    public BoolValue overgrown() {
+        return overgrown;
     }
 
     public void removeVegetation() {
-        this.setOvergrown(false);
-        this.setTicks(0);
+        overgrown.set(false);
+
+        this.ticks = 0;
+        this.ticking = false;
+        this.soundCooldown = 0;
     }
 
     @Environment(EnvType.CLIENT)
     public Identifier getOvergrownTexture() {
         ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
-        return variant.texture().withSuffixedPath("_overgrown"); // todo - best to have a fallback somehow but icr how to check if texture exists
-    }
+        Identifier baseTexture = variant.texture();
 
-    public static Random random() {
-        if (random == null)
-            random = new Random();
+        // FIXME what the fuck
+        if (baseTexture.getPath().contains("police_box")) {
+            return new Identifier("ait", "textures/blockentities/exteriors/police_box/overgrown.png");
+        }
 
-        return random;
+        return baseTexture.withSuffixedPath("_overgrown");
     }
 
     @Override
     public void tick(MinecraftServer server) {
-        if (tardis.isGrowth())
+        Tardis tardis = this.tardis();
+
+        if (!tardis.fuel().hasPower()) {
+            if (tardis.isGrowth() || overgrown.get()) {
+                this.ticking = false;
+                playMoodySounds(tardis);
+                return;
+            }
+
+            if (tardis.travel().getState() != TravelHandlerBase.State.LANDED) {
+                this.ticking = false;
+                return;
+            }
+
+            if (tardis.travel().getState() == TravelHandlerBase.State.FLIGHT) {
+                overgrown.set(false);
+                this.ticking = false;
+                this.ticks = 0;
+                return;
+            }
+
+            if (!this.ticking) {
+                this.ticking = true;
+                this.ticks = 0;
+            }
+
+            if (++this.ticks >= TIME_TO_OVERGROW) {
+                overgrown.set(true);
+                this.ticking = false;
+            }
+        } else {
+            this.ticking = false;
+        }
+    }
+
+    private void playMoodySounds(Tardis tardis) {
+        if (!overgrown.get() || tardis == null)
             return;
 
-        boolean overgrown = this.isOvergrown();
-        TravelHandlerBase.State state = this.tardis.travel().getState();
-
-        if (overgrown && (state == TravelHandlerBase.State.FLIGHT
-                || state == TravelHandlerBase.State.MAT)) {
-            this.setOvergrown(false);
-            this.setTicks(0);
+        if (soundCooldown > 0) {
+            soundCooldown--;
             return;
         }
 
-        if (overgrown)
-            return;
-
-        if (state != TravelHandlerBase.State.LANDED)
-            return;
-
-        // We know the tardis is landed so we can start ticking away
-        if (this.hasReachedMaxTicks())
-            return;
-
-        if (random().nextFloat() < 0.025f)
-            this.addTick();
+        //idk why i did this tbh
+        if (AITMod.RANDOM.nextFloat() < 0.005f) {
+            SoundEvent moodySound = AITSounds.MOODY;
+            tardis.getExterior().playSound(moodySound, SoundCategory.AMBIENT, 0.15f, 1.0f);
+            soundCooldown = 400;
+        }
     }
 }

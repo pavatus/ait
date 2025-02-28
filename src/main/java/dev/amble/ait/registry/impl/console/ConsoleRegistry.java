@@ -29,6 +29,7 @@ public class ConsoleRegistry {
     public static ConsoleTypeSchema HUDOLIN;
     public static ConsoleTypeSchema CRYSTALLINE;
     public static ConsoleTypeSchema RENAISSANCE;
+    public static ConsoleTypeSchema HOURGLASS;
 
     public static void init() {
         HARTNELL = register(new HartnellType());
@@ -37,8 +38,9 @@ public class ConsoleRegistry {
         TOYOTA = register(new ToyotaType());
         ALNICO = register(new AlnicoType());
         STEAM = register(new SteamType());
-        // HUDOLIN = register(new HudolinType());
+        HUDOLIN = register(new HudolinType());
         CRYSTALLINE = register(new CrystallineType());
         RENAISSANCE = register(new RenaissanceType());
+        HOURGLASS = register(new HourglassType());
     }
 }

@@ -1,15 +1,10 @@
-package dev.amble.ait.client.animation.console.crystalline;// Save this class in your mod and generate all required imports
+package dev.amble.ait.client.animation.console.crystalline;
 
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
 
-/**
- * Made with Blockbench 4.11.2
- * Exported for Minecraft version 1.19 or later with Yarn mappings
- * @author Author
- */
 public class CrystallineAnimations {
     public static final Animation CRYSTALLINE_FLIGHT = Animation.Builder.create(3.4F).looping()
             .addBoneAnimation("tardis", new Transformation(Transformation.Targets.ROTATE,

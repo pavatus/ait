@@ -169,6 +169,8 @@ public class SequenceHandler extends TardisComponent implements TardisTickable {
                 5.0F);
         world.spawnParticles(ParticleTypes.ANGRY_VILLAGER, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 1, 0.4F, 1F, 0.4F,
                 0.5F);
+        world.spawnParticles(ParticleTypes.LAVA, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 7, 0.4F, 1F, 0.4F,
+                0.5F);
         world.spawnParticles(ParticleTypes.FLASH, vec3d.getX(), vec3d.getY(), vec3d.getZ(), 4, 0.4F, 1F, 0.4F, 5.0F);
         world.spawnParticles(new DustParticleEffect(new Vector3f(0.2f, 0.2f, 0.2f), 4f), vec3d.getX(), vec3d.getY(),
                 vec3d.getZ(), 20, 0.0F, 1F, 0.0F, 2.0F);

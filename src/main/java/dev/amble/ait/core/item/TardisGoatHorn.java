@@ -1,6 +1,10 @@
 package dev.amble.ait.core.item;
 
+import static net.minecraft.block.entity.BeaconBlockEntity.playSound;
+
 import java.util.*;
+
+import dev.amble.lib.data.CachedDirectedGlobalPos;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -14,15 +18,16 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import dev.amble.ait.api.link.LinkableItem;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.tardis.Tardis;
+import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.data.enummap.EnumSet;
 import dev.amble.ait.data.enummap.Ordered;
 
@@ -65,7 +70,29 @@ public class TardisGoatHorn extends LinkableItem {
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        return TypedActionResult.fail(user.getStackInHand(hand));
+        ItemStack itemStack = user.getStackInHand(hand);
+        Optional<? extends RegistryEntry<Instrument>> optional = this.getInstrument(itemStack);
+        if (optional.isPresent()) {
+            Instrument instrument = (Instrument)((RegistryEntry<?>) optional.get()).value();
+            user.setCurrentHand(hand);
+            playSound(world, user.getBlockPos(), instrument.soundEvent().value());
+            user.getItemCooldownManager().set(this, instrument.useDuration());
+            user.incrementStat(Stats.USED.getOrCreateStat(this));
+
+            Tardis tardis = TardisGoatHorn.getTardisStatic(world, user.getStackInHand(hand));
+            if (tardis == null) return TypedActionResult.consume(itemStack);
+            CachedDirectedGlobalPos abpd = tardis.travel().destination();
+            BlockPos abpdPos = abpd.getPos();
+            Text message = Text.literal("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: ")
+                    .formatted(Formatting.GRAY)
+                    .append(WorldUtil.worldText(abpd.getDimension()).copy() + "...".formatted(Formatting.GRAY));
+
+            user.sendMessage(message, true);
+
+            return TypedActionResult.consume(itemStack);
+        } else {
+            return TypedActionResult.fail(itemStack);
+        }
     }
 
     public int getMaxUseTime(ItemStack stack) {

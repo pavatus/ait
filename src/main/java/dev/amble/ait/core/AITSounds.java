@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import dev.amble.ait.AITMod;
 
 public class AITSounds {
-    // public static final SoundEvent SECRET_MUSIC = register("music/secret_music"); // removed for its large size - if you bring it back, COMPRESS IT
+    // public static final SoundEvent SECRET_MUSIC = init("music/secret_music"); // removed for its large size - if you bring it back, COMPRESS IT
     public static final SoundEvent EVEN_MORE_SECRET_MUSIC = register("music/even_more_secret_music");
     public static final SoundEvent DRIFTING_MUSIC = register("music/drifting_by_radio");
     public static final SoundEvent MERCURY_MUSIC = register("music/mercury_nitrogenez");
@@ -39,6 +39,8 @@ public class AITSounds {
     public static final SoundEvent WAYPOINT_ACTIVATE = register("tardis/waypoint_activate");
     public static final SoundEvent POLICE_BOX_DOOR_OPEN = register("tardis/police_box_door_open");
     public static final SoundEvent POLICE_BOX_DOOR_CLOSE = register("tardis/police_box_door_close");
+    public static final SoundEvent TARDIS_BLING = register("tardis/bling");
+
 
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
     public static final SoundEvent SIEGE_DISABLE = register("tardis/siege_disable");
@@ -118,6 +120,7 @@ public class AITSounds {
     public static final SoundEvent RANDOMIZE = register("controls/randomize");
     public static final SoundEvent INCREMENT = register("controls/increment");
     public static final SoundEvent DIMENSION = register("controls/dimension");
+    public static final SoundEvent ENGINE_OVERLOAD = register("controls/engine_overload");
     public static final SoundEvent ML = register("tardis/ml");
 
     //Alt console sounds for renaissance
@@ -193,6 +196,10 @@ public class AITSounds {
     // Sonic
     public static final SoundEvent SONIC_USE = register("sonic/use");
     public static final SoundEvent SONIC_SWITCH = register("sonic/switch");
+    public static final SoundEvent SONIC_ON = register("sonic/sonic_on");
+    public static final SoundEvent SONIC_OFF = register("sonic/sonic_off");
+    public static final SoundEvent SONIC_TWEAK = register("sonic/sonic_tweak");
+    public static final SoundEvent SONIC_MENDING = register("sonic/sonic_mending");
 
     // Secret
     public static final SoundEvent DOOM_DOOR_OPEN = register("tardis/secret/doom_door_open");

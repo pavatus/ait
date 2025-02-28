@@ -42,6 +42,7 @@ public class SonicRegistry extends UnlockableRegistry<SonicSchema> {
         register(BuiltinSonic.create("song"));
         register(BuiltinSonic.create("singularity"));
         register(BuiltinSonic.create("candy_cane"));
+        register(BuiltinSonic.create("type_100"));
     }
 
     public static SonicRegistry getInstance() {

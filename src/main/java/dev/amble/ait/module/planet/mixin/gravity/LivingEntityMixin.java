@@ -17,7 +17,9 @@ import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITStatusEffects;
+import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
 
@@ -56,6 +58,15 @@ public abstract class LivingEntityMixin extends Entity {
 
         Vec3d movement = entity.getVelocity();
         entity.setVelocity(movement.x, movement.y + planet.gravity(), movement.z);
+    }
+
+    @Inject(method = "tickInVoid", at = @At("HEAD"), cancellable = true)
+    public void ait$tickInVoid(CallbackInfo ci) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        if (entity instanceof FlightTardisEntity)
+            ci.cancel();
+        if (entity.getWorld().getRegistryKey().equals(AITDimensions.SPACE))
+            ci.cancel();
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

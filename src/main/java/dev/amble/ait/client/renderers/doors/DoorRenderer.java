@@ -1,7 +1,6 @@
 package dev.amble.ait.client.renderers.doors;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,13 +11,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
-import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.client.boti.BOTI;
-import dev.amble.ait.client.models.boti.BotiPortalModel;
 import dev.amble.ait.client.models.doors.DoomDoorModel;
 import dev.amble.ait.client.models.doors.DoorModel;
 import dev.amble.ait.client.renderers.AITRenderLayers;
@@ -75,12 +71,6 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
         profiler.pop();
     }
 
-    private void renderDoorBoti(DoorBlockEntity door, ClientExteriorVariantSchema variant, @Nullable Identifier interiorTexture, Profiler profiler, Tardis tardis, T entity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        profiler.push("boti");
-        BOTI.renderInteriorDoorBoti(door, variant, matrices, AITMod.id("textures/environment/tardis_sky.png"), model, BotiPortalModel.getTexturedModelData().createModel(), light);
-        profiler.pop();
-    }
-
     private void renderDoor(Profiler profiler, Tardis tardis, T entity, MatrixStack matrices,
             VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (tardis.siege().isActive())
@@ -103,7 +93,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             BlockPos pos = globalPos.getPos();
             World world = globalPos.getWorld();
 
-            if (world != null) {
+            /*if (world != null) {
                 int lightConst = 524296;
                 int i = world.getLightLevel(LightType.SKY, pos);
                 int j = world.getLightLevel(LightType.BLOCK, pos);
@@ -114,7 +104,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                                 ? (i / 15) + j > 0 ? j + 13 : j
                                 : i + (world.getRegistryKey().equals(World.NETHER) ? j * 2 : j))
                         * lightConst;
-            }
+            }*/
         }
 
         matrices.push();
@@ -127,7 +117,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1,
                 1 /* 0.5f */, 1);
 
-        if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).isOvergrown())
+        if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).overgrown().get())
             model.renderWithAnimations(entity, model.getPart(), matrices,
                     vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(
                             tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).getOvergrownTexture())),
@@ -139,8 +129,8 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
 
         if (!variant.equals(ClientExteriorVariantRegistry.DOOM))
             ClientLightUtil.renderEmissivable(tardis.fuel().hasPower(), model::renderWithAnimations,
-                this.variant.emission(), entity, model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, 1,
-                alarms ? 0.3f : 1, alarms ? 0.3f : 1, 1);
+                this.variant.emission(), entity, model.getPart(), matrices, vertexConsumers, 0xf000f0, overlay, alarms ? !tardis.fuel().hasPower() ? 0.25f : 1f : 1f, alarms ? !tardis.fuel().hasPower() ? 0.01f : 0.3f : 1f,
+                    alarms ? !tardis.fuel().hasPower() ? 0.01f : 0.3f : 1f, 1f);
 
         profiler.swap("biome");
 
@@ -155,8 +145,11 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             }
         }
 
-        if (tardis.door().getLeftRot() > 0)
-            this.renderDoorBoti(entity, variant, null, profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth())
+            BOTI.DOOR_RENDER_QUEUE.add(entity);
+        //    this.renderDoorBoti(entity, variant, null,
+        //                    profiler, tardis, entity, matrices, vertexConsumers, light, overlay);
+
 
         matrices.pop();
         profiler.pop();

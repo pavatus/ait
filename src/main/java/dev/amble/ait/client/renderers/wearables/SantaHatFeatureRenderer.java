@@ -20,7 +20,6 @@ import net.minecraft.util.Identifier;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.models.wearables.SantaHatModel;
-import dev.amble.ait.core.AITItems;
 
 @Environment(value = EnvType.CLIENT)
 public class SantaHatFeatureRenderer<T extends LivingEntity, M extends PlayerEntityModel<T>>
@@ -41,8 +40,8 @@ public class SantaHatFeatureRenderer<T extends LivingEntity, M extends PlayerEnt
             float f, float g, float h, float j, float k, float l) {
         ItemStack stack = livingEntity.getEquippedStack(EquipmentSlot.HEAD);
 
-        if (!(stack.isOf(AITItems.SANTA_HAT)))
-            return;
+        /*if (!(stack.isOf(AITItems.SANTA_HAT)))
+            return;*/
 
         if (!(livingEntity instanceof AbstractClientPlayerEntity))
             return;

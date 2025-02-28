@@ -76,4 +76,7 @@ public abstract class ExteriorModel extends SinglePartEntityModel {
     }
 
     public abstract Animation getAnimationForDoorState(DoorHandler.AnimationDoorState state);
+
+    public abstract void renderDoors(ExteriorBlockEntity exterior, ModelPart root, MatrixStack matrices,
+                                     VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float pAlpha, boolean isBOTI);
 }

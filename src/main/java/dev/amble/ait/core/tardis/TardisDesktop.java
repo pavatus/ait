@@ -17,6 +17,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -26,6 +27,7 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.core.AITBlocks;
+import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
@@ -39,11 +41,9 @@ public class TardisDesktop extends TardisComponent {
 
     private static final StructurePlacementData SETTINGS = new StructurePlacementData().setUpdateNeighbors(false);
     public static final Identifier CACHE_CONSOLE = AITMod.id("cache_console");
-
+    public static final Identifier INTERIOR_UPDATE = AITMod.id("interior_update");
     private TardisDesktopSchema schema;
-
     private DirectedBlockPos doorPos;
-
     private final Corners corners;
     private final Set<BlockPos> consolePos;
 
@@ -62,10 +62,43 @@ public class TardisDesktop extends TardisComponent {
                         if (tardis == null)
                             return;
 
+                        if (tardis.sonic() != null && tardis.sonic().getConsoleSonic() != null) {
+                            player.getWorld().playSound(null, player.getBlockPos(), AITSounds.BWEEP,
+                                    SoundCategory.PLAYERS, 1f, 1f);
+                            player.sendMessage(Text.translatable("tardis.message.console.has_sonic_in_port"), true);
+                            return;
+                        }
+
                         tardis.getDesktop().cacheConsole(console);
                     });
                 }));
+
+        /*TardisEvents.DOOR_OPEN.register(tardis -> {
+            NetworkUtil.getSubscribedPlayers(tardis.asServer()).forEach(player -> {
+                ServerWorld serverWorld = tardis.asServer().getInteriorWorld();
+
+                for (int x = -RADIUS; x <= RADIUS; x += 16) {
+                    for (int z = -RADIUS; z <= RADIUS; z += 16) {
+                        boolean bl = serverWorld.getChunkManager().isChunkLoaded(x, z);
+                        if (!bl) continue;
+                        WorldChunk chunk = serverWorld.getChunk(x >> 4, z >> 4);
+                        for (BlockPos pos : BlockPos.iterate(chunk.getPos().getStartPos(),
+                                new BlockPos(chunk.getPos().getEndX(), 0, chunk.getPos().getEndZ()))) {
+                            sendInteriorChunkUpdate(pos, player);
+                        }
+                    }
+                }
+            });
+        });*/
     }
+
+   /* public static void sendInteriorChunkUpdate(BlockPos pos, ServerPlayerEntity player) {
+        PacketByteBuf data = PacketByteBufs.create();
+        data.writeBlockPos(pos);
+
+        if (BOTI.BLOCK_RENDER_QUEUE.isEmpty())
+            ServerPlayNetworking.send(player, INTERIOR_UPDATE, data);
+    }*/
 
     public TardisDesktop(TardisDesktopSchema schema) {
         super(Id.DESKTOP);
@@ -163,8 +196,8 @@ public class TardisDesktop extends TardisComponent {
                 BlockPos.ofFloored(corners.getBox().getCenter()), SETTINGS, world.getRandom(), Block.FORCE_STATE);
 
         optionalQueue.ifPresentOrElse(queue -> queue.thenRun(
-                () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
-                        System.currentTimeMillis() - start)),
+                        () -> AITMod.LOGGER.warn("Time taken to generate interior: {}ms",
+                                System.currentTimeMillis() - start)),
                 () -> AITMod.LOGGER.error("Failed to generate interior for {}",
                         this.tardis.getUuid())
         );
@@ -231,7 +264,7 @@ public class TardisDesktop extends TardisComponent {
     }
 
     public static void playSoundAtConsole(World dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,
-            float pitch) {
+                                          float pitch) {
         dim.playSound(null, console, sound, category, volume, pitch);
     }
 

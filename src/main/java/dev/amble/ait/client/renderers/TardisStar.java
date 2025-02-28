@@ -19,7 +19,7 @@ import dev.amble.ait.core.tardis.Tardis;
 public class TardisStar {
 
     public static final Identifier TARDIS_STAR_TEXTURE = new Identifier(AITMod.MOD_ID,
-            "textures/environment/tardis_star.png");
+            "textures/environment/eye_of_harmony.png");
     private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0) / 2.0);
 
     public static void render(WorldRenderContext context, Tardis tardis) {
@@ -129,19 +129,19 @@ public class TardisStar {
     }
 
     public static void putDeathLightNegativeXTerminalVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix,
-            float radius, float width) {
+                                                            float radius, float width) {
         buffer.vertex(matrix, -HALF_SQRT_3 * width, radius, -0.5f * width)
                 .color(255, tardis.isGrowth() ? 30 : 154, 0, 0).next();
     }
 
     public static void putDeathLightPositiveXTerminalVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix,
-            float radius, float width) {
+                                                            float radius, float width) {
         buffer.vertex(matrix, HALF_SQRT_3 * width, radius, -0.5f * width).color(255, tardis.isGrowth() ? 30 : 154, 0, 0)
                 .next();
     }
 
     public static void putDeathLightPositiveZTerminalVertex(Tardis tardis, VertexConsumer buffer, Matrix4f matrix,
-            float radius, float width) {
+                                                            float radius, float width) {
         buffer.vertex(matrix, 0.0f, radius, width).color(255, tardis.isGrowth() ? 30 : 154, 0, 0).next();
     }
 }

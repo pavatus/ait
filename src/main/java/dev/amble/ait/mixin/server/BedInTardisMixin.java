@@ -41,14 +41,11 @@ public class BedInTardisMixin {
         Loyalty loyalty = tardis.loyalty().get(player);
 
         Text message = switch (loyalty.type()) {
-            case REJECT -> Text.literal("The TARDIS groans in frustration...");
-            case NEUTRAL ->
-                    Text.literal("The TARDIS hums softly, neither welcoming nor dismissing your presence...");
-            case COMPANION ->
-                    Text.literal("The TARDIS glows warmly, as if glad to have you along for the journey...");
-            case PILOT -> Text.literal("The TARDIS hums gently, showing trust...");
-            case OWNER ->
-                    Text.literal("The TARDIS vibrates gently, a sound of reassurance that it will always be here for you...");
+            case REJECT -> Text.literal("You hear whispers all around you, you are not welcome. [REJECT]");
+            case NEUTRAL -> Text.literal("The TARDIS hums, neither welcoming nor dismissing your presence. [NEUTRAL]");
+            case COMPANION -> Text.literal("The TARDIS hums you a tune, as if glad to have you on board. [COMPANION]");
+            case PILOT -> Text.literal("The TARDIS hums gently, as if to show its trust. [PILOT]");
+            case OWNER -> Text.literal("The TARDIS hums you a song, as if to show it will always be here for you. [OWNER]");
         };
         player.sendMessage(message, true);
 

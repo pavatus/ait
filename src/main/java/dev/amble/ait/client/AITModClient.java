@@ -13,23 +13,41 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.particle.EndRodParticle;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.RotationPropertyHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LightType;
 
+import dev.amble.ait.AITMod;
+import dev.amble.ait.client.boti.BOTI;
 import dev.amble.ait.client.commands.ConfigCommand;
 import dev.amble.ait.client.data.ClientLandingManager;
+import dev.amble.ait.client.models.boti.BotiPortalModel;
+import dev.amble.ait.client.models.decoration.GallifreyFallsFrameModel;
+import dev.amble.ait.client.models.decoration.RiftModel;
+import dev.amble.ait.client.models.doors.DoorModel;
+import dev.amble.ait.client.models.exteriors.ExteriorModel;
+import dev.amble.ait.client.overlays.ExteriorAxeOverlay;
 import dev.amble.ait.client.overlays.FabricatorOverlay;
 import dev.amble.ait.client.overlays.RWFOverlay;
 import dev.amble.ait.client.overlays.SonicOverlay;
@@ -42,14 +60,12 @@ import dev.amble.ait.client.renderers.decoration.FlagBlockEntityRenderer;
 import dev.amble.ait.client.renderers.decoration.PlaqueRenderer;
 import dev.amble.ait.client.renderers.decoration.SnowGlobeRenderer;
 import dev.amble.ait.client.renderers.doors.DoorRenderer;
-import dev.amble.ait.client.renderers.entities.ControlEntityRenderer;
-import dev.amble.ait.client.renderers.entities.FallingTardisRenderer;
-import dev.amble.ait.client.renderers.entities.FlightTardisRenderer;
-import dev.amble.ait.client.renderers.entities.GallifreyFallsPaintingEntityRenderer;
+import dev.amble.ait.client.renderers.entities.*;
 import dev.amble.ait.client.renderers.exteriors.ExteriorRenderer;
 import dev.amble.ait.client.renderers.machines.*;
 import dev.amble.ait.client.renderers.monitors.MonitorRenderer;
 import dev.amble.ait.client.renderers.monitors.WallMonitorRenderer;
+import dev.amble.ait.client.renderers.sky.MarsSkyProperties;
 import dev.amble.ait.client.screens.AstralMapScreen;
 import dev.amble.ait.client.screens.BlueprintFabricatorScreen;
 import dev.amble.ait.client.screens.MonitorScreen;
@@ -57,15 +73,24 @@ import dev.amble.ait.client.sonic.SonicModelLoader;
 import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.tardis.manager.ClientTardisManager;
 import dev.amble.ait.client.util.ClientTardisUtil;
+import dev.amble.ait.compat.DependencyChecker;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
+import dev.amble.ait.core.blockentities.DoorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+import dev.amble.ait.core.blocks.ExteriorBlock;
+import dev.amble.ait.core.drinks.DrinkRegistry;
+import dev.amble.ait.core.drinks.DrinkUtil;
+import dev.amble.ait.core.entities.GallifreyFallsPaintingEntity;
+import dev.amble.ait.core.entities.RiftEntity;
 import dev.amble.ait.core.item.*;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
+import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.gun.core.item.BaseGunItem;
 import dev.amble.ait.registry.impl.SonicRegistry;
@@ -83,6 +108,7 @@ public class AITModClient implements ClientModInitializer {
 
         AmbleRegistries.getInstance().registerAll(
                 SonicRegistry.getInstance(),
+                DrinkRegistry.getInstance(),
                 ClientExteriorVariantRegistry.getInstance(),
                 ClientConsoleVariantRegistry.getInstance()
         );
@@ -100,6 +126,8 @@ public class AITModClient implements ClientModInitializer {
         hammerPredicate();
         siegeItemPredicate();
         adventItemPredicates();
+        registerItemColors();
+        registerParticles();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             ConfigCommand.register(dispatcher);
@@ -112,22 +140,21 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new SonicOverlay());
         HudRenderCallback.EVENT.register(new RWFOverlay());
         HudRenderCallback.EVENT.register(new FabricatorOverlay());
+        HudRenderCallback.EVENT.register(new ExteriorAxeOverlay());
 
-        /*
-         * ClientVortexDataHandler.init(); WorldRenderEvents.END.register(context -> {
-         * MinecraftClient client = MinecraftClient.getInstance(); World world =
-         * client.player.getWorld(); if(world.getRegistryKey() ==
-         * AITDimensions.TIME_VORTEX_WORLD) { System.out.println("rendering");
-         * VortexUtil vortex = new VortexUtil("space"); VortexData vortexData =
-         * ClientVortexDataHandler.getCachedVortexData(WorldUtil.getName(client));
-         *
-         * if(vortexData != null) { for (VortexNode node : vortexData.nodes()) {
-         * vortex.renderVortexNodes(context, node); } } } });
-         */
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> (player.getMainHandStack().getItem() instanceof BaseGunItem));
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; exteriorBOTI(context);});
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; doorBOTI(context);});
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; paintingBOTI(context);});
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> { if (!DependencyChecker.hasIris()) return; riftBOTI(context);});
+
+        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; exteriorBOTI(context);});
+        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; doorBOTI(context);});
+        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; paintingBOTI(context);});
+        WorldRenderEvents.END.register(context -> { if (DependencyChecker.hasIris()) return; riftBOTI(context);});
 
         // @TODO idk why but this gets rid of other important stuff, not sure
-        //DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
+        DimensionRenderingRegistry.registerDimensionEffects(AITDimensions.MARS.getValue(), new MarsSkyProperties());
 
         WorldRenderEvents.BEFORE_ENTITIES.register(context -> {
             Tardis tardis = ClientTardisUtil.getCurrentTardis();
@@ -225,10 +252,6 @@ public class AITModClient implements ClientModInitializer {
                     });
                 });
 
-        // does all this clientplaynetwrokigng shite really have to go in here, theres
-        // probably
-        // somewhere else it can go
-        // right??
         ClientPlayNetworking.registerGlobalReceiver(TravelHandler.CANCEL_DEMAT_SOUND, (client, handler, buf,
                 responseSender) -> {
             ClientTardis tardis = ClientTardisUtil.getCurrentTardis();
@@ -244,10 +267,6 @@ public class AITModClient implements ClientModInitializer {
 
         SonicModelLoader.init();
     }
-
-    /**
-     * This is for screens without a tardis
-     */
     public static Screen screenFromId(int id) {
         return screenFromId(id, null, null);
     }
@@ -414,6 +433,7 @@ public class AITModClient implements ClientModInitializer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
             EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
         }
+        EntityRendererRegistry.register(AITEntityTypes.RIFT_ENTITY, RiftEntityRenderer::new);
     }
 
     public static void setupBlockRendering() {
@@ -433,5 +453,123 @@ public class AITModClient implements ClientModInitializer {
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
         }
+        map.putBlock(AITBlocks.TARDIS_CORAL_BLOCK, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.TARDIS_CORAL_FAN, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.TARDIS_CORAL_WALL_FAN, RenderLayer.getCutout());
+    }
+
+    public void registerItemColors() {
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) ->tintIndex > 0 ? -1 :
+                DrinkUtil.getColor(stack), AITItems.MUG);
+    }
+
+    public void registerParticles() {
+        ParticleFactoryRegistry.getInstance().register(CORAL_PARTICLE, EndRodParticle.Factory::new);
+    }
+
+    public void exteriorBOTI(WorldRenderContext context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+        ClientWorld world = client.world;
+        MatrixStack stack = context.matrixStack();
+        for (ExteriorBlockEntity exterior : BOTI.EXTERIOR_RENDER_QUEUE) {
+            if (exterior == null || exterior.tardis() == null || exterior.tardis().isEmpty()) continue;
+            Tardis tardis = exterior.tardis().get();
+            if (tardis == null) return;
+            ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
+            ExteriorModel model = variant.model();
+            BlockPos pos = exterior.getPos();
+            stack.push();
+            stack.translate(0.5, 0, 0.5);
+            stack.translate(pos.getX() - context.camera().getPos().getX(), pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+            stack.scale(1, -1, -1);
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(RotationPropertyHelper.toDegrees(exterior.getCachedState().get(ExteriorBlock.ROTATION))));
+            int light = world.getLightLevel(pos);
+            if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
+                light = LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos));
+                BOTI.renderExteriorBoti(exterior, variant, stack,
+                        AITMod.id("textures/environment/tardis_sky.png"), model,
+                        BotiPortalModel.getTexturedModelData().createModel(), light);
+            }
+            stack.pop();
+        }
+        BOTI.EXTERIOR_RENDER_QUEUE.clear();
+    }
+
+    public void doorBOTI(WorldRenderContext context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+        ClientWorld world = client.world;
+        MatrixStack stack = context.matrixStack();
+        boolean bl = TardisServerWorld.isTardisDimension(world);
+        if (bl) {
+            Tardis tardis = ClientTardisUtil.getCurrentTardis();
+            if (tardis == null || tardis.getDesktop() == null) return;
+            ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
+            DoorModel model = variant.getDoor().model();
+            for (DoorBlockEntity door : BOTI.DOOR_RENDER_QUEUE) {
+                if (door == null) continue;
+                BlockPos pos = door.getPos();
+                stack.push();
+                stack.translate(0.5, 0, 0.5);
+                stack.translate(pos.getX() - context.camera().getPos().getX(), pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+                stack.scale(1, -1, -1);
+                stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(door.getCachedState().get(DoorBlock.FACING).asRotation()));
+                int light = world.getLightLevel(pos.up());
+                if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
+                    light = LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos));
+                    BOTI.renderInteriorDoorBoti(tardis, door, variant, stack,
+                            AITMod.id("textures/environment/tardis_sky.png"), model,
+                            BotiPortalModel.getTexturedModelData().createModel(), light);
+                }
+                stack.pop();
+            }
+            BOTI.DOOR_RENDER_QUEUE.clear();
+        }
+    }
+
+    public void paintingBOTI(WorldRenderContext context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+        ClientWorld world = client.world;
+        MatrixStack stack = context.matrixStack();
+        for (GallifreyFallsPaintingEntity painting : BOTI.PAINTING_RENDER_QUEUE) {
+            if (painting == null) continue;
+            Vec3d pos = painting.getPos();
+            stack.push();
+            //0, -0.5, 0.5
+            stack.translate(pos.getX() - context.camera().getPos().getX(),
+                    pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(painting.getBodyYaw()));
+            stack.translate(0, -0.5f, 0.5);
+            GallifreyFallsFrameModel frame = new GallifreyFallsFrameModel(GallifreyFallsFrameModel.getTexturedModelData().createModel());
+            BlockPos blockPos = BlockPos.ofFloored(painting.getClientCameraPosVec(client.getTickDelta()));
+            BOTI.renderGallifreyFallsPainting(stack, frame, LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, blockPos), world.getLightLevel(LightType.SKY, blockPos)));
+            stack.pop();
+        }
+        BOTI.PAINTING_RENDER_QUEUE.clear();
+    }
+
+    public void riftBOTI(WorldRenderContext context) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.world == null) return;
+        ClientWorld world = client.world;
+        MatrixStack stack = context.matrixStack();
+        for (RiftEntity rift : BOTI.RIFT_RENDERING_QUEUE) {
+            if (rift == null) continue;
+            Vec3d pos = rift.getPos();
+            stack.push();
+            stack.translate(pos.getX() - context.camera().getPos().getX(),
+                    pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
+            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rift.getBodyYaw()));
+            stack.translate(0, -0.5f, 0.5);
+            RiftModel riftModel = new RiftModel(RiftModel.getTexturedModelData().createModel());
+            BlockPos blockPos = BlockPos.ofFloored(rift.getClientCameraPosVec(client.getTickDelta()));
+            BOTI.renderRiftBoti(stack, riftModel, LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, blockPos), world.getLightLevel(LightType.SKY, blockPos)));
+            stack.pop();
+        }
+        BOTI.RIFT_RENDERING_QUEUE.clear();
     }
 }

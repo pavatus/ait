@@ -13,7 +13,6 @@ import dev.amble.ait.core.tardis.Tardis;
  * whatever it is that needs ticking to {@link Tardis}
  */
 public interface TardisTickable {
-
     default void tick(MinecraftServer server) { }
 
     @Environment(EnvType.CLIENT)

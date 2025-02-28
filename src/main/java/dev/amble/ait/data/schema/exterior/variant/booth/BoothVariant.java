@@ -53,6 +53,11 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
     }
 
     @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
+    }
+
+    @Override
     public boolean hasPortals() {
         return true;
     }
@@ -64,6 +69,6 @@ public abstract class BoothVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.25d;
+        return 2.7d;
     }
 }

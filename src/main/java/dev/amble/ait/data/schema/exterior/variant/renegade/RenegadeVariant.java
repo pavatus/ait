@@ -16,7 +16,6 @@ import dev.amble.ait.registry.impl.door.DoorRegistry;
 // a useful class for creating tardim variants as they all have the same filepath you know
 public abstract class RenegadeVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/renegade/renegade_";
-
     protected RenegadeVariant(String name) {
         super(RenegadeCategory.REFERENCE, AITMod.id("exterior/renegade/" + name),
                 new Loyalty(Loyalty.Type.PILOT));
@@ -54,11 +53,16 @@ public abstract class RenegadeVariant extends ExteriorVariantSchema {
 
     @Override
     public double portalHeight() {
-        return 2.3d;
+        return 2.8d;
     }
 
     @Override
     public double portalWidth() {
         return 1d;
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
     }
 }

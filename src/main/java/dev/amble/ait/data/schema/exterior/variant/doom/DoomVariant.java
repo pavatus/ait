@@ -1,6 +1,7 @@
 package dev.amble.ait.data.schema.exterior.variant.doom;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
@@ -32,5 +33,10 @@ public class DoomVariant extends ExteriorVariantSchema {
     @Override
     public boolean hasPortals() {
         return false;
+    }
+
+    @Override
+    public Vec3d seatTranslations() {
+        return new Vec3d(0.5, 1, 0.5);
     }
 }

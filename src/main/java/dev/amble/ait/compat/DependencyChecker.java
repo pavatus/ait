@@ -9,6 +9,7 @@ public class DependencyChecker {
 
     private static final boolean HAS_PORTALS = doesModExist("imm_ptl_core");
     private static final boolean HAS_IRIS = doesModExist("iris");
+    private static final boolean HAS_SODIUM = doesModExist("sodium");
     private static final boolean HAS_GRAVITY = doesModExist("gravity_changer_q");
 
     private static Boolean NVIDIA_CARD;
@@ -19,6 +20,10 @@ public class DependencyChecker {
 
     public static boolean hasPortals() {
         return HAS_PORTALS;
+    }
+
+    public static boolean hasSodium() {
+        return HAS_SODIUM;
     }
 
     public static boolean hasIris() {

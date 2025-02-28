@@ -18,6 +18,7 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
+import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.entities.ConsoleControlEntity;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
@@ -134,13 +135,13 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                 .filter(entity -> !(entity instanceof ConsoleControlEntity)) // Exclude control entities
                 .filter(entity -> !(entity instanceof ServerPlayerEntity && entity.isSpectator())) // Exclude spectators
                 .forEach(entity -> {
-                    // Calculate the motion vector away from the door
 
                     DirectedBlockPos directed = tardis.getDesktop().getDoorPos();
-                    BlockPos pos = directed.getPos();
+                    Vec3d pos = new Vec3d(directed.getPos().getX(), directed.getPos().getY(),
+                            directed.getPos().getZ()).offset(directed.toMinecraftDirection(), -0.5f);
 
-                    Vec3d motion = pos
-                            .toCenterPos().subtract(entity.getPos()).normalize().multiply(0.05);
+                    float suckValue = tardis.travel().position().getDimension().equals(AITDimensions.SPACE) ? 0.8f: 0.05f;
+                    Vec3d motion = pos.subtract(entity.getPos()).normalize().multiply(suckValue);
 
                     // Apply the motion to the entity
                     entity.setVelocity(entity.getVelocity().add(motion));
@@ -155,8 +156,8 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         if (directed == null)
             return false;
 
-        return !tardis.travel().isLanded() && this.isOpen()
-                && !tardis.areShieldsActive() && !tardis.travel().autopilot();
+        return tardis.travel().position().getDimension().equals(AITDimensions.SPACE) && this.isOpen() && !tardis.areShieldsActive()
+                || (!tardis.travel().isLanded() && this.isOpen() && !tardis.areShieldsActive() && !tardis.travel().autopilot());
     }
 
     public boolean isRightOpen() {
