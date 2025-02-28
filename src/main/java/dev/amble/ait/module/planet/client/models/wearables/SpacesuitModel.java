@@ -59,14 +59,14 @@ public class SpacesuitModel extends EntityModel<LivingEntity> {
         ModelPartData RightLeg = bone.addChild("RightLeg", ModelPartBuilder.create(), ModelTransform.pivot(-1.9F, -12.0F, 0.0F));
 
         ModelPartData right_leg_pant = RightLeg.addChild("right_leg_pant", ModelPartBuilder.create().uv(50, 17).cuboid(-3.9F, -4.75F, -2.0F, 4.0F, 8.0F, 4.0F, new Dilation(0.25F))
-                .uv(58, 0).cuboid(-3.9F, -5.0F, -2.0F, 4.0F, 8.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(1.9F, 4.75F, 0.0F));
+                .uv(58, 0).cuboid(-3.9F, -5.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(1.9F, 4.75F, 0.0F));
 
         ModelPartData RightFoot = RightLeg.addChild("RightFoot", ModelPartBuilder.create().uv(75, 0).cuboid(-3.9F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(0.25F))
                 .uv(54, 34).cuboid(-3.9F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(0.5F)), ModelTransform.pivot(1.9F, 11.75F, 0.0F));
 
         ModelPartData LeftLeg = bone.addChild("LeftLeg", ModelPartBuilder.create(), ModelTransform.pivot(1.9F, -12.125F, 0.0F));
 
-        ModelPartData left_leg_pant = LeftLeg.addChild("left_leg_pant", ModelPartBuilder.create().uv(58, 0).mirrored().cuboid(-0.1F, -12.25F, -2.0F, 4.0F, 8.0F, 4.0F, new Dilation(0.0F)).mirrored(false)
+        ModelPartData left_leg_pant = LeftLeg.addChild("left_leg_pant", ModelPartBuilder.create().uv(58, 0).mirrored().cuboid(-0.1F, -12.25F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)).mirrored(false)
                 .uv(50, 17).mirrored().cuboid(-0.1F, -12.0F, -2.0F, 4.0F, 8.0F, 4.0F, new Dilation(0.25F)).mirrored(false), ModelTransform.pivot(-1.9F, 12.125F, 0.0F));
 
         ModelPartData LeftFoot = LeftLeg.addChild("LeftFoot", ModelPartBuilder.create().uv(75, 0).mirrored().cuboid(-0.1F, -4.0F, -2.0F, 4.0F, 4.0F, 4.0F, new Dilation(0.25F)).mirrored(false)

@@ -564,7 +564,7 @@ public class AITModClient implements ClientModInitializer {
                     pos.getY() - context.camera().getPos().getY(), pos.getZ() - context.camera().getPos().getZ());
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
             stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rift.getBodyYaw()));
-            stack.translate(0, -0.5f, 0.5);
+            stack.translate(0, 1f, 0);
             RiftModel riftModel = new RiftModel(RiftModel.getTexturedModelData().createModel());
             BlockPos blockPos = BlockPos.ofFloored(rift.getClientCameraPosVec(client.getTickDelta()));
             BOTI.renderRiftBoti(stack, riftModel, LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, blockPos), world.getLightLevel(LightType.SKY, blockPos)));

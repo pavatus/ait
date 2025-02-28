@@ -53,6 +53,7 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
             Blueprint blueprint = this.getBlueprint().get();
             if (blueprint.tryAdd(hand)) {
                 // world.playSound(null, this.getPos(), AITSounds.DING, SoundCategory.BLOCKS, 1, 1);
+                //hand.decrement(1);
                 this.syncChanges();
 
                 if (blueprint.isComplete()) {

@@ -26,13 +26,10 @@ import dev.amble.ait.data.properties.bool.BoolValue;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class OvergrownHandler extends KeyedTardisComponent implements TardisTickable {
-
     private static final BoolProperty IS_OVERGROWN_PROPERTY = new BoolProperty("is_overgrown", false);
     private final BoolValue overgrown = IS_OVERGROWN_PROPERTY.create(this);
-
     @Exclude
     private static final int TIME_TO_OVERGROW = 24000;
-
     private int ticks = 24000;
     private boolean ticking = false;
     private int soundCooldown = 0;
@@ -47,7 +44,7 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
             if (stack.getItem() instanceof ShearsItem) {
                 player.swingHand(Hand.MAIN_HAND);
                 tardis.overgrown().removeVegetation();
-                stack.damage(1, player, (p) -> p.sendToolBreakStatus(Hand.MAIN_HAND));
+                stack.damage(1, player, p -> p.sendToolBreakStatus(Hand.MAIN_HAND));
 
                 TardisCriterions.VEGETATION.trigger(player);
                 return DoorHandler.InteractionResult.BANG;
@@ -72,7 +69,6 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
 
     public void removeVegetation() {
         overgrown.set(false);
-
         this.ticks = 0;
         this.ticking = false;
         this.soundCooldown = 0;
@@ -93,6 +89,9 @@ public class OvergrownHandler extends KeyedTardisComponent implements TardisTick
 
     @Override
     public void tick(MinecraftServer server) {
+
+        if (server.getTicks() % 20 != 0) return;
+
         Tardis tardis = this.tardis();
 
         if (!tardis.fuel().hasPower()) {
