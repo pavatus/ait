@@ -44,6 +44,7 @@ public class EngineOverload extends Control {
         }
 
         runDumpingArtronSequence(player, () -> {
+            world.playSound(null, player.getBlockPos(), AITSounds.ENGINE_OVERLOAD, SoundCategory.BLOCKS, 1.0F, 1.0F);
             world.getServer().execute(() -> {
                 tardis.travel().decreaseFlightTime(999999999);
                 tardis.travel().handbrake(false);
@@ -148,6 +149,6 @@ public class EngineOverload extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.ENGINE_OVERLOAD;
+        return AITSounds.BWEEP;
     }
 }
