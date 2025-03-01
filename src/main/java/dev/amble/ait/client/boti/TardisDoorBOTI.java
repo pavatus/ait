@@ -26,7 +26,7 @@ import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 
 public class TardisDoorBOTI extends BOTI {
-    public static void renderInteriorDoorBoti(Tardis tardis1, DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
+    public static void renderInteriorDoorBoti(Tardis tardis, DoorBlockEntity door, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
         if (!variant.parent().hasPortals()) return;
 
         if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
@@ -34,8 +34,6 @@ public class TardisDoorBOTI extends BOTI {
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
-
-        Tardis tardis = tardis1;
 
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));

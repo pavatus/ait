@@ -42,6 +42,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
             int light, int overlay) {
+        if (entity.getWorld() == null) return;
         Profiler profiler = entity.getWorld().getProfiler();
         profiler.push("door");
 

@@ -489,7 +489,8 @@ public class AITModClient implements ClientModInitializer {
             int light = world.getLightLevel(pos);
             if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth()) {
                 light = LightmapTextureManager.pack(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos));
-                TardisExteriorBOTI.renderExteriorBoti(exterior, variant, stack,
+                TardisExteriorBOTI boti = new TardisExteriorBOTI();
+                boti.renderExteriorBoti(exterior, variant, stack,
                         AITMod.id("textures/environment/tardis_sky.png"), model,
                         BotiPortalModel.getTexturedModelData().createModel(), light);
             }

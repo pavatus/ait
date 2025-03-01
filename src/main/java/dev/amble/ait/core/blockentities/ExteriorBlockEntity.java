@@ -56,6 +56,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     private ExteriorAnimation animation;
     private ExteriorVariantSchema variant;
     private UUID seatEntityUUID = null;
+    public long lastRequestTime = 0;
 
     public ExteriorBlockEntity(BlockPos pos, BlockState state) {
         super(AITBlockEntityTypes.EXTERIOR_BLOCK_ENTITY_TYPE, pos, state);
@@ -64,7 +65,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
     public ExteriorBlockEntity(BlockPos pos, BlockState state, Tardis tardis) {
         this(pos, state);
         this.link(tardis);
-
     }
 
     public void useOn(ServerWorld world, boolean sneaking, PlayerEntity player) {
@@ -156,6 +156,9 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         if (!tardis.travel().isLanded())
             return;
+
+        tardis.stats().setTargetWorld(this,
+                tardis.asServer().getInteriorWorld().getRegistryKey(), tardis.getDesktop().getDoorPos().getPos(), true);
 
         tardis.door().interact((ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
     }
@@ -328,5 +331,4 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         this.getWorld().setBlockState(pos, blockState.with(ExteriorBlock.LEVEL_4, Math.round(this.getAlpha() * 4)));
     }
-
 }

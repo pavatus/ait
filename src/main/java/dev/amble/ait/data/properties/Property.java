@@ -14,6 +14,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
@@ -72,6 +73,9 @@ public class Property<T> {
 
         public static final Type<DirectedGlobalPos> DIRECTED_GLOBAL_POS = new Type<>(DirectedGlobalPos.class,
                 (buf, pos) -> pos.write(buf), DirectedGlobalPos::read);
+
+        public static final Type<BlockPos> BLOCK_POS = new Type<>(BlockPos.class, PacketByteBuf::writeBlockPos,
+                PacketByteBuf::readBlockPos);
         public static final Type<CachedDirectedGlobalPos> CDIRECTED_GLOBAL_POS = new Type<>(
                 CachedDirectedGlobalPos.class, (buf, pos) -> pos.write(buf), CachedDirectedGlobalPos::read);
         public static final Type<Identifier> IDENTIFIER = new Type<>(Identifier.class, PacketByteBuf::writeIdentifier,
