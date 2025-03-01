@@ -23,15 +23,18 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.client.models.exteriors.ExteriorModel;
 import dev.amble.ait.client.renderers.AITRenderLayers;
 import dev.amble.ait.compat.DependencyChecker;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
+import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
 import dev.amble.ait.core.tardis.util.network.s2c.BOTIDataS2CPacket;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
+import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class TardisExteriorBOTI extends BOTI {
     private float lastRenderTick = -1;
@@ -145,6 +148,22 @@ public class TardisExteriorBOTI extends BOTI {
                     exterior.tardis().get().alarm().enabled().get() ? !exterior.tardis().get().fuel().hasPower() ? 0.01f : 0.3f : 1f, 1f, true);
         botiProvider.draw();
         stack.pop();
+
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+
+        ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
+        botiProvider.draw();
+        stack.pop();
+
+        if (variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
+            BiomeHandler handler = exterior.tardis().get().handler(TardisComponent.Id.BIOME);
+            Identifier biomeTexture = handler.getBiomeKey().get(variant.overrides());
+            ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack,
+                    botiProvider.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)),
+                    light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
+            botiProvider.draw();
+        }
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
