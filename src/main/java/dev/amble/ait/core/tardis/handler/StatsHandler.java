@@ -533,17 +533,17 @@ public class StatsHandler extends KeyedTardisComponent {
 
                 @Override
                 public boolean useAmbientOcclusion() {
-                    return true;
+                    return false;
                 }
 
                 @Override
                 public boolean hasDepth() {
-                    return true;
+                    return false;
                 }
 
                 @Override
                 public boolean isSideLit() {
-                    return true;
+                    return false;
                 }
 
                 @Override
@@ -554,7 +554,7 @@ public class StatsHandler extends KeyedTardisComponent {
                 @Override
                 public Sprite getParticleSprite() {
                     return mc.getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
-                            .apply(new Identifier("minecraft", "stone"));
+                            .apply(new Identifier("minecraft:block/stone"));
                 }
 
                 @Override

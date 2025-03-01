@@ -14,6 +14,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -30,11 +31,13 @@ import dev.amble.ait.compat.DependencyChecker;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
+import dev.amble.ait.core.tardis.handler.StatsHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
 import dev.amble.ait.core.tardis.util.network.s2c.BOTIDataS2CPacket;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+
 
 public class TardisExteriorBOTI extends BOTI {
     private float lastRenderTick = -1;
@@ -44,6 +47,10 @@ public class TardisExteriorBOTI extends BOTI {
 
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
+
+        Tardis tardis = exterior.tardis().get();
+
+        if (tardis == null) return;
 
         long currentTime = MinecraftClient.getInstance().getRenderTime();
         if (MinecraftClient.getInstance().getTickDelta() == lastRenderTick) {
@@ -101,22 +108,26 @@ public class TardisExteriorBOTI extends BOTI {
         if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
             MatrixStack matrices = new MatrixStack();
             stack.push();
+            stack.translate(2.5f, 1, -0.25f);
             stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-            stack.translate(-4.5, -1.85, 1.75f);
-            if (exterior.tardis().get().stats().targetPos() != null && exterior.tardis().get().stats().getTargetWorld() != null) {
-                if (exterior.tardis().get().stats().chunkModel != null) {
-                    BakedModel chunkMesh = exterior.tardis().get().stats().chunkModel;
+            StatsHandler stats = tardis.stats();
+            BlockPos targetPos = stats.targetPos();
+            RegistryKey<World> targetWorld = stats.getTargetWorld();
+            BakedModel chunkMesh = stats.chunkModel;
+            if (targetPos != null && targetWorld != null) {
+                /*if (chunkMesh != null) {
                     VertexConsumer chunkConsumer = botiProvider.getBuffer(RenderLayer.getCutout());
-                    /*MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer()
-                            .render(stack.peek(),
-                                    chunkConsumer,
-                                    null,
-                                    chunkMesh, 1, 1, 1, light,
-                                    OverlayTexture.DEFAULT_UV);*/
-                }
+                    MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer()
+                        .render(stack.peek(),
+                                chunkConsumer,
+                                null,
+                                chunkMesh, 1, 1, 1, light,
+                                OverlayTexture.DEFAULT_UV);
+                    botiProvider.draw(RenderLayer.getCutout());
+                }*/
 
-                for (Map.Entry<BlockPos, BlockEntity> entry : exterior.tardis().get().stats().blockEntities.entrySet()) {
+                for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
                     BlockPos offsetPos = entry.getKey();
                     BlockEntity be = entry.getValue();
                     BlockEntityRenderer<BlockEntity> renderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(be);
@@ -125,7 +136,8 @@ public class TardisExteriorBOTI extends BOTI {
                         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
                         stack.translate(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
                         be.setWorld(MinecraftClient.getInstance().world);
-                        renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack, botiProvider, light, OverlayTexture.DEFAULT_UV);
+                        renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack,
+                                botiProvider, light, OverlayTexture.DEFAULT_UV);
                         botiProvider.draw();
                         stack.pop();
                         //System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
