@@ -32,7 +32,6 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.StatsHandler;
-import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
 import dev.amble.ait.core.tardis.util.network.s2c.BOTIDataS2CPacket;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
@@ -71,7 +70,7 @@ public class TardisExteriorBOTI extends BOTI {
         BOTI_HANDLER.setupFramebuffer();
 
         Vec3d skyColor = MinecraftClient.getInstance().world.getSkyColor(MinecraftClient.getInstance().player.getPos(), MinecraftClient.getInstance().getTickDelta());
-        BOTI.setFramebufferColor(BOTI_HANDLER.afbo, (float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 0);
+        BOTI.setFramebufferColor(BOTI_HANDLER.afbo, (float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 1);
 
         BOTI.copyFramebuffer(MinecraftClient.getInstance().getFramebuffer(), BOTI_HANDLER.afbo);
 
@@ -89,11 +88,7 @@ public class TardisExteriorBOTI extends BOTI {
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         stack.translate(vec.x, vec.y, vec.z);
         stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight(), 1f);
-
-        if (exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED)
-            mask.render(stack, botiProvider.getBuffer(RenderLayer.getDebugFilledBox()), light, OverlayTexture.DEFAULT_UV, (float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 1);
-        else
-            mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+        mask.render(stack, botiProvider.getBuffer(AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR ? RenderLayer.getDebugFilledBox() : RenderLayer.getEndGateway()), light, OverlayTexture.DEFAULT_UV, (float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 1);
         botiProvider.draw();
         stack.pop();
 
