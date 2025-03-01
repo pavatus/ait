@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
+import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.sounds.flight.FlightSound;
 import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
@@ -450,51 +451,71 @@ public class StatsHandler extends KeyedTardisComponent {
         int baseY = targetPos.get().getY() & ~15;
         BlockState[][][] sectionStates = new BlockState[16][16][16];
         this.blockEntities.clear();
+
+        // First pass - load block states
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
-                    sectionStates[x][y][z] = getBlockStateFromChunkNBT(chunkData, pos);
+                    BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
+                    sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
+
                     String key = x + "_" + y + "_" + z;
                     if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
-                        NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
-                        BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
-                        if (blockEntity != null)
-                            this.blockEntities.put(pos.subtract(chunkPos.getCenterAtY(pos.getY())), blockEntity);
+                        try {
+                            NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
+                            BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
+                            if (blockEntity != null) {
+                                if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
+                                exteriorBlockEntity.tardis() != null) {
+                                    abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
+                                }
+                                BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
+                                this.blockEntities.put(relativePos, blockEntity);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
+                        }
                     }
                 }
             }
         }
 
+        // Second pass - generate quads
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     BlockState state = sectionStates[x][y][z];
-                    if (state != null && !state.isAir() && !state.hasBlockEntity()) { // Skip block entities here
-                        BakedModel model = blockRenderManager.getModel(state);
-                        BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
-                        List<BakedQuad> blockQuads = new ArrayList<>();
+                    if (state != null && !state.isAir() && !state.hasBlockEntity()) {
+                        try {
+                            BakedModel model = blockRenderManager.getModel(state);
+                            if (model != null) {
+                                List<BakedQuad> blockQuads = new ArrayList<>();
 
-                        for (Direction side : Direction.values()) {
-                            int adjX = x + side.getOffsetX();
-                            int adjY = y + side.getOffsetY();
-                            int adjZ = z + side.getOffsetZ();
-                            boolean occluded = false;
+                                // Add general quads
+                                List<BakedQuad> generalQuads = model.getQuads(state, null, Random.create());
+                                if (generalQuads != null) {
+                                    blockQuads.addAll(generalQuads);
+                                }
 
-                            if (adjX >= 0 && adjX < 16 && adjY >= 0 && adjY < 16 && adjZ >= 0 && adjZ < 16) {
-                                BlockState adjState = sectionStates[adjX][adjY][adjZ];
-                                occluded = adjState != null && adjState.isSolidBlock(mc.world, pos.offset(side.getOpposite()));
+                                // Add side quads
+                                for (Direction side : Direction.values()) {
+                                    List<BakedQuad> sideQuads = model.getQuads(state, side, Random.create());
+                                    if (sideQuads != null) {
+                                        blockQuads.addAll(sideQuads);
+                                    }
+                                }
+
+                                // Translate and add valid quads
+                                if (!blockQuads.isEmpty()) {
+                                    List<BakedQuad> translatedQuads = translateQuads(blockQuads, x, y, z);
+                                    if (!translatedQuads.isEmpty()) {
+                                        quads.addAll(translatedQuads);
+                                    }
+                                }
                             }
-
-                            if (!occluded) {
-                                List<BakedQuad> sideQuads = model.getQuads(state, side, Random.create());
-                                blockQuads.addAll(sideQuads);
-                            }
-                        }
-
-                        List<BakedQuad> translatedQuads = translateQuads(blockQuads, x, y, z);
-                        if (!translatedQuads.isEmpty()) {
-                            quads.addAll(translatedQuads);
+                        } catch (Exception e) {
+                            System.out.println("Failed to generate quads for block at " + x + "," + y + "," + z + ": " + e.getMessage());
                         }
                     }
                 }
@@ -550,19 +571,45 @@ public class StatsHandler extends KeyedTardisComponent {
     }
 
     private List<BakedQuad> translateQuads(List<BakedQuad> quads, int xOffset, int yOffset, int zOffset) {
-        List<BakedQuad> translated = new ArrayList<>();
-        for (BakedQuad quad : quads) {
-            int[] vertexData = quad.getVertexData().clone();
-            for (int i = 0; i < vertexData.length; i += 8) {
-                float x = Float.intBitsToFloat(vertexData[i]) + xOffset;
-                float y = Float.intBitsToFloat(vertexData[i + 1]) + yOffset;
-                float z = Float.intBitsToFloat(vertexData[i + 2]) + zOffset;
-                vertexData[i] = Float.floatToRawIntBits(x);
-                vertexData[i + 1] = Float.floatToRawIntBits(y);
-                vertexData[i + 2] = Float.floatToRawIntBits(z);
-            }
-            translated.add(new BakedQuad(vertexData, quad.getColorIndex(), quad.getFace(), quad.getSprite(), quad.hasShade()));
+        if (quads == null || quads.isEmpty()) {
+            return Collections.emptyList();
         }
+
+        List<BakedQuad> translated = new ArrayList<>(quads.size());
+
+        for (BakedQuad quad : quads) {
+            if (quad == null) continue;
+
+            int[] originalData = quad.getVertexData();
+            if (originalData == null || originalData.length < 32) continue; // Each vertex has 8 elements, 4 vertices per quad
+
+            int[] vertexData = originalData.clone();
+            try {
+                // Process all 4 vertices of the quad
+                for (int v = 0; v < 4; v++) {
+                    int baseIndex = v * 8;
+                    // Translate X, Y, Z coordinates
+                    float x = Float.intBitsToFloat(vertexData[baseIndex]) + xOffset;
+                    float y = Float.intBitsToFloat(vertexData[baseIndex + 1]) + yOffset;
+                    float z = Float.intBitsToFloat(vertexData[baseIndex + 2]) + zOffset;
+
+                    vertexData[baseIndex] = Float.floatToRawIntBits(x);
+                    vertexData[baseIndex + 1] = Float.floatToRawIntBits(y);
+                    vertexData[baseIndex + 2] = Float.floatToRawIntBits(z);
+                }
+
+                translated.add(new BakedQuad(
+                        vertexData,
+                        quad.getColorIndex(),
+                        quad.getFace(),
+                        quad.getSprite(),
+                        quad.hasShade()
+                ));
+            } catch (Exception e) {
+                AITMod.LOGGER.error("Failed to translate quad: {}", e.getMessage());
+            }
+        }
+
         return translated;
     }
 

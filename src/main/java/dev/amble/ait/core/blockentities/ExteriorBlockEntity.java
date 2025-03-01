@@ -157,7 +157,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (!tardis.travel().isLanded())
             return;
 
-        tardis.stats().setTargetWorld(this,
+
+        if (tardis.stats().getTargetWorld() != null &&
+                !tardis.stats().getTargetWorld().equals
+                        (tardis.asServer().getInteriorWorld().getRegistryKey()))
+            tardis.stats().setTargetWorld(this,
                 tardis.asServer().getInteriorWorld().getRegistryKey(), tardis.getDesktop().getDoorPos().getPos(), true);
 
         tardis.door().interact((ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);

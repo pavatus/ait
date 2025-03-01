@@ -28,7 +28,6 @@ import dev.amble.ait.core.tardis.handler.DoorHandler;
 import dev.amble.ait.core.tardis.handler.OvergrownHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
@@ -42,13 +41,13 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
     @Override
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
             int light, int overlay) {
-        if (entity.getWorld() == null) return;
+        if (entity.tardis() == null && entity.getWorld() == null) return;
         Profiler profiler = entity.getWorld().getProfiler();
         profiler.push("door");
 
         profiler.push("render");
 
-        if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
+        /*if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
             BlockState blockState = entity.getCachedState();
             float k = blockState.get(DoorBlock.FACING).asRotation();
             matrices.push();
@@ -59,7 +58,7 @@ public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRende
             matrices.pop();
             profiler.pop();
             return;
-        }
+        }*/
 
         if (!entity.isLinked())
             return;

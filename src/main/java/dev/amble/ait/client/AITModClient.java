@@ -3,6 +3,7 @@ package dev.amble.ait.client;
 import static dev.amble.ait.AITMod.*;
 import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -474,7 +475,8 @@ public class AITModClient implements ClientModInitializer {
         if (client.player == null || client.world == null) return;
         ClientWorld world = client.world;
         MatrixStack stack = context.matrixStack();
-        for (ExteriorBlockEntity exterior : BOTI.EXTERIOR_RENDER_QUEUE) {
+        var exteriorQueue = new ArrayList<>(BOTI.EXTERIOR_RENDER_QUEUE);
+        for (ExteriorBlockEntity exterior : exteriorQueue) {
             if (exterior == null || exterior.tardis() == null || exterior.tardis().isEmpty()) continue;
             Tardis tardis = exterior.tardis().get();
             if (tardis == null) return;

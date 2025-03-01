@@ -45,6 +45,18 @@ public class TardisExteriorBOTI extends BOTI {
         if (MinecraftClient.getInstance().world == null
                 || MinecraftClient.getInstance().player == null) return;
 
+        long currentTime = MinecraftClient.getInstance().getRenderTime();
+        if (MinecraftClient.getInstance().getTickDelta() == lastRenderTick) {
+            return;
+        }
+
+        lastRenderTick = MinecraftClient.getInstance().getTickDelta();
+
+        if (currentTime - exterior.lastRequestTime >= 20) {
+            updateChunkModel(exterior);
+            exterior.lastRequestTime = currentTime;
+        }
+
         stack.push();
 
         MinecraftClient.getInstance().getFramebuffer().endWrite();
@@ -72,7 +84,7 @@ public class TardisExteriorBOTI extends BOTI {
         stack.scale((float) variant.parent().portalWidth(), (float) variant.parent().portalHeight(), 1f);
 
         if (exterior.tardis().get().travel().getState() == TravelHandlerBase.State.LANDED)
-            mask.render(stack, botiProvider.getBuffer(RenderLayer.getEndGateway()), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+            mask.render(stack, botiProvider.getBuffer(RenderLayer.getDebugFilledBox()), light, OverlayTexture.DEFAULT_UV, (float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 1);
         else
             mask.render(stack, botiProvider.getBuffer(RenderLayer.getEntityTranslucentCull(frameTex)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         botiProvider.draw();
@@ -86,32 +98,22 @@ public class TardisExteriorBOTI extends BOTI {
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
-        long currentTime = MinecraftClient.getInstance().getRenderTime();
-        if (MinecraftClient.getInstance().getTickDelta() == lastRenderTick) {
-            stack.pop();
-            return;
-        }
-
-        lastRenderTick = MinecraftClient.getInstance().getTickDelta();
-
-        if (currentTime - exterior.lastRequestTime >= 20) {
-            updateChunkModel(exterior);
-            exterior.lastRequestTime = currentTime;
-        }
-
         if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
+            MatrixStack matrices = new MatrixStack();
             stack.push();
-            stack.scale(1f, -1f, 1f);
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+            stack.translate(-4.5, -1.85, 1.75f);
             if (exterior.tardis().get().stats().targetPos() != null && exterior.tardis().get().stats().getTargetWorld() != null) {
                 if (exterior.tardis().get().stats().chunkModel != null) {
                     BakedModel chunkMesh = exterior.tardis().get().stats().chunkModel;
                     VertexConsumer chunkConsumer = botiProvider.getBuffer(RenderLayer.getCutout());
-                    MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer()
+                    /*MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer()
                             .render(stack.peek(),
                                     chunkConsumer,
                                     null,
                                     chunkMesh, 1, 1, 1, light,
-                                    OverlayTexture.DEFAULT_UV);
+                                    OverlayTexture.DEFAULT_UV);*/
                 }
 
                 for (Map.Entry<BlockPos, BlockEntity> entry : exterior.tardis().get().stats().blockEntities.entrySet()) {
@@ -120,34 +122,20 @@ public class TardisExteriorBOTI extends BOTI {
                     BlockEntityRenderer<BlockEntity> renderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(be);
                     if (renderer != null) {
                         stack.push();
-                        stack.translate(offsetPos.getX() - 8, offsetPos.getY() - 8, offsetPos.getZ() - 8);
+                        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
+                        stack.translate(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
+                        be.setWorld(MinecraftClient.getInstance().world);
                         renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack, botiProvider, light, OverlayTexture.DEFAULT_UV);
-                        stack.pop();                    } else {
-                        System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
+                        botiProvider.draw();
+                        stack.pop();
+                        //System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
+                    } else {
+                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().render(be, MinecraftClient.getInstance().getTickDelta(), matrices, botiProvider);
                     }
                 }
             }
-            botiProvider.drawCurrentLayer();
             stack.pop();
         }
-
-        stack.push();
-        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-
-        ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack, botiProvider.getBuffer(AITRenderLayers.getBotiInterior(variant.texture())), light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
-        botiProvider.draw();
-        stack.pop();
-
-        stack.push();
-        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-        if (variant.emission() != null)
-            ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack, botiProvider.getBuffer(DependencyChecker.hasIris() ? AITRenderLayers.tardisEmissiveCullZOffset(variant.emission(), true) : AITRenderLayers.getBeaconBeam(variant.emission(), true)), 0xf000f0,
-                    OverlayTexture.DEFAULT_UV, exterior.tardis().get().alarm().enabled().get() ?
-                            !exterior.tardis().get().fuel().hasPower() ? 0.25f : 1f : 1f,
-                    exterior.tardis().get().alarm().enabled().get() ? !exterior.tardis().get().fuel().hasPower() ? 0.01f : 0.3f : 1f,
-                    exterior.tardis().get().alarm().enabled().get() ? !exterior.tardis().get().fuel().hasPower() ? 0.01f : 0.3f : 1f, 1f, true);
-        botiProvider.draw();
-        stack.pop();
 
         stack.push();
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
@@ -162,10 +150,22 @@ public class TardisExteriorBOTI extends BOTI {
         if (variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler handler = exterior.tardis().get().handler(TardisComponent.Id.BIOME);
             Identifier biomeTexture = handler.getBiomeKey().get(variant.overrides());
-            ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack,
-                    botiProvider.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)),
-                    light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
+            if (biomeTexture != null)
+                ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack,
+                        botiProvider.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)),
+                        light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
         }
+        botiProvider.draw();
+        stack.pop();
+
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+        if (variant.emission() != null)
+            ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack, botiProvider.getBuffer(DependencyChecker.hasIris() ? AITRenderLayers.tardisEmissiveCullZOffset(variant.emission(), true) : AITRenderLayers.getBeaconBeam(variant.emission(), true)), 0xf000f0,
+                    OverlayTexture.DEFAULT_UV, exterior.tardis().get().alarm().enabled().get() ?
+                            !exterior.tardis().get().fuel().hasPower() ? 0.25f : 1f : 1f,
+                    exterior.tardis().get().alarm().enabled().get() ? !exterior.tardis().get().fuel().hasPower() ? 0.01f : 0.3f : 1f,
+                    exterior.tardis().get().alarm().enabled().get() ? !exterior.tardis().get().fuel().hasPower() ? 0.01f : 0.3f : 1f, 1f, true);
         botiProvider.draw();
         stack.pop();
 
