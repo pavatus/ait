@@ -156,14 +156,18 @@ public class TardisExteriorBOTI extends BOTI {
         botiProvider.draw();
         stack.pop();
 
+        stack.push();
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+
         if (variant != ClientExteriorVariantRegistry.CORAL_GROWTH) {
             BiomeHandler handler = exterior.tardis().get().handler(TardisComponent.Id.BIOME);
             Identifier biomeTexture = handler.getBiomeKey().get(variant.overrides());
             ((ExteriorModel) frame).renderDoors(exterior, frame.getPart(), stack,
                     botiProvider.getBuffer(AITRenderLayers.getEntityCutoutNoCullZOffset(biomeTexture)),
                     light, OverlayTexture.DEFAULT_UV, 1, 1F, 1.0F, 1.0F, true);
-            botiProvider.draw();
         }
+        botiProvider.draw();
+        stack.pop();
 
         MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
 
