@@ -1,6 +1,6 @@
 package dev.amble.ait.client.boti;
 
-import static dev.amble.ait.client.renderers.entities.RiftEntityRenderer.CIRCLE_TEXTURE;
+import static dev.amble.ait.client.renderers.entities.RiftEntityRenderer.RIFT_TEXTURE;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
@@ -46,7 +46,7 @@ public class RiftBOTI extends BOTI {
         stack.push();
         stack.translate(0, -0.9, 0.05);
         stack.scale(1, 1, 1);
-        frame.render(stack, portalProvider.getBuffer(RenderLayer.getEntityTranslucentCull(CIRCLE_TEXTURE)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
+        frame.render(stack, portalProvider.getBuffer(RenderLayer.getEntityTranslucentCull(RIFT_TEXTURE)), 0xf000f0, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         portalProvider.draw();
         stack.pop();
         copyDepth(BOTI_HANDLER.afbo, MinecraftClient.getInstance().getFramebuffer());
@@ -61,7 +61,7 @@ public class RiftBOTI extends BOTI {
         //stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90));
         stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 50 * 360f));
         stack.translate(0, -1, 500);
-        VortexUtil util = new VortexUtil("war");
+        VortexUtil util = new VortexUtil("darkness");
         util.renderVortex(stack);
         portalProvider.draw();
         stack.pop();
