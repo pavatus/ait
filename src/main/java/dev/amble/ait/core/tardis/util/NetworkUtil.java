@@ -12,6 +12,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
@@ -34,9 +35,18 @@ import dev.amble.ait.core.tardis.util.network.s2c.BOTISyncS2CPacket;
 
 public class NetworkUtil {
     public static void init() {
+
         ServerPlayNetworking.registerGlobalReceiver(SyncPropertyC2SPacket.TYPE, SyncPropertyC2SPacket::handle);
-        ClientPlayNetworking.registerGlobalReceiver(BOTISyncS2CPacket.TYPE, BOTISyncS2CPacket::handle);
         ServerPlayNetworking.registerGlobalReceiver(BOTIChunkRequestC2SPacket.TYPE, BOTIChunkRequestC2SPacket::handle);
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            initClient();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static void initClient() {
+        ClientPlayNetworking.registerGlobalReceiver(BOTISyncS2CPacket.TYPE, BOTISyncS2CPacket::handle);
         ClientPlayNetworking.registerGlobalReceiver(BOTIDataS2CPacket.TYPE, BOTIDataS2CPacket::handle);
     }
 
@@ -67,9 +77,6 @@ public class NetworkUtil {
         }
     }
 
-    /**
-     * Gets players who have a linked item in their inventory
-     */
     public static Collection<ServerPlayerEntity> getLinkedPlayers(ServerTardis tardis) {
         List<ServerPlayerEntity> players = new ArrayList<>();
 
@@ -82,11 +89,6 @@ public class NetworkUtil {
         return players;
     }
 
-    /**
-     * TODO - this causes weird issues with the stacking, temporarily removed
-     * Returns whether the player has an item linked to this tardis in their
-     * inventory
-     */
     public static boolean hasLinkedItem(Tardis tardis, ServerPlayerEntity player) {
         for (ItemStack stack : player.getInventory().main) {
             if (stack.isEmpty())
