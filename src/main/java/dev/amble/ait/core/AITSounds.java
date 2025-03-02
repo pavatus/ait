@@ -40,6 +40,7 @@ public class AITSounds {
     public static final SoundEvent POLICE_BOX_DOOR_OPEN = register("tardis/police_box_door_open");
     public static final SoundEvent POLICE_BOX_DOOR_CLOSE = register("tardis/police_box_door_close");
     public static final SoundEvent TARDIS_BLING = register("tardis/bling");
+    public static final SoundEvent NAV_NOTIFICATION = register("tardis/nav_notification");
 
 
     public static final SoundEvent SIEGE_ENABLE = register("tardis/siege_enable");
@@ -58,7 +59,8 @@ public class AITSounds {
     //MASTER SOUNDS
     public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
     public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
-
+    //STABALIZE
+    public static final SoundEvent STABALIZE = register("tardis/stabalize_flight");
 
     // APPARATUS VIVI
     public static final SoundEvent MOODY = register("tardis/moody/moody");
