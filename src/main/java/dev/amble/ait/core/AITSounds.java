@@ -191,6 +191,7 @@ public class AITSounds {
     public static final SoundEvent RIFT3_AMBIENT = register("rift/ambient3");
     public static final SoundEvent RIFT_SUCCESS = register("rift/success");
     public static final SoundEvent RIFT_FAIL = register("rift/fail");
+    public static final SoundEvent RIFT_SONIC = register("rift/sonic_charge");
 
 
     // Fabricator
