@@ -41,6 +41,6 @@ public class ChameleonCircuit extends DurableSubSystem implements StructureHolde
     protected void onDisable() {
         super.onDisable();
 
-        this.tardis().getExterior().setType(CategoryRegistry.CAPSULE);
+        //this.tardis().getExterior().setType(CategoryRegistry.CAPSULE);
     }
 }

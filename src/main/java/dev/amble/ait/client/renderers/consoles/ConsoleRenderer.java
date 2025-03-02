@@ -12,11 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.World;
 
 import dev.amble.ait.client.models.consoles.ConsoleModel;
 import dev.amble.ait.client.models.items.HandlesModel;
-import dev.amble.ait.client.renderers.AITRenderLayers;
 import dev.amble.ait.client.util.ClientLightUtil;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.item.HandlesItem;
@@ -38,7 +36,9 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
     public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
             int light, int overlay) {
 
-        if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
+        if (entity.tardis() == null && entity.getWorld() == null) return;
+
+        /*if (entity.getWorld().getRegistryKey().equals(World.OVERWORLD)) {
             matrices.push();
             matrices.translate(0.5, 1.5, 0.5);
             matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180f));
@@ -52,7 +52,7 @@ public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntit
                     matrices, vertexConsumers, 0xf000f0, overlay, 1, 1, 1, 1);
             matrices.pop();
             return;
-        }
+        }*/
 
         if (!entity.isLinked())
             return;

@@ -12,20 +12,43 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.util.ServerLifecycleHooks;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.json.ModelOverrideList;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
+import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
+import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.sounds.flight.FlightSound;
 import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
 import dev.amble.ait.core.sounds.travel.TravelSound;
 import dev.amble.ait.core.sounds.travel.TravelSoundRegistry;
 import dev.amble.ait.core.sounds.travel.map.TravelSoundMap;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.core.tardis.util.network.s2c.BOTISyncS2CPacket;
 import dev.amble.ait.core.tardis.vortex.reference.VortexReference;
 import dev.amble.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import dev.amble.ait.core.util.Lazy;
@@ -63,6 +86,8 @@ public class StatsHandler extends KeyedTardisComponent {
     private static final DoubleProperty TARDIS_X_SCALE = new DoubleProperty("tardis_x_scale");
     private static final DoubleProperty TARDIS_Y_SCALE = new DoubleProperty("tardis_y_scale");
     private static final DoubleProperty TARDIS_Z_SCALE = new DoubleProperty("tardis_z_scale");
+    private static final Property<BlockPos> TARGET_POS = new Property<>(Property.Type.BLOCK_POS, "target_pos", BlockPos.ORIGIN);
+    private static final Property<RegistryKey<World>> TARGET_WORLD = new Property<>(Property.Type.WORLD_KEY, "target_world", World.OVERWORLD);
 
 
     private final Value<String> tardisName = NAME.create(this);
@@ -81,6 +106,8 @@ public class StatsHandler extends KeyedTardisComponent {
     private final DoubleValue tardis_x_scale = TARDIS_X_SCALE.create(this);
     private final DoubleValue tardis_y_scale = TARDIS_Y_SCALE.create(this);
     private final DoubleValue tardis_z_scale = TARDIS_Z_SCALE.create(this);
+    private final Value<BlockPos> targetPos = TARGET_POS.create(this);
+    private final Value<RegistryKey<World>> targetWorld = TARGET_WORLD.create(this);
 
 
 
@@ -90,6 +117,10 @@ public class StatsHandler extends KeyedTardisComponent {
     private Lazy<FlightSound> flightFxCache;
     @Exclude
     private Lazy<VortexReference> vortexFxCache;
+    @Exclude
+    public BakedModel chunkModel = null;
+    @Exclude
+    public Map<BlockPos, BlockEntity> blockEntities = new HashMap<>();
 
     public StatsHandler() {
         super(Id.STATS);
@@ -122,6 +153,8 @@ public class StatsHandler extends KeyedTardisComponent {
         tardis_x_scale.of(this, TARDIS_X_SCALE);
         tardis_y_scale.of(this, TARDIS_Y_SCALE);
         tardis_z_scale.of(this, TARDIS_Z_SCALE);
+        targetPos.of(this, TARGET_POS);
+        targetWorld.of(this, TARGET_WORLD);
 
         vortexId.addListener((id) -> {
             if (this.vortexFxCache != null)
@@ -385,4 +418,244 @@ public class StatsHandler extends KeyedTardisComponent {
         }
     }
 
+    public RegistryKey<World> getTargetWorld() {
+        return this.targetWorld.get();
+    }
+
+    public BlockPos targetPos() {
+        return this.targetPos.get();
+    }
+
+    public void setTargetWorld(ExteriorBlockEntity exteriorBlockEntity, RegistryKey<World> targetWorld, BlockPos targetPos, boolean markDirty) {
+        this.targetWorld.set(targetWorld);
+        this.targetPos.set(targetPos);
+        this.chunkModel = null;
+        if(this.blockEntities != null)
+            this.blockEntities.clear();
+        if (markDirty && exteriorBlockEntity.getWorld() != null && !exteriorBlockEntity.getWorld().isClient()) {
+            exteriorBlockEntity.getWorld().updateListeners(exteriorBlockEntity.getPos(), exteriorBlockEntity.getCachedState(), exteriorBlockEntity.getCachedState(), 3);
+            ServerLifecycleHooks.get().getPlayerManager().getPlayerList().forEach(player -> {
+                ServerPlayNetworking.send(player,
+                        new BOTISyncS2CPacket(exteriorBlockEntity.getPos(), targetWorld, targetPos));
+            });
+        }
+    }
+
+    public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity, NbtCompound chunkData) {
+        if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
+
+        MinecraftClient mc = MinecraftClient.getInstance();
+        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
+        List<BakedQuad> quads = new ArrayList<>();
+        ChunkPos chunkPos = new ChunkPos(targetPos.get());
+        int baseY = targetPos.get().getY() & ~15;
+        BlockState[][][] sectionStates = new BlockState[16][16][16];
+        this.blockEntities.clear();
+
+        // First pass - load block states
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+                    BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
+                    sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
+
+                    String key = x + "_" + y + "_" + z;
+                    if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
+                        try {
+                            NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
+                            BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
+                            if (blockEntity != null) {
+                                if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
+                                exteriorBlockEntity.tardis() != null) {
+                                    abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
+                                }
+                                BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
+                                this.blockEntities.put(relativePos, blockEntity);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Second pass - generate quads
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    BlockState state = sectionStates[x][y][z];
+                    if (state != null && !state.isAir() && !state.hasBlockEntity()) {
+                        try {
+                            BakedModel model = blockRenderManager.getModel(state);
+                            if (model != null) {
+                                List<BakedQuad> blockQuads = new ArrayList<>();
+
+                                // Add general quads
+                                List<BakedQuad> generalQuads = model.getQuads(state, null, Random.create());
+                                if (generalQuads != null) {
+                                    blockQuads.addAll(generalQuads);
+                                }
+
+                                // Add side quads
+                                for (Direction side : Direction.values()) {
+                                    List<BakedQuad> sideQuads = model.getQuads(state, side, Random.create());
+                                    if (sideQuads != null) {
+                                        blockQuads.addAll(sideQuads);
+                                    }
+                                }
+
+                                // Translate and add valid quads
+                                if (!blockQuads.isEmpty()) {
+                                    List<BakedQuad> translatedQuads = translateQuads(blockQuads, x, y, z);
+                                    if (!translatedQuads.isEmpty()) {
+                                        quads.addAll(translatedQuads);
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Failed to generate quads for block at " + x + "," + y + "," + z + ": " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (quads.isEmpty() && blockEntities.isEmpty()) {
+            System.out.println("No quads or block entities generated for chunk at " + targetPos.get() + " from data: " + chunkData);
+        } else {
+            this.chunkModel = new BakedModel() {
+                @Override
+                public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
+                    return quads;
+                }
+
+                @Override
+                public boolean useAmbientOcclusion() {
+                    return false;
+                }
+
+                @Override
+                public boolean hasDepth() {
+                    return false;
+                }
+
+                @Override
+                public boolean isSideLit() {
+                    return false;
+                }
+
+                @Override
+                public boolean isBuiltin() {
+                    return false;
+                }
+
+                @Override
+                public Sprite getParticleSprite() {
+                    return mc.getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
+                            .apply(new Identifier("minecraft:block/stone"));
+                }
+
+                @Override
+                public ModelTransformation getTransformation() {
+                    return ModelTransformation.NONE;
+                }
+
+                @Override
+                public ModelOverrideList getOverrides() {
+                    return ModelOverrideList.EMPTY;
+                }
+            };
+        }
+    }
+
+    private List<BakedQuad> translateQuads(List<BakedQuad> quads, int xOffset, int yOffset, int zOffset) {
+        if (quads == null || quads.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<BakedQuad> translated = new ArrayList<>(quads.size());
+
+        for (BakedQuad quad : quads) {
+            if (quad == null) continue;
+
+            int[] originalData = quad.getVertexData();
+            if (originalData == null || originalData.length < 32) continue; // Each vertex has 8 elements, 4 vertices per quad
+
+            int[] vertexData = originalData.clone();
+            try {
+                // Process all 4 vertices of the quad
+                for (int v = 0; v < 4; v++) {
+                    int baseIndex = v * 8;
+                    // Translate X, Y, Z coordinates
+                    float x = Float.intBitsToFloat(vertexData[baseIndex]) + xOffset;
+                    float y = Float.intBitsToFloat(vertexData[baseIndex + 1]) + yOffset;
+                    float z = Float.intBitsToFloat(vertexData[baseIndex + 2]) + zOffset;
+
+                    vertexData[baseIndex] = Float.floatToRawIntBits(x);
+                    vertexData[baseIndex + 1] = Float.floatToRawIntBits(y);
+                    vertexData[baseIndex + 2] = Float.floatToRawIntBits(z);
+                }
+
+                translated.add(new BakedQuad(
+                        vertexData,
+                        quad.getColorIndex(),
+                        quad.getFace(),
+                        quad.getSprite(),
+                        quad.hasShade()
+                ));
+            } catch (Exception e) {
+                AITMod.LOGGER.error("Failed to translate quad: {}", e.getMessage());
+            }
+        }
+
+        return translated;
+    }
+
+    private BlockState getBlockStateFromChunkNBT(NbtCompound chunkData, BlockPos pos) {
+        if (chunkData.contains("block_states")) {
+            NbtCompound blockStates = chunkData.getCompound("block_states");
+            if (blockStates.contains("palette") && blockStates.contains("data")) {
+                NbtList palette = blockStates.getList("palette", NbtCompound.COMPOUND_TYPE);
+                long[] data = blockStates.getLongArray("data");
+                if (data.length == 0 || palette.isEmpty()) {
+                    System.out.println("Empty data or palette in chunk NBT for pos " + pos +
+                            ": data=" + data.length + ", palette=" + palette.size());
+                    return Blocks.AIR.getDefaultState();
+                }
+
+                int bitsPerEntry = blockStates.contains("bitsPerEntry") ? blockStates.getInt("bitsPerEntry") :
+                        Math.max(2, (int) Math.ceil(Math.log(palette.size()) / Math.log(2)));
+                int x = pos.getX() & 15;
+                int y = pos.getY() & 15;
+                int z = pos.getZ() & 15;
+                int index = y * 256 + z * 16 + x;
+
+                int entriesPerLong = 64 / bitsPerEntry;
+                int longIndex = index / entriesPerLong;
+                if (longIndex >= data.length) {
+                    System.out.println("Long index out of bounds: " + longIndex + " >= " + data.length +
+                            " (index=" + index + ", bitsPerEntry=" + bitsPerEntry + ")");
+                    return Blocks.AIR.getDefaultState();
+                }
+                int offset = (index % entriesPerLong) * bitsPerEntry;
+                long value = (data[longIndex] >> offset) & ((1L << bitsPerEntry) - 1);
+
+                if (value >= 0 && value < palette.size()) {
+                    NbtCompound stateTag = palette.getCompound((int) value);
+                    return BlockState.CODEC.parse(NbtOps.INSTANCE, stateTag)
+                            .result().orElse(Blocks.AIR.getDefaultState());
+                } else {
+                    System.out.println("State value out of palette bounds at " + pos + ": " + value + " >= " + palette.size());
+                    return Blocks.AIR.getDefaultState();
+                }
+            } else {
+                System.out.println("Missing palette or data in block_states: " + blockStates);
+            }
+        } else {
+            System.out.println("No block_states in chunk data: " + chunkData);
+        }
+        return Blocks.AIR.getDefaultState();
+    }
 }

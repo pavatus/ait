@@ -26,6 +26,7 @@ public class CoralBlockEntity extends BlockEntity {
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        if (this.creator == null) return;
         nbt.putUuid("creator", this.creator);
     }
 }

@@ -153,6 +153,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
     }
 
     private static boolean isScanningSonicInConsole(Tardis tardis) {
+        if (tardis.sonic() == null) return false;
         ItemStack sonic = tardis.sonic().getConsoleSonic();
 
         if (sonic == null)

@@ -5,7 +5,7 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.util.Window;
 
-public class BOTIHandler {
+public class BOTIInit {
     public Framebuffer afbo;
 
     public void setupFramebuffer() {

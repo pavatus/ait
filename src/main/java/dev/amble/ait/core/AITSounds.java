@@ -185,7 +185,13 @@ public class AITSounds {
     public static final SoundEvent HAMMER_HIT = register("tools/hammer_hit");
     public static final SoundEvent COFFEE_MACHINE = register("tardis/coffee_machine");
 
-
+    // Rifts
+    public static final SoundEvent RIFT1_AMBIENT = register("rift/ambient1");
+    public static final SoundEvent RIFT2_AMBIENT = register("rift/ambient2");
+    public static final SoundEvent RIFT3_AMBIENT = register("rift/ambient3");
+    public static final SoundEvent RIFT_SUCCESS = register("rift/success");
+    public static final SoundEvent RIFT_FAIL = register("rift/fail");
+    public static final SoundEvent RIFT_SONIC = register("rift/sonic_charge");
 
 
     // Fabricator

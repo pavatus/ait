@@ -102,7 +102,7 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<VortexReference> list = VortexReferenceRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            idx = (idx - 1) % list.size();
+            idx = (idx - 1 + list.size()) % list.size();
             return list.get(idx);
         }
 
@@ -153,7 +153,7 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<TravelSound> list = TravelSoundRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            idx = (idx - 1) % list.size();
+            idx = (idx - 1 + list.size()) % list.size();
             return list.get(idx);
         }
 
@@ -182,7 +182,7 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
             List<FlightSound> list = FlightSoundRegistry.getInstance().toList();
 
             int idx = list.indexOf(current);
-            idx = (idx - 1) % list.size();
+            idx = (idx - 1 + list.size()) % list.size();
             return list.get(idx);
         }
 
