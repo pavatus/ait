@@ -49,7 +49,7 @@ public class RiftEntity extends DummyLivingEntity {
         if (this.getWorld().isClient()) return ActionResult.SUCCESS;
 
         if (interactAmount >= 3) {
-            this.getWorld().playSound(null, this.getBlockPos(), AITSounds.CLOISTER, SoundCategory.AMBIENT, 1f, 1f);
+            this.getWorld().playSound(null, this.getBlockPos(), AITSounds.RIFT_FAIL, SoundCategory.AMBIENT, 1f, 1f);
             this.discard();
             return ActionResult.FAIL;
         }
