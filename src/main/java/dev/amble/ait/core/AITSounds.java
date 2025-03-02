@@ -59,8 +59,8 @@ public class AITSounds {
     //MASTER SOUNDS
     public static final SoundEvent MASTER_DEMAT = register("tardis/master_demat");
     public static final SoundEvent MASTER_MAT = register("tardis/master_mat");
-    //STABALIZE
-    public static final SoundEvent STABALIZE = register("tardis/stabalize_flight");
+    //STABILIZE
+    public static final SoundEvent STABILIZE = register("tardis/stabilize_flight");
 
     // APPARATUS VIVI
     public static final SoundEvent MOODY = register("tardis/moody/moody");

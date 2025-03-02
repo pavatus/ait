@@ -73,8 +73,11 @@ public final class TravelHandler extends AnimatedTravelHandler implements Crasha
         });
 
         TardisEvents.LANDED.register(tardis -> {
-            if (AITMod.CONFIG.SERVER.GHOST_MONUMENT)
+            if (AITMod.CONFIG.SERVER.GHOST_MONUMENT) {
                 tardis.travel().tryFly();
+            }
+            if (tardis.travel().autopilot())
+                tardis.getDesktop().playSoundAtEveryConsole(AITSounds.NAV_NOTIFICATION, SoundCategory.BLOCKS, 2f, 1f);
         });
     }
 

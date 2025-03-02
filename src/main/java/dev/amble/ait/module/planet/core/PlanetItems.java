@@ -43,7 +43,7 @@ public class PlanetItems extends ItemContainer {
     public static final Item ANORTHOSITE_AXE = new AxeItem(PlanetToolMaterial.ANORTHOSITE, 3, 1f, new AItemSettings());
     public static final Item ANORTHOSITE_HOE = new HoeItem(PlanetToolMaterial.ANORTHOSITE, 1, 2f, new AItemSettings());
 
-    public static final Item HANDLES = new HandlesItem(new AItemSettings().maxCount(1).group(PlanetModule.instance().getItemGroup()));
+    public static final Item HANDLES = new HandlesItem(new AItemSettings().maxCount(1)/*.group(PlanetModule.instance().getItemGroup())*/);
 
     // MATERIALS
     public static final Item FABRIC = new Item(new AItemSettings());

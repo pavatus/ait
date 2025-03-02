@@ -12,9 +12,6 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
 
 public class AutoPilotControl extends Control {
-
-    private boolean hasPlayedNavSound = false;
-
     public AutoPilotControl() {
         super("protocol_116");
     }
@@ -43,16 +40,5 @@ public class AutoPilotControl extends Control {
     @Override
     public SoundEvent getSound() {
         return AITSounds.PROTOCOL_116_ON;
-    }
-
-    public void tick(Tardis tardis, ServerWorld world, BlockPos console) {
-        if (tardis.travel().hasFinishedFlight() && tardis.travel().autopilot() && !hasPlayedNavSound) {
-            world.playSound(null, console, AITSounds.NAV_NOTIFICATION, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            hasPlayedNavSound = true;
-        }
-
-        if (!tardis.travel().hasFinishedFlight()) {
-            hasPlayedNavSound = false;
-        }
     }
 }
