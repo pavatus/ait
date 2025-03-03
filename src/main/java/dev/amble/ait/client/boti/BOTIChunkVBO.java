@@ -77,7 +77,7 @@ public class BOTIChunkVBO {
     }
 
     public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity) {
-        if (!workingInThread || exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
+        if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
         // can't just do `return;` because then it'll throw "unreachable statement" so I have to wrap it in `if(true)`
 //        if(true) return; // Nothing in here should be called as it'll fuck EVERYTHING up
         MinecraftClient mc = MinecraftClient.getInstance();

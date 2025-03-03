@@ -129,6 +129,13 @@ public class TardisExteriorBOTI extends BOTI {
                 } else {
                     updateChunkModel(exterior);
                 }
+
+
+                if (exterior.tardis().get().stats().botiChunkVBO != null &&
+                        exterior.tardis().get().stats().botiChunkVBO.isDirty() &&
+                        !exterior.tardis().get().stats().botiChunkVBO.isWorkingInThread())
+                    exterior.tardis().get().stats().botiChunkVBO.updateChunkModel(exterior);
+
 //                exterior.tardis().get().stats().posState.forEach((pos, state) -> {
 //                    stack.push();
 //                    stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
