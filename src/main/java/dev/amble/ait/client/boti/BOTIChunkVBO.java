@@ -37,7 +37,7 @@ public class BOTIChunkVBO {
 
     public void setTargetPos(BlockPos targetPos) {
         this.targetPos = targetPos;
-        markDirty();
+//        markDirty();
     }
 
     public void markDirty() {

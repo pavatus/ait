@@ -74,7 +74,7 @@ public class BOTIRenderer<T extends BOTIBlockEntity> implements BlockEntityRende
         if(VBO == null) {
             VBO = new BOTIChunkVBO();
             VBO.setTargetPos(new BlockPos(0, 2, 0));
-            VBO.updateTestChunkModel();
+//            VBO.updateTestChunkModel();
         }
         else {//VBO.render(matrixStack, 147212134, OverlayTexture.DEFAULT_UV);
             matrixStack.push();

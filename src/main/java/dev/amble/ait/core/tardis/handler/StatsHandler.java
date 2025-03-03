@@ -452,7 +452,7 @@ public class StatsHandler extends KeyedTardisComponent {
         if(botiChunkVBO == null) botiChunkVBO = new BOTIChunkVBO();
 
         botiChunkVBO.setTargetPos(this.targetPos.get());
-        botiChunkVBO.updateChunkModel(exteriorBlockEntity, chunkData);
+//        botiChunkVBO.updateChunkModel(exteriorBlockEntity, chunkData);
         botiChunkVBO.updateBlockMap(this.posState);
 //        MinecraftClient mc = MinecraftClient.getInstance();
 //        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
