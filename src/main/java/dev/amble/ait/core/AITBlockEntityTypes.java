@@ -7,7 +7,7 @@ import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 
 import dev.amble.lib.container.impl.BlockEntityContainer;
-import dev.codiak.BEs.BOTIBlockEntity;
+import dev.codiak.tiles.BOTIBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import net.minecraft.block.entity.BlockEntityType;

@@ -1,7 +1,6 @@
 package dev.amble.ait.client.boti;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,24 +13,23 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.Random;
 
-import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+
 
 public class BOTIChunkVBO {
     private VertexBuffer vertexBuffer;
     public int vertexCount = 0;
     private final Map<BlockPos, BlockEntity> blockEntities = new HashMap<>();
+    public Map<BlockPos, BlockState> blocks = new HashMap<>();
     private BlockPos targetPos;
+    private boolean dirty = true;
 
     public BOTIChunkVBO() {
         this.vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
@@ -39,16 +37,38 @@ public class BOTIChunkVBO {
 
     public void setTargetPos(BlockPos targetPos) {
         this.targetPos = targetPos;
+        markDirty();
     }
 
+    public void markDirty() {
+        this.dirty = true;
+    }
+
+    public void updateBlockMap(Map<BlockPos, BlockState> map) {
+        this.blocks = map;
+    }
     public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity, NbtCompound chunkData) {
-        if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
+        if (!dirty || exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
         BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
         ChunkPos chunkPos = new ChunkPos(targetPos);
         int baseY = targetPos.getY() & ~15;
         this.blockEntities.clear();
+
+        // Precompute block states
+        BlockState[][][] states = new BlockState[16][16][16];
+        for (int i = 0; i < 4096; i++) {
+            int x = i & 15;
+            int y = (i >> 4) & 15;
+            int z = (i >> 8) & 15;
+            BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+            states[x][y][z] = getBlockStateFromChunkNBT(chunkData, pos);
+            states[x][y][z] = states[x][y][z] != null ? states[x][y][z] : Blocks.AIR.getDefaultState();
+            states[x][y][z] = Blocks.STONE.getDefaultState(); // Hardcoded for now.
+            // TODO:
+            // Use actual block states from the getBlockStateFromChunkNBT method
+        }
 
         BufferBuilder bufferBuilder = new BufferBuilder(4096 * 6 * 4);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
@@ -58,37 +78,11 @@ public class BOTIChunkVBO {
             int x = i & 15;
             int y = (i >> 4) & 15;
             int z = (i >> 8) & 15;
-            BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+            BlockState state = states[x][y][z];
 
-            BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
-            state = state != null ? state : Blocks.AIR.getDefaultState();
-            state = Blocks.STONE.getDefaultState(); // Hardcoded for now
-            String key = x + "_" + y + "_" + z;
-            if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
-                NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
-                BlockEntity blockEntity = BlockEntity.createFromNbt(pos, state, nbt);
-                if (blockEntity != null) {
-                    if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
-                            exteriorBlockEntity.tardis() != null) {
-                        abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
-                    }
-                    BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
-                    this.blockEntities.put(relativePos, blockEntity);
-                }
-            }
+            if (isOccluded(states, x, y, z)) continue;
 
             if (!state.isAir() && !state.hasBlockEntity()) {
-                BakedModel model = blockRenderManager.getModel(state);
-                if (model != null) {
-                    Random random = Random.create();
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, null, random), bufferBuilder, x, y, z);
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, Direction.UP, random), bufferBuilder, x, y, z);
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, Direction.DOWN, random), bufferBuilder, x, y, z);
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, Direction.NORTH, random), bufferBuilder, x, y, z);
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, Direction.SOUTH, random), bufferBuilder, x, y, z);
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, Direction.EAST, random), bufferBuilder, x, y, z);
-                    vertexCounter += addQuadsToBuffer(model.getQuads(state, Direction.WEST, random), bufferBuilder, x, y, z);
-                }
             }
         }
 
@@ -98,6 +92,7 @@ public class BOTIChunkVBO {
             vertexBuffer.bind();
             vertexBuffer.upload(builtBuffer);
             VertexBuffer.unbind();
+            dirty = false;
             System.out.println("VBO updated with " + vertexCount + " vertices for position " + targetPos);
         } else {
             System.out.println("No vertex data generated for chunk at " + targetPos + " from data: " + chunkData);
@@ -105,48 +100,11 @@ public class BOTIChunkVBO {
         }
     }
 
-    private int addQuadsToBuffer(List<BakedQuad> quads, BufferBuilder buffer, int xOffset, int yOffset, int zOffset) {
-        if (quads == null || quads.isEmpty()) return 0;
-
-        int verticesAdded = 0;
-        for (BakedQuad quad : quads) {
-            if (quad == null) continue;
-
-            int[] vertexData = quad.getVertexData();
-            if (vertexData.length < 32) continue;
-
-            for (int i = 0; i < 4; i++) {
-                int baseIndex = i * 8;
-                float x = Float.intBitsToFloat(vertexData[baseIndex]) + xOffset;
-                float y = Float.intBitsToFloat(vertexData[baseIndex + 1]) + yOffset;
-                float z = Float.intBitsToFloat(vertexData[baseIndex + 2]) + zOffset;
-                int packedColor = vertexData[baseIndex + 3];
-                float r = ((packedColor >> 16) & 0xFF) / 255.0f;
-                float g = ((packedColor >> 8) & 0xFF) / 255.0f;
-                float b = (packedColor & 0xFF) / 255.0f;
-                float a = ((packedColor >> 24) & 0xFF) / 255.0f;
-                float u = Float.intBitsToFloat(vertexData[baseIndex + 4]);
-                float v = Float.intBitsToFloat(vertexData[baseIndex + 5]);
-                int light = vertexData[baseIndex + 6];
-                int normal = vertexData[baseIndex + 7];
-                float nx = ((normal >> 16) & 0xFF) / 255.0f * 2.0f - 1.0f;
-                float ny = ((normal >> 8) & 0xFF) / 255.0f * 2.0f - 1.0f;
-                float nz = (normal & 0xFF) / 255.0f * 2.0f - 1.0f;
-
-                buffer.vertex(x, y, z)
-                        .color(r, g, b, a)
-                        .texture(u, v)
-                        .light(light)
-                        .normal(nx, ny, nz)
-                        .next();
-                verticesAdded++;
-                if (verticesAdded <= 4) { // Log first quad only
-                    System.out.println("Vertex: (" + x + ", " + y + ", " + z + "), Color: (" + r + ", " + g + ", " + b + ", " + a + ")");
-                }
-            }
-        }
-        System.out.println("Added " + verticesAdded + " vertices to buffer");
-        return verticesAdded;
+    private boolean isOccluded(BlockState[][][] states, int x, int y, int z) {
+        if (x == 0 || x == 15 || y == 0 || y == 15 || z == 0 || z == 15) return false;
+        return !states[x-1][y][z].isAir() && !states[x+1][y][z].isAir() &&
+                !states[x][y-1][z].isAir() && !states[x][y+1][z].isAir() &&
+                !states[x][y][z-1].isAir() && !states[x][y][z+1].isAir();
     }
 
     public void render(MatrixStack matrices, int light, int overlay) {
@@ -243,33 +201,56 @@ public class BOTIChunkVBO {
         return Blocks.AIR.getDefaultState();
     }
 
-    public void updateChunkModelTestQuads() {
+    public void updateTestChunkModel() {
+        if (!dirty) return;
+
         MinecraftClient mc = MinecraftClient.getInstance();
         BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
+        ChunkPos chunkPos = new ChunkPos(targetPos);
+        int baseY = targetPos.getY() & ~15;
         this.blockEntities.clear();
 
-        // Render one block instead of a full chunk
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        // Precompute block states
+        BlockState[][][] states = new BlockState[16][16][16];
+        for (int i = 0; i < 4096; i++) {
+            int x = i & 15;
+            int y = (i >> 4) & 15;
+            int z = (i >> 8) & 15;
+            BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+            states[x][y][z] = Blocks.STONE.getDefaultState(); // Hardcoded for now.
+
+            // TODO:
+            // Use actual block states from the getBlockStateFromChunkNBT method
+        }
+
+        BufferBuilder bufferBuilder = new BufferBuilder(4096 * 6 * 4);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
-        int vertexCounter = 8;
+        int vertexCounter = 0;
 
-        BlockState state = Blocks.STONE.getDefaultState();
-        BakedModel model = blockRenderManager.getModel(state);
-        if (model != null) {
-            Random random = Random.create();
-            vertexCounter += addQuadsToBuffer(model.getQuads(state, null, random), bufferBuilder, 0, 0, 0);
+        for (int i = 0; i < 4096; i++) {
+            int x = i & 15;
+            int y = (i >> 4) & 15;
+            int z = (i >> 8) & 15;
+            BlockState state = states[x][y][z];
+
+            if (isOccluded(states, x, y, z)) continue;
+
+            if (!state.isAir() && !state.hasBlockEntity()) {
+                this.blocks.put(new BlockPos(x, y, z), state);
+            }
         }
 
-        if (vertexCounter > 0) {
-            this.vertexCount = vertexCounter;
-            BufferBuilder.BuiltBuffer builtBuffer = bufferBuilder.end();
-            vertexBuffer.bind();
-            vertexBuffer.upload(builtBuffer);
-            VertexBuffer.unbind();
-            System.out.println("VBO updated with " + vertexCount + " vertices for position " + targetPos);
-        } else {
-            System.out.println("No vertex data generated for chunk at " + targetPos);
-            cleanup();
-        }
+//        if (!blocks.isEmpty()) {
+//            this.vertexCount = vertexCounter;
+//            BufferBuilder.BuiltBuffer builtBuffer = bufferBuilder.end();
+//            vertexBuffer.bind();
+//            vertexBuffer.upload(builtBuffer);
+//            VertexBuffer.unbind();
+//            dirty = false;
+//            System.out.println("VBO updated with " + vertexCount + " vertices for position " + targetPos);
+//        } else {
+//            System.out.println("No vertex data generated for chunk at " + targetPos);
+//            cleanup();
+//        }
     }
 }

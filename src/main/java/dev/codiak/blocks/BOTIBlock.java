@@ -1,6 +1,6 @@
 package dev.codiak.blocks;
 
-import dev.codiak.BEs.BOTIBlockEntity;
+import dev.codiak.tiles.BOTIBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;

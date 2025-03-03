@@ -18,6 +18,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -33,10 +34,12 @@ public class BOTIDataS2CPacket implements FabricPacket {
 
     private final BlockPos botiPos;
     public final NbtCompound chunkData;
+    public Map<BlockPos, BlockState> posStates = new HashMap<>();
 
     public BOTIDataS2CPacket(BlockPos botiPos, WorldChunk chunk, BlockPos targetPos) {
         this.botiPos = botiPos;
         this.chunkData = new NbtCompound();
+        List<Pair<BlockPos, BlockState>> posStates = new ArrayList<>();
         NbtCompound blockStates = new NbtCompound();
         NbtCompound blockEntities = new NbtCompound();
         World world = chunk.getWorld();
@@ -60,6 +63,8 @@ public class BOTIDataS2CPacket implements FabricPacket {
                         if (state != null && !state.isAir() && !stateToIndex.containsKey(state)) {
                             stateToIndex.put(state, paletteList.size());
                             paletteList.add(state);
+                            posStates.add(new Pair<>(new BlockPos(x, y, z), state));
+                            this.posStates.put(new BlockPos(x, y, z), state);
                         }
                     }
                 }
@@ -136,11 +141,28 @@ public class BOTIDataS2CPacket implements FabricPacket {
     public BOTIDataS2CPacket(PacketByteBuf buf) {
         this.botiPos = buf.readBlockPos();
         this.chunkData = buf.readNbt();
+        this.posStates = buf.readMap(
+                PacketByteBuf::readBlockPos,    // Key reader
+                buffer -> {                     // Value reader
+                    NbtCompound nbt = buffer.readNbt();
+                    return BlockState.CODEC.parse(NbtOps.INSTANCE, nbt)
+                            .result().orElse(Blocks.AIR.getDefaultState());
+                }
+        );
     }
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(botiPos);
         buf.writeNbt(chunkData);
+        buf.writeMap(
+                posStates,
+                PacketByteBuf::writeBlockPos,   // Key writer
+                (buffer, state) -> {            // Value writer
+                    NbtCompound nbt = (NbtCompound) BlockState.CODEC.encodeStart(NbtOps.INSTANCE, state)
+                            .result().orElse(new NbtCompound());
+                    buffer.writeNbt(nbt);
+                }
+        );
     }
 
     @Override
@@ -161,6 +183,7 @@ public class BOTIDataS2CPacket implements FabricPacket {
             if (exteriorBlockEntity.tardis() == null) return false;
             Tardis tardis = exteriorBlockEntity.tardis().get();
             tardis.stats().updateChunkModel(exteriorBlockEntity, this.chunkData);
+            tardis.stats().updateMap(this.posStates);
         }
         return true;
     }

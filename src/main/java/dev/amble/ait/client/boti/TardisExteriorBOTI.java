@@ -121,6 +121,24 @@ public class TardisExteriorBOTI extends BOTI {
                                 OverlayTexture.DEFAULT_UV);
                     botiProvider.draw(RenderLayer.getCutout());
                 }*/
+                // Just use this to enable/disable the boti bullshit
+                if(true) {
+                    exterior.tardis().get().stats().posState.forEach((pos, state) -> {
+                        stack.push();
+                        stack.translate(pos.getX(), pos.getY(), pos.getZ());
+                        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(
+                                state,
+                                new BlockPos(0, 0, 0),
+                                MinecraftClient.getInstance().world,
+                                stack,
+                                MinecraftClient.getInstance().getBufferBuilders()
+                                        .getEffectVertexConsumers().getBuffer(RenderLayers.getBlockLayer(state)),
+                                true,
+                                MinecraftClient.getInstance().world.getRandom()
+                        );
+                        stack.pop();
+                    });
+                }
                 // TODO: BOTI VBO Here
 //                if(exterior.tardis().get().stats().botiChunkVBO == null) {
 //                    exterior.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();

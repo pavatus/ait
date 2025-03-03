@@ -1,4 +1,4 @@
-package dev.codiak.BEs;
+package dev.codiak.tiles;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
