@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.util.ServerLifecycleHooks;
+import dev.codiak.threads.UpdateBOTIChunkModelThread;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -19,6 +20,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
@@ -98,7 +100,6 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<RegistryKey<World>> targetWorld = TARGET_WORLD.create(this);
 
 
-
     @Exclude
     private Lazy<TravelSoundMap> travelFxCache;
     @Exclude
@@ -165,7 +166,7 @@ public class StatsHandler extends KeyedTardisComponent {
             else this.getTravelEffects();
         });
 
-        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext();) {
+        for (Iterator<TardisDesktopSchema> it = DesktopRegistry.getInstance().iterator(); it.hasNext(); ) {
             this.unlock(it.next(), false);
         }
     }
@@ -207,6 +208,7 @@ public class StatsHandler extends KeyedTardisComponent {
     public BoolValue hailMary() {
         return hailMary;
     }
+
     public BoolValue receiveCalls() {
         return this.receiveCalls;
     }
@@ -339,6 +341,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
         return this.travelFxCache.get();
     }
+
     private TravelSoundMap createTravelEffectsCache() {
         TravelSoundMap map = new TravelSoundMap();
 
@@ -355,6 +358,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
         return this.flightFxCache.get();
     }
+
     private FlightSound createFlightEffectsCache() {
         return FlightSoundRegistry.getInstance().getOrFallback(this.flightId.get());
     }
@@ -377,24 +381,28 @@ public class StatsHandler extends KeyedTardisComponent {
         if (this.vortexFxCache != null)
             this.vortexFxCache.invalidate();
     }
+
     public void setFlightEffects(FlightSound current) {
         this.flightId.set(current.id());
 
         if (this.flightFxCache != null)
             this.flightFxCache.invalidate();
     }
+
     private void setDematEffects(TravelSound current) {
         this.dematId.set(current.id());
 
         if (this.travelFxCache != null)
             this.travelFxCache.invalidate();
     }
+
     private void setMatEffects(TravelSound current) {
         this.matId.set(current.id());
 
         if (this.travelFxCache != null)
             this.travelFxCache.invalidate();
     }
+
     public void setTravelEffects(TravelSound current) {
         switch (current.target()) {
             case DEMAT:
@@ -414,7 +422,7 @@ public class StatsHandler extends KeyedTardisComponent {
         this.targetWorld.set(targetWorld);
         this.targetPos.set(targetPos);
         this.chunkModel = null;
-        if(this.blockEntities != null)
+        if (this.blockEntities != null)
             this.blockEntities.clear();
         if (markDirty && exteriorBlockEntity.getWorld() != null && !exteriorBlockEntity.getWorld().isClient()) {
             exteriorBlockEntity.getWorld().updateListeners(exteriorBlockEntity.getPos(), exteriorBlockEntity.getCachedState(), exteriorBlockEntity.getCachedState(), 3);
@@ -429,6 +437,7 @@ public class StatsHandler extends KeyedTardisComponent {
     public BlockPos targetPos() {
         return this.targetPos.get();
     }
+
     @Exclude
     @Environment(value = EnvType.CLIENT)
     public BOTIChunkVBO botiChunkVBO;
@@ -444,12 +453,131 @@ public class StatsHandler extends KeyedTardisComponent {
 
     @Environment(value = EnvType.CLIENT)
     public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity, NbtCompound chunkData) {
-        if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
+        if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient())
+            return;
 
-        if(botiChunkVBO == null) botiChunkVBO = new BOTIChunkVBO();
+        if (botiChunkVBO == null) botiChunkVBO = new BOTIChunkVBO();
 
         botiChunkVBO.setTargetPos(this.targetPos.get());
         botiChunkVBO.updateBlockMap(this.posState);
     }
 
+
+    @Environment(value = EnvType.CLIENT)
+    public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity) {
+        if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient())
+            return;
+
+        if (botiChunkVBO == null) botiChunkVBO = new BOTIChunkVBO();
+
+        botiChunkVBO.setTargetPos(this.targetPos.get());
+        botiChunkVBO.updateBlockMap(this.posState);
+
+        new UpdateBOTIChunkModelThread(exteriorBlockEntity).start();
+
+        botiChunkVBO.updateChunkModel(exteriorBlockEntity);
+
+
+//        MinecraftClient mc = MinecraftClient.getInstance();
+//        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
+//        List<BakedQuad> quads = new ArrayList<>();
+//        ChunkPos chunkPos = new ChunkPos(targetPos.get());
+//        int baseY = targetPos.get().getY() & ~15;
+//        BlockState[][][] sectionStates = new BlockState[16][16][16];
+//        this.blockEntities.clear();
+//
+//        this.botiChunkVBO.blocks.forEach((pos, state) -> {
+//            if (state != null && !state.isAir() && !state.hasBlockEntity()) {
+//                BakedModel model = blockRenderManager.getModel(state);
+//                if (model != null) {
+//                    List<BakedQuad> blockQuads = new ArrayList<>();
+//
+//                    // Add general quads
+//                    List<BakedQuad> generalQuads = model.getQuads(state, null, net.minecraft.util.math.random.Random.create());
+//                    if (generalQuads != null) {
+//                        blockQuads.addAll(generalQuads);
+//                    }
+//
+//                    // Add side quads
+//                    List<BakedQuad> sideQuads = model.getQuads(state, Direction.NORTH, net.minecraft.util.math.random.Random.create());
+//                    sideQuads.addAll(model.getQuads(state, Direction.SOUTH, net.minecraft.util.math.random.Random.create()));
+//                    sideQuads.addAll(model.getQuads(state, Direction.EAST, net.minecraft.util.math.random.Random.create()));
+//                    sideQuads.addAll(model.getQuads(state, Direction.WEST, net.minecraft.util.math.random.Random.create()));
+//                    blockQuads.addAll(sideQuads);
+//
+//                    // Translate and add valid quads
+//                    if (!blockQuads.isEmpty()) {
+//                        List<BakedQuad> translatedQuads = translateQuads(blockQuads, pos.getX(), pos.getY(), pos.getZ());
+//                        if (!translatedQuads.isEmpty()) {
+//                            quads.addAll(translatedQuads);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//
+//        if (quads.isEmpty() && blockEntities.isEmpty()) {
+//            System.out.println("No quads or block entities generated for chunk at " + targetPos.get());
+//        } else {
+//            this.chunkModel = new BakedModel() {
+//                @Override
+//                public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, net.minecraft.util.math.random.Random random) {
+//                    return quads;
+//                }
+//
+//                @Override
+//                public boolean useAmbientOcclusion() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean hasDepth() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean isSideLit() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean isBuiltin() {
+//                    return false;
+//                }
+//
+//                @Override
+//                public Sprite getParticleSprite() {
+//                    return mc.getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
+//                            .apply(new Identifier("minecraft", "stone"));
+//                }
+//
+//                @Override
+//                public ModelTransformation getTransformation() {
+//                    return ModelTransformation.NONE;
+//                }
+//
+//                @Override
+//                public ModelOverrideList getOverrides() {
+//                    return ModelOverrideList.EMPTY;
+//                }
+//            };
+//        }
+    }
+
+    public List<BakedQuad> translateQuads(List<BakedQuad> quads, int xOffset, int yOffset, int zOffset) {
+        List<BakedQuad> translated = new ArrayList<>(quads.size());
+        for (BakedQuad quad : quads) {
+            int[] vertexData = quad.getVertexData().clone();
+            for (int i = 0; i < vertexData.length; i += 8) {
+                float x = Float.intBitsToFloat(vertexData[i]) + xOffset;
+                float y = Float.intBitsToFloat(vertexData[i + 1]) + yOffset;
+                float z = Float.intBitsToFloat(vertexData[i + 2]) + zOffset;
+                vertexData[i] = Float.floatToRawIntBits(x);
+                vertexData[i + 1] = Float.floatToRawIntBits(y);
+                vertexData[i + 2] = Float.floatToRawIntBits(z);
+            }
+            translated.add(new BakedQuad(vertexData, quad.getColorIndex(), quad.getFace(), quad.getSprite(), quad.hasShade()));
+        }
+        return translated;
+    }
 }

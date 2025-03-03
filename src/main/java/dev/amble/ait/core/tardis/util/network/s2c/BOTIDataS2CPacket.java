@@ -43,12 +43,10 @@ public class BOTIDataS2CPacket implements FabricPacket {
         try {
             Map<BlockState, Integer> stateToIndex = new HashMap<>();
             stateToIndex.put(Blocks.AIR.getDefaultState(), 0);
-            BlockState[][][] sectionStates = new BlockState[16][16][16];
             for (int y = 0; y < 16; y++) {
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
                         BlockState state = section.getBlockState(x, y, z);
-                        sectionStates[x][y][z] = state;
                         if (state != null && !state.isAir() && !stateToIndex.containsKey(state)) {
                             this.posStates.put(new BlockPos(x, y, z), state);
                         }
@@ -121,6 +119,12 @@ public class BOTIDataS2CPacket implements FabricPacket {
             if (exteriorBlockEntity.tardis() == null) return false;
             Tardis tardis = exteriorBlockEntity.tardis().get();
             tardis.stats().updateMap(this.posStates);
+
+            tardis.stats().updateChunkModel(exteriorBlockEntity);
+//            this.posStates.forEach((pos, state) -> {
+//
+//                MinecraftClient.getInstance().getBlockRenderManager().getModel(state).getQuads(state, Direction.NORTH, MinecraftClient.getInstance().world.random);
+//            });
         }
         return true;
     }

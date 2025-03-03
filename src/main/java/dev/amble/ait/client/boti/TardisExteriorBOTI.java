@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -38,6 +39,7 @@ import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
 public class TardisExteriorBOTI extends BOTI {
     private float lastRenderTick = -1;
+
     public void renderExteriorBoti(ExteriorBlockEntity exterior, ClientExteriorVariantSchema variant, MatrixStack stack, Identifier frameTex, SinglePartEntityModel frame, ModelPart mask, int light) {
         if (!AITMod.CONFIG.CLIENT.ENABLE_TARDIS_BOTI)
             return;
@@ -109,19 +111,43 @@ public class TardisExteriorBOTI extends BOTI {
             BlockPos doorPos = tardis.getDesktop().getDoorPos().getPos();
             RegistryKey<World> targetWorld = stats.getTargetWorld();
             if (doorPos != null && targetPos != null && targetWorld != null) {
-                exterior.tardis().get().stats().posState.forEach((pos, state) -> {
-                    stack.push();
-                    stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-                    stack.translate(doorPos.getX() - pos.getX(),
-                            doorPos.getY()- pos.getY(),
-                            doorPos.getZ()- pos.getZ());
-                    MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
-                            stack.peek(), botiProvider.getBuffer(RenderLayers.getBlockLayer(state)),
-                            state, MinecraftClient.getInstance().getBlockRenderManager().getModel(state),
-                            1, 1, 1, light - 0xf00ff, OverlayTexture.DEFAULT_UV
-                    );
-                    stack.pop();
-                });
+                if (exterior.tardis().get().stats().botiChunkVBO == null) {
+                    this.updateChunkModel(exterior);
+                }
+
+                OUTOFVBO:
+                if (exterior.tardis().get().stats().botiChunkVBO != null) {
+//                    exterior.tardis().get().stats().botiChunkVBO.render(stack, light, OverlayTexture.DEFAULT_UV);
+                    if (exterior.tardis().get().stats().botiChunkVBO.isWorkingInThread()) break OUTOFVBO;
+                    if (exterior.tardis().get().stats().botiChunkVBO.isDirty()) break OUTOFVBO;
+
+                    exterior.tardis().get().stats().botiChunkVBO.vertexBuffer.bind();
+                    VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.setupState();
+                    exterior.tardis().get().stats().botiChunkVBO.vertexBuffer.draw();
+                    VertexBuffer.unbind();
+                    VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.clearState();
+                } else {
+                    updateChunkModel(exterior);
+                }
+//                exterior.tardis().get().stats().posState.forEach((pos, state) -> {
+//                    stack.push();
+//                    stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+//                    stack.translate(doorPos.getX() - pos.getX(),
+//                            doorPos.getY()- pos.getY(),
+//                            doorPos.getZ()- pos.getZ());
+//                    MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
+//                            stack.peek(),
+//                            botiProvider.getBuffer(RenderLayers.getBlockLayer(state)),
+//                            state,
+//                            MinecraftClient.getInstance().getBlockRenderManager().getModel(state),
+//                            1,
+//                            1,
+//                            1,
+//                            light - 0xf00ff,
+//                            OverlayTexture.DEFAULT_UV
+//                    );
+//                    stack.pop();
+//                });
                 for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
                     BlockPos offsetPos = entry.getKey();
                     BlockEntity be = entry.getValue();
