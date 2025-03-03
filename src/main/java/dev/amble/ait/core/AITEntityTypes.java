@@ -4,9 +4,8 @@ import dev.amble.lib.container.AssignedName;
 import dev.amble.lib.container.impl.EntityContainer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.*;
+import net.minecraft.world.Heightmap;
 
 import dev.amble.ait.core.entities.*;
 
@@ -35,6 +34,8 @@ public class AITEntityTypes implements EntityContainer {
             .<CobbledSnowballEntity>create(SpawnGroup.MISC, CobbledSnowballEntity::new)
             .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).trackRangeBlocks(4).trackedUpdateRate(10).build();
 
-    public static final EntityType<RiftEntity> RIFT_ENTITY = FabricEntityTypeBuilder.create(SpawnGroup.MISC, RiftEntity::new)
+    public static final EntityType<RiftEntity> RIFT_ENTITY = FabricEntityTypeBuilder.Mob.createMob().spawnRestriction(
+            SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, RiftEntity::canSpawn)
+            .spawnGroup(SpawnGroup.MONSTER).entityFactory(RiftEntity::new)
             .dimensions(EntityDimensions.fixed(1f, 1f)).build();
 }

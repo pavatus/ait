@@ -4,16 +4,13 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
@@ -21,8 +18,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.util.math.random.ChunkRandom;
+import net.minecraft.world.*;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlocks;
@@ -31,7 +30,7 @@ import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.item.SonicItem;
 
-public class RiftEntity extends LivingEntity {
+public class RiftEntity extends MobEntity {
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;
@@ -79,12 +78,17 @@ public class RiftEntity extends LivingEntity {
     }
 
     @Override
+    public void setAiDisabled(boolean aiDisabled) {
+        super.setAiDisabled(true);
+    }
+
+    @Override
     public void onTrackedDataSet(TrackedData<?> data) {
         super.onTrackedDataSet(data);
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
+    public final ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (this.getWorld().isClient()) return ActionResult.SUCCESS;
 
         ItemStack stack = player.getStackInHand(hand);
@@ -144,7 +148,7 @@ public class RiftEntity extends LivingEntity {
                 if (newState != null) {
                     world.setBlockState(targetPos, newState, Block.NOTIFY_ALL);
 
-                    world.addParticle((ParticleEffect) AITMod.CORAL_PARTICLE,
+                    world.addParticle(AITMod.CORAL_PARTICLE,
                             targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5,
                             0, 0, 0);
 
@@ -211,5 +215,21 @@ public class RiftEntity extends LivingEntity {
     @Override
     public Arm getMainArm() {
         return Arm.LEFT;
+    }
+    public static boolean canSpawn(EntityType<MobEntity> type, WorldAccess world,
+                                   SpawnReason spawnReason, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        if (!(world instanceof StructureWorldAccess worldAccess)) return false;
+
+        if (spawnReason == SpawnReason.STRUCTURE) {
+            return RiftEntity.canMobSpawn(type, world, spawnReason, pos, random);
+        }
+
+        ChunkPos chunkPos = new ChunkPos(pos);
+        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
+                worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
+        if (random.nextInt(2) == 0 && bl) {
+            return RiftEntity.canMobSpawn(type, world, spawnReason, new BlockPos(pos.getX(), worldAccess.getTopY() + 5, pos.getZ()), random);
+        }
+        return false;
     }
 }
