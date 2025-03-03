@@ -1,10 +1,15 @@
 package dev.amble.ait.core.entities;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -13,20 +18,20 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
-import dev.amble.ait.api.ArtronHolderItem;
 import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.AITEntityTypes;
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
-import dev.amble.ait.core.entities.base.DummyLivingEntity;
+import dev.amble.ait.core.item.SonicItem;
 
-public class RiftEntity extends DummyLivingEntity {
+public class RiftEntity extends LivingEntity {
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;
@@ -45,7 +50,7 @@ public class RiftEntity extends DummyLivingEntity {
     };
 
     public RiftEntity(EntityType<?> type, World world) {
-        super(AITEntityTypes.RIFT_ENTITY, world, false);
+        super(AITEntityTypes.RIFT_ENTITY, world);
     }
 
     @Override
@@ -54,12 +59,37 @@ public class RiftEntity extends DummyLivingEntity {
     }
 
     @Override
+    public Iterable<ItemStack> getArmorItems() {
+        return List.of(new ItemStack[0]);
+    }
+
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+
+    }
+
+    @Override
+    public DataTracker getDataTracker() {
+        return super.getDataTracker();
+    }
+
+    @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        super.onTrackedDataSet(data);
+    }
+
+    @Override
     public ActionResult interact(PlayerEntity player, Hand hand) {
         if (this.getWorld().isClient()) return ActionResult.SUCCESS;
 
         ItemStack stack = player.getStackInHand(hand);
 
-        if (stack.getItem() instanceof ArtronHolderItem sonic) {
+        if (stack.getItem() instanceof SonicItem sonic) {
             if (!this.getWorld().isClient()) {
                 sonic.addFuel(1000, stack);
                 this.getWorld().playSound(null, this.getBlockPos(), AITSounds.RIFT_SONIC, SoundCategory.AMBIENT, 1f, 1f);
@@ -73,22 +103,27 @@ public class RiftEntity extends DummyLivingEntity {
         if (interactAmount >= 3) {
             boolean gotFragment = this.getWorld().getRandom().nextBoolean();
 
+            player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
             if (gotFragment) {
-                player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
                 spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(AITItems.CORAL_FRAGMENT));
                 this.getWorld().playSound(null, player.getBlockPos(), AITSounds.RIFT_SUCCESS, SoundCategory.AMBIENT, 1f, 1f);
             } else {
-                player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
                 spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(Items.PAPER));
                 this.getWorld().playSound(null, this.getBlockPos(), AITSounds.RIFT_FAIL, SoundCategory.AMBIENT, 1f, 1f);
                 spreadTardisCoral(this.getWorld(), this.getBlockPos());
             }
 
             this.discard();
+
             return gotFragment ? ActionResult.SUCCESS : ActionResult.FAIL;
         }
 
         return ActionResult.CONSUME;
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return true;
     }
 
     public static void spawnItem(World world, BlockPos pos, ItemStack stack) {
@@ -171,5 +206,10 @@ public class RiftEntity extends DummyLivingEntity {
                 currentSoundIndex = (currentSoundIndex + 1) % RIFT_SOUNDS.length;
             }
         }
+    }
+
+    @Override
+    public Arm getMainArm() {
+        return Arm.LEFT;
     }
 }

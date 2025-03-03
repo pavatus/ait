@@ -317,7 +317,7 @@ public class AITMod implements ModInitializer {
                 ConsoleControlEntity.createDummyAttributes());
 
         FabricDefaultAttributeRegistry.register(AITEntityTypes.RIFT_ENTITY,
-                RiftEntity.createDummyAttributes());
+                RiftEntity.createLivingAttributes());
 
         FabricDefaultAttributeRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE,
                 FlightTardisEntity.createDummyAttributes());

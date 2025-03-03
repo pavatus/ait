@@ -23,13 +23,11 @@ public interface ArtronHolderItem {
         nbt.putDouble(this.getFuelKey(), var <= 0 ? 0 : var);
     }
 
-    default double addFuel(double var, ItemStack stack) {
+    default double addFuel(double val, ItemStack stack) {
         double current = this.getCurrentFuel(stack);
         double max = this.getMaxFuel(stack);
 
-        this.setCurrentFuel((current <= max ? current + var : max), stack);
-        if (current == max)
-            return var - (max - current);
+        this.setCurrentFuel(Math.min(current + val, max), stack);
         return 0;
     }
 
