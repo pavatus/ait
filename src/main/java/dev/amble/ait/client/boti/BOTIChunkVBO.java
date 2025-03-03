@@ -1,9 +1,11 @@
 package dev.amble.ait.client.boti;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.amble.ait.AITMod;
-import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,9 +24,9 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import dev.amble.ait.AITMod;
+import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
+import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 
 public class BOTIChunkVBO {
     private VertexBuffer vertexBuffer;
