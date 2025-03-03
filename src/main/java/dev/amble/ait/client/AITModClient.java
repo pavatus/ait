@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import dev.amble.lib.register.AmbleRegistries;
+import dev.codiak.client.BOTIRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -395,6 +396,8 @@ public class AITModClient implements ClientModInitializer {
     }
 
     public static void blockEntityRendererRegister() {
+        BlockEntityRendererFactories.register(AITBlockEntityTypes.PORTAL_BLOCK_ENTITY_TYPE, BOTIRenderer::new);
+
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_BLOCK_ENTITY_TYPE, ConsoleRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE,
                 ConsoleGeneratorRenderer::new);
@@ -441,6 +444,7 @@ public class AITModClient implements ClientModInitializer {
 
     public static void setupBlockRendering() {
         BlockRenderLayerMap map = BlockRenderLayerMap.INSTANCE;
+        map.putBlock(AITBlocks.PORTAL_BLOCK, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.ZEITON_BLOCK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.BUDDING_ZEITON, RenderLayer.getCutout());
         map.putBlock(AITBlocks.ENGINE_BLOCK, RenderLayer.getCutout());

@@ -7,6 +7,7 @@ import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
 import java.util.Calendar;
 
 import dev.amble.lib.container.impl.BlockEntityContainer;
+import dev.codiak.BEs.BOTIBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 
 import net.minecraft.block.entity.BlockEntityType;
@@ -19,6 +20,10 @@ import dev.amble.ait.core.engine.link.block.FluidLinkBlockEntity;
 import dev.amble.ait.module.planet.core.PlanetBlocks;
 
 public class AITBlockEntityTypes implements BlockEntityContainer {
+    public static BlockEntityType<BOTIBlockEntity> PORTAL_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
+            .create(BOTIBlockEntity::new, AITBlocks.PORTAL_BLOCK).build();
+
+
     public static BlockEntityType<SnowGlobeBlockEntity> SNOW_GLOBE_BLOCK_ENTITY_TYPE;
 
     public static BlockEntityType<ExteriorBlockEntity> EXTERIOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder

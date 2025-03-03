@@ -1,7 +1,6 @@
 package dev.amble.ait.client.renderers.exteriors;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -22,7 +21,7 @@ import net.minecraft.util.profiler.Profiler;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.link.v2.TardisRef;
-import dev.amble.ait.client.boti.BOTIChunkVBO;
+import dev.amble.ait.client.boti.BOTI;
 import dev.amble.ait.client.models.exteriors.ExteriorModel;
 import dev.amble.ait.client.models.exteriors.SiegeModeModel;
 import dev.amble.ait.client.models.machines.ShieldsModel;
@@ -34,7 +33,6 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.CloakHandler;
 import dev.amble.ait.core.tardis.handler.OvergrownHandler;
-import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
 import dev.amble.ait.data.datapack.DatapackConsole;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
@@ -171,17 +169,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
 
-//        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth() && tardis.travel().isLanded())
-//            BOTI.EXTERIOR_RENDER_QUEUE.add(entity);
-        //this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
-        if (entity.tardis().get().stats().botiChunkVBO != null) {
-            matrices.push();
-            entity.tardis().get().stats().botiChunkVBO.render(matrices, light, OverlayTexture.DEFAULT_UV);
-            matrices.pop();
-        } else {
-            entity.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();
-            ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(entity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
-        }
+        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth() && tardis.travel().isLanded())
+            BOTI.EXTERIOR_RENDER_QUEUE.add(entity);
+//        this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
+//        if (entity.tardis().get().stats().botiChunkVBO != null) {
+//            matrices.push();
+//            entity.tardis().get().stats().botiChunkVBO.render(matrices, light, OverlayTexture.DEFAULT_UV);
+//            matrices.pop();
+//        } else {
+//            entity.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();
+//            ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(entity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
+//        }
 
         if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).overgrown().get()) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices,

@@ -439,8 +439,11 @@ public class StatsHandler extends KeyedTardisComponent {
     @Environment(value = EnvType.CLIENT)
     public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity, NbtCompound chunkData) {
         if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
-        botiChunkVBO.setTargetPos(this.targetPos.get());
-        botiChunkVBO.updateChunkModel(exteriorBlockEntity, chunkData);
+
+//        if(botiChunkVBO == null) botiChunkVBO = new BOTIChunkVBO();
+//
+//        botiChunkVBO.setTargetPos(this.targetPos.get());
+//        botiChunkVBO.updateChunkModel(exteriorBlockEntity, chunkData);
 
 //        MinecraftClient mc = MinecraftClient.getInstance();
 //        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();

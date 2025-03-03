@@ -121,6 +121,12 @@ public class TardisExteriorBOTI extends BOTI {
                                 OverlayTexture.DEFAULT_UV);
                     botiProvider.draw(RenderLayer.getCutout());
                 }*/
+                // TODO: BOTI VBO Here
+//                if(exterior.tardis().get().stats().botiChunkVBO == null) {
+//                    exterior.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();
+//                    updateChunkModel(exterior);
+//                }
+//                else if(exterior.tardis().get().door().isOpen()) exterior.tardis().get().stats().botiChunkVBO.render(stack, light, OverlayTexture.DEFAULT_UV);
 
                 for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
                     BlockPos offsetPos = entry.getKey();
