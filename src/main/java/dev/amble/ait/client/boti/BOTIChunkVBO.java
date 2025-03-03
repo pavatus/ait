@@ -250,7 +250,7 @@ public class BOTIChunkVBO {
         // Render one block instead of a full chunk
         BufferBuilder bufferBuilder = new BufferBuilder(24); // 6 quads * 4 vertices
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
-        int vertexCounter = 0;
+        int vertexCounter = 1;
 
         BlockState state = Blocks.STONE.getDefaultState();
         BakedModel model = blockRenderManager.getModel(state);

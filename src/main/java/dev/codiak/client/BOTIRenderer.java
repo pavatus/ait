@@ -18,13 +18,13 @@ public class BOTIRenderer<T extends BOTIBlockEntity> implements BlockEntityRende
 
     @Override
     public void render(BOTIBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        matrices.push();
+//        matrices.push();
         if(VBO == null) {
             VBO = new BOTIChunkVBO();
             VBO.setTargetPos(new BlockPos(0, 0, 0));
             VBO.updateChunkModelTestQuads();
         }
         else VBO.render(matrices, light, overlay);
-        matrices.pop();
+//        matrices.pop();
     }
 }
