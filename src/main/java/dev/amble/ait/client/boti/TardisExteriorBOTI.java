@@ -32,7 +32,6 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.StatsHandler;
 import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
-import dev.amble.ait.core.tardis.util.network.s2c.BOTIDataS2CPacket;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
@@ -123,13 +122,6 @@ public class TardisExteriorBOTI extends BOTI {
                     );
                     stack.pop();
                 });
-                // TODO: BOTI VBO Here
-//                if(exterior.tardis().get().stats().botiChunkVBO == null) {
-//                    exterior.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();
-//                    updateChunkModel(exterior);
-//                }
-//                else if(exterior.tardis().get().door().isOpen()) exterior.tardis().get().stats().botiChunkVBO.render(stack, light, OverlayTexture.DEFAULT_UV);
-
                 for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
                     BlockPos offsetPos = entry.getKey();
                     BlockEntity be = entry.getValue();
@@ -206,7 +198,6 @@ public class TardisExteriorBOTI extends BOTI {
             if (targetWorld != null) {
                 ChunkPos chunkPos = new ChunkPos(tardis.stats().targetPos());
                 WorldChunk chunk = targetWorld.getChunk(chunkPos.x, chunkPos.z);
-                tardis.stats().updateChunkModel(exteriorBlockEntity, new BOTIDataS2CPacket(exteriorBlockEntity.getPos(), chunk, tardis.stats().targetPos()).chunkData);
             } else {
                 ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
             }

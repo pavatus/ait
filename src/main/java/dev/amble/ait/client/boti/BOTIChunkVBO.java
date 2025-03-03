@@ -26,6 +26,7 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 public class BOTIChunkVBO {
     private VertexBuffer vertexBuffer;
     public int vertexCount = 0;
+    public static int chunksToRender = 4;
     private final Map<BlockPos, BlockEntity> blockEntities = new HashMap<>();
     public Map<BlockPos, BlockState> blocks = new HashMap<>();
     private BlockPos targetPos;
@@ -33,6 +34,10 @@ public class BOTIChunkVBO {
 
     public BOTIChunkVBO() {
         this.vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+    }
+
+    public static int blocksToRender() {
+        return chunksToRender >> 4;
     }
 
     public void setTargetPos(BlockPos targetPos) {
