@@ -18,7 +18,7 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 
 public class BOTIChunkVBO {
     /** if this is disabled, it won't even attempt to render/create quads **/
-    public boolean shouldGenerateQuads = true;
+    public boolean shouldGenerateQuads = false;
     public VertexBuffer vertexBuffer;
     public BufferBuilder bufferBuilder;
     public int vertexCount = 0;

@@ -15,6 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
@@ -361,4 +362,13 @@ public class WorldUtil {
                 new EntityStatusEffectS2CPacket(player.getId(), effect)));
     }
 
+    public static void teleportAllPassengers(Entity vehicle, ServerWorld target, Vec3d pos) {
+        vehicle.getPassengerList().forEach(passenger -> {
+            passenger.teleport(pos.x, pos.y, pos.z);
+            passenger.moveToWorld(target);
+            if (passenger instanceof ServerPlayerEntity player)
+                player.getStatusEffects().forEach(effect -> player.networkHandler.sendPacket(
+                        new EntityStatusEffectS2CPacket(player.getId(), effect)));
+        });
+    }
 }
