@@ -21,10 +21,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 
 import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
@@ -160,12 +157,13 @@ public class BOTIChunkVBO {
         matrices.push();
         MinecraftClient mc = MinecraftClient.getInstance();
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
-        matrices.translate(-camPos.x, -camPos.y, -camPos.z); // Align with camera
-        matrices.translate(0, 0, -5); // 5 blocks in front of player
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(mc.gameRenderer.getCamera().getPitch()));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(mc.gameRenderer.getCamera().getYaw() + 180.0F));
+        matrices.translate(camPos.x, camPos.y - 5f, camPos.z); // Align with camera
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend(); // Prevent blending issues
-        RenderSystem.depthFunc(515); // GL_LEQUAL
+        RenderSystem.enableCull();
+        RenderSystem.enableBlend(); // Prevent blending issues
+        RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getRenderTypeSolidProgram);
         RenderSystem.setShaderTexture(0, SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
 
@@ -188,6 +186,9 @@ public class BOTIChunkVBO {
         VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.clearState();
 
         matrices.pop();
+
+        RenderSystem.disableBlend();
+        RenderSystem.disableCull();
     }
 
     public void cleanup() {
@@ -248,9 +249,9 @@ public class BOTIChunkVBO {
         this.blockEntities.clear();
 
         // Render one block instead of a full chunk
-        BufferBuilder bufferBuilder = new BufferBuilder(24); // 6 quads * 4 vertices
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
-        int vertexCounter = 1;
+        int vertexCounter = 8;
 
         BlockState state = Blocks.STONE.getDefaultState();
         BakedModel model = blockRenderManager.getModel(state);
