@@ -1,12 +1,21 @@
 package dev.amble.ait.client.renderers.exteriors;
 
+import dev.amble.ait.client.boti.BOTIChunkVBO;
+import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
+import dev.amble.ait.core.tardis.util.network.s2c.BOTIDataS2CPacket;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl;
+import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.BlockModelRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.SheepEntity;
@@ -146,7 +155,7 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 RotationAxis.NEGATIVE_Y.rotationDegrees(!this.variant.equals(ClientExteriorVariantRegistry.DOOM)
                         ? h + 180f
                         : MinecraftClient.getInstance().player.getHeadYaw() + 180f
-                                + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
+                        + ((wrappedDegrees > -135 && wrappedDegrees < 135) ? 180f : 0f)));
 
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
 
@@ -169,9 +178,17 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
                 vertexConsumers.getBuffer(AITRenderLayers.getEntityTranslucentCull(texture)), light, overlay, 1, 1, 1,
                 alpha);
 
-        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth() && tardis.travel().isLanded())
-            BOTI.EXTERIOR_RENDER_QUEUE.add(entity);
-            //this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
+//        if (tardis.door().getLeftRot() > 0 && !tardis.isGrowth() && tardis.travel().isLanded())
+//            BOTI.EXTERIOR_RENDER_QUEUE.add(entity);
+        //this.renderExteriorBoti(entity, variant, matrices, texture, model, BotiPortalModel.getTexturedModelData().createModel(), light);
+        if (entity.tardis().get().stats().botiChunkVBO != null) {
+            matrices.push();
+            entity.tardis().get().stats().botiChunkVBO.render(matrices, light, OverlayTexture.DEFAULT_UV);
+            matrices.pop();
+        } else {
+            entity.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();
+            ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(entity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
+        }
 
         if (tardis.<OvergrownHandler>handler(TardisComponent.Id.OVERGROWN).overgrown().get()) {
             model.renderWithAnimations(entity, this.model.getPart(), matrices,

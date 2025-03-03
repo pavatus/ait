@@ -10,6 +10,7 @@ import java.util.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import dev.amble.ait.client.boti.BOTIChunkVBO;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -61,6 +62,10 @@ import dev.amble.ait.data.properties.dbl.DoubleProperty;
 import dev.amble.ait.data.properties.dbl.DoubleValue;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
 import dev.amble.ait.registry.impl.DesktopRegistry;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 public class StatsHandler extends KeyedTardisComponent {
 
@@ -422,10 +427,6 @@ public class StatsHandler extends KeyedTardisComponent {
         return this.targetWorld.get();
     }
 
-    public BlockPos targetPos() {
-        return this.targetPos.get();
-    }
-
     public void setTargetWorld(ExteriorBlockEntity exteriorBlockEntity, RegistryKey<World> targetWorld, BlockPos targetPos, boolean markDirty) {
         this.targetWorld.set(targetWorld);
         this.targetPos.set(targetPos);
@@ -441,176 +442,141 @@ public class StatsHandler extends KeyedTardisComponent {
         }
     }
 
+    public BlockPos targetPos() {
+        return this.targetPos.get();
+    }
+    public BOTIChunkVBO botiChunkVBO;
+
+
     public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity, NbtCompound chunkData) {
         if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
+        botiChunkVBO.setTargetPos(this.targetPos.get());
+        botiChunkVBO.updateChunkModel(exteriorBlockEntity, chunkData);
 
-        MinecraftClient mc = MinecraftClient.getInstance();
-        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
-        List<BakedQuad> quads = new ArrayList<>();
-        ChunkPos chunkPos = new ChunkPos(targetPos.get());
-        int baseY = targetPos.get().getY() & ~15;
-        BlockState[][][] sectionStates = new BlockState[16][16][16];
-        this.blockEntities.clear();
-
-        // First pass - load block states
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
-                    BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
-                    sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
-
-                    String key = x + "_" + y + "_" + z;
-                    if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
-                        try {
-                            NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
-                            BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
-                            if (blockEntity != null) {
-                                if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
-                                exteriorBlockEntity.tardis() != null) {
-                                    abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
-                                }
-                                BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
-                                this.blockEntities.put(relativePos, blockEntity);
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-
-        // Second pass - generate quads
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    BlockState state = sectionStates[x][y][z];
-                    if (state != null && !state.isAir() && !state.hasBlockEntity()) {
-                        try {
-                            BakedModel model = blockRenderManager.getModel(state);
-                            if (model != null) {
-                                List<BakedQuad> blockQuads = new ArrayList<>();
-
-                                // Add general quads
-                                List<BakedQuad> generalQuads = model.getQuads(state, null, Random.create());
-                                if (generalQuads != null) {
-                                    blockQuads.addAll(generalQuads);
-                                }
-
-                                // Add side quads
-                                for (Direction side : Direction.values()) {
-                                    List<BakedQuad> sideQuads = model.getQuads(state, side, Random.create());
-                                    if (sideQuads != null) {
-                                        blockQuads.addAll(sideQuads);
-                                    }
-                                }
-
-                                // Translate and add valid quads
-                                if (!blockQuads.isEmpty()) {
-                                    List<BakedQuad> translatedQuads = translateQuads(blockQuads, x, y, z);
-                                    if (!translatedQuads.isEmpty()) {
-                                        quads.addAll(translatedQuads);
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Failed to generate quads for block at " + x + "," + y + "," + z + ": " + e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-
-        if (quads.isEmpty() && blockEntities.isEmpty()) {
-            System.out.println("No quads or block entities generated for chunk at " + targetPos.get() + " from data: " + chunkData);
-        } else {
-            this.chunkModel = new BakedModel() {
-                @Override
-                public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-                    return quads;
-                }
-
-                @Override
-                public boolean useAmbientOcclusion() {
-                    return false;
-                }
-
-                @Override
-                public boolean hasDepth() {
-                    return false;
-                }
-
-                @Override
-                public boolean isSideLit() {
-                    return false;
-                }
-
-                @Override
-                public boolean isBuiltin() {
-                    return false;
-                }
-
-                @Override
-                public Sprite getParticleSprite() {
-                    return mc.getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
-                            .apply(new Identifier("minecraft:block/stone"));
-                }
-
-                @Override
-                public ModelTransformation getTransformation() {
-                    return ModelTransformation.NONE;
-                }
-
-                @Override
-                public ModelOverrideList getOverrides() {
-                    return ModelOverrideList.EMPTY;
-                }
-            };
-        }
-    }
-
-    private List<BakedQuad> translateQuads(List<BakedQuad> quads, int xOffset, int yOffset, int zOffset) {
-        if (quads == null || quads.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<BakedQuad> translated = new ArrayList<>(quads.size());
-
-        for (BakedQuad quad : quads) {
-            if (quad == null) continue;
-
-            int[] originalData = quad.getVertexData();
-            if (originalData == null || originalData.length < 32) continue; // Each vertex has 8 elements, 4 vertices per quad
-
-            int[] vertexData = originalData.clone();
-            try {
-                // Process all 4 vertices of the quad
-                for (int v = 0; v < 4; v++) {
-                    int baseIndex = v * 8;
-                    // Translate X, Y, Z coordinates
-                    float x = Float.intBitsToFloat(vertexData[baseIndex]) + xOffset;
-                    float y = Float.intBitsToFloat(vertexData[baseIndex + 1]) + yOffset;
-                    float z = Float.intBitsToFloat(vertexData[baseIndex + 2]) + zOffset;
-
-                    vertexData[baseIndex] = Float.floatToRawIntBits(x);
-                    vertexData[baseIndex + 1] = Float.floatToRawIntBits(y);
-                    vertexData[baseIndex + 2] = Float.floatToRawIntBits(z);
-                }
-
-                translated.add(new BakedQuad(
-                        vertexData,
-                        quad.getColorIndex(),
-                        quad.getFace(),
-                        quad.getSprite(),
-                        quad.hasShade()
-                ));
-            } catch (Exception e) {
-                AITMod.LOGGER.error("Failed to translate quad: {}", e.getMessage());
-            }
-        }
-
-        return translated;
+//        MinecraftClient mc = MinecraftClient.getInstance();
+//        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
+//        List<BakedQuad> quads = new ArrayList<>();
+//        ChunkPos chunkPos = new ChunkPos(targetPos.get());
+//        int baseY = targetPos.get().getY() & ~15;
+//        BlockState[][][] sectionStates = new BlockState[16][16][16];
+//        this.blockEntities.clear();
+//
+//        // First pass - load block states
+//        for (int y = 0; y < 16; y++) {
+//            for (int x = 0; x < 16; x++) {
+//                for (int z = 0; z < 16; z++) {
+//                    BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+//                    BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
+//                    sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
+//
+//                    String key = x + "_" + y + "_" + z;
+//                    if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
+//                        try {
+//                            NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
+//                            BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
+//                            if (blockEntity != null) {
+//                                if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
+//                                exteriorBlockEntity.tardis() != null) {
+//                                    abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
+//                                }
+//                                BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
+//                                this.blockEntities.put(relativePos, blockEntity);
+//                            }
+//                        } catch (Exception e) {
+//                            System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Second pass - generate quads
+//        for (int y = 0; y < 16; y++) {
+//            for (int x = 0; x < 16; x++) {
+//                for (int z = 0; z < 16; z++) {
+//                    BlockState state = sectionStates[x][y][z];
+//                    if (state != null && !state.isAir() && !state.hasBlockEntity()) {
+//                        try {
+//                            BakedModel model = blockRenderManager.getModel(state);
+//                            if (model != null) {
+//                                List<BakedQuad> blockQuads = new ArrayList<>();
+//
+//                                // Add general quads
+//                                List<BakedQuad> generalQuads = model.getQuads(state, null, Random.create());
+//                                if (generalQuads != null) {
+//                                    blockQuads.addAll(generalQuads);
+//                                }
+//
+//                                // Add side quads
+//                                for (Direction side : Direction.values()) {
+//                                    List<BakedQuad> sideQuads = model.getQuads(state, side, Random.create());
+//                                    if (sideQuads != null) {
+//                                        blockQuads.addAll(sideQuads);
+//                                    }
+//                                }
+//
+//                                // Translate and add valid quads
+//                                if (!blockQuads.isEmpty()) {
+//                                    List<BakedQuad> translatedQuads = translateQuads(blockQuads, x, y, z);
+//                                    if (!translatedQuads.isEmpty()) {
+//                                        quads.addAll(translatedQuads);
+//                                    }
+//                                }
+//                            }
+//                        } catch (Exception e) {
+//                            System.out.println("Failed to generate quads for block at " + x + "," + y + "," + z + ": " + e.getMessage());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (quads.isEmpty() && blockEntities.isEmpty()) {
+//            System.out.println("No quads or block entities generated for chunk at " + targetPos.get() + " from data: " + chunkData);
+//        } else {
+//            this.chunkModel = new BakedModel() {
+//                @Override
+//                public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
+//                    return quads;
+//                }
+//
+//                @Override
+//                public boolean useAmbientOcclusion() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean hasDepth() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean isSideLit() {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean isBuiltin() {
+//                    return false;
+//                }
+//
+//                @Override
+//                public Sprite getParticleSprite() {
+//                    return mc.getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
+//                            .apply(new Identifier("minecraft", "stone"));
+//                }
+//
+//                @Override
+//                public ModelTransformation getTransformation() {
+//                    return ModelTransformation.NONE;
+//                }
+//
+//                @Override
+//                public ModelOverrideList getOverrides() {
+//                    return ModelOverrideList.EMPTY;
+//                }
+//            };
+//        }
     }
 
     private BlockState getBlockStateFromChunkNBT(NbtCompound chunkData, BlockPos pos) {
