@@ -12,7 +12,6 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
@@ -103,42 +102,27 @@ public class TardisExteriorBOTI extends BOTI {
         if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
             MatrixStack matrices = new MatrixStack();
             stack.push();
-            stack.translate(2.5f, 1, -0.25f);
+            stack.translate(0, 0, 0);
             stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
             StatsHandler stats = tardis.stats();
             BlockPos targetPos = stats.targetPos();
+            BlockPos doorPos = tardis.getDesktop().getDoorPos().getPos();
             RegistryKey<World> targetWorld = stats.getTargetWorld();
-            BakedModel chunkMesh = stats.chunkModel;
-            if (targetPos != null && targetWorld != null) {
-                /*if (chunkMesh != null) {
-                    VertexConsumer chunkConsumer = botiProvider.getBuffer(RenderLayer.getCutout());
-                    MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer()
-                        .render(stack.peek(),
-                                chunkConsumer,
-                                null,
-                                chunkMesh, 1, 1, 1, light,
-                                OverlayTexture.DEFAULT_UV);
-                    botiProvider.draw(RenderLayer.getCutout());
-                }*/
-                // Just use this to enable/disable the boti bullshit
-                if(true) {
-                    exterior.tardis().get().stats().posState.forEach((pos, state) -> {
-                        stack.push();
-                        stack.translate(pos.getX(), pos.getY(), pos.getZ());
-                        MinecraftClient.getInstance().getBlockRenderManager().renderBlock(
-                                state,
-                                new BlockPos(0, 0, 0),
-                                MinecraftClient.getInstance().world,
-                                stack,
-                                MinecraftClient.getInstance().getBufferBuilders()
-                                        .getEffectVertexConsumers().getBuffer(RenderLayers.getBlockLayer(state)),
-                                true,
-                                MinecraftClient.getInstance().world.getRandom()
-                        );
-                        stack.pop();
-                    });
-                }
+            if (doorPos != null && targetPos != null && targetWorld != null) {
+                exterior.tardis().get().stats().posState.forEach((pos, state) -> {
+                    stack.push();
+                    stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+                    stack.translate(doorPos.getX() - pos.getX(),
+                            doorPos.getY()- pos.getY(),
+                            doorPos.getZ()- pos.getZ());
+                    MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
+                            stack.peek(), botiProvider.getBuffer(RenderLayers.getBlockLayer(state)),
+                            state, MinecraftClient.getInstance().getBlockRenderManager().getModel(state),
+                            1, 1, 1, light - 0xf00ff, OverlayTexture.DEFAULT_UV
+                    );
+                    stack.pop();
+                });
                 // TODO: BOTI VBO Here
 //                if(exterior.tardis().get().stats().botiChunkVBO == null) {
 //                    exterior.tardis().get().stats().botiChunkVBO = new BOTIChunkVBO();

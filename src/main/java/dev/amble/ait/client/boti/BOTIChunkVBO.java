@@ -102,9 +102,10 @@ public class BOTIChunkVBO {
 
     private boolean isOccluded(BlockState[][][] states, int x, int y, int z) {
         if (x == 0 || x == 15 || y == 0 || y == 15 || z == 0 || z == 15) return false;
-        return !states[x-1][y][z].isAir() && !states[x+1][y][z].isAir() &&
+        /*return !states[x-1][y][z].isAir() && !states[x+1][y][z].isAir() &&
                 !states[x][y-1][z].isAir() && !states[x][y+1][z].isAir() &&
-                !states[x][y][z-1].isAir() && !states[x][y][z+1].isAir();
+                !states[x][y][z-1].isAir() && !states[x][y][z+1].isAir();*/
+        return false;
     }
 
     public void render(MatrixStack matrices, int light, int overlay) {
