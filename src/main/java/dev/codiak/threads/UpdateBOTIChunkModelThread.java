@@ -69,42 +69,44 @@ public class UpdateBOTIChunkModelThread extends Thread {
 
         botiChunkVBO.blocks.forEach((pos, state) -> {
             if (state != null && !state.isAir() && !state.hasBlockEntity()) {
-                BakedModel model = blockRenderManager.getModel(state);
-                if (model != null) {
-                    List<BakedQuad> blockQuads = new ArrayList<>();
+                if(finalBotiChunkVBO.shouldGenerateQuads) {
+                    BakedModel model = blockRenderManager.getModel(state);
+                    if (model != null) {
+                        List<BakedQuad> blockQuads = new ArrayList<>();
 
-                    // Add general quads
-                    List<BakedQuad> generalQuads = model.getQuads(state, null, net.minecraft.util.math.random.Random.create());
-                    if (generalQuads != null) {
-                        blockQuads.addAll(generalQuads);
-                    }
+                        // Add general quads
+                        List<BakedQuad> generalQuads = model.getQuads(state, null, net.minecraft.util.math.random.Random.create());
+                        if (generalQuads != null) {
+                            blockQuads.addAll(generalQuads);
+                        }
 
-                    // Add side quads
-                    List<BakedQuad> sideQuads = model.getQuads(state, Direction.NORTH, net.minecraft.util.math.random.Random.create());
-                    sideQuads.addAll(model.getQuads(state, Direction.SOUTH, net.minecraft.util.math.random.Random.create()));
-                    sideQuads.addAll(model.getQuads(state, Direction.EAST, net.minecraft.util.math.random.Random.create()));
-                    sideQuads.addAll(model.getQuads(state, Direction.WEST, net.minecraft.util.math.random.Random.create()));
-                    blockQuads.addAll(sideQuads);
+                        // Add side quads
+                        List<BakedQuad> sideQuads = model.getQuads(state, Direction.NORTH, net.minecraft.util.math.random.Random.create());
+                        sideQuads.addAll(model.getQuads(state, Direction.SOUTH, net.minecraft.util.math.random.Random.create()));
+                        sideQuads.addAll(model.getQuads(state, Direction.EAST, net.minecraft.util.math.random.Random.create()));
+                        sideQuads.addAll(model.getQuads(state, Direction.WEST, net.minecraft.util.math.random.Random.create()));
+                        blockQuads.addAll(sideQuads);
 
-                    Random random = Random.create();
-                    int x = pos.getX();
-                    int y = pos.getY();
-                    int z = pos.getZ();
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, null, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.UP, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.DOWN, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.NORTH, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.SOUTH, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.EAST, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
-                    vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.WEST, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        Random random = Random.create();
+                        int x = pos.getX();
+                        int y = pos.getY();
+                        int z = pos.getZ();
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, null, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.UP, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.DOWN, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.NORTH, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.SOUTH, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.EAST, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
+                        vertexCounter.addAndGet(finalBotiChunkVBO.addQuadsToBuffer(model.getQuads(state, Direction.WEST, random), finalBotiChunkVBO.bufferBuilder, x, y, z));
 
 
-                    // Translate and add valid quads
-                    if (!blockQuads.isEmpty()) {
-                        if(exteriorBlockEntity.tardis().get().stats() != null) {
-                            List<BakedQuad> translatedQuads = exteriorBlockEntity.tardis().get().stats().translateQuads(blockQuads, pos.getX(), pos.getY(), pos.getZ());
-                            if (!translatedQuads.isEmpty()) {
-                                quads.addAll(translatedQuads);
+                        // Translate and add valid quads
+                        if (!blockQuads.isEmpty()) {
+                            if (exteriorBlockEntity.tardis().get().stats() != null) {
+                                List<BakedQuad> translatedQuads = exteriorBlockEntity.tardis().get().stats().translateQuads(blockQuads, pos.getX(), pos.getY(), pos.getZ());
+                                if (!translatedQuads.isEmpty()) {
+                                    quads.addAll(translatedQuads);
+                                }
                             }
                         }
                     }
@@ -112,7 +114,7 @@ public class UpdateBOTIChunkModelThread extends Thread {
             }
         });
 
-        if (quads.isEmpty()) { //&& blockEntities.isEmpty()) {
+        if (quads.isEmpty()) {
             System.out.println("No quads or block entities generated for chunk at " + targetPos);
         } else {
             exteriorBlockEntity.tardis().get().stats().chunkModel = new BakedModel() {
