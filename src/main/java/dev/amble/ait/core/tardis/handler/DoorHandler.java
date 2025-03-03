@@ -140,7 +140,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
                     Vec3d pos = new Vec3d(directed.getPos().getX(), directed.getPos().getY(),
                             directed.getPos().getZ()).offset(directed.toMinecraftDirection(), -0.5f);
 
-                    float suckValue = tardis.travel().position().getDimension().equals(AITDimensions.SPACE) ? 0.8f: 0.05f;
+                    float suckValue = tardis.travel().position().getDimension().equals(AITDimensions.SPACE) ? 0.08f: 0.05f;
                     Vec3d motion = pos.subtract(entity.getPos()).normalize().multiply(suckValue);
 
                     // Apply the motion to the entity
