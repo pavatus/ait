@@ -29,6 +29,7 @@ import net.minecraft.world.spawner.Spawner;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.tardis.ServerTardis;
+import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.util.WorldUtil;
 
@@ -65,15 +66,15 @@ public class TardisServerWorld extends MultiDimServerWorld {
         return created;
     }
 
-    public static ServerWorld get(ServerTardis tardis) {
+    public static ServerWorld get(Tardis tardis) {
         return ServerLifecycleHooks.get().getWorld(keyForTardis(tardis));
     }
 
-    private static RegistryKey<World> keyForTardis(ServerTardis tardis) {
+    private static RegistryKey<World> keyForTardis(Tardis tardis) {
         return RegistryKey.of(RegistryKeys.WORLD, idForTardis(tardis));
     }
 
-    private static Identifier idForTardis(ServerTardis tardis) {
+    private static Identifier idForTardis(Tardis tardis) {
         return new Identifier(NAMESPACE, tardis.getUuid().toString());
     }
 
