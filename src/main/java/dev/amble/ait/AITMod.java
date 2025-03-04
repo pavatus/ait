@@ -208,6 +208,8 @@ public class AITMod implements ModInitializer {
 
         Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
 
+        RiftEntity.addSpawn();
+
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);
             SummonTardisCommand.register(dispatcher);
@@ -317,7 +319,7 @@ public class AITMod implements ModInitializer {
                 ConsoleControlEntity.createDummyAttributes());
 
         FabricDefaultAttributeRegistry.register(AITEntityTypes.RIFT_ENTITY,
-                RiftEntity.createDummyAttributes());
+                RiftEntity.createMobAttributes());
 
         FabricDefaultAttributeRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE,
                 FlightTardisEntity.createDummyAttributes());

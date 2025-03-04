@@ -75,13 +75,23 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         ItemStack hand = player.getMainHandStack();
 
         if (tardis.isGrowth()) {
-            if (hand.getItem() == AITItems.PLASMIC_MATERIAL) {
-                int plasmic = tardis.interiorChangingHandler().plasmicMaterialAmount();
-                if (plasmic < MAX_PLASMIC_MATERIAL_AMOUNT) {
-                    tardis.interiorChangingHandler().addPlasmicMaterial(1);
-                    world.playSound(null, pos, SoundEvents.ENTITY_MAGMA_CUBE_SQUISH, SoundCategory.BLOCKS, 1F, (float) plasmic / 8);
-                    hand.decrement(1);
+            if (tardis.interiorChangingHandler().hasCage()) {
+                if (hand.getItem() == AITItems.PLASMIC_MATERIAL) {
+                    int plasmic = tardis.interiorChangingHandler().plasmicMaterialAmount();
+                    if (plasmic < MAX_PLASMIC_MATERIAL_AMOUNT) {
+                        tardis.interiorChangingHandler().addPlasmicMaterial(1);
+                        world.playSound(null, pos, SoundEvents.ENTITY_MAGMA_CUBE_SQUISH, SoundCategory.BLOCKS, 1F, (float) plasmic / 8);
+                        hand.decrement(1);
+                    }
                 }
+            } else {
+                if (hand.getItem() == AITItems.CORAL_CAGE) {
+                    world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_HIT, SoundCategory.BLOCKS, 1F, 0.7f);
+                    tardis.interiorChangingHandler().setHasCage(true);
+                    return;
+                }
+                world.playSound(null, pos, SoundEvents.BLOCK_CORAL_BLOCK_HIT, SoundCategory.BLOCKS, 1F, 0.3f);
+                player.sendMessage(Text.translatable("tardis.message.growth.no_cage"), true);
             }
          return;
         }
@@ -158,11 +168,11 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
             return;
 
 
-        if (tardis.stats().getTargetWorld() != null &&
+        /*if (tardis.stats().getTargetWorld() != null &&
                 !tardis.stats().getTargetWorld().equals
                         (tardis.asServer().getInteriorWorld().getRegistryKey()))
             tardis.stats().setTargetWorld(this,
-                tardis.asServer().getInteriorWorld().getRegistryKey(), tardis.getDesktop().getDoorPos().getPos(), true);
+                tardis.asServer().getInteriorWorld().getRegistryKey(), tardis.getDesktop().getDoorPos().getPos(), true);*/
 
         tardis.door().interact((ServerWorld) this.getWorld(), this.getPos(), (ServerPlayerEntity) player);
     }

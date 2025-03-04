@@ -58,6 +58,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
     private final Value<Identifier> queuedInterior = QUEUED_INTERIOR_PROPERTY.create(this);
     private static final IntProperty PLASMIC_MATERIAL_AMOUNT = new IntProperty("plasmic_material_amount");
     private final IntValue plasmicMaterialAmount = PLASMIC_MATERIAL_AMOUNT.create(this);
+    private static final BoolProperty HAS_CAGE = new BoolProperty("has_cage");
+    private final BoolValue hasCage = HAS_CAGE.create(this);
     private final BoolValue queued = QUEUED.create(this);
     private final BoolValue regenerating = REGENERATING.create(this);
 
@@ -70,6 +72,8 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     @Override
     public void onLoaded() {
+        plasmicMaterialAmount.of(this, PLASMIC_MATERIAL_AMOUNT);
+        hasCage.of(this, HAS_CAGE);
         queuedInterior.of(this, QUEUED_INTERIOR_PROPERTY);
         queued.of(this, QUEUED);
         regenerating.of(this, REGENERATING);
@@ -116,6 +120,14 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
     public int plasmicMaterialAmount() {
         return plasmicMaterialAmount.get();
+    }
+
+    public boolean hasCage() {
+        return hasCage.get();
+    }
+
+    public void setHasCage(boolean value) {
+        hasCage.set(value);
     }
 
     public void setPlasmicMaterialAmount(int amount) {

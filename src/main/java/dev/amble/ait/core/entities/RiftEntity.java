@@ -1,32 +1,40 @@
 package dev.amble.ait.core.entities;
 
+import java.util.List;
 import java.util.Random;
 
+import dev.amble.lib.util.TeleportUtil;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+
 import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.*;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.mob.AmbientEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleEffect;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.ChunkRandom;
+import net.minecraft.world.*;
 
 import dev.amble.ait.AITMod;
-import dev.amble.ait.api.ArtronHolderItem;
-import dev.amble.ait.core.AITBlocks;
-import dev.amble.ait.core.AITEntityTypes;
-import dev.amble.ait.core.AITItems;
-import dev.amble.ait.core.AITSounds;
-import dev.amble.ait.core.entities.base.DummyLivingEntity;
+import dev.amble.ait.core.*;
+import dev.amble.ait.core.item.SonicItem;
 
-public class RiftEntity extends DummyLivingEntity {
+public class RiftEntity extends AmbientEntity {
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;
@@ -45,7 +53,7 @@ public class RiftEntity extends DummyLivingEntity {
     };
 
     public RiftEntity(EntityType<?> type, World world) {
-        super(AITEntityTypes.RIFT_ENTITY, world, false);
+        super(AITEntityTypes.RIFT_ENTITY, world);
     }
 
     @Override
@@ -54,12 +62,61 @@ public class RiftEntity extends DummyLivingEntity {
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
+    public boolean cannotDespawn() {
+        return true;
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorItems() {
+        return List.of(new ItemStack[0]);
+    }
+
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+
+    }
+
+    @Override
+    public void onPlayerCollision(PlayerEntity player) {
+        if (player.getServer() == null) {
+            super.onPlayerCollision(player);
+            return;
+        }
+        ServerWorld world = player.getServer().getWorld(AITDimensions.TIME_VORTEX_WORLD);
+        if (world == null) {
+            super.onPlayerCollision(player);
+            return;
+        }
+        TeleportUtil.teleport(player, world, new Vec3d(0, 0, 0), player.bodyYaw);
+    }
+
+    @Override
+    public DataTracker getDataTracker() {
+        return super.getDataTracker();
+    }
+
+    @Override
+    public void setAiDisabled(boolean aiDisabled) {
+        super.setAiDisabled(true);
+    }
+
+    @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        super.onTrackedDataSet(data);
+    }
+
+    @Override
+    public final ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (this.getWorld().isClient()) return ActionResult.SUCCESS;
 
         ItemStack stack = player.getStackInHand(hand);
 
-        if (stack.getItem() instanceof ArtronHolderItem sonic) {
+        if (stack.getItem() instanceof SonicItem sonic) {
             if (!this.getWorld().isClient()) {
                 sonic.addFuel(1000, stack);
                 this.getWorld().playSound(null, this.getBlockPos(), AITSounds.RIFT_SONIC, SoundCategory.AMBIENT, 1f, 1f);
@@ -73,22 +130,27 @@ public class RiftEntity extends DummyLivingEntity {
         if (interactAmount >= 3) {
             boolean gotFragment = this.getWorld().getRandom().nextBoolean();
 
+            player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
             if (gotFragment) {
-                player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
                 spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(AITItems.CORAL_FRAGMENT));
                 this.getWorld().playSound(null, player.getBlockPos(), AITSounds.RIFT_SUCCESS, SoundCategory.AMBIENT, 1f, 1f);
             } else {
-                player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
                 spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(Items.PAPER));
                 this.getWorld().playSound(null, this.getBlockPos(), AITSounds.RIFT_FAIL, SoundCategory.AMBIENT, 1f, 1f);
                 spreadTardisCoral(this.getWorld(), this.getBlockPos());
             }
 
             this.discard();
+
             return gotFragment ? ActionResult.SUCCESS : ActionResult.FAIL;
         }
 
         return ActionResult.CONSUME;
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return true;
     }
 
     public static void spawnItem(World world, BlockPos pos, ItemStack stack) {
@@ -109,7 +171,7 @@ public class RiftEntity extends DummyLivingEntity {
                 if (newState != null) {
                     world.setBlockState(targetPos, newState, Block.NOTIFY_ALL);
 
-                    world.addParticle((ParticleEffect) AITMod.CORAL_PARTICLE,
+                    world.addParticle(AITMod.CORAL_PARTICLE,
                             targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5,
                             0, 0, 0);
 
@@ -171,5 +233,59 @@ public class RiftEntity extends DummyLivingEntity {
                 currentSoundIndex = (currentSoundIndex + 1) % RIFT_SOUNDS.length;
             }
         }
+    }
+
+    @Override
+    public Arm getMainArm() {
+        return Arm.LEFT;
+    }
+
+    public static boolean canSpawn(EntityType<RiftEntity> rift,
+                                   ServerWorldAccess serverWorldAccess, SpawnReason spawnReason,
+                                   BlockPos pos, net.minecraft.util.math.random.Random random) {
+        if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess)) return false;
+
+        if (spawnReason == SpawnReason.STRUCTURE) {
+            return worldAccess.isAir(pos);
+        }
+
+        ChunkPos chunkPos = new ChunkPos(pos);
+        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
+                worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
+        if (/*random.nextInt(2) == 0 && */bl) {
+            BlockPos newPos = new BlockPos(pos.getX(), worldAccess.getTopY() + 15, pos.getZ());
+            return worldAccess.isAir(newPos);
+        }
+        return false;
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        double d = packet.getX();
+        double e = packet.getY() + 25;
+        double f = packet.getZ();
+        float g = packet.getYaw();
+        float h = packet.getPitch();
+        this.updateTrackedPosition(d, e, f);
+        this.bodyYaw = packet.getHeadYaw();
+        this.headYaw = packet.getHeadYaw();
+        this.prevBodyYaw = this.bodyYaw;
+        this.prevHeadYaw = this.headYaw;
+        this.setId(packet.getId());
+        this.setUuid(packet.getUuid());
+        this.updatePositionAndAngles(d, e, f, g, h);
+        this.setVelocity(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
+        this.updatePosition(d, e, f);
+    }
+
+    public static void addSpawn() {
+        BiomeModifications.addSpawn(
+                BiomeSelectors.all(),
+                SpawnGroup.AMBIENT,
+                AITEntityTypes.RIFT_ENTITY,
+                4,
+                1,
+                1
+        );
     }
 }
