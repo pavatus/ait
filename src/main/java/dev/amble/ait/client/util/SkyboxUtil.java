@@ -64,6 +64,21 @@ public class SkyboxUtil extends WorldRenderer {
         matrices.pop();
     }
 
+    public static void renderVortexSky(MatrixStack matrices) {
+        VortexUtil util = new VortexUtil("dalekmod");
+        matrices.push();
+        float scale = 100f;
+        float zOffset = 500 * scale;
+        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees((float) MinecraftClient.getInstance().player.age / ((float) 200 / 5) * 360f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) MinecraftClient.getInstance().player.age / 100 * 360f));
+        matrices.translate(0, 0, zOffset);
+        matrices.scale(scale, scale, scale);
+
+        util.renderVortex(matrices);
+        matrices.pop();
+    }
+
     public static void renderTardisSky(MatrixStack matrices) {
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);

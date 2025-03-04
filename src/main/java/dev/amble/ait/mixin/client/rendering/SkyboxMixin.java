@@ -91,7 +91,7 @@ public abstract class SkyboxMixin {
         }
 
         if (this.world.getRegistryKey() == AITDimensions.TIME_VORTEX_WORLD) {
-            SkyboxUtil.renderTardisSky(matrices);
+            SkyboxUtil.renderVortexSky(matrices);
             ci.cancel();
         }
 
