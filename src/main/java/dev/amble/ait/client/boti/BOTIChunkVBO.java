@@ -17,8 +17,8 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 
 
 public class BOTIChunkVBO {
-    /** if this is disabled, it won't even attempt to render/create quads **/
-    public boolean shouldGenerateQuads = false;
+    /** if this is false, it won't even attempt to render/create quads and instead fall back to the {@link  net.minecraft.client.render.block.BlockModelRenderer} render method **/
+    public static boolean shouldGenerateQuads = false;
     public VertexBuffer vertexBuffer;
     public BufferBuilder bufferBuilder;
     public int vertexCount = 0;

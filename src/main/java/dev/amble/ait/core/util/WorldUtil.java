@@ -370,5 +370,10 @@ public class WorldUtil {
                 player.getStatusEffects().forEach(effect -> player.networkHandler.sendPacket(
                         new EntityStatusEffectS2CPacket(player.getId(), effect)));
         });
+        vehicle.teleport(pos.x, pos.y, pos.z);
+        vehicle.moveToWorld(target);
+        if (vehicle instanceof ServerPlayerEntity player)
+            player.getStatusEffects().forEach(effect -> player.networkHandler.sendPacket(
+                    new EntityStatusEffectS2CPacket(player.getId(), effect)));
     }
 }

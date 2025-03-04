@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.render.chunk.ChunkBuilder;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.entity.BlockEntity;
@@ -101,50 +102,49 @@ public class TardisExteriorBOTI extends BOTI {
         OUTOFBOTI:
         if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
             MatrixStack matrices = new MatrixStack();
-            stack.push();
-            stack.translate(0, 0, 0);
-            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
             StatsHandler stats = tardis.stats();
             BlockPos targetPos = stats.targetPos();
             BlockPos doorPos = tardis.getDesktop().getDoorPos().getPos();
             RegistryKey<World> targetWorld = stats.getTargetWorld();
             if (doorPos != null && targetPos != null && targetWorld != null) {
-                if (exterior.tardis().get().stats().botiChunkVBO == null) {
+                if (stats.botiChunkVBO == null) {
                     this.updateChunkModel(exterior);
+                    break OUTOFBOTI;
                 }
 
                 OUTOFVBO:
-                if (exterior.tardis().get().stats().botiChunkVBO != null) {
-//                    exterior.tardis().get().stats().botiChunkVBO.render(stack, light, OverlayTexture.DEFAULT_UV);
-                    if (exterior.tardis().get().stats().botiChunkVBO.isWorkingInThread()) break OUTOFVBO;
-                    if (exterior.tardis().get().stats().botiChunkVBO.isDirty()) break OUTOFVBO;
-                    if (!exterior.tardis().get().stats().botiChunkVBO.shouldGenerateQuads) break OUTOFVBO;
+                if (BOTIChunkVBO.shouldGenerateQuads) {
+//                    stats.botiChunkVBO.render(stack, light, OverlayTexture.DEFAULT_UV);
+                    if (stats.botiChunkVBO.isWorkingInThread()) break OUTOFVBO;
+                    if (stats.botiChunkVBO.isDirty()) break OUTOFVBO;
 
-                    exterior.tardis().get().stats().botiChunkVBO.vertexBuffer.bind();
+                    stats.botiChunkVBO.vertexBuffer.bind();
                     VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.setupState();
-                    exterior.tardis().get().stats().botiChunkVBO.vertexBuffer.draw();
+                    stats.botiChunkVBO.vertexBuffer.draw();
                     VertexBuffer.unbind();
                     VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.clearState();
-                } else {
-                    updateChunkModel(exterior);
+
+
+                    if (stats.botiChunkVBO != null &&
+                            stats.botiChunkVBO.isDirty() &&
+                            !stats.botiChunkVBO.isWorkingInThread())
+                        stats.botiChunkVBO.updateChunkModel(exterior);
                 }
 
+                OUTOFBLOCKRENDERER:
+                if (!BOTIChunkVBO.shouldGenerateQuads) {
+                    if (this.lastRenderTick == MinecraftClient.getInstance().getTickDelta() ||
+                            stats.posState == null) {
+                        updateChunkModel(exterior);
+                        break OUTOFBLOCKRENDERER;
+                    }
 
-                if (exterior.tardis().get().stats().botiChunkVBO != null &&
-                        exterior.tardis().get().stats().botiChunkVBO.isDirty() &&
-                        !exterior.tardis().get().stats().botiChunkVBO.isWorkingInThread())
-                    exterior.tardis().get().stats().botiChunkVBO.updateChunkModel(exterior);
-
-                stack.pop();
-
-                if(this.lastRenderTick == MinecraftClient.getInstance().getTickDelta() ||
-                exterior.tardis().get().stats().posState.isEmpty()) break OUTOFBOTI;
-                else {
-                    exterior.tardis().get().stats().posState.forEach((pos, state) -> {
+                    stats.posState.forEach((pos, state) -> {
                         stack.push();
+
                         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
-                        stack.translate(doorPos.getX() - pos.getX(),
+                        stack.translate(
+                                doorPos.getX() + pos.getX(),
                                 doorPos.getY() - pos.getY(),
                                 doorPos.getZ() - pos.getZ());
                         MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
@@ -160,28 +160,29 @@ public class TardisExteriorBOTI extends BOTI {
                         );
                         stack.pop();
                     });
+
                     this.lastRenderTick = MinecraftClient.getInstance().getTickDelta();
                 }
-                for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
-                    BlockPos offsetPos = entry.getKey();
-                    BlockEntity be = entry.getValue();
-                    BlockEntityRenderer<BlockEntity> renderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(be);
-                    if (renderer != null) {
-                        stack.push();
-                        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
-                        stack.translate(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
-                        be.setWorld(MinecraftClient.getInstance().world);
-                        renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack,
-                                botiProvider, light, OverlayTexture.DEFAULT_UV);
-                        botiProvider.draw();
-                        stack.pop();
-                        //System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
-                    } else {
-                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().render(be, MinecraftClient.getInstance().getTickDelta(), matrices, botiProvider);
-                    }
-                }
+//                for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
+//                    BlockPos offsetPos = entry.getKey();
+//                    BlockEntity be = entry.getValue();
+//                    BlockEntityRenderer<BlockEntity> renderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(be);
+//                    if (renderer != null) {
+//                        stack.push();
+//                        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
+//                        stack.translate(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
+//                        be.setWorld(MinecraftClient.getInstance().world);
+//                        renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack,
+//                                botiProvider, light, OverlayTexture.DEFAULT_UV);
+//                        botiProvider.draw();
+//                        stack.pop();
+//                        //System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
+//                    } else {
+//                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().render(be, MinecraftClient.getInstance().getTickDelta(), matrices, botiProvider);
+//                    }
+//                }
+//            }
             }
-            stack.pop();
         }
 
         stack.push();
