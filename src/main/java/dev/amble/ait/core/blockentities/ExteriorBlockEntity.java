@@ -88,6 +88,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 if (hand.getItem() == AITItems.CORAL_CAGE) {
                     world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_HIT, SoundCategory.BLOCKS, 1F, 0.7f);
                     tardis.interiorChangingHandler().setHasCage(true);
+                    hand.decrement(1);
                     return;
                 }
                 world.playSound(null, pos, SoundEvents.BLOCK_CORAL_BLOCK_HIT, SoundCategory.BLOCKS, 1F, 0.3f);
