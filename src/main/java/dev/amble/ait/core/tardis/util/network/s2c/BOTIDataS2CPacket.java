@@ -30,8 +30,11 @@ public class BOTIDataS2CPacket implements FabricPacket {
 
     private final BlockPos botiPos;
     public Map<BlockPos, BlockState> posStates = new HashMap<>();
+    public Map<BlockPos, BlockEntity> posTile = new HashMap<>();
+    public final NbtCompound chunkData;
 
     public BOTIDataS2CPacket(BlockPos botiPos, WorldChunk chunk, BlockPos targetPos) {
+        chunkData = new NbtCompound();
         this.botiPos = botiPos;
         NbtCompound blockEntities = new NbtCompound();
         int targetY = targetPos.getY();
@@ -39,13 +42,13 @@ public class BOTIDataS2CPacket implements FabricPacket {
         int sectionIndex = chunk.getSectionIndex(targetY);
         ChunkSection section = chunk.getSection(sectionIndex);
         ChunkPos chunkPos = chunk.getPos();
-
+        int r = 17;
         try {
             Map<BlockState, Integer> stateToIndex = new HashMap<>();
             stateToIndex.put(Blocks.AIR.getDefaultState(), 0);
             for (int y = 0; y < 16; y++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
+                for (int x = 0; x < r; x++) {
+                    for (int z = 0; z < r; z++) {
                         BlockState state = section.getBlockState(x, y, z);
                         if (state != null && !state.isAir() && !stateToIndex.containsKey(state)) {
                             this.posStates.put(new BlockPos(x, y, z), state);
@@ -56,8 +59,8 @@ public class BOTIDataS2CPacket implements FabricPacket {
 
             // Collect block entity data
             for (int y = 0; y < 16; y++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
+                for (int x = 0; x < r; x++) {
+                    for (int z = 0; z < r; z++) {
                         BlockPos worldPos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
                         BlockEntity be = chunk.getBlockEntity(worldPos);
                         if (be != null) {
@@ -68,7 +71,9 @@ public class BOTIDataS2CPacket implements FabricPacket {
                     }
                 }
             }
-
+            if (!blockEntities.isEmpty()) {
+                this.chunkData.put("block_entities", blockEntities);
+            }
         } catch (Exception e) {
             System.out.println("Exception in packet construction: " + e.getMessage());
             AITMod.LOGGER.atTrace();
@@ -86,6 +91,8 @@ public class BOTIDataS2CPacket implements FabricPacket {
                             .result().orElse(Blocks.AIR.getDefaultState());
                 }
         );
+
+        this.chunkData = buf.readNbt();
     }
     @Override
     public void write(PacketByteBuf buf) {
@@ -99,6 +106,7 @@ public class BOTIDataS2CPacket implements FabricPacket {
                     buffer.writeNbt(nbt);
                 }
         );
+        buf.writeNbt(chunkData);
     }
 
     @Override
@@ -119,6 +127,7 @@ public class BOTIDataS2CPacket implements FabricPacket {
             if (exteriorBlockEntity.tardis() == null) return false;
             Tardis tardis = exteriorBlockEntity.tardis().get();
             tardis.stats().updateMap(this.posStates);
+            tardis.stats().chunkData = this.chunkData;
 
             tardis.stats().updateChunkModel(exteriorBlockEntity);
 //            this.posStates.forEach((pos, state) -> {

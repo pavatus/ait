@@ -1,15 +1,19 @@
 package dev.amble.ait.client.boti;
 
 
+import java.util.Map;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.amble.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.RegistryKey;
@@ -135,6 +139,7 @@ public class TardisExteriorBOTI extends BOTI {
                     }
 
                     stats.posState.forEach((pos, state) -> {
+//                        if(!ClientCameraUtil.isInVisibleArea(pos)) return;
                         stack.push();
                         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 + doorPos.toMinecraftDirection().asRotation()));
                         stack.translate(
@@ -158,24 +163,25 @@ public class TardisExteriorBOTI extends BOTI {
 
                     this.lastRenderTick = MinecraftClient.getInstance().getTickDelta();
                 }
-//                for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
-//                    BlockPos offsetPos = entry.getKey();
-//                    BlockEntity be = entry.getValue();
-//                    BlockEntityRenderer<BlockEntity> renderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(be);
-//                    if (renderer != null) {
-//                        stack.push();
-//                        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
-//                        stack.translate(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
-//                        be.setWorld(MinecraftClient.getInstance().world);
-//                        renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack,
-//                                botiProvider, light, OverlayTexture.DEFAULT_UV);
-//                        botiProvider.draw();
-//                        stack.pop();
-//                        //System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
-//                    } else {
-//                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().render(be, MinecraftClient.getInstance().getTickDelta(), matrices, botiProvider);
-//                    }
-//                }
+
+                for (Map.Entry<BlockPos, BlockEntity> entry : stats.blockEntities.entrySet()) {
+                    BlockPos offsetPos = entry.getKey();
+                    BlockEntity be = entry.getValue();
+                    BlockEntityRenderer<BlockEntity> renderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(be);
+                    if (renderer != null) {
+                        stack.push();
+                        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
+                        stack.translate(offsetPos.getX(), offsetPos.getY(), offsetPos.getZ());
+                        be.setWorld(MinecraftClient.getInstance().world);
+                        renderer.render(be, MinecraftClient.getInstance().getTickDelta(), stack,
+                                botiProvider, light, OverlayTexture.DEFAULT_UV);
+                        botiProvider.draw();
+                        stack.pop();
+                        System.out.println("No renderer found for block entity " + be + " at " + offsetPos);
+                    } else {
+                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().render(be, MinecraftClient.getInstance().getTickDelta(), matrices, botiProvider);
+                    }
+                }
 //            }
             }
         }

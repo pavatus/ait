@@ -18,18 +18,25 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
+import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
 import dev.amble.ait.client.boti.BOTIChunkVBO;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.sounds.flight.FlightSound;
@@ -446,6 +453,9 @@ public class StatsHandler extends KeyedTardisComponent {
     @Environment(value = EnvType.CLIENT)
     public Map<BlockPos, BlockState> posState = new HashMap<>();
 
+    @Exclude
+    public NbtCompound chunkData = new NbtCompound();
+
     @Environment(value = EnvType.CLIENT)
     public void updateMap(Map<BlockPos, BlockState> statePos) {
         posState = statePos;
@@ -478,13 +488,43 @@ public class StatsHandler extends KeyedTardisComponent {
         botiChunkVBO.updateChunkModel(exteriorBlockEntity);
 
 
-//        MinecraftClient mc = MinecraftClient.getInstance();
-//        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
+        MinecraftClient mc = MinecraftClient.getInstance();
+        BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
 //        List<BakedQuad> quads = new ArrayList<>();
-//        ChunkPos chunkPos = new ChunkPos(targetPos.get());
-//        int baseY = targetPos.get().getY() & ~15;
+        ChunkPos chunkPos = new ChunkPos(targetPos.get());
+        int baseY = targetPos.get().getY() & ~15;
 //        BlockState[][][] sectionStates = new BlockState[16][16][16];
-//        this.blockEntities.clear();
+        this.blockEntities.clear();
+
+        BlockState[][][] sectionStates = new BlockState[16][16][16];
+
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+                    BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
+                    sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
+
+                    String key = x + "_" + y + "_" + z;
+                    if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
+                        try {
+                            NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
+                            BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
+                            if (blockEntity != null) {
+                                if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
+                                        exteriorBlockEntity.tardis() != null) {
+                                    abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
+                                }
+                                BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
+                                this.blockEntities.put(relativePos, blockEntity);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
 //
 //        this.botiChunkVBO.blocks.forEach((pos, state) -> {
 //            if (state != null && !state.isAir() && !state.hasBlockEntity()) {
@@ -579,5 +619,52 @@ public class StatsHandler extends KeyedTardisComponent {
             translated.add(new BakedQuad(vertexData, quad.getColorIndex(), quad.getFace(), quad.getSprite(), quad.hasShade()));
         }
         return translated;
+    }
+
+
+    private BlockState getBlockStateFromChunkNBT(NbtCompound chunkData, BlockPos pos) {
+        if (chunkData.contains("block_states")) {
+            NbtCompound blockStates = chunkData.getCompound("block_states");
+            if (blockStates.contains("palette") && blockStates.contains("data")) {
+                NbtList palette = blockStates.getList("palette", NbtCompound.COMPOUND_TYPE);
+                long[] data = blockStates.getLongArray("data");
+                if (data.length == 0 || palette.isEmpty()) {
+                    System.out.println("Empty data or palette in chunk NBT for pos " + pos +
+                            ": data=" + data.length + ", palette=" + palette.size());
+                    return Blocks.AIR.getDefaultState();
+                }
+
+                int bitsPerEntry = blockStates.contains("bitsPerEntry") ? blockStates.getInt("bitsPerEntry") :
+                        Math.max(2, (int) Math.ceil(Math.log(palette.size()) / Math.log(2)));
+                int x = pos.getX() & 15;
+                int y = pos.getY() & 15;
+                int z = pos.getZ() & 15;
+                int index = y * 256 + z * 16 + x;
+
+                int entriesPerLong = 64 / bitsPerEntry;
+                int longIndex = index / entriesPerLong;
+                if (longIndex >= data.length) {
+                    System.out.println("Long index out of bounds: " + longIndex + " >= " + data.length +
+                            " (index=" + index + ", bitsPerEntry=" + bitsPerEntry + ")");
+                    return Blocks.AIR.getDefaultState();
+                }
+                int offset = (index % entriesPerLong) * bitsPerEntry;
+                long value = (data[longIndex] >> offset) & ((1L << bitsPerEntry) - 1);
+
+                if (value >= 0 && value < palette.size()) {
+                    NbtCompound stateTag = palette.getCompound((int) value);
+                    return BlockState.CODEC.parse(NbtOps.INSTANCE, stateTag)
+                            .result().orElse(Blocks.AIR.getDefaultState());
+                } else {
+                    System.out.println("State value out of palette bounds at " + pos + ": " + value + " >= " + palette.size());
+                    return Blocks.AIR.getDefaultState();
+                }
+            } else {
+                System.out.println("Missing palette or data in block_states: " + blockStates);
+            }
+        } else {
+            System.out.println("No block_states in chunk data: " + chunkData);
+        }
+        return Blocks.AIR.getDefaultState();
     }
 }
