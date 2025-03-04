@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
@@ -13,6 +15,7 @@ import net.minecraft.entity.mob.AmbientEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -254,5 +257,35 @@ public class RiftEntity extends AmbientEntity {
             return worldAccess.isAir(newPos);
         }
         return false;
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        double d = packet.getX();
+        double e = packet.getY() + 25;
+        double f = packet.getZ();
+        float g = packet.getYaw();
+        float h = packet.getPitch();
+        this.updateTrackedPosition(d, e, f);
+        this.bodyYaw = packet.getHeadYaw();
+        this.headYaw = packet.getHeadYaw();
+        this.prevBodyYaw = this.bodyYaw;
+        this.prevHeadYaw = this.headYaw;
+        this.setId(packet.getId());
+        this.setUuid(packet.getUuid());
+        this.updatePositionAndAngles(d, e, f, g, h);
+        this.setVelocity(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
+        this.updatePosition(d, e, f);
+    }
+
+    public static void addSpawn() {
+        BiomeModifications.addSpawn(
+                BiomeSelectors.all(),
+                SpawnGroup.AMBIENT,
+                AITEntityTypes.RIFT_ENTITY,
+                4,
+                1,
+                1
+        );
     }
 }
