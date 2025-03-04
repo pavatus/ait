@@ -1,5 +1,7 @@
 package dev.amble.ait.core.tardis.util.network.s2c;
 
+import static dev.amble.ait.client.boti.BOTIChunkVBO.chunksToRender;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,13 +17,16 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.chunk.ChunkStatus;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.client.boti.BOTIChunkVBO;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 
@@ -31,50 +36,68 @@ public class BOTIDataS2CPacket implements FabricPacket {
     private final BlockPos botiPos;
     public Map<BlockPos, BlockState> posStates = new HashMap<>();
 
-    public BOTIDataS2CPacket(BlockPos botiPos, WorldChunk chunk, BlockPos targetPos) {
+    public BOTIDataS2CPacket(BlockPos botiPos, ServerWorld world, BlockPos targetPos) {
         this.botiPos = botiPos;
+
         NbtCompound blockEntities = new NbtCompound();
-        int targetY = targetPos.getY();
-        int baseY = targetY & ~15;
-        int sectionIndex = chunk.getSectionIndex(targetY);
-        ChunkSection section = chunk.getSection(sectionIndex);
-        ChunkPos chunkPos = chunk.getPos();
+        Map<BlockState, Integer> stateToIndex = new HashMap<>(32);
+        stateToIndex.put(Blocks.AIR.getDefaultState(), 0);
 
         try {
-            Map<BlockState, Integer> stateToIndex = new HashMap<>();
-            stateToIndex.put(Blocks.AIR.getDefaultState(), 0);
-            for (int y = 0; y < 16; y++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        BlockState state = section.getBlockState(x, y, z);
-                        if (state != null && !state.isAir() && !stateToIndex.containsKey(state)) {
-                            this.posStates.put(new BlockPos(x, y, z), state);
+            int chunksToRender = BOTIChunkVBO.chunksToRender;
+            int r = 16;
+            int targetY = targetPos.getY();
+            int baseY = targetY & ~15;
+
+            for (int i = 0; i < chunksToRender; i++) {
+                for (int d = 0; d < chunksToRender; d++) {
+                    BlockPos target = targetPos.add(BOTIChunkVBO.blocksToRender(i), 0,
+                            BOTIChunkVBO.blocksToRender(d));
+                    ChunkPos chunkPos = new ChunkPos(target);
+
+                    Chunk chunk = world.getChunk(chunkPos.x, chunkPos.z,
+                            ChunkStatus.FULL, false);
+                    if (chunk == null) continue;
+
+                    int sectionIndex = chunk.getSectionIndex(targetY);
+                    ChunkSection section = chunk.getSection(sectionIndex);
+
+                    for (int y = 0; y < r; y++) {
+                        for (int x = 0; x < r; x++) {
+                            for (int z = 0; z < r; z++) {
+                                BlockPos localPos = new BlockPos(x, y, z);
+                                BlockState state = section.getBlockState(x, y, z);
+
+                                // Block state and entity collection happens at the same time now
+                                if (state != null && !state.isAir() &&
+                                        !stateToIndex.containsKey(state)) {
+                                    this.posStates.put(localPos, state);
+                                }
+
+                                BlockPos worldPos = new BlockPos(
+                                        chunkPos.getStartX() + x,
+                                        baseY + y,
+                                        chunkPos.getStartZ() + z
+                                );
+                                BlockEntity be = chunk.getBlockEntity(worldPos);
+                                if (be != null) {
+                                    blockEntities.put(
+                                            localPos.toShortString(), // More efficient key
+                                            be.createNbtWithIdentifyingData()
+                                    );
+                                }
+                            }
                         }
                     }
                 }
             }
-
-            // Collect block entity data
-            for (int y = 0; y < 16; y++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        BlockPos worldPos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
-                        BlockEntity be = chunk.getBlockEntity(worldPos);
-                        if (be != null) {
-                            NbtCompound blockEntityNbt = be.createNbtWithIdentifyingData();
-                            String key = x + "_" + y + "_" + z;
-                            blockEntities.put(key, blockEntityNbt);
-                        }
-                    }
-                }
-            }
-
         } catch (Exception e) {
             System.out.println("Exception in packet construction: " + e.getMessage());
             AITMod.LOGGER.atTrace();
             System.out.println("Using fallback stone data due to serialization failure");
         }
     }
+
 
     public BOTIDataS2CPacket(PacketByteBuf buf) {
         this.botiPos = buf.readBlockPos();
@@ -87,6 +110,7 @@ public class BOTIDataS2CPacket implements FabricPacket {
                 }
         );
     }
+
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(botiPos);

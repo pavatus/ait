@@ -64,7 +64,7 @@ public class BOTIChunkRequestC2SPacket implements FabricPacket {
         ChunkPos chunkPos = new ChunkPos(this.targetPos);
         world.getChunkManager().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
         WorldChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
-        ServerPlayNetworking.send(source, new BOTIDataS2CPacket(this.botiPos, chunk, this.targetPos));
+        ServerPlayNetworking.send(source, new BOTIDataS2CPacket(this.botiPos, world, this.targetPos));
         return true;
     }
 }

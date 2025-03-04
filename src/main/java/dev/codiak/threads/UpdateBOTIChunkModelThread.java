@@ -55,6 +55,7 @@ public class UpdateBOTIChunkModelThread extends Thread {
         botiChunkVBO.markDirty();
 
         if(botiChunkVBO.bufferBuilder == null) botiChunkVBO.bufferBuilder = new BufferBuilder(4096 * 6 * 4);
+        if(botiChunkVBO.bufferBuilder.isBuilding()) return;
         botiChunkVBO.bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL);
         AtomicInteger vertexCounter = new AtomicInteger();
 

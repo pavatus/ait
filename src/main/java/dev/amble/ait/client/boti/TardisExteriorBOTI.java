@@ -2,7 +2,6 @@ package dev.amble.ait.client.boti;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.amble.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.lwjgl.opengl.GL11;
 
@@ -15,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -56,6 +56,9 @@ public class TardisExteriorBOTI extends BOTI {
             updateChunkModel(exterior);
             exterior.lastRequestTime = currentTime;
         }
+        if(currentTime < exterior.lastRequestTime) // Make sure the last request time is never greater than the current time, trust me it happens for some reason, almost like the last request time is *saved* in the TE
+            exterior.lastRequestTime = 0;
+
 
         stack.push();
 
@@ -94,12 +97,14 @@ public class TardisExteriorBOTI extends BOTI {
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
+        // https://www.geeksforgeeks.org/adding-labels-to-method-and-functions-in-java/
         OUTOFBOTI:
         if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
             MatrixStack matrices = new MatrixStack();
             StatsHandler stats = tardis.stats();
             BlockPos targetPos = stats.targetPos();
-            DirectedBlockPos doorPos = tardis.getDesktop().getDoorPos();
+            BlockPos doorPos = tardis.getDesktop().getDoorPos().getPos();
+            Direction doorDirection = tardis.getDesktop().getDoorPos().toMinecraftDirection();
             RegistryKey<World> targetWorld = stats.getTargetWorld();
             if (doorPos != null && targetPos != null && targetWorld != null) {
                 if (stats.botiChunkVBO == null) {
@@ -136,11 +141,11 @@ public class TardisExteriorBOTI extends BOTI {
 
                     stats.posState.forEach((pos, state) -> {
                         stack.push();
-                        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 + doorPos.toMinecraftDirection().asRotation()));
+                        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 + doorDirection.asRotation()));
                         stack.translate(
-                                doorPos.getPos().getX() - pos.getX() - 16.5f,
-                                doorPos.getPos().getY() - pos.getY() - 16,
-                                doorPos.getPos().getZ() - pos.getZ() + 1);
+                                doorPos.getX() - pos.getX() - 16.5f,
+                                doorPos.getY() - pos.getY(),
+                                doorPos.getZ() - pos.getZ() + 0.7f);
                         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
                         MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
                                 stack.peek(),
@@ -229,9 +234,9 @@ public class TardisExteriorBOTI extends BOTI {
         Tardis tardis = exteriorBlockEntity.tardis().get();
 
         long currentTime = mc.world.getTime();
-        if (exteriorBlockEntity.lastRequestTime == 0 || currentTime - exteriorBlockEntity.lastRequestTime >= 20) {
+//        if (exteriorBlockEntity.lastRequestTime == 0 || currentTime - exteriorBlockEntity.lastRequestTime >= 20) {
             ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
             exteriorBlockEntity.lastRequestTime = currentTime;
-        }
+//        }
     }
 }
