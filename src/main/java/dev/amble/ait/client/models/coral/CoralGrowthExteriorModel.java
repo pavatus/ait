@@ -579,16 +579,16 @@ public class CoralGrowthExteriorModel extends ExteriorModel {
         ClientTardis tardis = (ClientTardis) exterior.tardis().get();
 
         boolean isNotLanded = tardis.interiorChangingHandler().queued().get() || tardis.travel().getState() != TravelHandlerBase.State.LANDED;
-
-        seven.getChild("corallybits").visible = tardis.interiorChangingHandler().plasmicMaterialAmount() == 0;
-        six.getChild("sixcorallybits").visible = isNotLanded;
+        boolean hasCage = tardis.interiorChangingHandler().hasCage();
+        seven.getChild("corallybits").visible = !hasCage && tardis.interiorChangingHandler().plasmicMaterialAmount() == 0;
+        six.getChild("sixcorallybits").visible = !hasCage;
 
         door.visible = isNotLanded;
 
         float alpha = ((float) tardis.interiorChangingHandler().plasmicMaterialAmount() / 8f);
 
         super.renderWithAnimations(exterior, isNotLanded ? six : seven, matrices, vertices, light, overlay, red, green, blue, pAlpha);
-        super.renderWithAnimations(exterior, cage, matrices, vertices, light, overlay, red, green, blue, pAlpha);
+        if (hasCage) super.renderWithAnimations(exterior, cage, matrices, vertices, light, overlay, red, green, blue, pAlpha);
         super.renderWithAnimations(exterior, perimeter, matrices, vertices, light, overlay, red, green, blue,
                 alpha >= 1 ? pAlpha : alpha);
     }
