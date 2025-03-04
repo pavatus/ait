@@ -1,28 +1,23 @@
 package dev.amble.ait.client.boti;
 
-import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.amble.lib.data.DirectedBlockPos;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.render.chunk.ChunkBuilder;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.WorldChunk;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
@@ -104,7 +99,7 @@ public class TardisExteriorBOTI extends BOTI {
             MatrixStack matrices = new MatrixStack();
             StatsHandler stats = tardis.stats();
             BlockPos targetPos = stats.targetPos();
-            BlockPos doorPos = tardis.getDesktop().getDoorPos().getPos();
+            DirectedBlockPos doorPos = tardis.getDesktop().getDoorPos();
             RegistryKey<World> targetWorld = stats.getTargetWorld();
             if (doorPos != null && targetPos != null && targetWorld != null) {
                 if (stats.botiChunkVBO == null) {
@@ -141,12 +136,12 @@ public class TardisExteriorBOTI extends BOTI {
 
                     stats.posState.forEach((pos, state) -> {
                         stack.push();
-
-                        stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
+                        stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 + doorPos.toMinecraftDirection().asRotation()));
                         stack.translate(
-                                doorPos.getX() + pos.getX(),
-                                doorPos.getY() - pos.getY(),
-                                doorPos.getZ() - pos.getZ());
+                                doorPos.getPos().getX() - pos.getX() - 16.5f,
+                                doorPos.getPos().getY() - pos.getY() - 16,
+                                doorPos.getPos().getZ() - pos.getZ() + 1);
+                        stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
                         MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
                                 stack.peek(),
                                 botiProvider.getBuffer(RenderLayers.getBlockLayer(state)),
@@ -235,13 +230,7 @@ public class TardisExteriorBOTI extends BOTI {
 
         long currentTime = mc.world.getTime();
         if (exteriorBlockEntity.lastRequestTime == 0 || currentTime - exteriorBlockEntity.lastRequestTime >= 20) {
-            World targetWorld = mc.world.getRegistryKey() == tardis.stats().getTargetWorld() ? mc.world : null;
-            if (targetWorld != null) {
-                ChunkPos chunkPos = new ChunkPos(tardis.stats().targetPos());
-                WorldChunk chunk = targetWorld.getChunk(chunkPos.x, chunkPos.z);
-            } else {
-                ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
-            }
+            ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
             exteriorBlockEntity.lastRequestTime = currentTime;
         }
     }
