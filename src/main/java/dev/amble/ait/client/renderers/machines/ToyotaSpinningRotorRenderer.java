@@ -10,6 +10,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.models.machines.ToyotaSpinningRotorModel;
@@ -35,8 +36,12 @@ public class ToyotaSpinningRotorRenderer<T extends ToyotaSpinningRotorBlockEntit
                        VertexConsumerProvider vertexConsumers, int light, int overlay) {
         BlockState blockState = entity.getCachedState();
 
+
+
         matrices.push();
         matrices.scale(1f, 1f, 1f);
+        matrices.translate(0.5f, 1.5f, 0.5f);
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);

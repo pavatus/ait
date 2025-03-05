@@ -9,18 +9,19 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-import dev.amble.ait.core.blockentities.FlagBlockEntity;
+import dev.amble.ait.core.blockentities.ToyotaSpinningRotorBlockEntity;
+
 
 @SuppressWarnings("deprecation")
 public class ToyotaSpinningRotorBlock extends Block implements BlockEntityProvider {
 
     private static final VoxelShape CUBE = VoxelShapes.cuboid(
-            1,
-            1,
-            1,
-            1,
-            1,
-            1
+            0,
+            0,
+            0,
+            16,
+            16,
+            16
     );
 
 
@@ -28,10 +29,12 @@ public class ToyotaSpinningRotorBlock extends Block implements BlockEntityProvid
         super(settings);
     }
 
+
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return CUBE;
     }
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
@@ -39,6 +42,6 @@ public class ToyotaSpinningRotorBlock extends Block implements BlockEntityProvid
 
     @Nullable @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FlagBlockEntity(pos, state);
+        return new ToyotaSpinningRotorBlockEntity(pos, state);
     }
 }
