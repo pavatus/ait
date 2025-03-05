@@ -2,6 +2,7 @@ package dev.amble.ait.client.boti;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.lwjgl.opengl.GL11;
 
@@ -56,7 +57,7 @@ public class TardisExteriorBOTI extends BOTI {
             updateChunkModel(exterior);
             exterior.lastRequestTime = currentTime;
         }
-        if(currentTime < exterior.lastRequestTime) // Make sure the last request time is never greater than the current time, trust me it happens for some reason, almost like the last request time is *saved* in the TE
+        if (currentTime < exterior.lastRequestTime) // Make sure the last request time is never greater than the current time, trust me it happens for some reason, almost like the last request time is *saved* in the TE
             exterior.lastRequestTime = 0;
 
 
@@ -234,9 +235,13 @@ public class TardisExteriorBOTI extends BOTI {
         Tardis tardis = exteriorBlockEntity.tardis().get();
 
         long currentTime = mc.world.getTime();
+
+        if (ServerLifecycleHooks.get().getWorld(exteriorBlockEntity.tardis().get().stats().getTargetWorld()) == null ||
+                ServerLifecycleHooks.get().getWorld(exteriorBlockEntity.tardis().get().stats().getTargetWorld()).getRegistryKey() == World.OVERWORLD)
+            return;
 //        if (exteriorBlockEntity.lastRequestTime == 0 || currentTime - exteriorBlockEntity.lastRequestTime >= 20) {
-            ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
-            exteriorBlockEntity.lastRequestTime = currentTime;
+        ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
+        exteriorBlockEntity.lastRequestTime = currentTime;
 //        }
     }
 }

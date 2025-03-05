@@ -5,6 +5,7 @@ import static dev.amble.ait.client.boti.BOTIChunkVBO.chunksToRender;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -17,6 +18,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -36,9 +38,9 @@ public class BOTIDataS2CPacket implements FabricPacket {
     private final BlockPos botiPos;
     public Map<BlockPos, BlockState> posStates = new HashMap<>();
 
-    public BOTIDataS2CPacket(BlockPos botiPos, ServerWorld world, BlockPos targetPos) {
+    public BOTIDataS2CPacket(BlockPos botiPos, RegistryKey<World> key, BlockPos targetPos) {
         this.botiPos = botiPos;
-
+        ServerWorld world = ServerLifecycleHooks.get().getWorld(key);
         NbtCompound blockEntities = new NbtCompound();
         Map<BlockState, Integer> stateToIndex = new HashMap<>(32);
         stateToIndex.put(Blocks.AIR.getDefaultState(), 0);

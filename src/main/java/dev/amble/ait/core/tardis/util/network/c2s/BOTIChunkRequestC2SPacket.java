@@ -55,16 +55,12 @@ public class BOTIChunkRequestC2SPacket implements FabricPacket {
 
         MinecraftServer server = source.getServer();
 
-        if (server == null) return false;
+        if (server == null || server.getWorld(this.targetWorld) == null) return false;
 
-        ServerWorld world = server.getWorld(this.targetWorld);
-
-        if (world == null) return false;
-
-        ChunkPos chunkPos = new ChunkPos(this.targetPos);
-        world.getChunkManager().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
-        WorldChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
-        ServerPlayNetworking.send(source, new BOTIDataS2CPacket(this.botiPos, world, this.targetPos));
+//        ChunkPos chunkPos = new ChunkPos(this.targetPos);
+//        world.getChunkManager().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
+//        WorldChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
+        ServerPlayNetworking.send(source, new BOTIDataS2CPacket(this.botiPos, this.targetWorld, this.targetPos));
         return true;
     }
 }
