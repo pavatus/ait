@@ -34,7 +34,11 @@ public class BOTIChunkVBO {
     }
 
     public static int blocksToRender() {
-        return chunksToRender >> 4;
+        return chunksToRender >> 2;
+    }
+
+    public static int blocksToRender(int chunkIndex) {
+        return chunkIndex >> 2;
     }
 
     public void setTargetPos(BlockPos targetPos) {
