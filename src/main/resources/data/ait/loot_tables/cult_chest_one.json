@@ -43,6 +43,21 @@
           "type": "minecraft:item",
           "name": "ait:moon_sandstone",
           "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:cult_staser_rifle",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:cult_staser",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:handles",
+          "weight": 0.5
         }
       ],
       "rolls": 15
