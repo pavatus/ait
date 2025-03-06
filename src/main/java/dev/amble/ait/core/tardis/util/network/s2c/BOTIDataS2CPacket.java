@@ -1,7 +1,5 @@
 package dev.amble.ait.core.tardis.util.network.s2c;
 
-import static dev.amble.ait.client.boti.BOTIChunkVBO.chunksToRender;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,8 +55,10 @@ public class BOTIDataS2CPacket implements FabricPacket {
                             BOTIChunkVBO.blocksToRender(d));
                     ChunkPos chunkPos = new ChunkPos(target);
 
-                    Chunk chunk = world.getChunk(chunkPos.x, chunkPos.z,
-                            ChunkStatus.FULL, false);
+                    assert world != null;
+                    world.getChunkManager().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
+
+                    Chunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
                     if (chunk == null) continue;
 
                     int sectionIndex = chunk.getSectionIndex(targetY);

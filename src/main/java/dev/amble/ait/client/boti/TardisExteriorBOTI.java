@@ -4,10 +4,10 @@ package dev.amble.ait.client.boti;
 import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.amble.lib.util.ServerLifecycleHooks;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -140,12 +140,17 @@ public class TardisExteriorBOTI extends BOTI {
                 if (!BOTIChunkVBO.shouldGenerateQuads) {
                     if (this.lastRenderTick == MinecraftClient.getInstance().getTickDelta() ||
                             stats.posState == null) {
+                        break OUTOFBLOCKRENDERER;
+                    }
+                    if(stats.posState == null) {
                         updateChunkModel(exterior);
                         break OUTOFBLOCKRENDERER;
                     }
 
                     stats.posState.forEach((pos, state) -> {
 //                        if(!ClientCameraUtil.isInVisibleArea(pos)) return;
+                        if(state.equals(Blocks.AIR.getDefaultState())) return;
+
                         stack.push();
                         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 + doorDirection.asRotation()));
                         stack.translate(
@@ -242,8 +247,7 @@ public class TardisExteriorBOTI extends BOTI {
 
         long currentTime = mc.world.getTime();
 
-        if (ServerLifecycleHooks.get().getWorld(exteriorBlockEntity.tardis().get().stats().getTargetWorld()) == null ||
-                ServerLifecycleHooks.get().getWorld(exteriorBlockEntity.tardis().get().stats().getTargetWorld()).getRegistryKey() == World.OVERWORLD)
+        if (exteriorBlockEntity.tardis().get().stats().getTargetWorld() == World.OVERWORLD)
             return;
 //        if (exteriorBlockEntity.lastRequestTime == 0 || currentTime - exteriorBlockEntity.lastRequestTime >= 20) {
         ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
