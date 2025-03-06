@@ -69,7 +69,8 @@
 	"mixins": [
 		"ait.mixins.json",
 		"gaslighter.mixins.json",
-		"planet.mixins.json"
+		"planet.mixins.json",
+		"gun.mixins.json"
 	],
 	"accessWidener": "ait.accesswidener",
 	"depends": {
