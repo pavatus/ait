@@ -43,7 +43,6 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
         Tardis tardis = entity.tardis().get();
         matrices.push();
-        matrices.translate(0.5f, 1.5f, 0.5f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
         this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),

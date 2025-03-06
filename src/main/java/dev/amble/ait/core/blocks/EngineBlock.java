@@ -17,6 +17,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlockEntityTypes;
 import dev.amble.ait.core.blockentities.EngineBlockEntity;
 import dev.amble.ait.core.engine.SubSystem;
@@ -75,13 +76,7 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
 
         if (!engine.isLinked()) return;
 
-        world.addParticle(ParticleTypes.SMOKE, true, pos.getX() + -0.9f, pos.getY() + 1.25,
-                pos.getZ() + 1.8f, 0, 0.06, 0);
-        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + -0.9f, pos.getY() + 1.25,
-                pos.getZ() + 1.8f, 0, 0.06, 0);
-        world.addParticle(ParticleTypes.FLAME, true, pos.getX() + -0.9f, pos.getY() + 1.25,
-                pos.getZ() + 1.8f, 0, 0.06, 0);
-        world.addParticle(ParticleTypes.SMALL_FLAME, true, pos.getX() + -0.9f, pos.getY() + 1.25,
+        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX() + -0.9f, pos.getY() + 1.25,
                 pos.getZ() + 1.8f, 0, 0.06, 0);
 
         float durability = engine.tardis().get().subsystems().engine().durability();
