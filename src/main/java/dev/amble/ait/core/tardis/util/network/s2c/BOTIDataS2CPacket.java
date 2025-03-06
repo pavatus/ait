@@ -42,7 +42,6 @@ public class BOTIDataS2CPacket implements FabricPacket {
         NbtCompound blockEntities = new NbtCompound();
         Map<BlockState, Integer> stateToIndex = new HashMap<>(32);
         stateToIndex.put(Blocks.AIR.getDefaultState(), 0);
-
         try {
             int chunksToRender = BOTIChunkVBO.chunksToRender;
             int r = 16;
@@ -51,8 +50,8 @@ public class BOTIDataS2CPacket implements FabricPacket {
 
             for (int i = 0; i < chunksToRender; i++) {
                 for (int d = 0; d < chunksToRender; d++) {
-                    BlockPos target = targetPos.add(BOTIChunkVBO.blocksToRender(i), 0,
-                            BOTIChunkVBO.blocksToRender(d));
+                    BlockPos target = targetPos.add(BOTIChunkVBO.blocksToRender(i), 0, BOTIChunkVBO.blocksToRender(d));
+
                     ChunkPos chunkPos = new ChunkPos(target);
 
                     assert world != null;
@@ -69,8 +68,8 @@ public class BOTIDataS2CPacket implements FabricPacket {
                             for (int z = 0; z < r; z++) {
                                 BlockPos localPos = new BlockPos(x, y, z);
                                 BlockState state = section.getBlockState(x, y, z);
+                                if(state.isAir()) continue;
 
-                                // Block state and entity collection happens at the same time now
                                 if (state != null && !state.isAir() &&
                                         !stateToIndex.containsKey(state)) {
                                     this.posStates.put(localPos, state);

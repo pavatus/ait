@@ -12,7 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.util.ServerLifecycleHooks;
-import dev.codiak.threads.UpdateBOTIChunkModelThread;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -483,48 +482,49 @@ public class StatsHandler extends KeyedTardisComponent {
         botiChunkVBO.setTargetPos(this.targetPos.get());
         botiChunkVBO.updateBlockMap(this.posState);
 
-        new UpdateBOTIChunkModelThread(exteriorBlockEntity).start();
+//        new UpdateBOTIChunkModelThread(exteriorBlockEntity).start();
 
         botiChunkVBO.updateChunkModel(exteriorBlockEntity);
 
 
         MinecraftClient mc = MinecraftClient.getInstance();
         BlockRenderManager blockRenderManager = mc.getBlockRenderManager();
-//        List<BakedQuad> quads = new ArrayList<>();
+
         ChunkPos chunkPos = new ChunkPos(targetPos.get());
         int baseY = targetPos.get().getY() & ~15;
-//        BlockState[][][] sectionStates = new BlockState[16][16][16];
+
         this.blockEntities.clear();
 
         BlockState[][][] sectionStates = new BlockState[16][16][16];
 
-        for (int y = 0; y < 16; y++) {
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
-                    BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
-                    sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
+        if (chunkData.contains("block_entities"))
+            for (int y = 0; y < 16; y++) {
+                for (int x = 0; x < 16; x++) {
+                    for (int z = 0; z < 16; z++) {
+                        BlockPos pos = new BlockPos(chunkPos.getStartX() + x, baseY + y, chunkPos.getStartZ() + z);
+                        BlockState state = getBlockStateFromChunkNBT(chunkData, pos);
+                        sectionStates[x][y][z] = state != null ? state : Blocks.AIR.getDefaultState();
 
-                    String key = x + "_" + y + "_" + z;
-                    if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
-                        try {
-                            NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
-                            BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
-                            if (blockEntity != null) {
-                                if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
-                                        exteriorBlockEntity.tardis() != null) {
-                                    abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
+                        String key = x + "_" + y + "_" + z;
+                        if (chunkData.contains("block_entities") && chunkData.getCompound("block_entities").contains(key)) {
+                            try {
+                                NbtCompound nbt = chunkData.getCompound("block_entities").getCompound(key);
+                                BlockEntity blockEntity = BlockEntity.createFromNbt(pos, sectionStates[x][y][z], nbt);
+                                if (blockEntity != null) {
+                                    if (blockEntity instanceof AbstractLinkableBlockEntity abstractLinkableBlockEntity &&
+                                            exteriorBlockEntity.tardis() != null) {
+                                        abstractLinkableBlockEntity.link(exteriorBlockEntity.tardis().get());
+                                    }
+                                    BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
+                                    this.blockEntities.put(relativePos, blockEntity);
                                 }
-                                BlockPos relativePos = pos.subtract(new BlockPos(chunkPos.getStartX() + 8, baseY, chunkPos.getStartZ() + 8));
-                                this.blockEntities.put(relativePos, blockEntity);
+                            } catch (Exception e) {
+                                System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
                             }
-                        } catch (Exception e) {
-                            System.out.println("Failed to load block entity at " + pos + ": " + e.getMessage());
                         }
                     }
                 }
             }
-        }
 //
 //        this.botiChunkVBO.blocks.forEach((pos, state) -> {
 //            if (state != null && !state.isAir() && !state.hasBlockEntity()) {
@@ -662,8 +662,6 @@ public class StatsHandler extends KeyedTardisComponent {
             } else {
                 System.out.println("Missing palette or data in block_states: " + blockStates);
             }
-        } else {
-            System.out.println("No block_states in chunk data: " + chunkData);
         }
         return Blocks.AIR.getDefaultState();
     }
