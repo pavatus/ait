@@ -12,7 +12,6 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
@@ -33,7 +32,6 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.StatsHandler;
 import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
-import dev.amble.ait.core.tardis.util.network.s2c.BOTIDataS2CPacket;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
 
@@ -109,7 +107,7 @@ public class TardisExteriorBOTI extends BOTI {
             StatsHandler stats = tardis.stats();
             BlockPos targetPos = stats.targetPos();
             RegistryKey<World> targetWorld = stats.getTargetWorld();
-            BakedModel chunkMesh = stats.chunkModel;
+            // BakedModel chunkMesh = stats.chunkModel;
             if (targetPos != null && targetWorld != null) {
                 /*if (chunkMesh != null) {
                     VertexConsumer chunkConsumer = botiProvider.getBuffer(RenderLayer.getCutout());
@@ -198,7 +196,7 @@ public class TardisExteriorBOTI extends BOTI {
             if (targetWorld != null) {
                 ChunkPos chunkPos = new ChunkPos(tardis.stats().targetPos());
                 WorldChunk chunk = targetWorld.getChunk(chunkPos.x, chunkPos.z);
-                tardis.stats().updateChunkModel(exteriorBlockEntity, new BOTIDataS2CPacket(exteriorBlockEntity.getPos(), chunk, tardis.stats().targetPos()).chunkData);
+                // tardis.stats().updateChunkModel(exteriorBlockEntity, new BOTIDataS2CPacket(exteriorBlockEntity.getPos(), chunk, tardis.stats().targetPos()).chunkData);
             } else {
                 ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
             }

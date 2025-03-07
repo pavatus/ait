@@ -160,7 +160,7 @@ public class BOTIDataS2CPacket implements FabricPacket {
         if (exterior instanceof ExteriorBlockEntity exteriorBlockEntity) {
             if (exteriorBlockEntity.tardis() == null) return false;
             Tardis tardis = exteriorBlockEntity.tardis().get();
-            tardis.stats().updateChunkModel(exteriorBlockEntity, this.chunkData);
+            // tardis.stats().updateChunkModel(exteriorBlockEntity, this.chunkData);
         }
         return true;
     }

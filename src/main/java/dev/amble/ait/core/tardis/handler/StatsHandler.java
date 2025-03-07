@@ -12,43 +12,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.util.ServerLifecycleHooks;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
-import dev.amble.ait.api.link.v2.block.AbstractLinkableBlockEntity;
-import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.sounds.flight.FlightSound;
 import dev.amble.ait.core.sounds.flight.FlightSoundRegistry;
 import dev.amble.ait.core.sounds.travel.TravelSound;
 import dev.amble.ait.core.sounds.travel.TravelSoundRegistry;
 import dev.amble.ait.core.sounds.travel.map.TravelSoundMap;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
-import dev.amble.ait.core.tardis.util.network.s2c.BOTISyncS2CPacket;
 import dev.amble.ait.core.tardis.vortex.reference.VortexReference;
 import dev.amble.ait.core.tardis.vortex.reference.VortexReferenceRegistry;
 import dev.amble.ait.core.util.Lazy;
@@ -117,8 +96,10 @@ public class StatsHandler extends KeyedTardisComponent {
     private Lazy<FlightSound> flightFxCache;
     @Exclude
     private Lazy<VortexReference> vortexFxCache;
+    /*
     @Exclude
     public BakedModel chunkModel = null;
+     */
     @Exclude
     public Map<BlockPos, BlockEntity> blockEntities = new HashMap<>();
 
@@ -426,6 +407,7 @@ public class StatsHandler extends KeyedTardisComponent {
         return this.targetPos.get();
     }
 
+    /*
     public void setTargetWorld(ExteriorBlockEntity exteriorBlockEntity, RegistryKey<World> targetWorld, BlockPos targetPos, boolean markDirty) {
         this.targetWorld.set(targetWorld);
         this.targetPos.set(targetPos);
@@ -440,7 +422,6 @@ public class StatsHandler extends KeyedTardisComponent {
             });
         }
     }
-
     public void updateChunkModel(ExteriorBlockEntity exteriorBlockEntity, NbtCompound chunkData) {
         if (exteriorBlockEntity == null || exteriorBlockEntity.getWorld() == null || !exteriorBlockEntity.getWorld().isClient()) return;
 
@@ -657,5 +638,5 @@ public class StatsHandler extends KeyedTardisComponent {
             System.out.println("No block_states in chunk data: " + chunkData);
         }
         return Blocks.AIR.getDefaultState();
-    }
+    }*/
 }
