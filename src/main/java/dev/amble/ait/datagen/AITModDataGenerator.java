@@ -86,7 +86,6 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 dataGenerator.recipes(provider);
             }));
 
-
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_KEY, 1)
                     .pattern(" N ").pattern("IEI").pattern("IRI").input('N', Items.IRON_NUGGET)
                     .input('I', Items.IRON_INGOT).input('E', Items.ENDER_PEARL).input('R', Items.REDSTONE)
@@ -212,6 +211,21 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(AITBlocks.CABLE_BLOCK), conditionsFromItem(AITBlocks.CABLE_BLOCK))
                     .criterion(hasItem(Items.IRON_BLOCK), conditionsFromItem(Items.IRON_BLOCK))
                     .criterion(hasItem(AITBlocks.GENERIC_SUBSYSTEM), conditionsFromItem(AITBlocks.GENERIC_SUBSYSTEM)));
+
+            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITBlocks.MATRIX_ENERGIZER, 1)
+                    .pattern("IRI")
+                    .pattern("SCS")
+                    .pattern("IZI")
+                    .input('I', Items.IRON_INGOT)
+                    .input('R', Items.REDSTONE)
+                    .input('S', Items.SCULK)
+                    .input('C', AITBlocks.ARTRON_COLLECTOR_BLOCK)
+                    .input('Z', AITItems.SUPERHEATED_ZEITON)
+                    .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                    .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                    .criterion(hasItem(Items.SCULK), conditionsFromItem(Items.SCULK))
+                    .criterion(hasItem(AITBlocks.ARTRON_COLLECTOR_BLOCK), conditionsFromItem(AITBlocks.ARTRON_COLLECTOR_BLOCK))
+                    .criterion(hasItem(AITItems.SUPERHEATED_ZEITON), conditionsFromItem(AITItems.SUPERHEATED_ZEITON)));
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.BULB, 1)
                     .pattern("GGG")

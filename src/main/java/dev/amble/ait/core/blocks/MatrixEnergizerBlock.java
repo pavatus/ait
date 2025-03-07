@@ -35,6 +35,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.Vibrations;
@@ -170,6 +171,14 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
                 }
             }
         }
+    }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (hasPower(state)) {
+            dropStack((World) world, pos, AITItems.PERSONALITY_MATRIX.getDefaultStack());
+        }
+        super.onBroken(world, pos, state);
     }
 
     private boolean tryCreate(World world, BlockPos pos, BlockState state) {

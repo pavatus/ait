@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -43,6 +44,11 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
     public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
         if (!(world.isClient())) {
             if (hand.getItem() instanceof SubSystemItem link) {
+                if (this.getSourceStack().isPresent()) {
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(),
+                            player.getZ(), this.getSourceStack().get());
+                    world.spawnEntity(item);
+                }
                 this.setId(link.id());
                 this.idSource = hand.copy();
                 this.idSource.setCount(1);
