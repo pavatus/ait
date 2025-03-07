@@ -58,7 +58,7 @@ public class PersonalityMatrixItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
 
         tooltip.add(Text.literal("[NOT IMPLEMENTED] Name: " + stack.getOrCreateNbt().getString("name")).formatted(Formatting.BLUE));
-        tooltip.add(Text.literal("#0x" + colorToInt(getColor(stack)[0], getColor(stack)[1], getColor(stack)[2]))
+        tooltip.add(Text.literal("#" + colorToInt(getColor(stack)[0], getColor(stack)[1], getColor(stack)[2]))
                 .formatted(Formatting.GRAY));
     }
 }

@@ -12,20 +12,14 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.RavagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -38,8 +32,6 @@ import net.minecraft.world.WorldView;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITBlocks;
-import dev.amble.ait.core.AITItems;
-import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.blockentities.CoralBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -57,13 +49,12 @@ import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
     private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
     public static final IntProperty AGE = Properties.AGE_7;
-    public static final BooleanProperty HAS_PERSONALITY_MATRIX = BooleanProperty.of("has_personality_matrix");
 
     public CoralPlantBlock(Settings settings) {
         super(settings);
 
         this.setDefaultState(
-                this.getDefaultState().with(AGE, 0).with(HAS_PERSONALITY_MATRIX, false)
+                this.getDefaultState().with(AGE, 0)
         );
     }
 
@@ -81,29 +72,6 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     public final boolean isMature(BlockState blockState) {
         return this.getAge(blockState) >= this.getMaxAge();
-    }
-    public static boolean hasPersonalityMatrix(BlockState state) {
-        return state.get(HAS_PERSONALITY_MATRIX);
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack stack = player.getStackInHand(hand);
-        if (stack.isOf(AITItems.PERSONALITY_MATRIX) && !hasPersonalityMatrix(state)) {
-            if (world.isClient()) return ActionResult.SUCCESS;
-
-            // If the player is holding an engine core block, set the has_sms property to true
-            world.setBlockState(pos, state.with(HAS_PERSONALITY_MATRIX, true));
-            stack.decrement(1);
-
-            world.playSound(null, pos, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-            tryCreate((ServerWorld) world, pos, state);
-
-            return ActionResult.SUCCESS;
-        }
-
-        return super.onUse(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -144,11 +112,6 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
     private boolean tryCreate(ServerWorld world, BlockPos pos, BlockState state) {
         if (!this.isMature(state))
             return false;
-
-        if (!hasPersonalityMatrix(state)) {
-            world.playSound(null, pos, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return false;
-        }
 
         if (TardisServerWorld.isTardisDimension(world)) {
             this.createConsole(world, pos);
@@ -240,7 +203,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(AGE).add(FACING).add(HAS_PERSONALITY_MATRIX);
+        builder.add(AGE).add(FACING);
     }
 
     @Override
