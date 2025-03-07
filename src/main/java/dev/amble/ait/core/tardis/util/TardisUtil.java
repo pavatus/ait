@@ -65,7 +65,7 @@ public class TardisUtil {
 
                 if (tardis.flight().isFlying()) {
                     if (!player.isSneaking()) {
-                        tardis.door().interact(player.getServerWorld(), null, player);
+                        tardis.door().interactAllDoors(player.getServerWorld(), null, player, true);
                     } else {
                         tardis.door().interactToggleLock(player);
                     }

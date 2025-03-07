@@ -83,7 +83,7 @@ public class FabricatorRenderer<T extends FabricatorBlockEntity> implements Bloc
             matrices.scale(0.7f, 0.7f, 0.7f);
             matrices.scale(scale.x, scale.y, scale.z);
 
-            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light,
+            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, 0xf000f0,
                     overlay, matrices, vertexConsumers, entity.getWorld(), 0);
             matrices.pop();
         }

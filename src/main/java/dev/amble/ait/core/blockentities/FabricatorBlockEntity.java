@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.api.link.v2.block.InteriorLinkableBlockEntity;
 import dev.amble.ait.core.AITBlockEntityTypes;
+import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.item.blueprint.Blueprint;
 import dev.amble.ait.core.item.blueprint.BlueprintItem;
@@ -150,5 +152,23 @@ public class FabricatorBlockEntity extends InteriorLinkableBlockEntity {
         ServerWorld world = (ServerWorld) this.getWorld();
         world.getChunkManager().markForUpdate(this.getPos());
         this.markDirty();
+    }
+
+    public void onBroken() {
+        if (this.hasBlueprint()) {
+            this.getBlueprint().ifPresent(blueprint -> {
+                ItemStack stack = AITItems.BLUEPRINT.getDefaultStack();
+                stack.getOrCreateNbt().putString("Blueprint", blueprint.toString());
+                this.dropStack(stack);
+            });
+        }
+    }
+
+    private void dropStack(ItemStack stack) {
+        if (this.getWorld() == null || stack.isEmpty()) return;
+
+        ItemEntity item = new ItemEntity(this.getWorld(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), stack);
+
+        this.getWorld().spawnEntity(item);
     }
 }

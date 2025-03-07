@@ -274,6 +274,9 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         }
 
         if (!TardisUtil.isInteriorEmpty(tardis.asServer())) {
+            if (this.regenerating.get())
+                TardisUtil.teleportOutside(tardis.asServer(),
+                        TardisUtil.getAnyPlayerInsideInterior(tardis.asServer().getInteriorWorld()));
             warnPlayers();
             return;
         }

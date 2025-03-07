@@ -46,8 +46,8 @@
     },
     {
       "item": "ait:coral_fragment",
-      "maxCount": 12,
-      "minCount": 8
+      "maxCount": 4,
+      "minCount": 4
     }
   ]
 }

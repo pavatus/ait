@@ -92,7 +92,11 @@ public class AITBlocks extends BlockContainer {
 
     @NoEnglish
     public static final Block CORAL_PLANT = new CoralPlantBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque()
-            .noCollision().breakInstantly().luminance(light -> 0).sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+            .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).pistonBehavior(PistonBehavior.DESTROY));
+    @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
+    public static final Block MATRIX_ENERGIZER = new MatrixEnergizerBlock(FabricBlockSettings.create().ticksRandomly().nonOpaque()
+            .luminance(light -> 0).instrument(Instrument.COW_BELL)
+            .strength(1.5F, 6.0F).requiresTool().sounds(BlockSoundGroup.ANVIL).pistonBehavior(PistonBehavior.IGNORE));
     public static final Block TARDIS_CORAL_BLOCK = new Block(FabricBlockSettings.create().mapColor(MapColor.GOLD).solid().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5f, 6.0f));
     public static final Block TARDIS_CORAL_STAIRS = new StairsBlock(TARDIS_CORAL_BLOCK.getDefaultState(), FabricBlockSettings.create().mapColor(MapColor.GOLD).solid().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5f, 6.0f));
     public static final Block TARDIS_CORAL_SLAB = new SlabBlock(FabricBlockSettings.create().mapColor(MapColor.GOLD).solid().instrument(Instrument.BASEDRUM).requiresTool().strength(1.5f, 6.0f));
@@ -157,12 +161,6 @@ public class AITBlocks extends BlockContainer {
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
     @AutomaticModel
     public static final Block ZEITON_COBBLE = new Block(FabricBlockSettings.copyOf(ZEITON_BLOCK));
-
-    @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
-    @NoEnglish
-    public static final Block ZEITON_CAGE = new ZeitonCageBlock(FabricBlockSettings.create().nonOpaque().requiresTool()
-            .instrument(Instrument.BASEDRUM).strength(0.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE)
-            .luminance(light -> 15));
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @AutomaticModel()
