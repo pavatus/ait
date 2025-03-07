@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0,age=1": {
+      "model": "ait:block/matrix_energizer/matrix_energizer"
+    },
+    "age=2": {
+      "model": "ait:block/matrix_energizer/matrix_energizer_1"
+    },
+    "age=3": {
+      "model": "ait:block/matrix_energizer/matrix_energizer_2"
+    },
+    "age=4": {
+      "model": "ait:block/matrix_energizer/matrix_energizer_3"
+    }
+  }
+}

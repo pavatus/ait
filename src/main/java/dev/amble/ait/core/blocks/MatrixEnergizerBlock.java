@@ -82,8 +82,8 @@ public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getStackInHand(hand);
-        if (stack.isOf(Items.NETHER_STAR) && !hasPower(state)) {
-            if (world.isClient()) return ActionResult.SUCCESS;
+        if (world.isClient()) return ActionResult.SUCCESS;
+        if (stack.isOf(Items.NETHER_STAR) && !hasPower(state) && shriekerShrieks((ServerWorld) world, pos) > 2) {
 
             world.setBlockState(pos, state.with(HAS_POWER, true));
             stack.decrement(1);
