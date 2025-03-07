@@ -1,5 +1,5 @@
 {
-    "id": "ait:toyota_memorial",
+    "id": "frooploof:toyota_memorial",
     "category": "ait:exterior/police_box",
     "parent": "ait:exterior/police_box/default",
     "texture": "ait:textures/blockentities/exteriors/police_box/police_box_toyota_memorial.png",

@@ -16,9 +16,9 @@ public class EngineModel extends SinglePartEntityModel {
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData coral = modelPartData.addChild("engine", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 10.15F, 0.0F));
+        ModelPartData engine = modelPartData.addChild("engine", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 10.15F, 0.0F));
 
-        ModelPartData one = coral.addChild("one", ModelPartBuilder.create().uv(296, 363).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData one = engine.addChild("one", ModelPartBuilder.create().uv(296, 363).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData cube_r1 = one.addChild("cube_r1", ModelPartBuilder.create().uv(130, 137).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(2.0F, 2.5F, 0.0F, 0.0F, 1.5708F, 0.3491F));
 
@@ -32,7 +32,7 @@ public class EngineModel extends SinglePartEntityModel {
 
         ModelPartData cube_r6 = one.addChild("cube_r6", ModelPartBuilder.create().uv(294, 43).cuboid(-12.0F, -42.0F, 0.0F, 24.0F, 42.0F, 0.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
-        ModelPartData two = coral.addChild("two", ModelPartBuilder.create().uv(296, 331).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData two = engine.addChild("two", ModelPartBuilder.create().uv(296, 331).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData cube_r7 = two.addChild("cube_r7", ModelPartBuilder.create().uv(390, 137).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.7854F));
 
@@ -70,7 +70,7 @@ public class EngineModel extends SinglePartEntityModel {
 
         ModelPartData cube_r18 = bone47.addChild("cube_r18", ModelPartBuilder.create().uv(130, 154).cuboid(-8.0F, -4.0F, -10.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, -3.0F, 2.3562F, 0.0F, -3.1416F));
 
-        ModelPartData three = coral.addChild("three", ModelPartBuilder.create().uv(296, 331).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData three = engine.addChild("three", ModelPartBuilder.create().uv(296, 331).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData cube_r19 = three.addChild("cube_r19", ModelPartBuilder.create().uv(390, 273).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, -0.7854F));
 
@@ -114,7 +114,7 @@ public class EngineModel extends SinglePartEntityModel {
 
         ModelPartData cube_r33 = bone41.addChild("cube_r33", ModelPartBuilder.create().uv(130, 154).cuboid(-8.0F, -4.0F, -10.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, -5.0F, 2.3562F, 0.0F, -3.1416F));
 
-        ModelPartData four = coral.addChild("four", ModelPartBuilder.create().uv(296, 299).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData four = engine.addChild("four", ModelPartBuilder.create().uv(296, 299).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData cube_r34 = four.addChild("cube_r34", ModelPartBuilder.create().uv(455, 120).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(4.0F, 2.5F, 0.0F, 0.0F, 1.5708F, 0.3491F));
 
@@ -200,7 +200,7 @@ public class EngineModel extends SinglePartEntityModel {
 
         ModelPartData cube_r69 = bone35.addChild("cube_r69", ModelPartBuilder.create().uv(130, 154).cuboid(-8.0F, -4.0F, -10.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, -5.0F, 2.3562F, 0.0F, -3.1416F));
 
-        ModelPartData five = coral.addChild("five", ModelPartBuilder.create().uv(232, 299).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData five = engine.addChild("five", ModelPartBuilder.create().uv(232, 299).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData cube_r70 = five.addChild("cube_r70", ModelPartBuilder.create().uv(343, 43).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(8.0F, 3.0F, 0.0F, 0.0F, 1.5708F, 0.2618F));
 
@@ -318,7 +318,7 @@ public class EngineModel extends SinglePartEntityModel {
 
         ModelPartData cube_r119 = bone30.addChild("cube_r119", ModelPartBuilder.create().uv(130, 154).cuboid(-8.0F, -4.0F, -10.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, -7.0F, 2.3562F, 0.0F, -3.1416F));
 
-        ModelPartData six = coral.addChild("six", ModelPartBuilder.create().uv(232, 299).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData six = engine.addChild("six", ModelPartBuilder.create().uv(232, 299).cuboid(-16.0F, -0.25F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
         ModelPartData cube_r120 = six.addChild("cube_r120", ModelPartBuilder.create().uv(195, 86).cuboid(-8.0F, -4.0F, -12.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 3.0F, 11.0F, -0.2618F, 0.0F, 0.0F));
 
@@ -570,9 +570,9 @@ public class EngineModel extends SinglePartEntityModel {
 
         ModelPartData cube_r225 = bone23.addChild("cube_r225", ModelPartBuilder.create().uv(130, 154).cuboid(-8.0F, -4.0F, -8.0F, 16.0F, 0.0F, 16.0F, new Dilation(0.001F)), ModelTransform.of(0.0F, 0.0F, -9.0F, 2.3562F, 0.0F, -3.1416F));
 
-        ModelPartData bone = modelPartData.addChild("bone", ModelPartBuilder.create().uv(341, 460).cuboid(-24.0F, 8.0F, -24.0F, 48.0F, 0.0F, 48.0F, new Dilation(0.0F))
+        ModelPartData bone = engine.addChild("bone", ModelPartBuilder.create().uv(341, 460).cuboid(-24.0F, 8.0F, -24.0F, 48.0F, 0.0F, 48.0F, new Dilation(0.0F))
                 .uv(357, 427).cuboid(-16.0F, -5.85F, -16.0F, 32.0F, 0.0F, 32.0F, new Dilation(0.0F))
-                .uv(383, 524).cuboid(-3.0F, -3.0F, -24.0F, 6.0F, 6.0F, 48.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 16.0F, 0.0F));
+                .uv(383, 524).cuboid(-3.0F, -3.0F, -24.0F, 6.0F, 6.0F, 48.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 5.85F, 0.0F));
 
         ModelPartData cube_r226 = bone.addChild("cube_r226", ModelPartBuilder.create().uv(383, 524).cuboid(-3.0F, -3.0F, -24.0F, 6.0F, 6.0F, 48.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
