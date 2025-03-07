@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.SculkShriekerBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -41,6 +42,7 @@ import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.blockentities.MatrixEnergizerBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
 import dev.amble.ait.core.item.PersonalityMatrixItem;
+import dev.amble.ait.mixin.server.SculkShriekerAccessor;
 
 @SuppressWarnings("deprecation")
 public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
@@ -131,8 +133,16 @@ public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements 
         tryCreate(world, pos, state);
     }
 
+    public int shriekerShrieks(ServerWorld world, BlockPos pos) {
+        BlockEntity be = world.getBlockEntity(pos.down());
+        if (be instanceof SculkShriekerBlockEntity shriekerBe) {
+            return ((SculkShriekerAccessor) shriekerBe).getWarningLevel();
+        }
+        return 0;
+    }
+
     private boolean tryCreate(ServerWorld world, BlockPos pos, BlockState state) {
-        if (this.isMature(state) && hasPower(state)) {
+        if (this.isMature(state) && hasPower(state) && shriekerShrieks(world, pos) > (world.random.nextBoolean() ? 2 : 3)) {
             world.playSound(null, pos, SoundEvents.BLOCK_SCULK_CATALYST_BLOOM, SoundCategory.BLOCKS, 1.0F, 1.0F);
             ItemStack pmStack = AITItems.PERSONALITY_MATRIX.getDefaultStack();
             PersonalityMatrixItem pmItem = (PersonalityMatrixItem) pmStack.getItem();
