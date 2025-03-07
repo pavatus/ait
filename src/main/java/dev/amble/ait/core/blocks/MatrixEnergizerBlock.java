@@ -49,8 +49,7 @@ import dev.amble.ait.core.blockentities.MatrixEnergizerBlockEntity;
 import dev.amble.ait.core.item.PersonalityMatrixItem;
 
 public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
-
-    private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+    private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 11.0, 16.0);
     public static final EnumProperty<SculkSensorPhase> SENSOR_PHASE = Properties.SCULK_SENSOR_PHASE;
     public static final IntProperty AGE = Properties.AGE_3;
     public static final BooleanProperty HAS_POWER = BooleanProperty.of("has_power");
