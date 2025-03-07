@@ -76,23 +76,23 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
 
         if (!engine.isLinked()) return;
 
-        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX() + -0.9f, pos.getY() + 1.25,
-                pos.getZ() + 1.8f, 0, 0.06, 0);
+        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX(), pos.getY() + 1.25,
+                pos.getZ() + 0.5, 0, 0.1, 0);
 
         float durability = engine.tardis().get().subsystems().engine().durability();
 
         if (durability > 10) return;
 
         // smoke and spark particles & sfx when below 50%
-        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1.25,
-                pos.getZ() + 0.5f, 0.15, 0, 0);
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX(), pos.getY() + 1.25,
+                pos.getZ() + 0.5, 0, 0.1, 0);
         world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 0.1,
                 0, 0.05f);
 
-        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5f, pos.getY() + 1.25,
-                pos.getZ() + 0.5f, -0.15, 0, 0);
-        world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, -0.1,
-                0, -0.05f);
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX(), pos.getY() + 1.25,
+                pos.getZ() + 0.5, 0, 0.1, 0);
+        world.addParticle(ParticleTypes.CLOUD, pos.getX(), pos.getY() + 1.25,
+                pos.getZ() + 0.5, 0, 0.1, 0);
     }
 
     @Override

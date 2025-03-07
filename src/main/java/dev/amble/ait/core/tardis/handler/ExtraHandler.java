@@ -27,13 +27,12 @@ public class ExtraHandler extends KeyedTardisComponent {
         Drink drink = DrinkRegistry.getInstance().get(AITMod.id("coffee"));
         ItemStack stack = new ItemStack(AITItems.MUG);
         DrinkUtil.setDrink(stack, drink);
-        this.setRefreshmentItem(stack);
-        this.setInsertedDisc(ItemStack.EMPTY);
     }
 
     @Override
     public void onLoaded() {
         setRefreshmentItemValue.of(this, SET_REFRESHMENT_ITEM);
+        setInsertedDiscValue.of(this, INSERTED_DISC);
     }
 
     public ItemStack getRefreshmentItem() {

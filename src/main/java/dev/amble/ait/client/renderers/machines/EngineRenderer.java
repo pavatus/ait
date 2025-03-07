@@ -1,8 +1,7 @@
 package dev.amble.ait.client.renderers.machines;
 
-import org.joml.Vector3f;
-
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,12 +10,12 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.world.LightType;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.client.models.machines.EngineModel;
 import dev.amble.ait.client.util.ClientLightUtil;
 import dev.amble.ait.core.blockentities.EngineBlockEntity;
-import dev.amble.ait.core.engine.impl.EngineSystem;
 import dev.amble.ait.core.tardis.Tardis;
 
 // Made with Blockbench 4.8.3
@@ -43,16 +42,17 @@ public class EngineRenderer<T extends EngineBlockEntity> implements BlockEntityR
 
         Tardis tardis = entity.tardis().get();
         matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(180));
+        matrices.translate(0.5, -1.5f, -0.5);
 
-        this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(ENGINE_TEXTURE)),
-                light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.engineModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(ENGINE_TEXTURE)),
+                LightmapTextureManager.pack(entity.getWorld().getLightLevel(LightType.BLOCK, entity.getPos().up()), entity.getWorld().getLightLevel(LightType.SKY, entity.getPos())), overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (tardis.fuel().hasPower()) {
+        /*if (tardis.fuel().hasPower()) {
             EngineSystem.Status status = tardis.subsystems().engine().status();
             Vector3f colours = status.colour;
             ClientLightUtil.renderEmissive(this, EMISSIVE_ENGINE_TEXTURE, entity, this.engineModel.getPart(), matrices, vertexConsumers, light, overlay, colours.x, colours.y, colours.z, (status != EngineSystem.Status.OFF) ? 1.0F : 0.0F);
-        }
+        }*/
 
         matrices.pop();
     }
