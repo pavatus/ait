@@ -85,7 +85,7 @@ public class TardisGoatHorn extends LinkableItem {
             BlockPos abpdPos = abpd.getPos();
             Text message = Text.literal("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: ")
                     .formatted(Formatting.GRAY)
-                    .append(WorldUtil.worldText(abpd.getDimension()).copy() + "...".formatted(Formatting.GRAY));
+                    .append(WorldUtil.worldText(abpd.getDimension())).formatted(Formatting.GRAY);
 
             user.sendMessage(message, true);
 
