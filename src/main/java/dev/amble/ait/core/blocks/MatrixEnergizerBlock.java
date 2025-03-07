@@ -10,6 +10,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,7 +35,6 @@ import net.minecraft.world.WorldView;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlocks;
-import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.blockentities.MatrixEnergizerBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
@@ -77,7 +77,7 @@ public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getStackInHand(hand);
-        if (stack == AITItems.CHARGED_ZEITON_CRYSTAL.getDefaultStack() && !hasPower(state)) {
+        if (stack == Items.NETHER_STAR.getDefaultStack() && !hasPower(state)) {
             if (world.isClient()) return ActionResult.SUCCESS;
 
             world.setBlockState(pos, state.with(HAS_POWER, true));
