@@ -208,7 +208,7 @@ public class AITMod implements ModInitializer {
 
         Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
 
-        RiftEntity.addSpawn();
+        //RiftEntity.addSpawn();
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);

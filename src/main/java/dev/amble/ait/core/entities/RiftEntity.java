@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.mob.AmbientEntity;
@@ -149,6 +148,13 @@ public class RiftEntity extends AmbientEntity {
     }
 
     @Override
+    public void onDamaged(DamageSource damageSource) {
+        if (damageSource.equals(this.getWorld().getDamageSources().genericKill())) {
+            this.discard();
+        }
+    }
+
+    @Override
     public boolean hasNoGravity() {
         return true;
     }
@@ -246,15 +252,15 @@ public class RiftEntity extends AmbientEntity {
         if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess)) return false;
 
         if (spawnReason == SpawnReason.STRUCTURE) {
-            return worldAccess.isAir(pos);
+            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
         }
 
         ChunkPos chunkPos = new ChunkPos(pos);
         boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
                 worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
-        if (/*random.nextInt(2) == 0 && */bl) {
+        if (random.nextInt(55) == 0 && bl) {
             BlockPos newPos = new BlockPos(pos.getX(), worldAccess.getTopY() + 15, pos.getZ());
-            return worldAccess.isAir(newPos);
+            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
         }
         return false;
     }
@@ -278,7 +284,8 @@ public class RiftEntity extends AmbientEntity {
         this.updatePosition(d, e, f);
     }
 
-    public static void addSpawn() {
+
+    /*public static void addSpawn() {
         BiomeModifications.addSpawn(
                 BiomeSelectors.all(),
                 SpawnGroup.AMBIENT,
@@ -287,5 +294,5 @@ public class RiftEntity extends AmbientEntity {
                 1,
                 1
         );
-    }
+    }*/
 }
