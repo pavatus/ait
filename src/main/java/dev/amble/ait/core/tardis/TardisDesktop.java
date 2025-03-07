@@ -134,6 +134,9 @@ public class TardisDesktop extends TardisComponent {
             for (BlockPos consolePos : this.consolePos) {
                 return DirectedBlockPos.create(consolePos, (byte) 0);
             }
+
+            // oh no this this cant be
+            return DirectedBlockPos.create(BlockPos.ORIGIN, (byte) 0);
         }
 
         return doorPos;
