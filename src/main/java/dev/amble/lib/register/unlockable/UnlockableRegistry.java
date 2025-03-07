@@ -15,8 +15,6 @@ import net.minecraft.util.Identifier;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.data.Loyalty;
-import dev.amble.ait.data.datapack.DatapackDesktop;
-import dev.amble.ait.registry.impl.DesktopRegistry;
 
 public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDatapackRegistry<T> {
 
@@ -51,13 +49,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
     }
 
     public T getRandom(Tardis tardis, Random random) {
-        return DatapackRegistry.getRandom(this.toList().stream().filter(t -> {
-                            if (t instanceof DatapackDesktop desktop) {
-                                return desktop != DesktopRegistry.DEFAULT_CAVE;
-                            }
-                            return true;
-                        })
-                        .filter(tardis::isUnlocked).toList(), random,
+        return DatapackRegistry.getRandom(this.toList().stream().filter(tardis::isUnlocked).toList(), random,
                 this::fallback);
     }
 
