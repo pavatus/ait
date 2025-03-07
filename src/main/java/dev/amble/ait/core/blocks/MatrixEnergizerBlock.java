@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,9 +36,11 @@ import net.minecraft.world.WorldView;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlocks;
+import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.blockentities.MatrixEnergizerBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
+import dev.amble.ait.core.item.PersonalityMatrixItem;
 
 @SuppressWarnings("deprecation")
 public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
@@ -77,7 +80,7 @@ public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getStackInHand(hand);
-        if (stack == Items.NETHER_STAR.getDefaultStack() && !hasPower(state)) {
+        if (stack.isOf(Items.NETHER_STAR) && !hasPower(state)) {
             if (world.isClient()) return ActionResult.SUCCESS;
 
             world.setBlockState(pos, state.with(HAS_POWER, true));
@@ -116,7 +119,7 @@ public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements 
         if (world.getBaseLightLevel(pos, 0) >= 4) {
             int i = this.getAge(state);
             if (i < this.getMaxAge()) {
-                if (!(world.getBlockState(pos.down()).getBlock() instanceof SoulSandBlock)) {
+                if (!(world.getBlockState(pos.down()).getBlock() instanceof SculkShriekerBlock)) {
                     world.breakBlock(pos, true);
                     return;
                 }
@@ -129,12 +132,16 @@ public class MatrixEnergizerBlock extends HorizontalDirectionalBlock implements 
     }
 
     private boolean tryCreate(ServerWorld world, BlockPos pos, BlockState state) {
-        if (!this.isMature(state))
-            return false;
-
-        if (!hasPower(state)) {
+        if (this.isMature(state) && hasPower(state)) {
             world.playSound(null, pos, SoundEvents.BLOCK_SCULK_CATALYST_BLOOM, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return false;
+            ItemStack pmStack = AITItems.PERSONALITY_MATRIX.getDefaultStack();
+            PersonalityMatrixItem pmItem = (PersonalityMatrixItem) pmStack.getItem();
+            pmStack = pmItem.randomize();
+            ItemEntity matrix = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), pmStack);
+            world.spawnEntity(matrix);
+            world.breakBlock(pos, false);
+
+            return true;
         }
 
         return false;

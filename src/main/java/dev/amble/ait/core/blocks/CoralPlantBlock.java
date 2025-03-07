@@ -38,6 +38,7 @@ import net.minecraft.world.WorldView;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITBlocks;
+import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.blockentities.CoralBlockEntity;
@@ -54,17 +55,15 @@ import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 @SuppressWarnings("deprecation")
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
-
     private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 32.0, 16.0);
-
     public static final IntProperty AGE = Properties.AGE_7;
-    public static final BooleanProperty HAS_SMS = BooleanProperty.of("has_sms");
+    public static final BooleanProperty HAS_PERSONALITY_MATRIX = BooleanProperty.of("has_personality_matrix");
 
     public CoralPlantBlock(Settings settings) {
         super(settings);
 
         this.setDefaultState(
-                this.getDefaultState().with(AGE, 0).with(HAS_SMS, false)
+                this.getDefaultState().with(AGE, 0).with(HAS_PERSONALITY_MATRIX, false)
         );
     }
 
@@ -83,18 +82,18 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
     public final boolean isMature(BlockState blockState) {
         return this.getAge(blockState) >= this.getMaxAge();
     }
-    public static boolean hasSms(BlockState state) {
-        return state.get(HAS_SMS);
+    public static boolean hasPersonalityMatrix(BlockState state) {
+        return state.get(HAS_PERSONALITY_MATRIX);
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getStackInHand(hand);
-        if (stack.isOf(AITBlocks.ENGINE_CORE_BLOCK.asItem()) && !hasSms(state)) {
+        if (stack.isOf(AITItems.PERSONALITY_MATRIX) && !hasPersonalityMatrix(state)) {
             if (world.isClient()) return ActionResult.SUCCESS;
 
             // If the player is holding an engine core block, set the has_sms property to true
-            world.setBlockState(pos, state.with(HAS_SMS, true));
+            world.setBlockState(pos, state.with(HAS_PERSONALITY_MATRIX, true));
             stack.decrement(1);
 
             world.playSound(null, pos, AITSounds.SIEGE_DISABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -146,7 +145,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         if (!this.isMature(state))
             return false;
 
-        if (!hasSms(state)) {
+        if (!hasPersonalityMatrix(state)) {
             world.playSound(null, pos, AITSounds.SIEGE_ENABLE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             return false;
         }
@@ -241,7 +240,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(AGE).add(FACING).add(HAS_SMS);
+        builder.add(AGE).add(FACING).add(HAS_PERSONALITY_MATRIX);
     }
 
     @Override

@@ -2,6 +2,7 @@ package dev.amble.ait.client;
 
 import static dev.amble.ait.AITMod.*;
 import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
+import static dev.amble.ait.core.item.PersonalityMatrixItem.colorToInt;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,10 +34,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.RotationPropertyHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 
 import dev.amble.ait.AITMod;
@@ -124,6 +122,7 @@ public class AITModClient implements ClientModInitializer {
         entityRenderRegister();
         chargedZeitonCrystalPredicate();
         waypointPredicate();
+        personalityMatrixPredicate();
         hammerPredicate();
         siegeItemPredicate();
         adventItemPredicates();
@@ -321,6 +320,18 @@ public class AITModClient implements ClientModInitializer {
         }, AITItems.WAYPOINT_CARTRIDGE);
     }
 
+    public static void personalityMatrixPredicate() {
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            if (tintIndex != 0)
+                return -1;
+
+            PersonalityMatrixItem personalityMatrixItem = (PersonalityMatrixItem) stack.getItem();
+            int[] integers = personalityMatrixItem.getColor(stack);
+            return colorToInt(integers[0], integers[1], integers[2]);
+        },
+                AITItems.PERSONALITY_MATRIX);
+    }
+
     public static void hammerPredicate() {
         ModelPredicateProviderRegistry.register(AITItems.HAMMER, new Identifier("toymakered"),
                 (itemStack, clientWorld, livingEntity, integer) -> {
@@ -408,8 +419,6 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE,
                 WallMonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE,
-                EngineCoreBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE,
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
@@ -450,7 +459,6 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.WAYPOINT_BANK, RenderLayer.getCutout());
-        map.putBlock(AITBlocks.ENGINE_CORE_BLOCK, RenderLayer.getCutout());
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
         }

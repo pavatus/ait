@@ -44,8 +44,6 @@ public class AITBlockEntityTypes implements BlockEntityContainer {
             .create(EngineBlockEntity::new, AITBlocks.ENGINE_BLOCK).build();
     public static BlockEntityType<WallMonitorBlockEntity> WALL_MONITOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(WallMonitorBlockEntity::new, AITBlocks.WALL_MONITOR_BLOCK).build();
-    public static BlockEntityType<EngineCoreBlockEntity> ENGINE_CORE_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder
-            .create(EngineCoreBlockEntity::new, AITBlocks.ENGINE_CORE_BLOCK).build();
     public static BlockEntityType<MachineCasingBlockEntity> MACHINE_CASING_ENTITY_TYPE = FabricBlockEntityTypeBuilder
             .create(MachineCasingBlockEntity::new, AITBlocks.MACHINE_CASING).build();
     public static BlockEntityType<FabricatorBlockEntity> FABRICATOR_BLOCK_ENTITY_TYPE = FabricBlockEntityTypeBuilder

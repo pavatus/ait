@@ -71,13 +71,6 @@ public class AITBlocks extends BlockContainer {
     public static final Block ENGINE_BLOCK = new EngineBlock(ABlockSettings.create()
             .itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR)).requiresTool()
             .instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).pistonBehavior(PistonBehavior.IGNORE));
-
-    @NoEnglish
-    public static final Block ENGINE_CORE_BLOCK = new EngineCoreBlock(
-            ABlockSettings.create().itemSettings(new AItemSettings().group(AITItemGroups.FABRICATOR))
-                    .mapColor(MapColor.DIAMOND_BLUE).solid().instrument(Instrument.HAT)
-                    .strength(3.0F).luminance((state) -> 15).nonOpaque());
-
     @PickaxeMineable
     public static final Block CONSOLE_GENERATOR = new ConsoleGeneratorBlock(
             FabricBlockSettings.create().nonOpaque().noBlockBreakParticles().requiresTool().strength(1.5F)

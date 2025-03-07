@@ -881,7 +881,6 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation(AITBlocks.CONSOLE, "Console");
         provider.addTranslation(AITBlocks.REDSTONE_CONTROL_BLOCK, "Redstone Control");
         provider.addTranslation(AITBlocks.ENGINE_BLOCK, "Engine");
-        provider.addTranslation(AITBlocks.ENGINE_CORE_BLOCK, "Singularity Matrix Subsystem");
         provider.addTranslation(AITBlocks.CABLE_BLOCK, "Artron Cable");
         provider.addTranslation(AITBlocks.GENERIC_SUBSYSTEM, "Generalized Subsystem Core");
 
