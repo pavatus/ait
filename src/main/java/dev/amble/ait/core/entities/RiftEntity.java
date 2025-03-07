@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
@@ -34,6 +37,20 @@ import dev.amble.ait.core.*;
 import dev.amble.ait.core.item.SonicItem;
 
 public class RiftEntity extends AmbientEntity {
+    static {
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, world, targetWorld) -> {
+            if (targetWorld.getRegistryKey().equals(AITDimensions.TIME_VORTEX_WORLD)) {
+                Scheduler scheduler = Scheduler.get();
+                scheduler.runTaskLater(() -> {
+                    Random random = new Random();
+                    double x = player.getX() + (random.nextDouble() * 2000 - 1000);
+                    double y = player.getY() + (random.nextDouble() * 200 - 100);
+                    double z = player.getZ() + (random.nextDouble() * 2000 - 1000);
+                    TeleportUtil.teleport(player, world, new Vec3d(x, y, z), player.bodyYaw);
+                }, TimeUnit.SECONDS, 10);
+            }
+        });
+    }
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;
