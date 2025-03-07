@@ -172,6 +172,7 @@ public class AITMod implements ModInitializer {
                 AITModInitializer::onInitializeAIT);
 
         DoorRegistry.init();
+        HandlesResponseRegistry.init();
 
         AITStatusEffects.init();
         AITVillagers.init();
