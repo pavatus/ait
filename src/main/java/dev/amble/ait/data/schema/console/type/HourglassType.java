@@ -28,6 +28,8 @@ public class HourglassType extends ConsoleTypeSchema {
                     new Vector3f(1.0734375165775418f, 0.2624999964609742f, -0.8734375275671482f)),
             new ControlTypes(new AutoPilotControl(), EntityDimensions.changing(0.06249999f, 0.1f),
                     new Vector3f(-0.7453125081956387f, 0.5500003825873137f, 0.20078123826533556f)),
+            new ControlTypes(new ElectricalDischargeControl(), EntityDimensions.changing(0.06249999f, 0.1f),
+                    new Vector3f(-0.7453125081956387f, 0.5500003825873137f, 0.20078123826533556f)),
             new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.12500001f, 0.11250001f),
                     new Vector3f(0.7000000067055225f, 0.5499999988824129f, -0.20039063785225153f)),
             new ControlTypes(new DoorControl(), EntityDimensions.changing(0.1375f, 0.14999999f),
