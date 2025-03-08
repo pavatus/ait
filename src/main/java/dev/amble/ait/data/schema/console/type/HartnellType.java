@@ -76,7 +76,7 @@ public class HartnellType extends ConsoleTypeSchema {
                     new Vector3f(0.18749999906867743f, 0.47500019054859877f, 0.940820312127471f)),
             new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.17500001f, 0.0875f),
                     new Vector3f(-0.8250000150874257f, 0.47500014305114746f, 0.5783206885680556f)),
-            new ControlTypes(new EngineOverload(), EntityDimensions.changing(0.1125f, 0.1f),
+            new ControlTypes(new EngineOverloadControl(), EntityDimensions.changing(0.1125f, 0.1f),
                     new Vector3f(0.06484375149011612f, 0.47500014305114746f, -1.0359373092651367f)),
             new ControlTypes(new SetWaypointControl(), EntityDimensions.changing(0.07499999f, 0.1f),
                     new Vector3f(-0.9609375260770321f, 0.4625005563721061f, -0.2228515725582838f)),

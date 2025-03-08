@@ -66,8 +66,10 @@ public class ElectricalDischargeControl extends Control {
 
         world.getEntitiesByClass(LivingEntity.class, effectBox, entity -> true).forEach(entity -> {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 600, 1));
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 1));
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 50, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 300, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 200, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 600, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 275, 1));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 250, 1));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 75, 1));
         });

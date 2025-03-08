@@ -62,7 +62,7 @@ public class ControlRegistry {
         register(new TelepathicControl());
         register(new ThrottleControl());
         register(new VisualiserControl());
-        register(new EngineOverload());
+        register(new EngineOverloadControl());
         register(new ElectricalDischargeControl());
 
         // Waypoints
