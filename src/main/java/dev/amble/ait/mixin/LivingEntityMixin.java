@@ -36,7 +36,7 @@ public abstract class LivingEntityMixin extends Entity {
                 && (player.isCreative() || player.isSpectator()))
              return;
 
-        if (entity.getWorld() instanceof TardisServerWorld tardisWorld
+        if (entity.getWorld() instanceof TardisServerWorld tardisWorld && !tardisWorld.getTardis().isGrowth()
                 && !tardisWorld.getTardis().subsystems().lifeSupport().isEnabled()) {
             ItemStack stack = entity.getEquippedStack(EquipmentSlot.HEAD);
 
