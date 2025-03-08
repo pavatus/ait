@@ -1,5 +1,6 @@
 package dev.amble.ait.core.tardis.handler;
 
+import dev.amble.ait.data.Loyalty;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -167,6 +168,8 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
      * @return true if the entity will be repulsed by the shield
      */
     private boolean canPush(ServerPlayerEntity entity) {
-        return SecurityControl.hasMatchingKey(entity, this.tardis());
+        boolean companion = tardis.loyalty().get(entity).isOf(Loyalty.Type.COMPANION);
+
+        return !(companion || SecurityControl.hasMatchingKey(entity, this.tardis()));
     }
 }
