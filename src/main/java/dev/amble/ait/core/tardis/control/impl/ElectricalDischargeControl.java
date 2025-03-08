@@ -19,15 +19,13 @@ import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
-import dev.amble.ait.core.tardis.control.impl.pos.IncrementManager;
 
 public class ElectricalDischargeControl extends Control {
 
-    private static final int BASE_ARTRON_COST = 2750;
-    private static final int BASE_EFFECT_RADIUS = 2;
-    private static final int BASE_DURATION = 80;
-    private static final int STATUS_EFFECT_DURATION = 400;
-    private static final int ARTRON_COST_PER_INCREMENT = 50;
+    private static final int ARTRON_COST = 1250;
+    private static final int EFFECT_RADIUS = 2;
+    private static final int INITIAL_DELAY = 40;
+    private static final int TOTAL_DURATION = 80;
 
     public ElectricalDischargeControl() {
         super("electrical_discharge");
@@ -40,44 +38,38 @@ public class ElectricalDischargeControl extends Control {
             return false;
         }
 
-        int incrementLevel = IncrementManager.increment(tardis);
-        int effectRadius = BASE_EFFECT_RADIUS + (incrementLevel + 5);
-        int artronCost = BASE_ARTRON_COST + (incrementLevel + ARTRON_COST_PER_INCREMENT);
-
-        if (tardis.fuel().getCurrentFuel() < artronCost) {
-            player.sendMessage(Text.literal("§cERROR: Insufficient Artron Energy! Required: " + artronCost + " AU"), true);
+        if (tardis.fuel().getCurrentFuel() < ARTRON_COST) {
+            Text.literal("NOT ENOUGH ARTRON").formatted();
             return false;
         }
 
-        tardis.fuel().removeFuel(artronCost);
+        tardis.fuel().removeFuel(ARTRON_COST);
 
         BlockPos exteriorPos = tardis.travel().position().getPos();
         ServerWorld exteriorWorld = tardis.travel().position().getWorld();
 
-        world.playSound(null, console, AITSounds.DING, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        Scheduler.get().runTaskLater(() -> {
+            spreadElectricalEffects(exteriorWorld, exteriorPos);
+        }, TimeUnit.TICKS, INITIAL_DELAY);
 
         Scheduler.get().runTaskLater(() -> {
-            applyElectricalEffects(exteriorWorld, exteriorPos, effectRadius);
-            exteriorWorld.playSound(null, exteriorPos, AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            spawnElectricParticles(exteriorWorld, exteriorPos, effectRadius);
-        }, TimeUnit.TICKS, 40);
-
-        Scheduler.get().runTaskLater(() -> world.playSound(null, console, AITSounds.DING, SoundCategory.BLOCKS, 1.0F, 1.0F), TimeUnit.TICKS, BASE_DURATION);
+            world.playSound(null, console, AITSounds.DING, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }, TimeUnit.TICKS, TOTAL_DURATION);
 
         return true;
     }
 
-    private void applyElectricalEffects(ServerWorld world, BlockPos pos, int radius) {
-        Box effectBox = new Box(pos).expand(radius);
+
+    private void spreadElectricalEffects(ServerWorld world, BlockPos pos) {
+        Box effectBox = new Box(pos).expand(EFFECT_RADIUS);
 
         world.getEntitiesByClass(LivingEntity.class, effectBox, entity -> true).forEach(entity -> {
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, STATUS_EFFECT_DURATION, 1));
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, STATUS_EFFECT_DURATION / 4, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 600, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 50, 1));
         });
-    }
 
-    private void spawnElectricParticles(ServerWorld world, BlockPos pos, int radius) {
-        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, -1, -radius), pos.add(radius, 2, radius))) {
+        for (BlockPos targetPos : BlockPos.iterate(pos.add(-EFFECT_RADIUS, -1, -EFFECT_RADIUS), pos.add(EFFECT_RADIUS, 2, EFFECT_RADIUS))) {
             world.spawnParticles(ParticleTypes.ELECTRIC_SPARK, targetPos.getX() + 0.5, targetPos.getY() + 1.0, targetPos.getZ() + 0.5, 5, 0, 0.05, 0, 0.1);
         }
     }
@@ -89,7 +81,7 @@ public class ElectricalDischargeControl extends Control {
 
     @Override
     public long getDelayLength() {
-        return 5000;
+        return 600;
     }
 
     @Override
