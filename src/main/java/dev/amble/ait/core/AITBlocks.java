@@ -35,8 +35,6 @@ import dev.amble.ait.core.engine.block.generic.GenericSubSystemBlock;
 
 
 public class AITBlocks extends BlockContainer {
-
-    // TODO ADVENT BLOCKS GO UP HERE AND DECLARED IN THE STATIC METHOD AT THE BOTTOM
     public static Block SNOW_GLOBE;
 
     @NoBlockItem
@@ -119,17 +117,17 @@ public class AITBlocks extends BlockContainer {
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     @NoEnglish
     public static final Block ZEITON_BLOCK = new AmethystBlock(FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA)
-            .strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
+            .strength(1.5F, 6.0F).sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool());
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block BUDDING_ZEITON = new BuddingZeitonBlock(
-            FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F)
+            FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).ticksRandomly().strength(1.5F, 6.0F)
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK).requiresTool().pistonBehavior(PistonBehavior.DESTROY));
     @NoBlockDrop
     @PickaxeMineable(tool = PickaxeMineable.Tool.IRON)
     public static final Block ZEITON_CLUSTER = new AmethystClusterBlock(7, 3,
             FabricBlockSettings.create().mapColor(MapColor.DARK_AQUA).solid().nonOpaque().ticksRandomly()
-                    .sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F).luminance((state) -> 5)
+                    .sounds(BlockSoundGroup.AMETHYST_CLUSTER).strength(1.5F, 6.0F).luminance((state) -> 5)
                     .pistonBehavior(PistonBehavior.DESTROY));
 
     @PickaxeMineable(tool = PickaxeMineable.Tool.STONE)
