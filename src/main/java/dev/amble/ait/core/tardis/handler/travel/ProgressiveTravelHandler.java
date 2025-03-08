@@ -87,6 +87,14 @@ public abstract class ProgressiveTravelHandler extends TravelHandlerBase {
         return Math.max(0, percentage);
     }
 
+    /**
+     * Get the estimated time of arrival for the TARDIS
+     * @return The estimated time of arrival in seconds
+     */
+    public double getFlightETA() {
+        return (double) (this.getTargetTicks() - this.getFlightTicks())/ 20;
+    }
+
     public CachedDirectedGlobalPos getProgress() {
         return TravelUtil.getPositionFromPercentage(this.position(), this.destination(),
                 this.getDurationAsPercentage());
