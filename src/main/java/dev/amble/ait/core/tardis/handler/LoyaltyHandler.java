@@ -8,16 +8,12 @@ import java.util.function.Function;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.Nameable;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisTickable;
-import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.util.TardisUtil;
@@ -83,18 +79,14 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
         ServerTardis tardis = (ServerTardis) this.tardis;
 
-        boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty,
-                schema -> this.playUnlockEffects(player, schema));
-        playSound = DesktopRegistry.getInstance().tryUnlock(tardis, loyalty,
-                schema -> this.playUnlockEffects(player, schema)) || playSound;
-        playSound = ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty,
-                schema -> this.playUnlockEffects(player, schema)) || playSound;
-        playSound = SonicRegistry.getInstance().tryUnlock(tardis, loyalty,
-                schema -> this.playUnlockEffects(player, schema)) || playSound;
+        boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty);
+        playSound = DesktopRegistry.getInstance().tryUnlock(tardis, loyalty) || playSound;
+        playSound = ExteriorVariantRegistry.getInstance().tryUnlock(tardis, loyalty) || playSound;
+        playSound = SonicRegistry.getInstance().tryUnlock(tardis, loyalty) || playSound;
 
-        if (playSound)
+        /*if (playSound)
             player.getServerWorld().playSound(null, player.getBlockPos(), AITSounds.LOYALTY_UP,
-                    SoundCategory.PLAYERS, 0.2F, 1.0F);
+                    SoundCategory.PLAYERS, 0.2F, 1.0F);*/
 
         if (loyalty.isOf(Loyalty.Type.PILOT)) {
             TardisCriterions.REACH_PILOT.trigger(player);
@@ -105,7 +97,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
 
-        Text nameText = nameable.text().copy();
+        /*Text nameText = nameable.text().copy();
         Text unlockedMessage = Text.translatable("message.ait.unlocked");
 
         Text finalMessage = ((MutableText) nameText)
@@ -114,7 +106,7 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
                 .append(Text.literal("!"))
                 .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD);
 
-        player.sendMessage(finalMessage, false);
+        player.sendMessage(finalMessage, false);*/
     }
 
     public void addLevel(ServerPlayerEntity player, int level) {

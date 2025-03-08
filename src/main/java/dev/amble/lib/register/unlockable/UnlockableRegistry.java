@@ -3,7 +3,6 @@ package dev.amble.lib.register.unlockable;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
@@ -57,7 +56,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
         return this.getRandom(tardis, RANDOM);
     }
 
-    public boolean tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
+    public boolean tryUnlock(Tardis tardis, Loyalty loyalty) {
         boolean success = false;
         for (T schema : REGISTRY.values()) {
             if (tardis.isUnlocked(schema))
@@ -72,9 +71,6 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
 
             success = true;
             tardis.stats().unlock(schema);
-
-            if (consumer != null)
-                consumer.accept(schema);
         }
 
         return success;

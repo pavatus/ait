@@ -27,6 +27,12 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.fuel().disablePower());
+        TardisEvents.LANDED.register(tardis -> {
+            if (tardis.travel().autopilot()) {
+                if (tardis.travel().isCrashing())
+                    tardis.travel().autopilot(false);
+            }
+        });
     }
 
     public SubSystemHandler() {
