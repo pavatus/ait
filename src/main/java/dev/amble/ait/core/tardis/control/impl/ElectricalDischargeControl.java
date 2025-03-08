@@ -68,6 +68,8 @@ public class ElectricalDischargeControl extends Control {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 600, 1));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 1));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 50, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 250, 1));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 75, 1));
         });
 
         for (BlockPos targetPos : BlockPos.iterate(pos.add(-EFFECT_RADIUS, -1, -EFFECT_RADIUS), pos.add(EFFECT_RADIUS, 2, EFFECT_RADIUS))) {
