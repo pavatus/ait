@@ -950,7 +950,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.landingpad.adjust", "Adjusting to landing pad..");
         provider.addTranslation("tardis.message.self_destruct.warning", "SELF DESTRUCT INITIATED | ABORT SHIP");
         provider.addTranslation("warning.ait.needs_subsystem", "ERROR, REQUIRES ACTIVE SUBSYSTEM: %s");
-        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a charged crystal or nether star to bootstrap...");
+        provider.addTranslation("tardis.message.growth.hint", "Shock the TARDIS' water supply with a personality matrix to bootstrap...");
         provider.addTranslation("tardis.message.growth.no_cage", "Cage the TARDIS Coral to begin Plasmic coating process!");
         provider.addTranslation("tardis.message.interiorchange.not_enough_plasmic_material", "Not enough Plasmic Material for shell: %s / 8");
         provider.addTranslation("message.ait.control.ylandtype", "Vertical Search Mode: %s");
