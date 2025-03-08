@@ -35,7 +35,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.Vibrations;
 
@@ -48,18 +48,17 @@ import dev.amble.ait.core.blockentities.MatrixEnergizerBlockEntity;
 import dev.amble.ait.core.item.PersonalityMatrixItem;
 
 public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
-
-    private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+    private final VoxelShape DEFAULT = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 11.0, 16.0);
     public static final EnumProperty<SculkSensorPhase> SENSOR_PHASE = Properties.SCULK_SENSOR_PHASE;
     public static final IntProperty AGE = Properties.AGE_3;
     public static final BooleanProperty HAS_POWER = BooleanProperty.of("has_power");
-
+    public static final BooleanProperty SILENT = BooleanProperty.of("silent");
     public MatrixEnergizerBlock(Settings settings) {
         super(settings);
 
         this.setDefaultState(
                 this.getDefaultState().with(AGE, 0).with(HAS_POWER, false)
-                        .with(SENSOR_PHASE, SculkSensorPhase.INACTIVE)
+                        .with(SENSOR_PHASE, SculkSensorPhase.INACTIVE).with(SILENT, true)
         );
     }
 
@@ -172,6 +171,14 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
         }
     }
 
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (hasPower(state)) {
+            dropStack((World) world, pos, AITItems.PERSONALITY_MATRIX.getDefaultStack());
+        }
+        super.onBroken(world, pos, state);
+    }
+
     private boolean tryCreate(World world, BlockPos pos, BlockState state) {
         if (world.isClient()) return false;
         if (this.isMature(state) && hasPower(state)) {
@@ -196,6 +203,7 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
+        state.with(SILENT, true);
         super.onPlaced(world, pos, state, placer, itemStack);
 
         if (!(placer instanceof ServerPlayerEntity player))
@@ -210,12 +218,6 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
             TardisCriterions.PLACE_ENERGIZER.trigger(player);
         }
     }
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return (world.getBaseLightLevel(pos, 0) >= 4 || world.isSkyVisible(pos)) && super.canPlaceAt(state, world, pos);
-    }
-
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return DEFAULT;
@@ -233,7 +235,7 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(AGE).add(HAS_POWER).add(SENSOR_PHASE);
+        builder.add(AGE).add(HAS_POWER).add(SENSOR_PHASE).add(SILENT);
     }
 
     @Override
@@ -270,6 +272,7 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
         Block block = state.getBlock();
         world.updateNeighborsAlways(pos, block);
         world.updateNeighborsAlways(pos.down(), block);
+        state.with(SILENT, true);
     }
 
     public int getCooldownTime() {

@@ -256,6 +256,8 @@ public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEnt
     }
 
     private void updateModel(Tardis tardis) {
+        if (tardis.getExterior() == null)
+            return;
         ClientExteriorVariantSchema variant = tardis.getExterior().getVariant().getClient();
 
         if (this.variant != variant) {

@@ -67,8 +67,8 @@ public class PlaqueRenderer<T extends PlaqueBlockEntity> implements BlockEntityR
         this.textRenderer.drawWithOutline(Text.of(tardis.stats().getCreationString()).asOrderedText(),
                 xVal - ((float) this.textRenderer.getWidth(tardis.stats().getCreationString()) / 2), 35, 0xFFFFFF,
                 0x000000, matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
-        this.textRenderer.drawWithOutline(Text.of("-========-").asOrderedText(),
-                xVal - ((float) this.textRenderer.getWidth("-========-") / 2), 55, 0xFFFFFF, 0x000000,
+        this.textRenderer.drawWithOutline(Text.of("Type 50 TT Capsule").asOrderedText(),
+                xVal - ((float) this.textRenderer.getWidth("Type 50 TT Capsule") / 2), 55, 0xFFFFFF, 0x000000,
                 matrices.peek().getPositionMatrix(), vertexConsumers, 0xF000F0);
         this.textRenderer.drawWithOutline(Text.of(tardis.stats().getName()).asOrderedText(),
                 xVal - ((float) this.textRenderer.getWidth(tardis.stats().getName()) / 2), 75, 0xFFFFFF, 0x000000,
