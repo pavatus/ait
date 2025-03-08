@@ -167,6 +167,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (tardis == null)
             return normal;
 
+        if (tardis.siege() == null)
+            return normal;
+
         if (tardis.siege().isActive())
             return SIEGE_SHAPE;
 

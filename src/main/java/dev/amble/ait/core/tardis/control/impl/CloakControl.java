@@ -23,8 +23,6 @@ public class CloakControl extends Control {
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        CloakHandler cloak = tardis.handler(TardisComponent.Id.CLOAK);
-
         if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
             this.addToControlSequence(tardis, player, console);
 
@@ -32,6 +30,8 @@ public class CloakControl extends Control {
                     1.0F, 1.0F);
             return false;
         }
+
+        CloakHandler cloak = tardis.handler(TardisComponent.Id.CLOAK);
 
         cloak.cloaked().set(!cloak.cloaked().get());
 

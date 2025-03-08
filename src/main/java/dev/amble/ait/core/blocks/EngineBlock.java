@@ -100,6 +100,17 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
+    // TODO ONLY ALLOW ONE ENGINE IN THE INTERIOR
+    /*@Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (!(world.getBlockEntity(pos) instanceof EngineBlockEntity engine))
+            return;
+
+        if (engine.isLinked()) return;
+
+        super.onPlaced(world, pos, state, placer, itemStack);
+    }*/
+
     @Override
     protected BlockEntityType<? extends SubSystemBlockEntity> getType() {
         return AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE;
