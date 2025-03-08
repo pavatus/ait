@@ -40,6 +40,8 @@ public class ToyotaType extends ConsoleTypeSchema {
                     new Vector3f(0.9867187589406967f, 0.5875017130747437f, -0.5656250175088644f)),
             new ControlTypes(new FastReturnControl(), EntityDimensions.changing(0.099999994f, 0.16250001f),
                     new Vector3f(1.41171913780272f, 0.5375015251338482f, -0.2406251858919859f)),
+            new ControlTypes(new ElectricalDischargeControl(), EntityDimensions.changing(0.07499999f, 0.0875f),
+                    new Vector3f(0.0882810577750206f, 0.5750002861022949f, -1.4593753814697266f)),
 
             // Extra monitors
             new ControlTypes(new MonitorControl(), EntityDimensions.changing(0.43749988f, 0.3749999f),

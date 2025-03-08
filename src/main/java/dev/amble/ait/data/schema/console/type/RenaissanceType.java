@@ -40,6 +40,10 @@ public class RenaissanceType extends ConsoleTypeSchema {
             new ControlTypes(new DoorControl(), EntityDimensions.changing(0.06249999f, 0.21250002f),
                     new Vector3f(-0.9984386460855603f, 0.5750001911073923f, 0.6882816292345524f)),
 
+            new ControlTypes(new ElectricalDischargeControl(), EntityDimensions.changing(0.08749999f, 0.07499999f),
+                    new Vector3f(-1.1984382644295692f, 0.5500002857297659f, 0.4007816296070814f)),
+
+
             new ControlTypes(new DoorLockControl(), EntityDimensions.changing(0.06249999f, 0.21250002f),
                     new Vector3f(-1.0984386475756764f, 0.5750001911073923f, 0.5257816268131137f)),
 
