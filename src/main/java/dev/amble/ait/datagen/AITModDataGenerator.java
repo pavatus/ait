@@ -1276,7 +1276,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.landingpad.adjust", "Your landing position has been adjusted");
 
         // Commands
-        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.realworld.responses", "Spawned a real world TARDIS at: ");
         provider.addTranslation("command.ait.riftchunk.cannotsetlevel",
                 "This chunk is not a rift chunk, so you can't set the artron levels of it");
         provider.addTranslation("command.ait.riftchunk.setlevel", "Set artron levels in rift chunk to: %s");
@@ -1431,7 +1431,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
-        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.realworld.responses", "Spawned a real world TARDIS at: ");
 
         return provider;
     }
@@ -1530,7 +1530,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
-        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at: ");
+        provider.addTranslation("command.ait.realworld.responses", "Spawned a real world TARDIS at: ");
 
         return provider;
     }
@@ -1629,7 +1629,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 "The TARDIS does not have enough fuel to change it's interior");
         provider.addTranslation("tardis.message.interiorchange.warning",
                 "Interior reconfiguration started! Please leave the interior.");
-        provider.addTranslation("command.ait.realworld.response", "Spawned a real world TARDIS at:");
+        provider.addTranslation("command.ait.realworld.responses", "Spawned a real world TARDIS at:");
 
         return provider;
     }

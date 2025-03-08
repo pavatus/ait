@@ -52,24 +52,24 @@ public interface HandlesResponse extends Identifiable {
     }
 
     /**
-     * Run the response.
-     * @param player player who invoked this response
+     * Run the responses.
+     * @param player player who invoked this responses
      * @param source sound handler
      * @param tardis handles linked tardis
-     * @return Whether the response was successful.
+     * @return Whether the responses was successful.
      */
     boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis);
 
     /**
      * @param command keyword to search for
-     * @return whether the word given is a command word for this response
+     * @return whether the word given is a command word for this responses
      */
     default boolean isCommand(String command) {
-        return getCommandWords().contains(command);
+        return getCommandWords().contains(command.toLowerCase());
     }
 
     /**
-     * @return The command words that this response can handle.
+     * @return The command words that this responses can handle.
      */
     List<String> getCommandWords();
 }
