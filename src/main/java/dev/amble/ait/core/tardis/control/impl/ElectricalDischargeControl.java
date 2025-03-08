@@ -12,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
@@ -39,7 +40,7 @@ public class ElectricalDischargeControl extends Control {
         }
 
         if (tardis.fuel().getCurrentFuel() < ARTRON_COST) {
-            Text.literal("NOT ENOUGH ARTRON").formatted();
+            player.sendMessage(Text.literal("ERROR: Insufficient Artron Energy! Required: " + ARTRON_COST + " AU").formatted(Formatting.RED), true);
             return false;
         }
 
