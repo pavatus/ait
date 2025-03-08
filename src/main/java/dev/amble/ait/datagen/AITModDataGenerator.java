@@ -1023,7 +1023,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.description.repair_subsystem", "Repair a broken subsystem");
         provider.addTranslation("achievement.ait.title.engines_phase", "Technical Problems");
         provider.addTranslation("achievement.ait.description.engines_phase", "ENGINES PHASING! That doesnt sound good.");
-        provider.addTranslation("achievement.ait.title.place_energizer", "Proctrasination 3000");
+        provider.addTranslation("achievement.ait.title.place_energizer", "Procrastination 3000");
         provider.addTranslation("achievement.ait.description.place_energizer", "Place a Matrix Energizer ontop of a naturaly generated Shrieker.");
 
 
