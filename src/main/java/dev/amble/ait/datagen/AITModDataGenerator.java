@@ -935,6 +935,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("tardis.message.console.has_sonic_in_port", "Cannot cache console with sonic in port");
         provider.addTranslation("tardis.message.control.antigravs.active", "Antigravs: ENGAGED");
         provider.addTranslation("tardis.message.control.antigravs.inactive", "Antigravs: DISENGAGED");
+        provider.addTranslation("tardis.message.control.rwf_disabled", "RWF is disabled in SERVER config.");
         provider.addTranslation("tardis.message.control.fast_return.destination_nonexistent",
                 "Fast Return: Last Position Nonexistent!");
         provider.addTranslation("tardis.message.control.fast_return.last_position", "Fast Return: LAST POSITION SET");
