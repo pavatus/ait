@@ -36,7 +36,6 @@ import dev.amble.ait.core.engine.block.generic.GenericSubSystemBlock;
 
 public class AITBlocks extends BlockContainer {
     public static Block SNOW_GLOBE;
-
     @NoBlockItem
     @NoBlockDrop
     @NoEnglish

@@ -109,7 +109,6 @@ public abstract class TardisComponent extends Initializable<TardisComponent.Init
         BUTLER(ButlerHandler.class, ButlerHandler::new),
         PERMISSIONS(PermissionHandler.class, PermissionHandler::new),
         LOYALTY(LoyaltyHandler.class, LoyaltyHandler::new),
-        ENGINE(EngineHandler.class, EngineHandler::new),
         FLIGHT(RealFlightHandler.class, RealFlightHandler::new),
         BIOME(BiomeHandler.class, BiomeHandler::new),
         SHIELDS(ShieldHandler.class, ShieldHandler::new),

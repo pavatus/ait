@@ -63,7 +63,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         return system;
     }
 
-    private SubSystem remove(SubSystem.IdLike id) {
+    public SubSystem remove(SubSystem.IdLike id) {
         SubSystem found = this.systems.remove(id);
         this.sync();
         return found;

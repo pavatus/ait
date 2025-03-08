@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -42,20 +41,37 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
 
     @Override
     public ActionResult useOn(BlockState state, World world, boolean sneaking, PlayerEntity player, ItemStack hand) {
-        if (!(world.isClient())) {
-            if (hand.getItem() instanceof SubSystemItem link) {
-                if (this.getSourceStack().isPresent()) {
-                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(),
-                            player.getZ(), this.getSourceStack().get());
-                    world.spawnEntity(item);
+
+        if (hand.isEmpty()) {
+            if (this.system() != null && this.idSource != null) {
+                StackUtil.spawn(world, pos, this.idSource.copyAndEmpty());
+                if (this.tardis().isPresent()) {
+                    this.tardis().get().subsystems().remove(this.id());
                 }
-                this.setId(link.id());
-                this.idSource = hand.copy();
-                this.idSource.setCount(1);
-                hand.decrement(1);
-                world.playSound(null, this.getPos(), AITSounds.WAYPOINT_ACTIVATE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                world.playSound(null, this.getPos(), AITSounds.WAYPOINT_ACTIVATE, SoundCategory.BLOCKS, 1.0f, 0.1f);
+                this.markDirty();
+                this.sync();
+                this.id = null;
                 return ActionResult.SUCCESS;
             }
+        }
+
+        if ((world.isClient())) return ActionResult.SUCCESS;
+
+
+        if (hand.getItem() instanceof SubSystemItem link) {
+            if (this.system() != null && this.idSource != null) {
+                if (tardis() != null) {
+                    tardis().get().subsystems().get(this.id()).setEnabled(false);
+                }
+                StackUtil.spawn(world, pos, this.idSource.copyAndEmpty());
+            }
+            this.setId(link.id());
+            this.idSource = hand.copy();
+            this.idSource.setCount(1);
+            hand.decrement(1);
+            world.playSound(null, this.getPos(), AITSounds.WAYPOINT_ACTIVATE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            return ActionResult.SUCCESS;
         }
 
         return super.useOn(state, world, sneaking, player, hand);
