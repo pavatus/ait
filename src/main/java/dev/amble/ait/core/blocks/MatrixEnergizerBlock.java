@@ -15,6 +15,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -128,6 +129,10 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
                 double offsetY = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
                 double offsetZ = AITMod.RANDOM.nextGaussian() * getAge(state) * 0.01f;
                 world.addParticle(AITMod.CORAL_PARTICLE, centre.getX(), centre.getY() - 0.65f, centre.getZ(), offsetX, offsetY, offsetZ);
+                world.addParticle(ParticleTypes.SCULK_SOUL, centre.getX(), centre.getY() - 0.65f, centre.getZ(), offsetX, offsetY, offsetZ);
+                world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, centre.getX(), centre.getY() - 0.65f, centre.getZ(), offsetX, offsetY, offsetZ);
+
+
             }
         }
     }
