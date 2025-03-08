@@ -9,12 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITBlockEntityTypes;
 import dev.amble.ait.core.AITSounds;
+import dev.amble.ait.core.engine.DurableSubSystem;
 import dev.amble.ait.core.engine.StructureHolder;
 import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.engine.block.multi.MultiBlockStructure;
@@ -44,6 +46,10 @@ public class GenericStructureSystemBlockEntity extends StructureSystemBlockEntit
 
         if (hand.isEmpty()) {
             if (this.system() != null && this.idSource != null) {
+                if (this.system() instanceof DurableSubSystem durable && (durable.isBroken() || durable.durability() < 1250)) {
+                    player.sendMessage(Text.translatable("tardis.message.engine.system_is_weakened"), true);
+                    return ActionResult.SUCCESS;
+                }
                 StackUtil.spawn(world, pos, this.idSource.copyAndEmpty());
                 if (this.tardis().isPresent()) {
                     this.tardis().get().subsystems().remove(this.id());

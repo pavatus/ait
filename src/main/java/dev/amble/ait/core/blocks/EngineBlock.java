@@ -76,8 +76,8 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
 
         if (!engine.isLinked()) return;
 
-        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX(), pos.getY() + 1.25,
-                pos.getZ() + 0.5, 0, 0.1, 0);
+        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX() + 0.5, pos.getY() + 2,
+                pos.getZ() + 0.5, 0, 0.2, 0);
 
         float durability = engine.tardis().get().subsystems().engine().durability();
 

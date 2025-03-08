@@ -28,7 +28,7 @@ public class VisualiserControl extends Control {
 
         if (!AITMod.CONFIG.SERVER.RWF_ENABLED) {
             player.sendMessage(Text.translatable("tardis.message.control.rwf_disabled"), true);
-            return false;
+            return true;
         }
 
         if (!player.isSneaking() && tardis.travel().getState() == TravelHandlerBase.State.LANDED && tardis.subsystems().get(GRAVITATIONAL).isEnabled()) {
