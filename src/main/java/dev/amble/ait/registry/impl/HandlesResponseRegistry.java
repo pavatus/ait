@@ -3,6 +3,7 @@ package dev.amble.ait.registry.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.data.DirectedGlobalPos;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -369,6 +370,30 @@ public class HandlesResponseRegistry {
             @Override
             public Identifier id() {
                 return AITMod.id("hail_mary");
+            }
+        });
+
+        register(new HandlesResponse() {
+            @Override
+            public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                TravelHandlerBase.State state = tardis.travel().getState();
+                sendChat(player, Text.literal("TARDIS State: " + state.name()));
+
+                if (state == TravelHandlerBase.State.FLIGHT) {
+                    sendChat(player, Text.literal("Flight is " + tardis.travel().getDurationAsPercentage() + "% complete."));
+                }
+
+                return success(source);
+            }
+
+            @Override
+            public List<String> getCommandWords() {
+                return List.of("progress", "flight status", "flight progress");
+            }
+
+            @Override
+            public Identifier id() {
+                return AITMod.id("progress");
             }
         });
     }
