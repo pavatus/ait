@@ -3,6 +3,7 @@ package dev.amble.lib.register.unlockable;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
@@ -18,12 +19,12 @@ import dev.amble.ait.data.Loyalty;
 public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDatapackRegistry<T> {
 
     protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, Identifier packet,
-            Identifier name, boolean sync) {
+                                 Identifier name, boolean sync) {
         super(deserializer, codec, packet, name, sync);
     }
 
     protected UnlockableRegistry(Function<InputStream, T> deserializer, Codec<T> codec, String packet, String name,
-            boolean sync, String modid) {
+                                 boolean sync, String modid) {
         super(deserializer, codec, packet, name, sync, modid);
     }
 
@@ -56,7 +57,7 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
         return this.getRandom(tardis, RANDOM);
     }
 
-    public boolean tryUnlock(Tardis tardis, Loyalty loyalty) {
+    public boolean tryUnlock(Tardis tardis, Loyalty loyalty, Consumer<T> consumer) {
         boolean success = false;
         for (T schema : REGISTRY.values()) {
             if (tardis.isUnlocked(schema))
@@ -71,6 +72,9 @@ public abstract class UnlockableRegistry<T extends Unlockable> extends SimpleDat
 
             success = true;
             tardis.stats().unlock(schema);
+
+            if (consumer != null)
+                consumer.accept(schema);
         }
 
         return success;
