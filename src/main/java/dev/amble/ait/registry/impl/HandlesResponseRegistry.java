@@ -3,6 +3,7 @@ package dev.amble.ait.registry.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.data.DirectedGlobalPos;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -26,7 +27,6 @@ import dev.amble.ait.core.handles.HandlesSound;
 import dev.amble.ait.core.item.HandlesItem;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.Tardis;
-import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.world.TardisServerWorld;
 
 /**
@@ -381,7 +381,6 @@ public class HandlesResponseRegistry {
 
                 if (state == TravelHandlerBase.State.FLIGHT) {
                     sendChat(player, Text.literal("Flight is " + tardis.travel().getDurationAsPercentage() + "% complete."));
-                    sendChat(player, Text.literal("ETA " + Math.round(tardis.travel().getFlightETA()) + " seconds."));
                 }
 
                 return success(source);
