@@ -166,6 +166,7 @@ public class HandlesResponseRegistry {
         });
     }
 
+
     private static boolean onChatMessage(SignedMessage signedMessage, ServerPlayerEntity player, MessageType.Parameters parameters) {
         ItemStack stack;
 
@@ -191,7 +192,178 @@ public class HandlesResponseRegistry {
                 }
                 break;
             }
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (tardis.travel().inFlight()) {
+                        sendChat(player, Text.literal("The TARDIS is aredy in flight.."));
+                        return failure(source);
+                    }
+
+                    tardis.travel().dematerialize();
+                    sendChat(player, Text.literal("Initiating dematerialization sequence."));
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("dematerialize", "take off");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("dematerialize");
+                }
+            });
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (!tardis.travel().inFlight()) {
+                        sendChat(player, Text.literal("The TARDIS is not in flight."));
+                        return failure(source);
+                    }
+
+                    tardis.travel().rematerialize();
+                    sendChat(player, Text.literal("Rematerializing."));
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("rematerialize", "land");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("rematerialize");
+                }
+            });
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (tardis.door().locked()) {
+                        sendChat(player, Text.literal("Doors aredy locked"));
+                        return failure(source);
+                    }
+
+                    tardis.door().setLocked(true);
+                    sendChat(player, Text.literal("Locking door."));
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("lock", "lock door");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("lock");
+                }
+            });
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (!tardis.door().locked()) {
+                        sendChat(player, Text.literal("Doors aredy unlocked"));
+                        return failure(source);
+                    }
+
+                    tardis.door().setLocked(false);
+                    sendChat(player, Text.literal("Unlocking door."));
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("unlock", "unlock door");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("unlock");
+                }
+            });
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (!tardis.waypoint().hasWaypoint()) {
+                        sendChat(player, Text.literal("There is no waypoint set."));
+                        return failure(source);
+                    }
+
+                    sendChat(player, Text.literal("Setting course for waypoint."));
+                    tardis.waypoint().gotoWaypoint();
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("go to waypoint", "travel to waypoint");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("travel_waypoint");
+                }
+            });
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (tardis.door().isOpen()) {
+                        sendChat(player, Text.literal("Doors are aredy open"));
+                        return failure(source);
+                    }
+
+                    sendChat(player, Text.literal("Opening TARDIS doors."));
+                    tardis.door().openDoors();
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("open", "open the door");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("open_door");
+                }
+            });
+
+            register(new HandlesResponse() {
+                @Override
+                public boolean run(ServerPlayerEntity player, HandlesSound source, ServerTardis tardis) {
+                    if (!tardis.door().isOpen()) {
+                        sendChat(player, Text.literal("Doors are aredy closed"));
+                        return failure(source);
+                    }
+
+                    sendChat(player, Text.literal("Closing TARDIS doors."));
+                    tardis.door().closeDoors();
+                    return success(source);
+                }
+
+                @Override
+                public List<String> getCommandWords() {
+                    return List.of("close", "close the door");
+                }
+
+                @Override
+                public Identifier id() {
+                    return AITMod.id("close_door");
+                }
+            });
+
         }
+
+
 
         if (!TardisServerWorld.isTardisDimension(player.getWorld())) return true;
         Tardis tardis = ((TardisServerWorld) player.getWorld()).getTardis();
