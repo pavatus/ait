@@ -26,16 +26,11 @@ import dev.amble.ait.core.engine.block.SubSystemBlockEntity;
 
 public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-//    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(
-//            -16.0, 0.0, -16.0,
-//            32.0, 48.0, 32.0
-//    );
-    protected static final VoxelShape Y_SHAPE = VoxelShapes.fullCube();
 
+    protected static final VoxelShape Y_SHAPE = VoxelShapes.fullCube();
 
     public EngineBlock(Settings settings) {
         super(settings, SubSystem.Id.ENGINE);
-
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
@@ -76,40 +71,34 @@ public class EngineBlock extends SubSystemBlock implements BlockEntityProvider {
 
         if (!engine.isLinked()) return;
 
-        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX() + 0.5, pos.getY() + 2,
-                pos.getZ() + 0.5, 0, 0.2, 0);
+        double offsetX = (random.nextDouble() - 0.5) * 1.5;
+        double offsetZ = (random.nextDouble() - 0.5) * 1.5;
+        double offsetY = 1.5 + random.nextDouble();
+
+        world.addParticle(AITMod.CORAL_PARTICLE, true, pos.getX() + 0.5 + offsetX, pos.getY() + offsetY,
+                pos.getZ() + 0.5 + offsetZ, 0, 0.05, 0);
+        world.addParticle(ParticleTypes.ENCHANT, true, pos.getX() + 0.5 + offsetX, pos.getY() + offsetY,
+                pos.getZ() + 0.5 + offsetZ, 0, 0.05, 0);
 
         float durability = engine.tardis().get().subsystems().engine().durability();
 
         if (durability > 10) return;
 
-        // smoke and spark particles & sfx when below 50%
-        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX(), pos.getY() + 1.25,
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5, pos.getY() + 1.5,
                 pos.getZ() + 0.5, 0, 0.1, 0);
-        world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5f, pos.getY() + 1.25, pos.getZ() + 0.5f, 0.1,
-                0, 0.05f);
+        world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.5,
+                pos.getZ() + 0.5, 0.1, 0, 0.05);
 
-        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX(), pos.getY() + 1.25,
+        world.addParticle(ParticleTypes.LARGE_SMOKE, true, pos.getX() + 0.5, pos.getY() + 1.5,
                 pos.getZ() + 0.5, 0, 0.1, 0);
-        world.addParticle(ParticleTypes.CLOUD, pos.getX(), pos.getY() + 1.25,
-                pos.getZ() + 0.5, 0, 0.1, 0);
+        world.addParticle(ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.5,
+                pos.getZ() + 0.5, 0.1, 0, 0.05);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
-
-    // TODO ONLY ALLOW ONE ENGINE IN THE INTERIOR
-    /*@Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (!(world.getBlockEntity(pos) instanceof EngineBlockEntity engine))
-            return;
-
-        if (engine.isLinked()) return;
-
-        super.onPlaced(world, pos, state, placer, itemStack);
-    }*/
 
     @Override
     protected BlockEntityType<? extends SubSystemBlockEntity> getType() {
