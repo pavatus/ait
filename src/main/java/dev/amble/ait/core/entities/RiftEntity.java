@@ -3,9 +3,12 @@ package dev.amble.ait.core.entities;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
+import net.minecraft.entity.mob.AmbientEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -24,13 +27,12 @@ import net.minecraft.world.chunk.Chunk;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.*;
-import dev.amble.ait.core.entities.base.DummyAmbientEntity;
 import dev.amble.ait.core.item.SonicItem;
 import dev.amble.ait.core.util.StackUtil;
 import dev.amble.ait.core.util.WorldUtil;
+import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
-public class RiftEntity extends DummyAmbientEntity {
-
+public class RiftEntity extends AmbientEntity implements ISpaceImmune {
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;
@@ -111,7 +113,6 @@ public class RiftEntity extends DummyAmbientEntity {
 
                 BlockState currentState = world.getBlockState(targetPos);
                 BlockState newState = getReplacementBlock(currentState);
-
                 if (newState != null) {
                     world.setBlockState(targetPos, newState, Block.NOTIFY_ALL);
 
@@ -197,6 +198,7 @@ public class RiftEntity extends DummyAmbientEntity {
         return false;
     }
 
+    /** Overridden to ensure it spawn mid-air (Needs fixing?) **/
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
@@ -214,5 +216,16 @@ public class RiftEntity extends DummyAmbientEntity {
         this.updatePositionAndAngles(d, e, f, g, h);
         this.setVelocity(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
         this.updatePosition(d, e, f);
+    }
+
+    public static void addSpawn() {
+        BiomeModifications.addSpawn(
+                BiomeSelectors.all(),
+                SpawnGroup.AMBIENT,
+                AITEntityTypes.RIFT_ENTITY,
+                1,
+                1,
+                1
+        );
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
@@ -389,6 +390,22 @@ public class MonitorScreen extends ConsoleScreen {
 
         context.drawCenteredTextWithShadow(this.textRenderer, isExtUnlocked ? "" : "\uD83D\uDD12", x, y,
                 0xFFFFFF);
+
+        //float h = (float) (-textRenderer.getWidth("\uD83D\uDD12") / 2);
+
+        //Matrix4f matrix4f = stack.peek().getPositionMatrix();
+        VertexConsumerProvider vertex = context.getVertexConsumers();
+
+        //textRenderer.draw(Text.literal("\uD83D\uDD12"), h + 0.35f, 0.0F, 0xFFFFFFFF, false, matrix4f, vertex,
+                //TextRenderer.TextLayerType.SEE_THROUGH, 0x000000, 0xf000f0);
+
+        stack.push();
+        stack.translate(0, 0, 50f);
+
+        context.drawCenteredTextWithShadow(this.textRenderer, isExtUnlocked ? "" : "\uD83D\uDD12", x, y, 0xFFFFFF);
+
+        stack.pop();
+
 
         stack.pop();
     }

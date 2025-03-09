@@ -22,6 +22,7 @@ import dev.amble.ait.core.AITStatusEffects;
 import dev.amble.ait.core.entities.FlightTardisEntity;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
 @Mixin(value = LivingEntity.class, priority = 1001)
 public abstract class LivingEntityMixin extends Entity {
@@ -88,6 +89,9 @@ public abstract class LivingEntityMixin extends Entity {
         boolean oxygenated = entity.hasStatusEffect(AITStatusEffects.OXYGENATED);
 
         if (oxygenated)
+            return;
+
+        if (entity instanceof ISpaceImmune)
             return;
 
         if (planet.isFreezing() && !Planet.hasFullSuit(entity)) {

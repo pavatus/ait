@@ -24,8 +24,9 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITEntityTypes;
 import dev.amble.ait.core.AITItems;
+import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
-public class GallifreyFallsPaintingEntity extends AbstractDecorationEntity {
+public class GallifreyFallsPaintingEntity extends AbstractDecorationEntity implements ISpaceImmune {
     private static final int WIDTH = 48;
     private static final int HEIGHT = 32;
 
