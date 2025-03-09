@@ -14,9 +14,9 @@ public class Blueprint {
 
     public Blueprint(BlueprintSchema source) {
         this.source = source;
-
         this.requirements = source.inputs().toStacks();
     }
+
     public Blueprint(NbtCompound nbt) {
         this(BlueprintRegistry.getInstance().get(new Identifier(nbt.getString("id"))));
 
@@ -33,15 +33,13 @@ public class Blueprint {
         for (ItemStack requirement : requirements) {
             if (ItemStack.areItemsEqual(requirement, stack)) {
                 // now we need to check if the stack has the same amount of items
-                if (requirement.getCount() == stack.getCount()) {
+
+                int deducted = Math.min(requirement.getCount(), stack.getCount());
+                requirement.decrement(deducted);
+                stack.decrement(deducted);
+
+                if (requirement.isEmpty())
                     requirements.remove(requirement);
-                } else if (requirement.getCount() < stack.getCount()) {
-                    stack.decrement(requirement.getCount());
-                    requirements.remove(requirement);
-                } else {
-                    requirement.decrement(stack.getCount());
-                    stack.decrement(stack.getCount());
-                }
 
                 return true;
             }
@@ -63,11 +61,14 @@ public class Blueprint {
     public boolean isComplete() {
         return requirements.isEmpty();
     }
+
     public ItemStack getOutput() {
         return source.output().copy();
     }
+
     public Optional<ItemStack> tryCraft() {
-        if (!isComplete()) return Optional.empty();
+        if (!isComplete())
+            return Optional.empty();
 
         return Optional.of(getOutput());
     }
@@ -97,11 +98,7 @@ public class Blueprint {
         return nbt;
     }
 
-    @Override
-    public String toString() {
-        return "Blueprint{" +
-                "source=" + source +
-                ", requirements=" + requirements +
-                '}';
+    public BlueprintSchema getSource() {
+        return source;
     }
 }
