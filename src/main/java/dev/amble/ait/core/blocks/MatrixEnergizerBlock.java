@@ -152,11 +152,12 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
         if (world.isClient()) return;
         if (!(world.getBlockState(pos.down()).getBlock() instanceof SculkShriekerBlock) || !world.getBlockState(pos.down())
                 .get(SculkShriekerBlock.CAN_SUMMON)) {
-            world.breakBlock(pos, true);
             return;
         }
 
-        if (!world.getBlockState(pos.down()).get(SculkShriekerBlock.SHRIEKING)) return;
+        if (!world.getBlockState(pos.down()).get(SculkShriekerBlock.SHRIEKING)) {
+            return;
+        }
 
         if (!hasPower(world.getBlockState(pos))) return;
         BlockEntity be = world.getBlockEntity(pos);
@@ -208,18 +209,21 @@ public class MatrixEnergizerBlock extends Block implements BlockEntityProvider {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        state.with(SILENT, true);
         super.onPlaced(world, pos, state, placer, itemStack);
 
-        if (!(placer instanceof ServerPlayerEntity player))
-            return;
-
-        if (!(world.getBlockState(pos.down()).getBlock() instanceof SculkShriekerBlock)) {
-            world.breakBlock(pos, !placer.isPlayer() || !player.isCreative());
+        if (!(placer instanceof ServerPlayerEntity player)) {
             return;
         }
 
-        if (world.getBlockEntity(pos) instanceof MatrixEnergizerBlockEntity matrix) {
+        state.with(SILENT, true);
+
+        if (!(world.getBlockState(pos.down()).getBlock() instanceof SculkShriekerBlock)) {
+            world.breakBlock(pos, !player.isCreative());
+            if (!player.isCreative()) dropStack(world, pos, AITBlocks.MATRIX_ENERGIZER.asItem().getDefaultStack());
+            return;
+        }
+
+        if (world.getBlockEntity(pos) instanceof MatrixEnergizerBlockEntity) {
             TardisCriterions.PLACE_ENERGIZER.trigger(player);
         }
     }

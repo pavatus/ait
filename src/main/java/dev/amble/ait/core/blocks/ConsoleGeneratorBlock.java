@@ -37,8 +37,6 @@ public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (world.isClient())
-            return;
 
         super.onPlaced(world, pos, state, placer, itemStack);
     }

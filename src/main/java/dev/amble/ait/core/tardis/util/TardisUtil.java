@@ -5,6 +5,9 @@ import java.util.function.Predicate;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.data.DirectedBlockPos;
+import dev.amble.lib.util.TeleportUtil;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +33,7 @@ import net.minecraft.world.entity.EntityTrackingSection;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
+import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.AITTags;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
@@ -203,9 +207,27 @@ public class TardisUtil {
     public static void dropOutside(Tardis tardis, Entity entity) {
         TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
+        if (!(entity instanceof LivingEntity living)) return;
+
+        if (living.getServer() == null) return;
+
         CachedDirectedGlobalPos percentageOfDestination = tardis.travel().getProgress();
-        TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
-                percentageOfDestination.toPos());
+        Scheduler scheduler = Scheduler.get();
+        ServerWorld vortexWorld = living.getServer().getWorld(AITDimensions.TIME_VORTEX_WORLD);
+
+        if (vortexWorld == null) {
+            return;
+        }
+
+        TeleportUtil.teleport(living, vortexWorld, new Vec3d(vortexWorld.getRandom().nextBetween(0, 256), 0, vortexWorld.getRandom().nextBetween(0, 256)), living.getBodyYaw());
+        scheduler.runTaskLater(() -> {
+            if (living.getWorld() == vortexWorld) {
+                TeleportUtil.teleport(living, tardis.travel().destination().getWorld(),
+                        percentageOfDestination.getPos().toCenterPos(), living.getBodyYaw());
+            }
+        }, TimeUnit.SECONDS, 4);
+        /*TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
+                percentageOfDestination.toPos());*/
     }
 
     public static void teleportInside(Tardis tardis, Entity entity) {
