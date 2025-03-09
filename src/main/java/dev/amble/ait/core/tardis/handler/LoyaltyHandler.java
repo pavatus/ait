@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -22,6 +21,9 @@ import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.data.Loyalty;
+import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
+import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
+import dev.amble.ait.data.schema.sonic.SonicSchema;
 import dev.amble.ait.registry.impl.DesktopRegistry;
 import dev.amble.ait.registry.impl.SonicRegistry;
 import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
@@ -29,6 +31,15 @@ import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     private final Map<UUID, Loyalty> data;
+    private boolean messageEnabled = true;
+
+    public boolean isMessageEnabled() {
+        return messageEnabled;
+    }
+
+    public void setMessageEnabled(boolean messageEnabled) {
+        this.messageEnabled = messageEnabled;
+    }
 
     public LoyaltyHandler(HashMap<UUID, Loyalty> data) {
         super(Id.LOYALTY);
@@ -81,6 +92,11 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     }
 
     public void unlock(ServerPlayerEntity player, Loyalty loyalty) {
+
+        if (!messageEnabled) {
+            return;
+        }
+
         ServerTardis tardis = (ServerTardis) this.tardis;
 
         boolean playSound = ConsoleVariantRegistry.getInstance().tryUnlock(tardis, loyalty,
@@ -104,18 +120,28 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     }
 
     private void playUnlockEffects(ServerPlayerEntity player, Nameable nameable) {
+        Text nameText = nameable.text().copy().formatted(Formatting.GREEN);
 
-        Text nameText = nameable.text().copy();
-        Text unlockedMessage = Text.translatable("message.ait.unlocked");
+        Text unlockedMessage;
+        if (nameable instanceof SonicSchema) {
+            unlockedMessage = Text.translatable("message.ait.unlocked_sonic").formatted(Formatting.WHITE);
+        } else if (nameable instanceof ConsoleVariantSchema) {
+            unlockedMessage = Text.translatable("message.ait.unlocked_console").formatted(Formatting.WHITE);
+        } else if (nameable instanceof TardisDesktopSchema) {
+            unlockedMessage = Text.translatable("message.ait.unlocked_interior").formatted(Formatting.WHITE);
+        } else {
+            unlockedMessage = Text.translatable("message.ait.unlocked").formatted(Formatting.WHITE);
+        }
 
-        Text finalMessage = ((MutableText) nameText)
-                .append(Text.literal(" "))
+        // Create the final message
+        Text finalMessage = Text.empty()
                 .append(unlockedMessage)
-                .append(Text.literal("!"))
-                .formatted(Formatting.BOLD, Formatting.ITALIC, Formatting.GOLD);
+                .append(nameText)
+                .append(Text.literal("!").formatted(Formatting.WHITE));
 
         player.sendMessage(finalMessage, false);
     }
+
 
     public void addLevel(ServerPlayerEntity player, int level) {
         this.update(player, loyalty -> loyalty.add(level));
