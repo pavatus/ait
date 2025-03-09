@@ -982,7 +982,12 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
         provider.addTranslation("message.ait.enter_landing_code", "Enter Landing Code...");
         provider.addTranslation("message.ait.date_created", "Date Created:");
-        provider.addTranslation("message.ait.unlocked", "unlocked");
+        provider.addTranslation("message.ait.unlocked", "Congratulations! You unlocked a TARDIS Exterior Shell: ");
+        provider.addTranslation("message.ait.unlocked_sonic", "Congratulations! You unlocked a Sonic Screwdriver Casing Option: ");
+        provider.addTranslation("message.ait.unlocked_console", "Congratulations! You unlocked a TARDIS Console Interface: ");
+        provider.addTranslation("message.ait.unlocked_interior", "Congratulations! You unlocked a TARDIS Desktop Option: ");
+        provider.addTranslation("message.ait.unlocked_all", "Unlocked all: ");
+        provider.addTranslation("message.ait.all_types", "TARDIS Consoles, TARDIS Exteriors & Sonic Casings");
         provider.addTranslation("screen.ait.sonic_casing", "Sonic Casing");
         provider.addTranslation("screen.ait.current_au", "Current AU");
         provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
@@ -993,7 +998,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.cage.void_hint", "(Throw this into the END void)");
         provider.addTranslation("message.ait.cage.empty", "(Place this in a rift chunk)");
 
-        // Achivement
+        // Achievements
         provider.addTranslation("achievement.ait.title.root", "Adventures in Time");
         provider.addTranslation("achievement.ait.description.root", "Discover the wonders of time and space.");
         provider.addTranslation("achievement.ait.title.place_coral", "Gardening Guru");
@@ -1031,7 +1036,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("achievement.ait.title.repair_subsystem", "Handyman!");
         provider.addTranslation("achievement.ait.description.repair_subsystem", "Repair a broken subsystem");
         provider.addTranslation("achievement.ait.title.engines_phase", "Technical Problems");
-        provider.addTranslation("achievement.ait.description.engines_phase", "ENGINES PHASING! That doesnt sound good.");
+        provider.addTranslation("achievement.ait.description.engines_phase", "ENGINES PHASING! That doesn't sound good.");
         provider.addTranslation("achievement.ait.title.place_energizer", "Procrastination 3000");
         provider.addTranslation("achievement.ait.description.place_energizer", "Place a Matrix Energizer ontop of a naturaly generated Shrieker.");
 
@@ -1308,7 +1313,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         // Blueprint Item
         provider.addTranslation("ait.blueprint.tooltip", "Blueprint: ");
 
-        // directions
+        // Directions
         provider.addTranslation("direction.north", "North");
         provider.addTranslation("direction.north_east", "North East");
         provider.addTranslation("direction.north_west", "North West");
