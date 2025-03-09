@@ -1,23 +1,6 @@
+/*
 package dev.amble.ait.data.schema.console.type;
 
-import org.joml.Vector3f;
-
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.util.Identifier;
-
-import dev.amble.ait.AITMod;
-import dev.amble.ait.core.tardis.control.ControlTypes;
-import dev.amble.ait.core.tardis.control.impl.*;
-import dev.amble.ait.core.tardis.control.impl.pos.IncrementControl;
-import dev.amble.ait.core.tardis.control.impl.pos.XControl;
-import dev.amble.ait.core.tardis.control.impl.pos.YControl;
-import dev.amble.ait.core.tardis.control.impl.pos.ZControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.ConsolePortControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
-import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
-import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
-import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
 
 public class HudolinType extends ConsoleTypeSchema {
     public static final Identifier REFERENCE = AITMod.id("console/hudolin");
@@ -102,3 +85,4 @@ public class HudolinType extends ConsoleTypeSchema {
         return ConsoleVariantRegistry.HUDOLIN;
     }
 }
+*/
