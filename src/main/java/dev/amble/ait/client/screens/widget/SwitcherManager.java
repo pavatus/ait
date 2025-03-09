@@ -21,6 +21,7 @@ import dev.amble.ait.data.hum.Hum;
 import dev.amble.ait.registry.impl.HumRegistry;
 
 public class SwitcherManager<T extends Nameable, U> implements Nameable {
+
     private final Function<T, T> next;
     private final Function<T, T> previous;
     private final BiConsumer<T, U> sync;
@@ -38,12 +39,15 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
     public void next() {
         this.current = this.next.apply(this.current);
     }
+
     public void previous() {
         this.current = this.previous.apply(this.current);
     }
+
     public void sync(U arg) {
         this.sync.accept(this.current, arg);
     }
+
     public T get() {
         return this.current;
     }
@@ -54,9 +58,11 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
     }
 
     public static class HumSwitcher extends SwitcherManager<Hum, ClientTardis> {
+
         public HumSwitcher(Hum current) {
             super(HumSwitcher::next, HumSwitcher::previous, HumSwitcher::sync, current, "hum");
         }
+
         public HumSwitcher(Tardis tardis) {
             this(tardis.<ServerHumHandler>handler(TardisComponent.Id.HUM).get());
         }
@@ -83,9 +89,11 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
     }
 
     public static class VortexSwitcher extends SwitcherManager<VortexReference, ClientTardis> {
+
         public VortexSwitcher(VortexReference current) {
             super(VortexSwitcher::next, VortexSwitcher::previous, VortexSwitcher::sync, current, "vortex");
         }
+
         public VortexSwitcher(Tardis tardis) {
             this(tardis.stats().getVortexEffects());
         }
@@ -119,6 +127,7 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
 
             this.target = target;
         }
+
         public TravelSoundSwitcher(Tardis tardis, TravelHandlerBase.State target) {
             this(tardis.stats().getTravelEffects().get(target), target);
         }
@@ -191,15 +200,13 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
         }
     }
 
-    public static class ModeManager extends SwitcherManager<SwitcherManager, Object> {
-        private final Tardis tardis;
+    public static class ModeManager extends SwitcherManager<SwitcherManager<?, ClientTardis>, ClientTardis> {
 
         public ModeManager(Tardis tardis) {
             super((var) -> next(var, tardis), (var) -> previous(var, tardis), ModeManager::sync, new HumSwitcher(tardis), "mode");
-            this.tardis = tardis;
         }
 
-        private static SwitcherManager next(SwitcherManager current, Tardis tardis) {
+        private static SwitcherManager<?, ClientTardis> next(SwitcherManager<?, ClientTardis> current, Tardis tardis) {
             return switch (current.id) {
                 case "hum" -> new VortexSwitcher(tardis);
                 case "vortex" -> new FlightSoundSwitcher(tardis);
@@ -208,7 +215,7 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
                 default -> new HumSwitcher(tardis);
             };
         }
-        private static SwitcherManager previous(SwitcherManager current, Tardis tardis) {
+        private static SwitcherManager<?, ClientTardis> previous(SwitcherManager<?, ClientTardis> current, Tardis tardis) {
             return switch (current.id) {
                 case "hum" -> new TravelSoundSwitcher(tardis, TravelHandlerBase.State.MAT);
                 case "vortex" -> new HumSwitcher(tardis);
@@ -217,7 +224,8 @@ public class SwitcherManager<T extends Nameable, U> implements Nameable {
                 default -> new TravelSoundSwitcher(tardis, TravelHandlerBase.State.DEMAT);
             };
         }
-        private static void sync(SwitcherManager current, Object object) {
+
+        private static void sync(SwitcherManager<?, ClientTardis> current, ClientTardis object) {
             current.sync(object);
         }
     }

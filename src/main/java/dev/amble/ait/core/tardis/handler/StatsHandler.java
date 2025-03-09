@@ -13,11 +13,9 @@ import com.google.gson.JsonParser;
 import dev.amble.lib.register.unlockable.Unlockable;
 import dev.amble.lib.util.ServerLifecycleHooks;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
@@ -80,11 +78,9 @@ public class StatsHandler extends KeyedTardisComponent {
     private final Value<Identifier> matId = MAT_FX.create(this);
     private final Value<Identifier> flightId = FLIGHT_FX.create(this);
     private final Value<Identifier> vortexId = VORTEX_FX.create(this);
-    private final DoubleValue tardis_x_scale = TARDIS_X_SCALE.create(this);
-    private final DoubleValue tardis_y_scale = TARDIS_Y_SCALE.create(this);
-    private final DoubleValue tardis_z_scale = TARDIS_Z_SCALE.create(this);
-
-
+    private final DoubleValue tardisXScale = TARDIS_X_SCALE.create(this);
+    private final DoubleValue tardisYScale = TARDIS_Y_SCALE.create(this);
+    private final DoubleValue tardisZScale = TARDIS_Z_SCALE.create(this);
 
     @Exclude
     private Lazy<TravelSoundMap> travelFxCache;
@@ -92,12 +88,6 @@ public class StatsHandler extends KeyedTardisComponent {
     private Lazy<FlightSound> flightFxCache;
     @Exclude
     private Lazy<VortexReference> vortexFxCache;
-    /*
-    @Exclude
-    public BakedModel chunkModel = null;
-     */
-    @Exclude
-    public Map<BlockPos, BlockEntity> blockEntities = new HashMap<>();
 
     public StatsHandler() {
         super(Id.STATS);
@@ -127,9 +117,9 @@ public class StatsHandler extends KeyedTardisComponent {
         matId.of(this, MAT_FX);
         flightId.of(this, FLIGHT_FX);
         vortexId.of(this, VORTEX_FX);
-        tardis_x_scale.of(this, TARDIS_X_SCALE);
-        tardis_y_scale.of(this, TARDIS_Y_SCALE);
-        tardis_z_scale.of(this, TARDIS_Z_SCALE);
+        tardisXScale.of(this, TARDIS_X_SCALE);
+        tardisYScale.of(this, TARDIS_Y_SCALE);
+        tardisZScale.of(this, TARDIS_Z_SCALE);
         vortexId.addListener((id) -> {
             if (this.vortexFxCache != null)
                 this.vortexFxCache.invalidate();
@@ -276,31 +266,30 @@ public class StatsHandler extends KeyedTardisComponent {
     }
 
     public float getXScale() {
-        double v = tardis_x_scale.get();
+        double v = tardisXScale.get();
         return (float) v;
     }
 
     public float getYScale() {
-        double v = tardis_y_scale.get();
+        double v = tardisYScale.get();
         return (float) v;
     }
 
     public float getZScale() {
-        double v = tardis_z_scale.get();
+        double v = tardisZScale.get();
         return (float) v;
     }
 
-
     public void setXScale(double scale) {
-        this.tardis_x_scale.set(scale);
+        this.tardisXScale.set(scale);
     }
 
     public void setYScale(double scale) {
-        this.tardis_y_scale.set(scale);
+        this.tardisYScale.set(scale);
     }
 
     public void setZScale(double scale) {
-        this.tardis_z_scale.set(scale);
+        this.tardisZScale.set(scale);
     }
 
     public String getCreationString() {
@@ -328,6 +317,7 @@ public class StatsHandler extends KeyedTardisComponent {
     private TravelSoundMap createTravelEffectsCache() {
         TravelSoundMap map = new TravelSoundMap();
 
+        // TODO move to proper registries
         map.put(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.getInstance().getOrElse(this.dematId.get(), TravelSoundRegistry.DEFAULT_DEMAT));
         map.put(TravelHandlerBase.State.MAT, TravelSoundRegistry.getInstance().getOrElse(this.matId.get(), TravelSoundRegistry.DEFAULT_MAT));
 
@@ -341,6 +331,7 @@ public class StatsHandler extends KeyedTardisComponent {
 
         return this.flightFxCache.get();
     }
+
     private FlightSound createFlightEffectsCache() {
         return FlightSoundRegistry.getInstance().getOrFallback(this.flightId.get());
     }
@@ -363,24 +354,28 @@ public class StatsHandler extends KeyedTardisComponent {
         if (this.vortexFxCache != null)
             this.vortexFxCache.invalidate();
     }
+
     public void setFlightEffects(FlightSound current) {
         this.flightId.set(current.id());
 
         if (this.flightFxCache != null)
             this.flightFxCache.invalidate();
     }
+
     private void setDematEffects(TravelSound current) {
         this.dematId.set(current.id());
 
         if (this.travelFxCache != null)
             this.travelFxCache.invalidate();
     }
+
     private void setMatEffects(TravelSound current) {
         this.matId.set(current.id());
 
         if (this.travelFxCache != null)
             this.travelFxCache.invalidate();
     }
+
     public void setTravelEffects(TravelSound current) {
         switch (current.target()) {
             case DEMAT:

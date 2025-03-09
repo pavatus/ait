@@ -10,6 +10,7 @@ import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.util.TriState;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.EntityLike;
 import net.minecraft.world.entity.EntityTrackingSection;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.api.ExtraPushableEntity;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.core.AITSounds;
@@ -43,7 +45,6 @@ import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.handler.OvergrownHandler;
 import dev.amble.ait.core.tardis.handler.permissions.PermissionHandler;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
-import dev.amble.ait.core.util.ShapeUtil;
 import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.Loyalty;
@@ -245,6 +246,9 @@ public class TardisUtil {
     }
 
     private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos directed) {
+        if (((ExtraPushableEntity) entity).ait$pushBehaviour() == TriState.FALSE)
+            return;
+
         BlockPos pos = directed.getPos();
         boolean isDoor = world.getBlockEntity(pos) instanceof DoorBlockEntity;
 
@@ -279,13 +283,8 @@ public class TardisUtil {
                 }
             }
 
-            Scheduler.get().runTaskLater(() -> pushFromEntree(world, entity), TimeUnit.SECONDS, 1);
-        });
-    }
-
-    private static void pushFromEntree(ServerWorld world, Entity entree) {
-        world.getEntitiesByClass(LivingEntity.class, ShapeUtil.cloneBox(entree.getBoundingBox()).expand(2), e -> true).forEach(t -> {
-            t.pushAwayFrom(entree);
+            ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.FALSE);
+            Scheduler.get().runTaskLater(() -> ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.DEFAULT), TimeUnit.SECONDS, 3);
         });
     }
 

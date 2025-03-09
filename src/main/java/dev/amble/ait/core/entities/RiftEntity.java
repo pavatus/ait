@@ -19,7 +19,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.*;
 
@@ -68,7 +67,8 @@ public class RiftEntity extends DummyAmbientEntity {
             super.onPlayerCollision(player);
             return;
         }
-        TeleportUtil.teleport(player, world, new Vec3d(0, 0, 0), player.bodyYaw);
+
+        TeleportUtil.teleport(player, world, player.getPos(), player.bodyYaw);
     }
 
     @Override
@@ -188,17 +188,16 @@ public class RiftEntity extends DummyAmbientEntity {
                                    BlockPos pos, net.minecraft.util.math.random.Random random) {
         if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess)) return false;
 
-        if (spawnReason == SpawnReason.STRUCTURE) {
+        if (spawnReason == SpawnReason.STRUCTURE)
             return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
-        }
 
         ChunkPos chunkPos = new ChunkPos(pos);
         boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
                 worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
-        if (random.nextInt(55) == 0 && bl) {
-            BlockPos newPos = new BlockPos(pos.getX(), worldAccess.getTopY() + 15, pos.getZ());
+
+        if (random.nextInt(25) == 0 && bl)
             return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
-        }
+
         return false;
     }
 
