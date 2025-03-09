@@ -57,11 +57,6 @@ public abstract class LivingEntityMixin extends Entity implements ExtraPushableE
     }
 
     @Override
-    public void ait$restorePushable() {
-        this.ait$pushable = TriState.DEFAULT;
-    }
-
-    @Override
     public void ait$setPushBehaviour(TriState pushable) {
         this.ait$pushable = pushable;
     }
