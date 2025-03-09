@@ -11,6 +11,8 @@
 		"DrTheo",
 		"Duzo",
 		"Maketendo",
+		"AddieDaBaddie",
+		"Saturn",
 		"Artists: \n",
 		"Tright",
 		"b2bmrww2",
@@ -31,7 +33,7 @@
 	],
 	"contributors": [
 		"Pastelb96 (translations)",
-		"Saturn & Maketendo (wiki)"
+		"Codiak"
 	],
 	"contact": {
 		"homepage": "https://amblelabs.github.io",
@@ -43,26 +45,26 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "dev.amble.ait.AITMod"
+			"dev.amble.ait.AITMod"
 		],
 		"client": [
-          "dev.amble.ait.client.AITModClient",
-          "dev.amble.ait.compat.Compat"
+			"dev.amble.ait.client.AITModClient",
+			"dev.amble.ait.compat.Compat"
 		],
 		"fabric-datagen": [
-          "dev.amble.ait.datagen.AITModDataGenerator"
+			"dev.amble.ait.datagen.AITModDataGenerator"
 		],
 		"ait-main": [
-          "dev.amble.ait.compat.Compat"
+			"dev.amble.ait.compat.Compat"
 		],
 		"modmenu": [
 			"dev.amble.ait.config.AITModMenu"
 		],
 		"amblekit-main": [
-          "dev.amble.ait.init.AmbleInitializer"
+			"dev.amble.ait.init.AmbleInitializer"
 		],
 		"amblekit-client": [
-          "dev.amble.ait.init.client.AmbleClientInitializer"
+			"dev.amble.ait.init.client.AmbleClientInitializer"
 		]
 	},
 	"mixins": [
