@@ -77,6 +77,7 @@ import dev.amble.ait.core.*;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+import dev.amble.ait.core.blocks.AstralMapBlock;
 import dev.amble.ait.core.blocks.ExteriorBlock;
 import dev.amble.ait.core.drinks.DrinkRegistry;
 import dev.amble.ait.core.drinks.DrinkUtil;
@@ -268,6 +269,8 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
 
         SonicModelLoader.init();
+
+        AstralMapBlock.registerSyncListener();
     }
     public static Screen screenFromId(int id) {
         return screenFromId(id, null, null);

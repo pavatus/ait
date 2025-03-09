@@ -23,6 +23,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -72,10 +73,13 @@ public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockE
                               BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof AstralMapBlockEntity be && !world.isClient()) {
+        if (blockEntity instanceof AstralMapBlockEntity && !world.isClient()) {
             sendStructures((ServerWorld) world, (ServerPlayerEntity) player);
-            be.useOn(world, player.isSneaking(), player);
+
+            player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F, 1.0F);
+            AITMod.openScreen((ServerPlayerEntity) player, 2);
         }
+
         return ActionResult.SUCCESS;
     }
 
@@ -133,7 +137,6 @@ public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockE
             structureIds = ids;
         }
 
-
         PacketByteBuf buf = PacketByteBufs.create();
 
         buf.writeInt(structureIds.size());
@@ -145,7 +148,7 @@ public class AstralMapBlock extends HorizontalDirectionalBlock implements BlockE
     }
 
     @Environment(EnvType.CLIENT)
-    private static void registerSyncListener() {
+    public static void registerSyncListener() {
         ClientPlayNetworking.registerGlobalReceiver(SYNC_STRUCTURES, (client, handler, buf, responseSender) -> {
             int size = buf.readInt();
             List<Identifier> ids = new ArrayList<>(size);
