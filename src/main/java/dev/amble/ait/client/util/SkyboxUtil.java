@@ -65,7 +65,7 @@ public class SkyboxUtil extends WorldRenderer {
     }
 
     public static void renderVortexSky(MatrixStack matrices) {
-        VortexUtil util = new VortexUtil("dalekmod");
+        VortexUtil util = new VortexUtil("darkness");
         matrices.push();
         float scale = 100f;
         float zOffset = 500 * scale;
