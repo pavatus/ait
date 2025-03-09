@@ -26,7 +26,7 @@ import dev.amble.ait.core.world.TardisServerWorld;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ExtraPushableEntity {
 
-    @Unique private TriState ait$pushable;
+    @Unique private TriState ait$pushable = TriState.DEFAULT;
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
