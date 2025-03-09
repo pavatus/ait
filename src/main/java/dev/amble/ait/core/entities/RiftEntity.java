@@ -30,8 +30,9 @@ import dev.amble.ait.core.*;
 import dev.amble.ait.core.item.SonicItem;
 import dev.amble.ait.core.util.StackUtil;
 import dev.amble.ait.core.util.WorldUtil;
+import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
-public class RiftEntity extends AmbientEntity {
+public class RiftEntity extends AmbientEntity implements ISpaceImmune {
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;

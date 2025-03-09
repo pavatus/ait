@@ -51,8 +51,9 @@ import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.core.util.ForcedChunkUtil;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
+import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
-public class FallingTardisEntity extends LinkableDummyEntity {
+public class FallingTardisEntity extends LinkableDummyEntity implements ISpaceImmune {
 
     private static final int HURT_MAX = 100;
     private static final float HURT_AMOUNT = 40f;

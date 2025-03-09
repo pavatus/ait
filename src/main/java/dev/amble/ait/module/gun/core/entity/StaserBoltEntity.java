@@ -24,8 +24,9 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.module.gun.core.item.GunItems;
+import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
-public class StaserBoltEntity extends PersistentProjectileEntity {
+public class StaserBoltEntity extends PersistentProjectileEntity implements ISpaceImmune {
     public StaserBoltEntity(EntityType<? extends StaserBoltEntity> entityType, World world) {
         super(GunEntityTypes.STASER_BOLT_ENTITY_TYPE, world);
     }
