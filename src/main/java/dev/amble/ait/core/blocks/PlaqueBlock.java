@@ -1,5 +1,6 @@
 package dev.amble.ait.core.blocks;
 
+import dev.amble.ait.core.util.ShapeUtil;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
@@ -18,6 +19,7 @@ import dev.amble.ait.core.blockentities.PlaqueBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
 
 public class PlaqueBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
+
     protected static final VoxelShape SHAPE = Block.createCuboidShape(-0.25 * 16, 0.125 * 16, 0.875 * 16, 1.25 * 16,
             0.875 * 16, 16);
 
@@ -28,12 +30,12 @@ public class PlaqueBlock extends HorizontalDirectionalBlock implements BlockEnti
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return rotateShape(Direction.NORTH, state.get(FACING), SHAPE);
+        return ShapeUtil.rotate(Direction.NORTH, state.get(FACING), SHAPE);
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return rotateShape(Direction.NORTH, state.get(FACING), SHAPE);
+        return ShapeUtil.rotate(Direction.NORTH, state.get(FACING), SHAPE);
     }
 
     @Override
@@ -60,20 +62,6 @@ public class PlaqueBlock extends HorizontalDirectionalBlock implements BlockEnti
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-    }
-
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
-
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1],
-                    VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
-            buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
-        }
-
-        return buffer[0];
     }
 
     @Override

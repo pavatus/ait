@@ -2,6 +2,7 @@ package dev.amble.ait.core.blocks;
 
 import java.util.function.ToIntFunction;
 
+import dev.amble.ait.core.util.ShapeUtil;
 import dev.amble.lib.api.ICantBreak;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -244,7 +245,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
             shape = DependencyChecker.hasPortals() && !ignorePortals ? PORTALS_SHAPE : CUBE_NORTH_SHAPE;
         }
 
-        return rotateShape(Direction.NORTH, direction, shape);
+        return ShapeUtil.rotate(Direction.NORTH, direction, shape);
     }
 
     public Direction approximateDirection(int rotation) {
@@ -432,20 +433,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
                 ParticleUtil.spawnParticle(world, pos, random, ParticleTypes.TOTEM_OF_UNDYING);
             }
         }
-    }
-
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
-
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1],
-                    VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
-            buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
-        }
-
-        return buffer[0];
     }
 
     @Override
