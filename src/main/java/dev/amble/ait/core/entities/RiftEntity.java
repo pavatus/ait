@@ -205,7 +205,7 @@ public class RiftEntity extends DummyAmbientEntity {
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
-        double e = packet.getY() + 25;
+        double e = packet.getY() + 0;
         double f = packet.getZ();
         float g = packet.getYaw();
         float h = packet.getPitch();
