@@ -27,6 +27,12 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
 
     static {
         TardisEvents.OUT_OF_FUEL.register(tardis -> tardis.fuel().disablePower());
+        TardisEvents.LANDED.register(tardis -> {
+            if (tardis.travel().autopilot()) {
+                if (tardis.travel().isCrashing())
+                    tardis.travel().autopilot(false);
+            }
+        });
     }
 
     public SubSystemHandler() {
@@ -63,7 +69,7 @@ public class SubSystemHandler extends KeyedTardisComponent implements TardisTick
         return system;
     }
 
-    private SubSystem remove(SubSystem.IdLike id) {
+    public SubSystem remove(SubSystem.IdLike id) {
         SubSystem found = this.systems.remove(id);
         this.sync();
         return found;

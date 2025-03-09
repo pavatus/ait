@@ -23,6 +23,7 @@ import dev.amble.ait.core.AITStatusEffects;
 import dev.amble.ait.core.tardis.control.impl.SecurityControl;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.properties.bool.BoolProperty;
 import dev.amble.ait.data.properties.bool.BoolValue;
 
@@ -167,6 +168,8 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
      * @return true if the entity will be repulsed by the shield
      */
     private boolean canPush(ServerPlayerEntity entity) {
-        return SecurityControl.hasMatchingKey(entity, this.tardis());
+        boolean companion = tardis.loyalty().get(entity).isOf(Loyalty.Type.COMPANION);
+
+        return !(companion || SecurityControl.hasMatchingKey(entity, this.tardis()));
     }
 }

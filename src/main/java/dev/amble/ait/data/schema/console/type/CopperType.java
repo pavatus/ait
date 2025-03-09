@@ -40,7 +40,7 @@ public class CopperType extends ConsoleTypeSchema {
                     new Vector3f(0.17499694786965847f, 0.46249985694885254f, 1.189068604260683f)),
             new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.125f, 0.33749995f),
                     new Vector3f(-0.6742191342636943f, 0.4750005714595318f, 1.1015651691704988f)),
-            new ControlTypes(new EngineOverload(), EntityDimensions.changing(0.099999994f, 0.17500001f),
+            new ControlTypes(new EngineOverloadControl(), EntityDimensions.changing(0.099999994f, 0.17500001f),
                     new Vector3f(0.8148471852764487f, 0.5249999985098839f, 1.0312561066821218f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.15f, 0.17500001f),
                     new Vector3f(-0.48671876825392246f, 1.065000157803297f, -0.26874999795109034f)),
@@ -80,6 +80,8 @@ public class CopperType extends ConsoleTypeSchema {
                     new Vector3f(1.514459267258644f, 0.29999975580722094f, 0.21327821072191f)),
             new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.1375f, 0.1375f),
                     new Vector3f(0.9898498551920056f, 0.4750000424683094f, 0.5812560999765992f)),
+            new ControlTypes(new ElectricalDischargeControl(), EntityDimensions.changing(0.08749999f, 0.18750001f),
+                    new Vector3f(-0.8484344435855746f, 0.4625001894310117f, 0.7390625085681677f)),
             new ControlTypes(new SecurityControl(), EntityDimensions.changing(0.099999994f, 0.18750001f),
                     new Vector3f(0.8171813935041428f, 0.7625001901760697f, -0.1843719482421875f)),
 

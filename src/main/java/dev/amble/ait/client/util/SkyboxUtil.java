@@ -65,7 +65,7 @@ public class SkyboxUtil extends WorldRenderer {
     }
 
     public static void renderVortexSky(MatrixStack matrices) {
-        VortexUtil util = new VortexUtil("dalekmod");
+        VortexUtil util = new VortexUtil("darkness");
         matrices.push();
         float scale = 100f;
         float zOffset = 500 * scale;
@@ -151,10 +151,11 @@ public class SkyboxUtil extends WorldRenderer {
         // Planet Rendering
         Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
         renderStarBody(false, matrices, SUN,
-                new Vec3d(cameraPos.getX() + 270, cameraPos.getY() + 200, cameraPos.getZ() + 30), new
+                new Vec3d(cameraPos.getX() + 270, cameraPos.getY() - 120, cameraPos.getZ() + 0), new
                         Vector3f(12f, 12f, 12f),
-                new Vector3f(12, 45, 0), false,
-                new Vector3f(0.5f, 0, 0f));
+                new Vector3f(12, 45, 0),
+                true,
+                new Vector3f(0.3f, 0.15f, 0.01f));
 
         renderSkyBody(false, matrices, AITMod.id("textures/environment/earth.png"),
                 new Vec3d(cameraPos.getX() - 530, cameraPos.getY() + 40, cameraPos.getZ() + 10), new

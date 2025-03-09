@@ -28,7 +28,7 @@ public class VisualiserControl extends Control {
 
         if (!AITMod.CONFIG.SERVER.RWF_ENABLED) {
             player.sendMessage(Text.translatable("tardis.message.control.rwf_disabled"), true);
-            return false;
+            return true;
         }
 
         if (!player.isSneaking() && tardis.travel().getState() == TravelHandlerBase.State.LANDED && tardis.subsystems().get(GRAVITATIONAL).isEnabled()) {
@@ -41,8 +41,7 @@ public class VisualiserControl extends Control {
                 world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
 
-
-            world.getServer().executeSync(() -> tardis.flight().enterFlight(player));
+            tardis.flight().enterFlight(player);
             return true;
         }
         return false;
@@ -55,6 +54,6 @@ public class VisualiserControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.BWEEP;
+        return AITSounds.RENAISSANCE_ANTI_GRAV_ALT;
     }
 }

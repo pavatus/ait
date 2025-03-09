@@ -381,7 +381,6 @@ public class HandlesResponseRegistry {
 
                 if (state == TravelHandlerBase.State.FLIGHT) {
                     sendChat(player, Text.literal("Flight is " + tardis.travel().getDurationAsPercentage() + "% complete."));
-                    sendChat(player, Text.literal("ETA " + Math.round(tardis.travel().getFlightETA()) + " seconds."));
                 }
 
                 return success(source);

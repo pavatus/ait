@@ -62,6 +62,14 @@ public class AITAchievementProvider extends FabricAdvancementProvider {
         // one
         // that shows
 
+        Advancement brandNew = Advancement.Builder.create().parent(firstEnter)
+                .display(AITItems.MUG, Text.translatable("achievement.ait.title.brand_new"),
+                        Text.translatable("achievement.ait.description.brand_new"),
+                        null,
+                        AdvancementFrame.CHALLENGE, true, true, true)
+                .criterion("brand_new", TardisCriterions.BRAND_NEW.conditions())
+                .build(consumer, AITMod.MOD_ID + "/brand_new");
+
         Advancement ironKey = Advancement.Builder.create().parent(firstEnter)
                 .display(AITItems.IRON_KEY, Text.translatable("achievement.ait.title.iron_key"),
                         Text.translatable("achievement.ait.description.iron_key"), null, AdvancementFrame.TASK, true, false, true)

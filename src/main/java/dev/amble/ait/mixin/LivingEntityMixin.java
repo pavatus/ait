@@ -36,16 +36,17 @@ public abstract class LivingEntityMixin extends Entity {
                 && (player.isCreative() || player.isSpectator()))
              return;
 
+        ItemStack stack = entity.getEquippedStack(EquipmentSlot.HEAD);
+
+        if (stack.isIn(AITTags.Items.FULL_RESPIRATORS) || stack.isIn(AITTags.Items.HALF_RESPIRATORS))
+            return;
+
         if (entity.getWorld() instanceof TardisServerWorld tardisWorld && !tardisWorld.getTardis().isGrowth()
                 && !tardisWorld.getTardis().subsystems().lifeSupport().isEnabled()) {
-            ItemStack stack = entity.getEquippedStack(EquipmentSlot.HEAD);
-
-            if (!stack.isIn(AITTags.Items.FULL_RESPIRATORS) || !stack.isIn(AITTags.Items.HALF_RESPIRATORS)) {
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
-                        200, false, false));
-                entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
-                        200, 1, false, false));
-            }
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 1,
+                    200, false, false));
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
+                    200, 1, false, false));
         }
     }
 }

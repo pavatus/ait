@@ -37,10 +37,12 @@ import dev.amble.ait.core.blockentities.CoralBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.handler.FuelHandler;
+import dev.amble.ait.core.tardis.handler.LoyaltyHandler;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.tardis.manager.TardisBuilder;
 import dev.amble.ait.core.world.RiftChunkManager;
 import dev.amble.ait.core.world.TardisServerWorld;
+import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
 import dev.amble.ait.registry.impl.DesktopRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
@@ -119,7 +121,7 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         }
 
         if (world.getBlockEntity(pos) instanceof CoralBlockEntity coral)
-            this.createTardis(world, pos, coral.creator);
+            this.createTardis(world, pos, coral.creator, state);
 
         return true;
     }
@@ -128,13 +130,15 @@ public class CoralPlantBlock extends HorizontalDirectionalBlock implements Block
         world.setBlockState(pos, AITBlocks.CONSOLE.getDefaultState());
     }
 
-    private void createTardis(ServerWorld world, BlockPos pos, UUID creatorId) {
+    private void createTardis(ServerWorld world, BlockPos pos, UUID creatorId, BlockState state) {
         if (!(world.getPlayerByUuid(creatorId) instanceof ServerPlayerEntity player))
             return;
 
-        TardisBuilder builder = new TardisBuilder().at(CachedDirectedGlobalPos.create(world, pos, (byte) 0))
+        TardisBuilder builder = new TardisBuilder().at(CachedDirectedGlobalPos.create(world, pos,
+                        CachedDirectedGlobalPos.getGeneralizedRotation(state.get(FACING))))
                 .owner(player)
                 .<FuelHandler>with(TardisComponent.Id.FUEL, fuel -> fuel.setCurrentFuel(5000))
+                .<LoyaltyHandler>with(TardisComponent.Id.LOYALTY, loyaltyHandler -> loyaltyHandler.set(player, new Loyalty(Loyalty.Type.NEUTRAL)))
                 .with(TardisComponent.Id.TRAVEL, travel -> travel.tardis().travel().autopilot(false))
                 .exterior(ExteriorVariantRegistry.getInstance().get(CoralGrowthVariant.REFERENCE))
                 .desktop(DesktopRegistry.DEFAULT_CAVE);
