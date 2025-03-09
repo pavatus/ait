@@ -1,13 +1,11 @@
 package dev.amble.ait.core.blocks;
 
-import dev.amble.ait.core.util.ShapeUtil;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -17,6 +15,7 @@ import net.minecraft.world.BlockView;
 
 import dev.amble.ait.core.blockentities.PlaqueBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
+import dev.amble.ait.core.util.ShapeUtil;
 
 public class PlaqueBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
