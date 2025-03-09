@@ -54,6 +54,6 @@ public class VisualiserControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.BWEEP;
+        return AITSounds.RENAISSANCE_ANTI_GRAV_ALT;
     }
 }
