@@ -36,7 +36,7 @@ public class ExteriorAxeOverlay implements HudRenderCallback {
         if (!(block instanceof ExteriorBlock)) return;
         ExteriorBlockEntity exterior = (ExteriorBlockEntity) mc.player.getWorld().getBlockEntity(((BlockHitResult) mc.crosshairTarget).getBlockPos());
         if (exterior == null || exterior.tardis() == null) return;
-        if (!exterior.tardis().get().isGrowth() && !exterior.tardis().get().fuel().hasPower() && exterior.tardis().get().door().locked() && !(mc.player.getMainHandStack().getItem() instanceof AxeItem)) {
+        if (!exterior.tardis().get().siege().isActive() && !exterior.tardis().get().isGrowth() && !exterior.tardis().get().fuel().hasPower() && exterior.tardis().get().door().locked() && !(mc.player.getMainHandStack().getItem() instanceof AxeItem)) {
             stack.push();
             stack.translate((float) drawContext.getScaledWindowWidth() / 2 - 8f,
                     (float) drawContext.getScaledWindowHeight() / 2 - 8f,
