@@ -91,7 +91,7 @@ public class RenaissanceType extends ConsoleTypeSchema {
                     new Vector3f(1.3390628937631845f, 0.5000000009313226f, -0.4867185531184077f)),
 
             new ControlTypes(new DimensionControl(), EntityDimensions.changing(0.1375f, 0.099999994f),
-                    new Vector3f(1.0890628900378942f, 0.5125000011175871f, -0.9242185596376657f)),
+                    new Vector3f(1.1140636447817087f, 0.4999998090788722f, -1.0117191327735782f)),
 
             new ControlTypes(new RefuelerControl(), EntityDimensions.changing(0.1375f, 0.1375f),
                     new Vector3f(7.816394791007042E-4f, 0.6499996222555637f, -0.9929687511175871f)),

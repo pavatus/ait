@@ -91,6 +91,6 @@ public class ElectricalDischargeControl extends Control {
 
     @Override
     public SoundEvent getSound() {
-        return AITSounds.BWEEP;
+        return AITSounds.SHIELDS;
     }
 }
