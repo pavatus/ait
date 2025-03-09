@@ -49,7 +49,7 @@ public class RiftEntity extends DummyAmbientEntity {
     };
 
     public RiftEntity(EntityType<?> type, World world) {
-        super(AITEntityTypes.RIFT_ENTITY, world, false);
+        super(AITEntityTypes.RIFT_ENTITY, world);
     }
 
     @Override
