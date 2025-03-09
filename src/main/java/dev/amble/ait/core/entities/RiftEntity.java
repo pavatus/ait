@@ -68,7 +68,8 @@ public class RiftEntity extends DummyAmbientEntity {
             super.onPlayerCollision(player);
             return;
         }
-        TeleportUtil.teleport(player, world, new Vec3d(0, 0, 0), player.bodyYaw);
+
+        TeleportUtil.teleport(player, world, player.getPos(), player.bodyYaw);
     }
 
     @Override

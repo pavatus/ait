@@ -5,8 +5,11 @@ import java.util.List;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.util.ServerLifecycleHooks;
+import dev.drtheo.scheduler.api.Scheduler;
+import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 
@@ -15,6 +18,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.brain.Schedule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
@@ -82,6 +87,25 @@ public class WorldUtil {
                 if (TardisServerWorld.isTardisDimension(world)) blacklist(world);
             }
         });
+
+        ServerEntityWorldChangeEvents.AFTER_ENTITY_CHANGE_WORLD.register((originalEntity, newEntity, origin, destination) -> {
+            if (destination == TIME_VORTEX)
+                scheduleVortexFall(newEntity);
+        });
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+            if (destination == TIME_VORTEX)
+                scheduleVortexFall(player);
+        });
+    }
+
+    private static void scheduleVortexFall(Entity entity) {
+        int worldIndex = TIME_VORTEX.getRandom().nextInt(worlds.size());
+
+        Scheduler.get().runTaskLater(() -> {
+            if (entity.getWorld() == TIME_VORTEX)
+                entity.moveToWorld(worlds.get(worldIndex));
+        }, TimeUnit.SECONDS, 5);
     }
 
     public static ServerWorld getOverworld() {
