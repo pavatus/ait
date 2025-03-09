@@ -1,5 +1,6 @@
 package dev.amble.ait.mixin;
 
+import net.fabricmc.fabric.api.util.TriState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,7 +26,7 @@ import dev.amble.ait.core.world.TardisServerWorld;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ExtraPushableEntity {
 
-    @Unique private Boolean ait$pushable;
+    @Unique private TriState ait$pushable;
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
@@ -57,20 +58,25 @@ public abstract class LivingEntityMixin extends Entity implements ExtraPushableE
 
     @Override
     public void ait$restorePushable() {
-        this.ait$pushable = null;
+        this.ait$pushable = TriState.DEFAULT;
     }
 
     @Override
-    public void ait$setPushable(boolean pushable) {
+    public void ait$setPushBehaviour(TriState pushable) {
         this.ait$pushable = pushable;
+    }
+
+    @Override
+    public TriState ait$pushBehaviour() {
+        return ait$pushable;
     }
 
     @Inject(method = "isPushable", at = @At("RETURN"), cancellable = true)
     public void isPushable(CallbackInfoReturnable<Boolean> cir) {
         boolean pushable = cir.getReturnValueZ();
 
-        if (this.ait$pushable != null)
-            pushable = this.ait$pushable;
+        if (this.ait$pushable != TriState.DEFAULT)
+            pushable = this.ait$pushable.get();
 
         cir.setReturnValue(pushable);
     }

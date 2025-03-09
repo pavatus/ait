@@ -10,6 +10,7 @@ import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.util.TriState;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
@@ -245,6 +246,9 @@ public class TardisUtil {
     }
 
     private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos directed) {
+        if (((ExtraPushableEntity) entity).ait$pushBehaviour() == TriState.FALSE)
+            return;
+
         BlockPos pos = directed.getPos();
         boolean isDoor = world.getBlockEntity(pos) instanceof DoorBlockEntity;
 
@@ -279,8 +283,8 @@ public class TardisUtil {
                 }
             }
 
-            ((ExtraPushableEntity) entity).ait$setPushable(false);
-            Scheduler.get().runTaskLater(() -> ((ExtraPushableEntity) entity).ait$restorePushable(), TimeUnit.SECONDS, 3);
+            ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.FALSE);
+            Scheduler.get().runTaskLater(() -> ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.DEFAULT), TimeUnit.SECONDS, 3);
         });
     }
 
