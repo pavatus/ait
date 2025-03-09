@@ -31,6 +31,7 @@ import net.minecraft.world.entity.EntityLike;
 import net.minecraft.world.entity.EntityTrackingSection;
 
 import dev.amble.ait.AITMod;
+import dev.amble.ait.api.ExtraPushableEntity;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.core.AITSounds;
@@ -43,7 +44,6 @@ import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.handler.OvergrownHandler;
 import dev.amble.ait.core.tardis.handler.permissions.PermissionHandler;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
-import dev.amble.ait.core.util.ShapeUtil;
 import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.Loyalty;
@@ -279,13 +279,8 @@ public class TardisUtil {
                 }
             }
 
-            Scheduler.get().runTaskLater(() -> pushFromEntree(world, entity), TimeUnit.SECONDS, 1);
-        });
-    }
-
-    private static void pushFromEntree(ServerWorld world, Entity entree) {
-        world.getEntitiesByClass(LivingEntity.class, ShapeUtil.cloneBox(entree.getBoundingBox()).expand(2), e -> true).forEach(t -> {
-            t.pushAwayFrom(entree);
+            ((ExtraPushableEntity) entity).ait$setPushable(false);
+            Scheduler.get().runTaskLater(() -> ((ExtraPushableEntity) entity).ait$restorePushable(), TimeUnit.SECONDS, 3);
         });
     }
 

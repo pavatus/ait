@@ -2,9 +2,11 @@ package dev.amble.ait.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,11 +18,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import dev.amble.ait.api.ExtraPushableEntity;
 import dev.amble.ait.core.AITTags;
 import dev.amble.ait.core.world.TardisServerWorld;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity implements ExtraPushableEntity {
+
+    @Unique private Boolean ait$pushable;
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
@@ -48,5 +53,25 @@ public abstract class LivingEntityMixin extends Entity {
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,
                     200, 1, false, false));
         }
+    }
+
+    @Override
+    public void ait$restorePushable() {
+        this.ait$pushable = null;
+    }
+
+    @Override
+    public void ait$setPushable(boolean pushable) {
+        this.ait$pushable = pushable;
+    }
+
+    @Inject(method = "isPushable", at = @At("RETURN"), cancellable = true)
+    public void isPushable(CallbackInfoReturnable<Boolean> cir) {
+        boolean pushable = cir.getReturnValueZ();
+
+        if (this.ait$pushable != null)
+            pushable = this.ait$pushable;
+
+        cir.setReturnValue(pushable);
     }
 }
