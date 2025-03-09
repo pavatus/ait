@@ -57,7 +57,7 @@
         {
           "type": "minecraft:item",
           "name": "ait:handles",
-          "weight": 0.5
+          "weight": 1
         }
       ],
       "rolls": 15
