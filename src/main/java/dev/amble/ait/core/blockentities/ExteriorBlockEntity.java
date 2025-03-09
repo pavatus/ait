@@ -236,7 +236,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         return ((ServerWorld) world).getEntity(seatEntityUUID);
     }
 
-
     public void onEntityCollision(Entity entity) {
         TardisRef ref = this.tardis();
 
@@ -246,7 +245,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (ref.isEmpty())
             return;
 
-        Tardis tardis = ref.get();
+        ServerTardis tardis = ref.get().asServer();
         TravelHandler travel = tardis.travel();
 
         boolean previouslyLocked = tardis.door().previouslyLocked().get();
