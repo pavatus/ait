@@ -115,7 +115,7 @@ public class DoorBlockEntity extends InteriorLinkableBlockEntity {
         if (tardis.sonic().getExteriorSonic() != null) {
             SonicHandler handler = tardis.sonic();
             if (pos != null) {
-                player.giveItemStack(handler.takeExteriorSonic());
+                player.getInventory().offerOrDrop(handler.takeExteriorSonic());
                 world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
                         0.2F);
             }

@@ -97,6 +97,7 @@ public class RealFlightHandler extends KeyedTardisComponent implements TardisTic
     public void enterFlight(ServerPlayerEntity player) {
         this.tardis.door().closeDoors();
         this.tardis().travel().autopilot(false);
+        this.tardis.travel().handbrake(true);
         this.flying.set(true);
 
         FlightTardisEntity entity = FlightTardisEntity.createAndSpawn(

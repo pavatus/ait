@@ -20,12 +20,12 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 
-public class EngineOverload extends Control {
+public class EngineOverloadControl extends Control {
 
     private static final Random RANDOM = new Random();
     private static final String[] SPINNER = {"/", "-", "\\", "|"};
 
-    public EngineOverload() {
+    public EngineOverloadControl() {
         super("engine_overload");
     }
 

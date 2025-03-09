@@ -20,8 +20,10 @@ import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
 import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITStatusEffects;
+import dev.amble.ait.core.tardis.control.impl.SecurityControl;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.properties.bool.BoolProperty;
 import dev.amble.ait.data.properties.bool.BoolValue;
 
@@ -111,14 +113,17 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
                 .filter(entity -> entity.isPushable() || entity instanceof ProjectileEntity)
                 .forEach(entity -> {
                     if (entity instanceof ServerPlayerEntity player) {
-                        if (entity.isSubmergedInWater()) {
-                            player.addStatusEffect(
-                                    new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
-                        }
-                        if (entity.getWorld().getRegistryKey().equals(AITDimensions.SPACE)) {
-                            System.out.println("hello?");
-                            player.addStatusEffect(
-                                    new StatusEffectInstance(AITStatusEffects.OXYGENATED, 20, 1, true, false));
+                        if (!canPush(player)) {
+                            if (entity.isSubmergedInWater()) {
+                                player.addStatusEffect(
+                                        new StatusEffectInstance(StatusEffects.WATER_BREATHING, 15, 3, true, false, false));
+                            }
+                            if (entity.getWorld().getRegistryKey().equals(AITDimensions.SPACE)) {
+                                System.out.println("hello?");
+                                player.addStatusEffect(
+                                        new StatusEffectInstance(AITStatusEffects.OXYGENATED, 20, 1, true, false));
+                            }
+                            return;
                         }
                     }
                     if (this.visuallyShielded().get()) {
@@ -153,5 +158,18 @@ public class ShieldHandler extends KeyedTardisComponent implements TardisTickabl
                         }
                     }
                 });
+    }
+
+    /**
+     * Checks
+     * - Loyalty > COMPANION
+     * - Has linked key
+     * @param entity the entity to check
+     * @return true if the entity will be repulsed by the shield
+     */
+    private boolean canPush(ServerPlayerEntity entity) {
+        boolean companion = tardis.loyalty().get(entity).isOf(Loyalty.Type.COMPANION);
+
+        return !(companion || SecurityControl.hasMatchingKey(entity, this.tardis()));
     }
 }

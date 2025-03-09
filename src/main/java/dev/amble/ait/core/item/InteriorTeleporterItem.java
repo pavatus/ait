@@ -33,7 +33,6 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         ItemStack stack = user.getStackInHand(hand);
         Tardis tardis = getTardis(world, stack);
 
-
         if (world.isClient()) {
             boolean success = (tardis != null);
 
@@ -45,16 +44,17 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         }
         // server-side
 
-        if (tardis == null) return TypedActionResult.fail(stack);
+        if (tardis == null)
+            return TypedActionResult.fail(stack);
 
         Loyalty loyalty = tardis.loyalty().get(user);
         Loyalty.Type type = loyalty.type();
 
-        boolean success;
-        success = switch (type) {
+        boolean success = switch (type) {
             case REJECT, NEUTRAL -> false;
-            case COMPANION -> tardis.travel().isLanded();
             case PILOT, OWNER -> true;
+
+            case COMPANION -> tardis.travel().isLanded();
         };
 
         if (!success) {
@@ -68,7 +68,7 @@ public class InteriorTeleporterItem extends LinkableItem { // todo - new model +
         createTeleportEffect((ServerPlayerEntity) user, PARTICLE_SUCCESS);
         world.playSound(null, user.getBlockPos(), AITSounds.BWEEP, SoundCategory.PLAYERS, 1f, 1f);
 
-        TardisUtil.teleportInside(tardis, user);
+        TardisUtil.teleportInside(tardis.asServer(), user);
 
         stack.setCount(stack.getCount() - 1);
         user.getItemCooldownManager().set(this, 16 * 20);

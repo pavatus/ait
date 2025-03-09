@@ -18,11 +18,12 @@ import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.core.world.TardisServerWorld;
 
 public class TardisCriterions {
-    public static SimpleCriterion ROOT = SimpleCriterion.create("root").register();;
-    public static SimpleCriterion TAKEOFF = SimpleCriterion.create("takeoff").register();;
-    public static SimpleCriterion CRASH = SimpleCriterion.create("crash").register();;
-    public static SimpleCriterion VEGETATION = SimpleCriterion.create("break_vegetation").register();;
+    public static SimpleCriterion ROOT = SimpleCriterion.create("root").register();
+    public static SimpleCriterion TAKEOFF = SimpleCriterion.create("takeoff").register();
+    public static SimpleCriterion CRASH = SimpleCriterion.create("crash").register();
+    public static SimpleCriterion VEGETATION = SimpleCriterion.create("break_vegetation").register();
     public static SimpleCriterion PLACE_CORAL = SimpleCriterion.create("place_coral").register();
+    public static final SimpleCriterion PLACE_ENERGIZER = SimpleCriterion.create("place_energizer").register();
     public static SimpleCriterion ENTER_TARDIS = SimpleCriterion.create("enter_tardis").register();
     public static SimpleCriterion REDECORATE = SimpleCriterion.create("redecorate").register();
     public static SimpleCriterion FORCED_ENTRY = SimpleCriterion.create("forced_entry").register();
@@ -33,6 +34,7 @@ public class TardisCriterions {
     public static SimpleCriterion ENABLE_SUBSYSTEM = SimpleCriterion.create("enable_subsystem").register();
     public static SimpleCriterion REPAIR_SUBSYSTEM = SimpleCriterion.create("repair_subsystem").register();
     public static SimpleCriterion ENGINES_PHASE = SimpleCriterion.create("engines_phase").register();
+    public static SimpleCriterion BRAND_NEW = SimpleCriterion.create("brand_new").register();
 
     public static void init() {
         AITMod.LOGGER.info("Initializing Tardis Criterions");

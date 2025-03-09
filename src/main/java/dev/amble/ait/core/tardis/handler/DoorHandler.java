@@ -234,6 +234,10 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
     }
 
     public boolean interact(ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player) {
+        return this.interactAllDoors(world, pos, player, false);
+    }
+
+    public boolean interactAllDoors(ServerWorld world, @Nullable BlockPos pos, @Nullable ServerPlayerEntity player, boolean both) {
         ServerWorld interior = tardis.asServer().getInteriorWorld();
         InteractionResult result = TardisEvents.USE_DOOR.invoker().onUseDoor(tardis, interior, world, player, pos);
 
@@ -283,7 +287,7 @@ public class DoorHandler extends KeyedTardisComponent implements TardisTickable 
         interior.playSound(null, tardis.getDesktop().getDoorPos().getPos(), sound,
                 SoundCategory.BLOCKS, 0.2F, world.getRandom().nextBoolean() ? 1f : 0.8f);
 
-        if (player.isSneaking()) {
+        if (player.isSneaking() || both) {
             if (this.isOpen()) {
                 this.closeDoors();
             } else {

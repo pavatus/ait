@@ -16,7 +16,6 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,9 +29,9 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.api.KeyedTardisComponent;
 import dev.amble.ait.api.TardisEvents;
 import dev.amble.ait.api.TardisTickable;
+import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.advancement.TardisCriterions;
 import dev.amble.ait.core.engine.SubSystem;
-import dev.amble.ait.core.item.ChargedZeitonCrystalItem;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
@@ -274,6 +273,9 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
         }
 
         if (!TardisUtil.isInteriorEmpty(tardis.asServer())) {
+            if (this.regenerating.get())
+                TardisUtil.teleportOutside(tardis.asServer(),
+                        TardisUtil.getAnyPlayerInsideInterior(tardis.asServer().getInteriorWorld()));
             warnPlayers();
             return;
         }
@@ -298,9 +300,11 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
 
         TardisUtil.getEntitiesInInterior(this.tardis, 50).stream()
                 .filter(entity -> entity instanceof ItemEntity item
-                        && (item.getStack().getItem() == Items.NETHER_STAR || isChargedCrystal(item.getStack()))
+                        && (item.getStack().getItem() == AITItems.PERSONALITY_MATRIX)
                         && entity.isTouchingWater())
                 .forEach(entity -> {
+                    ItemEntity item = (ItemEntity) entity;
+                    ItemStack stack = item.getStack();
                     DirectedGlobalPos position = this.tardis.travel().position();
 
                     if (position == null)
@@ -314,22 +318,16 @@ public class InteriorChangingHandler extends KeyedTardisComponent implements Tar
                             SoundCategory.BLOCKS, 10.0F, 0.75F);
 
                     this.queueInteriorChange(DesktopRegistry.getInstance().getRandom(this.tardis));
+                    if (stack.isOf(AITItems.PERSONALITY_MATRIX)) {
+                        NbtCompound nbt = stack.getOrCreateNbt();
+                        if (nbt.contains("name")) {
+                            this.tardis.stats().setName(nbt.getString("name"));
+                        }
+                    }
 
                     if (this.queued.get())
                         entity.discard();
                 });
-    }
-
-    private boolean isChargedCrystal(ItemStack stack) {
-        if (!(stack.getItem() instanceof ChargedZeitonCrystalItem))
-            return false;
-
-        NbtCompound nbt = stack.getOrCreateNbt();
-
-        if (!nbt.contains(ChargedZeitonCrystalItem.FUEL_KEY))
-            return false;
-
-        return nbt.getDouble(ChargedZeitonCrystalItem.FUEL_KEY) >= ChargedZeitonCrystalItem.MAX_FUEL;
     }
 
     private boolean canQueue() {

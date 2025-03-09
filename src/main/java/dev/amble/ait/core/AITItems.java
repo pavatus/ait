@@ -78,11 +78,14 @@ public class AITItems extends ItemContainer {
     public static final Item FACELESS_RESPIRATOR = new RenderableArmorItem(ArmorMaterials.IRON,
             ArmorItem.Type.HELMET, new AItemSettings().group(AITItemGroups.MAIN).maxCount(1).maxDamage(80),
             true);
+
+    public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
+
     public static final Item HYPERCUBE = new HypercubeItem(new AItemSettings().maxCount(1).group(AITItemGroups.MAIN));
     public static final Item PSYCHPAPER = new PsychpaperItem(new AItemSettings().maxCount(1).group(AITItemGroups.MAIN));
     public static final Item HAZANDRA = new InteriorTeleporterItem(new AItemSettings().group(AITItemGroups.MAIN));
 
-    // Keys/Key Templates
+    // Keys/Horns - Templates
     public static final Item IRON_KEY = new KeyItem(new AItemSettings().group(AITItemGroups.MAIN));
     public static final Item GOLD_KEY = new KeyItem(
             new AItemSettings().rarity(Rarity.UNCOMMON).group(AITItemGroups.MAIN), KeyItem.Protocols.SNAP);
@@ -97,6 +100,15 @@ public class AITItems extends ItemContainer {
     public static final Item SKELETON_KEY = new KeyItem(
             new AItemSettings().rarity(Rarity.EPIC).group(AITItemGroups.MAIN), KeyItem.Protocols.SKELETON,
             KeyItem.Protocols.HAIL, KeyItem.Protocols.SNAP);
+
+    public static final Item IRON_GOAT_HORN = new TardisGoatHorn(new AItemSettings().group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
+
+    public static final Item GOLD_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.UNCOMMON).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
+
+    public static final Item CLASSIC_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.EPIC).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS, TardisGoatHorn.Protocols.HAIL);
+
+    public static final Item NETHERITE_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.RARE).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS, TardisGoatHorn.Protocols.HAIL);
+
     @NoEnglish
     public static final Item GOLD_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new AItemSettings().group(AITItemGroups.MAIN), "Gold Key", "Gold Nugget");
@@ -106,8 +118,7 @@ public class AITItems extends ItemContainer {
     @NoEnglish
     public static final Item CLASSIC_KEY_UPGRADE_SMITHING_TEMPLATE = new KeySmithingTemplateItem(
             new AItemSettings().group(AITItemGroups.MAIN), "Classic Key", "Amethyst Shard");
-    //public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
-    public static final Item SONIC_SCREWDRIVER = new SonicItem(new AItemSettings().group(AITItemGroups.MAIN));
+
 
     // Crafting items
     public static final Item ZEITON_SHARD = new ZeitonShardItem(new AItemSettings());
@@ -119,6 +130,7 @@ public class AITItems extends ItemContainer {
     public static final Item PLASMIC_MATERIAL = new Item(new AItemSettings().group(AITItemGroups.MAIN));
     public static final Item CORAL_FRAGMENT = new Item(new AItemSettings().group(AITItemGroups.MAIN));
     public static final Item CORAL_CAGE = new Item(new AItemSettings().group(AITItemGroups.MAIN));
+    public static final Item PERSONALITY_MATRIX = new PersonalityMatrixItem(new AItemSettings().group(AITItemGroups.MAIN));
 
     // Machine parts
     public static final Item ARTRON_FLUID_LINK = new FluidLinkItem(AbstractLinkItem.Type.ARTRON,
@@ -195,13 +207,6 @@ public class AITItems extends ItemContainer {
     public static final Item EARTH_MUSIC_DISC = new MusicDiscItem(1, AITSounds.EARTH_MUSIC,
             new AItemSettings().maxCount(1).rarity(Rarity.RARE), 315);
 
-    public static final Item IRON_GOAT_HORN = new TardisGoatHorn(new AItemSettings().group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
-
-    public static final Item GOLD_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.UNCOMMON).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS);
-
-    public static final Item CLASSIC_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.EPIC).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS, TardisGoatHorn.Protocols.HAIL);
-
-    public static final Item NETHERITE_GOAT_HORN = new TardisGoatHorn(new AItemSettings().rarity(Rarity.RARE).group(AITItemGroups.MAIN), InstrumentTags.GOAT_HORNS, TardisGoatHorn.Protocols.HAIL);
 
     // Block controls
 

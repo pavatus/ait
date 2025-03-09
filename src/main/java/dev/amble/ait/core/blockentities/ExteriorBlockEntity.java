@@ -88,6 +88,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
                 if (hand.getItem() == AITItems.CORAL_CAGE) {
                     world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_HIT, SoundCategory.BLOCKS, 1F, 0.7f);
                     tardis.interiorChangingHandler().setHasCage(true);
+                    hand.decrement(1);
                     return;
                 }
                 world.playSound(null, pos, SoundEvents.BLOCK_CORAL_BLOCK_HIT, SoundCategory.BLOCKS, 1F, 0.3f);
@@ -116,7 +117,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
 
         if (hasSonic) {
             if (shouldEject) {
-                player.giveItemStack(handler.takeExteriorSonic());
+                player.getInventory().offerOrDrop(handler.takeExteriorSonic());
                 world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1F,
                         0.2F);
                 return;
@@ -235,7 +236,6 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         return ((ServerWorld) world).getEntity(seatEntityUUID);
     }
 
-
     public void onEntityCollision(Entity entity) {
         TardisRef ref = this.tardis();
 
@@ -245,7 +245,7 @@ public class ExteriorBlockEntity extends AbstractLinkableBlockEntity implements 
         if (ref.isEmpty())
             return;
 
-        Tardis tardis = ref.get();
+        ServerTardis tardis = ref.get().asServer();
         TravelHandler travel = tardis.travel();
 
         boolean previouslyLocked = tardis.door().previouslyLocked().get();

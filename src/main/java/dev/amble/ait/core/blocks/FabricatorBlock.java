@@ -25,6 +25,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.explosion.Explosion;
 
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.FabricatorBlockEntity;
@@ -45,6 +47,24 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
             ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         this.setDefaultState(state.with(FACING, placer.getHorizontalFacing().getOpposite()));
+    }
+
+    @Override
+    public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
+        if (world.getBlockEntity(pos) instanceof FabricatorBlockEntity be) {
+            be.onBroken();
+        }
+
+        super.onDestroyedByExplosion(world, pos, explosion);
+    }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (world.getBlockEntity(pos) instanceof FabricatorBlockEntity be) {
+            be.onBroken();
+        }
+
+        super.onBroken(world, pos, state);
     }
 
     @Override
@@ -81,7 +101,7 @@ public class FabricatorBlock extends HorizontalDirectionalBlock implements Block
 
         Direction direction = state.get(FACING);
         double d = (double) pos.getX() + 0.55 - (double) (random.nextFloat() * 0.1f);
-        double e = (double) pos.getY() + 0.55 - (double) (random.nextFloat() * 0.1f);
+        double e = (double) pos.getY() + 0.25 - (double) (random.nextFloat() * 0.1f);
         double f = (double) pos.getZ() + 0.55 - (double) (random.nextFloat() * 0.1f);
         double g = 0.4f - (random.nextFloat() + random.nextFloat()) * 0.4f;
         world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d + (double) direction.getOffsetX() * g,

@@ -24,6 +24,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
@@ -88,7 +89,6 @@ import dev.amble.ait.registry.impl.door.DoorRegistry;
 import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
-    // The PREAmble lolololol
 
     public static final String MOD_ID = "ait";
     public static final Logger LOGGER = LoggerFactory.getLogger("ait");
@@ -172,6 +172,7 @@ public class AITMod implements ModInitializer {
                 AITModInitializer::onInitializeAIT);
 
         DoorRegistry.init();
+        HandlesResponseRegistry.init();
 
         AITStatusEffects.init();
         AITVillagers.init();
@@ -206,9 +207,16 @@ public class AITMod implements ModInitializer {
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES,
                 CUSTOM_GEODE_PLACED_KEY);
 
-        Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
+        BiomeModifications.addSpawn(
+                BiomeSelectors.all(),
+                SpawnGroup.AMBIENT,
+                AITEntityTypes.RIFT_ENTITY,
+                4,
+                1,
+                1
+        );
 
-        RiftEntity.addSpawn();
+        Registry.register(net.minecraft.registry.Registries.FEATURE, CRATER_ID, CRATER);
 
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             TeleportInteriorCommand.register(dispatcher);

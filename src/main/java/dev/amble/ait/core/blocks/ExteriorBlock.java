@@ -47,6 +47,7 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+import dev.amble.ait.core.util.ShapeUtil;
 import dev.amble.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
@@ -167,6 +168,9 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
         if (tardis == null)
             return normal;
 
+        if (tardis.siege() == null)
+            return normal;
+
         if (tardis.siege().isActive())
             return SIEGE_SHAPE;
 
@@ -241,7 +245,7 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
             shape = DependencyChecker.hasPortals() && !ignorePortals ? PORTALS_SHAPE : CUBE_NORTH_SHAPE;
         }
 
-        return rotateShape(Direction.NORTH, direction, shape);
+        return ShapeUtil.rotate(Direction.NORTH, direction, shape);
     }
 
     public Direction approximateDirection(int rotation) {
@@ -429,20 +433,6 @@ public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBr
                 ParticleUtil.spawnParticle(world, pos, random, ParticleTypes.TOTEM_OF_UNDYING);
             }
         }
-    }
-
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
-
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.combine(buffer[1],
-                    VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX), BooleanBiFunction.OR));
-            buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
-        }
-
-        return buffer[0];
     }
 
     @Override

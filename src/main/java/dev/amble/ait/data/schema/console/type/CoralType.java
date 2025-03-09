@@ -44,7 +44,7 @@ public class CoralType extends ConsoleTypeSchema {
                     new Vector3f(-0.3125000046566129f, 0.45000019017606974f, -0.8390625016763806f)),
             new ControlTypes(new LandTypeControl(), EntityDimensions.changing(0.23750003f, 0.099999994f),
                     new Vector3f(0.7398437662050128f, 0.7150001563131809f, -0.40507811680436134f)),
-            new ControlTypes(new EngineOverload(), EntityDimensions.changing(0.1375f, 0.1f),
+            new ControlTypes(new EngineOverloadControl(), EntityDimensions.changing(0.1375f, 0.1f),
                     new Vector3f(-0.6828126898035407f, 0.6250001918524504f, 0.06328086648136377f)),
             new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.1375f, 0.16250001f),
                     new Vector3f(0.7140626860782504f, 0.3749999972060323f, 0.8023437531664968f)),
@@ -82,6 +82,8 @@ public class CoralType extends ConsoleTypeSchema {
                     new Vector3f(-0.3484375160187483f, 0.600000855512917f, 0.4757812535390258f)),
             new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.08749999f),
                     new Vector3f(0.6019531404599547f, 0.6249998062849045f, 7.812539115548134E-4f)),
+            new ControlTypes(new ElectricalDischargeControl(), EntityDimensions.changing(0.07499999f, 0.1f),
+                    new Vector3f(-1.0578126963227987f, 0.39999999664723873f, -0.22421894501894712f)),
             new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.099999994f, 0.21250002f),
                     new Vector3f(-1.2734375027939677f, 0.1874997541308403f, -0.5624999990686774f)),};
 

@@ -90,7 +90,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (oxygenated)
             return;
 
-        if (planet.isFreezing() && Planet.hasFullSuit(entity)) {
+        if (planet.isFreezing() && !Planet.hasFullSuit(entity)) {
             if (entity.getType().isIn(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES))
                 return;
 

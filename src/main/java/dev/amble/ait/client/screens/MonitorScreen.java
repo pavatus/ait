@@ -16,6 +16,7 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -113,9 +114,9 @@ public class MonitorScreen extends ConsoleScreen {
     private void createButtons() {
         this.buttons.clear();
         // exterior change text button
-        Text applyText = Text.translatable("screen.ait.monitor.apply");
+        MutableText applyText = Text.translatable("screen.ait.monitor.apply");
         this.addButton(new PressableTextWidget((width / 2 + 55), (height / 2 + 8),
-                this.textRenderer.getWidth(applyText), 20, Text.translatable("screen.ait.monitor.apply").formatted(Formatting.BOLD), button -> {
+                this.textRenderer.getWidth(applyText), 20, applyText.formatted(Formatting.BOLD), button -> {
                     sendExteriorPacket(this.tardis(), this.getCategory(), this.getCurrentVariant());
                 }, this.textRenderer));
         this.addButton(new PressableTextWidget((width / 2 + 30), (height / 2 + 8), this.textRenderer.getWidth("<#>"),

@@ -18,7 +18,6 @@ import dev.amble.ait.core.entities.RiftEntity;
 public class BOTI {
     public static final Queue<RiftEntity> RIFT_RENDERING_QUEUE = new LinkedList<>();
     public static BOTIInit BOTI_HANDLER = new BOTIInit();
-    public static BOTIVBO BOTIVBO = new BOTIVBO();
     public static AITBufferBuilderStorage AIT_BUF_BUILDER_STORAGE = new AITBufferBuilderStorage();
     public static Queue<DoorBlockEntity> DOOR_RENDER_QUEUE = new LinkedList<>();
     public static Queue<GallifreyFallsPaintingEntity> PAINTING_RENDER_QUEUE = new LinkedList<>();

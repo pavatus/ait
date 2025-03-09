@@ -98,24 +98,30 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
 
         PlayerEntity player = this.getPlayer();
 
-        if (!this.isLinked()) return;
+        if (player == null)
+            return;
+
+        if (!this.isLinked())
+            return;
 
         Tardis tardis = this.tardis().get();
 
+        if (player.isSneaking() && (this.isOnGround() || tardis.travel().antigravs().get())
+                && this.getWorld().isInBuildLimit(this.getBlockPos()))
+            this.finishLand(tardis, player);
+
         if (this.getWorld().isClient()) {
             MinecraftClient client = MinecraftClient.getInstance();
-            Tardis tardisClient = this.tardis().get().asClient();
+
             if (client.player == this.getControllingPassenger()) {
                 client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
-                //client.options.hudHidden = true;
+
                 if (!this.groundCollision)
-                    ClientShakeUtil.shake((float) (tardisClient.travel().speed() + this.getVelocity().horizontalLength()) / tardisClient.travel().maxSpeed().get());
+                    ClientShakeUtil.shake((float) (tardis.travel().speed() + this.getVelocity().horizontalLength()) / tardis.travel().maxSpeed().get());
             }
+
             return;
         }
-
-        if (player == null)
-            return;
 
         if (!player.isInvisible())
             player.setInvisible(true);
@@ -123,21 +129,13 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
         if (!player.isInvulnerable())
             player.setInvulnerable(true);
 
-        boolean onGround = this.isOnGround();
-
         tardis.flight().tickFlight((ServerPlayerEntity) player);
 
         if (tardis.door().isOpen()) {
             this.getWorld().getOtherEntities(this, this.getBoundingBox(), entity
                     -> !entity.isSpectator() && entity != player && entity instanceof LivingEntity).forEach(
-                    entity -> TardisUtil.teleportInside(tardis, entity)
+                    entity -> TardisUtil.teleportInside(tardis.asServer(), entity)
             );
-        }
-
-        if (player.isSneaking() && (onGround || tardis.travel().antigravs().get())
-                && this.getY() > this.getWorld().getBottomY() && this.getY() < this.getWorld().getTopY()) {
-            //System.out.println(onGround);
-            this.finishLand(tardis, player);
         }
     }
 
@@ -168,13 +166,14 @@ public class FlightTardisEntity extends LinkableLivingEntity implements JumpingM
             client.options.hudHidden = false;
             return;
         }
+
         if (!(player instanceof ServerPlayerEntity serverPlayer))
             return;
 
         if (this.interiorPos == null) {
-            TardisUtil.teleportInside(tardis, serverPlayer);
+            TardisUtil.teleportInside(tardis.asServer(), serverPlayer);
         } else {
-            TardisUtil.teleportToInteriorPosition(tardis, serverPlayer, this.interiorPos);
+            TardisUtil.teleportToInteriorPosition(tardis.asServer(), serverPlayer, this.interiorPos);
         }
 
         tardis.flight().exitFlight(serverPlayer);

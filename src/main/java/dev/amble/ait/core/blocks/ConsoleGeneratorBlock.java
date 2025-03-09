@@ -6,21 +6,17 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
-import dev.amble.ait.core.world.TardisServerWorld;
 
 public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {
 
@@ -41,17 +37,6 @@ public class ConsoleGeneratorBlock extends HorizontalDirectionalBlock implements
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack itemStack) {
-        if (world.isClient())
-            return;
-
-        if (!TardisServerWorld.isTardisDimension((ServerWorld) world)) {
-            // dont place yo
-            world.breakBlock(pos, true);
-            world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f,
-                    new ItemStack(AITBlocks.CONSOLE_GENERATOR)));
-
-            return;
-        }
 
         super.onPlaced(world, pos, state, placer, itemStack);
     }

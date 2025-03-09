@@ -12,6 +12,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RotationAxis;
 
 import dev.amble.ait.client.models.machines.GenericSubSystemModel;
 import dev.amble.ait.client.renderers.MultiBlockStructureRenderer;
@@ -37,22 +38,24 @@ public class GenericSubSystemRenderer<T extends GenericStructureSystemBlockEntit
             MultiBlockStructureRenderer.instance().render(holder.getStructure(), entity.getPos(), entity.getWorld(), matrices, vertexConsumers, true);
         }
 
-        matrices.translate(0.5f, -0.5f, 0.5f);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrices.translate(0.5f, -1.5f, -0.5f);
 
         ItemStack stack = entity.getSourceStack().orElse(null);
         boolean hasStack = stack != null && !stack.isEmpty();
 
-        ModelPart cube = this.model.getPart().getChild("cube_r3");
-        cube.visible = !hasStack;
+        ModelPart wires = this.model.getPart().getChild("wires");
+        wires.visible = hasStack;
 
         this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(GenericSubSystemModel.TEXTURE)),
                 light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
         if (hasStack) {
             matrices.push();
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
             double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 18.0;
 
-            matrices.translate(0, 0.85f + (offset / 2), 0);
+            matrices.translate(0, -1.15f + (offset / 2), 0);
 
             Vector3f scale = MinecraftClient.getInstance().getItemRenderer().getModel(stack, entity.getWorld(), null, 0).getTransformation().firstPersonRightHand.scale;
             matrices.scale(0.9f, 0.9f, 0.9f);

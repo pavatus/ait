@@ -37,8 +37,8 @@ import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.blocks.types.HorizontalDirectionalBlock;
 import dev.amble.ait.core.item.HammerItem;
-import dev.amble.ait.data.schema.console.variant.crystalline.CrystallineVariant;
-import dev.amble.ait.data.schema.console.variant.crystalline.CrystallineZeitonVariant;
+import dev.amble.ait.data.schema.console.type.CopperType;
+import dev.amble.ait.data.schema.console.type.CrystallineType;
 
 public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEntityProvider, ICantBreak {
 
@@ -179,32 +179,50 @@ public class ConsoleBlock extends HorizontalDirectionalBlock implements BlockEnt
 
             if (!consoleBlockEntity.tardis().get().fuel().hasPower()) return;
 
-            if (!(consoleBlockEntity.getVariant() instanceof CrystallineZeitonVariant ||
-                    consoleBlockEntity.getVariant() instanceof CrystallineVariant)) return;
-
             double d = pos.getX();
             double e = pos.getY();
             double f = pos.getZ();
 
-            for (int i = 0; i < random.nextInt(15) + 1; ++i) {
-                boolean bl = random.nextBoolean();
-                float particleSpeed = random.nextFloat() / 15.0f;
+            if ((consoleBlockEntity.getTypeSchema() instanceof CrystallineType)) {
 
-                world.addParticle(ParticleTypes.SMOKE,
-                        (double) pos.getX() + 0.5,
-                        (double) pos.getY() + 2,
-                        (double) pos.getZ() + 0.5,
-                        bl ? particleSpeed : -particleSpeed,
-                        2.2E-3,
-                        bl ? particleSpeed : -particleSpeed);
+                for (int i = 0; i < random.nextInt(15) + 1; ++i) {
+                    boolean bl = random.nextBoolean();
+                    float particleSpeed = random.nextFloat() / 15.0f;
 
-                world.addParticle(ParticleTypes.CLOUD,
-                        pos.getX() + 0.5,
-                        pos.getY() + 0.5,
-                        pos.getZ() + 0.5,
-                        0.0,
-                        0.1,
-                        0.0);
+                    world.addParticle(ParticleTypes.SMOKE,
+                            (double) pos.getX() + 0.5,
+                            (double) pos.getY() + 2,
+                            (double) pos.getZ() + 0.5,
+                            bl ? particleSpeed : -particleSpeed,
+                            2.2E-3,
+                            bl ? particleSpeed : -particleSpeed);
+
+                    world.addParticle(ParticleTypes.CLOUD,
+                            pos.getX() + 0.5,
+                            pos.getY() + 0.5,
+                            pos.getZ() + 0.5,
+                            0.0,
+                            0.1,
+                            0.0);
+                }
+                return;
+            }
+
+            if (consoleBlockEntity.tardis() != null &&
+                    !consoleBlockEntity.tardis().get().extra().getInsertedDisc().isEmpty() &&
+                    consoleBlockEntity.getTypeSchema() instanceof CopperType) {
+                for (int i = 0; i < random.nextInt(10) + 1; ++i) {
+                    boolean bl = random.nextBoolean();
+                    float b = (float)world.getRandom().nextInt(4) / 24.0f;
+
+                    world.addParticle(ParticleTypes.NOTE,
+                            d + 1.4,
+                            e + 2.6,
+                            f - 0.15f,
+                            b + 1.5,
+                            b,
+                            b + 0.5);
+                }
             }
         }
     }

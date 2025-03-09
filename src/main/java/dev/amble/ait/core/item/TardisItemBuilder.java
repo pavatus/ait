@@ -10,6 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationPropertyHelper;
@@ -101,8 +102,17 @@ public class TardisItemBuilder extends Item {
                     fuel.enablePower();
                 })
                 .with(TardisComponent.Id.SUBSYSTEM, SubSystemHandler::repairAll)
-                .<LoyaltyHandler>with(TardisComponent.Id.LOYALTY,
-                        loyalty -> loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER)));
+                .<LoyaltyHandler> with(TardisComponent.Id.LOYALTY,
+                loyalty -> {
+                    loyalty.setMessageEnabled(false);
+                    loyalty.set(serverPlayer, new Loyalty(Loyalty.Type.OWNER));
+                });
+
+        TardisBuilder builder1 = new TardisBuilder().at(pos)
+                .<LoyaltyHandler> with(TardisComponent.Id.LOYALTY,
+                        loyalty -> {
+                            loyalty.setMessageEnabled(true);
+                        });
 
         if (this.exterior == null || this.desktop == null) {
             DefaultThemes.getRandom().apply(builder);
@@ -114,7 +124,17 @@ public class TardisItemBuilder extends Item {
         ServerTardis created = ServerTardisManager.getInstance()
                 .create(builder);
 
-        if (created == null) {
+        ServerTardis created1 = ServerTardisManager.getInstance()
+                .create(builder1);
+
+        player.sendMessage(
+                Text.empty()
+                        .append(Text.translatable("message.ait.unlocked_all").formatted(Formatting.WHITE))
+                        .append(Text.translatable("message.ait.all_types").formatted(Formatting.GREEN))
+                        .append(Text.literal("!").formatted(Formatting.WHITE)), false);
+
+
+        if ( created == null || created1 == null) {
             player.sendMessage(Text.translatable("message.ait.max_tardises"), true);
             return ActionResult.FAIL;
         }

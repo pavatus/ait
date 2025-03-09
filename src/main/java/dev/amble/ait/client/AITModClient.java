@@ -2,6 +2,7 @@ package dev.amble.ait.client;
 
 import static dev.amble.ait.AITMod.*;
 import static dev.amble.ait.core.AITItems.isUnlockedOnThisDay;
+import static dev.amble.ait.core.item.PersonalityMatrixItem.colorToInt;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,15 +29,11 @@ import net.minecraft.client.particle.EndRodParticle;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.RotationPropertyHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 
 import dev.amble.ait.AITMod;
@@ -79,6 +76,7 @@ import dev.amble.ait.core.*;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
 import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
+import dev.amble.ait.core.blocks.AstralMapBlock;
 import dev.amble.ait.core.blocks.ExteriorBlock;
 import dev.amble.ait.core.drinks.DrinkRegistry;
 import dev.amble.ait.core.drinks.DrinkUtil;
@@ -124,6 +122,7 @@ public class AITModClient implements ClientModInitializer {
         entityRenderRegister();
         chargedZeitonCrystalPredicate();
         waypointPredicate();
+        personalityMatrixPredicate();
         hammerPredicate();
         siegeItemPredicate();
         adventItemPredicates();
@@ -269,6 +268,8 @@ public class AITModClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register((context, delta) -> SonicRendering.getInstance().renderGui(context, delta));
 
         SonicModelLoader.init();
+
+        AstralMapBlock.registerSyncListener();
     }
     public static Screen screenFromId(int id) {
         return screenFromId(id, null, null);
@@ -319,6 +320,18 @@ public class AITModClient implements ClientModInitializer {
             WaypointItem waypoint = (WaypointItem) stack.getItem();
             return waypoint.getColor(stack);
         }, AITItems.WAYPOINT_CARTRIDGE);
+    }
+
+    public static void personalityMatrixPredicate() {
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            if (tintIndex != 0)
+                return -1;
+
+            PersonalityMatrixItem personalityMatrixItem = (PersonalityMatrixItem) stack.getItem();
+            int[] integers = personalityMatrixItem.getColor(stack);
+            return colorToInt(integers[0], integers[1], integers[2]);
+        },
+                AITItems.PERSONALITY_MATRIX);
     }
 
     public static void hammerPredicate() {
@@ -408,15 +421,11 @@ public class AITModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WALL_MONITOR_BLOCK_ENTITY_TYPE,
                 WallMonitorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_BLOCK_ENTITY_TYPE, EngineRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.ENGINE_CORE_BLOCK_ENTITY_TYPE,
-                EngineCoreBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FABRICATOR_BLOCK_ENTITY_TYPE,
                 FabricatorRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.WAYPOINT_BANK_BLOCK_ENTITY_TYPE,
                 WaypointBankBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.FLAG_BLOCK_ENTITY_TYPE, FlagBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(AITBlockEntityTypes.ZEITON_CAGE_BLOCK_ENTITY_TYPE,
-                ZeitonCageRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.GENERIC_SUBSYSTEM_BLOCK_TYPE,
                 GenericSubSystemRenderer::new);
         BlockEntityRendererFactories.register(AITBlockEntityTypes.POWER_CONVERTER_BLOCK_TYPE,
@@ -433,9 +442,9 @@ public class AITModClient implements ClientModInitializer {
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE, FlightTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
-        if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
-            EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
-        }
+//        if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
+//            EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
+//        }
         EntityRendererRegistry.register(AITEntityTypes.RIFT_ENTITY, RiftEntityRenderer::new);
     }
 
@@ -452,13 +461,13 @@ public class AITModClient implements ClientModInitializer {
         map.putBlock(AITBlocks.FABRICATOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.ENVIRONMENT_PROJECTOR, RenderLayer.getTranslucent());
         map.putBlock(AITBlocks.WAYPOINT_BANK, RenderLayer.getCutout());
-        map.putBlock(AITBlocks.ENGINE_CORE_BLOCK, RenderLayer.getCutout());
         if (isUnlockedOnThisDay(Calendar.DECEMBER, 30)) {
             map.putBlock(AITBlocks.SNOW_GLOBE, RenderLayer.getCutout());
         }
         map.putBlock(AITBlocks.TARDIS_CORAL_BLOCK, RenderLayer.getCutout());
         map.putBlock(AITBlocks.TARDIS_CORAL_FAN, RenderLayer.getCutout());
         map.putBlock(AITBlocks.TARDIS_CORAL_WALL_FAN, RenderLayer.getCutout());
+        map.putBlock(AITBlocks.MATRIX_ENERGIZER, RenderLayer.getCutout());
     }
 
     public void registerItemColors() {

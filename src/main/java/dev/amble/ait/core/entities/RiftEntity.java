@@ -57,57 +57,13 @@ public class RiftEntity extends AmbientEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-    }
-
-    @Override
     public boolean cannotDespawn() {
         return true;
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return List.of(new ItemStack[0]);
-    }
-
-    @Override
-    public ItemStack getEquippedStack(EquipmentSlot slot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
-
-    }
-
-    @Override
     public void onPlayerCollision(PlayerEntity player) {
-        if (player.getServer() == null) {
-            super.onPlayerCollision(player);
-            return;
-        }
-        ServerWorld world = player.getServer().getWorld(AITDimensions.TIME_VORTEX_WORLD);
-        if (world == null) {
-            super.onPlayerCollision(player);
-            return;
-        }
-        TeleportUtil.teleport(player, world, new Vec3d(0, 0, 0), player.bodyYaw);
-    }
-
-    @Override
-    public DataTracker getDataTracker() {
-        return super.getDataTracker();
-    }
-
-    @Override
-    public void setAiDisabled(boolean aiDisabled) {
-        super.setAiDisabled(true);
-    }
-
-    @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
+        TeleportUtil.teleport(player, WorldUtil.getTimeVortex(), player.getPos(), player.bodyYaw);
     }
 
     @Override
@@ -132,10 +88,10 @@ public class RiftEntity extends AmbientEntity {
 
             player.damage(this.getWorld().getDamageSources().hotFloor(), 7);
             if (gotFragment) {
-                spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(AITItems.CORAL_FRAGMENT));
+                StackUtil.spawn(this.getWorld(), this.getBlockPos(), new ItemStack(AITItems.CORAL_FRAGMENT));
                 this.getWorld().playSound(null, player.getBlockPos(), AITSounds.RIFT_SUCCESS, SoundCategory.AMBIENT, 1f, 1f);
             } else {
-                spawnItem(this.getWorld(), this.getBlockPos(), new ItemStack(Items.PAPER));
+                StackUtil.spawn(this.getWorld(), this.getBlockPos(), new ItemStack(Items.PAPER));
                 this.getWorld().playSound(null, this.getBlockPos(), AITSounds.RIFT_FAIL, SoundCategory.AMBIENT, 1f, 1f);
                 spreadTardisCoral(this.getWorld(), this.getBlockPos());
             }
@@ -148,25 +104,16 @@ public class RiftEntity extends AmbientEntity {
         return ActionResult.CONSUME;
     }
 
-    @Override
-    public boolean hasNoGravity() {
-        return true;
-    }
-
-    public static void spawnItem(World world, BlockPos pos, ItemStack stack) {
-        ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-        world.spawnEntity(entity);
-    }
-
-    //TODO: Optimize this stuff and make it use "world height map" or whatever
-    //I wasent able to because rifts brain is null which makes world height thingy hate it
-    //Duzo if your seeing this pls fix rifts and their dammed null brain :pray:
     private void spreadTardisCoral(World world, BlockPos pos) {
         int radius = 4;
-        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius))) {
-            if (RANDOM.nextFloat() < 0.3f) { // 30% chance per block
-                BlockState currentState = world.getBlockState(targetPos);
 
+        Chunk chunk = world.getChunk(pos);
+        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, 0, -radius), pos.add(radius, 0, radius))) {
+            if (world.random.nextBetween(0, 10) < 3) { // 30% chance per block
+                targetPos = targetPos.withY(chunk.sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                        targetPos.getX() & 15, targetPos.getZ() & 15));
+
+                BlockState currentState = world.getBlockState(targetPos);
                 BlockState newState = getReplacementBlock(currentState);
                 if (newState != null) {
                     world.setBlockState(targetPos, newState, Block.NOTIFY_ALL);
@@ -235,27 +182,21 @@ public class RiftEntity extends AmbientEntity {
         }
     }
 
-    @Override
-    public Arm getMainArm() {
-        return Arm.LEFT;
-    }
-
     public static boolean canSpawn(EntityType<RiftEntity> rift,
                                    ServerWorldAccess serverWorldAccess, SpawnReason spawnReason,
                                    BlockPos pos, net.minecraft.util.math.random.Random random) {
         if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess)) return false;
 
-        if (spawnReason == SpawnReason.STRUCTURE) {
-            return worldAccess.isAir(pos);
-        }
+        if (spawnReason == SpawnReason.STRUCTURE)
+            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
 
         ChunkPos chunkPos = new ChunkPos(pos);
         boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
                 worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
-        if (random.nextInt(5) == 0 && bl) {
-            BlockPos newPos = new BlockPos(pos.getX(), worldAccess.getTopY() + 15, pos.getZ());
-            return worldAccess.isAir(newPos);
-        }
+
+        if (random.nextInt(25) == 0 && bl)
+            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
+
         return false;
     }
 
@@ -263,7 +204,7 @@ public class RiftEntity extends AmbientEntity {
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
-        double e = packet.getY() + 25;
+        double e = packet.getY() + 0;
         double f = packet.getZ();
         float g = packet.getYaw();
         float h = packet.getPitch();

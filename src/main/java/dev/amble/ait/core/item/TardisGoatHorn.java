@@ -80,12 +80,12 @@ public class TardisGoatHorn extends LinkableItem {
             user.incrementStat(Stats.USED.getOrCreateStat(this));
 
             Tardis tardis = TardisGoatHorn.getTardisStatic(world, user.getStackInHand(hand));
-            if (tardis == null) return TypedActionResult.consume(itemStack);
+            if (tardis == null || tardis.travel() == null) return TypedActionResult.consume(itemStack);
             CachedDirectedGlobalPos abpd = tardis.travel().destination();
             BlockPos abpdPos = abpd.getPos();
             Text message = Text.literal("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: ")
                     .formatted(Formatting.GRAY)
-                    .append(WorldUtil.worldText(abpd.getDimension()).copy() + "...".formatted(Formatting.GRAY));
+                    .append(WorldUtil.worldText(abpd.getDimension())).formatted(Formatting.GRAY);
 
             user.sendMessage(message, true);
 

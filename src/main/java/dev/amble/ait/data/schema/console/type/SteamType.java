@@ -36,7 +36,7 @@ public class SteamType extends ConsoleTypeSchema {
                     new Vector3f(-0.2523437635973096f, 0.3999996166676283f, -0.8867187527939677f)),
             new ControlTypes(new VisualiserControl(), EntityDimensions.changing(0.18750001f, 0.1125f),
                     new Vector3f(0.4398435605689883f, 0.350000093691051f, -0.7617183709517121f)),
-            new ControlTypes(new EngineOverload(), EntityDimensions.changing(0.20000002f, 0.1125f),
+            new ControlTypes(new EngineOverloadControl(), EntityDimensions.changing(0.20000002f, 0.1125f),
                     new Vector3f(0.9281248115003109f, 0.3499998077750206f, 0.25234413240104914f)),
             new ControlTypes(new AntiGravsControl(), EntityDimensions.changing(0.074999996f, 0.17500001f),
                     new Vector3f(0.7890625102445483f, 0.4375001899898052f, 0.002343735657632351f)),
@@ -82,6 +82,8 @@ public class SteamType extends ConsoleTypeSchema {
                     new Vector3f(-0.7109374962747097f, 0.47500057239085436f, -0.17265624925494194f)),
             new ControlTypes(new SonicPortControl(), EntityDimensions.changing(0.125f, 0.1125f),
                     new Vector3f(0.35234375298023224f, 0.4624999947845936f, -0.5992187550291419f)),
+            new ControlTypes(new ElectricalDischargeControl(),EntityDimensions.changing(0.074999996f, 0.1f),
+                    new Vector3f(-0.10859355796128511f, 0.5624998090788722f, 0.5019529350101948f)),
             new ControlTypes(new ShieldsControl(), EntityDimensions.changing(0.08749999f, 0.16250001f),
                     new Vector3f(0.7640625275671482f, 0.4374997578561306f, -0.09999999217689037f)),};
 
