@@ -188,20 +188,16 @@ public class RiftEntity extends DummyAmbientEntity {
                                    BlockPos pos, net.minecraft.util.math.random.Random random) {
         if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess)) return false;
 
-        if (spawnReason == SpawnReason.STRUCTURE) {
-            AITMod.LOGGER.info("Spawning rift at {}, reason: structure", pos);
-            return worldAccess.getBlockState(pos).isAir();
-        }
+        if (spawnReason == SpawnReason.STRUCTURE)
+            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
 
         ChunkPos chunkPos = new ChunkPos(pos);
         boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
                 worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
-        if (random.nextInt(55) == 0 && bl) {
-            AITMod.LOGGER.info("Spawning rift at {}, reaason: random", pos);
-            return worldAccess.getBlockState(pos).isAir();
-        }
 
-        AITMod.LOGGER.info("Failed to spawn rift at {}", pos);
+        if (random.nextInt(25) == 0 && bl)
+            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
+
         return false;
     }
 
