@@ -80,6 +80,7 @@ public class AITBlockTagProvider extends AmbleBlockTagProvider {
             module.getBlockRegistry().ifPresent(this::withBlocks);
         });
 
+        this.withBlocks(AITBlocks.class);
         super.configure(arg);
     }
 

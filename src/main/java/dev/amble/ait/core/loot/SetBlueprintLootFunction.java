@@ -1,6 +1,5 @@
 
-package dev.amble.ait.datagen.datagen_providers.loot;
-
+package dev.amble.ait.core.loot;
 
 import java.util.Random;
 
@@ -21,6 +20,7 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.core.item.blueprint.BlueprintItem;
 import dev.amble.ait.core.item.blueprint.BlueprintRegistry;
 import dev.amble.ait.core.item.blueprint.BlueprintSchema;
+
 public class SetBlueprintLootFunction extends ConditionalLootFunction {
     final BlueprintSchema blueprint;
     public Random random = AITMod.RANDOM;
