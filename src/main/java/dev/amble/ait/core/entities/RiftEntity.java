@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
@@ -21,12 +20,14 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.*;
+import net.minecraft.world.chunk.Chunk;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.entities.base.DummyAmbientEntity;
 import dev.amble.ait.core.item.SonicItem;
 import dev.amble.ait.core.util.StackUtil;
+import dev.amble.ait.core.util.WorldUtil;
 
 public class RiftEntity extends DummyAmbientEntity {
 
@@ -58,17 +59,7 @@ public class RiftEntity extends DummyAmbientEntity {
 
     @Override
     public void onPlayerCollision(PlayerEntity player) {
-        if (player.getServer() == null) {
-            super.onPlayerCollision(player);
-            return;
-        }
-        ServerWorld world = player.getServer().getWorld(AITDimensions.TIME_VORTEX_WORLD);
-        if (world == null) {
-            super.onPlayerCollision(player);
-            return;
-        }
-
-        TeleportUtil.teleport(player, world, player.getPos(), player.bodyYaw);
+        TeleportUtil.teleport(player, WorldUtil.getTimeVortex(), player.getPos(), player.bodyYaw);
     }
 
     @Override
@@ -111,11 +102,16 @@ public class RiftEntity extends DummyAmbientEntity {
 
     private void spreadTardisCoral(World world, BlockPos pos) {
         int radius = 4;
-        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius))) {
-            if (RANDOM.nextFloat() < 0.3f) { // 30% chance per block
-                BlockState currentState = world.getBlockState(targetPos);
 
+        Chunk chunk = world.getChunk(pos);
+        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, 0, -radius), pos.add(radius, 0, radius))) {
+            if (world.random.nextBetween(0, 10) < 3) { // 30% chance per block
+                targetPos = targetPos.withY(chunk.sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                        targetPos.getX() & 15, targetPos.getZ() & 15));
+
+                BlockState currentState = world.getBlockState(targetPos);
                 BlockState newState = getReplacementBlock(currentState);
+
                 if (newState != null) {
                     world.setBlockState(targetPos, newState, Block.NOTIFY_ALL);
 
