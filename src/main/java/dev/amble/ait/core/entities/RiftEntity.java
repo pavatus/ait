@@ -1,11 +1,17 @@
 package dev.amble.ait.core.entities;
 
+import java.util.List;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.mob.AmbientEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -15,21 +21,20 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.*;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.*;
-import dev.amble.ait.core.entities.base.DummyAmbientEntity;
 import dev.amble.ait.core.item.SonicItem;
-import dev.amble.ait.core.util.StackUtil;
 
-public class RiftEntity extends DummyAmbientEntity {
-
+public class RiftEntity extends AmbientEntity {
     private int interactAmount = 0;
     private int ambientSoundCooldown = 0;
     private int currentSoundIndex = 0;
@@ -58,17 +63,7 @@ public class RiftEntity extends DummyAmbientEntity {
 
     @Override
     public void onPlayerCollision(PlayerEntity player) {
-        if (player.getServer() == null) {
-            super.onPlayerCollision(player);
-            return;
-        }
-        ServerWorld world = player.getServer().getWorld(AITDimensions.TIME_VORTEX_WORLD);
-        if (world == null) {
-            super.onPlayerCollision(player);
-            return;
-        }
-
-        TeleportUtil.teleport(player, world, player.getPos(), player.bodyYaw);
+        TeleportUtil.teleport(player, WorldUtil.getTimeVortex(), player.getPos(), player.bodyYaw);
     }
 
     @Override
@@ -111,10 +106,14 @@ public class RiftEntity extends DummyAmbientEntity {
 
     private void spreadTardisCoral(World world, BlockPos pos) {
         int radius = 4;
-        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, -radius, -radius), pos.add(radius, radius, radius))) {
-            if (RANDOM.nextFloat() < 0.3f) { // 30% chance per block
-                BlockState currentState = world.getBlockState(targetPos);
 
+        Chunk chunk = world.getChunk(pos);
+        for (BlockPos targetPos : BlockPos.iterate(pos.add(-radius, 0, -radius), pos.add(radius, 0, radius))) {
+            if (world.random.nextBetween(0, 10) < 3) { // 30% chance per block
+                targetPos = targetPos.withY(chunk.sampleHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                        targetPos.getX() & 15, targetPos.getZ() & 15));
+
+                BlockState currentState = world.getBlockState(targetPos);
                 BlockState newState = getReplacementBlock(currentState);
                 if (newState != null) {
                     world.setBlockState(targetPos, newState, Block.NOTIFY_ALL);
@@ -201,6 +200,7 @@ public class RiftEntity extends DummyAmbientEntity {
         return false;
     }
 
+    /** Overridden to ensure it spawn mid-air (Needs fixing?) **/
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
@@ -218,5 +218,16 @@ public class RiftEntity extends DummyAmbientEntity {
         this.updatePositionAndAngles(d, e, f, g, h);
         this.setVelocity(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
         this.updatePosition(d, e, f);
+    }
+
+    public static void addSpawn() {
+        BiomeModifications.addSpawn(
+                BiomeSelectors.all(),
+                SpawnGroup.AMBIENT,
+                AITEntityTypes.RIFT_ENTITY,
+                1,
+                1,
+                1
+        );
     }
 }

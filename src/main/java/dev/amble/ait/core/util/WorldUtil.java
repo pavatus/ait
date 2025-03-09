@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.util.ServerLifecycleHooks;
+import dev.amble.lib.util.TeleportUtil;
 import dev.drtheo.scheduler.api.Scheduler;
 import dev.drtheo.scheduler.api.TimeUnit;
 import net.fabricmc.api.EnvType;
@@ -18,7 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
@@ -88,8 +89,8 @@ public class WorldUtil {
         });
 
         ServerEntityWorldChangeEvents.AFTER_ENTITY_CHANGE_WORLD.register((originalEntity, newEntity, origin, destination) -> {
-            if (destination == TIME_VORTEX)
-                scheduleVortexFall(newEntity);
+            if (destination == TIME_VORTEX && newEntity instanceof LivingEntity living)
+                scheduleVortexFall(living);
         });
 
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
@@ -98,12 +99,12 @@ public class WorldUtil {
         });
     }
 
-    private static void scheduleVortexFall(Entity entity) {
+    private static void scheduleVortexFall(LivingEntity entity) {
         int worldIndex = TIME_VORTEX.getRandom().nextInt(worlds.size());
 
         Scheduler.get().runTaskLater(() -> {
             if (entity.getWorld() == TIME_VORTEX)
-                entity.moveToWorld(worlds.get(worldIndex));
+                TeleportUtil.teleport(entity, worlds.get(worldIndex), entity.getPos(), entity.getYaw());
         }, TimeUnit.SECONDS, 5);
     }
 

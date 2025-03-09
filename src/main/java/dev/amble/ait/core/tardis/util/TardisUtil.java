@@ -260,6 +260,8 @@ public class TardisUtil {
             if (entity.getVehicle() instanceof FlightTardisEntity)
                 return;
 
+            ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.FALSE);
+
             if (entity instanceof ServerPlayerEntity player) {
                 WorldUtil.teleportToWorld(player, world, vec,
                         RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
@@ -283,7 +285,6 @@ public class TardisUtil {
                 }
             }
 
-            ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.FALSE);
             Scheduler.get().runTaskLater(() -> ((ExtraPushableEntity) entity).ait$setPushBehaviour(TriState.DEFAULT), TimeUnit.SECONDS, 3);
         });
     }
