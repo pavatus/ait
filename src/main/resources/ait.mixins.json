@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "dev.amble.ait.compat.AITMixinPlugin",
   "mixins": [
+    "EntityMixin",
     "LivingEntityMixin",
     "UseActionMixin",
     "artron.ServerWorldMixin",
