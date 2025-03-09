@@ -35,13 +35,11 @@ public class BOTIDataS2CPacket implements FabricPacket {
 
     private final BlockPos botiPos;
     public Map<BlockPos, BlockState> posStates = new HashMap<>();
+    Map<BlockPos, NbtCompound> blockEntities = new HashMap<>();
 
     public BOTIDataS2CPacket(BlockPos botiPos, RegistryKey<World> key, BlockPos targetPos) {
         this.botiPos = botiPos;
         ServerWorld world = ServerLifecycleHooks.get().getWorld(key);
-        NbtCompound blockEntities = new NbtCompound();
-        Map<BlockState, Integer> stateToIndex = new HashMap<>(32);
-        stateToIndex.put(Blocks.AIR.getDefaultState(), 0);
         try {
             int chunksToRender = BOTIChunkVBO.chunksToRender;
             int r = 16;
@@ -66,12 +64,11 @@ public class BOTIDataS2CPacket implements FabricPacket {
                     for (int y = 0; y < r; y++) {
                         for (int x = 0; x < r; x++) {
                             for (int z = 0; z < r; z++) {
-                                BlockPos localPos = new BlockPos(x, y, z);
+                                BlockPos localPos = new BlockPos(x + (i >> 4), y, z + (d >> 4));
                                 BlockState state = section.getBlockState(x, y, z);
-                                if(state.isAir()) continue;
+                                if(state == null || state.isAir()) continue;
 
-                                if (state != null && !state.isAir() &&
-                                        !stateToIndex.containsKey(state)) {
+                                if (!this.posStates.containsKey(localPos)) {
                                     this.posStates.put(localPos, state);
                                 }
 
@@ -83,7 +80,7 @@ public class BOTIDataS2CPacket implements FabricPacket {
                                 BlockEntity be = chunk.getBlockEntity(worldPos);
                                 if (be != null) {
                                     blockEntities.put(
-                                            localPos.toShortString(), // More efficient key
+                                            localPos,
                                             be.createNbtWithIdentifyingData()
                                     );
                                 }
@@ -103,12 +100,16 @@ public class BOTIDataS2CPacket implements FabricPacket {
     public BOTIDataS2CPacket(PacketByteBuf buf) {
         this.botiPos = buf.readBlockPos();
         this.posStates = buf.readMap(
-                PacketByteBuf::readBlockPos,    // Key reader
-                buffer -> {                     // Value reader
+                PacketByteBuf::readBlockPos,
+                buffer -> {
                     NbtCompound nbt = buffer.readNbt();
                     return BlockState.CODEC.parse(NbtOps.INSTANCE, nbt)
                             .result().orElse(Blocks.AIR.getDefaultState());
                 }
+        );
+        this.blockEntities = buf.readMap(
+                PacketByteBuf::readBlockPos,
+                PacketByteBuf::readNbt
         );
     }
 
@@ -117,12 +118,17 @@ public class BOTIDataS2CPacket implements FabricPacket {
         buf.writeBlockPos(botiPos);
         buf.writeMap(
                 posStates,
-                PacketByteBuf::writeBlockPos,   // Key writer
-                (buffer, state) -> {            // Value writer
+                PacketByteBuf::writeBlockPos,
+                (buffer, state) -> {
                     NbtCompound nbt = (NbtCompound) BlockState.CODEC.encodeStart(NbtOps.INSTANCE, state)
                             .result().orElse(new NbtCompound());
                     buffer.writeNbt(nbt);
                 }
+        );
+        buf.writeMap(
+                blockEntities,
+                PacketByteBuf::writeBlockPos,
+                PacketByteBuf::writeNbt
         );
     }
 
@@ -131,7 +137,6 @@ public class BOTIDataS2CPacket implements FabricPacket {
         return TYPE;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> boolean handle(ClientPlayerEntity source, PacketSender response) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
@@ -146,10 +151,6 @@ public class BOTIDataS2CPacket implements FabricPacket {
             tardis.stats().updateMap(this.posStates);
 
             tardis.stats().updateChunkModel(exteriorBlockEntity);
-//            this.posStates.forEach((pos, state) -> {
-//
-//                MinecraftClient.getInstance().getBlockRenderManager().getModel(state).getQuads(state, Direction.NORTH, MinecraftClient.getInstance().world.random);
-//            });
         }
         return true;
     }

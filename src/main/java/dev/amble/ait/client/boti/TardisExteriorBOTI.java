@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Blocks;
@@ -102,7 +103,7 @@ public class TardisExteriorBOTI extends BOTI {
         GL11.glStencilMask(0x00);
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
-        // https://www.geeksforgeeks.org/adding-labels-to-method-and-functions-in-java/
+        // It's not a loop, it's a label https://www.geeksforgeeks.org/adding-labels-to-method-and-functions-in-java/
         OUTOFBOTI:
         if (AITMod.CONFIG.CLIENT.SHOULD_RENDER_BOTI_INTERIOR) {
             MatrixStack matrices = new MatrixStack();
@@ -138,25 +139,31 @@ public class TardisExteriorBOTI extends BOTI {
 
                 OUTOFBLOCKRENDERER:
                 if (!BOTIChunkVBO.shouldGenerateQuads) {
-                    if (this.lastRenderTick == MinecraftClient.getInstance().getTickDelta() ||
-                            stats.posState == null) {
-                        break OUTOFBLOCKRENDERER;
-                    }
                     if(stats.posState == null) {
                         updateChunkModel(exterior);
+                        break OUTOFBLOCKRENDERER;
+                    }
+                    if (this.lastRenderTick == MinecraftClient.getInstance().getTickDelta()) {
                         break OUTOFBLOCKRENDERER;
                     }
 
                     stats.posState.forEach((pos, state) -> {
 //                        if(!ClientCameraUtil.isInVisibleArea(pos)) return;
+//                        if(!BehindDoor(pos, doorPos, doorDirection)) return; // Make sure blocks behind the door aren't rendered
                         if(state.equals(Blocks.AIR.getDefaultState())) return;
 
                         stack.push();
                         stack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180 + doorDirection.asRotation()));
+                        Matrix4f matrix = stack.peek().getPositionMatrix();
+
+                        // Extract the translation components (x, y, z) from the matrix
+                        float x = matrix.m03(); // Translation in X
+                        float y = matrix.m13(); // Translation in Y
+                        float z = matrix.m23(); // Translation in Z
                         stack.translate(
-                                doorPos.getX() - pos.getX() - 16.5f,
+                                doorPos.getX() - pos.getX(),
                                 doorPos.getY() - pos.getY(),
-                                doorPos.getZ() - pos.getZ() + 0.7f);
+                                doorPos.getZ() - pos.getZ());
                         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180f));
                         MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(
                                 stack.peek(),
@@ -253,5 +260,31 @@ public class TardisExteriorBOTI extends BOTI {
         ClientPlayNetworking.send(new BOTIChunkRequestC2SPacket(exteriorBlockEntity.getPos(), tardis.stats().getTargetWorld(), tardis.stats().targetPos()));
         exteriorBlockEntity.lastRequestTime = currentTime;
 //        }
+    }
+
+    public boolean BehindDoor(BlockPos DoorPos, BlockPos pos, Direction doorFacing) {
+        int x = pos.getX();
+        int z = pos.getZ();
+        int dx = DoorPos.getX();
+        int dz = DoorPos.getZ();
+
+        switch(doorFacing) {
+            case UP, DOWN -> { // If the door is facing Up or Down, something is severely wrong, and we shouldn't even attempt to render the blocks in the first place
+                return false;
+            }
+            case NORTH -> {
+                return z < dz;
+            }
+            case SOUTH -> {
+                return z > dz;
+            }
+            case EAST -> {
+                return x > dx;
+            }
+            case WEST -> {
+                return x < dx;
+            }
+        }
+        return false;
     }
 }

@@ -45,7 +45,6 @@ public class BOTIChunkRequestC2SPacket implements FabricPacket {
         return TYPE;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> boolean handle(ServerPlayerEntity source, PacketSender response) {
         if (source == null) return false;
 
@@ -53,9 +52,6 @@ public class BOTIChunkRequestC2SPacket implements FabricPacket {
 
         if (server == null || server.getWorld(this.targetWorld) == null) return false;
 
-//        ChunkPos chunkPos = new ChunkPos(this.targetPos);
-//        world.getChunkManager().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.FULL, false);
-//        WorldChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
         ServerPlayNetworking.send(source, new BOTIDataS2CPacket(this.botiPos, this.targetWorld, this.targetPos));
         return true;
     }
