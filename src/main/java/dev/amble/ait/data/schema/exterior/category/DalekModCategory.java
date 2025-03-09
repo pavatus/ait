@@ -15,6 +15,7 @@ public class DalekModCategory extends ExteriorCategorySchema {
 
     @Override
     public ExteriorVariantSchema getDefaultVariant() {
-        return ExteriorVariantRegistry.DALEK_MOD_1963;
+        //return ExteriorVariantRegistry.DALEK_MOD_1963;
+        return null;
     }
 }

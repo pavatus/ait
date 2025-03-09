@@ -195,15 +195,15 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
     public static ExteriorVariantSchema STALLION_SOUL;
     public static ExteriorVariantSchema STALLION_STEEL;
     public static ExteriorVariantSchema ADAPTIVE;
-    public static ExteriorVariantSchema DALEK_MOD_1963;
-    public static ExteriorVariantSchema DALEK_MOD_1967;
-    public static ExteriorVariantSchema DALEK_MOD_1970;
-    public static ExteriorVariantSchema DALEK_MOD_1976;
-    public static ExteriorVariantSchema DALEK_MOD_1980;
-    //public static ExteriorVariantSchema JAKE_DEFAULT;
-    public static ExteriorVariantSchema PRESENT_DEFAULT;
-    public static ExteriorVariantSchema PRESENT_GREEN;
-    public static ExteriorVariantSchema PRESENT_BLUE;
+//    public static ExteriorVariantSchema DALEK_MOD_1963;
+//    public static ExteriorVariantSchema DALEK_MOD_1967;
+//    public static ExteriorVariantSchema DALEK_MOD_1970;
+//    public static ExteriorVariantSchema DALEK_MOD_1976;
+//    public static ExteriorVariantSchema DALEK_MOD_1980;
+//    public static ExteriorVariantSchema JAKE_DEFAULT;
+//    public static ExteriorVariantSchema PRESENT_DEFAULT;
+//    public static ExteriorVariantSchema PRESENT_GREEN;
+//    public static ExteriorVariantSchema PRESENT_BLUE;
     public static ExteriorVariantSchema PIPE_DEFAULT;
     public static ExteriorVariantSchema PIPE_RED;
     //public static ExteriorVariantSchema PIPE_YELLOW;
@@ -287,22 +287,22 @@ public class ExteriorVariantRegistry extends UnlockableRegistry<ExteriorVariantS
         STALLION_STEEL = register(new StallionSteelVariant());
 
         // Adaptive
-        ADAPTIVE = register(new AdaptiveVariant());
+//        ADAPTIVE = register(new AdaptiveVariant());
 
         // Dalek Mod
-        DALEK_MOD_1963 = register(new DalekMod1963Variant());
-        DALEK_MOD_1967 = register(new DalekMod1967Variant());
-        DALEK_MOD_1970 = register(new DalekMod1970Variant());
-        DALEK_MOD_1976 = register(new DalekMod1976Variant());
-        DALEK_MOD_1980 = register(new DalekMod1980Variant());
+//        DALEK_MOD_1963 = register(new DalekMod1963Variant());
+//        DALEK_MOD_1967 = register(new DalekMod1967Variant());
+//        DALEK_MOD_1970 = register(new DalekMod1970Variant());
+//        DALEK_MOD_1976 = register(new DalekMod1976Variant());
+//        DALEK_MOD_1980 = register(new DalekMod1980Variant());
 
         // Jake
         //JAKE_DEFAULT = init(new JakeDefaultVariant());
 
         // Present
-        PRESENT_DEFAULT = register(new PresentDefaultVariant());
-        PRESENT_GREEN = register(new PresentGreenVariant());
-        PRESENT_BLUE = register(new PresentBlueVariant());
+//        PRESENT_DEFAULT = register(new PresentDefaultVariant());
+//        PRESENT_GREEN = register(new PresentGreenVariant());
+//        PRESENT_BLUE = register(new PresentBlueVariant());
 
         // Pipe
         PIPE_DEFAULT = register(new PipeDefaultVariant());

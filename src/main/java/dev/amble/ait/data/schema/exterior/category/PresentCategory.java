@@ -21,7 +21,8 @@ public class PresentCategory extends ExteriorCategorySchema {
 
     @Override
     public ExteriorVariantSchema getDefaultVariant() {
-        return ExteriorVariantRegistry.PRESENT_DEFAULT;
+        //return ExteriorVariantRegistry.PRESENT_DEFAULT;
+        return null;
     }
 
 
