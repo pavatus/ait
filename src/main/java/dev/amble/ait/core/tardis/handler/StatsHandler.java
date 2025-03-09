@@ -317,8 +317,9 @@ public class StatsHandler extends KeyedTardisComponent {
     private TravelSoundMap createTravelEffectsCache() {
         TravelSoundMap map = new TravelSoundMap();
 
-        map.put(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.getInstance().getOrFallback(this.dematId.get()));
-        map.put(TravelHandlerBase.State.MAT, TravelSoundRegistry.getInstance().getOrFallback(this.matId.get()));
+        // TODO move to proper registries
+        map.put(TravelHandlerBase.State.DEMAT, TravelSoundRegistry.getInstance().getOrElse(this.dematId.get(), TravelSoundRegistry.DEFAULT_DEMAT));
+        map.put(TravelHandlerBase.State.MAT, TravelSoundRegistry.getInstance().getOrElse(this.matId.get(), TravelSoundRegistry.DEFAULT_MAT));
 
         return map;
     }
