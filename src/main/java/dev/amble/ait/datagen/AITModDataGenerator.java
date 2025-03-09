@@ -7,8 +7,6 @@ import static net.minecraft.data.server.recipe.RecipeProvider.createSlabRecipe;
 import java.util.Calendar;
 import java.util.concurrent.CompletableFuture;
 
-import dev.amble.ait.core.AITEntityTypes;
-import dev.amble.ait.module.gun.core.entity.GunEntityTypes;
 import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
 import dev.amble.lib.datagen.lang.LanguageType;
 import dev.amble.lib.datagen.sound.AmbleSoundProvider;
@@ -27,11 +25,13 @@ import net.minecraft.registry.RegistryWrapper;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlocks;
+import dev.amble.ait.core.AITEntityTypes;
 import dev.amble.ait.core.AITItemGroups;
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.datagen.datagen_providers.*;
 import dev.amble.ait.datagen.datagen_providers.loot.AITBlockLootTables;
 import dev.amble.ait.module.ModuleRegistry;
+import dev.amble.ait.module.gun.core.entity.GunEntityTypes;
 import dev.amble.ait.module.planet.core.PlanetBlocks;
 import dev.amble.ait.module.planet.core.PlanetItems;
 import dev.amble.ait.module.planet.core.world.PlanetConfiguredFeatures;
