@@ -1,6 +1,5 @@
 package dev.amble.ait.core.entities;
 
-import java.util.List;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
@@ -9,30 +8,28 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.mob.AmbientEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.*;
+import net.minecraft.world.chunk.Chunk;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.*;
 import dev.amble.ait.core.item.SonicItem;
+import dev.amble.ait.core.util.StackUtil;
+import dev.amble.ait.core.util.WorldUtil;
 
 public class RiftEntity extends AmbientEntity {
     private int interactAmount = 0;
