@@ -2,8 +2,6 @@ package dev.amble.ait.core.entities;
 
 import java.util.Random;
 
-import dev.amble.ait.core.entities.base.DummyAmbientEntity;
-import dev.amble.ait.core.util.StackUtil;
 import dev.amble.lib.util.TeleportUtil;
 
 import net.minecraft.block.*;
@@ -27,7 +25,9 @@ import net.minecraft.world.*;
 
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.*;
+import dev.amble.ait.core.entities.base.DummyAmbientEntity;
 import dev.amble.ait.core.item.SonicItem;
+import dev.amble.ait.core.util.StackUtil;
 
 public class RiftEntity extends DummyAmbientEntity {
 

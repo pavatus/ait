@@ -1,6 +1,8 @@
 package dev.amble.ait.core.entities.base;
 
 import com.mojang.serialization.Dynamic;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.brain.Brain;
@@ -11,7 +13,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class DummyAmbientEntity extends AmbientEntity {
 
@@ -77,8 +78,7 @@ public class DummyAmbientEntity extends AmbientEntity {
         return false;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.INTENTIONALLY_EMPTY;
     }

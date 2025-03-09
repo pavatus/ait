@@ -21,10 +21,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.SpawnGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
