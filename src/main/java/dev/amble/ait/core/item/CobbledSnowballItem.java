@@ -1,17 +1,7 @@
 package dev.amble.ait.core.item;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
 
-import dev.amble.ait.core.AITEntityTypes;
-import dev.amble.ait.core.entities.CobbledSnowballEntity;
 
 public class CobbledSnowballItem extends Item {
     public CobbledSnowballItem(Settings settings) {

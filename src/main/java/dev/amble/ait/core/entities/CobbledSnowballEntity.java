@@ -24,7 +24,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
-import dev.amble.ait.core.AITEntityTypes;
 
 public class CobbledSnowballEntity extends ThrownItemEntity {
     public CobbledSnowballEntity(EntityType<? extends CobbledSnowballEntity> entityType, World world) {
