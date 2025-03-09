@@ -3,6 +3,7 @@ package dev.amble.ait.core.tardis.util;
 import java.util.*;
 import java.util.function.Predicate;
 
+import dev.amble.ait.core.util.ShapeUtil;
 import dev.amble.lib.data.CachedDirectedGlobalPos;
 import dev.amble.lib.data.DirectedBlockPos;
 import dev.amble.lib.util.TeleportUtil;
@@ -33,7 +34,6 @@ import net.minecraft.world.entity.EntityTrackingSection;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisEvents;
-import dev.amble.ait.core.AITDimensions;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.AITTags;
 import dev.amble.ait.core.blockentities.DoorBlockEntity;
@@ -176,7 +176,6 @@ public class TardisUtil {
         BlockPos pos = directed.getPos();
 
         return switch (directed.getRotation()) {
-            default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() - 0.5f);
             case 1, 2, 3 -> new Vec3d(pos.getX() + 1.1f, pos.getY(), pos.getZ() - 0.5f);
             case 4 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 0.5f);
             case 5, 6, 7 -> new Vec3d(pos.getX() + 1.5f, pos.getY(), pos.getZ() + 1.1f);
@@ -184,6 +183,7 @@ public class TardisUtil {
             case 9, 10, 11 -> new Vec3d(pos.getX(), pos.getY(), pos.getZ() + 1.5f);
             case 12 -> new Vec3d(pos.getX() - 0.5f, pos.getY(), pos.getZ() + 0.5f);
             case 13, 14, 15 -> new Vec3d(pos.getX() - 0.3f, pos.getY(), pos.getZ() - 0.5f);
+            default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() - 0.5f);
         };
     }
 
@@ -191,10 +191,10 @@ public class TardisUtil {
         BlockPos pos = directed.getPos();
 
         return switch (directed.getRotation()) {
-            default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.6f);
             case 4 -> new Vec3d(pos.getX() + 0.4f, pos.getY(), pos.getZ() + 0.5f);
             case 8 -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.4f);
             case 12 -> new Vec3d(pos.getX() + 0.6f, pos.getY(), pos.getZ() + 0.5f);
+            default -> new Vec3d(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.6f);
         };
     }
 
@@ -207,39 +207,37 @@ public class TardisUtil {
     public static void dropOutside(Tardis tardis, Entity entity) {
         TardisEvents.LEAVE_TARDIS.invoker().onLeave(tardis, entity);
 
-        if (!(entity instanceof LivingEntity living)) return;
-
-        if (living.getServer() == null) return;
+        if (!(entity instanceof LivingEntity living))
+            return;
 
         CachedDirectedGlobalPos percentageOfDestination = tardis.travel().getProgress();
         Scheduler scheduler = Scheduler.get();
-        ServerWorld vortexWorld = living.getServer().getWorld(AITDimensions.TIME_VORTEX_WORLD);
 
-        if (vortexWorld == null) {
+        ServerWorld vortexWorld = WorldUtil.getTimeVortex();
+
+        if (vortexWorld == null)
             return;
-        }
 
         TeleportUtil.teleport(living, vortexWorld, new Vec3d(vortexWorld.getRandom().nextBetween(0, 256), 0, vortexWorld.getRandom().nextBetween(0, 256)), living.getBodyYaw());
+
         scheduler.runTaskLater(() -> {
             if (living.getWorld() == vortexWorld) {
                 TeleportUtil.teleport(living, tardis.travel().destination().getWorld(),
                         percentageOfDestination.getPos().toCenterPos(), living.getBodyYaw());
             }
         }, TimeUnit.SECONDS, 4);
-        /*TardisUtil.teleportWithDoorOffset(tardis.travel().destination().getWorld(), entity,
-                percentageOfDestination.toPos());*/
     }
 
-    public static void teleportInside(Tardis tardis, Entity entity) {
+    public static void teleportInside(ServerTardis tardis, Entity entity) {
         TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
-        TardisUtil.teleportWithDoorOffset(tardis.asServer().getInteriorWorld(), entity, tardis.getDesktop().getDoorPos());
+        TardisUtil.teleportWithDoorOffset(tardis.getInteriorWorld(), entity, tardis.getDesktop().getDoorPos());
     }
 
-    public static void teleportToInteriorPosition(Tardis tardis, Entity entity, BlockPos pos) {
+    public static void teleportToInteriorPosition(ServerTardis tardis, Entity entity, BlockPos pos) {
         if (entity instanceof ServerPlayerEntity player) {
             TardisEvents.ENTER_TARDIS.invoker().onEnter(tardis, entity);
 
-            WorldUtil.teleportToWorld(player, tardis.asServer().getInteriorWorld(),
+            WorldUtil.teleportToWorld(player, tardis.getInteriorWorld(),
                     new Vec3d(pos.getX(), pos.getY(), pos.getZ()), entity.getYaw(), player.getPitch());
 
             player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
@@ -248,7 +246,6 @@ public class TardisUtil {
 
     private static void teleportWithDoorOffset(ServerWorld world, Entity entity, DirectedBlockPos directed) {
         BlockPos pos = directed.getPos();
-
         boolean isDoor = world.getBlockEntity(pos) instanceof DoorBlockEntity;
 
         Vec3d vec = isDoor
@@ -256,7 +253,9 @@ public class TardisUtil {
                 : TardisUtil.offsetDoorPosition(directed).add(0, 0.125, 0);
 
         world.getServer().execute(() -> {
-            if (entity.getVehicle() instanceof FlightTardisEntity) return;
+            if (entity.getVehicle() instanceof FlightTardisEntity)
+                return;
+
             if (entity instanceof ServerPlayerEntity player) {
                 WorldUtil.teleportToWorld(player, world, vec,
                         RotationPropertyHelper.toDegrees(directed.getRotation()) + (isDoor ? 0 : 180f),
@@ -279,6 +278,14 @@ public class TardisUtil {
                             entity.getPitch());
                 }
             }
+
+            Scheduler.get().runTaskLater(() -> pushFromEntree(world, entity), TimeUnit.SECONDS, 1);
+        });
+    }
+
+    private static void pushFromEntree(ServerWorld world, Entity entree) {
+        world.getEntitiesByClass(LivingEntity.class, ShapeUtil.cloneBox(entree.getBoundingBox()).expand(2), e -> true).forEach(t -> {
+            t.pushAwayFrom(entree);
         });
     }
 
