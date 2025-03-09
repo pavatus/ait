@@ -248,14 +248,14 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                     .criterion(hasItem(Blocks.IRON_BARS), conditionsFromItem(Blocks.IRON_BARS)));
 
 
-            provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_GOAT_HORN, 1)
+            /*provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, AITItems.IRON_GOAT_HORN, 1)
                     .pattern("III")
                     .pattern("IBI")
                     .pattern("III")
                     .input('I', Items.IRON_INGOT)
                     .input('B', Items.GOAT_HORN)
                     .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
-                    .criterion(hasItem(Items.GOAT_HORN), conditionsFromItem(Items.GOAT_HORN)));
+                    .criterion(hasItem(Items.GOAT_HORN), conditionsFromItem(Items.GOAT_HORN)));*/
 
             provider.addShapedRecipe(ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, PlanetItems.FABRIC, 1)
                     .pattern("SSS")
@@ -591,7 +591,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                 AITMod.id("classic_key_smithing"));
 
         // Horn Crafting
-        provider.addSmithingTransformRecipe(
+        /*provider.addSmithingTransformRecipe(
                 SmithingTransformRecipeJsonBuilder
                         .create(Ingredient.ofItems(AITItems.GOLD_KEY_UPGRADE_SMITHING_TEMPLATE),
                                 Ingredient.ofItems(AITItems.IRON_GOAT_HORN), Ingredient.ofItems(Items.GOLD_NUGGET),
@@ -623,7 +623,7 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
                         .criterion(hasItem(AITItems.NETHERITE_GOAT_HORN), conditionsFromItem(AITItems.NETHERITE_GOAT_HORN))
                         .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
                         .criterion(hasItem(AITItems.CLASSIC_KEY), conditionsFromItem(AITItems.CLASSIC_KEY)),
-                AITMod.id("classic_goat_horn_smithing"));
+                AITMod.id("classic_goat_horn_smithing"));*/
     }
 
     public void generateSoundData(FabricDataGenerator.Pack pack) {
