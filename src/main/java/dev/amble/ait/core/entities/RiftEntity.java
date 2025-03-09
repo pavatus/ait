@@ -252,13 +252,14 @@ public class RiftEntity extends AmbientEntity {
         ChunkPos chunkPos = new ChunkPos(pos);
         boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
                 worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
-        if (/*random.nextInt(2) == 0 && */bl) {
+        if (random.nextInt(5) == 0 && bl) {
             BlockPos newPos = new BlockPos(pos.getX(), worldAccess.getTopY() + 15, pos.getZ());
             return worldAccess.isAir(newPos);
         }
         return false;
     }
 
+    /** Overridden to ensure it spawn mid-air (Needs fixing?) **/
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
@@ -283,7 +284,7 @@ public class RiftEntity extends AmbientEntity {
                 BiomeSelectors.all(),
                 SpawnGroup.AMBIENT,
                 AITEntityTypes.RIFT_ENTITY,
-                4,
+                1,
                 1,
                 1
         );
