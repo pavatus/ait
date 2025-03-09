@@ -11,6 +11,7 @@
     "client.experimental_screen.LevelSummaryMixin",
     "client.rendering.EntityMixin",
     "compat.gravity.EntityTagsMixin",
+    "fix.LivingEntityBrainFixMixin",
     "lookup.EntityTrackingSectionAccessor",
     "lookup.SectionedEntityCacheAccessor",
     "lookup.SimpleEntityLookupAccessor",

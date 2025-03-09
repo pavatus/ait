@@ -16,12 +16,8 @@ import net.minecraft.world.World;
 
 public class DummyAmbientEntity extends AmbientEntity {
 
-    private final boolean hasBrain;
-
-    protected DummyAmbientEntity(EntityType<? extends AmbientEntity> entityType, World world, boolean hasBrain) {
+    protected DummyAmbientEntity(EntityType<? extends AmbientEntity> entityType, World world) {
         super(entityType, world);
-
-        this.hasBrain = hasBrain;
     }
 
     @Override
@@ -99,11 +95,11 @@ public class DummyAmbientEntity extends AmbientEntity {
 
     @Override
     protected Brain<?> deserializeBrain(Dynamic<?> dynamic) {
-        return hasBrain ? super.deserializeBrain(dynamic) : null;
+        return null;
     }
 
     @Override
     public Brain<?> getBrain() {
-        return hasBrain ? super.getBrain() : DummyLivingEntity.BRAIN;
+        return DummyLivingEntity.BRAIN;
     }
 }
