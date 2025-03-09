@@ -156,6 +156,11 @@
         },
         {
           "type": "minecraft:item",
+          "name": "ait:blueprint",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
           "name": "ait:inductor",
           "weight": 5
         },
