@@ -46,6 +46,36 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:redstone",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:comparator",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:detector_block",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:zeiton_shard",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:repeater",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:sculk",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
           "name": "ait:cult_staser_rifle",
           "weight": 1
         },
@@ -58,6 +88,81 @@
           "type": "minecraft:item",
           "name": "ait:handles",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:data_mercurial_link",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:artron_mercurial_link",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:vortex_fluid_link",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:data_fluid_link",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:artron_fluid_link",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:hazandra",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:vortex_mercurial_link",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:hypercube",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:waypoint_cartridge",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:generic_subsystem",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:cable_block",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:condenser",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:manipulator",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:inductor",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "ait:bulb",
+          "weight": 5
         }
       ],
       "rolls": 15
