@@ -30,9 +30,9 @@ public class AITEntityTypes implements EntityContainer {
             .<GallifreyFallsPaintingEntity>create(SpawnGroup.MISC, GallifreyFallsPaintingEntity::new)
             .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build();
 
-    public static final EntityType<CobbledSnowballEntity> COBBLED_SNOWBALL_TYPE = FabricEntityTypeBuilder
-            .<CobbledSnowballEntity>create(SpawnGroup.MISC, CobbledSnowballEntity::new)
-            .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).trackRangeBlocks(4).trackedUpdateRate(10).build();
+//    public static final EntityType<CobbledSnowballEntity> COBBLED_SNOWBALL_TYPE = FabricEntityTypeBuilder
+//            .<CobbledSnowballEntity>create(SpawnGroup.MISC, CobbledSnowballEntity::new)
+//            .dimensions(EntityDimensions.fixed(0.25f, 0.25f)).trackRangeBlocks(4).trackedUpdateRate(10).build();
 
     public static final EntityType<RiftEntity> RIFT_ENTITY = FabricEntityTypeBuilder.Mob.createMob()
             .spawnGroup(SpawnGroup.AMBIENT).entityFactory(RiftEntity::new)

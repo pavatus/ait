@@ -31,9 +31,9 @@ public class CobbledSnowballEntity extends ThrownItemEntity {
         super(entityType, world);
     }
 
-    public CobbledSnowballEntity(LivingEntity livingEntity, World world) {
-        super(AITEntityTypes.COBBLED_SNOWBALL_TYPE, livingEntity, world);
-    }
+//    public CobbledSnowballEntity(LivingEntity livingEntity, World world) {
+//        super(AITEntityTypes.COBBLED_SNOWBALL_TYPE, livingEntity, world);
+//    }
 
     @Override
     protected Item getDefaultItem() {

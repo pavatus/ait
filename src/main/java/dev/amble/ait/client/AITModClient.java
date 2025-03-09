@@ -440,9 +440,9 @@ public class AITModClient implements ClientModInitializer {
         EntityRendererRegistry.register(AITEntityTypes.FALLING_TARDIS_TYPE, FallingTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.FLIGHT_TARDIS_TYPE, FlightTardisRenderer::new);
         EntityRendererRegistry.register(AITEntityTypes.GALLIFREY_FALLS_PAINTING_TYPE, GallifreyFallsPaintingEntityRenderer::new);
-        if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
-            EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
-        }
+//        if (isUnlockedOnThisDay(Calendar.DECEMBER, 26)) {
+//            EntityRendererRegistry.register(AITEntityTypes.COBBLED_SNOWBALL_TYPE, FlyingItemEntityRenderer::new);
+//        }
         EntityRendererRegistry.register(AITEntityTypes.RIFT_ENTITY, RiftEntityRenderer::new);
     }
 
