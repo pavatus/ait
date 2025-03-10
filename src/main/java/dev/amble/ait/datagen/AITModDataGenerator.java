@@ -37,8 +37,7 @@ import dev.amble.ait.module.planet.core.PlanetItems;
 import dev.amble.ait.module.planet.core.world.PlanetConfiguredFeatures;
 import dev.amble.ait.module.planet.core.world.PlanetPlacedFeatures;
 
-public class
-AITModDataGenerator implements DataGeneratorEntrypoint {
+public class AITModDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
@@ -1010,7 +1009,8 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
         provider.addTranslation("message.ait.enter_landing_code", "Enter Landing Code...");
         provider.addTranslation("message.ait.date_created", "Date Created:");
-        provider.addTranslation("message.ait.unlocked", "Exterior Shell '%s' unlocked!");
+        provider.addTranslation("message.ait.unlocked", "'%s' unlocked!");
+        provider.addTranslation("message.ait.unlocked_exterior", "Exterior Shell '%s' unlocked!");
         provider.addTranslation("message.ait.unlocked_sonic", "Sonic Screwdriver Casing '%s' unlocked!");
         provider.addTranslation("message.ait.unlocked_console", "Console Interface '%s' unlocked!");
         provider.addTranslation("message.ait.unlocked_interior", "Desktop Theme '%s' unlocked!");

@@ -23,6 +23,7 @@ import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
+import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 import dev.amble.ait.data.schema.sonic.SonicSchema;
 import dev.amble.ait.registry.impl.DesktopRegistry;
 import dev.amble.ait.registry.impl.SonicRegistry;
@@ -129,6 +130,8 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
             unlockedMessage = Text.translatable("message.ait.unlocked_console", nameText).formatted(Formatting.WHITE);
         } else if (nameable instanceof TardisDesktopSchema) {
             unlockedMessage = Text.translatable("message.ait.unlocked_interior", nameText).formatted(Formatting.WHITE);
+        } else if (nameable instanceof ExteriorVariantSchema) {
+            unlockedMessage = Text.translatable("message.ait.unlocked_exterior", nameText).formatted(Formatting.WHITE);
         } else {
             unlockedMessage = Text.translatable("message.ait.unlocked", nameText).formatted(Formatting.WHITE);
         }
