@@ -24,7 +24,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -59,11 +58,9 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> ON_DELAY = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<String> CONTROL_ID = DataTracker.registerData(ConsoleControlEntity.class, TrackedDataHandlerRegistry.STRING);
 
     private BlockPos consoleBlockPos;
-    public Control control;
-    public Identifier controlName;
+    private Control control;
 
     public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world, false);
@@ -111,7 +108,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.dataTracker.startTracking(SEQUENCE_LENGTH, 0);
         this.dataTracker.startTracking(WAS_SEQUENCED, false);
         this.dataTracker.startTracking(ON_DELAY, false);
-        this.dataTracker.startTracking(CONTROL_ID, "");
     }
 
     @Override
@@ -129,7 +125,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         nbt.putBoolean("partOfSequence", this.isPartOfSequence());
         nbt.putInt("sequenceColor", this.getSequenceIndex());
         nbt.putBoolean("wasSequenced", this.wasSequenced());
-        nbt.putString("controlId", this.getControlId());
     }
 
     @Override
@@ -158,9 +153,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
         if (nbt.contains("wasSequenced"))
             this.setWasSequenced(nbt.getBoolean("wasSequenced"));
-
-        if (nbt.contains("controlId"))
-            this.setControlId(nbt.getString("controlId"));
     }
 
     @Override
@@ -206,11 +198,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     }
 
     @Override
-    public Text getName() {
-        return Text.translatable(AITMod.id(this.getControlId()).toTranslationKey("control"));
-    }
-
-    @Override
     public EntityDimensions getDimensions(EntityPose pose) {
         if (this.getDataTracker().containsKey(WIDTH) && this.getDataTracker().containsKey(HEIGHT))
             return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
@@ -246,14 +233,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     public void setControlHeight(float height) {
         this.dataTracker.set(HEIGHT, height);
-    }
-
-    public void setControlId(String string) {
-        this.dataTracker.set(CONTROL_ID, string);
-    }
-
-    public String getControlId() {
-        return this.dataTracker.get(CONTROL_ID);
     }
 
     public Control getControl() {
@@ -359,7 +338,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     public void setControlData(ConsoleTypeSchema consoleType, ControlTypes type, BlockPos consoleBlockPosition) {
         this.consoleBlockPos = consoleBlockPosition;
         this.control = type.getControl();
-        this.setControlId(this.control.getId().getPath().toString());
+
+        super.setCustomName(Text.translatable(this.control.getId().toTranslationKey("control")));
 
         if (consoleType != null) {
             this.setControlWidth(type.getScale().width);
@@ -399,5 +379,5 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     }
 
     @Override
-    public void setCustomName(@Nullable Text name) {}
+    public void setCustomName(@Nullable Text name) { }
 }

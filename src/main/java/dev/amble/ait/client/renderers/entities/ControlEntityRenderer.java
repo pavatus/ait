@@ -57,7 +57,10 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (d > 4096.0)
             return;
 
-        Text name = entity.getName();
+        Text name = entity.getCustomName();
+
+        if (name == null)
+            return;
 
         TextRenderer textRenderer = this.getTextRenderer();
         float h = (float) -textRenderer.getWidth(name) / 2;
@@ -92,9 +95,8 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
             return;
 
         boolean sonicInConsole = isScanningSonicInConsole(tardis);
-        PlayerEntity player = MinecraftClient.getInstance().player;
 
-        if (!sonicInConsole || !entity.isPartOfSequence()/* || tardis.loyalty().get(player).isOf(Loyalty.Type.PILOT)*/)
+        if (!sonicInConsole || !entity.isPartOfSequence())
             return;
 
         matrices.push();
