@@ -10,6 +10,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.drinks.DrinkRegistry;
@@ -21,16 +22,12 @@ public class RefreshmentControl extends Control {
     private int currentIndex = 0;
 
     public RefreshmentControl() {
-        super("refreshment_control");
+        super(AITMod.id("refreshment_control"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-        if (world.isClient()) {
-            return false;
-        }
-
-        currentIndex = (currentIndex + 1) % DrinkRegistry.getInstance().toList().size();
+        currentIndex = (currentIndex + 1) % DrinkRegistry.getInstance().size();
         ItemStack selectedItem = DrinkUtil.setDrink(new ItemStack(AITItems.MUG), DrinkRegistry.getInstance().toList().get(currentIndex));
 
         tardis.extra().setRefreshmentItem(selectedItem);

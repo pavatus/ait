@@ -14,6 +14,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.tardis.Tardis;
@@ -26,11 +27,11 @@ public class EngineOverloadControl extends Control {
     private static final String[] SPINNER = {"/", "-", "\\", "|"};
 
     public EngineOverloadControl() {
-        super("engine_overload");
+        super(AITMod.id("engine_overload"));
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         if (tardis.fuel().getCurrentFuel() < 25000) {
             player.sendMessage(Text.literal("§cERROR, TARDIS REQUIRES AT LEAST 25K ARTRON TO EXECUTE THIS ACTION."), true);
             world.playSound(null, player.getBlockPos(), AITSounds.CLOISTER, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -93,6 +94,8 @@ public class EngineOverloadControl extends Control {
             int delay = i + 1;
             Scheduler.get().runTaskLater(() -> {
                 String frame = SPINNER[delay % SPINNER.length];
+
+                // FIXME: use translations
                 player.sendMessage(Text.literal("§6DUMPING ARTRON " + frame), true);
             }, TimeUnit.SECONDS, delay);
         }

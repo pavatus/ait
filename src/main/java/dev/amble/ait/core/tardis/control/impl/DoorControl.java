@@ -6,6 +6,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
@@ -17,15 +18,12 @@ public class DoorControl extends Control {
     private SoundEvent soundEvent = SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
 
     public DoorControl() {
-        super("door_control");
+        super(AITMod.id("door_control"));
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+        super.runServer(tardis, player, world, console, leftClick);
 
         boolean isRenaissance = false;
         if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {

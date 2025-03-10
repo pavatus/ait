@@ -5,6 +5,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
@@ -20,15 +21,12 @@ public class ShieldsControl extends Control {
     private SoundEvent soundEvent = AITSounds.SHIELDS;
 
     public ShieldsControl() {
-        super("shields");
+        super(AITMod.id("shields"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+        super.runServer(tardis, player, world, console, leftClick);
 
         boolean isRenaissance = false;
         boolean isCoral = false;

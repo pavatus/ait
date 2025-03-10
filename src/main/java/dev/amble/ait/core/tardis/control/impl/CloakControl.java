@@ -7,6 +7,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.engine.SubSystem;
@@ -18,21 +19,14 @@ public class CloakControl extends Control {
 
     public CloakControl() {
         // ⬚ ?
-        super("protocol_3");
+        super(AITMod.id("protocol_3"));
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-
-            world.playSound(null, player.getBlockPos(), AITSounds.PROTOCOL_3, SoundCategory.BLOCKS,
-                    1.0F, 1.0F);
-            return false;
-        }
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+        super.runServer(tardis, player, world, console, leftClick);
 
         CloakHandler cloak = tardis.handler(TardisComponent.Id.CLOAK);
-
         cloak.cloaked().set(!cloak.cloaked().get());
 
         if (cloak.cloaked().get()) {

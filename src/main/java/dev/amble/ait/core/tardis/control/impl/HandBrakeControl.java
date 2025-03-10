@@ -5,6 +5,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.engine.SubSystem;
@@ -17,22 +18,21 @@ import dev.amble.ait.data.schema.console.variant.renaissance.*;
 
 public class HandBrakeControl extends Control {
 
-    public HandBrakeControl() {
-        super("handbrake");
-    }
-
     private SoundEvent soundEvent = AITSounds.HANDBRAKE_UP;
 
-    @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+    public HandBrakeControl() {
+        super(AITMod.id("handbrake"));
+    }
 
-        if (tardis.isInDanger()) return false;
+    @Override
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+        super.runServer(tardis, player, world, console, leftClick);
+
+        if (tardis.isInDanger())
+            return false;
 
         EngineSystem.Phaser phaser = tardis.subsystems().engine().phaser();
+
         if (phaser.isPhasing()) {
             phaser.cancel();
             return true;

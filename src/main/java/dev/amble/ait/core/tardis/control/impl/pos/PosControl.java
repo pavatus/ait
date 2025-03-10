@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
@@ -15,22 +16,15 @@ public abstract class PosControl extends Control {
 
     private final PosType type;
 
-    public PosControl(PosType type, String id) {
-        super(id);
-        this.type = type;
-    }
-
     public PosControl(PosType type) {
-        this(type, type.asString());
+        super(AITMod.id(type.asString()));
+        this.type = type;
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
             boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+        super.runServer(tardis, player, world, console, leftClick);
 
         TravelHandler travel = tardis.travel();
         CachedDirectedGlobalPos destination = travel.destination();

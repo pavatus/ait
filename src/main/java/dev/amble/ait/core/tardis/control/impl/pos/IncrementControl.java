@@ -6,6 +6,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
@@ -17,21 +18,17 @@ public class IncrementControl extends Control {
     private SoundEvent soundEvent = AITSounds.CRANK;
 
     public IncrementControl() {
-        super("increment");
+        super(AITMod.id("increment"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+        super.runServer(tardis, player, world, console, leftClick);
 
         boolean isCoral = false;
 
-        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity)
             isCoral = isCoralVariant(consoleBlockEntity);
-        }
 
         this.soundEvent = isCoral ? AITSounds.CORAL_INCREMENT_ALT : AITSounds.CRANK;
 

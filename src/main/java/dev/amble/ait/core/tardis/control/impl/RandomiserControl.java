@@ -8,6 +8,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.control.Control;
@@ -19,7 +20,7 @@ import dev.amble.ait.core.tardis.util.AsyncLocatorUtil;
 public class RandomiserControl extends Control {
 
     public RandomiserControl() {
-        super("randomiser");
+        super(AITMod.id("randomiser"));
     }
 
     /**
@@ -27,13 +28,8 @@ public class RandomiserControl extends Control {
      * {@link AsyncLocatorUtil}
      */
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
         TravelHandler travel = tardis.travel();
-
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
 
         TravelUtil.randomPos(tardis, 10, IncrementManager.increment(tardis), cached -> {
             tardis.travel().destination(cached);

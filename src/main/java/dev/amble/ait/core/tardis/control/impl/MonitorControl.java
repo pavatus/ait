@@ -24,7 +24,7 @@ public class MonitorControl extends Control {
     private SoundEvent soundEvent = AITSounds.MONITOR;
 
     public MonitorControl() {
-        super("monitor");
+        super(AITMod.id("monitor"));
     }
 
     @Override
@@ -35,9 +35,8 @@ public class MonitorControl extends Control {
         if (!player.isSneaking()) {
             boolean isCoral = false;
 
-            if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
-            isCoral = isCoralVariant(consoleBlockEntity);
-            }
+            if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity)
+                isCoral = isCoralVariant(consoleBlockEntity);
 
             this.soundEvent = isCoral ? AITSounds.CORAL_MONITOR_ALT : AITSounds.MONITOR;
 
@@ -49,13 +48,13 @@ public class MonitorControl extends Control {
             }
 
             AITMod.openScreen(player, 0, tardis.getUuid(), console);
-            return true;
         } else {
             DecimalFormat df = new DecimalFormat("#.##");
             String formattedNumber = df.format(tardis.getFuel());
             player.sendMessage(Text.of("X: " + abpdPos.getX() + " Y: " + abpdPos.getY() + " Z: " + abpdPos.getZ() + " Dim: " + WorldUtil.worldText(abpd.getDimension()).getString() + " Fuel: " + formattedNumber + "/50000"), true);
-            return true;
         }
+
+        return true;
     }
 
     @Override

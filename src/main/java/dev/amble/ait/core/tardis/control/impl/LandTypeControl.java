@@ -6,6 +6,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
@@ -19,15 +20,12 @@ public class LandTypeControl extends Control {
     private SoundEvent soundEvent = AITSounds.LAND_TYPE;
 
     public LandTypeControl() {
-        super("land_type");
+        super(AITMod.id("land_type"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+        super.runServer(tardis, player, world, console, leftClick);
 
         if (leftClick) {
             tardis.travel().horizontalSearch().flatMap(value -> {
