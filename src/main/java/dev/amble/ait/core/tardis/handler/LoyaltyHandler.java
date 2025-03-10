@@ -124,22 +124,16 @@ public class LoyaltyHandler extends TardisComponent implements TardisTickable {
 
         Text unlockedMessage;
         if (nameable instanceof SonicSchema) {
-            unlockedMessage = Text.translatable("message.ait.unlocked_sonic").formatted(Formatting.WHITE);
+            unlockedMessage = Text.translatable("message.ait.unlocked_sonic", nameText).formatted(Formatting.WHITE);
         } else if (nameable instanceof ConsoleVariantSchema) {
-            unlockedMessage = Text.translatable("message.ait.unlocked_console").formatted(Formatting.WHITE);
+            unlockedMessage = Text.translatable("message.ait.unlocked_console", nameText).formatted(Formatting.WHITE);
         } else if (nameable instanceof TardisDesktopSchema) {
-            unlockedMessage = Text.translatable("message.ait.unlocked_interior").formatted(Formatting.WHITE);
+            unlockedMessage = Text.translatable("message.ait.unlocked_interior", nameText).formatted(Formatting.WHITE);
         } else {
-            unlockedMessage = Text.translatable("message.ait.unlocked").formatted(Formatting.WHITE);
+            unlockedMessage = Text.translatable("message.ait.unlocked", nameText).formatted(Formatting.WHITE);
         }
 
-        // Create the final message
-        Text finalMessage = Text.empty()
-                .append(unlockedMessage)
-                .append(nameText)
-                .append(Text.literal("!").formatted(Formatting.WHITE));
-
-        player.sendMessage(finalMessage, false);
+        player.sendMessage(unlockedMessage, false);
     }
 
 

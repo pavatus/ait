@@ -982,12 +982,12 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("message.ait.landing_code", "Landing Code...");
         provider.addTranslation("message.ait.enter_landing_code", "Enter Landing Code...");
         provider.addTranslation("message.ait.date_created", "Date Created:");
-        provider.addTranslation("message.ait.unlocked", "Congratulations! You unlocked a TARDIS Exterior Shell: ");
-        provider.addTranslation("message.ait.unlocked_sonic", "Congratulations! You unlocked a Sonic Screwdriver Casing Option: ");
-        provider.addTranslation("message.ait.unlocked_console", "Congratulations! You unlocked a TARDIS Console Interface: ");
-        provider.addTranslation("message.ait.unlocked_interior", "Congratulations! You unlocked a TARDIS Desktop Option: ");
-        provider.addTranslation("message.ait.unlocked_all", "Unlocked all: ");
-        provider.addTranslation("message.ait.all_types", "TARDIS Consoles, TARDIS Exteriors & Sonic Casings");
+        provider.addTranslation("message.ait.unlocked", "Exterior Shell '%s' unlocked!");
+        provider.addTranslation("message.ait.unlocked_sonic", "Sonic Screwdriver Casing '%s' unlocked!");
+        provider.addTranslation("message.ait.unlocked_console", "Console Interface '%s' unlocked!");
+        provider.addTranslation("message.ait.unlocked_interior", "Desktop Theme '%s' unlocked!");
+        provider.addTranslation("message.ait.unlocked_all", "Unlocked all %s");
+        provider.addTranslation("message.ait.all_types", "Consoles, Exteriors, Desktops & Sonic Casings");
         provider.addTranslation("screen.ait.sonic_casing", "Sonic Casing");
         provider.addTranslation("screen.ait.current_au", "Current AU");
         provider.addTranslation("screen.ait.linked_tardis", "Linked TARDIS");
