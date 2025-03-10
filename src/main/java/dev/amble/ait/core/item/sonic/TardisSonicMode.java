@@ -67,7 +67,7 @@ public class TardisSonicMode extends SonicMode {
             tardis.travel().handbrake(false);
             tardis.travel().dematerialize();
 
-            player.sendMessage(Text.of("Tardis sent to flight"), true); // todo translatable
+            player.sendMessage(Text.translatable("sonic.ait.mode.tardis.flight"), true);
 
             return true;
         }
@@ -76,7 +76,7 @@ public class TardisSonicMode extends SonicMode {
         tardis.travel().handbrake(true);
         tardis.fuel().refueling().set(true);
 
-        player.sendMessage(Text.of("Tardis refueling"), true); // todo translatable
+        player.sendMessage(Text.translatable("sonic.ait.mode.tardis.refuel"), true);
 
         return true;
     }
@@ -99,7 +99,7 @@ public class TardisSonicMode extends SonicMode {
         tardis.travel().dematerialize();
 
         // inform player
-        player.sendMessage(Text.of("Tardis summoned to your location"), true); // todo translatable
+        player.sendMessage(Text.translatable("sonic.ait.mode.tardis.location_summon"), true);
 
         return true;
     }
