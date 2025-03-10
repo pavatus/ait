@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import dev.amble.ait.api.link.v2.TardisRef;
@@ -34,7 +35,7 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         super.writeNbt(nbt);
 
         if (this.getControl() != null)
-            nbt.putString(ControlBlockItem.CONTROL_ID_KEY, this.getControl().getId());
+            nbt.putString(ControlBlockItem.CONTROL_ID_KEY, this.getControl().getId().toString());
     }
 
     @Override
@@ -42,7 +43,7 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         super.readNbt(nbt);
 
         if (nbt.contains(ControlBlockItem.CONTROL_ID_KEY))
-            this.setControl(nbt.getString(ControlBlockItem.CONTROL_ID_KEY));
+            this.setControlId(new Identifier(nbt.getString(ControlBlockItem.CONTROL_ID_KEY)));
     }
 
     /**
@@ -54,7 +55,7 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
         return this.control;
     }
 
-    public void setControl(String id) {
+    public void setControlId(Identifier id) {
         Optional<Control> found = ControlRegistry.fromId(id);
 
         if (found.isEmpty())
@@ -82,8 +83,9 @@ public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
             this.createDelay(this.control.getDelayLength());
 
         this.getWorld().playSound(null, pos, this.control.getSound(), SoundCategory.BLOCKS, 0.7f, 1f);
-        return this.control.runServer(tardis, user, user.getServerWorld(), this.pos, isMine);
+        return this.control.handleRun(tardis, user, user.getServerWorld(), this.pos, isMine);
     }
+
     public boolean run(ServerPlayerEntity user, RedstoneControlBlock.Mode mode) {
         boolean isMine = mode == RedstoneControlBlock.Mode.PUNCH;
         return this.run(user, isMine);

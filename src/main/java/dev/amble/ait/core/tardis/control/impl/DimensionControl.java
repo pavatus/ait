@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
 import dev.amble.ait.core.lock.LockedDimensionRegistry;
@@ -28,19 +29,15 @@ public class DimensionControl extends Control {
     private SoundEvent soundEvent = AITSounds.DIMENSION;
 
     public DimensionControl() {
-        super("dimension");
+        super(AITMod.id("dimension"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+        super.runServer(tardis, player, world, console, leftClick);
 
         TravelHandler travel = tardis.travel();
         CachedDirectedGlobalPos dest = travel.destination();
-
 
         if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
             if (isRenaissanceVariant(consoleBlockEntity)) {

@@ -16,6 +16,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.engine.SubSystem;
 import dev.amble.ait.core.tardis.Tardis;
@@ -29,15 +30,12 @@ public class ElectricalDischargeControl extends Control {
     private static final int TOTAL_DURATION = 80;
 
     public ElectricalDischargeControl() {
-        super("electrical_discharge");
+        super(AITMod.id("electrical_discharge"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+        super.runServer(tardis, player, world, console, leftClick);
 
         if (tardis.fuel().getCurrentFuel() < ARTRON_COST) {
             player.sendMessage(Text.literal("ERROR: Insufficient Artron Energy! Required: " + ARTRON_COST + " AU").formatted(Formatting.RED), true);

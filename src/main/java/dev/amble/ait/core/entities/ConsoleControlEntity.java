@@ -21,8 +21,6 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -31,7 +29,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import dev.amble.ait.AITMod;
-import dev.amble.ait.api.link.v2.TardisRef;
 import dev.amble.ait.core.AITEntityTypes;
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
@@ -45,8 +42,6 @@ import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
 
 public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
-    private static final TrackedData<String> IDENTITY = DataTracker.registerData(ConsoleControlEntity.class,
-            TrackedDataHandlerRegistry.STRING);
     private static final TrackedData<Float> WIDTH = DataTracker.registerData(ConsoleControlEntity.class,
             TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Float> HEIGHT = DataTracker.registerData(ConsoleControlEntity.class,
@@ -87,7 +82,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public void remove(RemovalReason reason) {
-        AITMod.LOGGER.debug("Control entity discarded as {}", reason);
         this.setRemoved(reason);
     }
 
@@ -106,7 +100,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     public void initDataTracker() {
         super.initDataTracker();
 
-        this.dataTracker.startTracking(IDENTITY, "");
         this.dataTracker.startTracking(WIDTH, 0.125f);
         this.dataTracker.startTracking(HEIGHT, 0.125f);
         this.dataTracker.startTracking(OFFSET, new Vector3f(0));
@@ -119,15 +112,11 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        TardisRef ref = this.asRef();
-
-        if (ref != null && ref.getId() != null)
-            nbt.putUuid("tardis", ref.getId());
+        super.writeCustomDataToNbt(nbt);
 
         if (consoleBlockPos != null)
             nbt.put("console", NbtHelper.fromBlockPos(this.consoleBlockPos));
 
-        nbt.putString("identity", this.getIdentity());
         nbt.putFloat("width", this.getControlWidth());
         nbt.putFloat("height", this.getControlHeight());
         nbt.putFloat("offsetX", this.getOffset().x());
@@ -146,9 +135,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
         if (console != null)
             this.consoleBlockPos = NbtHelper.toBlockPos(console);
-
-        if (nbt.contains("identity"))
-            this.setIdentity(nbt.getString("identity"));
 
         if (nbt.contains("width") && nbt.contains("height")) {
             this.setControlWidth(nbt.getFloat("width"));
@@ -196,11 +182,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-
-        if (source.getAttacker() instanceof TntEntity tnt) {
-            return false;
-        }
-
         if (source.getAttacker() instanceof PlayerEntity player) {
             if (player.getOffHandStack().getItem() == Items.COMMAND_BLOCK) {
                 controlEditorHandler(player);
@@ -208,7 +189,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
                 this.run((PlayerEntity) source.getAttacker(), source.getAttacker().getWorld(), true);
         }
 
-        return super.damage(source, amount);
+        return false;
     }
 
     @Override
@@ -219,9 +200,9 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public Text getName() {
         if (this.control != null)
-            return Text.translatable(this.control.getId());
-        else
-            return super.getName();
+            return Text.translatable(this.control.getId().toTranslationKey("control"));
+
+        return super.getName();
     }
 
     @Override
@@ -230,11 +211,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             return EntityDimensions.changing(this.getControlWidth(), this.getControlHeight());
 
         return super.getDimensions(pose);
-    }
-
-    @Nullable @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.INTENTIONALLY_EMPTY;
     }
 
     @Override
@@ -249,14 +225,6 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     @Override
     public boolean shouldRenderName() {
         return true;
-    }
-
-    public String getIdentity() {
-        return this.dataTracker.get(IDENTITY);
-    }
-
-    public void setIdentity(String string) {
-        this.dataTracker.set(IDENTITY, string);
     }
 
     public float getControlWidth() {
@@ -366,8 +334,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             this.getWorld().playSound(null, this.getBlockPos(), this.control.getSound(), SoundCategory.BLOCKS, 0.7f,
                     1f);
 
-        return this.control.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos,
-                leftClick); // i dont gotta check these cus i know its server
+        return this.control.handleRun(tardis, (ServerPlayerEntity) player, (ServerWorld) world, this.consoleBlockPos, leftClick);
     }
 
     public void setScaleAndCalculate(float width, float height) {
@@ -381,10 +348,8 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
         this.control = type.getControl();
 
         if (consoleType != null) {
-            this.setIdentity(this.control.getClass().getSimpleName());
             this.setControlWidth(type.getScale().width);
             this.setControlHeight(type.getScale().height);
-            this.setCustomName(Text.translatable(type.getControl().id));
         }
     }
 
@@ -420,12 +385,5 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
     }
 
     @Override
-    public void setCustomName(@Nullable Text name) {
-        if (name == null) return;
-        if (this.getControl() == null) return;
-        Text text = Text.translatable(this.control.id);
-        if (name.equals(text)) {
-            super.setCustomName(name);
-        }
-    }
+    public void setCustomName(@Nullable Text name) { }
 }

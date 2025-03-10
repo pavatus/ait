@@ -3,8 +3,6 @@ package dev.amble.ait.core.entities;
 import java.util.Random;
 
 import dev.amble.lib.util.TeleportUtil;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
@@ -212,16 +210,5 @@ public class RiftEntity extends AmbientEntity implements ISpaceImmune {
         this.updatePositionAndAngles(d, e, f, g, h);
         this.setVelocity(packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ());
         this.updatePosition(d, e, f);
-    }
-
-    public static void addSpawn() {
-        BiomeModifications.addSpawn(
-                BiomeSelectors.all(),
-                SpawnGroup.AMBIENT,
-                AITEntityTypes.RIFT_ENTITY,
-                1,
-                1,
-                1
-        );
     }
 }

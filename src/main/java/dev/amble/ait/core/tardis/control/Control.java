@@ -5,6 +5,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import dev.amble.ait.AITMod;
@@ -16,27 +17,37 @@ import dev.amble.ait.core.util.WorldUtil;
 
 public class Control {
 
-    public String id; // a name to represent the control
+    private final Identifier id;
 
-    public Control(String id) {
-        this.setId(id);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    public Control(Identifier id) {
         this.id = id;
     }
 
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
+    public Identifier getId() {
+        return id;
+    }
+
+    protected boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
+                             boolean leftClick) throws ControlSequencedException {
+        if (this.shouldBeAddedToSequence(tardis)) {
+            this.addToControlSequence(tardis, player, console);
+            throw ControlSequencedException.INSTANCE;
+        }
+
         return false;
     }
 
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
+    public boolean handleRun(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
                              boolean leftClick) {
-        return runServer(tardis, player, world, console);
+        try {
+            return this.runServer(tardis, (ServerPlayerEntity) player, (ServerWorld) world, console, leftClick);
+        } catch (Control.ControlSequencedException e) {
+            return false;
+        }
+    }
+
+    protected boolean shouldBeAddedToSequence(Tardis tardis) {
+        return tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this);
     }
 
     public void addToControlSequence(Tardis tardis, ServerPlayerEntity player, BlockPos pos) {
@@ -57,6 +68,7 @@ public class Control {
     public boolean requiresPower() {
         return true;
     }
+
     protected SubSystem.IdLike requiredSubSystem() {
         return SubSystem.Id.ENGINE;
     }
@@ -87,7 +99,7 @@ public class Control {
     }
 
     public boolean canRun(Tardis tardis, ServerPlayerEntity user) {
-        if ((this.requiresPower() && !tardis.fuel().hasPower()))
+        if (this.requiresPower() && !tardis.fuel().hasPower())
             return false;
 
         boolean security = tardis.stats().security().get();
@@ -95,15 +107,15 @@ public class Control {
         if (!this.ignoresSecurity() && security)
             return SecurityControl.hasMatchingKey(user, tardis);
 
-        /*if (tardis.flight().isFlying())
-            return false;*/
-
         SubSystem.IdLike dependent = this.requiredSubSystem();
+
         if (dependent != null) {
-            boolean bool = tardis.subsystems().get(dependent).isEnabled();
-            if (!bool)
+            boolean enabled = tardis.subsystems().get(dependent).isEnabled();
+
+            if (!enabled)
                 user.sendMessage(Text.translatable("warning.ait.needs_subsystem", WorldUtil.fakeTranslate(dependent.toString())));
-            return bool;
+
+            return enabled;
         }
 
         return true;
@@ -124,5 +136,21 @@ public class Control {
     @Override
     public int hashCode() {
         return this.id.hashCode();
+    }
+
+    public static class ControlSequencedException extends RuntimeException {
+        /**
+         * The singleton instance, to reduce object allocations.
+         */
+        public static final ControlSequencedException INSTANCE = new ControlSequencedException();
+
+        private ControlSequencedException() {
+            this.setStackTrace(new StackTraceElement[0]);
+        }
+
+        public synchronized Throwable fillInStackTrace() {
+            this.setStackTrace(new StackTraceElement[0]);
+            return this;
+        }
     }
 }

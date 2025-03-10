@@ -19,9 +19,12 @@ public abstract class LinkableDummyLivingEntity extends DummyLivingEntity implem
             .register(LinkableDummyLivingEntity.class);
 
     private TardisRef tardis;
+    private final boolean writeNbt;
 
-    public LinkableDummyLivingEntity(EntityType<? extends LivingEntity> type, World world, boolean hasBrain) {
+    public LinkableDummyLivingEntity(EntityType<? extends LivingEntity> type, World world, boolean writeNbt) {
         super(type, world);
+
+        this.writeNbt = writeNbt;
     }
 
     @Override
@@ -63,13 +66,17 @@ public abstract class LinkableDummyLivingEntity extends DummyLivingEntity implem
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+        if (this.writeNbt)
+            super.readCustomDataFromNbt(nbt);
+
         AbstractLinkableEntity.super.readCustomDataFromNbt(nbt);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+        if (this.writeNbt)
+            super.writeCustomDataToNbt(nbt);
+
         AbstractLinkableEntity.super.writeCustomDataToNbt(nbt);
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.blockentities.ConsoleBlockEntity;
@@ -20,20 +21,17 @@ public class AntiGravsControl extends Control {
     private SoundEvent soundEvent = AITSounds.ANTI_GRAVS;
 
     public AntiGravsControl() {
-        super("antigravs");
+        super(AITMod.id("antigravs"));
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+        super.runServer(tardis, player, world, console, leftClick);
 
         boolean isRenaissance = false;
-        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity) {
+
+        if (world.getBlockEntity(console) instanceof ConsoleBlockEntity consoleBlockEntity)
             isRenaissance = isRenaissanceVariant(consoleBlockEntity);
-        }
 
         this.soundEvent = isRenaissance ? AITSounds.RENAISSANCE_ANTI_GRAV_ALT : AITSounds.ANTI_GRAVS;
 

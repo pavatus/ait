@@ -11,6 +11,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.item.WaypointItem;
 import dev.amble.ait.core.tardis.Tardis;
@@ -24,14 +25,12 @@ public class ConsolePortControl extends Control {
     private SoundEvent currentMusic = null;
 
     public ConsolePortControl() {
-        super("console_port");
+        super(AITMod.id("console_port"));
     }
 
     @Override
     public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console,
                              boolean leftClick) {
-
-
         if (leftClick) {
             if (!tardis.extra().getInsertedDisc().isEmpty()) {
                 ejectDisc(tardis, player, world, console);
@@ -43,7 +42,6 @@ public class ConsolePortControl extends Control {
         }
 
         ItemStack itemStack = player.getMainHandStack();
-
 
         if (itemStack.getItem() instanceof MusicDiscItem musicDisc) {
             if (!tardis.extra().getInsertedDisc().isEmpty()) return false;

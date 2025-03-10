@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureKeys;
 
+import dev.amble.ait.AITMod;
 import dev.amble.ait.api.link.LinkableItem;
 import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.AITSounds;
@@ -53,19 +54,14 @@ public class TelepathicControl extends Control {
     public static final int RADIUS = 256;
 
     public TelepathicControl() {
-        super("telepathic_circuit");
+        super(AITMod.id("telepathic_circuit"));
     }
 
     @Override
-    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console) {
-        if (tardis.sequence().hasActiveSequence() && tardis.sequence().controlPartOfSequence(this)) {
-            this.addToControlSequence(tardis, player, console);
-            return false;
-        }
+    public boolean runServer(Tardis tardis, ServerPlayerEntity player, ServerWorld world, BlockPos console, boolean leftClick) {
+        super.runServer(tardis, player, world, console, leftClick);
 
-        boolean security = tardis.stats().security().get();
-
-        if (security && !KeyItem.hasMatchingKeyInInventory(player, tardis))
+        if (tardis.stats().security().get() && !KeyItem.hasMatchingKeyInInventory(player, tardis))
             return false;
 
         ItemStack held = player.getMainHandStack();
