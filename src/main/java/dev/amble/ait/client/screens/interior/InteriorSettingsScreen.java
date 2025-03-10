@@ -396,7 +396,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     private void nextDesktop() {
         this.selectedDesktop = nextDesktop(this.selectedDesktop);
 
-        if (!isCurrentUnlocked())
+        if (!isCurrentUnlocked() || this.selectedDesktop == DesktopRegistry.DEFAULT_CAVE)
             nextDesktop(); // ooo incursion crash
     }
 
@@ -411,7 +411,7 @@ public class InteriorSettingsScreen extends ConsoleScreen {
     private void previousDesktop() {
         this.selectedDesktop = previousDesktop(this.selectedDesktop);
 
-        if (!isCurrentUnlocked())
+        if (!isCurrentUnlocked() || this.selectedDesktop == DesktopRegistry.DEFAULT_CAVE)
             previousDesktop(); // ooo incursion crash
     }
 

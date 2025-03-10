@@ -916,10 +916,10 @@ AITModDataGenerator implements DataGeneratorEntrypoint {
         provider.addTranslation("block.ait.fabricator.tooltip.use", "(Place on top of a Smithing Table)");
         provider.addTranslation("tooltip.ait.use_in_tardis", "(Place inside a TARDIS)");
         provider.addTranslation("block.ait.artron_collector_block.tooltip.use", "(Charges inside of Rift Chunks)");
-        provider.addTranslation("tooltip.ait.power_converter", "(Convert Zeiton,Lava,Coal and Wood into Artron)");
+        provider.addTranslation("tooltip.ait.power_converter", "(Convert zeiton, lava, coal and wood into Artron)");
         provider.addTranslation("tooltip.ait.singularity", "(Give the TARDIS Coral this to allow the generation of the interior)");
-        provider.addTranslation("tooltip.ait.tardis_coral", "(Place the CORAL on soul sand in a rift chunk and give it a SMS to generate your interior)");
-        provider.addTranslation("tooltip.ait.matrix_energizer", "(Place this on a naturally generating shriker and give it a nether star)");
+        provider.addTranslation("tooltip.ait.tardis_coral", "(Place the Tardis Coral on Soul Sand in a Rift Chunk to grow a TARDIS)");
+        provider.addTranslation("tooltip.ait.matrix_energizer", "(Place on a naturally-occurring shrieker to produce a Personality Matrix)");
 
         // Painting
         provider.addTranslation("painting.ait.crab_thrower.title", "Crab Thrower");

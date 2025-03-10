@@ -225,17 +225,18 @@ public class TardisDesktop extends TardisComponent {
         World dim = this.tardis.asServer().getInteriorWorld();
         dim.playSound(null, consolePos, SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 0.5f, 1.0f);
 
-        ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(consolePos,
-                AITBlocks.CONSOLE_GENERATOR.getDefaultState());
-
-        if (dim.getBlockEntity(consolePos) instanceof ConsoleBlockEntity entity)
+        if (dim.getBlockEntity(consolePos) instanceof ConsoleBlockEntity entity) {
+            ConsoleGeneratorBlockEntity generator = new ConsoleGeneratorBlockEntity(consolePos,
+                    AITBlocks.CONSOLE_GENERATOR.getDefaultState(), entity.getTypeSchema().id(), entity.getVariant().id());
             entity.killControls();
 
-        dim.removeBlock(consolePos, false);
-        dim.removeBlockEntity(consolePos);
+            dim.removeBlock(consolePos, false);
+            dim.removeBlockEntity(consolePos);
 
-        dim.setBlockState(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
-        dim.addBlockEntity(generator);
+            dim.setBlockState(consolePos, AITBlocks.CONSOLE_GENERATOR.getDefaultState(), Block.NOTIFY_ALL);
+
+            dim.addBlockEntity(generator);
+        }
     }
 
     public static void playSoundAtConsole(World dim, BlockPos console, SoundEvent sound, SoundCategory category, float volume,

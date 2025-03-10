@@ -48,6 +48,12 @@ public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
         this.type = ConsoleRegistry.HARTNELL.id();
     }
 
+    public ConsoleGeneratorBlockEntity(BlockPos pos, BlockState state, Identifier type, Identifier variant) {
+        super(AITBlockEntityTypes.CONSOLE_GENERATOR_ENTITY_TYPE, pos, state);
+        this.type = type;
+        this.variant = variant;
+    }
+
     public void useOn(World world, boolean sneaking, PlayerEntity player) {
         if (!TardisServerWorld.isTardisDimension(world))
             return;

@@ -26,14 +26,13 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.api.link.LinkableItem;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.Tardis;
-import dev.amble.ait.core.tardis.util.network.c2s.BOTIChunkRequestC2SPacket;
 import dev.amble.ait.core.tardis.util.network.c2s.SyncPropertyC2SPacket;
 
 public class NetworkUtil {
     public static void init() {
 
         ServerPlayNetworking.registerGlobalReceiver(SyncPropertyC2SPacket.TYPE, SyncPropertyC2SPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(BOTIChunkRequestC2SPacket.TYPE, BOTIChunkRequestC2SPacket::handle);
+        //ServerPlayNetworking.registerGlobalReceiver(BOTIChunkRequestC2SPacket.TYPE, BOTIChunkRequestC2SPacket::handle);
 
         /*if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             initClient();

@@ -52,6 +52,7 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
         ConsoleModel console = ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id()).model();
         Identifier consoleTexture = ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id())
                 .texture();
+        Identifier consoleEmission = ClientConsoleVariantRegistry.getInstance().get(entity.getConsoleVariant().id()).emission();
 
         Tardis tardis = entity.tardis().get();
         if (!tardis.isUnlocked(entity.getConsoleVariant())) {
@@ -109,6 +110,10 @@ public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> imp
             console.render(matrices,
                     vertexConsumers.getBuffer(entity.getConsoleVariant().getClient().equals(ClientConsoleVariantRegistry.COPPER) ? RenderLayer.getEntityTranslucent(consoleTexture) :
                             RenderLayer.getEntityTranslucentCull(consoleTexture)), 0xf000f0, overlay, 0.3607843137f,
+                    0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
+            console.render(matrices,
+                    vertexConsumers.getBuffer(entity.getConsoleVariant().getClient().equals(ClientConsoleVariantRegistry.COPPER) ? RenderLayer.getEntityTranslucent(consoleTexture) :
+                            RenderLayer.getEntityTranslucentCull(consoleEmission)), 0xf000f0, overlay, 0.3607843137f,
                     0.9450980392f, 1, entity.getWorld().random.nextInt(32) != 6 ? 0.4f : 0.05f);
         } else {
             console.render(matrices,
