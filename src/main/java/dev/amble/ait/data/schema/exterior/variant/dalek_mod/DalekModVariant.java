@@ -12,7 +12,7 @@ import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.door.impl.DalekModDoorVariant;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.category.DalekModCategory;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 
 public abstract class DalekModVariant extends ExteriorVariantSchema {

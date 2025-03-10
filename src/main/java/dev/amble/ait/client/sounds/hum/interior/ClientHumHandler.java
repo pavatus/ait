@@ -25,7 +25,7 @@ import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.util.ClientTardisUtil;
 import dev.amble.ait.core.tardis.handler.ServerHumHandler;
 import dev.amble.ait.data.hum.Hum;
-import dev.amble.ait.registry.impl.HumRegistry;
+import dev.amble.ait.registry.HumRegistry;
 
 public class ClientHumHandler extends SoundHandler {
 

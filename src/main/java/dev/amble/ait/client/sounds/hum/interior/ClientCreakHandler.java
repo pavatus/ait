@@ -20,7 +20,7 @@ import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.util.ClientTardisUtil;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.CreakSound;
-import dev.amble.ait.registry.impl.CreakRegistry;
+import dev.amble.ait.registry.CreakRegistry;
 
 public class ClientCreakHandler extends SoundHandler {
 

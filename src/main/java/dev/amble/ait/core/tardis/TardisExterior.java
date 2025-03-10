@@ -20,8 +20,8 @@ import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.util.StackUtil;
 import dev.amble.ait.data.schema.exterior.ExteriorCategorySchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.CategoryRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.CategoryRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class TardisExterior extends TardisComponent {
 

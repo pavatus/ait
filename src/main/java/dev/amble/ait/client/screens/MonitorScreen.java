@@ -42,9 +42,9 @@ import dev.amble.ait.data.schema.exterior.ExteriorCategorySchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.category.ClassicCategory;
 import dev.amble.ait.data.schema.exterior.category.PoliceBoxCategory;
-import dev.amble.ait.registry.impl.CategoryRegistry;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.CategoryRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class MonitorScreen extends ConsoleScreen {
     private static final Identifier TEXTURE = new Identifier(AITMod.MOD_ID,

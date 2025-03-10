@@ -11,8 +11,8 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import dev.amble.ait.client.models.doors.DoorModel;
 import dev.amble.ait.data.schema.door.impl.CapsuleDoorVariant;
-import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.ClientDoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientDoorSchema {

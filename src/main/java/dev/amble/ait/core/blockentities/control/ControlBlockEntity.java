@@ -18,7 +18,7 @@ import dev.amble.ait.core.blocks.control.RedstoneControlBlock;
 import dev.amble.ait.core.item.control.ControlBlockItem;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.control.Control;
-import dev.amble.ait.registry.impl.ControlRegistry;
+import dev.amble.ait.registry.ControlRegistry;
 
 public abstract class ControlBlockEntity extends InteriorLinkableBlockEntity {
 

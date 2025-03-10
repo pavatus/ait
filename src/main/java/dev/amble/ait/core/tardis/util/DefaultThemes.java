@@ -14,10 +14,10 @@ import dev.amble.ait.data.hum.Hum;
 import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.HumRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.HumRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public enum DefaultThemes {
     CORAL("coral", "exterior/police_box/coral", "coral", "console/coral"),

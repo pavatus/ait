@@ -29,8 +29,8 @@ import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.tardis.manager.TardisBuilder;
 import dev.amble.ait.core.tardis.util.DefaultThemes;
 import dev.amble.ait.data.Loyalty;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class TardisItemBuilder extends Item {
     private final Identifier exterior;

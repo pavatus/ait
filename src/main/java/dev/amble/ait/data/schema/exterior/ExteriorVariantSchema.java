@@ -22,9 +22,9 @@ import dev.amble.ait.core.tardis.animation.ExteriorAnimation;
 import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.BasicSchema;
 import dev.amble.ait.data.schema.door.DoorSchema;
-import dev.amble.ait.registry.impl.CategoryRegistry;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.CategoryRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 /**
  * A variant for a {@link ExteriorCategorySchema} which provides a model,

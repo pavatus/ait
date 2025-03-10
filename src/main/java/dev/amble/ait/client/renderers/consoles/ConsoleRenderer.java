@@ -22,7 +22,7 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.data.datapack.DatapackConsole;
 import dev.amble.ait.data.schema.console.ClientConsoleVariantSchema;
 import dev.amble.ait.data.schema.console.variant.crystalline.client.ClientCrystallineVariant;
-import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import dev.amble.ait.registry.console.variant.ClientConsoleVariantRegistry;
 
 public class ConsoleRenderer<T extends ConsoleBlockEntity> implements BlockEntityRenderer<T> {
 

@@ -12,7 +12,7 @@ import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.data.hum.Hum;
-import dev.amble.ait.registry.impl.HumRegistry;
+import dev.amble.ait.registry.HumRegistry;
 
 public class ServerHumHandler extends TardisComponent {
     public static final Identifier SEND = AITMod.id("send_hum");

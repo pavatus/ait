@@ -28,7 +28,7 @@ import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.client.util.ClientTardisUtil;
 import dev.amble.ait.core.item.SonicItem;
 import dev.amble.ait.data.schema.sonic.SonicSchema;
-import dev.amble.ait.registry.impl.SonicRegistry;
+import dev.amble.ait.registry.SonicRegistry;
 
 public class SonicSettingsScreen extends ConsoleScreen {
     private static final Identifier BACKGROUND = new Identifier(AITMod.MOD_ID,

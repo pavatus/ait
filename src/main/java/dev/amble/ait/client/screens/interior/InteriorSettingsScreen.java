@@ -37,7 +37,7 @@ import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.handler.FuelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
-import dev.amble.ait.registry.impl.DesktopRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
 
 @Environment(EnvType.CLIENT)
 public class InteriorSettingsScreen extends ConsoleScreen {

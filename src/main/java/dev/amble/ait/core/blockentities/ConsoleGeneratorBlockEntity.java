@@ -34,8 +34,8 @@ import dev.amble.ait.core.AITItems;
 import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
 import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
-import dev.amble.ait.registry.impl.console.ConsoleRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.console.ConsoleRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
 
 public class ConsoleGeneratorBlockEntity extends InteriorLinkableBlockEntity {
     public static final Identifier SYNC_TYPE = AITMod.id("sync_gen_type");

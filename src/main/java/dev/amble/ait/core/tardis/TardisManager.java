@@ -50,7 +50,7 @@ import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
 import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.exterior.ExteriorCategorySchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public abstract class TardisManager<T extends Tardis, C> {
 

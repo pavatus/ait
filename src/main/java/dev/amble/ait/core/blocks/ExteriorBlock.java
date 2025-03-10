@@ -51,7 +51,7 @@ import dev.amble.ait.core.util.ShapeUtil;
 import dev.amble.ait.data.schema.exterior.variant.adaptive.AdaptiveVariant;
 import dev.amble.ait.module.planet.core.space.planet.Planet;
 import dev.amble.ait.module.planet.core.space.planet.PlanetRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 @SuppressWarnings("deprecation")
 public class ExteriorBlock extends Block implements BlockEntityProvider, ICantBreak, Waterloggable {

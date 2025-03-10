@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
+import dev.amble.ait.client.commands.ClientRegistryCommand;
 import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -92,11 +93,11 @@ import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.gun.core.item.BaseGunItem;
-import dev.amble.ait.registry.impl.SonicRegistry;
-import dev.amble.ait.registry.impl.console.ConsoleRegistry;
-import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
-import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.SonicRegistry;
+import dev.amble.ait.registry.console.ConsoleRegistry;
+import dev.amble.ait.registry.console.variant.ClientConsoleVariantRegistry;
+import dev.amble.ait.registry.door.ClientDoorRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
 
 @Environment(value = EnvType.CLIENT)
 public class AITModClient implements ClientModInitializer {
@@ -131,6 +132,7 @@ public class AITModClient implements ClientModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             ConfigCommand.register(dispatcher);
+            ClientRegistryCommand.register(dispatcher);
         });
 
         AITKeyBinds.init();

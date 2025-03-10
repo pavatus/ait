@@ -9,8 +9,8 @@ import net.minecraft.util.InvalidIdentifierException;
 
 import dev.amble.ait.data.schema.BasicSchema;
 import dev.amble.ait.data.schema.exterior.category.CapsuleCategory;
-import dev.amble.ait.registry.impl.CategoryRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.CategoryRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 /**
  * @author duzo

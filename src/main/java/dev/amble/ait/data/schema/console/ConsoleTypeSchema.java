@@ -11,8 +11,8 @@ import net.minecraft.util.InvalidIdentifierException;
 import dev.amble.ait.api.Nameable;
 import dev.amble.ait.core.tardis.control.ControlTypes;
 import dev.amble.ait.data.schema.exterior.category.CapsuleCategory;
-import dev.amble.ait.registry.impl.console.ConsoleRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.console.ConsoleRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
 
 public abstract class ConsoleTypeSchema implements Identifiable, Nameable {
     private final Identifier id;

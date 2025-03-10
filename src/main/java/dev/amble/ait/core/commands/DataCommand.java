@@ -22,7 +22,7 @@ import dev.amble.ait.core.commands.argument.TardisArgumentType;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.data.properties.Value;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public class DataCommand {
 

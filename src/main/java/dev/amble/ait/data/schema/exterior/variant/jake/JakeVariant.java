@@ -11,7 +11,7 @@ import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.door.impl.JakeDoorVariant;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.category.JakeCategory;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 public abstract class JakeVariant extends ExteriorVariantSchema {
     protected static final String TEXTURE_PATH = "textures/blockentities/exteriors/jake/jake_";

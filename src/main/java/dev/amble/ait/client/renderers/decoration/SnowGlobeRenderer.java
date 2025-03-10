@@ -15,7 +15,7 @@ import dev.amble.ait.core.blockentities.SnowGlobeBlockEntity;
 import dev.amble.ait.core.blocks.SnowGlobeBlock;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
 
 public class SnowGlobeRenderer<T extends SnowGlobeBlockEntity> implements BlockEntityRenderer<T> {
     public static final Identifier SNOW_GLOBE_TEXTURE = new Identifier(AITMod.MOD_ID,

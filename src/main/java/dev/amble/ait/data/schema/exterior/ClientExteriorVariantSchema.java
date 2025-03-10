@@ -15,9 +15,9 @@ import dev.amble.ait.AITMod;
 import dev.amble.ait.client.models.exteriors.ExteriorModel;
 import dev.amble.ait.data.datapack.exterior.BiomeOverrides;
 import dev.amble.ait.data.schema.door.ClientDoorSchema;
-import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.door.ClientDoorRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientExteriorVariantSchema implements Identifiable {

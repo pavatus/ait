@@ -37,7 +37,7 @@ import dev.amble.ait.data.properties.bool.BoolValue;
 import dev.amble.ait.data.properties.dbl.DoubleProperty;
 import dev.amble.ait.data.properties.dbl.DoubleValue;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
-import dev.amble.ait.registry.impl.DesktopRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
 
 public class StatsHandler extends KeyedTardisComponent {
 

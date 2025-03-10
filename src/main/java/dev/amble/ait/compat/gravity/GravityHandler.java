@@ -29,7 +29,7 @@ import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.data.Exclude;
 import dev.amble.ait.data.properties.Property;
 import dev.amble.ait.data.properties.Value;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public class GravityHandler extends KeyedTardisComponent implements TardisTickable {
 

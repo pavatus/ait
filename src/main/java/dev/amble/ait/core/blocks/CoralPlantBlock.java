@@ -44,8 +44,8 @@ import dev.amble.ait.core.world.RiftChunkManager;
 import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.exterior.variant.growth.CoralGrowthVariant;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 @SuppressWarnings("deprecation")
 public class CoralPlantBlock extends HorizontalDirectionalBlock implements BlockEntityProvider {

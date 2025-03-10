@@ -22,7 +22,7 @@ import dev.amble.ait.core.blockentities.ExteriorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.handler.BiomeHandler;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
 
 
 public class TardisExteriorBOTI extends BOTI {

@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.data.schema.door.impl.CapsuleDoorVariant;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 /**
  * This class provides information about a door for an exterior <br>

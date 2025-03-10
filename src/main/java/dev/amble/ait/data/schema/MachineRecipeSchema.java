@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 import dev.amble.ait.core.util.StackUtil;
-import dev.amble.ait.registry.impl.MachineRecipeRegistry;
+import dev.amble.ait.registry.MachineRecipeRegistry;
 
 public class MachineRecipeSchema implements Identifiable {
 

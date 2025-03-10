@@ -4,7 +4,7 @@ import net.minecraft.util.math.Vec3d;
 
 import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.door.impl.PoliceBoxCoralDoorVariant;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 public class PoliceBoxCoralVariant extends PoliceBoxVariant {
     public PoliceBoxCoralVariant() {

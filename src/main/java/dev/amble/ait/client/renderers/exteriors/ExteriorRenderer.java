@@ -35,7 +35,7 @@ import dev.amble.ait.core.tardis.handler.CloakHandler;
 import dev.amble.ait.core.tardis.handler.OvergrownHandler;
 import dev.amble.ait.data.datapack.DatapackConsole;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
 
 public class ExteriorRenderer<T extends ExteriorBlockEntity> implements BlockEntityRenderer<T> {
 

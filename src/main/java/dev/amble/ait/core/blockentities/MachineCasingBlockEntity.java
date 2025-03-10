@@ -20,7 +20,7 @@ import dev.amble.ait.core.AITBlockEntityTypes;
 import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.item.SonicItem;
 import dev.amble.ait.core.util.StackUtil;
-import dev.amble.ait.registry.impl.MachineRecipeRegistry;
+import dev.amble.ait.registry.MachineRecipeRegistry;
 
 public class MachineCasingBlockEntity extends BlockEntity {
 

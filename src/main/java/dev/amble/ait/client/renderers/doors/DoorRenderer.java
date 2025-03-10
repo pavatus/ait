@@ -28,7 +28,7 @@ import dev.amble.ait.core.tardis.handler.DoorHandler;
 import dev.amble.ait.core.tardis.handler.OvergrownHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
 
 public class DoorRenderer<T extends DoorBlockEntity> implements BlockEntityRenderer<T> {
 

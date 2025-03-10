@@ -17,7 +17,7 @@ import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.TardisManager;
 import dev.amble.ait.core.tardis.manager.ServerTardisManager;
 import dev.amble.ait.data.properties.Value;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public class SyncPropertyC2SPacket implements FabricPacket {
     public static final PacketType<SyncPropertyC2SPacket> TYPE = PacketType.create(AITMod.id("send_property"), SyncPropertyC2SPacket::new);

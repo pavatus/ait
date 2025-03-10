@@ -21,7 +21,7 @@ import dev.amble.ait.client.models.consoles.ConsoleGeneratorModel;
 import dev.amble.ait.client.models.consoles.ConsoleModel;
 import dev.amble.ait.core.blockentities.ConsoleGeneratorBlockEntity;
 import dev.amble.ait.core.tardis.Tardis;
-import dev.amble.ait.registry.impl.console.variant.ClientConsoleVariantRegistry;
+import dev.amble.ait.registry.console.variant.ClientConsoleVariantRegistry;
 
 public class ConsoleGeneratorRenderer<T extends ConsoleGeneratorBlockEntity> implements BlockEntityRenderer<T> {
 

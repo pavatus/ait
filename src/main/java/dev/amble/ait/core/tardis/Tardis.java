@@ -12,8 +12,8 @@ import dev.amble.ait.core.tardis.control.sequences.SequenceHandler;
 import dev.amble.ait.core.tardis.handler.*;
 import dev.amble.ait.core.tardis.handler.permissions.PermissionHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public abstract class Tardis extends Initializable<TardisComponent.InitContext> {
 

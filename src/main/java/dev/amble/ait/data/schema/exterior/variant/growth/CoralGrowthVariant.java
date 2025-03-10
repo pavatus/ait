@@ -11,7 +11,7 @@ import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.door.impl.CoralGrowthDoorVariant;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.category.GrowthCategory;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 public class CoralGrowthVariant extends ExteriorVariantSchema {
     public static final Identifier REFERENCE = AITMod.id("exterior/coral_growth");

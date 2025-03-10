@@ -16,7 +16,7 @@ import dev.amble.ait.api.TardisComponent;
 import dev.amble.ait.api.TardisTickable;
 import dev.amble.ait.data.Exclude;
 import dev.amble.ait.data.enummap.EnumMap;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public class TardisHandlersManager extends TardisComponent implements TardisTickable {
 

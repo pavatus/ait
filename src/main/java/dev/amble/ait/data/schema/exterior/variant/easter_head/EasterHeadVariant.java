@@ -12,7 +12,7 @@ import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.door.impl.EasterHeadDoorVariant;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.category.EasterHeadCategory;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
 
 // a useful class for creating easter_head variants as they all have the same filepath you know
 public abstract class EasterHeadVariant extends ExteriorVariantSchema {

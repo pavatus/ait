@@ -26,7 +26,7 @@ import dev.amble.ait.client.tardis.ClientTardis;
 import dev.amble.ait.core.tardis.Tardis;
 import dev.amble.ait.core.tardis.TardisManager;
 import dev.amble.ait.data.Exclude;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public class ClientTardisManager extends TardisManager<ClientTardis, MinecraftClient> {
 

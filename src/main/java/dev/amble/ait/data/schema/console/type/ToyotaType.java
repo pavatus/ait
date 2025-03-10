@@ -17,7 +17,7 @@ import dev.amble.ait.core.tardis.control.impl.waypoint.MarkWaypointControl;
 import dev.amble.ait.core.tardis.control.impl.waypoint.SetWaypointControl;
 import dev.amble.ait.data.schema.console.ConsoleTypeSchema;
 import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
 
 public class ToyotaType extends ConsoleTypeSchema {
     public static final Identifier REFERENCE = AITMod.id("console/toyota");

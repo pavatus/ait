@@ -21,9 +21,9 @@ import dev.amble.ait.core.commands.argument.IdentifierWildcardArgumentType;
 import dev.amble.ait.core.commands.argument.TardisArgumentType;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.data.Wildcard;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class UnlockCommand {
 

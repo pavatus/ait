@@ -45,8 +45,8 @@ import dev.amble.ait.data.properties.bool.BoolValue;
 import dev.amble.ait.data.properties.integer.IntProperty;
 import dev.amble.ait.data.properties.integer.IntValue;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
-import dev.amble.ait.registry.impl.CategoryRegistry;
-import dev.amble.ait.registry.impl.DesktopRegistry;
+import dev.amble.ait.registry.CategoryRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
 
 public class InteriorChangingHandler extends KeyedTardisComponent implements TardisTickable {
     public static final Identifier CHANGE_DESKTOP = AITMod.id("change_desktop");

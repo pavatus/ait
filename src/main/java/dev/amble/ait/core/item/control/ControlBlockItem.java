@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 import dev.amble.ait.core.entities.ConsoleControlEntity;
 import dev.amble.ait.core.tardis.control.Control;
-import dev.amble.ait.registry.impl.ControlRegistry;
+import dev.amble.ait.registry.ControlRegistry;
 
 public abstract class ControlBlockItem extends BlockItem {
     public static final String CONTROL_ID_KEY = "controlId";

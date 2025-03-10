@@ -24,10 +24,10 @@ import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.console.ConsoleVariantSchema;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
 import dev.amble.ait.data.schema.sonic.SonicSchema;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.SonicRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.SonicRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class LoyaltyHandler extends TardisComponent implements TardisTickable {
     private final Map<UUID, Loyalty> data;

@@ -18,7 +18,7 @@ import dev.amble.ait.api.TardisTickable;
 import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.data.Exclude;
-import dev.amble.ait.registry.impl.MoodEventPoolRegistry;
+import dev.amble.ait.registry.MoodEventPoolRegistry;
 
 public class MoodHandler extends TardisComponent implements TardisTickable {
 

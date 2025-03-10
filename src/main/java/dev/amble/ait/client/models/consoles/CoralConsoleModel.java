@@ -25,7 +25,7 @@ import dev.amble.ait.core.tardis.handler.WaypointHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandler;
 import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
 import dev.amble.ait.core.util.WorldUtil;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
 
 public class CoralConsoleModel extends ConsoleModel {
     public static final Animation EMPTY_ANIM = Animation.Builder.create(1).build(); // temporary animation bc rn we have

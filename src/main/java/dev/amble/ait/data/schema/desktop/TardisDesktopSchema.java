@@ -13,7 +13,7 @@ import dev.amble.ait.core.util.WorldUtil;
 import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.BasicSchema;
 import dev.amble.ait.data.schema.desktop.textures.DesktopPreviewTexture;
-import dev.amble.ait.registry.impl.DesktopRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
 
 public abstract class TardisDesktopSchema extends BasicSchema implements Unlockable {
 

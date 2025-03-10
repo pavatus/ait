@@ -5,7 +5,7 @@ import net.minecraft.util.Identifier;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.data.schema.exterior.ExteriorCategorySchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class RenegadeCategory extends ExteriorCategorySchema {
     public static final Identifier REFERENCE = AITMod.id("exterior/renegade");

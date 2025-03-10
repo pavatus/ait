@@ -23,10 +23,10 @@ import dev.amble.ait.data.schema.door.ClientDoorSchema;
 import dev.amble.ait.data.schema.door.DoorSchema;
 import dev.amble.ait.data.schema.exterior.ClientExteriorVariantSchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.door.ClientDoorRegistry;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
-import dev.amble.ait.registry.impl.exterior.ClientExteriorVariantRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.door.ClientDoorRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
+import dev.amble.ait.registry.exterior.ClientExteriorVariantRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 /**
  * An all-in-one utility class for creating addon exteriors

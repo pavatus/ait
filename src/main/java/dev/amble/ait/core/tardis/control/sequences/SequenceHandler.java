@@ -27,7 +27,7 @@ import dev.amble.ait.core.tardis.TardisDesktop;
 import dev.amble.ait.core.tardis.control.Control;
 import dev.amble.ait.core.tardis.util.TardisUtil;
 import dev.amble.ait.data.Exclude;
-import dev.amble.ait.registry.impl.SequenceRegistry;
+import dev.amble.ait.registry.SequenceRegistry;
 
 public class SequenceHandler extends TardisComponent implements TardisTickable {
     @Exclude

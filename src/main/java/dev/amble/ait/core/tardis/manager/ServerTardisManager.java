@@ -21,7 +21,7 @@ import dev.amble.ait.core.tardis.ServerTardis;
 import dev.amble.ait.core.tardis.manager.old.DeprecatedServerTardisManager;
 import dev.amble.ait.core.tardis.util.NetworkUtil;
 import dev.amble.ait.data.properties.Value;
-import dev.amble.ait.registry.impl.TardisComponentRegistry;
+import dev.amble.ait.registry.TardisComponentRegistry;
 
 public class ServerTardisManager extends DeprecatedServerTardisManager {
 

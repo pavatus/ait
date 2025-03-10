@@ -20,8 +20,8 @@ import dev.amble.ait.core.world.TardisServerWorld;
 import dev.amble.ait.data.Loyalty;
 import dev.amble.ait.data.schema.desktop.TardisDesktopSchema;
 import dev.amble.ait.data.schema.exterior.ExteriorVariantSchema;
-import dev.amble.ait.registry.impl.DesktopRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.DesktopRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class TardisBuilder {
 

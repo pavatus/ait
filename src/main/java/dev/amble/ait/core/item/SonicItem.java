@@ -22,7 +22,7 @@ import dev.amble.ait.client.sounds.ClientSoundManager;
 import dev.amble.ait.core.AITSounds;
 import dev.amble.ait.core.item.sonic.SonicMode;
 import dev.amble.ait.data.schema.sonic.SonicSchema;
-import dev.amble.ait.registry.impl.SonicRegistry;
+import dev.amble.ait.registry.SonicRegistry;
 
 
 public class SonicItem extends LinkableItem implements ArtronHolderItem {

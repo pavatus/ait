@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import dev.amble.ait.registry.*;
+import dev.amble.ait.registry.v2.AITRegistries;
 import dev.amble.lib.container.RegistryContainer;
 import dev.amble.lib.register.AmbleRegistries;
 import dev.amble.lib.util.ServerLifecycleHooks;
@@ -82,11 +84,10 @@ import dev.amble.ait.data.landing.LandingPadRegion;
 import dev.amble.ait.data.schema.MachineRecipeSchema;
 import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.ait.module.planet.core.space.planet.Crater;
-import dev.amble.ait.registry.impl.*;
-import dev.amble.ait.registry.impl.console.ConsoleRegistry;
-import dev.amble.ait.registry.impl.console.variant.ConsoleVariantRegistry;
-import dev.amble.ait.registry.impl.door.DoorRegistry;
-import dev.amble.ait.registry.impl.exterior.ExteriorVariantRegistry;
+import dev.amble.ait.registry.console.ConsoleRegistry;
+import dev.amble.ait.registry.console.variant.ConsoleVariantRegistry;
+import dev.amble.ait.registry.door.DoorRegistry;
+import dev.amble.ait.registry.exterior.ExteriorVariantRegistry;
 
 public class AITMod implements ModInitializer {
 
@@ -179,6 +180,7 @@ public class AITMod implements ModInitializer {
         AITArgumentTypes.register();
         AITSounds.init();
         AITDimensions.init();
+        AITRegistries.init();
 
         CustomTrades.registerCustomTrades();
 
@@ -246,6 +248,7 @@ public class AITMod implements ModInitializer {
             DebugCommand.register(dispatcher);
             EraseChunksCommand.register(dispatcher);
             FlightCommand.register(dispatcher);
+            RegistryCommand.register(dispatcher);
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(TardisUtil.REGION_LANDING_CODE,

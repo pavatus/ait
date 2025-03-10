@@ -5,7 +5,7 @@ import dev.amble.ait.core.engine.DurableSubSystem;
 import dev.amble.ait.core.engine.StructureHolder;
 import dev.amble.ait.core.engine.block.multi.MultiBlockStructure;
 import dev.amble.ait.core.tardis.TardisExterior;
-import dev.amble.ait.registry.impl.CategoryRegistry;
+import dev.amble.ait.registry.CategoryRegistry;
 
 public class ChameleonCircuit extends DurableSubSystem implements StructureHolder {
     static {
