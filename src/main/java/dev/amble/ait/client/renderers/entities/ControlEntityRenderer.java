@@ -57,7 +57,7 @@ public class ControlEntityRenderer extends LivingEntityRenderer<ConsoleControlEn
         if (d > 4096.0)
             return;
 
-        Text name = Text.translatable(AITMod.id(text.getString())
+        Text name = Text.translatable(entity.control.getId()
                 .toTranslationKey("control"));
 
         TextRenderer textRenderer = this.getTextRenderer();

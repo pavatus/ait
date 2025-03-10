@@ -60,7 +60,7 @@ public class ConsoleControlEntity extends LinkableDummyLivingEntity {
             TrackedDataHandlerRegistry.BOOLEAN);
 
     private BlockPos consoleBlockPos;
-    private Control control;
+    public Control control;
 
     public ConsoleControlEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world, false);
