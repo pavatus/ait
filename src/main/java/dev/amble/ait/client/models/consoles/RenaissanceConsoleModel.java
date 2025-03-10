@@ -1331,12 +1331,12 @@ public class RenaissanceConsoleModel extends ConsoleModel {
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180f));
 
         // Throttle Control
-        //ModelPart throttle = this.console.getChild("throttle");
-        //throttle.pitch = throttle.pitch + ((tardis.travel().speed() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
+        ModelPart throttle = this.console.getChild("bone53").getChild("throttle");
+        throttle.pitch = throttle.pitch + ((tardis.travel().speed() / (float) tardis.travel().maxSpeed().get()) * 1.5f);
 
         // Handbrake Control and Lights
-        //ModelPart handbrake = this.console.getChild("bone7").getChild("panelf").getChild("handbrake");
-        //handbrake.pitch = !tardis.travel().handbrake() ? handbrake.pitch - -0.57f : handbrake.pitch;
+        ModelPart handbrake = this.console.getChild("panelf").getChild("handbrake");
+        handbrake.pitch = !tardis.travel().handbrake() ? handbrake.pitch - -0.57f : handbrake.pitch;
 
 
 //

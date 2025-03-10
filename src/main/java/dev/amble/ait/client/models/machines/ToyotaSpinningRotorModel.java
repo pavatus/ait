@@ -2,11 +2,15 @@ package dev.amble.ait.client.models.machines;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.SinglePartEntityModel;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 
-public class ToyotaSpinningRotorModel extends SinglePartEntityModel {
+import dev.amble.ait.client.animation.console.renaissance.RenaissanceAnimation;
+import dev.amble.ait.client.animation.machines.ToyotaSpinningRotorAnimation;
+import dev.amble.ait.core.tardis.handler.travel.TravelHandlerBase;
+
+public class ToyotaSpinningRotorModel extends SpinningRotorModel {
     private final ModelPart bone4;
     public ToyotaSpinningRotorModel(ModelPart root) {
         this.bone4 = root.getChild("bone4");
@@ -559,6 +563,15 @@ public class ToyotaSpinningRotorModel extends SinglePartEntityModel {
     @Override
     public void setAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     }
+
+    @Override
+    public Animation getAnimationForState(TravelHandlerBase.State state) {
+        return switch (state) {
+            default -> ToyotaSpinningRotorAnimation.FLIGHT;
+            case LANDED -> RenaissanceAnimation.RENAISSANCE_IDLE;
+        };
+    }
+
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         bone4.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
