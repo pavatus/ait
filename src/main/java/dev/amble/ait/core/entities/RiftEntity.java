@@ -19,9 +19,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
 
@@ -30,6 +28,7 @@ import dev.amble.ait.core.*;
 import dev.amble.ait.core.item.SonicItem;
 import dev.amble.ait.core.util.StackUtil;
 import dev.amble.ait.core.util.WorldUtil;
+import dev.amble.ait.core.world.RiftChunkManager;
 import dev.amble.ait.module.planet.core.util.ISpaceImmune;
 
 public class RiftEntity extends AmbientEntity implements ISpaceImmune {
@@ -184,22 +183,18 @@ public class RiftEntity extends AmbientEntity implements ISpaceImmune {
     public static boolean canSpawn(EntityType<RiftEntity> rift,
                                    ServerWorldAccess serverWorldAccess, SpawnReason spawnReason,
                                    BlockPos pos, net.minecraft.util.math.random.Random random) {
-        if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess)) return false;
+        if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess))
+            return false;
 
         if (spawnReason == SpawnReason.STRUCTURE)
-            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
+            return worldAccess.getBlockState(pos).isAir();
 
-        ChunkPos chunkPos = new ChunkPos(pos);
-        boolean bl = ChunkRandom.getSlimeRandom(chunkPos.x, chunkPos.z,
-                worldAccess.getSeed(), 987234910L).nextInt(8) == 0;
-
-        if (random.nextInt(25) == 0 && bl)
-            return RiftEntity.canMobSpawn(rift, worldAccess, spawnReason, pos, random);
+        if (random.nextInt(50) == 0 && RiftChunkManager.isRiftChunk(worldAccess, pos))
+            return worldAccess.getBlockState(pos).isAir();
 
         return false;
     }
 
-    /** Overridden to ensure it spawn mid-air (Needs fixing?) **/
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
