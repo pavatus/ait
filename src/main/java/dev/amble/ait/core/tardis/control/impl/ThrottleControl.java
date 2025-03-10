@@ -31,6 +31,7 @@ public class ThrottleControl extends Control {
         TravelHandler travel = tardis.travel();
 
         if (player.getMainHandStack().isOf(AITItems.MUG)) {
+            travel.forceDemat();
             travel.crash();
 
             TardisCriterions.BRAND_NEW.trigger(player);
