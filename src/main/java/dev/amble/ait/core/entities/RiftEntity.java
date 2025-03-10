@@ -61,6 +61,7 @@ public class RiftEntity extends AmbientEntity implements ISpaceImmune {
 
     @Override
     public void onPlayerCollision(PlayerEntity player) {
+        if (WorldUtil.getTimeVortex() == null) return;
         TeleportUtil.teleport(player, WorldUtil.getTimeVortex(), player.getPos(), player.bodyYaw);
     }
 
