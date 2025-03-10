@@ -110,7 +110,10 @@ public abstract class SonicMode implements Ordered {
     public abstract Identifier model(SonicSchema.Models models);
 
     public static HitResult getHitResult(LivingEntity user) {
-        return ProjectileUtil.getCollision(user, entity -> !entity.isSpectator() && entity.canHit(), 16);
+        return getHitResult(user, 16);
+    }
+    public static HitResult getHitResult(LivingEntity user, double distance) {
+        return ProjectileUtil.getCollision(user, entity -> !entity.isSpectator() && entity.canHit(), distance);
     }
 
     @Override

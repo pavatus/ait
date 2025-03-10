@@ -109,12 +109,6 @@ public class TardisItemBuilder extends Item {
                     loyalty.setMessageEnabled(true);
                 });
 
-        TardisBuilder builder1 = new TardisBuilder().at(pos)
-                .<LoyaltyHandler> with(TardisComponent.Id.LOYALTY,
-                        loyalty -> {
-                            loyalty.setMessageEnabled(true);
-                        });
-
         if (this.exterior == null || this.desktop == null) {
             DefaultThemes.getRandom().apply(builder);
         } else {
