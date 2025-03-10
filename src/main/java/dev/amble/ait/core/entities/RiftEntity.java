@@ -17,6 +17,8 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
@@ -49,11 +51,6 @@ public class RiftEntity extends AmbientEntity implements ISpaceImmune {
 
     public RiftEntity(EntityType<?> type, World world) {
         super(AITEntityTypes.RIFT_ENTITY, world);
-    }
-
-    @Override
-    public boolean cannotDespawn() {
-        return true;
     }
 
     @Override
@@ -184,11 +181,19 @@ public class RiftEntity extends AmbientEntity implements ISpaceImmune {
         if (!(serverWorldAccess instanceof StructureWorldAccess worldAccess))
             return false;
 
-        if (spawnReason == SpawnReason.STRUCTURE)
-            return worldAccess.getBlockState(pos).isAir();
+        Chunk chunk = worldAccess.getChunk(pos);
+        ChunkPos chunkPos = chunk.getPos();
+        BlockPos startPos = new BlockPos(chunkPos.getStartX(), chunk.getBottomY(), chunkPos.getStartZ());
+        BlockPos endPos = new BlockPos(chunkPos.getEndX(), worldAccess.getHeight(), chunkPos.getEndZ());
+        Box box = new Box(startPos, endPos);
 
-        if (random.nextInt(50) == 0 && RiftChunkManager.isRiftChunk(worldAccess, pos))
-            return worldAccess.getBlockState(pos).isAir();
+        if (spawnReason == SpawnReason.STRUCTURE && serverWorldAccess.getEntitiesByType(rift, box,
+                predicate -> true).isEmpty())
+            return worldAccess.getBlockState(pos).isAir() && worldAccess.getBlockState(pos.down()).isAir();
+
+        if (random.nextInt(10) == 0 && serverWorldAccess.getEntitiesByType(rift, box,
+                predicate -> true).isEmpty() && RiftChunkManager.isRiftChunk(worldAccess, pos))
+            return worldAccess.getBlockState(pos).isAir() && worldAccess.getBlockState(pos.down()).isAir();
 
         return false;
     }
@@ -196,7 +201,7 @@ public class RiftEntity extends AmbientEntity implements ISpaceImmune {
     @Override
     public void onSpawnPacket(EntitySpawnS2CPacket packet) {
         double d = packet.getX();
-        double e = packet.getY() + 0;
+        double e = packet.getY();
         double f = packet.getZ();
         float g = packet.getYaw();
         float h = packet.getPitch();
